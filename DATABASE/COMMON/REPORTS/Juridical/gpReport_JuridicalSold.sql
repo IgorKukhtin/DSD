@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+             , RetailName TVarChar, RetailReportName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , JuridicalPartnerlName TVarChar
              , BranchCode Integer, BranchName TVarChar
@@ -96,6 +97,8 @@ BEGIN
         Object_Juridical.ValueData AS JuridicalName,
         ObjectHistory_JuridicalDetails_View.OKPO,
         Object_JuridicalGroup.ValueData  AS JuridicalGroupName,
+        Object_Retail.ValueData       AS RetailName,
+        Object_RetailReport.ValueData AS RetailReportName,
         Object_Partner.ObjectCode AS PartnerCode,
         Object_Partner.ValueData  AS PartnerName,
         CASE WHEN Object_Partner.ValueData <> '' THEN Object_Partner.ValueData ELSE Object_Juridical.ValueData END :: TVarChar AS JuridicalPartnerlName,
@@ -197,20 +200,20 @@ BEGIN
 
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_PriceCorrective()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
-               + SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service()) AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10300() THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
+               + SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
                  AS SaleRealSumm
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_Service(), zc_Movement_PriceCorrective()) AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10300() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm_10300
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_Service(), zc_Movement_PriceCorrective()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm_10300
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS TransferDebtSumm
 
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInRealSumm
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10300() THEN 1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm_10300
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm_10300
 
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PriceCorrective()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS PriceCorrectiveSumm
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
-               + SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service()) AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_ProfitLossDirection_10300() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
+               + SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service()) AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
                  AS ServiceRealSumm
 
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_SendDebt()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SendDebtSumm
@@ -306,6 +309,15 @@ BEGIN
                                 ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
                                AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
            LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+                                ON ObjectLink_Juridical_RetailReport.ObjectId = Object_Juridical.Id
+                               AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
+           LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
 
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Operation.PartnerId

@@ -6934,6 +6934,10 @@ begin
      //
      myEnabledCB(cbPriceListItems);
      //
+     try StrToInt(SessionIdEdit.Text) except SessionIdEdit.Text:='70';end;
+     if StrToInt(SessionIdEdit.Text)=0 then SessionIdEdit.Text:='70';
+
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -6941,6 +6945,7 @@ begin
         Add('     , PriceList_byHistory.Id_Postgres as PriceListId_PG');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_PG');
         Add('     , case when PriceListItems_byHistory.StartDate=zc_DateStart() then '+FormatToDateServer_notNULL(StrToDate('01.01.1990'))+' else PriceListItems_byHistory.StartDate end as OperDate');
+        Add('     , PriceListItems_byHistory.EndDate');
         Add('     , case when PriceListItems_byHistory.EndDate=zc_DateEnd() then zc_rvYes() else zc_rvNo() end as isLastPrice');
         Add('     , PriceListItems_byHistory.NewPrice as NewPrice');
         Add('     , PriceListItems_byHistory.Id_Postgres as Id_Postgres');
@@ -6948,8 +6953,18 @@ begin
         Add('     left outer join dba.PriceList_byHistory on PriceList_byHistory.Id=PriceListItems_byHistory.PriceListID');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=PriceListItems_byHistory.GoodsPropertyId');
         Add('where (PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0)');
-        Add('  and (PriceListItems_byHistory.StartDate>(ToDay()-70) or PriceListItems_byHistory.Id_Postgres is null)');
+        if StrToInt(SessionIdEdit.Text) >= 1000
+        then
+            else if StrToInt(SessionIdEdit.Text) >= 100
+                 then Add('  and (PriceListItems_byHistory.EndDate>(ToDay()-'+SessionIdEdit.Text+') and PriceListItems_byHistory.NewPrice<>0)')
+                 else Add('  and (PriceListItems_byHistory.StartDate>(ToDay()-'+SessionIdEdit.Text+') or PriceListItems_byHistory.Id_Postgres is null)');
 // Add('  and GoodsProperty.Id_Postgres = 7836 and PriceList_byHistory.Id_Postgres = 18840');
+        try
+        if StrToInt(OKPOEdit.Text) < 0  then
+        Add('and GoodsProperty.GoodsCode = ' + IntToStr(-1 * StrToInt(OKPOEdit.Text)));
+        except
+        end;
+
         Add('order by PriceListId_PG, GoodsId_PG, OperDate');
         Open;
         cbPriceListItems.Caption:='5.2. ('+IntToStr(RecordCount)+') Прайс листы - цены';
@@ -6960,13 +6975,14 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_ObjectHistory_PriceListItemLast';
+        toStoredProc.StoredProcName:='gpInsertUpdate_ObjectHistory_PriceListItemLast_sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, 0);
+        toStoredProc.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
         toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inIsLast',ftBoolean,ptInput, FALSE);
         //
@@ -6980,6 +6996,7 @@ begin
              toStoredProc.Params.ParamByName('inPriceListId').Value:=FieldByName('PriceListId_PG').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_PG').AsInteger;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
              toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('NewPrice').AsFloat;
              if FieldByName('isLastPrice').AsInteger=zc_rvYes
              then toStoredProc.Params.ParamByName('inIsLast').Value:=true

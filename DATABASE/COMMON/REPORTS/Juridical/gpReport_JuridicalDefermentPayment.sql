@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inJuridicalGroupId Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, RetailName_main TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -63,7 +63,7 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101())
-     SELECT a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.OKPO, a.JuridicalGroupName
+     SELECT a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
              , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
              , a.BranchId, a.BranchCode, a.BranchName
              , a.PaidKindId, a.PaidKindName
@@ -83,7 +83,8 @@ from (
      Object_Account_View.AccountName_all AS AccountName
    , Object_Juridical.Id        AS JuridicalId
    , Object_Juridical.Valuedata AS JuridicalName
-   , COALESCE (Object_Retail.ValueData, 'прочие') :: TVarChar AS RetailName
+   , COALESCE (Object_RetailReport.ValueData, 'прочие') :: TVarChar AS RetailName
+   , COALESCE (Object_Retail.ValueData, 'прочие') :: TVarChar AS RetailName_main
    , ObjectHistory_JuridicalDetails_View.OKPO
    , Object_JuridicalGroup.ValueData AS JuridicalGroupName
    , Object_Partner.Id          AS PartnerId
@@ -308,9 +309,14 @@ from (
                                AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_AreaContract()
            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+                                ON ObjectLink_Juridical_RetailReport.ObjectId = Object_Juridical.Id
+                               AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
+           LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
+
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
-                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_RetailReport()
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
            LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = RESULT.JuridicalGroupId

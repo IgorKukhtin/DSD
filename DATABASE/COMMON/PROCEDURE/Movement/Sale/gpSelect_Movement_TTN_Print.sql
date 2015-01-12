@@ -150,6 +150,8 @@ BEGIN
            , CAST('Ман АЕ 1913 ВР Фургон- рефрежератор-С' AS TVarChar)    AS CarName
            , CAST('Ман АЕ 1955 ВР Прицеп' AS TVarChar)                    AS CarTrailerName
            , CAST('Литвиненко А,М № посв, кіа 585542' AS TVarChar)        AS DriverName
+           , CAST('Гненко М,И № 3434' AS TVarChar)                        AS ExpName
+           , CAST('В 9735359' AS TVarChar)                                AS PlombaInvNumber
 
 
 

@@ -141,12 +141,21 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 60
           end
-          object clRetailName: TcxGridDBColumn
+          object clRetailName_main: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName_main'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object clRetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 100
           end
           object colBranchCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1092#1083'.'

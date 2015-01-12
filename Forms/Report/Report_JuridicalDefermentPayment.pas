@@ -75,6 +75,7 @@ type
     cxLabel4: TcxLabel;
     edJuridicalGroup: TcxButtonEdit;
     JuridicalGroupGuides: TdsdGuides;
+    clRetailName_main: TcxGridDBColumn;
   private
     { Private declarations }
   public

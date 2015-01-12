@@ -2,8 +2,8 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1080#1079' 1'#1057
   ClientHeight = 416
   ClientWidth = 958
-  ExplicitWidth = 966
-  ExplicitHeight = 443
+  ExplicitWidth = 974
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -37,6 +37,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -428,6 +429,9 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actRefresh
+        end
+        item
           Action = actBeforeMove
         end
         item
@@ -595,6 +599,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -602,6 +607,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       end
       item
         Name = 'inInvNumber'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'InvNumber'
         DataType = ftString
@@ -609,6 +615,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       end
       item
         Name = 'inClientCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ClientCode'
         ParamType = ptInput
@@ -620,6 +627,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 320
     Top = 264
   end
@@ -649,6 +657,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 288
     Top = 112
   end
@@ -723,6 +732,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 192
     Top = 120
   end
@@ -752,6 +762,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 336
     Top = 216
   end
@@ -781,6 +792,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 264
     Top = 216
   end
