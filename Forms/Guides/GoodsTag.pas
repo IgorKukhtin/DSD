@@ -44,6 +44,7 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actInsert: TdsdInsertUpdateAction;
+    clGoodsGroupAnalystName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_GoodsTag()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsTag(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsTag(Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsTag(
- INOUT ioId             Integer   ,     -- ключ объекта <Признак товара> 
-    IN inCode           Integer   ,     -- Код объекта  
-    IN inName           TVarChar  ,     -- Название объекта 
-    IN inSession        TVarChar        -- сессия пользователя
+ INOUT ioId                  Integer   ,     -- ключ объекта <Признак товара> 
+    IN inCode                Integer   ,     -- Код объекта  
+    IN inName                TVarChar  ,     -- Название объекта 
+    IN inGoodsGroupAnalystId Integer   ,     -- ссылка на группу Товаров (аналитика) 
+    IN inSession             TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -32,18 +34,22 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsTag(), vbCode_calc, inName);
    
+      -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsTag_GoodsGroupAnalyst(), ioId, inGoodsGroupAnalystId); 
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsTag (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_GoodsTag (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.01.15         * add GoodsGroupAnalyst
  15.09.14         *
 */
 
