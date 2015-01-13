@@ -447,8 +447,8 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TTransferDebtOutForm'
-      FormNameParam.Value = 'TTransferDebtOutForm'
+      FormName = 'TTransferDebtOut_OrderForm'
+      FormNameParam.Value = 'TTransferDebtOut_OrderForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTransferDebtOutForm'

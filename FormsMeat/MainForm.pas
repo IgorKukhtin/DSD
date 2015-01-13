@@ -456,6 +456,8 @@ type
     bbContractTagGroup: TdxBarButton;
     actContractTag: TdsdOpenForm;
     bbContractTag: TdxBarButton;
+    actTransferDebtOut_Order: TdsdOpenForm;
+    bbTransferDebtOut_Order: TdxBarButton;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
