@@ -109,7 +109,8 @@ type
     bbUnCompleteTaxCorrective: TdxBarButton;
     bbSetErasedTaxCorrective: TdxBarButton;
     cxLabel17: TcxLabel;
-    edInvNumberOrder: TcxTextEdit;
+    edInvNumberOrder: TcxButtonEdit;
+    GuidesInvNumberOrder: TdsdGuides;
   private
     { Private declarations }
   public
