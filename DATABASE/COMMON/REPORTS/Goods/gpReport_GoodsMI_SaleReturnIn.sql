@@ -133,21 +133,21 @@ BEGIN
     END IF;
 
     -- Ограничения
-    CREATE TEMP TABLE _tmpPartner (PartnerId Integer/*, JuridicalId Integer, AreaId Integer*/) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpPartner (PartnerId Integer, JuridicalId Integer/*, AreaId Integer*/) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer/*, RetailId Integer, JuridicalGroupId Integer, OKPO TVarChar*/) ON COMMIT DROP;
     IF inAreaId <> 0
     THEN
         -- устанавливается признак
         vbIsPartner:= TRUE;
         -- заполнение по Контрагенту
-        INSERT INTO _tmpPartner (PartnerId/*, JuridicalId, AreaId*/)
+        INSERT INTO _tmpPartner (PartnerId, JuridicalId/*, AreaId*/)
            SELECT ObjectLink_Partner_Area.ObjectId
-                -- , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, 0)
+                , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, 0)
                 -- , COALESCE (ObjectLink_Partner_Area.ChildObjectId, 0)
            FROM ObjectLink AS ObjectLink_Partner_Area
-                /*LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                      ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_Area.ObjectId
-                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()*/
+                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
            WHERE ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
              AND ObjectLink_Partner_Area.ChildObjectId = inAreaId
        ;

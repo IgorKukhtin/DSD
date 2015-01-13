@@ -180,10 +180,10 @@ BEGIN
            , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
 
-           , CASE WHEN vbDiscountPercent <> 0 AND 1 = 0 THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT
-           , CASE WHEN vbDiscountPercent <> 0 AND 1 = 0 THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
-           , CASE WHEN vbDiscountPercent <> 0 AND 1 = 0 THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
-           , CASE WHEN vbDiscountPercent <> 0 AND 1 = 0 THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * MovementFloat_TotalSummMVAT.ValueData AS TotalSummMVAT
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData) AS SummVAT
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * MovementFloat_TotalSumm.ValueData AS TotalSumm
 
            , COALESCE (Object_Partner.ValueData, Object_From.ValueData) AS FromName
            , Object_To.ValueData               		AS ToName
@@ -385,7 +385,8 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
              -- сумма по ценам док-та
-           , CASE WHEN tmpMI.CountForPrice <> 0
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
+           * CASE WHEN tmpMI.CountForPrice <> 0
                        THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
                   ELSE CAST (tmpMI.AmountPartner * tmpMI.Price AS NUMERIC (16, 2))
              END AS AmountSumm

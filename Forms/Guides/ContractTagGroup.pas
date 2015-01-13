@@ -1,4 +1,4 @@
-unit ContractTag;
+unit ContractTagGroup;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TContractTagForm = class(TParentForm)
+  TContractTagGroupForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -56,7 +56,6 @@ type
     actInsert: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    clContractTagGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -68,6 +67,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractTagForm);
+  RegisterClass(TContractTagGroupForm);
 
 end.
