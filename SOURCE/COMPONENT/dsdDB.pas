@@ -200,8 +200,12 @@ begin
      end;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
+     DataSets[0].DataSet.DisableControls;
      if DataSets[0].DataSet is TClientDataSet then
         TClientDataSet(DataSets[0].DataSet).XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+    // TClientDataSet(DataSets[0].DataSet).SaveToFile('c:\data.hhh', dfBinary);
+    // TClientDataSet(DataSets[0].DataSet).SaveToFile('c:\data.xml');
+     DataSets[0].DataSet.EnableControls;
      if DataSets[0].DataSet is TkbmMemTable then begin
 
         StringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));

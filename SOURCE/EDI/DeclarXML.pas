@@ -85,6 +85,7 @@ type
     ['{C71FD00F-DC4D-4D88-B552-5595D3AF198F}']
     { Property Accessors }
     function Get_HORIG: UnicodeString;
+    function Get_HERPN: UnicodeString;
     function Get_HFILL: UnicodeString;
     function Get_HPODFILL: UnicodeString;
     function Get_HNUM: UnicodeString;
@@ -120,6 +121,7 @@ type
     function Get_RXXXXG3S: IXMLRXXXXTypeList;
     function Get_RXXXXG4: IXMLRXXXXTypeList;
     function Get_RXXXXG4S: IXMLRXXXXTypeList;
+    function Get_RXXXXG105_2S: IXMLRXXXXTypeList;
     function Get_RXXXXG5: IXMLRXXXXTypeList;
     function Get_RXXXXG6: IXMLRXXXXTypeList;
     function Get_RXXXXG7: IXMLRXXXXTypeList;
@@ -134,6 +136,7 @@ type
     function Get_R04G7: UnicodeString;
     function Get_R04G11: UnicodeString;
     procedure Set_HORIG(Value: UnicodeString);
+    procedure Set_HERPN(Value: UnicodeString);
     procedure Set_HFILL(Value: UnicodeString);
     procedure Set_HPODFILL(Value: UnicodeString);
     procedure Set_HNUM(Value: UnicodeString);
@@ -171,6 +174,7 @@ type
     procedure Set_R04G11(Value: UnicodeString);
     { Methods & Properties }
     property HORIG: UnicodeString read Get_HORIG write Set_HORIG;
+    property HERPN: UnicodeString read Get_HERPN write Set_HERPN;
     property HFILL: UnicodeString read Get_HFILL write Set_HFILL;
     property HPODFILL: UnicodeString read Get_HPODFILL write Set_HPODFILL;
     property HNUM: UnicodeString read Get_HNUM write Set_HNUM;
@@ -206,6 +210,7 @@ type
     property RXXXXG3S: IXMLRXXXXTypeList read Get_RXXXXG3S;
     property RXXXXG4: IXMLRXXXXTypeList read Get_RXXXXG4;
     property RXXXXG4S: IXMLRXXXXTypeList read Get_RXXXXG4S;
+    property RXXXXG105_2S: IXMLRXXXXTypeList read Get_RXXXXG105_2S;
     property RXXXXG5: IXMLRXXXXTypeList read Get_RXXXXG5;
     property RXXXXG6: IXMLRXXXXTypeList read Get_RXXXXG6;
     property RXXXXG7: IXMLRXXXXTypeList read Get_RXXXXG7;
@@ -312,6 +317,7 @@ type
     FRXXXXG3: IXMLRXXXXTypeList;
     FRXXXXG3S: IXMLRXXXXTypeList;
     FRXXXXG4: IXMLRXXXXTypeList;
+    FRXXXXG105_2S: IXMLRXXXXTypeList;
     FRXXXXG4S: IXMLRXXXXTypeList;
     FRXXXXG5: IXMLRXXXXTypeList;
     FRXXXXG6: IXMLRXXXXTypeList;
@@ -321,6 +327,7 @@ type
   protected
     { IXMLDECLARBODYType }
     function Get_HORIG: UnicodeString;
+    function Get_HERPN: UnicodeString;
     function Get_HFILL: UnicodeString;
     function Get_HPODFILL: UnicodeString;
     function Get_HNUM: UnicodeString;
@@ -356,6 +363,7 @@ type
     function Get_RXXXXG3S: IXMLRXXXXTypeList;
     function Get_RXXXXG4: IXMLRXXXXTypeList;
     function Get_RXXXXG4S: IXMLRXXXXTypeList;
+    function Get_RXXXXG105_2S: IXMLRXXXXTypeList;
     function Get_RXXXXG5: IXMLRXXXXTypeList;
     function Get_RXXXXG6: IXMLRXXXXTypeList;
     function Get_RXXXXG7: IXMLRXXXXTypeList;
@@ -370,6 +378,7 @@ type
     function Get_R04G7: UnicodeString;
     function Get_R04G11: UnicodeString;
     procedure Set_HORIG(Value: UnicodeString);
+    procedure Set_HERPN(Value: UnicodeString);
     procedure Set_HFILL(Value: UnicodeString);
     procedure Set_HPODFILL(Value: UnicodeString);
     procedure Set_HNUM(Value: UnicodeString);
@@ -640,6 +649,7 @@ begin
   RegisterChildNode('RXXXXG3S', TXMLRXXXXType);
   RegisterChildNode('RXXXXG4', TXMLRXXXXType);
   RegisterChildNode('RXXXXG4S', TXMLRXXXXType);
+  RegisterChildNode('RXXXXG105_2S', TXMLRXXXXType);
   RegisterChildNode('RXXXXG5', TXMLRXXXXType);
   RegisterChildNode('RXXXXG6', TXMLRXXXXType);
   RegisterChildNode('RXXXXG7', TXMLRXXXXType);
@@ -655,6 +665,7 @@ begin
   FRXXXXG3S := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG3S') as IXMLRXXXXTypeList;
   FRXXXXG4 := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG4') as IXMLRXXXXTypeList;
   FRXXXXG4S := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG4S') as IXMLRXXXXTypeList;
+  FRXXXXG105_2S := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG105_2S') as IXMLRXXXXTypeList;
   FRXXXXG5 := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG5') as IXMLRXXXXTypeList;
   FRXXXXG6 := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG6') as IXMLRXXXXTypeList;
   FRXXXXG7 := CreateCollection(TXMLRXXXXTypeList, IXMLRXXXXType, 'RXXXXG7') as IXMLRXXXXTypeList;
@@ -903,6 +914,11 @@ begin
   Result := ChildNodes['H10G2S'].Text;
 end;
 
+function TXMLDECLARBODYType.Get_HERPN: UnicodeString;
+begin
+  Result := ChildNodes['HERPN'].Text;
+end;
+
 procedure TXMLDECLARBODYType.Set_H02G1S(Value: UnicodeString);
 begin
   ChildNodes['H02G1S'].NodeValue := Value;
@@ -938,6 +954,11 @@ begin
   ChildNodes['H10G1S'].NodeValue := Value;
 end;
 
+function TXMLDECLARBODYType.Get_RXXXXG105_2S: IXMLRXXXXTypeList;
+begin
+  Result := FRXXXXG105_2S;
+end;
+
 function TXMLDECLARBODYType.Get_RXXXXG1D: IXMLRXXXXTypeList;
 begin
   Result := FRXXXXG1D;
@@ -946,6 +967,11 @@ end;
 procedure TXMLDECLARBODYType.Set_H10G2S(Value: UnicodeString);
 begin
   ChildNodes['H10G2S'].NodeValue := Value;
+end;
+
+procedure TXMLDECLARBODYType.Set_HERPN(Value: UnicodeString);
+begin
+  ChildNodes['HERPN'].NodeValue := Value;
 end;
 
 function TXMLDECLARBODYType.Get_RXXXXG2D: IXMLRXXXXTypeList;
