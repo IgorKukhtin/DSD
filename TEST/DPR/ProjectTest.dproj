@@ -1814,6 +1814,14 @@
 				<Form>ContractTagGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtOut_Order.pas">
+				<Form>TransferDebtOut_OrderForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtOut_OrderJournal.pas">
+				<Form>TransferDebtOut_OrderJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
