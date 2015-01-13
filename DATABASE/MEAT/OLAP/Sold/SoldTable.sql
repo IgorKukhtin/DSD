@@ -83,10 +83,10 @@ CREATE TABLE SoldTable
  , SendDebt_Summ          TFloat
  , Money_SendDebt_Summ    TFloat
 
- , SaleBonus             TFloat
- , Sale_Profit           TFloat
- , SaleReturn_Profit     TFloat
- , SaleBonusProfit       TFloat
+ , Sale_Profit            TFloat
+ , SaleBonus_Profit       TFloat
+ , SaleReturn_Profit      TFloat
+ , SaleReturnBonus_Profit TFloat
 )
 WITH (
   OIDS=FALSE
