@@ -608,7 +608,9 @@ uses
   ReceiptCostEdit in '..\..\Forms\Guides\ReceiptCostEdit.pas' {ReceiptCostEditForm: TParentForm},
   ReceiptKind in '..\..\Forms\Kind\ReceiptKind.pas' {ReceiptKindForm: TParentForm},
   ContractTagGroup in '..\..\Forms\Guides\ContractTagGroup.pas' {ContractTagGroupForm: TParentForm},
-  ContractTagGroupEdit in '..\..\Forms\Guides\ContractTagGroupEdit.pas' {ContractTagGroupEditForm: TParentForm};
+  ContractTagGroupEdit in '..\..\Forms\Guides\ContractTagGroupEdit.pas' {ContractTagGroupEditForm: TParentForm},
+  TransferDebtOut_Order in '..\..\Forms\Document\TransferDebtOut_Order.pas' {TransferDebtOut_OrderForm: TParentForm},
+  TransferDebtOut_OrderJournal in '..\..\Forms\Document\TransferDebtOut_OrderJournal.pas' {TransferDebtOut_OrderJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

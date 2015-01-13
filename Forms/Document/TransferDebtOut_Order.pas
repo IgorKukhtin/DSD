@@ -1,4 +1,4 @@
-unit TransferDebtOut;
+unit TransferDebtOut_Order;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImageComboBox;
 
 type
-  TTransferDebtOutForm = class(TAncestorDocumentForm)
+  TTransferDebtOut_OrderForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
     edFrom: TcxButtonEdit;
     edTo: TcxButtonEdit;
@@ -122,6 +122,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TTransferDebtOutForm);
+  RegisterClass(TTransferDebtOut_OrderForm);
 
 end.

@@ -820,6 +820,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtOutJournalForm');
+  //по заявке
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtOut_OrderForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransferDebtOut_OrderForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtOut_OrderJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransferDebtOut_OrderJournalForm');
 end;
 
 procedure TLoadFormTest.LoadTransferDebtInFormTest;

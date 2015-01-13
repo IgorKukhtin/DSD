@@ -798,6 +798,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbTransferDebtOut_Order'
+        end
+        item
+          Visible = True
           ItemName = 'bbTaxDocuments_Separator'
         end
         item
@@ -2087,6 +2091,10 @@
     end
     object bbContractTag: TdxBarButton
       Action = actContractTag
+      Category = 0
+    end
+    object bbTransferDebtOut_Order: TdxBarButton
+      Action = actTransferDebtOut_Order
       Category = 0
     end
   end
@@ -4594,6 +4602,17 @@
       Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')'
       OnExecute = actReport_OLAPSoldExecute
+    end
+    object actTransferDebtOut_Order: TdsdOpenForm
+      Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076', '#1087#1086' '#1079#1072#1103#1074#1082#1077')'
+      FormName = 'TTransferDebtOut_OrderJournalForm'
+      FormNameParam.Name = 'TTransferDebtOutJournalForm'
+      FormNameParam.Value = 'TTransferDebtOut_OrderJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
     end
   end
   inherited cxLocalizer: TcxLocalizer
