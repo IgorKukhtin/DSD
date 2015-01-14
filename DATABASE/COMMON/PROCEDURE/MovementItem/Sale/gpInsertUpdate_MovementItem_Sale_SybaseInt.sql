@@ -27,6 +27,46 @@ $BODY$
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
+     IF                (EXISTS (SELECT ValueData FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Checked())
+                    OR EXISTS (SELECT MovementLinkMovement.MovementId
+                               FROM MovementLinkMovement
+                                    INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    INNER JOIN MovementBoolean AS MovementBoolean_Medoc
+                                                               ON MovementBoolean_Medoc.MovementId = MovementLinkMovement.MovementChildId
+                                                              AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()
+                                                              AND MovementBoolean_Medoc.ValueData = TRUE
+                               WHERE MovementLinkMovement.MovementId = inMovementId
+                                 AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
+                      )
+     THEN
+          IF ioId <> 0
+          THEN
+          -- сохранили <Элемент документа>
+          SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+                 INTO ioId, ioCountForPrice, outAmountSumm
+          FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+                                               , inMovementId         := inMovementId
+                                               , inGoodsId            := (SELECT ObjectId FROM MovementItem WHERE Id = ioId)
+                                               , inAmount             := inAmount
+                                               , inAmountPartner      := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountPartner()), 0)
+                                               , inAmountChangePercent:= inAmountChangePercent
+                                               , inChangePercentAmount:= inChangePercentAmount
+                                               , inPrice              := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_Price()), 0)
+                                               , ioCountForPrice      := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_CountForPrice()), 0)
+                                               , inHeadCount          := inHeadCount
+                                               , inBoxCount           := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_BoxCount()), 0)
+                                               , inPartionGoods       := inPartionGoods
+                                               , inGoodsKindId        := COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_GoodsKind()), 0)
+                                               , inAssetId            := inAssetId
+                                               , inBoxId              := COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_Box()), 0)
+                                               , inUserId             := vbUserId
+                                                ) AS tmp;
+          ELSE
+              RAISE EXCEPTION 'Ошибка. Налоговая в <Медке> или документ <Проверен>.';
+          END IF;
+
+     ELSE
      IF inIsOnlyUpdateInt = TRUE
      THEN
           -- сохранили <Элемент документа>
@@ -70,6 +110,7 @@ BEGIN
                                                , inBoxId              := COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_Box()), 0)
                                                , inUserId             := vbUserId
                                                 ) AS tmp;
+     END IF;
      END IF;
 
 END;

@@ -36,6 +36,55 @@ BEGIN
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
 
 
+     IF ioId <> 0 AND (EXISTS (SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked())
+                    OR EXISTS (SELECT MovementLinkMovement.MovementId
+                               FROM MovementLinkMovement
+                                    INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    INNER JOIN MovementBoolean AS MovementBoolean_Medoc
+                                                               ON MovementBoolean_Medoc.MovementId = MovementLinkMovement.MovementChildId
+                                                              AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()
+                                                              AND MovementBoolean_Medoc.ValueData = TRUE
+                               WHERE MovementLinkMovement.MovementId = ioId
+                                 AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
+                      )
+     THEN
+          -- сохранили <Документ>
+          SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
+                 INTO ioId, ioPriceListId, outPriceListName
+          FROM gpInsertUpdate_Movement_Sale (ioId               := ioId
+                                           , inInvNumber        := inInvNumber
+                                           , inInvNumberPartner := (SELECT ValueData FROM MovementString WHERE MovementId = ioId AND DescId = zc_MovementString_InvNumberPartner())
+                                           , inInvNumberOrder   := inInvNumberOrder
+                                           , inOperDate         := inOperDate
+                                           , inOperDatePartner  := (SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()) -- inOperDatePartner
+                                           , inChecked          := (SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked())
+                                           -- , inPriceWithVAT     := inPriceWithVAT
+                                           -- , inVATPercent       := inVATPercent
+                                           , inChangePercent    := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_ChangePercent())
+                                           , inFromId           := inFromId
+                                           , inToId             := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_To())
+                                           , inPaidKindId       := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_PaidKind())
+                                           , inContractId       := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_Contract())
+                                           , inRouteSortingId   := inRouteSortingId
+                                           , inCurrencyDocumentId  := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_CurrencyDocument())
+                                           , inCurrencyPartnerId   := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_CurrencyPartner())
+                                           , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
+                                                                        FROM MovementLinkMovement
+                                                                             JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                                             JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementLinkMovement.MovementChildId
+                                                                                                    AND MovementLinkObject.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                                        WHERE MovementLinkMovement.MovementId = ioId
+                                                                          AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
+                                           , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
+                                           , ioPriceListId      := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_PriceList())
+                                           , ioCurrencyPartnerValue := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_CurrencyPartnerValue())
+                                           , ioParPartnerValue      := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_ParPartnerValue())
+                                           , inSession          := inSession
+                                            ) AS tmp;
+
+     ELSE
      IF inIsOnlyUpdateInt = TRUE AND ioId <> 0
      THEN
           -- сохранили <Документ>
@@ -108,6 +157,7 @@ BEGIN
                                            , inSession          := inSession
                                             ) AS tmp;
 
+     END IF;
      END IF;
 
      -- сохранили свойство <Цена с НДС (да/нет)>

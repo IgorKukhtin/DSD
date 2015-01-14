@@ -213,7 +213,7 @@ BEGIN
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
 
-          IF vbMovementDescId_find = vbMovementDescId
+          IF vbMovementDescId_find <> vbMovementDescId
           THEN
                -- пометим записи на удаление ПОКА
                PERFORM gpSetErased_MovementItem (MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
@@ -381,6 +381,8 @@ BEGIN
 
           WHERE  Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
             AND ((Sale1C.VIDDOC = '4') OR (Sale1C.VIDDOC = '3')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+            AND COALESCE (ObjectLink_Partner1CLink_Partner.ChildObjectId, 0) <> zc_Enum_InfoMoney_40801() -- Внутренний оборот
+
                  GROUP BY Sale1C.InvNumber
                         , Sale1C.OperDate
                         , zfGetUnitFromUnitId (Sale1C.UnitId)
@@ -426,7 +428,7 @@ BEGIN
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
 
           -- пометим записи на удаление ПОКА
-          PERFORM gpSetErased_MovementItem(MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
+          -- PERFORM gpSetErased_MovementItem(MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
 
           -- открыли курсор
           OPEN curMovementItem FOR 

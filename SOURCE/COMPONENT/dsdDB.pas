@@ -143,7 +143,7 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
      kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit, EDI, ExternalSave, Medoc,
-     cxMemo;
+     cxMemo, dsdInternetAction;
 
 var
   DefaultStreamFormat: TkbmCSVStreamFormat;
@@ -869,6 +869,8 @@ begin
         (Component as TEDI).Directory := FValue;
      if Component is TMedocAction then
         (Component as TMedocAction).Directory := FValue;
+     if Component is TdsdSMTPFileAction then
+        (Component as TdsdSMTPFileAction).FileName := FValue;
      if Component is TExportGrid then begin
         if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
            (Component as TExportGrid).DefaultFileName := FValue;

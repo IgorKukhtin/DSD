@@ -297,8 +297,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Styles.Footer = nil
           Styles.Header = nil
           object colAreaName: TcxGridDBColumn
-            Caption = #1056#1077#1075#1080#1086#1085
+            Caption = #1056#1077#1075#1080#1086#1085' ('#1076#1086#1075#1086#1074#1086#1088')'
             DataBinding.FieldName = 'AreaName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -479,15 +480,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 60
           end
           object clPersonalName: TcxGridDBColumn
-            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
           object clPersonalTradeName: TcxGridDBColumn
-            Caption = #1058#1055' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            Caption = #1058#1055' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalTradeName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -496,7 +497,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 70
           end
           object clPersonalCollationName: TcxGridDBColumn
-            Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' '#1087#1086' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalCollationName'
             Visible = False
             HeaderAlignmentHorz = taCenter
