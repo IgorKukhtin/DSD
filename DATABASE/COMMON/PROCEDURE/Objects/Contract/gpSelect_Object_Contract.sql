@@ -32,7 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
              , PersonalCollationId Integer, PersonalCollationCode Integer, PersonalCollationName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
-             , ContractTagId Integer, ContractTagName TVarChar
+             , ContractTagId Integer, ContractTagName TVarChar, ContractTagGroupName TVarChar
                           
              , AreaContractId Integer, AreaContractName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
@@ -115,6 +115,7 @@ BEGIN
 
        , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
+       , Object_Contract_View.ContractTagGroupName
 
        , Object_AreaContract.Id             AS AreaContractId
        , Object_AreaContract.ValueData      AS AreaContractName

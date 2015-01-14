@@ -76,6 +76,7 @@ type
     edJuridicalGroup: TcxButtonEdit;
     JuridicalGroupGuides: TdsdGuides;
     clRetailName_main: TcxGridDBColumn;
+    clContractTagGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

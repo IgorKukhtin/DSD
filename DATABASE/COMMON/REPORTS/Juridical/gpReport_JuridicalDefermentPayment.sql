@@ -17,7 +17,7 @@ RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
-             , ContractTagName TVarChar, ContractStateKindCode Integer
+             , ContractTagGroupName TVarChar, ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
              , PersonalCollationName TVarChar
              , StartDate TDateTime, EndDate TDateTime
@@ -68,7 +68,7 @@ BEGIN
              , a.BranchId, a.BranchCode, a.BranchName
              , a.PaidKindId, a.PaidKindName
              , a.ContractId, a.ContractCode, a.ContractNumber
-             , a.ContractTagName TVarChar, a.ContractStateKindCode
+             , a.ContractTagGroupName, a.ContractTagName, a.ContractStateKindCode
              , a.PersonalName
              , a.PersonalCollationName
              , a.StartDate, a.EndDate
@@ -98,6 +98,7 @@ from (
    , View_Contract.ContractId
    , View_Contract.ContractCode
    , View_Contract.InvNumber AS ContractNumber
+   , View_Contract.ContractTagGroupName
    , View_Contract.ContractTagName
    , View_Contract.ContractStateKindCode
    , Object_Personal_View.PersonalName      AS PersonalName

@@ -101,6 +101,15 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 69
       end
+      object clContractTagGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractTagGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object clContractTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractTagName'

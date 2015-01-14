@@ -113,6 +113,7 @@ type
     CurrencyJournal: TdsdOpenForm;
     clRetailName: TcxGridDBColumn;
     clRetailReportName: TcxGridDBColumn;
+    clContractTagGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

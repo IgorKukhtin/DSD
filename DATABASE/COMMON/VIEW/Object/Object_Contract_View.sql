@@ -17,6 +17,10 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , Object_Contract_InvNumber_View.ContractStateKindCode
        , Object_Contract_InvNumber_View.ContractStateKindName
 
+       , Object_Contract_InvNumber_View.ContractTagGroupId
+       , Object_Contract_InvNumber_View.ContractTagGroupCode
+       , Object_Contract_InvNumber_View.ContractTagGroupName
+
        , Object_Contract_InvNumber_View.ContractTagId
        , Object_Contract_InvNumber_View.ContractTagCode
        , Object_Contract_InvNumber_View.ContractTagName

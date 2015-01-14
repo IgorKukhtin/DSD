@@ -130,6 +130,7 @@ type
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     colGLNCode: TcxGridDBColumn;
+    clContractTagGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

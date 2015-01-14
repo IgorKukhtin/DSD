@@ -27,7 +27,7 @@ $BODY$
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF                (EXISTS (SELECT ValueData FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Checked())
+     IF                (EXISTS (SELECT ValueData FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Checked() AND ValueData = TRUE)
                     OR EXISTS (SELECT MovementLinkMovement.MovementId
                                FROM MovementLinkMovement
                                     INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId

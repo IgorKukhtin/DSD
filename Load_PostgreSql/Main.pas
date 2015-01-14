@@ -172,6 +172,7 @@ type
     cbComplete_List: TCheckBox;
     cbBranchSendOnPrice: TCheckBox;
     UnitCodeSendOnPriceEdit: TEdit;
+    cbFillSoldTable: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -326,6 +327,8 @@ type
     procedure pLoadDocumentItem_Delete_Int(SaveCount:Integer);
     function pLoadDocument_Delete_Fl:Integer;
     procedure pLoadDocumentItem_Delete_Fl(SaveCount:Integer);
+
+    procedure pLoadFillSoldTable;
 
     // Guides :
     procedure pLoadGuide_Measure;
@@ -1253,6 +1256,20 @@ end;
 procedure TMainForm.FormShow(Sender: TObject);
 var StartDate:TDateTime;
 begin
+     if ParamStr(2)='autoFillSoldTable'
+     then begin
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-31)+') as RetV');
+               StartDate:=fromSqlQuery.FieldByName('RetV').AsDateTime;
+
+               StartDateEdit.Text:=DateToStr(StartDate);
+               EndDateEdit.Text:=DateToStr(Date-1);
+
+               cbFillSoldTable.Checked:=true;
+               //Загружаем
+               OKDocumentButtonClick(Self);
+     end;
+
+
      if ParamStr(2)='autoReturnIn'
      then begin
                StartDateEdit.Text:=DateToStr(Date-1);
@@ -1568,7 +1585,8 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_WeighingPartner;
      if not fStop then pLoadDocumentItem_WeighingPartner(myRecordCount1);
-
+     //
+     if not fStop then pLoadFillSoldTable;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -15867,9 +15885,22 @@ begin
              then if (FieldByName('BillNumberNalog').AsInteger=0)or(FieldByName('MoneyKindId').AsInteger<>FieldByName('zc_mkBN').AsInteger)
                   then
                       begin
-                           // удаляем
-                           toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-                           if not myExecToStoredProc_two then ;//exit;
+                           fOpenSqToQuery (' select case when MovementBoolean_Medoc.ValueData = TRUE or MovementBoolean.ValueData = TRUE'
+                                         +'              then '+IntToStr(zc_rvYes)+' else '+IntToStr(zc_rvNo)
+                                         +'         end as isMedoc'
+                                         +' from Movement'
+                                         +'      left join MovementLinkMovement as MovementLinkMovement_Tax on MovementLinkMovement_Tax.MovementId=Movement.Id and MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Master()'
+                                         +'      left join MovementBoolean on MovementBoolean.MovementId = Movement.Id AND MovementBoolean.DescId = zc_MovementBoolean_Checked()'
+                                         +'      left join Movement as Movement_Tax on Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId and Movement_Tax.StatusId <> zc_Enum_Status_Erased()'
+                                         +'      left join MovementBoolean AS MovementBoolean_Medoc on MovementBoolean_Medoc.MovementId = MovementLinkMovement_Tax.MovementChildId AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()'
+                                         +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
+
+                          if(toSqlQuery.FieldByName('isMedoc').AsInteger = zc_rvNo)
+                          then begin
+                                // удаляем
+                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                                if not myExecToStoredProc_two then ;//exit;
+                          end;
                       end
                   else
                       begin
@@ -16097,6 +16128,19 @@ begin
              //!!!     fExecSqToQuery ('select gpMovementItem_Tax_SetErased (MovementItem.Id, zfCalc_UserAdmin()) from MovementItem where MovementId = '+FieldByName('Id_Postgres').AsString);
              //!!!!!!!!!!!!!!!!!!
              //
+
+                           fOpenSqToQuery (' select case when MovementBoolean_Medoc.ValueData = TRUE or MovementBoolean.ValueData = TRUE'
+                                         +'              then '+IntToStr(zc_rvYes)+' else '+IntToStr(zc_rvNo)
+                                         +'         end as isMedoc'
+                                         +' from Movement'
+                                         +'      left join MovementLinkMovement as MovementLinkMovement_Tax on MovementLinkMovement_Tax.MovementChildId = Movement.Id and MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Master()'
+                                         +'      left join MovementBoolean on MovementBoolean.MovementId = MovementLinkMovement_Tax.MovementId AND MovementBoolean.DescId = zc_MovementBoolean_Checked()'
+                                         +'      left join MovementBoolean AS MovementBoolean_Medoc on MovementBoolean_Medoc.MovementId = Movement.Id AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()'
+                                         +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
+
+                          if(toSqlQuery.FieldByName('isMedoc').AsInteger = zc_rvNo) or (FieldByName('Id_Postgres').AsInteger=0)
+                          then begin
+
              //Номер филиала не должен измениться
                   fOpenSqToQuery (' select ValueData as InvNumberBranch'
                                  +' from MovementString'
@@ -16149,6 +16193,8 @@ begin
              if (FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Bill set NalogId_PG=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
              //
+
+                          end;
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -17618,16 +17664,24 @@ begin
                            +'             )or MovementLinkMovement.MovementChildId is not null'
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
+                           +'       , case when MovementBoolean_Medoc.ValueData = TRUE or MovementBoolean.ValueData = TRUE'
+                           +'              then '+IntToStr(zc_rvYes)+' else '+IntToStr(zc_rvNo)
+                           +'         end as isMedoc'
                            +' from Movement'
                            +'      left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
                            +'      left join MovementDate AS MD on MD.MovementId = Movement.Id and MD.DescId = zc_MovementDate_OperDatePartner()'
                            +'      left join MovementLinkMovement on MovementLinkMovement.MovementId=Movement.Id and MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())'
+                           +'      left join MovementLinkMovement as MovementLinkMovement_Tax on MovementLinkMovement_Tax.MovementId=Movement.Id and MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Master()'
+                           +'      left join MovementBoolean on MovementBoolean.MovementId = Movement.Id AND MovementBoolean.DescId = zc_MovementBoolean_Checked()'
+                           +'      left join Movement as Movement_Tax on Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId and Movement_Tax.StatusId <> zc_Enum_Status_Erased()'
+                           +'      left join MovementBoolean AS MovementBoolean_Medoc on MovementBoolean_Medoc.MovementId = MovementLinkMovement_Tax.MovementChildId AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()'
                            +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
 
 // if FieldByName('Id_Postgres').AsString = '259257' then showMessage('');
              //
              if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
               and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
+              and(toSqlQuery.FieldByName('isMedoc').AsInteger = zc_rvNo)
              then begin
                   if toSqlQuery.FieldByName('isDelete').AsInteger = zc_rvNo
                   then begin
@@ -17725,13 +17779,15 @@ begin
              // gc_isDebugMode:=true;
              //
              if cbOnlyUpdateInt.Checked then addSklad:= ' and MLO.ObjectId=8459 ' else addSklad:= ' and 1=0 ';// Склад Реализации
-             
+
              fOpenSqToQuery (' select Movement.Id as MovementId'
                            +'       , Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
                            +'       , case when (Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
                            +addSklad // Склад Реализации
                            +'             )or MovementLinkMovement.MovementChildId is not null'
+                           +'              or MovementBoolean_Medoc.ValueData = TRUE'
+                           +'              or MovementBoolean.ValueData = TRUE'
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from MovementItem'
@@ -17739,6 +17795,10 @@ begin
                            +'      left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
                            +'      left join MovementDate AS MD on MD.MovementId = Movement.Id and MD.DescId = zc_MovementDate_OperDatePartner()'
                            +'      left join MovementLinkMovement on MovementLinkMovement.MovementId=MovementItem.MovementId and MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())'
+                           +'      left join MovementLinkMovement as MovementLinkMovement_Tax on MovementLinkMovement_Tax.MovementId=Movement.Id and MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Master()'
+                           +'      left join MovementBoolean on MovementBoolean.MovementId = Movement.Id AND MovementBoolean.DescId = zc_MovementBoolean_Checked()'
+                           +'      left join Movement as Movement_Tax on Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId and Movement_Tax.StatusId <> zc_Enum_Status_Erased()'
+                           +'      left join MovementBoolean AS MovementBoolean_Medoc on MovementBoolean_Medoc.MovementId = MovementLinkMovement_Tax.MovementChildId AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()'
                            +' where MovementItem.Id='+FieldByName('Id_Postgres').AsString);
 
 
@@ -18011,6 +18071,13 @@ begin
      end;
      //
      myDisabledCB(cbLossGuide);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadFillSoldTable;
+begin
+     if (not cbFillSoldTable.Checked)or(not cbFillSoldTable.Enabled) then exit;
+     //
+     fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(StartDateEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateEdit.Text)+',zfCalc_UserAdmin())')
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost:Boolean);

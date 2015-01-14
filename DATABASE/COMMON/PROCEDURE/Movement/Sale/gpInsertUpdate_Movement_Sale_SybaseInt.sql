@@ -36,7 +36,7 @@ BEGIN
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
 
 
-     IF ioId <> 0 AND (EXISTS (SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked())
+     IF ioId <> 0 AND (EXISTS (SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked() AND ValueData = TRUE)
                     OR EXISTS (SELECT MovementLinkMovement.MovementId
                                FROM MovementLinkMovement
                                     INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
