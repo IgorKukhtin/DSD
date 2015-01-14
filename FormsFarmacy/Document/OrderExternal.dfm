@@ -2,7 +2,6 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 668
   ClientWidth = 846
-  ExplicitLeft = -64
   ExplicitWidth = 854
   ExplicitHeight = 695
   PixelsPerInch = 96
@@ -274,11 +273,24 @@ inherited OrderExternalForm: TOrderExternalForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
+    object actExportStoredproc: TdsdExecStoredProc [0]
+      Category = 'SendEMail'
+      MoveParams = <>
+      StoredProc = spGetExportParam
+      StoredProcList = <
+        item
+          StoredProc = spGetExportParam
+        end
+        item
+          StoredProc = spSelectExport
+        end>
+      Caption = 'actExportStoredproc'
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actExportToPartner: TExportGrid [2]
-      Category = 'Export'
+    object actExportToPartner: TExportGrid [3]
+      Category = 'SendEMail'
       TabSheet = tsMain
       MoveParams = <>
       ColumnNameDataSet = PrintHeaderCDS
@@ -331,7 +343,7 @@ inherited OrderExternalForm: TOrderExternalForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -377,7 +389,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       Caption = 'actGetDocumentDataForEmail'
     end
-    object SMTPGridAction: TdsdSMTPGridAction
+    object SMTPFileAction: TdsdSMTPFileAction
       Category = 'SendEMail'
       MoveParams = <>
       Host.Value = Null
@@ -404,27 +416,9 @@ inherited OrderExternalForm: TOrderExternalForm
       ToAddress.Value = Null
       ToAddress.Component = FormParams
       ToAddress.ComponentItem = 'AddressTo'
-      cxGrid = cxGrid
     end
     object mactSMTPSend: TMultiAction
       Category = 'SendEMail'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetDocumentDataForEmail
-        end
-        item
-          Action = SMTPGridAction
-        end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1083#1099#1082#1077' E-mail?'
-      InfoAfterExecute = 'E-mail '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
-      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
-      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
-      ImageIndex = 53
-      ShortCut = 16467
-    end
-    object mactExportToPartner: TMultiAction
-      Category = 'Export'
       MoveParams = <>
       ActionList = <
         item
@@ -432,23 +426,19 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Action = actExportToPartner
-        end>
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
-      ImageIndex = 27
-    end
-    object actExportStoredproc: TdsdExecStoredProc
-      Category = 'Export'
-      MoveParams = <>
-      StoredProc = spGetExportParam
-      StoredProcList = <
-        item
-          StoredProc = spGetExportParam
         end
         item
-          StoredProc = spSelectExport
+          Action = actGetDocumentDataForEmail
+        end
+        item
+          Action = SMTPFileAction
         end>
-      Caption = 'actExportStoredproc'
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1083#1099#1082#1077' E-mail?'
+      InfoAfterExecute = 'E-mail '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      ImageIndex = 53
+      ShortCut = 16467
     end
   end
   inherited MasterDS: TDataSource
@@ -578,10 +568,6 @@ inherited OrderExternalForm: TOrderExternalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportToExcel'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -621,17 +607,6 @@ inherited OrderExternalForm: TOrderExternalForm
     object bbSendEMail: TdxBarButton
       Action = mactSMTPSend
       Category = 0
-    end
-    object bbExportToExcel: TdxBarButton
-      Action = mactExportToPartner
-      Category = 0
-    end
-    object bbExportToText: TdxBarButton
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1058#1077#1082#1089#1090
-      Category = 0
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1058#1077#1082#1089#1090
-      Visible = ivAlways
-      ImageIndex = 42
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1241,6 +1216,11 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = actExportToPartner
         ComponentItem = 'ExportType'
+      end
+      item
+        Name = 'DefaultFileName'
+        Value = Null
+        Component = SMTPFileAction
       end>
     PackSize = 1
     Left = 608

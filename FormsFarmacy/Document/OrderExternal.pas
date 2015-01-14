@@ -46,7 +46,6 @@ type
     ContractGuides: TdsdGuides;
     colPrice: TcxGridDBColumn;
     colPartionGoodsDate: TcxGridDBColumn;
-    SMTPGridAction: TdsdSMTPGridAction;
     actGetDocumentDataForEmail: TdsdExecStoredProc;
     spGetDocumentDataForEmail: TdsdStoredProc;
     mactSMTPSend: TMultiAction;
@@ -56,11 +55,9 @@ type
     cxGridExport: TcxGrid;
     spSelectExport: TdsdStoredProc;
     ExportDS: TDataSource;
-    mactExportToPartner: TMultiAction;
     actExportStoredproc: TdsdExecStoredProc;
-    bbExportToExcel: TdxBarButton;
-    bbExportToText: TdxBarButton;
     spGetExportParam: TdsdStoredProc;
+    actExportToPartner: TExportGrid;
   private
     { Private declarations }
   public

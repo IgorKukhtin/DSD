@@ -30,6 +30,7 @@ BEGIN
        SELECT
          ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, ''))::TVarChar
         , 5;
+       RETURN;
    END IF;
 
    IF vbJuridicalId = 59610 THEN --БАДМ
@@ -38,7 +39,14 @@ BEGIN
        SELECT
          ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, ''))::TVarChar
         , 5;
+       RETURN;
    END IF;
+
+   RETURN QUERY
+   SELECT
+      ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, ''))::TVarChar
+    , 3;
+
 
 END;
 $BODY$

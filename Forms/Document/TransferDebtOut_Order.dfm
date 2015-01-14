@@ -1,26 +1,26 @@
 inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076', '#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
-  ClientHeight = 668
+  ClientHeight = 687
   ClientWidth = 1268
   ExplicitWidth = 1276
-  ExplicitHeight = 702
+  ExplicitHeight = 721
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 131
     Width = 1268
-    Height = 537
+    Height = 556
     ExplicitTop = 131
     ExplicitWidth = 1268
     ExplicitHeight = 537
-    ClientRectBottom = 537
+    ClientRectBottom = 556
     ClientRectRight = 1268
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1268
       ExplicitHeight = 513
       inherited cxGrid: TcxGrid
         Width = 1268
-        Height = 513
+        Height = 532
         ExplicitWidth = 1268
         ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -151,13 +151,15 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077
       ImageIndex = 2
+      ExplicitHeight = 513
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
         Width = 1268
-        Height = 513
+        Height = 532
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 513
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxDS
@@ -721,10 +723,10 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
     Top = 63
     Properties.Buttons = <
       item
-        Action = actDisabled
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 99
   end
@@ -1651,7 +1653,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_TransferDebtOut'
+    StoredProcName = 'gpInsertUpdate_Movement_TransferDebtOut_Order'
     Params = <
       item
         Name = 'ioId'
@@ -2653,6 +2655,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberOrder
+    Key = '0'
     FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormName = 'TOrderExternalJournalChoiceForm'
@@ -2814,7 +2817,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 212
-    Top = 48
+    Left = 204
+    Top = 56
   end
 end

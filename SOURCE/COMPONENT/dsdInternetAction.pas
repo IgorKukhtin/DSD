@@ -48,13 +48,22 @@ type
     property cxGrid: TcxGrid read FcxGrid write FcxGrid;
   end;
 
+  TdsdSMTPFileAction = class(TdsdSMTPAction)
+  private
+    FFileName: string;
+  protected
+    procedure FillAttachments; override;
+  published
+    property FileName: String read FFileName write FFileName;
+  end;
+
   procedure Register;
 
 implementation
 
 uses SysUtils, IdMessage, IdText, IdAttachmentFile, IdSMTP, cxGridExportLink,
      VCL.ActnList, cxControls, IdExplicitTLSClientServerBase, IdSSLOpenSSL,
-     IdGlobal, StrUtils;
+     IdGlobal, StrUtils, IOUtils, Types;
 
 { TdsdSMTPAction }
 
@@ -62,6 +71,7 @@ procedure Register;
 begin
   RegisterActions('DSDLib', [TdsdSMTPAction], TdsdSMTPAction);
   RegisterActions('DSDLib', [TdsdSMTPGridAction], TdsdSMTPGridAction);
+  RegisterActions('DSDLib', [TdsdSMTPFileAction], TdsdSMTPFileAction);
 end;
 
 type
@@ -142,7 +152,7 @@ begin
          Stream := TFileStream.Create(Attachments[i], fmOpenReadWrite);
          try
             with TIdAttachmentFile.Create(EMsg.MessageParts) do begin
-                 FileName := Subject + '.xls';
+                 FileName := ExtractFileName(Attachments[i]);
                  LoadFromStream(Stream);
             end;
          finally
@@ -239,5 +249,27 @@ begin
        DeleteFile(FFileName);
   end;
 end;
+
+{ TdsdSMTPFileAction }
+
+procedure TdsdSMTPFileAction.FillAttachments;
+var Files: TStringDynArray;
+begin
+  inherited;
+  if not FileExists(FFileName) then begin
+     Files := TDirectory.GetFiles(GetCurrentDir, FFileName + '.*');
+     if High(Files) >= 0 then
+        FileName := Files[0];
+  end;
+
+  SetLength(FAttachments, 1);
+  FAttachments[0] := FFileName;
+end;
+
+initialization
+  RegisterClass(TdsdSMTPAction);
+  RegisterClass(TdsdSMTPGridAction);
+  RegisterClass(TdsdSMTPFileAction);
+
 
 end.

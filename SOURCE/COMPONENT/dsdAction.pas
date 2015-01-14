@@ -510,6 +510,7 @@ type
     FExportType: TcxExport;
     FDefaultFileName: string;
     FColumnNameDataSet: TDataSet;
+    FOpenAfterCreate: boolean;
     procedure SetGrid(const Value: TcxControl);
   protected
     procedure Notification(AComponent: TComponent;
@@ -525,6 +526,7 @@ type
     property Hint;
     property ImageIndex;
     property ShortCut;
+    property OpenAfterCreate: boolean read FOpenAfterCreate write FOpenAfterCreate default true;
     property DefaultFileName: string read FDefaultFileName write FDefaultFileName;
   end;
 
@@ -1290,6 +1292,7 @@ begin
   inherited;
   PostDataSetBeforeExecute := true;
   ExportType := cxegExportToExcel;
+  FOpenAfterCreate := true
 end;
 
 function TExportGrid.LocalExecute: Boolean;
@@ -1360,8 +1363,9 @@ begin
        cxegExportToXlsx:  cxExportPivotGridToExcel(FileName, TcxCustomPivotGrid(FGrid), IsCtrlPressed);
      end;
   end;
-  ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil,
-    SW_SHOWNORMAL);
+  if OpenAfterCreate then
+     ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil,
+       SW_SHOWNORMAL);
 end;
 
 procedure TExportGrid.Notification(AComponent: TComponent;

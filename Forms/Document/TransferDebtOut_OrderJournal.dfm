@@ -411,7 +411,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
             DataBinding.FieldName = 'Checked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 36
+            Width = 39
           end
         end
       end
@@ -451,8 +451,8 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
       FormNameParam.Value = 'TTransferDebtOut_OrderForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TTransferDebtOutForm'
-      FormNameParam.Value = 'TTransferDebtOutForm'
+      FormName = 'TTransferDebtOut_OrderForm'
+      FormNameParam.Value = 'TTransferDebtOut_OrderForm'
     end
     object actChecked: TdsdExecStoredProc [6]
       Category = 'DSDLib'
