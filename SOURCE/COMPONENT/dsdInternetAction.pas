@@ -48,6 +48,15 @@ type
     property cxGrid: TcxGrid read FcxGrid write FcxGrid;
   end;
 
+  TdsdSMTPFileAction = class(TdsdSMTPAction)
+  private
+    FFileName: string;
+  protected
+    procedure FillAttachments; override;
+  published
+    property FileName: String read FFileName write FFileName;
+  end;
+
   procedure Register;
 
 implementation
@@ -62,6 +71,7 @@ procedure Register;
 begin
   RegisterActions('DSDLib', [TdsdSMTPAction], TdsdSMTPAction);
   RegisterActions('DSDLib', [TdsdSMTPGridAction], TdsdSMTPGridAction);
+  RegisterActions('DSDLib', [TdsdSMTPFileAction], TdsdSMTPFileAction);
 end;
 
 type
@@ -239,5 +249,20 @@ begin
        DeleteFile(FFileName);
   end;
 end;
+
+{ TdsdSMTPFileAction }
+
+procedure TdsdSMTPFileAction.FillAttachments;
+begin
+  inherited;
+  SetLength(FAttachments, 1);
+  FAttachments[0] := FFileName;
+end;
+
+initialization
+  RegisterClass(TdsdSMTPAction);
+  RegisterClass(TdsdSMTPGridAction);
+  RegisterClass(TdsdSMTPFileAction);
+
 
 end.
