@@ -120,6 +120,7 @@ begin
   LoadReportFromFile('PrintMovement_Tax0115', ReportPath + '\Товарный Учет\PrintMovement_Tax0115.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective1214', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective1214.fr3');
+  LoadReportFromFile('PrintMovement_TaxCorrective0115', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective0115.fr3');
   LoadReportFromFile('PrintMovement_Bill', ReportPath + '\Товарный Учет\PrintMovement_Bill.fr3');
   LoadReportFromFile('PrintMovement_Bill01074874', ReportPath + '\Товарный Учет\PrintMovement_Bill01074874.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrectiveReestr', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrectiveReestr.fr3');

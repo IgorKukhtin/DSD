@@ -26,10 +26,12 @@ $BODY$
 
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent TFloat;
+    DECLARE vbNotNDSPayer_INN TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
-     vbUserId:= inSession;
+     vbUserId := inSession;
+     vbNotNDSPayer_INN := '100000000000';
 
      -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_Tax, 0) AS MovementId_Tax
@@ -114,7 +116,12 @@ BEGIN
            , CASE WHEN Movement.OperDate < '01.01.2015' THEN 'J1201006' ELSE 'J1201007' END ::TVarChar AS CHARCODE
            , 'Неграш О.В.'::TVarChar                    AS N10
            , 'оплата з поточного рахунка'::TVarChar     AS N9
-           , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
+
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN ''
+             ELSE CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar)
+             END                                        AS InvNumberPartner
+
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
 
@@ -123,17 +130,25 @@ BEGIN
            , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS SummVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
 
-           , Object_From.ValueData             		AS FromName
-           , Object_To.ValueData               		AS ToName
+           , Object_From.ValueData             		    AS FromName
+           , Object_To.ValueData               		    AS ToName
 
-           , View_Contract.InvNumber         		AS ContractName
+           , View_Contract.InvNumber         		    AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
 
-           , OH_JuridicalDetails_To.FullName            AS JuridicalName_To
-           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
+           --, OH_JuridicalDetails_To.FullName            AS JuridicalName_To
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN 'НЕПЛАТНИК'
+             ELSE OH_JuridicalDetails_To.FullName END   AS JuridicalName_To
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN ''
+             ELSE OH_JuridicalDetails_To.JuridicalAddress END AS JuridicalAddress_To
+
+
+--           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
            , OH_JuridicalDetails_To.INN                 AS INN_To
            , OH_JuridicalDetails_To.NumberVAT           AS NumberVAT_To
@@ -141,7 +156,12 @@ BEGIN
            , OH_JuridicalDetails_To.BankAccount         AS BankAccount_To
            , OH_JuridicalDetails_To.BankName            AS BankName_To
            , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
-           , OH_JuridicalDetails_To.Phone               AS Phone_To
+--           , OH_JuridicalDetails_To.Phone               AS Phone_To
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN ''
+             ELSE OH_JuridicalDetails_To.Phone END      AS Phone_To
+
+
            , ObjectString_BuyerGLNCode.ValueData        AS BuyerGLNCode
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
@@ -159,12 +179,22 @@ BEGIN
            , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
            , MovementDate_OperDatePartnerEDI.ValueData     AS OperDatePartnerEDI
 
-           , CASE WHEN inisClientCopy=TRUE
+           , CASE WHEN inisClientCopy = TRUE
                   THEN 'X' ELSE '' END                  AS CopyForClient
-           , CASE WHEN inisClientCopy=TRUE
+           , CASE WHEN inisClientCopy = TRUE
                   THEN '' ELSE 'X' END                  AS CopyForUs
            , CASE WHEN (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN 'X' ELSE '' END                  AS ERPN
+
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN 'X' ELSE '' END                  AS NotNDSPayer
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN '0' ELSE '' END                  AS NotNDSPayerC1
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN '2' ELSE '' END                  AS NotNDSPayerC2
+
+
+
            , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
 
            , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) AS EDIId
@@ -520,6 +550,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.01.15                                                       *
  30.12.14                                                       * add MeasureCode
  23.07.14                                        * add tmpObject_GoodsPropertyValueGroup and ArticleGLN
  05.06.14                                        * restore ContractSigningDate
