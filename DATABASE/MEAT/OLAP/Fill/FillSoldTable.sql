@@ -1,9 +1,12 @@
 -- Function: gpSelect_Object_GoodsByGoodsKind1CLink (TVarChar)
 
 DROP FUNCTION IF EXISTS FillSoldTable (TVarChar);
+DROP FUNCTION IF EXISTS FillSoldTable (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION FillSoldTable(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inStartDate    TDateTime ,
+    IN inEndDate      TDateTime ,
+    IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS VOId
 -- RETURNS SETOF refcursor
@@ -11,7 +14,7 @@ AS
 $BODY$
 BEGIN
   --
-  DELETE FROM SoldTable;
+  DELETE FROM SoldTable WHERE OperDate BETWEEN inStartDate AND inEndDate;
 
 
   --
@@ -402,12 +405,13 @@ BEGIN
                 , SaleBonus_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(Bonus, 0)  -- Прибыль с учетом бонусов (только реализ)
                , SaleReturn_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(Return_Summ, 0)                      -- Прибыль с учетом !!!возврата!!!
           , SaleReturnBonus_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(Return_Summ, 0) - COALESCE(Bonus, 0) -- Прибыль с учетом !!!возврата!!! и бонусов
-  ;
+  WHERE OperDate BETWEEN inStartDate AND inEndDate;
+
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION FillSoldTable (TVarChar) OWNER TO postgres;
+ALTER FUNCTION FillSoldTable (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -419,4 +423,4 @@ ALTER FUNCTION FillSoldTable (TVarChar) OWNER TO postgres;
 */
 -- тест
 -- SELECT * FROM SoldTable
--- SELECT * FROM FillSoldTable (zfCalc_UserAdmin()) 
+-- SELECT * FROM FillSoldTable ('01.11.2014', '31.12.2014', zfCalc_UserAdmin()) 
