@@ -552,7 +552,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 13.01.15                                                       *
+ 14.01.15                                                       *
  30.12.14                                                       * add MeasureCode
  23.07.14                                        * add tmpObject_GoodsPropertyValueGroup and ArticleGLN
  05.06.14                                        * restore ContractSigningDate

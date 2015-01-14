@@ -18,13 +18,15 @@ $BODY$
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
 
+    DECLARE vbNotNDSPayer_INN TVarChar;
+
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
-
+     vbNotNDSPayer_INN := '100000000000';
 
      -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
@@ -47,7 +49,7 @@ BEGIN
      -- очень важная проверка
      IF COALESCE (vbMovementId_TaxCorrective, 0) = 0 OR COALESCE (vbStatusId_TaxCorrective, 0) <> zc_Enum_Status_Complete()
      THEN
-         IF COALESCE (vbMovementId_TaxCorrective, 0) = 0 
+         IF COALESCE (vbMovementId_TaxCorrective, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Документ <%> не создан.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective());
          END IF;
@@ -208,10 +210,22 @@ BEGIN
            , CASE WHEN (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN 'X' ELSE '' END                                      AS ERPN
 
-           , ObjectString_FromAddress.ValueData                             AS PartnerAddress_From
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN '' ELSE 'X' END                                      AS ERPN2
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN 'X' ELSE '' END                                      AS NotNDSPayer
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN '0' ELSE '' END                                      AS NotNDSPayerC1
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN '2' ELSE '' END                                      AS NotNDSPayerC2
 
-           , OH_JuridicalDetails_To.FullName                                AS JuridicalName_To
-           , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
+           , ObjectString_FromAddress.ValueData                             AS PartnerAddress_From
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN 'НЕПЛАТНИК'
+             ELSE OH_JuridicalDetails_To.FullName END                       AS JuridicalName_To
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN ''
+             ELSE OH_JuridicalDetails_To.JuridicalAddress END               AS JuridicalAddress_To
            , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
@@ -219,7 +233,9 @@ BEGIN
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
-           , OH_JuridicalDetails_To.Phone                                   AS Phone_To
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN ''
+             ELSE OH_JuridicalDetails_To.Phone END                          AS Phone_To
            , ObjectString_BuyerGLNCode.ValueData                            AS BuyerGLNCode
 
            , OH_JuridicalDetails_From.FullName                              AS JuridicalName_From
@@ -281,7 +297,7 @@ BEGIN
        FROM tmpMovement
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
-                                           ON MovementLinkMovement_ChildEDI.MovementId = tmpMovement.Id 
+                                           ON MovementLinkMovement_ChildEDI.MovementId = tmpMovement.Id
                                           AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
 
             LEFT JOIN MovementFloat AS MovementFloat_Amount
@@ -591,6 +607,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.01.15                                                       *
  16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
  09.07.14                                                       *
  27.06.14                                        * !!! print all !!!
