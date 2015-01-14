@@ -117,11 +117,13 @@ BEGIN
            -- , 'Неграш О.В.'::TVarChar                    AS N10
            , 'Рудик Н.В.'::TVarChar                    AS N10
            , 'оплата з поточного рахунка'::TVarChar     AS N9
-
+/*
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN ''
              ELSE CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar)
              END                                        AS InvNumberPartner
+*/
+           ,  CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
 
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
@@ -552,7 +554,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 13.01.15                                                       *
+ 14.01.15                                                       *
  30.12.14                                                       * add MeasureCode
  23.07.14                                        * add tmpObject_GoodsPropertyValueGroup and ArticleGLN
  05.06.14                                        * restore ContractSigningDate
