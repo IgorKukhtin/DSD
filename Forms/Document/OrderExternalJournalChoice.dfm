@@ -4,8 +4,8 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   ClientWidth = 1020
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitWidth = 1028
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -658,6 +658,19 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'ChangePercent'
           DataType = ftFloat
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
