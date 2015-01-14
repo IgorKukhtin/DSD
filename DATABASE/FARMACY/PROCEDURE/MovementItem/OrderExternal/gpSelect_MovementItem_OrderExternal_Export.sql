@@ -25,6 +25,9 @@ BEGIN
        FROM Movement_OrderExternal_View 
        WHERE Movement_OrderExternal_View.Id = inMovementId;
 
+
+
+
      IF vbJuridicalId = 59611 THEN --Оптима
 
 
@@ -60,6 +63,7 @@ BEGIN
        WHERE Movement.Id = inMovementId;
 
      RETURN NEXT Cursor2;
+     RETURN;
 
      END IF;
 
@@ -78,8 +82,24 @@ BEGIN
        WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = false;
 
      RETURN NEXT Cursor2;
-
+     RETURN;
    END IF;
+   -- Во всех других случаях
+     OPEN Cursor1 FOR
+       SELECT 'Code'::TVarChar AS FieldName, 'Код'::TVarChar AS DisplayName
+ UNION SELECT 'Amount'::TVarChar AS FieldName, 'Количество'::TVarChar AS DisplayName;
+                                          
+     RETURN NEXT Cursor1;
+
+     OPEN Cursor2 FOR
+       SELECT            
+             MovementItem.PartnerGoodsCode::TVarChar as Code
+           , MovementItem.Amount                     as Amount
+           
+        FROM MovementItem_OrderExternal_View AS MovementItem
+       WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = false;
+
+   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -89,6 +109,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal_Export (Integer, TVarChar) OW
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.01.15                         *
  25.12.14                         *
  12.12.14                         *
  06.11.14                         *
@@ -101,3 +122,4 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal_Export (Integer, TVarChar) OW
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- select * from gpSelect_MovementItem_OrderExternal_Export(inMovementId := 80 ,  inSession := '3');
+                     

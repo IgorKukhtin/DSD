@@ -198,10 +198,20 @@ AS
              zc_movement_TaxCorrective()
            , CAST ('TaxCorrective' AS TVarChar)
            , CAST ('01.12.2014' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('31.12.2014' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective1214' AS TVarChar)
+      UNION
+--коррект  c 01.01.2015
+      SELECT
+             zc_movement_TaxCorrective()
+           , CAST ('TaxCorrective' AS TVarChar)
+           , CAST ('01.01.2015' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TaxCorrective0115' AS TVarChar)
 
 
 /*

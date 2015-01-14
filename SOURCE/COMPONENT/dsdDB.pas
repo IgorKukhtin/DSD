@@ -143,7 +143,7 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
      kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit, EDI, ExternalSave, Medoc,
-     cxMemo;
+     cxMemo, dsdInternetAction;
 
 var
   DefaultStreamFormat: TkbmCSVStreamFormat;
@@ -200,8 +200,12 @@ begin
      end;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
+     DataSets[0].DataSet.DisableControls;
      if DataSets[0].DataSet is TClientDataSet then
         TClientDataSet(DataSets[0].DataSet).XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+    // TClientDataSet(DataSets[0].DataSet).SaveToFile('c:\data.hhh', dfBinary);
+    // TClientDataSet(DataSets[0].DataSet).SaveToFile('c:\data.xml');
+     DataSets[0].DataSet.EnableControls;
      if DataSets[0].DataSet is TkbmMemTable then begin
 
         StringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
@@ -865,6 +869,8 @@ begin
         (Component as TEDI).Directory := FValue;
      if Component is TMedocAction then
         (Component as TMedocAction).Directory := FValue;
+     if Component is TdsdSMTPFileAction then
+        (Component as TdsdSMTPFileAction).FileName := FValue;
      if Component is TExportGrid then begin
         if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
            (Component as TExportGrid).DefaultFileName := FValue;

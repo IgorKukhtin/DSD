@@ -40,7 +40,10 @@ BEGIN
      'call "DBA"."LoadIncomeBillItems"('''||Movement_Income_View.InvNumber||''','''||to_char(Movement_Income_View.OperDate, 'yyyy-mm-dd')||
           ''','''||to_char(Movement_Income_View.PaymentDate, 'yyyy-mm-dd')||
           ''','||Movement_Income_View.PriceWithVAT::integer||','''||coalesce(Juridical.OKPO,'')||''','||vbUnitId||','||ObjectFloat_NDSKind_NDS.ValueData||
-          ','||MovementItem.GoodsCode||','''||MovementItem.GoodsName||''','||MovementItem.Amount||','||MovementItem.Price||')'::text AS OneProcedure
+          ','||MovementItem.GoodsCode||','''||MovementItem.GoodsName||''','||MovementItem.Amount||','||
+             CASE WHEN Movement_Income_View.PriceWithVAT THEN MovementItem.Price
+             ELSE MovementItem.Price * (1 + Movement_Income_View.NDS/100)
+             END||')'::text AS OneProcedure
        FROM Movement_Income_View    
          LEFT JOIN ObjectHistory_JuridicalDetails_View AS Juridical ON Juridical.JuridicalId = Movement_Income_View.FromId
          LEFT JOIN MovementItem_Income_View AS MovementItem ON MovementItem.MovementId = Movement_Income_View.Id
@@ -59,6 +62,7 @@ ALTER FUNCTION gpGetDataForSend (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.01.15                         *
  26.12.14                         *
  09.12.14                         *
  03.07.14                                                       *
@@ -67,5 +71,5 @@ ALTER FUNCTION gpGetDataForSend (Integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
---SELECT * FROM gpGetDataForSend (inMovementId:= 7904 , inSession:= '2')
+--SELECT * FROM gpGetDataForSend (inMovementId:= 12743 , inSession:= '2')
 

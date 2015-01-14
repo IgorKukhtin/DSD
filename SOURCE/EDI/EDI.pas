@@ -391,7 +391,11 @@ begin
     ('SupplierGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
     ('BuyerGLNCode').asString;
 
-  DECLAR.DECLARBODY.HORIG := '1';
+  if C_DOC_VER <> '7' then
+     DECLAR.DECLARBODY.HORIG := '1';
+//  else
+  //   DECLAR.DECLARBODY.HERPN := '1';
+
   DECLAR.DECLARBODY.HNUM := trim(HeaderDataSet.FieldByName('InvNumberPartner')
     .asString);
   DECLAR.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy',
@@ -495,6 +499,19 @@ begin
   HeaderDataSet.First;
   while not HeaderDataSet.Eof do
   begin
+    with DECLAR.DECLARBODY.RXXXXG105_2S.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := HeaderDataSet.FieldByName('MeasureCode').asString;
+    end;
+    inc(i);
+    HeaderDataSet.Next;
+  end;
+
+  i := 1;
+  HeaderDataSet.First;
+  while not HeaderDataSet.Eof do
+  begin
     with DECLAR.DECLARBODY.RXXXXG5.Add do
     begin
       ROWNUM := IntToStr(i);
@@ -568,8 +585,9 @@ begin
     (FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummvat').AsFloat),
     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
-  DECLAR.DECLARBODY.H10G1D := FormatDateTime('ddmmyyyy',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  if C_DOC_VER <> '7' then
+     DECLAR.DECLARBODY.H10G1D := FormatDateTime('ddmmyyyy',
+        HeaderDataSet.FieldByName('OperDate').asDateTime);
   DECLAR.DECLARBODY.H10G2S := 'Неграш';
 
   if SendToFTP then
@@ -697,7 +715,9 @@ begin
     ('BuyerGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
     ('SupplierGLNCode').asString;
 
-  DECLAR.DECLARBODY.HORIG := '1';
+  if C_DOC_VER <> '7' then
+     DECLAR.DECLARBODY.HORIG := '1';
+
   DECLAR.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
   DECLAR.DECLARBODY.HNUM := trim(HeaderDataSet.FieldByName('InvNumberPartner')
@@ -765,6 +785,19 @@ begin
     begin
       ROWNUM := IntToStr(i);
       NodeValue := ItemsDataSet.FieldByName('MeasureName').asString;
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG105_2S.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := ItemsDataSet.FieldByName('MeasureCode').asString;
     end;
     inc(i);
     ItemsDataSet.Next;
