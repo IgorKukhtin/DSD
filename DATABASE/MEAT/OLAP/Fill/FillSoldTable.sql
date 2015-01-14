@@ -23,7 +23,7 @@ BEGIN
                        , Sale_Summ, Sale_Summ_10300, Sale_SummCost, Sale_SummCost_10500, Sale_SummCost_40200, Sale_Amount_Weight, Sale_Amount_Sh, Sale_AmountPartner_Weight, Sale_AmountPartner_Sh, Sale_Amount_10500_Weight, Sale_Amount_40200_Weight
                        , Actions_Summ, Actions_Weight
                        , Return_Summ, Return_Summ_10300, Return_SummCost, Return_SummCost_40200, Return_Amount_Weight, Return_Amount_Sh, Return_AmountPartner_Weight, Return_AmountPartner_Sh, Return_Amount_40200_Weight
-                       , SaleReturn_Summ, SaleReturn_SummCost, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
+                       , SaleReturn_Summ, SaleReturn_Summ_10300, SaleReturn_SummCost, SaleReturn_SummCost_40200, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
                        , Bonus, Plan_Weight, Plan_Summ
                        , Money_Summ, SendDebt_Summ, Money_SendDebt_Summ)
 
@@ -70,7 +70,7 @@ BEGIN
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
-                                                              AND MIContainer.OperDate >= '01.12.2015'
+                                                              AND MIContainer.OperDate >= '01.06.2014'
                               INNER JOIN ContainerLinkObject AS CLO_Juridical
                                                              ON CLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
                                                             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -166,10 +166,12 @@ BEGIN
            , tmpResult.Return_AmountPartner_Sh
            , tmpResult.Return_Amount_40200_Weight
 
-           , (tmpResult.Sale_Summ - tmpResult.Return_Summ)                   AS SaleReturn_Summ
-           , (tmpResult.Sale_SummCost - tmpResult.Return_SummCost)           AS SaleReturn_SummCost
-           , (tmpResult.Sale_Amount_Weight - tmpResult.Return_Amount_Weight) AS SaleReturn_Amount_Weight
-           , (tmpResult.Sale_Amount_Sh - tmpResult.Return_Amount_Sh)         AS SaleReturn_Amount_Sh
+           , (tmpResult.Sale_Summ - tmpResult.Return_Summ)                     AS SaleReturn_Summ
+           , (tmpResult.Sale_Summ_10300 - tmpResult.Return_Summ_10300)         AS SaleReturn_Summ_10300
+           , (tmpResult.Sale_SummCost - tmpResult.Return_SummCost)             AS SaleReturn_SummCost
+           , (tmpResult.Sale_SummCost_40200 + tmpResult.Return_SummCost_40200) AS SaleReturn_SummCost_40200 -- !!!здесь сумма!!!
+           , (tmpResult.Sale_Amount_Weight - tmpResult.Return_Amount_Weight)   AS SaleReturn_Amount_Weight
+           , (tmpResult.Sale_Amount_Sh - tmpResult.Return_Amount_Sh)           AS SaleReturn_Amount_Sh
       
            , 0, 0, 0
            , 0, 0, 0
@@ -300,14 +302,14 @@ BEGIN
            , 0 AS Sale_Summ, 0 AS Sale_Summ_10300, 0 AS Sale_SummCost, 0 AS Sale_SummCost_10500, 0 AS Sale_SummCost_40200, 0 AS Sale_Amount_Weight, 0 AS Sale_Amount_Sh, 0 AS Sale_AmountPartner_Weight, 0 AS Sale_AmountPartner_Sh, 0 AS Sale_Amount_10500_Weight, 0 AS Sale_Amount_40200_Weight
            , 0 AS Actions_Summ, 0 AS Actions_Weight
            , 0 AS Return_Summ, 0 AS Return_Summ_10300, 0 AS Return_SummCost, 0 AS Return_SummCost_40200, 0 AS Return_Amount_Weight, 0 AS Return_Amount_Sh, 0 AS Return_AmountPartner_Weight, 0 AS Return_AmountPartner_Sh, 0 AS Return_Amount_40200_Weight
-           , 0 AS SaleReturn_Summ, 0 AS SaleReturn_SummCost, 0 AS SaleReturn_Amount_Weight, 0 AS SaleReturn_Amount_Sh
+           , 0 AS SaleReturn_Summ, 0 AS SaleReturn_Summ_10300, 0 AS SaleReturn_SummCost, 0 AS SaleReturn_SummCost_40200, 0 AS SaleReturn_Amount_Weight, 0 AS SaleReturn_Amount_Sh
            , -1 * SUM (MovementItemContainer.Amount) AS Bonus
            , 0 AS Plan_Weight, 0 AS Plan_Summ
            , 0 AS Money_Summ, 0 AS SendDebt_Summ, 0 AS Money_SendDebt_Summ
    FROM Movement 
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                  AND MovementItemContainer.OperDate >= '01.12.2015'
+                                  AND MovementItemContainer.OperDate >= '01.06.2014'
         JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                       AND Container.ObjectId = zc_Enum_Account_50401() -- !!!Расходы будущих периодов + Услуги по маркетингу!!!
 
@@ -355,16 +357,16 @@ BEGIN
            , 0 AS Sale_Summ, 0 AS Sale_Summ_10300, 0 AS Sale_SummCost, 0 AS Sale_SummCost_10500, 0 AS Sale_SummCost_40200, 0 AS Sale_Amount_Weight, 0 AS Sale_Amount_Sh, 0 AS Sale_AmountPartner_Weight, 0 AS Sale_AmountPartner_Sh, 0 AS Sale_Amount_10500_Weight, 0 AS Sale_Amount_40200_Weight
            , 0 AS Actions_Summ, 0 AS Actions_Weight
            , 0 AS Return_Summ, 0 AS Return_Summ_10300, 0 AS Return_SummCost, 0 AS Return_SummCost_40200, 0 AS Return_Amount_Weight, 0 AS Return_Amount_Sh, 0 AS Return_AmountPartner_Weight, 0 AS Return_AmountPartner_Sh, 0 AS Return_Amount_40200_Weight
-           , 0 AS SaleReturn_Summ, 0 AS SaleReturn_SummCost, 0 AS SaleReturn_Amount_Weight, 0 AS SaleReturn_Amount_Sh
+           , 0 AS SaleReturn_Summ, 0 AS SaleReturn_Summ_10300, 0 AS SaleReturn_SummCost, 0 AS SaleReturn_SummCost_40200, 0 AS SaleReturn_Amount_Weight, 0 AS SaleReturn_Amount_Sh
            , 0 AS Bonus
            , 0 AS Plan_Weight, 0 AS Plan_Summ
            , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN -1 * MovementItemContainer.Amount ELSE 0 END) AS Money_Summ
            , SUM (CASE WHEN Movement.DescId = zc_Movement_SendDebt() THEN -1 * MovementItemContainer.Amount ELSE 0 END) AS SendDebt_Summ
-           , SUM (MovementItemContainer.Amount) AS Money_SendDebt_Summ
+           , SUM (-1 * MovementItemContainer.Amount) AS Money_SendDebt_Summ
    FROM Movement 
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                  AND MovementItemContainer.OperDate >= '01.12.2015'
+                                  AND MovementItemContainer.OperDate >= '01.06.2014'
         JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                       AND Container.DescId = zc_Container_Summ()
         INNER JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()

@@ -45,61 +45,66 @@ BEGIN
    UNION SELECT 124, 'data'::TVarChar, 'С\с продажа-возврат' :: TVarChar, 'SaleReturn_SummCost'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
 
-   UNION SELECT 131, 'data'::TVarChar, 'Сумма бонус' :: TVarChar, 'Bonus'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 131, 'data'::TVarChar, 'Сумма скидки' :: TVarChar, 'SaleReturn_Summ_10300'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+   UNION SELECT 132, 'data'::TVarChar, 'Сумма скидки (на весе)' :: TVarChar, 'Sale_SummCost_10500'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+
+   UNION SELECT 133, 'data'::TVarChar, 'Сумма бонус' :: TVarChar, 'Bonus'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    -- UNION SELECT 132, 'data'::TVarChar, 'Сумма продажа-бонус' :: TVarChar, 'SaleBonus'::TVarChar, ',0.00'::TVarChar, 
    --               ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
 
-   UNION SELECT 132, 'data'::TVarChar, 'Прибыль продажа' :: TVarChar, 'Sale_Profit'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 141, 'data'::TVarChar, 'Прибыль продажа' :: TVarChar, 'Sale_Profit'::TVarChar, ',0.0'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 133, 'data'::TVarChar, 'Прибыль продажа-бонус' :: TVarChar, 'SaleBonus_Profit'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 142, 'data'::TVarChar, 'Прибыль продажа-бонус' :: TVarChar, 'SaleBonus_Profit'::TVarChar, ',0.0'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 134, 'data'::TVarChar, 'Прибыль продажа-возврат' :: TVarChar, 'SaleReturn_Profit'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 143, 'data'::TVarChar, 'Прибыль продажа-возврат' :: TVarChar, 'SaleReturn_Profit'::TVarChar, ',0.0'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 135, 'data'::TVarChar, 'Прибыль продажа-возврат-бонус' :: TVarChar, 'SaleReturnBonus_Profit'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 144, 'data'::TVarChar, 'Прибыль продажа-возврат-бонус' :: TVarChar, 'SaleReturnBonus_Profit'::TVarChar, ',0.0'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
 
-   UNION SELECT 136, 'data'::TVarChar, '% рент. продажа' :: TVarChar, 'Sale_Percent'::TVarChar, ',0.###'::TVarChar, 
+   UNION SELECT 151, 'data'::TVarChar, '% рент. продажа' :: TVarChar, 'Sale_Percent'::TVarChar, ',0.0'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,
                 'Sale_SummCost,Sale_Profit'::TVarChar,
                 'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(Sale_Profit) / SUM(Sale_SummCost) * 100 END'::TVarChar,
                 'stPercent'::TVarChar
-   UNION SELECT 137, 'data'::TVarChar, '% рент. продажа-бонус'::TVarChar, 'SaleBonus_Percent'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 152, 'data'::TVarChar, '% рент. продажа-бонус'::TVarChar, 'SaleBonus_Percent'::TVarChar, ',0.0'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,
                  'Sale_SummCost,SaleBonus_Profit'::TVarChar,
                  'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(SaleBonus_Profit) / SUM(Sale_SummCost) * 100 END'::TVarChar,
                  'stPercent'::TVarChar
-   UNION SELECT 138, 'data'::TVarChar, '% рент. продажа-возврат' :: TVarChar, 'SaleReturn_Percent'::TVarChar, ',0.###'::TVarChar, 
+   UNION SELECT 153, 'data'::TVarChar, '% рент. продажа-возврат' :: TVarChar, 'SaleReturn_Percent'::TVarChar, ',0.0'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,
                  'Sale_SummCost,SaleReturn_Profit'::TVarChar,
                  'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(SaleReturn_Profit) / SUM(Sale_SummCost) * 100 END'::TVarChar,
                  'stPercent'::TVarChar
-   UNION SELECT 139, 'data'::TVarChar, '% рент. продажа-возврат-бонус'::TVarChar, 'SaleReturnBonus_Percent'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 154, 'data'::TVarChar, '% рент. продажа-возврат-бонус'::TVarChar, 'SaleReturnBonus_Percent'::TVarChar, ',0.0'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,
                  'Sale_SummCost,SaleReturnBonus_Profit'::TVarChar,
                  'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(SaleReturnBonus_Profit) / SUM(Sale_SummCost) * 100 END'::TVarChar,
                  'stPercent'::TVarChar
 
-   UNION SELECT 141, 'data'::TVarChar, 'План кол.вес'::TVarChar, 'Plan_Weight'::TVarChar, ',0.###'::TVarChar, 
+   UNION SELECT 161, 'data'::TVarChar, 'План кол.вес'::TVarChar, 'Plan_Weight'::TVarChar, ',0.###'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 142, 'data'::TVarChar, 'План сумма'::TVarChar, 'Plan_Summ'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 162, 'data'::TVarChar, 'План сумма'::TVarChar, 'Plan_Summ'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 143, 'data'::TVarChar, '% выполнения план кол.вес'::TVarChar, 'Plan_Percent'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 163, 'data'::TVarChar, '% выполнения план кол.вес'::TVarChar, 'Plan_Percent'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,
                  'Plan_Weight,Sale_AmountPartner_Weight'::TVarChar,
                  'CASE WHEN SUM(Plan_Weight) = 0 THEN 0 ELSE SUM(Sale_AmountPartner_Weight) / SUM(Plan_Weight) * 100 - 100 END'::TVarChar,
                  'stPercent'::TVarChar
 
-   UNION SELECT 151, 'data'::TVarChar, 'Акции кг'::TVarChar, 'Actions_Weight'::TVarChar, ',0.###'::TVarChar, 
+   UNION SELECT 161, 'data'::TVarChar, 'Акции кг'::TVarChar, 'Actions_Weight'::TVarChar, ',0.###'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 152, 'data'::TVarChar, 'Акции сумма'::TVarChar, 'Actions_Summ'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 162, 'data'::TVarChar, 'Акции сумма'::TVarChar, 'Actions_Summ'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
 
-   UNION SELECT 161, 'data'::TVarChar, 'Расчеты сумма'::TVarChar, 'Money_SendDebt_Summ' :: TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 171, 'data'::TVarChar, 'Оплата сумма'::TVarChar, 'Money_Summ' :: TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 162, 'data'::TVarChar, 'Оплата сумма'::TVarChar, 'Money_Summ' :: TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 172, 'data'::TVarChar, 'Вз-зачет сумма'::TVarChar, 'SendDebt_Summ' :: TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 163, 'data'::TVarChar, 'Вз-зачет сумма'::TVarChar, 'SendDebt_Summ' :: TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 173, 'data'::TVarChar, 'Оплата и Вз-зачет'::TVarChar, 'Money_SendDebt_Summ' :: TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
 
    UNION SELECT 11, 'dimension'::TVarChar, 'Форма оплаты'::TVarChar, 'PaidKindName'::TVarChar, ''::TVarChar, 
@@ -123,14 +128,12 @@ BEGIN
    UNION SELECT 20, 'dimension'::TVarChar, 'УП статья'::TVarChar, 'InfoMoneyName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectInfoMoney'::TVarChar, 'InfoMoneyId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
 
-
    UNION SELECT 31, 'dimension'::TVarChar, 'ФИО (супервайзер)'::TVarChar, 'PersonalName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectPersonal'::TVarChar, 'PersonalId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
    UNION SELECT 32, 'dimension'::TVarChar, 'ФИО (ТП)'::TVarChar, 'PersonalTradeName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectPersonalTrade'::TVarChar, 'PersonalTradeId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
    UNION SELECT 33, 'dimension'::TVarChar, 'Филиал (супервайзер)'::TVarChar, 'BranchPersonalName'::TVarChar, ''::TVarChar,
                  'Object'::TVarChar, 'ObjectBranchPersonal'::TVarChar, 'BranchId_Personal'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
-
 
    UNION SELECT 41, 'dimension'::TVarChar, 'Область'::TVarChar, 'RegionName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectRegion'::TVarChar, 'RegionId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
@@ -147,11 +150,18 @@ BEGIN
    UNION SELECT 47, 'dimension'::TVarChar, 'Улица'::TVarChar, 'StreetName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectStreet'::TVarChar, 'StreetId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
 
-   UNION SELECT 21, 'dimension'::TVarChar, 'Товар'::TVarChar, 'GoodsName'::TVarChar, ''::TVarChar, 
+   UNION SELECT 51, 'dimension'::TVarChar, 'Торговая марка' :: TVarChar, 'TradeMarkName'::TVarChar, ''::TVarChar, 
+                 'Object'::TVarChar, 'ObjectTradeMark'::TVarChar, 'TradeMarkId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
+   UNION SELECT 52, 'dimension'::TVarChar, 'Группа аналитики' :: TVarChar, 'GoodsGroupAnalystName'::TVarChar, ''::TVarChar, 
+                 'Object'::TVarChar, 'ObjectGoodsGroupAnalyst'::TVarChar, 'GoodsGroupAnalystId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
+   UNION SELECT 53, 'dimension'::TVarChar, 'Признак товара' :: TVarChar, 'GoodsTagName'::TVarChar, ''::TVarChar, 
+                 'Object'::TVarChar, 'ObjectGoodsTag'::TVarChar, 'GoodsTagId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
+   UNION SELECT 54, 'dimension'::TVarChar, 'Товар'::TVarChar, 'GoodsName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectGoods'::TVarChar, 'GoodsId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
-   UNION SELECT 22, 'dimension'::TVarChar, 'Вид товара'::TVarChar, 'GoodsKindName'::TVarChar, ''::TVarChar, 
+   UNION SELECT 55, 'dimension'::TVarChar, 'Вид товара'::TVarChar, 'GoodsKindName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectGoodsKind'::TVarChar, 'GoodsKindId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
-     
+   UNION SELECT 56, 'dimension'::TVarChar, 'Ед. изм.' :: TVarChar, 'MeasureName'::TVarChar, ''::TVarChar, 
+                 'Object'::TVarChar, 'ObjectMeasure'::TVarChar, 'MeasureId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
      )
                  AS SetupData ORDER BY 1;
 
@@ -163,8 +173,9 @@ ALTER FUNCTION gpGet_OlapSoldReportOption (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.01.15                                        * all
  21.11.14                        * 
 */
 
 -- тест
--- SELECT * FROM gpGet_OlapSoldReportOption (zfCalc_UserAdmin()) 
+-- SELECT * FROM gpGet_OlapSoldReportOption (zfCalc_UserAdmin())
