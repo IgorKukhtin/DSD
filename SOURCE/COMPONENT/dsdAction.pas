@@ -526,7 +526,7 @@ type
     property Hint;
     property ImageIndex;
     property ShortCut;
-    property OpenAfterCreate: boolean read FOpenAfterCreate write FOpenAfterCreate default false;
+    property OpenAfterCreate: boolean read FOpenAfterCreate write FOpenAfterCreate default true;
     property DefaultFileName: string read FDefaultFileName write FDefaultFileName;
   end;
 
@@ -1292,7 +1292,7 @@ begin
   inherited;
   PostDataSetBeforeExecute := true;
   ExportType := cxegExportToExcel;
-  FOpenAfterCreate := false
+  FOpenAfterCreate := true
 end;
 
 function TExportGrid.LocalExecute: Boolean;

@@ -63,7 +63,7 @@ implementation
 
 uses SysUtils, IdMessage, IdText, IdAttachmentFile, IdSMTP, cxGridExportLink,
      VCL.ActnList, cxControls, IdExplicitTLSClientServerBase, IdSSLOpenSSL,
-     IdGlobal, StrUtils;
+     IdGlobal, StrUtils, IOUtils, Types;
 
 { TdsdSMTPAction }
 
@@ -152,7 +152,7 @@ begin
          Stream := TFileStream.Create(Attachments[i], fmOpenReadWrite);
          try
             with TIdAttachmentFile.Create(EMsg.MessageParts) do begin
-                 FileName := Subject + '.xls';
+                 FileName := ExtractFileName(Attachments[i]);
                  LoadFromStream(Stream);
             end;
          finally
@@ -253,8 +253,15 @@ end;
 { TdsdSMTPFileAction }
 
 procedure TdsdSMTPFileAction.FillAttachments;
+var Files: TStringDynArray;
 begin
   inherited;
+  if not FileExists(FFileName) then begin
+     Files := TDirectory.GetFiles(GetCurrentDir, FFileName + '.*');
+     if High(Files) >= 0 then
+        FileName := Files[0];
+  end;
+
   SetLength(FAttachments, 1);
   FAttachments[0] := FFileName;
 end;
