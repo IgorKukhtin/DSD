@@ -38,6 +38,16 @@ BEGIN
                                                               AND MovementBoolean_Medoc.ValueData = TRUE
                                WHERE MovementLinkMovement.MovementId = inMovementId
                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
+                    OR EXISTS (SELECT MovementLinkMovement.MovementId
+                               FROM MovementLinkMovement
+                                    INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    INNER JOIN MovementBoolean AS MovementBoolean_Electron
+                                                               ON MovementBoolean_Electron.MovementId = MovementLinkMovement.MovementChildId
+                                                              AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+                                                              AND MovementBoolean_Electron.ValueData = TRUE
+                               WHERE MovementLinkMovement.MovementId = inMovementId
+                                 AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
                       )
      THEN
           IF ioId <> 0
