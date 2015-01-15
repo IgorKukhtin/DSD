@@ -3,6 +3,7 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
+  ExplicitLeft = -157
   ExplicitWidth = 1094
   ExplicitHeight = 261
   PixelsPerInch = 96
@@ -4785,8 +4786,269 @@
         Action = actCurrencyMovement
       end
     end
-    object N13: TMenuItem [2]
+    object miTaxDocuments: TMenuItem [2]
       Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
+      object miTax: TMenuItem
+        Action = actTax
+      end
+      object miTaxCorrective: TMenuItem
+        Action = actTaxCorrection
+      end
+      object N13: TMenuItem
+        Caption = '-'
+      end
+      object miReport_CheckTax: TMenuItem
+        Action = actReport_CheckTax
+      end
+      object miReport_CheckTaxCorrective: TMenuItem
+        Action = actReport_CheckTaxCorrective
+      end
+      object N14: TMenuItem
+        Caption = '-'
+      end
+      object miSaveTaxDocument: TMenuItem
+        Action = actSaveTaxDocument
+      end
+      object N15: TMenuItem
+        Caption = '-'
+      end
+      object miTransferDebtIn: TMenuItem
+        Action = actTransferDebtIn
+      end
+      object miTransferDebtOut: TMenuItem
+        Action = actTransferDebtOut
+      end
+      object miTransferDebtOut_Order: TMenuItem
+        Action = actTransferDebtOut_Order
+      end
+      object N16: TMenuItem
+        Caption = '-'
+      end
+      object miPriceCorrective: TMenuItem
+        Action = actPriceCorrective
+      end
+      object N17: TMenuItem
+        Caption = '-'
+      end
+      object miReport_GoodsMI_TransferDebtIn: TMenuItem
+        Action = actReport_GoodsMI_TransferDebtIn
+      end
+      object miReport_GoodsMI_TransferDebtOut: TMenuItem
+        Action = actReport_GoodsMI_TransferDebtOut
+      end
+    end
+    object miAssetDocuments: TMenuItem [3]
+      Caption = #1054#1057
+      object miAssetGroup: TMenuItem
+        Action = actAssetGroup
+      end
+      object miAsset: TMenuItem
+        Action = actAsset
+      end
+      object N18: TMenuItem
+        Caption = '-'
+      end
+      object miCountry: TMenuItem
+        Action = actCountry
+      end
+      object miMaker: TMenuItem
+        Action = actMaker
+      end
+    end
+    object miHistory: TMenuItem [4]
+      Caption = #1048#1089#1090#1086#1088#1080#1080
+      object miPriceListItem: TMenuItem
+        Action = actPriceListItem
+      end
+    end
+    object miTransportDocuments: TMenuItem [5]
+      Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      object miTransport: TMenuItem
+        Action = actTransport
+      end
+      object miIncomeFuel: TMenuItem
+        Action = actIncomeFuel
+      end
+      object miPersonalSendCash: TMenuItem
+        Action = actPersonalSendCash
+      end
+      object miPersonalAccount: TMenuItem
+        Action = actPersonalAccount
+      end
+      object miTransportService: TMenuItem
+        Action = actTransportService
+      end
+      object miSendTicketFuel: TMenuItem
+        Action = actSendTicketFuel
+      end
+      object N19: TMenuItem
+        Caption = '-'
+      end
+      object miCar: TMenuItem
+        Action = actCar
+      end
+      object miRoute: TMenuItem
+        Action = actRoute
+      end
+      object miCarModel: TMenuItem
+        Action = actCarModel
+      end
+      object miFreight: TMenuItem
+        Action = actFreight
+      end
+      object miFuel: TMenuItem
+        Action = actFuel
+      end
+      object miRateFuelKind: TMenuItem
+        Action = actRateFuelKind
+      end
+      object miRateFuel: TMenuItem
+        Action = actRateFuel
+      end
+      object miCardFuel: TMenuItem
+        Action = actCardFuel
+      end
+      object miTicketFuel: TMenuItem
+        Action = actTicketFuel
+      end
+      object N20: TMenuItem
+        Caption = '-'
+      end
+      object miReport_Transport: TMenuItem
+        Action = actReport_Transport
+      end
+      object miReport_Fuel: TMenuItem
+        Action = actReport_Fuel
+      end
+      object miReport_TransportHoursWork: TMenuItem
+        Action = actReport_TransportHoursWork
+      end
+    end
+    object miPersonalDocuments: TMenuItem [6]
+      Caption = #1055#1077#1088#1089#1086#1085#1072#1083
+      object miPersonalGroup: TMenuItem
+        Action = actPersonalGroup
+      end
+      object miPersonal: TMenuItem
+        Action = actPersonal
+      end
+      object miPosition: TMenuItem
+        Action = actPosition
+      end
+      object miPositionLevel: TMenuItem
+        Action = actPositionLevel
+      end
+      object miMember: TMenuItem
+        Action = actMember
+      end
+      object miWorkTimeKind: TMenuItem
+        Action = actWorkTimeKind
+      end
+      object miStaffListData: TMenuItem
+        Action = actStaffListData
+      end
+      object miModelService: TMenuItem
+        Action = actModelService
+      end
+      object miPersonalServiceList: TMenuItem
+        Action = actPersonalServiceList
+      end
+      object N21: TMenuItem
+        Caption = '-'
+      end
+      object miCalendar: TMenuItem
+        Action = actCalendar
+      end
+      object miSheetWorkTime: TMenuItem
+        Action = actSheetWorkTime
+      end
+      object N22: TMenuItem
+        Caption = '-'
+      end
+      object miPersonalService: TMenuItem
+        Action = actPersonalService
+      end
+      object miCash_Personal: TMenuItem
+        Action = actPersonalCash
+      end
+    end
+    object miReportsProduction: TMenuItem [7]
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      object miReportProductionUnion: TMenuItem
+        Action = actReport_Production_Union
+      end
+    end
+    object miReportsGoods: TMenuItem [8]
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      object miReport_MotionGoods: TMenuItem
+        Action = actReport_MotionGoods
+      end
+      object miReport_GoodsTax: TMenuItem
+        Action = actReport_GoodsTax
+      end
+      object miReport_Goods: TMenuItem
+        Action = actReport_Goods
+      end
+      object miReport_OrderExternal: TMenuItem
+        Action = actReport_OrderExternal
+      end
+      object miReport_OrderExternal_Sale: TMenuItem
+        Action = actReport_OrderExternal_Sale
+      end
+      object N23: TMenuItem
+        Caption = '-'
+      end
+      object miReport_GoodsMI_Income: TMenuItem
+        Action = actReport_GoodsMI_Income
+      end
+      object miReport_GoodsMI_IncomeByPartner: TMenuItem
+        Action = actReport_GoodsMI_IncomeByPartner
+      end
+      object N24: TMenuItem
+        Caption = '-'
+      end
+      object miReport_GoodsMI_SaleReturnIn: TMenuItem
+        Action = actReport_GoodsMI_SaleReturnIn
+      end
+      object miReport_GoodsMISale: TMenuItem
+        Action = actReport_GoodsMISale
+      end
+      object miReport_GoodsMI_byMovementSale: TMenuItem
+        Action = actReport_GoodsMI_byMovementSale
+      end
+      object miReport_GoodsMI_byMovementDifSale: TMenuItem
+        Action = actReport_GoodsMI_byMovementDifSale
+      end
+      object miReport_GoodsMI_byPriceDifSale: TMenuItem
+        Action = actReport_GoodsMI_byPriceDifSale
+      end
+      object N25: TMenuItem
+        Caption = '-'
+      end
+      object miReport_GoodsMIReturn: TMenuItem
+        Action = actReport_GoodsMIReturn
+      end
+      object miReport_GoodsMI_byMovementReturn: TMenuItem
+        Action = actReport_GoodsMI_byMovementReturn
+      end
+      object miReport_GoodsMI_byMovementDifReturn: TMenuItem
+        Action = actReport_GoodsMI_byMovementDifReturn
+      end
+      object N26: TMenuItem
+        Caption = '-'
+      end
+      object miReport_HistoryCost: TMenuItem
+        Action = actReport_HistoryCost
+      end
+      object N27: TMenuItem
+        Caption = '-'
+      end
+      object miReport_GoodsMI_Production: TMenuItem
+        Action = actReport_GoodsMI_ProductionUnionIncome
+      end
+      object miReport_GoodsMI_ProductionUnionReturn: TMenuItem
+        Action = actReport_GoodsMI_ProductionUnionReturn
+      end
     end
   end
 end
