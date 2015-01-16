@@ -4640,6 +4640,8 @@
       end>
   end
   inherited MainMenu1: TMainMenu
+    Left = 456
+    Top = 64
     object miGoodsDocuments: TMenuItem [0]
       Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       object miIncome: TMenuItem
