@@ -3,7 +3,7 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitLeft = -157
+  ExplicitLeft = -96
   ExplicitWidth = 1094
   ExplicitHeight = 261
   PixelsPerInch = 96
@@ -5048,6 +5048,149 @@
       end
       object miReport_GoodsMI_ProductionUnionReturn: TMenuItem
         Action = actReport_GoodsMI_ProductionUnionReturn
+      end
+      object miReport_GoodsMI_ProductionSeparateIncome: TMenuItem
+        Action = actReport_GoodsMI_ProductionSeparateIncome
+      end
+      object mitReport_GoodsMI_ProductionSeparateReturn: TMenuItem
+        Action = actReport_GoodsMI_ProductionSeparateReturn
+      end
+      object miReport_GoodsMI_ProductionSeparate: TMenuItem
+        Action = actReport_GoodsMI_ProductionSeparate
+      end
+      object miReport_GoodsMI_ProductionUnion: TMenuItem
+        Action = actReport_GoodsMI_ProductionUnion
+      end
+      object miReport_GoodsMI_ProductionUnionMD: TMenuItem
+        Action = actReport_GoodsMI_ProductionUnionMD
+      end
+      object N28: TMenuItem
+        Caption = '-'
+      end
+      object miReport_CheckContractInMovement: TMenuItem
+        Action = actReport_CheckContractInMovement
+      end
+    end
+    object miReportsFinance: TMenuItem [9]
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      object miReport_JuridicalSold: TMenuItem
+        Action = actReport_JuridicalSold
+      end
+      object miReport_JuridicalDefermentPayment: TMenuItem
+        Action = actReport_JuridicalDefermentPayment
+      end
+      object miReport_JuridicalCollation: TMenuItem
+        Action = actReport_JuridicalCollation
+      end
+      object N29: TMenuItem
+        Caption = '-'
+      end
+      object miReport_CheckBonus: TMenuItem
+        Action = actReport_CheckBonus
+      end
+      object N30: TMenuItem
+        Caption = '-'
+      end
+      object miReport_Account: TMenuItem
+        Action = actReport_Account
+      end
+      object miReport_Member: TMenuItem
+        Action = actReport_Member
+      end
+      object miReport_Personal: TMenuItem
+        Action = actReport_Personal
+      end
+      object miReport_Founders: TMenuItem
+        Action = actReport_Founders
+      end
+      object miReport_Cash: TMenuItem
+        Action = actReport_Cash
+      end
+      object miReport_BankAccount: TMenuItem
+        Action = actReport_BankAccount
+      end
+    end
+    object miReportMain: TMenuItem [10]
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
+      object miReport_Balance: TMenuItem
+        Action = actReport_Balance
+      end
+      object miReport_ProfitLoss: TMenuItem
+        Action = actReport_ProfitLoss
+      end
+      object miReport_OLAPSold: TMenuItem
+        Action = actReport_OLAPSold
+      end
+    end
+    inherited miService: TMenuItem
+      object miAction: TMenuItem [0]
+        Action = actAction
+      end
+      object miProcess: TMenuItem [1]
+        Action = actProcess
+      end
+      object miUser: TMenuItem [2]
+        Action = actUser
+      end
+      object miRole: TMenuItem [3]
+        Action = actRole
+      end
+      object miSetUserDefaults: TMenuItem [4]
+        Action = actSetUserDefaults
+      end
+      object miMovementDesc: TMenuItem [5]
+        Action = actMovementDesc
+      end
+      object miPeriodClose: TMenuItem [6]
+        Action = actPeriodClose
+      end
+      object miPeriodClose_User: TMenuItem [7]
+        Action = actPeriodClose_User
+      end
+      object miPartner1CLink: TMenuItem [8]
+        Action = actPartner1CLink
+      end
+      object miGoodsByGoodsKind1CLink: TMenuItem [9]
+        Action = actGoodsByGoodsKind1CLink
+      end
+      object miPartner1CLink_Excel: TMenuItem [10]
+        Action = actPartner1CLink_Excel
+      end
+      object miExternalSave: TMenuItem [11]
+        Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' 1'#1057
+        object miSaveDocumentTo1C: TMenuItem
+          Action = actSaveDocumentTo1C
+        end
+        object miSaveMarketingDocumentTo1CForm: TMenuItem
+          Action = actSaveMarketingDocumentTo1CForm
+        end
+      end
+      object miEDI: TMenuItem [12]
+        Action = actEDI
+      end
+      object miLoad1CSale: TMenuItem [13]
+        Action = actLoad1CSale
+      end
+      object miLoad1CMoney: TMenuItem [14]
+        Action = actLoad1CMoney
+      end
+      object miToolsWeighingTree: TMenuItem [15]
+        Action = actToolsWeighingTree
+      end
+      object N31: TMenuItem [16]
+        Caption = '-'
+      end
+      object miImportGroup: TMenuItem [17]
+        Action = actImportGroup
+      end
+      object miImportType: TMenuItem [18]
+        Action = actImportType
+      end
+      object miImportSettings: TMenuItem [19]
+        Action = actImportSettings
+      end
+      object miImportExportLink: TMenuItem [20]
+        Action = actImportExportLink
       end
     end
   end
