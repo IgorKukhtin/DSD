@@ -180,6 +180,9 @@ BEGIN
                     , CASE WHEN Movement.DescId = zc_Movement_Service() AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_ProfitLossDirection_10300() THEN TRUE ELSE FALSE END
             ) AS tmpMIContainer
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = tmpMIContainer.MovementId
+                                        AND MovementLinkObject_Partner.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_Partner() END
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMIContainer.MovementDescId
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpMIContainer.MovementItemId
@@ -187,7 +190,7 @@ BEGIN
 
             LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpMIContainer.AccountId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMIContainer.JuridicalId   
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpMIContainer.PartnerId
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = CASE WHEN tmpMIContainer.PartnerId <> 0 THEN tmpMIContainer.PartnerId ELSE MovementLinkObject_Partner.ObjectId END
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMIContainer.BranchId
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = tmpMIContainer.ContractId
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpMIContainer.InfoMoneyId         

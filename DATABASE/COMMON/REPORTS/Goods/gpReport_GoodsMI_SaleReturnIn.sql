@@ -169,6 +169,7 @@ BEGIN
                 LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = _tmpPartner.JuridicalId*/
            WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR COALESCE (inRetailId, 0) = 0)
              AND (_tmpPartner.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+           GROUP BY _tmpPartner.JuridicalId
        ;
     ELSE
         -- по ёр Ћицу (только)
