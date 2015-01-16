@@ -22,7 +22,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object_ContractPartner.ObjectCode), 0) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_ContractPartner()) AS Code
           
            , CAST (0 as Integer)    AS ContractId
            , CAST ('' as TVarChar)  AS ContractName  
@@ -32,8 +32,7 @@ BEGIN
 
            , CAST (NULL AS Boolean) AS isErased
 
-       FROM Object AS Object_ContractPartner
-       WHERE Object_ContractPartner.DescId = zc_Object_ContractPartner();
+       ;
    ELSE
        RETURN QUERY 
        SELECT 
