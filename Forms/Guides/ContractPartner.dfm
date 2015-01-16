@@ -70,12 +70,12 @@ inherited ContractPartnerForm: TContractPartnerForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TInsertUpdateChoiceAction
-      FormName = 'TContractPartnerIditForm'
-      FormNameParam.Value = 'TContractPartnerIditForm'
+      FormName = 'TContractPartnerEditForm'
+      FormNameParam.Value = 'TContractPartnerEditForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TContractPartnerIditForm'
-      FormNameParam.Value = 'TContractPartnerIditForm'
+      FormName = 'TContractPartnerEditForm'
+      FormNameParam.Value = 'TContractPartnerEditForm'
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <

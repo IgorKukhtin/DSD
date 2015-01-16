@@ -28,8 +28,8 @@ BEGIN
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContractPartner(), vbCode_calc);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractPartner(), vbCode_calc, ''
-                                , inAccessKeyId:= COALESCE ((SELECT Object_Branch.AccessKeyId FROM ObjectLink LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink.ChildObjectId WHERE ObjectLink.ObjectId = inUnitId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch()), zc_Enum_Process_AccessKey_TrasportDnepr()));
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractPartner(), vbCode_calc, '');
+                                --, inAccessKeyId:= COALESCE ((SELECT Object_Branch.AccessKeyId FROM ObjectLink LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink.ChildObjectId WHERE ObjectLink.ObjectId = inUnitId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch()), zc_Enum_Process_AccessKey_TrasportDnepr()));
    -- сохранили связь с < >
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContractPartner_Contract(), ioId, inContractId);
    -- сохранили связь с <>

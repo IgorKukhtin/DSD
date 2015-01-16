@@ -229,7 +229,7 @@
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TPartner_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -253,7 +253,7 @@
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractChoiceForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
