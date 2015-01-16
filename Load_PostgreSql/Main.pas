@@ -16136,7 +16136,7 @@ begin
                                          +'      left join MovementLinkMovement as MovementLinkMovement_Tax on MovementLinkMovement_Tax.MovementChildId = Movement.Id and MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Master()'
                                          +'      left join MovementBoolean on MovementBoolean.MovementId = MovementLinkMovement_Tax.MovementId AND MovementBoolean.DescId = zc_MovementBoolean_Checked()'
                                          +'      left join MovementBoolean AS MovementBoolean_Medoc on MovementBoolean_Medoc.MovementId = Movement.Id AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()'
-                                         +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
+                                         +' where Movement.Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
 
                           if(toSqlQuery.FieldByName('isMedoc').AsInteger = zc_rvNo) or (FieldByName('Id_Postgres').AsInteger=0)
                           then begin

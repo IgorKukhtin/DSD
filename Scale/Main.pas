@@ -9,7 +9,8 @@ uses
   Vcl.DBGrids, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdDB, Datasnap.DBClient, Util, Inifiles;
+  cxCalendar, dsdDB, Datasnap.DBClient, Util, Inifiles, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TMainForm = class(TForm)

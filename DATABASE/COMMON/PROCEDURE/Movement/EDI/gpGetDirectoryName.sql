@@ -8,12 +8,13 @@ CREATE OR REPLACE FUNCTION gpGetDirectoryName(
 RETURNS TVarChar AS
 $BODY$
 DECLARE
-  UserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
+   vbUserId:= lpGetUserBySession (inSession);
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
-   Directory := 'с:\medoc\data\';
+   Directory := '\\Axf\общая\'|| lfGet_Object_ValueData (vbUserId) ||'\medoc\data\';
       
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
@@ -21,4 +22,4 @@ END;$BODY$
 ALTER FUNCTION gpGetDirectoryName(TVarChar)
   OWNER TO postgres;
 
--- SELECT length(gpGet_Object_Form) FROM gpGet_Object_UserFormSettings('Form1', '2')
+-- SELECT * FROM gpGetDirectoryName('5')

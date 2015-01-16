@@ -267,10 +267,11 @@ BEGIN
      SELECT View_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_To FROM lfGet_Object_InfoMoney (vbInfoMoneyId_To) AS View_InfoMoney;
 
      -- !!!Если нет филиала для "основной деятельности", тогда это "главный филиал"
-     IF vbInfoMoneyDestinationId_To IN (zc_Enum_InfoMoneyDestination_30100() -- Продукция
+     IF COALESCE (vbBranchId_From, 0) = 0
+        /*vbInfoMoneyDestinationId_To IN (zc_Enum_InfoMoneyDestination_30100() -- Продукция
                                       , zc_Enum_InfoMoneyDestination_30200() -- Мясное сырье
                                        )
-        AND vbBranchId_From = 0
+        AND vbBranchId_From = 0*/
      THEN
          vbBranchId_From:= zc_Branch_Basis();
      END IF;

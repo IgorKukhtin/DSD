@@ -3,7 +3,7 @@
   ClientHeight = 524
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 556
+  ExplicitHeight = 549
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -125,7 +125,6 @@
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 15
-    ExplicitHeight = 495
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
@@ -135,14 +134,12 @@
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ExplicitHeight = 495
       ClientRectBottom = 524
       ClientRectRight = 841
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitLeft = -2
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -174,7 +171,6 @@
           Height = 500
           Align = alRight
           TabOrder = 8
-          ExplicitHeight = 471
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -307,7 +303,6 @@
       object PartnerTS: TcxTabSheet
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
         ImageIndex = 1
-        ExplicitHeight = 471
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -363,7 +358,6 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitHeight = 471
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -657,7 +651,7 @@
   object cxLabel19: TcxLabel [24]
     Left = 10
     Top = 405
-    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1086#1090#1095#1077#1090')'
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
   end
   object ceRetailReport: TcxButtonEdit [25]
     Left = 8
@@ -668,7 +662,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 29
+    TabOrder = 28
     Width = 273
   end
   object cxLabel20: TcxLabel [26]
@@ -1335,8 +1329,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
