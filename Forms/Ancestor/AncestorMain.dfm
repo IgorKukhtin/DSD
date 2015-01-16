@@ -387,9 +387,6 @@ object AncestorMainForm: TAncestorMainForm
       object N3: TMenuItem
         Caption = '-'
       end
-      object N1: TMenuItem
-        Caption = '-'
-      end
       object miLookAndFillSettings: TMenuItem
         Action = actLookAndFeel
       end

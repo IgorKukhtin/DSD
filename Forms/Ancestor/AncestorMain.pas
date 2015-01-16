@@ -39,7 +39,6 @@ type
     N2: TMenuItem;
     miMovementProtocol: TMenuItem;
     miUserProtocol: TMenuItem;
-    N1: TMenuItem;
     N3: TMenuItem;
     miLookAndFillSettings: TMenuItem;
     miAbout: TMenuItem;
