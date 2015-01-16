@@ -718,6 +718,9 @@ type
     N37: TMenuItem;
     miJuridicalGuides: TMenuItem;
     N38: TMenuItem;
+    actContractPartner: TdsdOpenForm;
+    bbContractPartner: TdxBarButton;
+    miContractPartner: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
