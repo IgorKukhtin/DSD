@@ -32,6 +32,18 @@ type
     bbLookAndFillSettings: TdxBarButton;
     actImportExportLink: TdsdOpenForm;
     bbImportExportLink: TdxBarButton;
+    MainMenu1: TMainMenu;
+    miGuides: TMenuItem;
+    miService: TMenuItem;
+    miProtocol: TMenuItem;
+    miExit: TMenuItem;
+    N2: TMenuItem;
+    miMovementProtocol: TMenuItem;
+    miUserProtocol: TMenuItem;
+    N3: TMenuItem;
+    miLookAndFillSettings: TMenuItem;
+    miAbout: TMenuItem;
+    miUpdateProgramm: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);

@@ -31,7 +31,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar
              , RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
-             , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar
+             , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , PersonalName TVarChar, UnitName_Personal TVarChar, BranchName_Personal TVarChar
              , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -169,6 +169,7 @@ BEGIN
                 LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = _tmpPartner.JuridicalId*/
            WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR COALESCE (inRetailId, 0) = 0)
              AND (_tmpPartner.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+           GROUP BY _tmpPartner.JuridicalId
        ;
     ELSE
         -- по ёр Ћицу (только)
@@ -421,6 +422,7 @@ BEGIN
           , View_Contract_InvNumber.ContractCode
           , View_Contract_InvNumber.InvNumber              AS ContractNumber
           , View_Contract_InvNumber.ContractTagName
+          , View_Contract_InvNumber.ContractTagGroupName
 
           , View_Personal.PersonalName       AS PersonalName
           , View_Personal.UnitName           AS UnitName_Personal
@@ -564,4 +566,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.11.2014', inEndDate:= '30.11.2014', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.11.2014', inEndDate:= '30.11.2014', inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inSession:= zfCalc_UserAdmin());

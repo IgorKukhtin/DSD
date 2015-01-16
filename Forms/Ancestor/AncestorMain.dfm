@@ -10,6 +10,7 @@ object AncestorMainForm: TAncestorMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = MainMenu1
   OldCreateOrder = False
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
@@ -361,5 +362,43 @@ object AncestorMainForm: TAncestorMainForm
     StorageType = stStream
     Left = 240
     Top = 56
+  end
+  object MainMenu1: TMainMenu
+    Left = 496
+    Top = 56
+    object miGuides: TMenuItem
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+    end
+    object miService: TMenuItem
+      Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object miProtocol: TMenuItem
+        Action = actProtocol
+        Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074
+      end
+      object miMovementProtocol: TMenuItem
+        Action = actProtocolMovement
+      end
+      object miUserProtocol: TMenuItem
+        Action = actProtocolUser
+      end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object miLookAndFillSettings: TMenuItem
+        Action = actLookAndFeel
+      end
+      object miAbout: TMenuItem
+        Action = actAbout
+      end
+      object miUpdateProgramm: TMenuItem
+        Action = actUpdateProgram
+      end
+    end
+    object miExit: TMenuItem
+      Action = actExit
+    end
   end
 end

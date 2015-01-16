@@ -18,6 +18,12 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
    DECLARE vbGroupNameFull TVarChar;   
+
+   DECLARE vbIndex               Integer;
+   DECLARE vbGoodsGroupId        Integer;
+   DECLARE vbTradeMarkId         Integer;
+   DECLARE vbGoodsTagId          Integer;
+   DECLARE vbGoodsGroupAnalystId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
@@ -54,6 +60,31 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили связь с <Бизнесы>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Business(), ioId, inBusinessId);
+
+
+   -- Level-0
+   vbTradeMarkId:=         (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsGroupId AND DescId = zc_ObjectLink_GoodsGroup_TradeMark());
+   vbGoodsTagId:=          (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsGroupId AND DescId = zc_ObjectLink_GoodsGroup_GoodsTag());
+   vbGoodsGroupAnalystId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsGroupId AND DescId = zc_ObjectLink_GoodsGroup_GoodsGroupAnalyst());
+   vbGoodsGroupId:=        (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsGroupId AND DescId = zc_ObjectLink_GoodsGroup_Parent());
+
+   vbIndex:= 1;
+   WHILE vbGoodsGroupId <> 0 AND vbIndex < 10 LOOP
+      -- Level-next
+      IF COALESCE (vbTradeMarkId, 0) = 0         THEN vbTradeMarkId:=         (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbGoodsGroupId AND DescId = zc_ObjectLink_GoodsGroup_TradeMark()); END IF;
+      IF COALESCE (vbGoodsTagId, 0) = 0          THEN vbGoodsTagId:=          (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbGoodsGroupId AND DescId = zc_ObjectLink_GoodsGroup_GoodsTag()); END IF;
+      IF COALESCE (vbGoodsGroupAnalystId, 0) = 0 THEN vbGoodsGroupAnalystId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbGoodsGroupId AND DescId = zc_ObjectLink_GoodsGroup_GoodsGroupAnalyst()); END IF;
+      vbGoodsGroupId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbGoodsGroupId AND DescId = zc_ObjectLink_GoodsGroup_Parent());
+      -- теперь следуюющий
+      vbIndex := vbIndex + 1;
+   END LOOP;
+
+   -- сохранили связь с <Торговые марки>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ioId, vbTradeMarkId);   
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ioId, vbGoodsTagId);   
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ioId, vbGoodsGroupAnalystId);  
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

@@ -576,6 +576,10 @@ CREATE OR REPLACE FUNCTION zc_Object_GoodsQuality() RETURNS integer AS $BODY$BEG
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_GoodsQuality', 'Параметры качественного удостоверения' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsQuality');
 
+CREATE OR REPLACE FUNCTION zc_Object_ContractPartner() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ContractPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_ContractPartner', 'Договора по контрагентам' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractPartner');
+
 
 --!!! Аптека
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -623,7 +627,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 12.01.15        * add zc_Object_ContractTagGroup
+ 16.01.15         * add zc_Object_ContractPartner
+ 12.01.15         * add zc_Object_ContractTagGroup
  18.12.14                                        * zc_Object_AnalyzerId
  08.12.14         * add zc_Object_GoodsQuality
  24.11.14         * add GoodsGroupAnalyst

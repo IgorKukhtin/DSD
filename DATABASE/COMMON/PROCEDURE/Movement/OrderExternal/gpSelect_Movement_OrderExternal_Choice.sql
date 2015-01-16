@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
+             , JuridicalId Integer, JuridicalName TVarChar
              , isEDI Boolean
               )
 AS
@@ -89,6 +90,9 @@ BEGIN
            , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
+
+          , Object_Juridical.Id             AS JuridicalId
+          , Object_Juridical.ValueData      AS JuridicalName
 
            , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
 
@@ -194,6 +198,12 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id 
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+
+         LEFT JOIN ObjectLink AS ObjectLink_From_Juridical
+                              ON ObjectLink_From_Juridical.ObjectId = Object_From.Id 
+                             AND ObjectLink_From_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_From_Juridical.ChildObjectId
+                                          
        WHERE MovementLinkObject_From.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0
       ;
 
@@ -205,8 +215,11 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal_Choice (TDateTime, TDateTime, Boo
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.01.15         * add From_Juridical
  21.10.14                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.01.2014', inEndDate:= '08.08.2014', inIsErased := FALSE, inPartnerId:= 0, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.06.2014', inEndDate:= '08.11.2014', inIsErased := FALSE, inPartnerId:= 0, inSession:= '2')
+
+ --select * from gpSelect_Movement_OrderExternal_Choice(instartdate := ('01.11.2014')::TDateTime , inenddate := ('30.11.2014')::TDateTime , inIsErased := 'False' , inPartnerId:= 0,  inSession := '5');

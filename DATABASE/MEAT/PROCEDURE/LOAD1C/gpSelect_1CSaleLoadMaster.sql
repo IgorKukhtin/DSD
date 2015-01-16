@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_1CSaleLoadMaster(
 RETURNS TABLE (UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
                OperDate TDateTime, ClientCode Integer, ClientName TVarChar, 
                ClientINN TVarChar, ClientOKPO TVarChar,
-               InvNalog TVarChar, 
+               /*InvNalog TVarChar,*/
                BranchName TVarChar, DocType TVarChar, 
                DeliveryPointCode Integer, DeliveryPointName TVarChar,
                ContractId Integer, ContractNumber TVarChar, EndDate TDateTime
@@ -71,7 +71,7 @@ BEGIN
       Sale1C.ClientName  ,   
       Sale1C.ClientINN   ,
       Sale1C.ClientOKPO  ,
-      Sale1C.InvNalog    ,
+      -- Sale1C.InvNalog    ,
       Object_Branch.ValueData AS BranchName,
       CASE Sale1C.VidDoc
         WHEN '1' THEN 'Расход'
@@ -113,7 +113,7 @@ BEGIN
       Sale1C.ClientName  ,   
       Sale1C.ClientINN   ,
       Sale1C.ClientOKPO  ,
-      Sale1C.InvNalog    ,
+      -- Sale1C.InvNalog    ,
       Object_Branch.ValueData,
       CASE Sale1C.VidDoc
         WHEN '1' THEN 'Расход'

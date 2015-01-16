@@ -71,7 +71,9 @@ CREATE TABLE SoldTable
  , Return_Amount_40200_Weight  TFloat
 
  , SaleReturn_Summ           TFloat
+ , SaleReturn_Summ_10300     TFloat
  , SaleReturn_SummCost       TFloat
+ , SaleReturn_SummCost_40200 TFloat
  , SaleReturn_Amount_Weight  TFloat
  , SaleReturn_Amount_Sh      TFloat
 
@@ -83,10 +85,10 @@ CREATE TABLE SoldTable
  , SendDebt_Summ          TFloat
  , Money_SendDebt_Summ    TFloat
 
- , SaleBonus             TFloat
- , Sale_Profit           TFloat
- , SaleReturn_Profit     TFloat
- , SaleBonusProfit       TFloat
+ , Sale_Profit            TFloat
+ , SaleBonus_Profit       TFloat
+ , SaleReturn_Profit      TFloat
+ , SaleReturnBonus_Profit TFloat
 )
 WITH (
   OIDS=FALSE

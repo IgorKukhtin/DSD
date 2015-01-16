@@ -1,28 +1,28 @@
 inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076', '#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
-  ClientHeight = 668
+  ClientHeight = 687
   ClientWidth = 1268
   ExplicitWidth = 1276
-  ExplicitHeight = 702
+  ExplicitHeight = 721
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 131
     Width = 1268
-    Height = 537
+    Height = 556
     ExplicitTop = 131
     ExplicitWidth = 1268
-    ExplicitHeight = 537
-    ClientRectBottom = 537
+    ExplicitHeight = 556
+    ClientRectBottom = 556
     ClientRectRight = 1268
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1268
-      ExplicitHeight = 513
+      ExplicitHeight = 532
       inherited cxGrid: TcxGrid
         Width = 1268
-        Height = 513
+        Height = 532
         ExplicitWidth = 1268
-        ExplicitHeight = 513
+        ExplicitHeight = 532
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -155,7 +155,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         Left = 0
         Top = 0
         Width = 1268
-        Height = 513
+        Height = 532
         Align = alClient
         TabOrder = 0
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
@@ -327,7 +327,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           object colOKPO_From: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO_From'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -336,7 +335,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -345,7 +343,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           object colToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -370,7 +367,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -379,7 +375,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           object colVATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -388,7 +383,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           object colTotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummVAT'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -397,7 +391,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           object colTotalSummMVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummMVAT'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -406,7 +399,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           object colTotalSummPVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummPVAT'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -415,7 +407,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -721,10 +712,10 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
     Top = 63
     Properties.Buttons = <
       item
-        Action = actDisabled
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 99
   end
@@ -1440,7 +1431,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_TransferDebtOut'
-    Left = 128
+    Left = 120
     Top = 56
   end
   inherited spGet: TdsdStoredProc
@@ -1646,12 +1637,18 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         Value = ''
         Component = edTax
         DataType = ftString
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
       end>
     Left = 216
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_TransferDebtOut'
+    StoredProcName = 'gpInsertUpdate_Movement_TransferDebtOut_Order'
     Params = <
       item
         Name = 'ioId'
@@ -1771,6 +1768,13 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1778,10 +1782,12 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-        Guides = GuidesFrom
+        Guides = GuidesInvNumberOrder
       end
       item
-        Guides = GuidesTo
+        Guides = ContractFromGuides
+      end
+      item
       end>
     Left = 160
     Top = 192
@@ -1834,6 +1840,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         Control = edIsChecked
       end
       item
+        Control = edInvNumberOrder
       end>
     Left = 232
     Top = 193
@@ -2342,8 +2349,8 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         Value = ''
         DataType = ftString
       end>
-    Left = 576
-    Top = 152
+    Left = 560
+    Top = 144
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -2653,6 +2660,7 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberOrder
+    Key = '0'
     FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormName = 'TOrderExternalJournalChoiceForm'
@@ -2676,45 +2684,43 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       item
         Name = 'OperDatePartner'
         Value = 0d
-        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'OperDatePartner_Sale'
         Value = 0d
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'FromId'
         Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
         ParamType = ptInput
       end
       item
         Name = 'FromName'
         Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ToId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'ToName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
       end
       item
         Name = 'RouteSortingId'
@@ -2732,12 +2738,14 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       item
         Name = 'PaidKindId'
         Value = ''
+        Component = PaidKindToGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'PaidKindName'
         Value = ''
+        Component = PaidKindToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2745,12 +2753,14 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       item
         Name = 'ContractId'
         Value = ''
+        Component = ContractToGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'ContractName'
         Value = ''
+        Component = ContractToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2804,17 +2814,17 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       item
         Name = 'MasterPartnerId'
         Value = ''
-        Component = GuidesTo
+        Component = GuidesPartner
         ComponentItem = 'Key'
       end
       item
         Name = 'MasterPartnerName'
         Value = ''
-        Component = GuidesTo
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 212
-    Top = 48
+    Left = 204
+    Top = 56
   end
 end

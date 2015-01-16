@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 
 
@@ -21,6 +22,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     
     IN inJuridicalId         Integer  ,     -- Юридическое лицо
     IN inJuridicalBasisId    Integer  ,     -- Главное юридическое лицо
+    IN inJuridicalDocumentId Integer  ,     -- Юридическое лицо (печать док.)
+    
     IN inInfoMoneyId         Integer  ,     -- УП статья назначения
     IN inContractKindId      Integer  ,     -- Вид договора
     IN inPaidKindId          Integer  ,     -- Вид формы оплаты
@@ -182,6 +185,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Главным юридическим лицом>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalBasis(), ioId, inJuridicalBasisId);
+   -- сохранили связь с <Юридическое лицо(печать док.)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalDocument(), ioId, inJuridicalDocumentId);   
    -- сохранили связь с <Статьи назначения>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили связь с <Виды договоров>
@@ -233,6 +238,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.01.15         * add JuridicalDocument
  10.11.14         * add GLNCode               
  07.11.14         * замана Area  на AreaContract
  21.07.14                                        * add проверка <Номер договора>

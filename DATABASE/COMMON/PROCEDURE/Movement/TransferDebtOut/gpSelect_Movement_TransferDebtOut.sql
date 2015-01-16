@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InfoMoneyGroupName_to TVarChar, InfoMoneyDestinationName_to TVarChar, InfoMoneyCode_to Integer, InfoMoneyName_to TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
+             , MovementId_Order Integer
              , isError Boolean
              )
 AS
@@ -101,6 +102,8 @@ BEGIN
            , Object_TaxKind_Master.ValueData             AS DocumentTaxKindName
            , MovementLinkMovement_Master.MovementChildId AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData        AS InvNumberPartner_Master
+           
+           , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
 
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
@@ -230,6 +233,10 @@ BEGIN
                                         AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
             LEFT JOIN Object AS Object_TaxKind_Master ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
       ;
 
 END;
@@ -240,6 +247,7 @@ ALTER FUNCTION gpSelect_Movement_TransferDebtOut (TDateTime, TDateTime, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 14.01.15         * add MovementId_Order
  17.12.14         * add InvNumberOrder
  03.09.14         * add Checked
  20.06.14                                                       * add InvNumberPartner

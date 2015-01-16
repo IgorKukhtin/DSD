@@ -23,7 +23,7 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
              , JuridicalPartnerlName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , ContractCode Integer, ContractNumber TVarChar
-             , ContractTagName TVarChar, ContractStateKindCode Integer
+             , ContractTagGroupName TVarChar, ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar, PersonalTradeName TVarChar, PersonalCollationName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , PaidKindName TVarChar, AccountName TVarChar
@@ -106,6 +106,7 @@ BEGIN
         Object_Branch.ValueData   AS BranchName,
         View_Contract.ContractCode,
         View_Contract.InvNumber AS ContractNumber,
+        View_Contract.ContractTagGroupName,
         View_Contract.ContractTagName,
         View_Contract.ContractStateKindCode,
         Object_Personal_View.PersonalName      AS PersonalName,

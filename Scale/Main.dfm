@@ -1306,7 +1306,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 58
+        ExplicitWidth = 57
       end
       object OperCount_shEdit: TEdit
         Left = 3
@@ -2208,6 +2208,7 @@ object MainForm: TMainForm
         DataSet = DataSetMI
       end>
     Params = <>
+    PackSize = 1
     Left = 224
     Top = 384
   end

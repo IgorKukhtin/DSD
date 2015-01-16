@@ -140,6 +140,9 @@ type
     ceIsUnique: TcxCheckBox;
     cxLabel22: TcxLabel;
     edGLNCode: TcxTextEdit;
+    cxLabel23: TcxLabel;
+    edJuridicalDocument: TcxButtonEdit;
+    JuridicalDocumentGuides: TdsdGuides;
   private
     { Private declarations }
   public

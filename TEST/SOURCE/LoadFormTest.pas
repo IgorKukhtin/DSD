@@ -37,6 +37,7 @@ type
     procedure LoadCarModelFormTest;
     procedure LoadContractKindFormTest;
     procedure LoadContractFormTest;
+    procedure LoadContractPartnerFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadCorrespondentAccountFormTest;
     procedure LoadCurrencyFormTest;
@@ -304,6 +305,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractKindEditForm');
+end;
+
+procedure TLoadFormTest.LoadContractPartnerFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPartnerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractPartnerEditForm');
 end;
 
 procedure TLoadFormTest.LoadCurrencyFormTest;

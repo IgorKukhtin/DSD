@@ -114,13 +114,16 @@ BEGIN
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
            , CASE WHEN Movement.OperDate < '01.01.2015' THEN 'J1201006' ELSE 'J1201007' END ::TVarChar AS CHARCODE
-           , 'Íåãðàø Î.Â.'::TVarChar                    AS N10
+           -- , 'Íåãðàø Î.Â.'::TVarChar                    AS N10
+           , 'Ðóäèê Í.Â.'::TVarChar                    AS N10
            , 'îïëàòà ç ïîòî÷íîãî ðàõóíêà'::TVarChar     AS N9
-
+/*
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN ''
              ELSE CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar)
              END                                        AS InvNumberPartner
+*/
+           ,  CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
 
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
@@ -177,7 +180,7 @@ BEGIN
            , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode
 
            , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
-           , MovementDate_OperDatePartnerEDI.ValueData     AS OperDatePartnerEDI
+           , COALESCE (Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData)     AS OperDatePartnerEDI
 
            , CASE WHEN inisClientCopy = TRUE
                   THEN 'X' ELSE '' END                  AS CopyForClient
@@ -210,6 +213,7 @@ BEGIN
                                     ON MovementFloat_Amount.MovementId =  MovementLinkMovement_Sale.MovementChildId
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 
+            LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id =  MovementLinkMovement_Sale.MovementChildId
             LEFT JOIN MovementDate AS MovementDate_OperDatePartnerEDI
                                    ON MovementDate_OperDatePartnerEDI.MovementId =  MovementLinkMovement_Sale.MovementChildId
                                   AND MovementDate_OperDatePartnerEDI.DescId = zc_MovementDate_OperDatePartner()
@@ -550,7 +554,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
- 13.01.15                                                       *
+ 14.01.15                                                       *
  30.12.14                                                       * add MeasureCode
  23.07.14                                        * add tmpObject_GoodsPropertyValueGroup and ArticleGLN
  05.06.14                                        * restore ContractSigningDate

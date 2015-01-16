@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Contract (Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Contract (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Contract (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Contract(
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Contract(
     IN inPersonalCollationId Integer  ,     -- Сотрудники (сверка)
     IN inBankAccountId       Integer  ,     -- Расчетные счета(оплата нам)
     IN inContractTagId       Integer  ,     -- Признак договора
-    
+    IN inJuridicalDocumentId Integer  ,     -- Юридическое лицо (печать док.)
+
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -38,7 +40,10 @@ BEGIN
    -- PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_BankAccount(), ioId, inBankAccountId);
    -- сохранили связь с <Признак договора>
    -- PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractTag(), ioId, inContractTagId);
-   
+
+   -- сохранили связь с <Юридическое лицо(печать док.)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalDocument(), ioId, inJuridicalDocumentId);    
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
@@ -50,6 +55,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.01.15         * add inJuridicalDocumentId
  14.08.14                                        * add inPersonalId
  22.04.14         *
 */

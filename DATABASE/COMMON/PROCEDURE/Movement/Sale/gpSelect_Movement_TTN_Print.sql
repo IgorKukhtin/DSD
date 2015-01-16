@@ -147,11 +147,11 @@ BEGIN
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
            , OH_JuridicalDetails_From.AccounterName     AS AccounterName_From
-           , CAST('Ман АЕ 1913 ВР Фургон- рефрежератор-С' AS TVarChar)    AS CarName
-           , CAST('Ман АЕ 1955 ВР Прицеп' AS TVarChar)                    AS CarTrailerName
-           , CAST('Литвиненко А,М № посв, кіа 585542' AS TVarChar)        AS DriverName
-           , CAST('Гненко М,И № 3434' AS TVarChar)                        AS ExpName
-           , CAST('В 9735359' AS TVarChar)                                AS PlombaInvNumber
+           , CAST('' AS TVarChar)                       AS CarName
+           , CAST('' AS TVarChar)                       AS CarTrailerName
+           , CAST('' AS TVarChar)                       AS DriverName
+           , CAST('' AS TVarChar)                       AS ExpName
+           , CAST('' AS TVarChar)                       AS PlombaInvNumber
 
 
 

@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractKindId Integer, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
+             , JuridicalDocumentId Integer, JuridicalDocumentCode Integer, JuridicalDocumentName TVarChar
              
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
@@ -32,7 +33,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
              , PersonalCollationId Integer, PersonalCollationCode Integer, PersonalCollationName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
-             , ContractTagId Integer, ContractTagName TVarChar
+             , ContractTagId Integer, ContractTagName TVarChar, ContractTagGroupName TVarChar
                           
              , AreaContractId Integer, AreaContractName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
@@ -87,6 +88,10 @@ BEGIN
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
        , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
 
+       , Object_JuridicalDocument.Id             AS JuridicalDocumentId
+       , Object_JuridicalDocument.ObjectCode     AS JuridicalDocumentCode
+       , Object_JuridicalDocument.ValueData      AS JuridicalDocumentName
+
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
 
@@ -115,6 +120,7 @@ BEGIN
 
        , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
+       , Object_Contract_View.ContractTagGroupName
 
        , Object_AreaContract.Id             AS AreaContractId
        , Object_AreaContract.ValueData      AS AreaContractName
@@ -254,6 +260,11 @@ BEGIN
                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
+                             ON ObjectLink_Contract_JuridicalDocument.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
+        LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
+
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
 
@@ -270,6 +281,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 15.01.15         * add JuridicalDocument
  10.11.14         * add GLNCode
  18.08.14                                        * add inParams...
  16.08.14                                        * add JuridicalGroupName

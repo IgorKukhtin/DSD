@@ -610,7 +610,9 @@ uses
   ContractTagGroup in '..\..\Forms\Guides\ContractTagGroup.pas' {ContractTagGroupForm: TParentForm},
   ContractTagGroupEdit in '..\..\Forms\Guides\ContractTagGroupEdit.pas' {ContractTagGroupEditForm: TParentForm},
   TransferDebtOut_Order in '..\..\Forms\Document\TransferDebtOut_Order.pas' {TransferDebtOut_OrderForm: TParentForm},
-  TransferDebtOut_OrderJournal in '..\..\Forms\Document\TransferDebtOut_OrderJournal.pas' {TransferDebtOut_OrderJournalForm: TParentForm};
+  TransferDebtOut_OrderJournal in '..\..\Forms\Document\TransferDebtOut_OrderJournal.pas' {TransferDebtOut_OrderJournalForm: TParentForm},
+  ContractPartner in '..\..\Forms\Guides\ContractPartner.pas' {ContractPartnerForm: TParentForm},
+  ContractPartnerEdit in '..\..\Forms\Guides\ContractPartnerEdit.pas' {ContractPartnerEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
