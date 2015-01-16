@@ -141,6 +141,9 @@ type
     actUpdatePriceCurrency: TdsdExecStoredProc;
     spUpdatePriceCurrency: TdsdStoredProc;
     bbUpdatePriceCurrency: TdxBarButton;
+    spSelectPrintTTN: TdsdStoredProc;
+    actPrint_TTN: TdsdPrintAction;
+    bbPrint_TTN: TdxBarButton;
   private
     { Private declarations }
   public

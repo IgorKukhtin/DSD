@@ -578,69 +578,6 @@ inherited SaleJournalForm: TSaleJournalForm
       Width = 200
     end
   end
-  object spSelectPrintPack21: TdsdStoredProc [2]
-    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print21'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 127
-    Top = 488
-  end
-  object spSelectPrintPack22: TdsdStoredProc [3]
-    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print22'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 191
-    Top = 504
-  end
-  object spSelectPrintInvoice: TdsdStoredProc [4]
-    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 447
-    Top = 416
-  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
@@ -1619,6 +1556,69 @@ inherited SaleJournalForm: TSaleJournalForm
       end>
     Left = 200
     Top = 304
+  end
+  object spSelectPrintPack21: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print21'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 127
+    Top = 488
+  end
+  object spSelectPrintPack22: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print22'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 191
+    Top = 504
+  end
+  object spSelectPrintInvoice: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 447
+    Top = 416
   end
   object spGetReporNameBill: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
