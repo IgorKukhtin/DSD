@@ -297,6 +297,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Grid = cxGridExport
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
+      OpenAfterCreate = False
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint

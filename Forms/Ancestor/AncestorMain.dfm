@@ -272,12 +272,12 @@ object AncestorMainForm: TAncestorMainForm
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
-    Left = 88
-    Top = 16
+    Left = 96
+    Top = 64
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 24
-    Top = 16
+    Left = 32
+    Top = 72
   end
   object spUserProtocol: TdsdStoredProc
     StoredProcName = 'gpInsert_UserProtocol'

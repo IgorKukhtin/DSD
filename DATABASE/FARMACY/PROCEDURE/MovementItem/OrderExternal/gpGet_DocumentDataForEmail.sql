@@ -12,8 +12,11 @@ RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVa
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbUnitId Integer;
+  DECLARE vbContractId Integer;
   DECLARE vbMail TVarChar;
   DECLARE vbUserMail TVarChar;
+  DECLARE vbSubject TVarChar;
   DECLARE vbUserMailSign TBlob;
   DECLARE vbUnitSign TBlob;
   DECLARE vbJuridicalName TVarChar;
@@ -32,16 +35,26 @@ BEGIN
     WHERE DescId = zc_MovementLinkObject_From()
       AND MovementId = inId;
 
-   SELECT object_unit_view.juridicalname||' от '||object_unit_view.name, SomeText INTO vbZakazName, vbUnitSign 
+   SELECT object_unit_view.juridicalname||' от '||object_unit_view.name, SomeText, MovementLinkObject.ObjectId INTO vbZakazName, vbUnitSign, vbUnitId 
       FROM 
           MovementLinkObject 
-    LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = ObjectId 
-                                     AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitEmailSign()
-    LEFT JOIN object_unit_view ON object_unit_view.id = MovementLinkObject.ObjectId                                 
-    
-
+                LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = ObjectId 
+                                                      AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitEmailSign()
+                LEFT JOIN object_unit_view ON object_unit_view.id = MovementLinkObject.ObjectId                                 
+ 
     WHERE MovementLinkObject.DescId = zc_MovementLinkObject_To()
       AND MovementId = inId;
+
+   SELECT Object_ImportExportLink_View.StringKey INTO vbSubject
+      FROM 
+          MovementLinkObject 
+                LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = vbUnitId
+                                                      AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                                      AND Object_ImportExportLink_View.ValueId = ObjectId  
+ 
+    WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
+      AND MovementId = inId;
+
 
     IF COALESCE(vbMail, '') = '' THEN
        RAISE EXCEPTION 'У юридического лица нет контактактных лиц с e-mail';
@@ -61,12 +74,17 @@ BEGIN
     ELSE
        vbUserMail := ', '||vbUserMail;
     END IF;
+    
+    IF COALESCE(vbSubject, '') = '' THEN 
+       vbSubject := ('Заказ '||vbJuridicalName||' от - '||COALESCE(vbZakazName, ''))::TVarChar;
+    END IF;
+    
 
     vbMail := (vbMail||vbUserMail)::TVarChar;
 
        RETURN QUERY
        SELECT
-         ('Заказ '||vbJuridicalName||' от - '||COALESCE(vbZakazName, ''))::TVarChar, (COALESCE(vbUnitSign, '')||'<br>'||COALESCE(vbUserMailSign, ''))::TBlob, 'zakaz_family-neboley@mail.ru'::TVarChar
+         vbSubject, (COALESCE(vbUnitSign, '')||'<br>'||COALESCE(vbUserMailSign, ''))::TBlob, 'zakaz_family-neboley@mail.ru'::TVarChar
        , vbMail, 'smtp.mail.ru'::TVarChar, 465
        , 'zakaz_family-neboley@mail.ru'::TVarChar, 'fgntrfyt,jktq'::TVarChar;
 
@@ -80,6 +98,7 @@ ALTER FUNCTION gpGet_DocumentDataForEmail(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.01.15                         *  
  24.12.14                         *  
  18.11.14                         *  
 
@@ -87,4 +106,4 @@ ALTER FUNCTION gpGet_DocumentDataForEmail(integer, TVarChar) OWNER TO postgres;
 
 -- тест
 --             
-select * FROM  gpGet_DocumentDataForEmail(inId := 9941,  inSession := '377790');
+select * FROM  gpGet_DocumentDataForEmail(inId := 12183,  inSession := '377790');

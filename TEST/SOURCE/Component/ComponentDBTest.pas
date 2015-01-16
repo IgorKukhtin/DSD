@@ -18,14 +18,61 @@ type
     procedure SetParamToStoredProc;
     procedure DBFOpenTest;
     procedure ExecuteStoredProcOnServerTest;
+    procedure dsdStoredProcTest;
+    procedure BinaryFlowTest;
   end;
 
 implementation
 
 uses dsdDB, SysUtils, DateUtils, cxCalendar, Storage, DB, Dialogs,
-     Authentication, CommonData, DBClient, dsdAction;
+     Authentication, CommonData, DBClient, dsdAction, forms,
+     UtilConst, Classes;
 
 { TComponentDBTest }
+
+procedure TComponentDBTest.BinaryFlowTest;
+const  pXML =
+  (*'<xml Session = "" AutoWidht = "false" >' +
+    '<gpExecSql OutputType="otDataSet">' +
+         '<inSqlText DataType="ftString" Value="''SELECT 1 AS test''" />' +
+    '</gpExecSql>' +
+  '</xml>'(*)
+    '<xml Session = "" AutoWidht = "false" >' +
+    '<gpSelect_Object_PaidKind OutputType="otDataSet">' +
+    '</gpSelect_Object_PaidKind>' +
+  '</xml>';
+
+var St: AnsiString;
+    ClientDataSet: TClientDataSet;
+    FileStream: TFileStream;
+    StringStream: TStringStream;
+    Stt: AnsiString;
+    i: integer;
+begin
+  ClientDataSet := TClientDataSet.Create(nil);
+  FileStream := TFileStream.Create('c:\datanew.hhh', fmOpenRead  );
+  try
+    St := TStorageFactory.GetStorage.ExecuteProc(pXML);
+    StringStream := TStringStream.Create(St);
+    StringStream.SaveToFile('c:\datanewnew.hhh');
+//    ClientDataSet.LoadFromStream(StringStream);
+    StringStream.LoadFromStream(FileStream);
+    Stt := StringStream.DataString;
+
+    for I := 1 to length(st) do
+        check(st[i] = stt[i], IntToStr(i)+'   '+IntToStr(byte(st[i]))+ ' '+IntToStr(byte(stt[i])));
+
+   // ClientDataSet.XMLData := St;
+   // ClientDataSet.SaveToFile('c:\datanew.hhh', dfBinary);
+
+  //  Check(ClientDataSet.FieldCount = 4, IntToStr(ClientDataSet.FieldCount));
+   // Check(ClientDataSet.Fields[3].FieldName = 'iserased', ClientDataSet.Fields[3].FieldName);
+  finally
+    FreeAndNil(ClientDataSet);
+    FreeAndNil(FileStream);
+    FreeAndNil(StringStream);
+  end;
+end;
 
 procedure TComponentDBTest.DBFOpenTest;
 {var ZConnection : TZConnection;
@@ -39,6 +86,20 @@ begin
   ZTable.Connection := ZConnection;
   ZTable.TableName := 'export';
   ZTable.Open;}
+end;
+
+procedure TComponentDBTest.dsdStoredProcTest;
+var Form: TForm;
+    StoredProc: TdsdStoredProc;
+begin
+  Form := TForm.Create(nil);
+  StoredProc := TdsdStoredProc.Create(Form);
+  try
+    Form.RemoveComponent(StoredProc);
+
+  finally
+    FreeAndNil(Form)
+  end;
 end;
 
 procedure TComponentDBTest.ExecuteStoredProcOnServerTest;
@@ -107,7 +168,7 @@ end;
 procedure TComponentDBTest.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
 end;
 
 procedure TComponentDBTest.ShowStoredProcParamTest;

@@ -94,35 +94,45 @@ BEGIN
                                    AND MovementLinkObject_From.ObjectId = inJuridicalId
                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
  
-  -- Ищем подразделение
+     -- Ищем подразделение и Договор. Два в одном
+     SELECT MainId, ValueId INTO vbUnitId, vbContractId
+       FROM Object_ImportExportLink_View
+            LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = inJuridicalId
+      WHERE ValueId = Object_Contract_View.Id  AND StringKey = inUnitName;
 
-    SELECT MainId INTO vbUnitId 
-      FROM Object_ImportExportLink_View
-     WHERE ValueId = inJuridicalId AND StringKey = inUnitName;
+     IF COALESCE(vbUnitId, 0) = 0 THEN
+        -- Ищем подразделение по Юрлицу.
+        SELECT MainId INTO vbUnitId 
+          FROM Object_ImportExportLink_View
+         WHERE ValueId = inJuridicalId AND StringKey = inUnitName;
+     END IF;
 
   -- Если не нашли, то сразу ругнемся. Подразделение должно быть!
      IF COALESCE(vbUnitId, 0) = 0 THEN
         RAISE EXCEPTION 'Не установлено Подразделение';
      END IF;
+        
 
-  -- А вот тут попытка угадать договор.
-     -- Если даты не равны, то ищем любой договор с отсрочкой платежа
-     IF inPaymentDate > (inOperDate + interval '1 day') THEN
-     	SELECT MAX(Id) INTO vbContractId 
-     	   FROM Object_Contract_View 
-     	  WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) <> 0;
-     ELSE
-     -- иначе любой договор без отсрочки платежа
-     	SELECT MAX(Id) INTO vbContractId 
-     	   FROM Object_Contract_View 
-     	  WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) = 0;
-     END IF;	     	
+     IF COALESCE(vbContractId, 0) = 0 THEN
+      -- А вот тут попытка угадать договор.
+        -- Если даты не равны, то ищем любой договор с отсрочкой платежа
+        IF inPaymentDate > (inOperDate + interval '1 day') THEN
+           SELECT MAX(Id) INTO vbContractId 
+     	     FROM Object_Contract_View 
+     	    WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) <> 0;
+        ELSE
+        -- иначе любой договор без отсрочки платежа
+           SELECT MAX(Id) INTO vbContractId 
+     	     FROM Object_Contract_View 
+     	    WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) = 0;
+        END IF;	     	
 
-     -- Ищем хоть какой-нить договор
-     IF COALESCE(vbContractId, 0) = 0 THEN 
-     	SELECT MAX(Id) INTO vbContractId 
-     	   FROM Object_Contract_View 
-     	  WHERE Object_Contract_View.JuridicalId = inJuridicalId;
+        -- Ищем хоть какой-нить договор
+        IF COALESCE(vbContractId, 0) = 0 THEN 
+           SELECT MAX(Id) INTO vbContractId 
+     	     FROM Object_Contract_View 
+     	   WHERE Object_Contract_View.JuridicalId = inJuridicalId;
+        END IF;
      END IF;
 
   -- Ищем товар 
@@ -181,7 +191,7 @@ BEGIN
 
      IF inisLastRecord THEN
         -- пересчитали Итоговые суммы
-        PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+        PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
      END IF;
 
 
@@ -194,6 +204,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.01.15                        *   
  08.01.15                        *   
  29.12.14                        *   
  26.12.14                        *   

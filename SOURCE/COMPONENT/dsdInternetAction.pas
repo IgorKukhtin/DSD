@@ -22,6 +22,7 @@ type
   protected
     FAttachments: TArrayOfS;
     procedure FillAttachments; virtual;
+    procedure DeleteAttachments; virtual;
     function LocalExecute: boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -53,6 +54,7 @@ type
     FFileName: string;
   protected
     procedure FillAttachments; override;
+    procedure DeleteAttachments; override;
   published
     property FileName: String read FFileName write FFileName;
   end;
@@ -186,6 +188,11 @@ begin
   FBody := TdsdParam.Create;
 end;
 
+procedure TdsdSMTPAction.DeleteAttachments;
+begin
+
+end;
+
 destructor TdsdSMTPAction.Destroy;
 begin
   FreeAndNil(FToAddress);
@@ -219,11 +226,15 @@ begin
     RicipientsList.Free;
   end;
   FillAttachments;
-  result := TMailer.SendMail(Host.Value, Port.Value,
-                             Password.Value, Username.Value,
-                             Recipients, FromAddress.Value,
-                             Subject.Value, Body.Value,
-                             FAttachments);
+  try
+    result := TMailer.SendMail(Host.Value, Port.Value,
+                               Password.Value, Username.Value,
+                               Recipients, FromAddress.Value,
+                               Subject.Value, Body.Value,
+                               FAttachments);
+  finally
+    DeleteAttachments;
+  end;
 end;
 
 { TdsdSMTPDBViewAction }
@@ -251,6 +262,14 @@ begin
 end;
 
 { TdsdSMTPFileAction }
+
+procedure TdsdSMTPFileAction.DeleteAttachments;
+begin
+  inherited;
+  // Обязательно тут грохнуть файл!!!
+  if FileExists(FileName) then
+     DeleteFile(FileName);
+end;
 
 procedure TdsdSMTPFileAction.FillAttachments;
 var Files: TStringDynArray;

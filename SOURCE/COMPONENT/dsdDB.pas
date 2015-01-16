@@ -98,6 +98,7 @@ type
     FPackSize: integer;
     FCurrentPackSize: integer;
     FDataXML: string;
+    FAutoWidth: boolean;
     // Возвращает XML строку заполненных параметров
     function FillParams: String;
     procedure FillOutputParams(XML: String);
@@ -126,11 +127,14 @@ type
     property DataSet: TDataSet read GetDataSet write SetDataSet;
     // Обновляемые ДатаСеты
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
+    // тип возврата значений
     property OutputType: TOutputType read FOutputType write FOutputType default otDataSet;
     // Параметры процедуры
     property Params: TdsdParams read FParams write FParams;
     // Количество записей в пакете для вызова
     property PackSize: integer read FPackSize write FPackSize;
+    // автоматический расчет ширины колонок
+    property AutoWidth: boolean read FAutoWidth write FAutoWidth default false;
   end;
 
   procedure Register;
@@ -184,6 +188,7 @@ begin
   CurrentPackSize := 0;
   PackSize := 1;
   FDataXML := '';
+  FAutoWidth := false;
 end;
 
 procedure TdsdStoredProc.DataSetRefresh;
@@ -200,12 +205,13 @@ begin
      end;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
-     DataSets[0].DataSet.DisableControls;
-     if DataSets[0].DataSet is TClientDataSet then
-        TClientDataSet(DataSets[0].DataSet).XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
-    // TClientDataSet(DataSets[0].DataSet).SaveToFile('c:\data.hhh', dfBinary);
-    // TClientDataSet(DataSets[0].DataSet).SaveToFile('c:\data.xml');
-     DataSets[0].DataSet.EnableControls;
+  //   DataSets[0].DataSet.DisableControls;
+     try
+        if DataSets[0].DataSet is TClientDataSet then
+           TClientDataSet(DataSets[0].DataSet).XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+     finally
+    //    DataSets[0].DataSet.EnableControls;
+     end;
      if DataSets[0].DataSet is TkbmMemTable then begin
 
         StringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
@@ -421,7 +427,7 @@ begin
   if FDataXML <> '' then
      FDataXML := '<data>' + FDataXML + '</data>';
   Result :=
-           '<xml Session = "' + Session + '" >' +
+           '<xml Session = "' + Session + '" AutoWidth = "' + BoolToStr(AutoWidth) + '" >' +
                 '<' + StoredProcName + ' OutputType = "' + GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '" DataSetType = "' + GetDataSetType + '" >' +
                    FillParams +
                 '</' + StoredProcName + '>' +
@@ -459,7 +465,8 @@ end;
 procedure TdsdStoredProc.MultiExecute(ExecPack: boolean);
 begin
   // Заполняем значение Data
-  FDataXML := FDataXML + '<dataitem>' + FillParams + '</dataitem>';
+  if not ExecPack then
+     FDataXML := FDataXML + '<dataitem>' + FillParams + '</dataitem>';
   // Увеличиваем счетчик
   CurrentPackSize := CurrentPackSize + 1;
   // Выполняем
@@ -478,7 +485,7 @@ procedure TdsdStoredProc.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
+//  if csDesigning in ComponentState then
     if (Operation = opRemove) then begin
          if Assigned(Params) then
             for i := 0 to Params.Count - 1 do

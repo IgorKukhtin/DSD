@@ -10,8 +10,10 @@ CREATE OR REPLACE FUNCTION gpGet_OrderExternal_ExportParam(
 RETURNS TABLE (DefaultFileName TVarChar, ExportType Integer) AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbContractId Integer;
   DECLARE vbJuridicalId Integer;
   DECLARE vbUnitName TVarChar;
+  DECLARE vbSubject TVarChar;
   DECLARE vbMainJuridicalName TVarChar;
 BEGIN
 
@@ -26,9 +28,22 @@ BEGIN
 
    IF vbJuridicalId = 59611 THEN --Оптима
 
+      SELECT replace(replace(Object_ImportExportLink_View.StringKey, '|', ''), '*', ' ') INTO vbSubject
+      FROM 
+          MovementLinkObject 
+    
+                LEFT JOIN MovementLinkObject AS UnitLink ON UnitLink.DescId = zc_MovementLinkObject_To()
+                                                        AND UnitLink.movementid = MovementLinkObject.MovementId
+                LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = UnitLink.objectid
+                                                      AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
+                                                      AND Object_ImportExportLink_View.ValueId = MovementLinkObject.ObjectId  
+ 
+    WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
+      AND MovementLinkObject.MovementId = inMovementId;
+
        RETURN QUERY
        SELECT
-         ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, ''))::TVarChar
+         COALESCE(vbSubject, ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, '')))::TVarChar
         , 5;
        RETURN;
    END IF;
@@ -58,9 +73,11 @@ ALTER FUNCTION gpGet_OrderExternal_ExportParam(integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.01.15                         *  
  16.12.14                         *  
 
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_City (0, '2')
+-- 
+SELECT * FROM gpGet_OrderExternal_ExportParam (13692, '2')

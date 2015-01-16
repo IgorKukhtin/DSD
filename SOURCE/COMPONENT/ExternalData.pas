@@ -49,12 +49,12 @@ end;
 function TExternalData.isLastRecord: boolean;
 begin
   result := false;
-  exit;
   if FDataSet.EOF then
      exit;
   FDataSet.Next;
   result := FDataSet.EOF;
-  FDataSet.Prior;
+  if not result then
+     FDataSet.Prior;
 end;
 
 procedure TExternalData.Next;
