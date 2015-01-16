@@ -131,6 +131,8 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     colGLNCode: TcxGridDBColumn;
     clContractTagGroupName: TcxGridDBColumn;
+    JuridicalDocumentChoiceForm: TOpenChoiceForm;
+    clJuridicalDocumentName: TcxGridDBColumn;
   private
     { Private declarations }
   public

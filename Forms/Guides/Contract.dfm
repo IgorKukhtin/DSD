@@ -159,6 +159,21 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 132
       end
+      object clJuridicalDocumentName: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.)'
+        DataBinding.FieldName = 'JuridicalDocumentName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = JuridicalDocumentChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
@@ -789,8 +804,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1485,6 +1500,29 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
+    object JuridicalDocumentChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'JuridicalDocumentChoiceForm'
+      FormName = 'TJuridical_ObjectForm'
+      FormNameParam.Value = 'TJuridical_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalDocumentId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalDocumentName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
@@ -1706,6 +1744,13 @@ object ContractForm: TContractForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractTagId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalDocumentId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'JuridicalDocumentId'
         ParamType = ptInput
       end>
     PackSize = 1
