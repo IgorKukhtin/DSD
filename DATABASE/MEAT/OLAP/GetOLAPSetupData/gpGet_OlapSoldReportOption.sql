@@ -135,6 +135,8 @@ BEGIN
    UNION SELECT 33, 'dimension'::TVarChar, 'Филиал (супервайзер)'::TVarChar, 'BranchPersonalName'::TVarChar, ''::TVarChar,
                  'Object'::TVarChar, 'ObjectBranchPersonal'::TVarChar, 'BranchId_Personal'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
 
+   UNION SELECT 40, 'dimension'::TVarChar, 'Адрес'::TVarChar, 'Address'::TVarChar, ''::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    UNION SELECT 41, 'dimension'::TVarChar, 'Область'::TVarChar, 'RegionName'::TVarChar, ''::TVarChar, 
                  'Object'::TVarChar, 'ObjectRegion'::TVarChar, 'RegionId'::TVarChar, 'ValueData'::TVarChar,''::TVarChar
    UNION SELECT 42, 'dimension'::TVarChar, 'Район'::TVarChar, 'ProvinceName'::TVarChar, ''::TVarChar, 

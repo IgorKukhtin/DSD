@@ -89,6 +89,8 @@ CREATE TABLE SoldTable
  , SaleBonus_Profit       TFloat
  , SaleReturn_Profit      TFloat
  , SaleReturnBonus_Profit TFloat
+
+ , Address TVarChar
 )
 WITH (
   OIDS=FALSE

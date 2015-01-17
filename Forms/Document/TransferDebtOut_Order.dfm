@@ -2,8 +2,8 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076', '#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 687
   ClientWidth = 1268
-  ExplicitWidth = 1276
-  ExplicitHeight = 721
+  ExplicitWidth = 1284
+  ExplicitHeight = 722
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -56,11 +56,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
-          Styles.Content = nil
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -236,7 +231,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
               Column = colTotalSummPVAT
             end>
           DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsBehavior.FocusCellOnCycle = True
           OptionsCustomize.ColumnHiding = True
@@ -249,12 +243,10 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colStatus: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Images = dmMain.ImageList
             Properties.Items = <
               item
                 Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
@@ -487,7 +479,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 163
-      ExplicitHeight = 22
       Width = 163
     end
     object cxLabel3: TcxLabel
@@ -1801,6 +1792,9 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
         Control = edInvNumberPartner
       end
       item
+        Control = edInvNumberOrder
+      end
+      item
         Control = edOperDate
       end
       item
@@ -1838,9 +1832,6 @@ inherited TransferDebtOut_OrderForm: TTransferDebtOut_OrderForm
       end
       item
         Control = edIsChecked
-      end
-      item
-        Control = edInvNumberOrder
       end>
     Left = 232
     Top = 193

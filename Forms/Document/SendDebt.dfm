@@ -690,17 +690,19 @@
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PaidKindFromId'
+        Name = 'Key'
         Value = ''
         Component = PaidKindFromGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
-        Name = 'PaidKindFromName'
+        Name = 'TextValue'
         Value = ''
         Component = PaidKindFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
     Left = 59
     Top = 251
@@ -966,17 +968,19 @@
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PaidKindToId'
+        Name = 'Key'
         Value = ''
         Component = PaidKindToGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
-        Name = 'PaidKindToName'
+        Name = 'TextValue'
         Value = ''
         Component = PaidKindToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
     Left = 347
     Top = 259

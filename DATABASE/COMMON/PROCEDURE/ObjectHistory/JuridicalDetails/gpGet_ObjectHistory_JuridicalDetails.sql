@@ -20,7 +20,7 @@ BEGIN
                         (SELECT * FROM ObjectHistory
                           WHERE ObjectHistory.ObjectId = inJuridicalId
                             AND ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails()
-                            AND inOperDate BETWEEN ObjectHistory.StartDate AND ObjectHistory.EndDate)
+                            AND inOperDate <= ObjectHistory.StartDate AND inOperDate < ObjectHistory.EndDate)
        SELECT
              ObjectHistory_JuridicalDetails.Id                                              AS Id
            , COALESCE(ObjectHistory_JuridicalDetails.StartDate, Empty.StartDate)            AS StartDate

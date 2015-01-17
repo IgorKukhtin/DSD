@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_GoodsByGoodsKind1CLink (TVarChar)
 
-DROP FUNCTION IF EXISTS FillSoldTable (TVarChar);
 DROP FUNCTION IF EXISTS FillSoldTable (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION FillSoldTable(
@@ -28,7 +27,9 @@ BEGIN
                        , Return_Summ, Return_Summ_10300, Return_SummCost, Return_SummCost_40200, Return_Amount_Weight, Return_Amount_Sh, Return_AmountPartner_Weight, Return_AmountPartner_Sh, Return_Amount_40200_Weight
                        , SaleReturn_Summ, SaleReturn_Summ_10300, SaleReturn_SummCost, SaleReturn_SummCost_40200, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
                        , Bonus, Plan_Weight, Plan_Summ
-                       , Money_Summ, SendDebt_Summ, Money_SendDebt_Summ)
+                       , Money_Summ, SendDebt_Summ, Money_SendDebt_Summ
+                       , Address
+                        )
 
    WITH tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
                              , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
@@ -73,7 +74,7 @@ BEGIN
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
-                                                              AND MIContainer.OperDate >= '01.06.2014'
+                                                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               INNER JOIN ContainerLinkObject AS CLO_Juridical
                                                              ON CLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
                                                             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -179,6 +180,8 @@ BEGIN
            , 0, 0, 0
            , 0, 0, 0
 
+           , ObjectString_Address.ValueData AS Address
+
       FROM (SELECT tmpOperation.OperDate
                  , tmpOperation.InvNumber
 
@@ -242,6 +245,9 @@ BEGIN
            ) AS tmpResult
 
            LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpResult.PartnerId
+           LEFT JOIN ObjectString AS ObjectString_Address
+                                  ON ObjectString_Address.ObjectId = tmpResult.PartnerId
+                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
            LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                 ON ObjectLink_Goods_TradeMark.ObjectId = tmpResult.GoodsId
@@ -309,10 +315,11 @@ BEGIN
            , -1 * SUM (MovementItemContainer.Amount) AS Bonus
            , 0 AS Plan_Weight, 0 AS Plan_Summ
            , 0 AS Money_Summ, 0 AS SendDebt_Summ, 0 AS Money_SendDebt_Summ
-   FROM Movement 
+           , '' AS Address
+   FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                  AND MovementItemContainer.OperDate >= '01.06.2014'
+                                  AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
         JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                       AND Container.ObjectId = zc_Enum_Account_50401() -- !!!Расходы будущих периодов + Услуги по маркетингу!!!
 
@@ -366,10 +373,11 @@ BEGIN
            , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN -1 * MovementItemContainer.Amount ELSE 0 END) AS Money_Summ
            , SUM (CASE WHEN Movement.DescId = zc_Movement_SendDebt() THEN -1 * MovementItemContainer.Amount ELSE 0 END) AS SendDebt_Summ
            , SUM (-1 * MovementItemContainer.Amount) AS Money_SendDebt_Summ
-   FROM Movement 
+           , '' AS Address
+   FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                  AND MovementItemContainer.OperDate >= '01.06.2014'
+                                  AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
         JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                       AND Container.DescId = zc_Container_Summ()
         INNER JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()

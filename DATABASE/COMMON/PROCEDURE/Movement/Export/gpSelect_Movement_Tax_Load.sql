@@ -91,7 +91,7 @@ BEGIN
             LEFT JOIN ObjectHistory AS ObjectHistory_JuridicalDetails 
                    ON ObjectHistory_JuridicalDetails.ObjectId = MovementLinkObject_To.ObjectId
                   AND ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
-                  AND Movement.OperDate BETWEEN ObjectHistory_JuridicalDetails.StartDate AND ObjectHistory_JuridicalDetails.EndDate  
+                  AND Movement.OperDate >= ObjectHistory_JuridicalDetails.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails.EndDate  
             LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_FullName
                    ON ObjectHistoryString_JuridicalDetails_FullName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                   AND ObjectHistoryString_JuridicalDetails_FullName.DescId = zc_ObjectHistoryString_JuridicalDetails_FullName()
@@ -135,4 +135,4 @@ ALTER FUNCTION gpSelect_Movement_Tax_Load (TDateTime, TDateTime, Integer, Intege
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '16.06.2014', inEndDate:= '16.06.2014', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '01.12.2014', inEndDate:= '31.12.2014', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= '2')

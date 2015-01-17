@@ -29,7 +29,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar
-             , RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar
+             , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , PersonalName TVarChar, UnitName_Personal TVarChar, BranchName_Personal TVarChar
@@ -407,6 +407,7 @@ BEGIN
 
           , View_Partner_Address.AreaName
           , View_Partner_Address.PartnerTagName
+          , ObjectString_Address.ValueData AS Address
           , View_Partner_Address.RegionName
           , View_Partner_Address.ProvinceName
           , View_Partner_Address.CityKindName
@@ -510,6 +511,9 @@ BEGIN
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
           LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpOperationGroup.PartnerId
+          LEFT JOIN ObjectString AS ObjectString_Address
+                                 ON ObjectString_Address.ObjectId = tmpOperationGroup.PartnerId
+                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
 
