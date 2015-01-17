@@ -119,6 +119,9 @@ type
     bbPrint_Spec: TdxBarButton;
     colTotalSummChange: TcxGridDBColumn;
     colIsMedoc: TcxGridDBColumn;
+    spSelectPrintTTN: TdsdStoredProc;
+    actPrint_TTN: TdsdPrintAction;
+    bbPrint_TTN: TdxBarButton;
   private
     { Private declarations }
   public

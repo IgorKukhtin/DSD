@@ -38,8 +38,6 @@ BEGIN
 
      OPEN Cursor2 FOR
        SELECT            
---             JuridicalKey.IntegerKey as CodeDebet
---           , PointKey.IntegerKey     as CodePoint
              ''::VarChar(10)                        AS Field1
            , ''::VarChar(10)                        AS Field2
            , ''::VarChar(10)                        AS Field3
@@ -50,9 +48,9 @@ BEGIN
            , MovementItem.PartnerGoodsCode::Integer as KOD
            
         FROM Movement_OrderExternal_View AS Movement
-         LEFT JOIN Object_ImportExportLink_View AS PointKey ON PointKey.LinkTypeId = zc_Enum_ImportExportLinkType_UnitJuridical()
-                                               AND PointKey.MainId = Movement.ToId
-                                               AND PointKey.ValueId = Movement.FromId
+         LEFT JOIN (SELECT DISTINCT IntegerKey, MainId, ValueId FROM Object_ImportExportLink_View AS PointKey WHERE PointKey.LinkTypeId = zc_Enum_ImportExportLinkType_UnitJuridical()
+                                               LIMIT 1 ) AS PointKey ON PointKey.MainId = Movement.ToId
+                                                            AND PointKey.ValueId = Movement.FromId
          LEFT JOIN Object_Unit_View AS Unit ON Unit.Id = Movement.ToId 
          LEFT JOIN Object_ImportExportLink_View AS JuridicalKey ON JuridicalKey.LinkTypeId = zc_Enum_ImportExportLinkType_UnitJuridical()
                                                AND JuridicalKey.MainId = Unit.JuridicalId
@@ -86,18 +84,23 @@ BEGIN
    END IF;
    -- Во всех других случаях
      OPEN Cursor1 FOR
-       SELECT 'Code'::TVarChar AS FieldName, 'Код'::TVarChar AS DisplayName
- UNION SELECT 'Amount'::TVarChar AS FieldName, 'Количество'::TVarChar AS DisplayName;
+       SELECT 'PartnerCode'::TVarChar AS FieldName, 'Код покупателя'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'Code'::TVarChar AS FieldName, 'Код'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'GoodsName'::TVarChar AS FieldName, 'Товар'::TVarChar AS DisplayName, 200 AS Width
+ UNION SELECT 'Amount'::TVarChar AS FieldName, 'Кол-во'::TVarChar AS DisplayName, 100 AS Width;
                                           
      RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
        SELECT            
-             MovementItem.PartnerGoodsCode::TVarChar as Code
+             MovementItem.PartnerGoodsCode::TVarChar as PartnerCode
+           , MovementItem.GoodsCode::TVarChar        as Code
+           , MovementItem.GoodsName                  AS GoodsName
            , MovementItem.Amount                     as Amount
            
         FROM MovementItem_OrderExternal_View AS MovementItem
        WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = false;
+     RETURN NEXT Cursor2;
 
    
 END;

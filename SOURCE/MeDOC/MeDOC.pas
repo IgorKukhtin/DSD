@@ -599,25 +599,23 @@ begin
      i := 0;
      DocumentSumm := 0;
      while not EOF do begin
-         if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('Price').AsFloat <> 0) then begin
-           //Дата відвантаження
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
-           //Причина коригування:
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', 'повернення');
-           //Номенклатура поставки товарів
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
-           //Одиниця виміру товару
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
-           //Коригування кількості (зміна кількості, об'єму, обсягу)
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.00', - FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
-           //Коригування кількості  (ціна постачання одиниці товару\послуги):
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
+         //Дата відвантаження
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
+         //Причина коригування:
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', 'повернення');
+         //Номенклатура поставки товарів
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
+         //Одиниця виміру товару
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
+         //Коригування кількості (зміна кількості, об'єму, обсягу)
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.00', - FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
+         //Коригування кількості  (ціна постачання одиниці товару\послуги):
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
-           //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
-           DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
-           inc(i);
-         end;
+         //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
+         DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
+         inc(i);
          Next;
      end;
      Close;
@@ -724,25 +722,23 @@ begin
      i := 0;
      DocumentSumm := 0;
      while not EOF do begin
-         if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('Price').AsFloat <> 0) then begin
-           //Дата відвантаження
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
-           //Причина коригування:
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', 'повернення');
-           //Номенклатура поставки товарів
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
-           //Одиниця виміру товару
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
-           //Коригування кількості (зміна кількості, об'єму, обсягу)
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.00', - FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
-           //Коригування кількості  (ціна постачання одиниці товару\послуги):
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
+         //Дата відвантаження
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
+         //Причина коригування:
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', 'повернення');
+         //Номенклатура поставки товарів
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
+         //Одиниця виміру товару
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
+         //Коригування кількості (зміна кількості, об'єму, обсягу)
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.00', - FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
+         //Коригування кількості  (ціна постачання одиниці товару\послуги):
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
-           //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
-           DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
-           inc(i);
-         end;
+         //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
+         DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
+         inc(i);
          Next;
      end;
      Close;
@@ -790,8 +786,6 @@ begin
 
   //Код податкових зобов'язань
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'PZOB', '5');
-   //Включено до ЄРПН
-  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N16', '1');
   //Дата складання розрахунку коригування
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N12', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
   //Дата розрахунку коригування
@@ -847,25 +841,25 @@ begin
      i := 0;
      DocumentSumm := 0;
      while not EOF do begin
-         if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('Price').AsFloat <> 0) then begin
-           //Дата відвантаження
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
-           //Причина коригування:
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', 'повернення');
-           //Номенклатура поставки товарів
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
-           //Одиниця виміру товару
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
-           //Коригування кількості (зміна кількості, об'єму, обсягу)
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.00', - FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
-           //Коригування кількості  (ціна постачання одиниці товару\послуги):
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
+         //Дата відвантаження
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
+         //Причина коригування:
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', 'повернення');
+         //Номенклатура поставки товарів
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
+         //Одиниця виміру товару
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
+         //Код одиниці виміру товару
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A141', FieldByName('MeasureCode').AsString);
+         //Коригування кількості (зміна кількості, об'єму, обсягу)
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.00', - FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
+         //Коригування кількості  (ціна постачання одиниці товару\послуги):
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
-           //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
-           DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
-           inc(i);
-         end;
+         //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
+         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
+         DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
+         inc(i);
          Next;
      end;
      Close;
@@ -893,6 +887,10 @@ begin
         CreateJ1201207XMLFile(HeaderDataSet, ItemsDataSet, FileName)
    end;
 end;
+
+initialization
+  RegisterClass(TMedocAction);
+  RegisterClass(TMedocCorrectiveAction);
 
 end.
 

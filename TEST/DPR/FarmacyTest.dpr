@@ -205,7 +205,8 @@ uses
   Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
   MovementProtocol in '..\..\Forms\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
   ImportExportLinkTypeTest in '..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas',
-  NDSKind in '..\..\Forms\Kind\NDSKind.pas' {NDSKindForm: TParentForm};
+  NDSKind in '..\..\Forms\Kind\NDSKind.pas' {NDSKindForm: TParentForm},
+  ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

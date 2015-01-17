@@ -305,14 +305,19 @@ begin
     PriceWithVAT := ElementList[14] = '1';
     SyncCode := StrToInt(ElementList[15]);
 
+    Remark := '';
     ElementList := SplitString(StringList[2], #9);
-    Remark := ElementList[0];
+    for I := Low(ElementList) to High(ElementList) do
+        if ElementList[i] <> '' then begin
+           Remark := ElementList[i];
+           break;
+        end;
     for I := 3 to StringList.Count - 1 do
         // разбираем строки
         with FDataSet do begin
           ElementList := SplitString(StringList[i], #9);
           Price := gfStrToFloat(ElementList[20]) / gfStrToFloat(ElementList[15]);
-          if ElementList[13] = '' then
+          if (ElementList[13] = '') or (ElementList[13] = '.  .') then
              ExpirationDate := OperDate
           else
              ExpirationDate := VarToDateTime(ElementList[13]);    // Срок годности
@@ -394,7 +399,7 @@ begin
     dtXLS: begin
       strConn:='Provider=Microsoft.Jet.OLEDB.4.0;' +
                'Data Source=' + FileName + ';' +
-               'Extended Properties="Excel 8.0' + FExtendedProperties + ';"';
+               'Extended Properties="Excel 8.0' + FExtendedProperties + ';IMEX=1;"';
       if not Assigned(FAdoConnection) then begin
          FAdoConnection := TAdoConnection.Create(nil);
          FAdoConnection.LoginPrompt := false;

@@ -9,7 +9,8 @@ uses
   Vcl.ActnList, dxBar, cxClasses, Vcl.StdActns, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinsdxBarPainter, cxPropertiesStore, Vcl.Menus,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
-  cxEdit, cxLabel, dsdAction;
+  cxEdit, cxLabel, dsdAction, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
+  Vcl.ToolWin, Vcl.ActnCtrls, Vcl.ActnMenus;
 
 type
   TAncestorMainForm = class(TForm)
@@ -39,7 +40,6 @@ type
     N2: TMenuItem;
     miMovementProtocol: TMenuItem;
     miUserProtocol: TMenuItem;
-    N1: TMenuItem;
     N3: TMenuItem;
     miLookAndFillSettings: TMenuItem;
     miAbout: TMenuItem;

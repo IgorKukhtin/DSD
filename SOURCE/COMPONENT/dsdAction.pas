@@ -1328,12 +1328,14 @@ begin
               while TcxGridDBTableView(TcxGrid(FGrid).Views[0]).ColumnCount > 0 do
                     TcxGridDBTableView(TcxGrid(FGrid).Views[0]).Columns[0].Free;
               TcxGridDBDataController(TcxGrid(FGrid).Views[0].DataController).CreateAllItems;
-              // ¬от тут устанавливаем имена колонок
+              // ¬от тут устанавливаем имена колонок и ширину!
               if Assigned(ColumnNameDataSet) then begin
                  with TcxGridDBTableView(TcxGrid(FGrid).Views[0]) do
                    for I := 0 to ColumnCount - 1 do begin
-                     if ColumnNameDataSet.Locate(cFieldName, Columns[i].DataBinding.FieldName, [loCaseInsensitive]) then
+                     if ColumnNameDataSet.Locate(cFieldName, Columns[i].DataBinding.FieldName, [loCaseInsensitive]) then begin
                         Columns[i].Caption := ColumnNameDataSet.FieldByName(cDisplayName).AsString;
+                        TcxGridDBColumn(Columns[i]).Width := ColumnNameDataSet.FieldByName('Width').AsInteger;
+                     end;
                    end;
               end;
            end;

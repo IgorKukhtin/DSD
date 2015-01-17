@@ -140,12 +140,15 @@ begin
             ftString: begin
               field_type := 'C';
               len :=  min(FFieldDefs[i].Size, 254);
-              dec :=  FFieldDefs[i].Precision;
             end;
-            ftInteger, ftBCD: begin
+            ftInteger: begin
               field_type := 'N';
               len := 10;
-              dec := 0;
+            end;
+            ftBCD: begin
+              field_type := 'N';
+              len := FFieldDefs[i].Size;
+              dec := FFieldDefs[i].Precision;
             end;
             ftFloat: begin
               field_type := 'N';

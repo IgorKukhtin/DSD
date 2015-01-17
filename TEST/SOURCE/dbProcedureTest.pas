@@ -332,6 +332,8 @@ begin
   ProcedureLoad;
   ScriptDirectory := ProcedurePath + 'OBJECTS\ContractTag\';
   ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ContractPartner\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreatePeriodCloseProcedure;

@@ -11,6 +11,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbClientId Integer; 
   DECLARE vbConnectionString TVarChar;
   DECLARE vbQueryText TBlob;
 BEGIN
@@ -23,11 +24,17 @@ BEGIN
 
          SELECT 
              Object_ImportExportLink_View.IntegerKey       
-           , Object_ImportExportLink_View.StringKey  INTO vbUnitId, vbConnectionString
+           , Object_ImportExportLink_View.StringKey
+           , ClientLink.IntegerKey INTO vbUnitId, vbConnectionString, vbClientId
            
        FROM Movement_Income_View    
          LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitUnitId()
                                                AND Object_ImportExportLink_View.MainId = Movement_Income_View.ToId
+         LEFT JOIN Object_Unit_View AS Object_Unit_View ON Object_Unit_View.id = Movement_Income_View.ToId
+         LEFT JOIN Object_ImportExportLink_View AS ClientLink ON ClientLink.LinkTypeId = zc_Enum_ImportExportLinkType_OldClientLink()
+                                               AND ClientLink.MainId = Object_Unit_View.parentid
+                                               AND ClientLink.ValueId = Movement_Income_View.ContractId
+         
       WHERE Movement_Income_View.Id = inMovementId;
       
     IF COALESCE(vbUnitId, 0) = 0 THEN 
@@ -39,7 +46,7 @@ BEGIN
        FROM (SELECT 
      'call "DBA"."LoadIncomeBillItems"('''||Movement_Income_View.InvNumber||''','''||to_char(Movement_Income_View.OperDate, 'yyyy-mm-dd')||
           ''','''||to_char(Movement_Income_View.PaymentDate, 'yyyy-mm-dd')||
-          ''','||Movement_Income_View.PriceWithVAT::integer||','''||coalesce(Juridical.OKPO,'')||''','||vbUnitId||','||ObjectFloat_NDSKind_NDS.ValueData||
+          ''','||Movement_Income_View.PriceWithVAT::integer||','''||coalesce(Juridical.OKPO,'')||''','||COALESCE(vbClientId, 0)||','||vbUnitId||','||ObjectFloat_NDSKind_NDS.ValueData||
           ','||MovementItem.GoodsCode||','''||MovementItem.GoodsName||''','||MovementItem.Amount||','||
              CASE WHEN Movement_Income_View.PriceWithVAT THEN MovementItem.Price
              ELSE MovementItem.Price * (1 + Movement_Income_View.NDS/100)
@@ -71,5 +78,6 @@ ALTER FUNCTION gpGetDataForSend (Integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
---SELECT * FROM gpGetDataForSend (inMovementId:= 12743 , inSession:= '2')
+--
+SELECT * FROM gpGetDataForSend (inMovementId:= 13735  , inSession:= '2')
 
