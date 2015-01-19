@@ -145,6 +145,8 @@ type
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     InsertRecordCP: TInsertRecord;
     bbRecordCP: TdxBarButton;
+    colCode: TcxGridDBColumn;
+    dsdUpdateDataSet1: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

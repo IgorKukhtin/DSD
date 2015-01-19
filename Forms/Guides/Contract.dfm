@@ -357,7 +357,6 @@ object ContractForm: TContractForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -796,6 +795,13 @@ object ContractForm: TContractForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object colCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 57
+      end
       object clPartnerName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
         DataBinding.FieldName = 'PartnerName'
@@ -850,8 +856,8 @@ object ContractForm: TContractForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 112
+    Left = 344
+    Top = 120
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1105,6 +1111,16 @@ object ContractForm: TContractForm
         end>
       isShowModal = True
     end
+    object InsertRecordCP: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView1
+      Action = PartnerChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      ImageIndex = 0
+    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1132,6 +1148,16 @@ object ContractForm: TContractForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object InsertRecordCCK: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableViewContractCondition
+      Action = ContractConditionKindChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
+      ImageIndex = 0
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -1466,26 +1492,6 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
-    object InsertRecordCP: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      View = cxGridDBTableView1
-      Action = PartnerChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-      ImageIndex = 0
-    end
-    object InsertRecordCCK: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      View = cxGridDBTableViewContractCondition
-      Action = ContractConditionKindChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-      ImageIndex = 0
-    end
     object actContractCondition: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -1497,6 +1503,17 @@ object ContractForm: TContractForm
       Caption = 'actUpdateDataSetCCK'
       DataSource = ContractConditionDS
     end
+    object dsdUpdateDataSet1: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateContractPartner
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateContractPartner
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource1
+    end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -1507,36 +1524,6 @@ object ContractForm: TContractForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
-    end
-    object PartnerChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PartnerChoiceForm'
-      FormName = 'TPartner_ObjectForm'
-      FormNameParam.Value = 'TPartner_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet1
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet1
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'inJuridicalId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalId'
-          ParamType = ptInput
-        end>
-      isShowModal = False
     end
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1581,6 +1568,36 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'PersonalTradeName'
           DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object PartnerChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PartnerChoiceForm'
+      FormName = 'TPartner_ObjectForm'
+      FormNameParam.Value = 'TPartner_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet1
+          ComponentItem = 'PartnerId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet1
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
         end>
       isShowModal = False
     end
@@ -1716,8 +1733,8 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 272
-    Top = 184
+    Left = 800
+    Top = 224
   end
   object ContractConditionDS: TDataSource
     DataSet = ContractConditionCDS
@@ -1945,6 +1962,13 @@ object ContractForm: TContractForm
         Component = ClientDataSet1
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = ClientDataSet1
+        ComponentItem = 'Code'
+        ParamType = ptInput
       end
       item
         Name = 'inContractId'
