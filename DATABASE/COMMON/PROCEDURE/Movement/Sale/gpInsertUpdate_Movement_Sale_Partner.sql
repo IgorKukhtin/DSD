@@ -99,10 +99,10 @@ BEGIN
                         WHERE Movement.Id = ioId
                           AND Movement.OperDate = inOperDate
                           AND Movement.InvNumber = inInvNumber
-                          AND COALESCE (MovementFloat_VATPercent.ValueData, 0) = COALESCE (outVATPercent, 0)
-                          AND COALESCE (MovementFloat_ChangePercent.ValueData, 0) = COALESCE (inChangePercent, 0)
+                          -- AND COALESCE (MovementFloat_VATPercent.ValueData, 0) = COALESCE (outVATPercent, 0)
+                          -- AND COALESCE (MovementFloat_ChangePercent.ValueData, 0) = COALESCE (inChangePercent, 0)
                           AND COALESCE (MovementString_InvNumberOrder.ValueData, '') = COALESCE (inInvNumberOrder, '')
-                          AND COALESCE (MovementLinkObject_RouteSorting.ObjectId, 0) = COALESCE (inRouteSortingId, 0)
+                          -- AND COALESCE (MovementLinkObject_RouteSorting.ObjectId, 0) = COALESCE (inRouteSortingId, 0)
                        )
          THEN
              RAISE EXCEPTION 'Ошибка.Коорректировать <Документ> можно только в первичных данных.';
