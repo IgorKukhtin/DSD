@@ -3,7 +3,6 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitLeft = -96
   ExplicitWidth = 1094
   ExplicitHeight = 261
   PixelsPerInch = 96

@@ -133,6 +133,18 @@ type
     clContractTagGroupName: TcxGridDBColumn;
     JuridicalDocumentChoiceForm: TOpenChoiceForm;
     clJuridicalDocumentName: TcxGridDBColumn;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    clPartnerName: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    ClientDataSet1: TClientDataSet;
+    DataSource1: TDataSource;
+    spSelectContractPartner: TdsdStoredProc;
+    spInsertUpdateContractPartner: TdsdStoredProc;
+    PartnerChoiceForm: TOpenChoiceForm;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    InsertRecordCP: TInsertRecord;
+    bbRecordCP: TdxBarButton;
   private
     { Private declarations }
   public

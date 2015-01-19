@@ -10,7 +10,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   Vcl.Controls, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, Vcl.Menus;
+  dxSkinsdxBarPainter, Vcl.Menus, cxButtonEdit;
 
 type
   TContractPartnerForm = class(TAncestorGuidesForm)

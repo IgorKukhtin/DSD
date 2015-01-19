@@ -2,7 +2,7 @@ object ContractForm: TContractForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientHeight = 473
+  ClientHeight = 514
   ClientWidth = 1186
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,9 +22,10 @@ object ContractForm: TContractForm
     Top = 26
     Width = 1186
     Height = 303
-    Align = alClient
+    Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 20
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -600,13 +601,15 @@ object ContractForm: TContractForm
   object cxGridContractCondition: TcxGrid
     Left = 0
     Top = 329
-    Width = 1186
-    Height = 144
-    Align = alBottom
+    Width = 768
+    Height = 185
+    Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 335
+    ExplicitWidth = 624
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -638,7 +641,7 @@ object ContractForm: TContractForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 127
       end
       object cContractConditionKindName: TcxGridDBColumn
         Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -652,7 +655,7 @@ object ContractForm: TContractForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 120
       end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -764,6 +767,55 @@ object ContractForm: TContractForm
     TabOrder = 10
     Width = 278
   end
+  object cxGrid1: TcxGrid
+    Left = 768
+    Top = 329
+    Width = 418
+    Height = 185
+    Align = alRight
+    TabOrder = 11
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
+    object cxGridDBTableView1: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DataSource1
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Filter.Active = True
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsBehavior.IncSearch = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clPartnerName: TcxGridDBColumn
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+        DataBinding.FieldName = 'PartnerName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PartnerChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 258
+      end
+    end
+    object cxGridLevel1: TcxGridLevel
+      GridView = cxGridDBTableView1
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 56
@@ -860,6 +912,14 @@ object ContractForm: TContractForm
         item
           Visible = True
           ItemName = 'bbInsertRecCCK'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRecordCP'
         end
         item
           BeginGroup = True
@@ -993,6 +1053,10 @@ object ContractForm: TContractForm
       Visible = ivAlways
       Control = cbEndDate
     end
+    object bbRecordCP: TdxBarButton
+      Action = InsertRecordCP
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1008,6 +1072,9 @@ object ContractForm: TContractForm
         end
         item
           StoredProc = spSelectContractCondition
+        end
+        item
+          StoredProc = spSelectContractPartner
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1399,6 +1466,16 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
+    object InsertRecordCP: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView1
+      Action = PartnerChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      ImageIndex = 0
+    end
     object InsertRecordCCK: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
@@ -1430,6 +1507,36 @@ object ContractForm: TContractForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object PartnerChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PartnerChoiceForm'
+      FormName = 'TPartner_ObjectForm'
+      FormNameParam.Value = 'TPartner_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet1
+          ComponentItem = 'PartnerId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet1
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
+        end>
+      isShowModal = False
     end
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1565,8 +1672,8 @@ object ContractForm: TContractForm
     Top = 224
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 208
+    Left = 88
+    Top = 256
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Contract'
@@ -1614,8 +1721,8 @@ object ContractForm: TContractForm
   end
   object ContractConditionDS: TDataSource
     DataSet = ContractConditionCDS
-    Left = 102
-    Top = 413
+    Left = 62
+    Top = 397
   end
   object ContractConditionCDS: TClientDataSet
     Aggregates = <>
@@ -1624,8 +1731,8 @@ object ContractForm: TContractForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 225
-    Top = 413
+    Left = 177
+    Top = 389
   end
   object spInsertUpdateContractCondition: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractCondition'
@@ -1684,8 +1791,8 @@ object ContractForm: TContractForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 368
-    Top = 416
+    Left = 312
+    Top = 392
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractCondition'
@@ -1696,8 +1803,8 @@ object ContractForm: TContractForm
       end>
     Params = <>
     PackSize = 1
-    Left = 650
-    Top = 397
+    Left = 570
+    Top = 381
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Contract'
@@ -1782,8 +1889,8 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 448
-    Top = 360
+    Left = 432
+    Top = 376
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -1799,5 +1906,90 @@ object ContractForm: TContractForm
       end>
     Left = 536
     Top = 160
+  end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'ContractId'
+    MasterFields = 'Id'
+    MasterSource = DataSource
+    PacketRecords = 0
+    Params = <>
+    Left = 797
+    Top = 373
+  end
+  object DataSource1: TDataSource
+    DataSet = ClientDataSet1
+    Left = 798
+    Top = 437
+  end
+  object spSelectContractPartner: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ContractPartner'
+    DataSet = ClientDataSet1
+    DataSets = <
+      item
+        DataSet = ClientDataSet1
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 906
+    Top = 357
+  end
+  object spInsertUpdateContractPartner: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ContractPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet1
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = ClientDataSet1
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 408
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end
+      item
+        Action = dsdChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 1000
+    Top = 376
   end
 end
