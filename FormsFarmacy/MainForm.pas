@@ -8,7 +8,7 @@ uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   DataModul, dxSkinsCore, dxSkinsDefaultPainters,
   cxLocalization, Vcl.Menus, cxPropertiesStore, cxGraphics,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
-  Vcl.Controls, cxLabel;
+  Vcl.Controls, cxLabel, dxSkinsdxBarPainter;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -103,6 +103,46 @@ type
     bbOrderKind: TdxBarButton;
     actOrderInternalLite: TdsdOpenForm;
     bbOrderInternalLite: TdxBarButton;
+    miCommon: TMenuItem;
+    miAdditionalGoods: TMenuItem;
+    N1: TMenuItem;
+    miGoodsPartnerCode: TMenuItem;
+    miGoodsPartnerCodeMaster: TMenuItem;
+    N4: TMenuItem;
+    miUnit: TMenuItem;
+    miJuridical: TMenuItem;
+    N5: TMenuItem;
+    miContract: TMenuItem;
+    miContactPerson: TMenuItem;
+    miLoad: TMenuItem;
+    miImportGroup: TMenuItem;
+    miMovementLoad: TMenuItem;
+    miPriceListLoad: TMenuItem;
+    miReports: TMenuItem;
+    miBalance: TMenuItem;
+    miReportGoodsOrder: TMenuItem;
+    miSearchGoods: TMenuItem;
+    miGoodsCommon: TMenuItem;
+    miUser: TMenuItem;
+    N6: TMenuItem;
+    miRole: TMenuItem;
+    miSetDefault: TMenuItem;
+    N7: TMenuItem;
+    miSaveData: TMenuItem;
+    miPriceGroupSettings: TMenuItem;
+    miJuridicalSettings: TMenuItem;
+    miJuridicalSettingsPriceList: TMenuItem;
+    N8: TMenuItem;
+    miMeasure: TMenuItem;
+    miNDSKind: TMenuItem;
+    miRetail: TMenuItem;
+    miOrderKind: TMenuItem;
+    miImportType: TMenuItem;
+    N9: TMenuItem;
+    miImportSettings: TMenuItem;
+    miImportExportLink: TMenuItem;
+    N10: TMenuItem;
+    miTest: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }
