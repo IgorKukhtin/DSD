@@ -4,7 +4,6 @@ interface
 
 uses
   System.SysUtils, System.Classes, dsdDB, Data.DB, Datasnap.DBClient, Vcl.Dialogs;
-
 type
 
   TDBObject = record
@@ -14,7 +13,7 @@ type
   end;
 
   TListItem = record
-    Num:  integer;
+    Number:  integer;
     Id:   integer;
     Name: string;
   end;
@@ -23,55 +22,36 @@ type
 
   TSetting = record
     ScaleNum:         integer;
-    ToolsCode:        integer;
-    DefaultToolsCode: integer;
-    RouteSortingId:   integer;
-    RouteSortingCode: integer;
-    RouteSortingName: string;
-    DescId:           integer;
-    DescName:         string;
+    UserId:           integer;
+
+    MovementDescCode: integer;
+    MovementDescCode: integer;
+    MovementDescId:   integer;
     FromId:           integer;
     FromCode:         integer;
     FromName:         string;
     ToId:             integer;
     ToCode:           integer;
     ToName:           string;
-    PartnerId:        integer;
-    PartnerCode:      integer;
-    PartnerName:      string;
+    PaidKindId:       integer;
+    PaidKindName:     string;
+    ColorGridValue:    string;
+
+    RouteSortingId:   integer;
+    RouteSortingCode: integer;
+    RouteSortingName: string;
+
     PriceListId:      integer;
     PriceListCode:    integer;
     PriceListName:    string;
-    PaidKindId:       integer;
-    PaidKindName:     string;
-    ColorGridName:    string;
   end;
 
-function GetObject_byCode(Code, DescId: integer): TDBObject;
-function GetDefaultValue(inLevel1,inLevel2,inLevel3,inLevel4,inValueData:String):String;
+function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
+function gpGetObject_byCode (Code, DescId: integer): TDBObject;
+
 function GetListOrder_ByCode(Num:integer; List:TListArray):integer;
 
 function isEqualFloatValues(Value1,Value2:Double):boolean;
-{==================================}
-//      создает TParam с названием поля _Name и типом _DataType и значение _Value
-function CreateParamValue(_Name:String;_DataType:TFieldType;_Value: variant):TParams;
-{==================================}
-//      создает TParam с названием поля _Name и типом _DataType
-//      и добавляет к TParams
-procedure ParamAdd(var Result:TParams;_Name:String;_DataType:TFieldType);
-{==================================}
-//      возвращаят индекс парамтра сназванием FindName в TParams
-function GetIndexParams(execParams:TParams;FindName:String):integer;
-//      создает TParam с названием поля _Name и типом _DataType и значение _Value
-//      и добавляет к TParams
-procedure ParamAddValue(var Params: TParams;_Name:String;_DataType:TFieldType;_Value: variant);
-function FindParamName(execParams:TParams;FindValue:String):String;
-{==================================}
-// равно ли значение полей pParams значениям в DataSet
-function EqualParams_DataSet(pParams: TParams;DataSet: TDataSet): boolean;
-{==================================}
-function FindTStringList(execList:TStringList;FindItem:String):boolean;
-{==================================}
 
 //procedure FillCustomList(List: array of TListItem; ProcName: String);
 function FillCustomList(ProcName: String): TListArray;
@@ -138,7 +118,7 @@ begin
 end;
 
 
-function GetDefaultValue(inLevel1,inLevel2,inLevel3,inLevel4,inValueData:String):String;
+function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
 var
  spExec : TdsdStoredProc;
  ClientDataSet: TClientDataSet;
@@ -149,12 +129,12 @@ begin
     with spExec do begin
        OutputType:=otDataSet;
        DataSet:=ClientDataSet;
-       StoredProcName:='gpGetToolsPropertyValue';
+       StoredProcName:='gpGet_ToolsWeighing_Value';
        Params.AddParam('inLevel1', ftString, ptInput, inLevel1);
        Params.AddParam('inLevel2', ftString, ptInput, inLevel2);
        Params.AddParam('inLevel3', ftString, ptInput, inLevel3);
-       Params.AddParam('inLevel4', ftString, ptInput, inLevel4);
-       Params.AddParam('inValueData', ftString, ptInput, inValueData);
+       Params.AddParam('inItemName', ftString, ptInput, inItemName);
+       Params.AddParam('inDefaultValue', ftString, ptInput, inDefaultValue);
        try
          Execute;
          result := ClientDataSet.FieldByName('Value').asString;

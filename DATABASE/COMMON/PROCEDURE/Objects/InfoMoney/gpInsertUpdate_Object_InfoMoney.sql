@@ -56,4 +56,4 @@ ALTER FUNCTION gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Inte
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Contract()
+-- SELECT * FROM gpInsertUpdate_Object_InfoMoney()

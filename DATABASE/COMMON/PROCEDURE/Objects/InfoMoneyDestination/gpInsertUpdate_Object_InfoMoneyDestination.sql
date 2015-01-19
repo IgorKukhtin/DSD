@@ -50,4 +50,4 @@ ALTER FUNCTION gpInsertUpdate_Object_InfoMoneyDestination (Integer, Integer, TVa
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Contract()
+-- SELECT * FROM gpInsertUpdate_Object_InfoMoneyDestination()

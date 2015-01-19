@@ -24,7 +24,6 @@ object GuideGoodsForm: TGuideGoodsForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 664
     object DBGrid1: TDBGrid
       Left = 0
       Top = 33
@@ -49,7 +48,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 664
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -117,7 +115,6 @@ object GuideGoodsForm: TGuideGoodsForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 664
     object TarePanel: TPanel
       Left = 244
       Top = 0
@@ -578,7 +575,6 @@ object GuideGoodsForm: TGuideGoodsForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitWidth = 664
   end
   object DataSource: TDataSource
     DataSet = Query

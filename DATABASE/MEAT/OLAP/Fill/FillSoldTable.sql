@@ -28,7 +28,7 @@ BEGIN
                        , SaleReturn_Summ, SaleReturn_Summ_10300, SaleReturn_SummCost, SaleReturn_SummCost_40200, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
                        , Bonus, Plan_Weight, Plan_Summ
                        , Money_Summ, SendDebt_Summ, Money_SendDebt_Summ
-                       , Address
+                       -- , Address
                         )
 
    WITH tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
@@ -180,7 +180,7 @@ BEGIN
            , 0, 0, 0
            , 0, 0, 0
 
-           , ObjectString_Address.ValueData AS Address
+           -- , COALESCE (ObjectString_Address.ValueData, '') AS Address
 
       FROM (SELECT tmpOperation.OperDate
                  , tmpOperation.InvNumber
@@ -315,7 +315,7 @@ BEGIN
            , -1 * SUM (MovementItemContainer.Amount) AS Bonus
            , 0 AS Plan_Weight, 0 AS Plan_Summ
            , 0 AS Money_Summ, 0 AS SendDebt_Summ, 0 AS Money_SendDebt_Summ
-           , '' AS Address
+           -- , '' :: TVarChar AS Address
    FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()
@@ -373,7 +373,7 @@ BEGIN
            , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN -1 * MovementItemContainer.Amount ELSE 0 END) AS Money_Summ
            , SUM (CASE WHEN Movement.DescId = zc_Movement_SendDebt() THEN -1 * MovementItemContainer.Amount ELSE 0 END) AS SendDebt_Summ
            , SUM (-1 * MovementItemContainer.Amount) AS Money_SendDebt_Summ
-           , '' AS Address
+           -- , '' :: TVarChar AS Address
    FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()

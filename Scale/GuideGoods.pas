@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons;
+  Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons
+ ,UtilScale;
 
 type
   TGuideGoodsForm = class(TForm)
@@ -119,11 +120,16 @@ type
 var
   GuideGoodsForm: TGuideGoodsForm;
 
+  PriceList_Array     :TArrayList;
+  TareCount_Array     :TArrayList;
+  TareWeight_Array    :TArrayList;
+  ChangePercent_Array :TArrayList;
+
 implementation
 
 {$R *.dfm}
 
-uses Util;
+ uses dmMainScale;
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Execute(ClientId:Integer;BillDate:TDateTime): boolean;
 begin
@@ -164,35 +170,37 @@ end;
 procedure TGuideGoodsForm.FormCreate(Sender: TObject);
 var i:Integer;
 begin
-  FillAllList;
+  PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'PriceList');
+  TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'TareCount');
+  TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'TareWeight');
+  ChangePercent_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'ChangePercent');
+  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'Default');
+  Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'Service');
+  //
   //прайс-лист
-  EditPriceListCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','PriceListCode','','1');
-  for I := 0 to Length(PriceList)-1 do
-    rgPriceList.Items.Add('('+IntToStr(PriceList[i].Num)+') '+ PriceList[i].Name);
-  rgPriceList.ItemIndex:=  StrToInt(EditPriceListCode.Text)-1;
+  for i := 0 to Length(PriceList_Array)-1 do
+    rgPriceList.Items.Add('('+IntToStr(PriceList_Array[i].Number)+') '+ PriceList_Array[i].Name);
+  EditPriceListCode.Text:=GetArrayList_Value_byName(Default_Array,'PriceListNumber');
   //вес тары
-  EditTareCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','WeightTareCode','','1');
-  for I := 0 to Length(WeightTare)-1 do
-    rgTare.Items.Add('('+IntToStr(WeightTare[i].Num)+') '+ WeightTare[i].Name + ' кг');
-  rgTare.ItemIndex:=  StrToInt(EditTareCode.Text)-1;
+  for i := 0 to Length(TareWeight_Array)-1 do
+    rgTare.Items.Add('('+IntToStr(TareWeight_Array[i].Number)+') '+ TareWeight_Array[i].Name);
+  EditTareCode.Text:=GetArrayList_Value_byName(Default_Array,'TareCountNumber');
   //Скидка по весу
-  EditDiscountCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','ChangePercentCode','','1');
-  for I := 0 to Length(ChangePercent)-1 do
-    rgDiscount.Items.Add('('+IntToStr(ChangePercent[i].Num)+') '+ ChangePercent[i].Name+ ' %');
-  rgDiscount.ItemIndex:=  StrToInt(EditDiscountCode.Text)-1;
-
+  for I := 0 to Length(ChangePercent_Array)-1 do
+    rgDiscount.Items.Add('('+IntToStr(ChangePercent_Array[i].Number)+') '+ ChangePercent_Array[i].Name);
+  EditDiscountCode.Text:=GetArrayList_Value_byName(Default_Array,'TareWeightNumber');
   //код вида товара(упаковки)
-  EditKindPackageCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','GoodsKindCode','','1');
-  for I := 0 to Length(GoodsKindWeighing)-1 do
-    rgKindPackage.Items.Add('('+IntToStr(GoodsKindWeighing[i].Num)+') '+ GoodsKindWeighing[i].Name);
-  rgKindPackage.ItemIndex:=   GetListOrder_ByCode(StrToInt(EditKindPackageCode.Text), GoodsKindWeighing);
+  //EditKindPackageCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','GoodsKindCode','','1');
+  //for I := 0 to Length(GoodsKindWeighing)-1 do
+  //  rgKindPackage.Items.Add('('+IntToStr(GoodsKindWeighing[i].Num)+') '+ GoodsKindWeighing[i].Name);
+  //rgKindPackage.ItemIndex:=   GetListOrder_ByCode(StrToInt(EditKindPackageCode.Text), GoodsKindWeighing);
 
 {
   for I := 0 to Length(GoodsKindWeighing)-1 do
    if IntToStr(GoodsKindWeighing[i].Num) = EditKindPackageCode.Text then
        rgKindPackage.ItemIndex:=  StrToInt(EditKindPackageCode.Text)-1;
 }
-
+{
      if Length(PriceList) >0
      then begin
             rgKindPackage.Columns:=2;
@@ -201,7 +209,7 @@ begin
             EditPriceListCode.Width:=EditPriceListCode.Width-100;
             KindPackagePanel.Width:=KindPackagePanel.Width+100;
      end;
-
+}
 
 {
      fEnterGoodsCode:=false;
@@ -614,7 +622,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.rgKindPackageClick(Sender: TObject);
 begin
-    EditKindPackageCode.Text:=IntToStr(GoodsKindWeighing[rgKindPackage.ItemIndex].Num );
+    //EditKindPackageCode.Text:=IntToStr(GoodsKindWeighing[rgKindPackage.ItemIndex].Num );
     ActiveControl:=EditKindPackageCode;
 end;
 {------------------------------------------------------------------------------}
