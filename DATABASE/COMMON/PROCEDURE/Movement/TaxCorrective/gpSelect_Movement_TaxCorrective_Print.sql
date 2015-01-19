@@ -258,7 +258,7 @@ BEGIN
            , Object_Measure.ValueData                               AS MeasureName
            , CASE WHEN Object_Measure.ObjectCode=1 THEN '0301'
                   WHEN Object_Measure.ObjectCode=2 THEN '2009'
-             ELSE ''     END                        AS MeasureCode
+             ELSE ''     END                                        AS MeasureCode
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical

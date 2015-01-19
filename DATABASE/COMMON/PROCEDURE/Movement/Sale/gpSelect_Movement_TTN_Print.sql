@@ -114,7 +114,7 @@ BEGIN
                   WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MovementString_InvNumberPartner.ValueData = ''
                        THEN Movement.InvNumber
                   ELSE Movement.InvNumber
-             END AS InvNumber
+             END                                        AS InvNumber
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
@@ -152,6 +152,12 @@ BEGIN
            , CAST('' AS TVarChar)                       AS DriverName
            , CAST('' AS TVarChar)                       AS ExpName
            , CAST('' AS TVarChar)                       AS PlombaInvNumber
+           , tmpMI.BoxCount                             AS Sum_BoxCount
+           , CAST(zc_Calc_NumPhraseUA (floor(tmpMI.BoxCount), 1) AS TVarChar)                                                       AS Sum_BoxCountWords
+           , CAST(zc_Calc_NumPhraseUA (trunc(tmpMI.Weight_BruttoT), 0) AS TVarChar)                                                 AS Sum_Weight_Brutto_T_Words1
+           , CAST(zc_Calc_NumPhraseUA (trunc(trunc(tmpMI.Weight_BruttoT - trunc(tmpMI.Weight_BruttoT),3) * 1000) , 0) AS TVarChar)  AS Sum_Weight_Brutto_T_Words2
+           , tmpMI.Weight_BruttoT                       AS Sum_Weight_Brutto_T
+--           , tmpMI.Box_Weight/1000                      AS Box_Weight
 
 
 
@@ -160,6 +166,64 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+
+           LEFT JOIN (SELECT
+                             CAST(SUM(COALESCE(MIFloat_BoxCount.ValueData,0)) AS NUMERIC) AS BoxCount
+                           , SUM(COALESCE(ObjectFloat_Box_Weight.ValueData,0))      AS Box_Weight
+/*
+                           , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
+                                       THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                  ELSE MovementItem.Amount
+                                  END)                                              AS AmountPartner
+*/
+                           , SUM(((
+                              --AmountPartner
+                                 (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
+                                       THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                  ELSE MovementItem.Amount
+                                  END)
+
+                           * (CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (OF_Weight.ValueData, 0) ELSE 1 END ))
+                           + COALESCE(MIFloat_BoxCount.ValueData, 0) * COALESCE(ObjectFloat_Box_Weight.ValueData,0)))/1000    AS Weight_BruttoT
+
+                      FROM MovementItem
+                      INNER JOIN MovementItemFloat AS MIFloat_Price
+                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                             AND MIFloat_Price.ValueData <> 0
+                      LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                             ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                            AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+
+                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
+                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+
+                      LEFT JOIN ObjectFloat AS ObjectFloat_Box_Weight
+                             ON ObjectFloat_Box_Weight.ObjectId = MILinkObject_Box.ObjectId
+                            AND ObjectFloat_Box_Weight.DescId = zc_ObjectFloat_Box_Weight()
+
+
+                      LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+
+                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
+                      LEFT JOIN ObjectFloat AS OF_Weight
+                             ON OF_Weight.ObjectId = MovementItem.ObjectId
+                            AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+                      LEFT JOIN ObjectLink AS OL_Goods_Measure
+                             ON OL_Goods_Measure.ObjectId = MovementItem.ObjectId
+                            AND OL_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+
+
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId     = zc_MI_Master()
+               AND MovementItem.isErased   = FALSE
+            ) AS tmpMI ON 1=1
+
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
@@ -313,6 +377,9 @@ BEGIN
            , tmpMI.AmountPartner             AS AmountPartner
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
+           , tmpMI.BoxCount                  AS BoxCount
+           , tmpMI.Box_Weight                AS Box_Weight
+
 
              -- сумма по ценам док-та
            , CASE WHEN tmpMI.CountForPrice <> 0
@@ -349,6 +416,8 @@ BEGIN
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
+           , CAST (((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ))
+           + tmpMI.BoxCount * tmpMI.Box_Weight)/1000 AS TFloat)   AS Weight_BruttoT
 --           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
@@ -358,13 +427,15 @@ BEGIN
                          WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                    END AS Price
-                  , MIFloat_CountForPrice.ValueData AS CountForPrice
-                  , SUM (MovementItem.Amount) AS Amount
+                    END                                 AS Price
+                  , MIFloat_CountForPrice.ValueData     AS CountForPrice
+                  , COALESCE (MIFloat_BoxCount.ValueData, 0)          AS BoxCount
+                  , COALESCE (ObjectFloat_Box_Weight.ValueData, 0)    AS Box_Weight
+                  , SUM (MovementItem.Amount)           AS Amount
                   , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                               ELSE MovementItem.Amount
-                         END) AS AmountPartner
+                         END)                           AS AmountPartner
              FROM MovementItem
                   INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -379,6 +450,18 @@ BEGIN
                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                                              ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                             AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
+                                                   ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+
+                   LEFT JOIN ObjectFloat AS ObjectFloat_Box_Weight
+                                         ON ObjectFloat_Box_Weight.ObjectId = MILinkObject_Box.ObjectId
+                                        AND ObjectFloat_Box_Weight.DescId = zc_ObjectFloat_Box_Weight()
+
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -389,6 +472,8 @@ BEGIN
                     , MILinkObject_GoodsKind.ObjectId
                     , MIFloat_Price.ValueData
                     , MIFloat_CountForPrice.ValueData
+                    , MIFloat_BoxCount.ValueData
+                    , ObjectFloat_Box_Weight.ValueData
             ) AS tmpMI
 
 
@@ -396,11 +481,12 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
@@ -432,8 +518,6 @@ ALTER FUNCTION gpSelect_Movement_TTN_Print (Integer,TVarChar) OWNER TO postgres;
 -- тест
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_TTN_Print (inMovementId := 135428, inSession:= '2');
+ SELECT * FROM gpSelect_Movement_TTN_Print (inMovementId := 130355, inSession:= '2');
 COMMIT;
 */
-
-
