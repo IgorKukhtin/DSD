@@ -114,7 +114,7 @@ BEGIN
                   WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MovementString_InvNumberPartner.ValueData = ''
                        THEN Movement.InvNumber
                   ELSE Movement.InvNumber
-             END AS InvNumber
+             END                                        AS InvNumber
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
@@ -153,6 +153,9 @@ BEGIN
            , CAST('' AS TVarChar)                       AS ExpName
            , CAST('' AS TVarChar)                       AS PlombaInvNumber
            , tmpMI.BoxCount                             AS Sum_BoxCount
+           , CAST(zc_Calc_NumPhraseUA (floor(tmpMI.BoxCount), 1) AS TVarChar)                                                       AS Sum_BoxCountWords
+           , CAST(zc_Calc_NumPhraseUA (trunc(tmpMI.Weight_BruttoT), 0) AS TVarChar)                                                 AS Sum_Weight_Brutto_T_Words1
+           , CAST(zc_Calc_NumPhraseUA (trunc(trunc(tmpMI.Weight_BruttoT - trunc(tmpMI.Weight_BruttoT),3) * 1000) , 0) AS TVarChar)  AS Sum_Weight_Brutto_T_Words2
            , tmpMI.Weight_BruttoT                       AS Sum_Weight_Brutto_T
 --           , tmpMI.Box_Weight/1000                      AS Box_Weight
 
@@ -165,13 +168,14 @@ BEGIN
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
 
            LEFT JOIN (SELECT
-                             SUM(MIFloat_BoxCount.ValueData)            AS BoxCount
-                           , SUM(ObjectFloat_Box_Weight.ValueData)      AS Box_Weight
+                             CAST(SUM(COALESCE(MIFloat_BoxCount.ValueData,0)) AS NUMERIC) AS BoxCount
+                           , SUM(COALESCE(ObjectFloat_Box_Weight.ValueData,0))      AS Box_Weight
+/*
                            , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
                                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                   ELSE MovementItem.Amount
-                                  END)                                  AS AmountPartner
-                                  --------------------------------------------------------------------------------------------------------------------------------
+                                  END)                                              AS AmountPartner
+*/
                            , SUM(((
                               --AmountPartner
                                  (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
@@ -180,19 +184,13 @@ BEGIN
                                   END)
 
                            * (CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (OF_Weight.ValueData, 0) ELSE 1 END ))
-                           + MIFloat_BoxCount.ValueData * ObjectFloat_Box_Weight.ValueData))/1000    AS Weight_BruttoT
+                           + COALESCE(MIFloat_BoxCount.ValueData, 0) * COALESCE(ObjectFloat_Box_Weight.ValueData,0)))/1000    AS Weight_BruttoT
 
                       FROM MovementItem
                       INNER JOIN MovementItemFloat AS MIFloat_Price
                               ON MIFloat_Price.MovementItemId = MovementItem.Id
                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
                              AND MIFloat_Price.ValueData <> 0
-                      LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
-
-                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-
                       LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                              ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                             AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
@@ -205,6 +203,13 @@ BEGIN
                              ON ObjectFloat_Box_Weight.ObjectId = MILinkObject_Box.ObjectId
                             AND ObjectFloat_Box_Weight.DescId = zc_ObjectFloat_Box_Weight()
 
+
+                      LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+
+                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
                       LEFT JOIN ObjectFloat AS OF_Weight
                              ON OF_Weight.ObjectId = MovementItem.ObjectId
                             AND OF_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -212,8 +217,6 @@ BEGIN
                       LEFT JOIN ObjectLink AS OL_Goods_Measure
                              ON OL_Goods_Measure.ObjectId = MovementItem.ObjectId
                             AND OL_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-
-
 
 
              WHERE MovementItem.MovementId = inMovementId
@@ -426,8 +429,8 @@ BEGIN
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END                                 AS Price
                   , MIFloat_CountForPrice.ValueData     AS CountForPrice
-                  , MIFloat_BoxCount.ValueData          AS BoxCount
-                  , ObjectFloat_Box_Weight.ValueData    AS Box_Weight
+                  , COALESCE (MIFloat_BoxCount.ValueData, 0)          AS BoxCount
+                  , COALESCE (ObjectFloat_Box_Weight.ValueData, 0)    AS Box_Weight
                   , SUM (MovementItem.Amount)           AS Amount
                   , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
@@ -515,8 +518,6 @@ ALTER FUNCTION gpSelect_Movement_TTN_Print (Integer,TVarChar) OWNER TO postgres;
 -- тест
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_TTN_Print (inMovementId := 135428, inSession:= '2');
+ SELECT * FROM gpSelect_Movement_TTN_Print (inMovementId := 130355, inSession:= '2');
 COMMIT;
 */
-
-
