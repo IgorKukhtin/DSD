@@ -29,7 +29,9 @@ type
   end;
 
   TSettingMovement = record
-    MovementDescCode: integer;
+    OperDate:   TDateTime;
+
+    MovementNumber:   integer;
     MovementDescId:   integer;
     FromId:           integer;
     FromCode:         integer;
@@ -39,11 +41,17 @@ type
     ToName:           string;
     PaidKindId:       integer;
     PaidKindName:     string;
-    ColorGridValue:    string;
+    ColorGridValue:   integer;
 
-    RouteSortingId:   integer;
-    RouteSortingCode: integer;
-    RouteSortingName: string;
+    calcPartnerCode:    integer;
+    calcPartnerName:    string;
+
+    OrderExternalId:         integer;
+    OrderExternal_BarCode:   string;
+    OrderExternal_InvNumber: string;
+
+    ContractId:       integer;
+    ContractNumber:   string;
 
     PriceListId:      integer;
     PriceListCode:    integer;

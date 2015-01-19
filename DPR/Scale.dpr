@@ -58,26 +58,25 @@ uses
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
-  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
-  dmMainTest in '..\Scale\Util\dmMainTest.pas' {DMMainTestForm: TDataModule};
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
-//  Application.MainFormOnTaskbar := True;
-  // Процесс аутентификации
-  with TLoginForm.Create(Application) do
-    //Если все хорошо создаем главную форму Application.CreateForm();
-    if ShowModal = mrOk then begin
-//       TUpdater.AutomaticUpdateProgram;
-  Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TDMMainTestForm, DMMainTestForm);
-  // !!!важно первым!!!
 
-  Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
-  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
+  // Процесс аутентификации
+  with TLoginForm.Create(Application)
+  do
+    //Если все хорошо создаем главную форму Application.CreateForm();
+    if ShowModal = mrOk then
+    begin
+         //TUpdater.AutomaticUpdateProgram;
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         Application.CreateForm(TMainForm, MainForm);
+         // !!!важно первым!!!
+         Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
+         Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
   end;
 
 //  Application.CreateForm(TMainForm, MainForm);

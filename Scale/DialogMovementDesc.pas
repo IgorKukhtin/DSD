@@ -8,21 +8,31 @@ uses
   AncestorDialog, dsdDB, Data.DB, Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids,
   Data.Bind.EngExt, Vcl.Bind.DBEngExt, System.Rtti, System.Bindings.Outputs,
   Vcl.Bind.Editors, Data.Bind.Components, dsdAddOn, Data.FMTBcd,
-  Data.SqlExpr;
+  Data.SqlExpr, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxTextEdit,
+  cxMaskEdit, cxButtonEdit
+, UtilScale;
 
 type
   TDialogMovementDescForm = class(TAncestorDialogForm)
-    gbPartnerAll: TGroupBox;
-    PanelPartner: TPanel;
-    gbPartnerCode: TGroupBox;
-    EditPartnerCode: TEdit;
-    gbPartnerName: TGroupBox;
-    PanelPartnerName: TPanel;
-    gbGrid: TGroupBox;
     CDS: TClientDataSet;
     DataSource: TDataSource;
     spSelect: TdsdStoredProc;
+    InfoPanel: TPanel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Label2: TLabel;
+    Panel4: TPanel;
+    Label3: TLabel;
+    PanelPartnerName: TPanel;
+    Panel5: TPanel;
+    ScaleLabel: TLabel;
+    EdiBarCode: TEdit;
+    Panel6: TPanel;
     DBGrid: TDBGrid;
+    EditPartnerCode: TcxButtonEdit;
+    Label4: TLabel;
     procedure bbOkClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure EditPartnerCodeExit(Sender: TObject);
@@ -31,9 +41,15 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure DBGridCellClick(Column: TColumn);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure EdiBarCodeExit(Sender: TObject);
+    procedure EdiBarCodeChange(Sender: TObject);
 
   private
     ChoiceNumber:Integer;
+
+    IsOrderExternal: Boolean;
+    SettingMovement_local: TSettingMovement;
+
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
     function Execute: boolean; override;
@@ -44,31 +60,22 @@ var
 
 implementation
 {$R *.dfm}
-uses UtilScale,Main,dmMainTest;
+uses Main,DMMainScale;
 {------------------------------------------------------------------------}
-function TDialogMovementDescForm.Execute: boolean; //Проверка корректного ввода в Edit
+function TDialogMovementDescForm.Execute: Boolean; //Проверка корректного ввода в Edit
 begin
-     CDS.Locate('Number',GetArrayList_Value_byName(Default_Array,'MovementNumber'),[]);
-     ActiveControl:=EditPartnerCode;
      ChoiceNumber:=0;
+     CDS.Locate('Number',GetArrayList_Value_byName(Default_Array,'MovementNumber'),[]);
+     CDS.Filtered:=false;
 
-{  if CurSetting.PartnerCode<>0 then
-  EditPartnerCode.Text := IntToStr(CurSetting.PartnerCode)
-  else EditPartnerCode.Text:='';
-  PanelPartnerName.Caption := CurSetting.PartnerName;
+     if SettingMovement.OrderExternal_BarCode<>''
+     then EdiBarCode.Text:=SettingMovement.OrderExternal_BarCode
+     else EdiBarCode.Text:=SettingMovement.OrderExternal_InvNumber;
 
-  if CurSetting.RouteSortingId<>0 then
-  EditRouteUnitCode.Text := IntToStr(CurSetting.RouteSortingCode)
-  else EditRouteUnitCode.Text:='';
-  PanelRouteUnitName.Caption := CurSetting.RouteSortingName;
+     EditPartnerCode.Text:= IntToStr(SettingMovement.calcPartnerCode);
 
-  if CurSetting.PriceListId<>0 then
-  EditPriceListCode.Text := IntToStr(CurSetting.PriceListCode)
-  else EditPriceListCode.Text:='';
-  PanelPriceListName.Caption := CurSetting.PriceListName;
-}
-
-     result:=(ShowModal=mrOk);
+     ActiveControl:=EdiBarCode;
+     Result:=(ShowModal=mrOk);
 end;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Checked: boolean; //Проверка корректного ввода в Edit
@@ -99,7 +106,12 @@ begin
  SettingMovement.ToName:= CDS.FieldByName('ToName').asString;
  SettingMovement.PaidKindId:= CDS.FieldByName('PaidKindId').asInteger;
  SettingMovement.PaidKindName:= CDS.FieldByName('PaidKindName').asString;
- SettingMovement.ColorGridValue:= CDS.FieldByName('ColorGridValue').asString;
+ SettingMovement.ColorGridValue:= CDS.FieldByName('ColorGridValue').asInteger;
+
+ SettingMovement.OrderExternalId         := SettingMovement_local.OrderExternalId;
+ SettingMovement.OrderExternal_BarCode   := SettingMovement_local.OrderExternal_BarCode;
+ SettingMovement.OrderExternal_InvNumber := SettingMovement_local.OrderExternal_InvNumber;
+
 
 end;
 {------------------------------------------------------------------------}
@@ -150,6 +162,50 @@ begin
      end;
 end;
 {------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.EdiBarCodeChange(Sender: TObject);
+begin
+    if Length(trim(EdiBarCode.Text))>=13 then EdiBarCodeExit(Self);
+end;
+{------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.EdiBarCodeExit(Sender: TObject);
+begin
+    if Length(trim(EdiBarCode.Text))>0
+    then begin
+              //поиск по номеру или ш-к
+              isOrderExternal:=DMMainScaleForm.gpSelect_Scale_OrderExternal(SettingMovement_local,SettingMovement.OperDate,EdiBarCode.Text);
+              if isOrderExternal=false then
+              begin
+                   ShowMessage('Ошибка.Значение <Штрих код/Номер заявки> не найдено.');
+                   ActiveControl:=EdiBarCode;
+                   exit;
+              end;
+    end
+    else begin //обнуление
+               isOrderExternal:=true;
+               SettingMovement_local.OrderExternalId:=0;
+               SettingMovement_local.OrderExternal_BarCode:='';
+               SettingMovement_local.OrderExternal_InvNumber:='';
+          end;
+    //
+    if SettingMovement_local.OrderExternal_BarCode<>''
+    then begin
+              CDS.Filter:='MovementDescId='+IntToStr(SettingMovement_local.MovementDescId)
+                    +' and PaidKindId='+IntToStr(SettingMovement_local.PaidKindId)
+                    //+' and FromId='+IntToStr(SettingMovement_local.FromId)
+                    ;
+              CDS.Filtered:=true;
+              if CDS.RecordCount<>1 then
+              begin
+                   ShowMessage('Ошибка.Значение <Вид документа> не определено.');
+                   ActiveControl:=EdiBarCode;
+                   isOrderExternal:=false;
+                   exit;
+              end;
+              // завершение
+              DBGridCellClick(DBGrid.Columns[0]);
+         end;
+end;
+{------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodeExit(Sender: TObject);
 var
  PartnerObject: TDBObject;
@@ -176,10 +232,12 @@ end;
 procedure TDialogMovementDescForm.FormKeyDown(Sender: TObject; var Key: Word;  Shift: TShiftState);
 begin
      if Key = VK_RETURN
-     then if (ActiveControl=EditPartnerCode)
-          then ActiveControl:=DBGrid
-          else if (ActiveControl=DBGrid)
-               then DBGridCellClick(DBGrid.Columns[0]);
+     then if (ActiveControl=EdiBarCode)
+          then ActiveControl:=EditPartnerCode
+          else if (ActiveControl=EditPartnerCode)
+               then ActiveControl:=DBGrid
+               else if (ActiveControl=DBGrid)
+                    then DBGridCellClick(DBGrid.Columns[0]);
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.FormKeyUp(Sender: TObject; var Key: Word;Shift: TShiftState);
@@ -187,7 +245,6 @@ begin
      if (Key = VK_UP)or(Key = VK_DOWN)or(Key = VK_HOME)or(Key = VK_END)or(Key = VK_PRIOR)or(Key = VK_NEXT)
      then if (CDS.FieldByName('MovementDescId').AsInteger=0)
           then CDS.Next;
-
 end;
 {------------------------------------------------------------------------}
 end.

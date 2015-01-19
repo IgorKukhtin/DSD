@@ -191,10 +191,9 @@ var
   MainForm: TMainForm;
 
 implementation
-
 {$R *.dfm}
 
-uses UtilScale, DialogMovementDesc, GuideGoods;
+uses DMMainScale, UtilScale, DialogMovementDesc, GuideGoods;
 
 function TMainForm.myCheckPartionStr:boolean;
 begin
@@ -245,6 +244,8 @@ begin
   SettingMain.ScaleNum:=Ini.ReadInteger('Main','ScaleNum',1);
   SettingMain.ComPort :=Ini.ReadString('Main','ComPort','1');
   Ini.Free;
+  //
+  BillDateEdit.Text:=DateToStr(DMMainScaleForm.gpSelect_Scale_OperDate(SettingMovement));
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
