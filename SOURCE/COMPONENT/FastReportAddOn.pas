@@ -72,10 +72,160 @@ const
 
   kopek:wordForms = ('копейка', 'копейки', 'копеек');
   cent:wordForms = ('цент', 'цента', 'центов');
+  {------------------------------------------------------------------}
+  nfFull    = 0; // ѕолное название триад:  тыс€ча, миллион, ...
+  nfShort   = 4; //  раткое название триад:  тыс., млн., ...
+
+  nfMale    = 0; // ћужской род
+  nfFemale  = 1; // ∆енский род
+  nfMiddle  = 2; // —редний род
+
+{ Ёти константы можно объедин€ть с помощью "or". ‘ункци€ G_NumToStr возвращает
+  номер формы, в которой должно сто€ть следующее за данным числом слово, т.е.
+  одно из следующих значений: }
+
+  rfFirst  = 1;  // ѕерва€ форма: "один слон" или "двадцать одна кошка"
+  rfSecond = 2;  // ¬тора€ форма: "три слона" или "четыре кошки"
+  rfThird  = 3;  // “реть€ форма: "шесть слонов" или "восемь кошек"
 
 
 
+function G_NumToStr(N: Int64; var S: string; FormatFlags: LongInt): Integer;
+//---------------------------
+    function G_ModDiv10(var V: LongWord): Integer;
+    const
+    Base10: Integer = 10;
+    asm
+          MOV     ECX,EAX
+          MOV     EAX,[EAX]
+          XOR     EDX,EDX
+          DIV     Base10
+          MOV     [ECX],EAX
+          MOV     EAX,EDX
+    end;
+//----------------------------
 
+const
+
+  M_Ed: array [1..9] of string =
+    ('один ','два ','три ','чотири ','п`€ть ','шiсть ','сiм ','вiсiм ','дев`€ть ');
+  W_Ed: array [1..9] of string =
+    ('одна ','двi ','три ','чотири ','п`€ть ','шiсть ','сiм ','вiсiм ','дев`€ть ');
+  G_Ed: array [1..9] of string =
+    ('одне ','два ','три ','чотири ','п`€ть ','шiсть ','сiм ','вiсiм ','дев`€ть ');
+  E_Ds: array [0..9] of string =
+    ('дес€ть ','одиннадц€ть ','дванадц€ть ','тринадц€ть ','чотирнадц€ть ',
+     'п`€тнадц€ть ','шiстнадц€ть ','сiмнадц€ть ','вiсiмнадц€ть ','дев`€тнадц€ть ');
+  D_Ds: array [2..9] of string =
+    ('двадц€ть ','тридц€ть ','сорок ','п`€тдес€т ','шiстдес€т ','сiмдес€т ',
+     'вiсiмдес€т ','дев`€носто ');
+  U_Hd: array [1..9] of string =
+    ('сто ','двiстi ','триста ','чотириста ','п`€тсот ','шiстсот ','сiмсот ',
+     'вiсiмсот ','дев`€тсот ');
+  M_Tr: array[1..6,0..3] of string =
+    (('тис. ','тис€ча ','тис€чi ','тис€ч '),
+     ('млн. ','мiлiон ','мiлiона ','мiлiонiв '),
+     ('млрд. ','мiлiард ','мiлiарда ','мiлiардiв '),
+     ('трлн. ','трилiон ','трилiона ','трилiонiв '),
+     ('квадр. ','квадр≥лл≥он ','квадрильйона ','квадрильйон≥в '),
+     ('кв≥нт. ','кв≥нтильйон ','кв≥нтильйони ','кв≥нтильйон≥в '));
+var
+  V1: Int64;
+  VArr: array[0..6] of Integer;
+  I, E, D, H, Count: Integer;
+  SB: TStringBuilder;
+begin
+  Result := 3;
+  if N = 0 then
+  begin
+    S := 'нуль ';
+    Exit;
+  end;
+  if N > 0 then
+    SB := TStringBuilder.Create(120)
+  else if N <> $8000000000000000 then
+  begin
+    N := -N;
+    SB := TStringBuilder.Create('м≥нус ');
+  end else
+  begin                                 { -9.223.372.036.854.775.808 }
+    if FormatFlags and nfShort = 0 then
+      S := 'м≥нус дев`€ть кв≥нтильйон≥в дв≥ст≥ двадц€ть три квадрильйона'+
+        ' триста с≥мдес€т два трильйони тридц€ть ш≥сть м≥ль€рд≥в'+
+        ' в≥с≥мсот п`€тьдес€т чотири м≥льйони с≥мсот с≥мдес€т п`€ть'+
+        ' тис€ч в≥с≥мсот в≥с≥м '
+    else
+      S := 'м≥нус дев`€ть кв≥нт. дв≥ст≥ двадц€ть три квадр. триста'+
+        ' с≥мдес€т два трлн. тридц€ть ш≥сть млрд. в≥с≥мсот п`€тьдес€т'+
+        ' чотири млн. с≥мсот с≥мдес€т п`€ть тис. в≥с≥мсот в≥с≥м ';
+    Exit;
+  end;
+  Count := 0;
+  repeat
+    V1 := N div 1000;
+    VArr[Count] := N - (V1 * 1000);
+    N := V1;
+    Inc(Count);
+  until V1 = 0;
+  for I := Count - 1 downto 0 do
+  begin
+    H := VArr[I];
+    Result := 3;
+    if H <> 0 then
+    begin
+      E := G_ModDiv10(LongWord(H));
+      D := G_ModDiv10(LongWord(H));
+      if D <> 1 then
+      begin
+        if E = 1 then
+          Result := 1
+        else if (E >= 2) and (E <= 4) then
+          Result := 2;
+        if (H <> 0) and (D <> 0) then
+          SB.Append(U_Hd[H]).Append(D_Ds[D])
+        else if H <> 0 then
+          SB.Append(U_Hd[H])
+        else if D <> 0 then
+          SB.Append(D_Ds[D]);
+        if E <> 0 then
+          if I = 0 then
+            case FormatFlags and 3 of
+              0: SB.Append(M_Ed[E]);
+              1: SB.Append(W_Ed[E]);
+              2: SB.Append(G_Ed[E]);
+            else
+              SB.Append('#### ');
+            end
+          else if I = 1 then
+            SB.Append(W_Ed[E])
+          else
+            SB.Append(M_Ed[E]);
+      end else
+        if H = 0 then
+          SB.Append(E_Ds[E])
+        else
+          SB.Append(U_Hd[H]).Append(E_Ds[E]);
+      if I <> 0 then
+      begin
+        if FormatFlags and nfShort = 0 then
+          SB.Append(M_Tr[I, Result])
+        else
+          SB.Append(M_Tr[I, 0]);
+      end;
+    end;
+  end;
+  S := SB.ToString;
+  SB.Free;
+end;
+
+
+function NumToStr(N: Int64; FormatFlags: LongInt): string;
+var
+  l_str: string;
+begin
+  G_NumToStr(N, l_str, FormatFlags);
+  Result := l_str;
+end;
 
 //-------------------------------------------------------------—умма ≈вро
 function GetUnitString(n:digit; x:gender):String;
@@ -682,7 +832,8 @@ begin
               CallMethod, 'ћои функции', '—умма прописью рус');
     AddMethod('function SummaCurToTextRu(Money: Double, Curr: String): String',
               CallMethod, 'ћои функции', '—умма вал прописью рус');
-
+    AddMethod('function NumToStr(N: Int64; FormatFlags: LongInt): String',
+              CallMethod, 'ћои функции', '„исло прописью укр');
   end;
 end;
 function TFunctions.CallMethod(Instance: TObject; ClassType: TClass;
@@ -694,6 +845,8 @@ begin
     Result := SummaToTextRu(Params[0]);
   if MethodName = 'SUMMACURTOTEXTRU' then
     Result := SummaCurToTextRu(Params[0], Params[1]);
+  if MethodName = 'NUMTOSTR' then
+    Result := NumToStr(Params[0], Params[1]);
 
 end;
 initialization
