@@ -13,14 +13,8 @@ type
     bbCancel: TBitBtn;
     procedure bbOkClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
   protected
-    FormParams: TParams;
     function Checked: boolean; virtual;//Проверка корректного ввода в Edit
-    procedure CreateFormParams;virtual;//
-    procedure WriteFormParams(execFormParams: TParams); virtual;//
-    procedure SetFormParams(execFormParams: TParams); virtual;//
   public
     function Execute: boolean; virtual;
   end;
@@ -30,19 +24,8 @@ implementation
 {------------------------------------------------------------------------------}
 function TAncestorDialogForm.Execute: boolean;
 begin
-      //WriteFormParams(execFormParams);
-      result:=(ShowModal=mrOk);
-      //if result then SetFormParams(execFormParams)
+     result:=(ShowModal=mrOk);
 end;
-{------------------------------------------------------------------------------}
-procedure TAncestorDialogForm.CreateFormParams;
-begin FormParams:=nil;end;
-{------------------------------------------------------------------------------}
-procedure TAncestorDialogForm.WriteFormParams(execFormParams: TParams);
-begin end;
-{------------------------------------------------------------------------------}
-procedure TAncestorDialogForm.SetFormParams(execFormParams: TParams);
-begin end;
 {------------------------------------------------------------------------------}
 function TAncestorDialogForm.Checked;
 begin result:=false;end;
@@ -60,10 +43,5 @@ begin
  else bbCancel.Left:=(BottomPanel.Width div 2)-(bbCancel.Width div 2);
 end;
 {------------------------------------------------------------------------------}
-procedure TAncestorDialogForm.FormCreate(Sender: TObject);
-begin CreateFormParams;end;
-{------------------------------------------------------------------------------}
-procedure TAncestorDialogForm.FormDestroy(Sender: TObject);
-begin if Assigned(FormParams)then FormParams.Free;end;
-{------------------------------------------------------------------------------}
+
 end.

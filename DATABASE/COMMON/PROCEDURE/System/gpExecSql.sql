@@ -11,4 +11,4 @@ $BODY$LANGUAGE plpgsql;
 
 
 
-SELECT * FROM gpExecSql('SELECT 1 AS test', '')
+-- SELECT * FROM gpExecSql('SELECT 1 AS test', '')

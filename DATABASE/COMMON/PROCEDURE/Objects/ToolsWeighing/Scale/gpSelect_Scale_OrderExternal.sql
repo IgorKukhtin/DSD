@@ -13,8 +13,8 @@ RETURNS TABLE (MovementId       Integer
              , InvNumberPartner TVarChar
 
              , MovementDescId Integer
-             , FromId         Integer, FromName       TVarChar
-             , ToId           Integer, ToName         TVarChar
+             , FromId         Integer, FromCode         Integer, FromName       TVarChar
+             , ToId           Integer, ToCode           Integer, ToName         TVarChar
              , PaidKindId     Integer, PaidKindName   TVarChar
 
              , PriceListId    Integer, PriceListCode  Integer, PriceListName TVarChar
@@ -37,8 +37,10 @@ BEGIN
 
             , zc_Movement_Sale()                             AS MovementDescId
             , Object_From.Id                                 AS FromId
+            , Object_From.ObjectCode                          AS FromCode
             , Object_From.ValueData                          AS FromName
             , Object_To.Id                                   AS ToId
+            , Object_To.ObjectCode                            AS ToCode
             , Object_To.ValueData                            AS ToName
             , Object_PaidKind.Id                             AS PaidKindId
             , Object_PaidKind.ValueData                      AS PaidKindName

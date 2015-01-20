@@ -29,10 +29,11 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                          THEN TRUE
                                     ELSE NULL
                                END AS isCash
-                             , CASE WHEN Id IN (zc_Enum_Process_AccessKey_DocumentDnepr()
+                             , CASE WHEN Id IN (zc_Enum_Process_AccessKey_DocumentBread()
+                                              , zc_Enum_Process_AccessKey_DocumentDnepr()
                                               , zc_Enum_Process_AccessKey_DocumentKiev()
                                               , zc_Enum_Process_AccessKey_DocumentZaporozhye()
-                                              , zc_Enum_Process_AccessKey_DocumentBread()
+                                              , zc_Enum_Process_AccessKey_DocumentOdessa()
                                                )
                                          THEN TRUE
                                     ELSE NULL
@@ -45,6 +46,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                               , zc_Enum_Process_AccessKey_TrasportCherkassi()
                                               , zc_Enum_Process_AccessKey_TrasportDoneck()
                                               , zc_Enum_Process_AccessKey_TrasportZaporozhye()
+                                              , zc_Enum_Process_AccessKey_TrasportOdessa()
                                                )
                                          THEN TRUE
                                     ELSE NULL

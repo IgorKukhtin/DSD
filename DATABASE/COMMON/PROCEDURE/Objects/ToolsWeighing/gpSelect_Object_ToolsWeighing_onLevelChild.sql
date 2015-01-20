@@ -91,5 +91,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (1, 'Default', zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (1, 'Tools', zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (1, 'Service', zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (1, 'PriceList', zfCalc_UserAdmin())

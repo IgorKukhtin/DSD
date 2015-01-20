@@ -20,7 +20,7 @@ type
     Value: string;
   end;
 
-  TArrayList =  array of TListItem;
+  TArrayList = array of TListItem;
 
   TSettingMain = record
     ScaleNum:         integer;
@@ -28,35 +28,6 @@ type
     UserId:           integer;
   end;
 
-  TSettingMovement = record
-    OperDate:   TDateTime;
-
-    MovementNumber:   integer;
-    MovementDescId:   integer;
-    FromId:           integer;
-    FromCode:         integer;
-    FromName:         string;
-    ToId:             integer;
-    ToCode:           integer;
-    ToName:           string;
-    PaidKindId:       integer;
-    PaidKindName:     string;
-    ColorGridValue:   integer;
-
-    calcPartnerCode:    integer;
-    calcPartnerName:    string;
-
-    OrderExternalId:         integer;
-    OrderExternal_BarCode:   string;
-    OrderExternal_InvNumber: string;
-
-    ContractId:       integer;
-    ContractNumber:   string;
-
-    PriceListId:      integer;
-    PriceListCode:    integer;
-    PriceListName:    string;
-  end;
 
   function GetArrayList_Value_byName   (ArrayList:TArrayList;Name:String):String;
   function GetArrayList_Index_byName   (ArrayList:TArrayList;Name:String):Integer;
@@ -65,14 +36,73 @@ type
   function isEqualFloatValues (Value1,Value2:Double):boolean;
   procedure MyDelay(mySec:Integer);
 
+  procedure Create_ParamsMovement(var Params:TParams);
+
+  // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
+  procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
+  // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams со значением _Value
+  procedure ParamAddValue(var execParams: TParams;_Name:String;_DataType:TFieldType;_Value: variant);
+  // возвращаят индекс парамтра сназванием FindName в TParams
+  function GetIndexParams(execParams:TParams;FindName:String):integer;
+  //
+  procedure CopyValuesParamsFrom(fromParams,toParams:TParams);
+
 var
-  SettingMain    : TSettingMain;
-  SettingMovement: TSettingMovement;
+  SettingMain   : TSettingMain;
+  ParamsMovement: TParams;
 
   Default_Array       :TArrayList;
   Service_Array       :TArrayList;
 
+  zc_Movement_Income: integer;
+  zc_Movement_ReturnOut: integer;
+  zc_Movement_Sale: integer;
+  zc_Movement_ReturnIn: integer;
+  zc_Movement_Send: integer;
+  zc_Movement_SendOnPrice: integer;
+
+  zc_Movement_Loss: integer;
+  zc_Movement_Inventory: integer;
+  zc_Movement_ProductionUnion: integer;
+  zc_Movement_ProductionSeparate: integer;
+
 implementation
+
+{------------------------------------------------------------------------}
+procedure Create_ParamsMovement(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'ColorGridValue',ftInteger);
+     ParamAdd(Params,'OperDate',ftDateTime);
+
+     ParamAdd(Params,'MovementNumber',ftInteger);
+
+     ParamAdd(Params,'MovementDescId',ftInteger);
+     ParamAdd(Params,'FromId',ftInteger);
+     ParamAdd(Params,'FromCode',ftInteger);
+     ParamAdd(Params,'FromName',ftString);
+     ParamAdd(Params,'ToId',ftInteger);
+     ParamAdd(Params,'ToCode',ftInteger);
+     ParamAdd(Params,'ToName',ftString);
+     ParamAdd(Params,'PaidKindId',ftInteger);
+     ParamAdd(Params,'PaidKindName',ftString);
+
+     ParamAdd(Params,'calcPartnerId',ftInteger);
+     ParamAdd(Params,'calcPartnerCode',ftInteger);
+     ParamAdd(Params,'calcPartnerName',ftString);
+
+     ParamAdd(Params,'OrderExternalId',ftInteger);
+     ParamAdd(Params,'OrderExternal_BarCode',ftString);
+     ParamAdd(Params,'OrderExternal_InvNumber',ftString);
+
+     ParamAdd(Params,'ContractId',ftInteger);
+     ParamAdd(Params,'ContractNumber',ftString);
+
+     ParamAdd(Params,'PriceListId',ftInteger);
+     ParamAdd(Params,'PriceListCode',ftInteger);
+     ParamAdd(Params,'PriceListName',ftString);
+
+end;
 {------------------------------------------------------------------------}
 function GetArrayList_Value_byName(ArrayList:TArrayList;Name:String):String;
 var i: Integer;
@@ -131,6 +161,43 @@ begin
           Application.ProcessMessages;
           Application.ProcessMessages;
      end;
+end;
+{------------------------------------------------------------------------------}
+// создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
+procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
+begin
+     if not Assigned(execParams) then execParams:=TParams.Create
+     else
+         if GetIndexParams(execParams,_Name)>=0 then exit;
+
+     TParam.Create(execParams,ptUnknown);
+     execParams[execParams.Count-1].Name:=_Name;
+     execParams[execParams.Count-1].DataType:=_DataType;
+end;
+{------------------------------------------------------------------------------}
+// создает TParam с названием поля _Name и типом _DataType и добавляет к TParams со значением _Value
+procedure ParamAddValue(var execParams: TParams;_Name:String;_DataType:TFieldType;_Value: variant);
+begin
+  if not Assigned(execParams) then execParams:=TParams.Create;
+  ParamAdd(execParams,_Name,_DataType);
+  execParams.Items[GetIndexParams(execParams,_Name)].Value:=_Value;
+end;
+{------------------------------------------------------------------------------}
+function GetIndexParams(execParams:TParams;FindName:String):integer;//возвращаят индекс парамтра сназванием FindName в TParams
+var i:integer;
+begin
+  Result:=-1;
+  if not Assigned(execParams) then exit;
+  for i:=0 to execParams.Count-1 do
+          if UpperCase(execParams[i].Name)=UpperCase(FindName)then begin Result:=i;break;end;
+end;
+{------------------------------------------------------------------------------}
+procedure CopyValuesParamsFrom(fromParams,toParams:TParams);
+var i:integer;
+begin
+   if not Assigned(fromParams)then exit;
+   with fromParams do
+    for i:=0 to Count-1 do toParams.ParamValues[Items[i].Name]:=ParamValues[Items[i].Name];
 end;
 {------------------------------------------------------------------------------}
 end.

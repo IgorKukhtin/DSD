@@ -305,6 +305,7 @@ object MainForm: TMainForm
           8888888777778888888888888888888888888888888888888888}
         ParentShowHint = False
         ShowHint = True
+        OnClick = ButtonRefreshZakazClick
       end
       object ButtonNewGetParams: TSpeedButton
         Left = 2
@@ -329,7 +330,7 @@ object MainForm: TMainForm
       object ButtonPrintBill_detail_byInvNumber: TSpeedButton
         Left = 541
         Top = 3
-        Width = 12
+        Width = 36
         Height = 29
         Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
         Glyph.Data = {
@@ -893,7 +894,7 @@ object MainForm: TMainForm
         Text = 'EnterWeightEdit'
       end
     end
-    object gbBillDate: TGroupBox
+    object gbOperDate: TGroupBox
       Left = 0
       Top = 0
       Width = 133
@@ -907,7 +908,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 3
-      object BillDateEdit: TcxDateEdit
+      object OperDateEdit: TcxDateEdit
         Left = 6
         Top = 16
         EditValue = 41640d

@@ -70,6 +70,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<Debugger_RunParams>/autologin</Debugger_RunParams>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -164,6 +165,9 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
+			<DCCReference Include="..\Scale\Util\UtilPrint.pas">
+				<Form>UtilPrintForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
