@@ -152,10 +152,10 @@ BEGIN
            , CAST('' AS TVarChar)                       AS DriverName
            , CAST('' AS TVarChar)                       AS ExpName
            , CAST('' AS TVarChar)                       AS PlombaInvNumber
-           , tmpMI.BoxCount                             AS Sum_BoxCount
-           , CAST(zc_Calc_NumPhraseUA (floor(tmpMI.BoxCount), 1) AS TVarChar)                                                       AS Sum_BoxCountWords
-           , CAST(zc_Calc_NumPhraseUA (trunc(tmpMI.Weight_BruttoT), 0) AS TVarChar)                                                 AS Sum_Weight_Brutto_T_Words1
-           , CAST(zc_Calc_NumPhraseUA (trunc(trunc(tmpMI.Weight_BruttoT - trunc(tmpMI.Weight_BruttoT),3) * 1000) , 0) AS TVarChar)  AS Sum_Weight_Brutto_T_Words2
+           , CAST(trunc(tmpMI.BoxCount) AS Integer)     AS Sum_BoxCount
+           , CAST(trunc(tmpMI.Weight_BruttoT) AS Integer)                                                 AS Sum_Weight_Brutto_T_Word1
+           , CAST(trunc(trunc(tmpMI.Weight_BruttoT - trunc(tmpMI.Weight_BruttoT), 3) * 1000) AS Integer)  AS Sum_Weight_Brutto_T_Word2
+
            , tmpMI.Weight_BruttoT                       AS Sum_Weight_Brutto_T
 --           , tmpMI.Box_Weight/1000                      AS Box_Weight
 
@@ -176,7 +176,7 @@ BEGIN
                                   ELSE MovementItem.Amount
                                   END)                                              AS AmountPartner
 */
-                           , SUM(((
+                           , round((SUM(((
                               --AmountPartner
                                  (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
                                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
@@ -184,7 +184,7 @@ BEGIN
                                   END)
 
                            * (CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (OF_Weight.ValueData, 0) ELSE 1 END ))
-                           + COALESCE(MIFloat_BoxCount.ValueData, 0) * COALESCE(ObjectFloat_Box_Weight.ValueData,0)))/1000    AS Weight_BruttoT
+                           + COALESCE(MIFloat_BoxCount.ValueData, 0) * COALESCE(ObjectFloat_Box_Weight.ValueData,0)))/1000), 3)  AS Weight_BruttoT
 
                       FROM MovementItem
                       INNER JOIN MovementItemFloat AS MIFloat_Price
@@ -518,6 +518,6 @@ ALTER FUNCTION gpSelect_Movement_TTN_Print (Integer,TVarChar) OWNER TO postgres;
 -- тест
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_TTN_Print (inMovementId := 130355, inSession:= '2');
+ SELECT * FROM gpSelect_Movement_TTN_Print (inMovementId := 597300, inSession:= '2');
 COMMIT;
 */

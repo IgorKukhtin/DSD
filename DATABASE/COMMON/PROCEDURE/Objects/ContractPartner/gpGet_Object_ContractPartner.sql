@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ContractPartner(
     IN inSession                TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
-             , ContactId Integer, ContacttName TVarChar
+             , ContactId Integer, ContractName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , isErased boolean
              ) AS
