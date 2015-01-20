@@ -141,9 +141,9 @@ BEGIN
 
        WHERE Goods_Juridical.ObjectId = inJuridicalId AND Goods_Juridical.GoodsCode = inGoodsCode;
   
-    --≈сли вдруг такого нет, то мы его ќЅя«ј“≈Ћ№Ќќ добавл€ем
+    --≈сли вдруг такого нет, то мы его ќЅя«ј“≈Ћ№Ќќ добавл€ем. Ѕ≈« проверки на уникальность
      IF COALESCE(vbPartnerGoodsId, 0) = 0 THEN
-        vbPartnerGoodsId := lpInsertUpdate_Object_Goods(0, inGoodsCode, inGoodsName, NULL, NULL, NULL, inJuridicalId, vbUserId, NULL, inMakerName);    
+        vbPartnerGoodsId := lpInsertUpdate_Object_Goods(0, inGoodsCode, inGoodsName, NULL, NULL, NULL, inJuridicalId, vbUserId, NULL, inMakerName, false);    
      END IF;
  
   -- »щем товар дл€ накладной. 

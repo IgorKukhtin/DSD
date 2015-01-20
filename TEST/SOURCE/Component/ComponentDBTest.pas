@@ -32,11 +32,16 @@ uses dsdDB, SysUtils, DateUtils, cxCalendar, Storage, DB, Dialogs,
 
 procedure TComponentDBTest.BinaryFlowTest;
 const  pXML =
-  '<xml Session = "" AutoWidht = "false" >' +
+(*  '<xml Session = "" AutoWidht = "false" >' +
     '<gpExecSql OutputType="otDataSet">' +
          '<inSqlText DataType="ftString" Value="''SELECT 1 AS test''" />' +
     '</gpExecSql>' +
+  '</xml>';                 *)
+  '<xml Session = "3" AutoWidht = "false" >' +
+    '<gpSelect_Object_Goods_Retail OutputType="otDataSet"/>' +
   '</xml>';
+
+  //select * from gpSelect_Object_Goods_Retail( inSession := '3');
 //'<xml Session = "9458" AutoWidth = "0" ><gpSelect_Object_Partner OutputType = "otDataSet" DataSetType = "TClientDataSet" ><inJuridicalId  DataType="ftInteger"   Value="0" /></gpSelect_Object_Partner></xml>';
 
 var St: AnsiString;
@@ -51,11 +56,11 @@ begin
   try
     St := TStorageFactory.GetStorage.ExecuteProc(pXML);
 //    ClientDataSet.XMLData := St;
-  //  ClientDataSet.SaveToFile('c:\datanew.hhh');
+//    ClientDataSet.SaveToFile('c:\datanew.hhh');
     StringStream := TStringStream.Create(st);
     StringStream.SaveToFile('c:\datanewnew.hhh');
     StringStream.LoadFromStream(FileStream);
-  //  ClientDataSet.LoadFromStream(StringStream);
+//    ClientDataSet.LoadFromStream(StringStream);
     Stt := StringStream.DataString;
 
     for I := 1 to length(st) do
@@ -65,8 +70,8 @@ begin
    // ClientDataSet.XMLData := St;
    // ClientDataSet.SaveToFile('c:\datanew.hhh', dfBinary);
 
-  //  Check(ClientDataSet.FieldCount = 4, IntToStr(ClientDataSet.FieldCount));
-   // Check(ClientDataSet.Fields[3].FieldName = 'iserased', ClientDataSet.Fields[3].FieldName);
+    //Check(ClientDataSet.FieldCount = 4, IntToStr(ClientDataSet.FieldCount));
+    Check(ClientDataSet.Fields[0].asString = 'iserased', ClientDataSet.Fields[0].asString);
   finally
     FreeAndNil(ClientDataSet);
     FreeAndNil(FileStream);
@@ -93,9 +98,11 @@ begin
   buf:=$42CCE801602AB000;
   a:=@buf;
   d:=Double(a^);
+  // 24.04.2015 12:35:40
   // 63565562140000  -- миллисекунды
   // 63565562140 - секунды
-  TimeStamp := MSecsToTimeStamp(d);
+  // 63565472140000
+  TimeStamp := MSecsToTimeStamp(63565472140000);
   // 735712 -Day - 45340000 мсек - 45340 сек
   // 62135578800
   DateTime := TimeStampToDateTime(TimeStamp);
