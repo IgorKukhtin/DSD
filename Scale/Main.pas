@@ -194,7 +194,7 @@ var
 implementation
 {$R *.dfm}
 
-uses DMMainScale, UtilScale, DialogMovementDesc, GuideGoods,UtilPrint;
+uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,UtilPrint;
 
 function TMainForm.myCheckPartionStr:boolean;
 begin
@@ -268,7 +268,15 @@ end;
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if Key = VK_F2 then GetParams;
-     if Key = VK_SPACE then begin Key:=0;ButtonNewGetParamsClick(self);end
+     if Key = VK_SPACE then begin Key:=0;ButtonNewGetParamsClick(self);end;
+
+  if ShortCut(Key, Shift) = 24659 then begin
+     gc_isDebugMode := not gc_isDebugMode;
+     if gc_isDebugMode then
+        ShowMessage('Установлен режим отладки')
+      else
+        ShowMessage('Снят режим отладки');
+  end;
 end;
 
 

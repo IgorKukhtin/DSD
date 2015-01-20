@@ -47,7 +47,7 @@ type
   private
     ChoiceNumber:Integer;
 
-    IsOrderExternal,IsPartnerCode: Boolean;
+    IsOrderExternal: Boolean;
     ParamsMovement_local: TParams;
 
     function Checked: boolean; override;//Проверка корректного ввода в Edit
@@ -67,7 +67,6 @@ begin
      CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
 
      IsOrderExternal:=false;
-     IsPartnerCode:=false;
 
      CDS.Filtered:=false;
 
@@ -89,11 +88,17 @@ end;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
-     Result:=(IsOrderExternal=true)and(IsPartnerCode=true);
+     Result:=(IsOrderExternal=true)and(CDS.FieldByName('MovementDescId').AsInteger<>0);
      if not Result then exit;
 
+     if ((CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Income)
+       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnOut)
+       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Sale)
+       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnIn)
+        )
+       and(ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=0)
+     then begin Result:=false;exit;end;
 
-     if CDS.FieldByName('MovementDescId').AsInteger=0 then exit;
 
      with ParamsMovement_local do
      begin
@@ -105,13 +110,21 @@ begin
            and(CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Income)
           then begin
           ParamByName('FromId').AsInteger:= CDS.FieldByName('FromId').asInteger;
+          ParamByName('FromCode').asString:= CDS.FieldByName('FromCode').asString;
           ParamByName('FromName').asString:= CDS.FieldByName('FromName').asString;
+          ParamByName('ToId').AsInteger:= CDS.FieldByName('calcPartnerId').asInteger;
+          ParamByName('ToCode').AsInteger:= CDS.FieldByName('calcPartnerCode').asInteger;
+          ParamByName('ToName').asString:= CDS.FieldByName('calcPartnerName').asString;
           end;
 
           if  (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Sale)
            and(CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_ReturnOut)
           then begin
+          ParamByName('FromId').AsInteger:= CDS.FieldByName('calcPartnerId').asInteger;
+          ParamByName('FromCode').AsInteger:= CDS.FieldByName('calcPartnerCode').asInteger;
+          ParamByName('FromName').asString:= CDS.FieldByName('calcPartnerName').asString;
           ParamByName('ToId').AsInteger:= CDS.FieldByName('ToId').asInteger;
+          ParamByName('ToCode').AsInteger:= CDS.FieldByName('ToCode').asInteger;
           ParamByName('ToName').asString:= CDS.FieldByName('ToName').asString;
           end;
 
@@ -139,7 +152,6 @@ begin
               else begin
                         EditPartnerCode.Text:= IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);
                         PanelPartnerName.Caption:= ParamsMovement_local.ParamByName('calcPartnerName').asString;
-                        IsPartnerCode:=true;
                    end;
     end
     else begin //обнуление
