@@ -20,6 +20,7 @@ BEGIN
            , COALESCE (Object_ToolsWeighing_View.ParentId, 0) AS ParentId
            , Object_ToolsWeighing_View.isErased
        FROM Object_ToolsWeighing_View
+       WHERE isLeaf = FALSE
        UNION SELECT
              0 AS Id,
              0 AS Code,

@@ -3,6 +3,7 @@
   ClientHeight = 387
   ClientWidth = 1462
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -480
   ExplicitWidth = 1478
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -344,6 +345,14 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object Address: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089
+            DataBinding.FieldName = 'Address'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object RegionName: TcxGridDBColumn
             Caption = #1054#1073#1083#1072#1089#1090#1100

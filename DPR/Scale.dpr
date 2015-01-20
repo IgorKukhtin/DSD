@@ -29,10 +29,10 @@ uses
   UnilWin in '..\SOURCE\UnilWin.pas',
   Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
   ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
-  DialogBillKind in '..\Scale\DialogBillKind.pas' {DialogBillKindForm},
+  DialogMovementDesc in '..\Scale\DialogMovementDesc.pas' {DialogMovementDescForm},
   AncestorDialog in '..\Scale\Ancestor\AncestorDialog.pas' {AncestorDialogForm},
-  Util in '..\Scale\Util\Util.pas',
-  DM in '..\Scale\Util\DM.pas' {DMMain: TDataModule},
+  UtilScale in '..\Scale\Util\UtilScale.pas',
+  dmMainScale in '..\Scale\Util\dmMainScale.pas' {DMMainScaleForm: TDataModule},
   GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm},
   VKDBFDataSet in '..\SOURCE\DBF\VKDBFDataSet.pas',
   VKDBFPrx in '..\SOURCE\DBF\VKDBFPrx.pas',
@@ -64,16 +64,19 @@ uses
 
 begin
   Application.Initialize;
-//  Application.MainFormOnTaskbar := True;
+
   // Процесс аутентификации
-  with TLoginForm.Create(Application) do
+  with TLoginForm.Create(Application)
+  do
     //Если все хорошо создаем главную форму Application.CreateForm();
-    if ShowModal = mrOk then begin
-//       TUpdater.AutomaticUpdateProgram;
-    Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TDialogBillKindForm, DialogBillKindForm);
-  Application.CreateForm(TDMMain, DMMain);
-  Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
+    if ShowModal = mrOk then
+    begin
+         //TUpdater.AutomaticUpdateProgram;
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         Application.CreateForm(TMainForm, MainForm);
+         // !!!важно первым!!!
+         Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
+         Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
   end;
 
 //  Application.CreateForm(TMainForm, MainForm);

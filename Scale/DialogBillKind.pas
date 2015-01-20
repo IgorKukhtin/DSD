@@ -24,9 +24,9 @@ type
     gbRouteUnitName: TGroupBox;
     PanelRouteUnitName: TPanel;
     gbGrid: TGroupBox;
-    ClientDataSet: TClientDataSet;
+    CDS: TClientDataSet;
     DataSource: TDataSource;
-    spData: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     DBGrid: TDBGrid;
     PanelPriceList: TPanel;
     gbPriceListCode: TGroupBox;
@@ -74,7 +74,7 @@ end;
 
 procedure TDialogBillKindForm.bbOkClick(Sender: TObject);
 begin
- if ClientDataSet.FieldByName('GroupSubNum').AsInteger=0 then Exit;
+ if CDS.FieldByName('GroupSubNum').AsInteger=0 then Exit;
 // EditPartnerCodeExit(Sender);
 // EditRouteUnitCodeExit(Sender);
 // EditPartnerCodeExit(Sender);
@@ -83,17 +83,17 @@ begin
            else if ActiveControl=EditPriceListCode then EditPriceListCodeExit(Sender);
 
 
-// ShowMessage(ClientDataSet.FieldByName('DisplayName').asString);
- NewSetting.ToolsCode:= ClientDataSet.FieldByName('Code').asInteger;
- NewSetting.DescId:= ClientDataSet.FieldByName('DescId').asInteger;
- NewSetting.DescName:= ClientDataSet.FieldByName('DescName').asString;
- NewSetting.FromId:= ClientDataSet.FieldByName('FromId').asInteger;
- NewSetting.FromName:= ClientDataSet.FieldByName('FromName').asString;
- NewSetting.ToId:= ClientDataSet.FieldByName('ToId').asInteger;
- NewSetting.ToName:= ClientDataSet.FieldByName('ToName').asString;
- NewSetting.PaidKindId:= ClientDataSet.FieldByName('PaidKindId').asInteger;
- NewSetting.PaidKindName:= ClientDataSet.FieldByName('PaidKindName').asString;
- NewSetting.ColorGridName:= ClientDataSet.FieldByName('ColorGridName').asString;
+// ShowMessage(CDS.FieldByName('DisplayName').asString);
+ NewSetting.ToolsCode:= CDS.FieldByName('Code').asInteger;
+ NewSetting.DescId:= CDS.FieldByName('DescId').asInteger;
+ NewSetting.DescName:= CDS.FieldByName('DescName').asString;
+ NewSetting.FromId:= CDS.FieldByName('FromId').asInteger;
+ NewSetting.FromName:= CDS.FieldByName('FromName').asString;
+ NewSetting.ToId:= CDS.FieldByName('ToId').asInteger;
+ NewSetting.ToName:= CDS.FieldByName('ToName').asString;
+ NewSetting.PaidKindId:= CDS.FieldByName('PaidKindId').asInteger;
+ NewSetting.PaidKindName:= CDS.FieldByName('PaidKindName').asString;
+ NewSetting.ColorGridName:= CDS.FieldByName('ColorGridName').asString;
 
  CurSetting := NewSetting;
 // DialogBillKindForm.Checked:=true;
@@ -111,7 +111,7 @@ procedure TDialogBillKindForm.DBGridDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
 begin
   inherited;
-     if ClientDataSet.FieldByName('GroupSubNum').AsInteger=0 then
+     if CDS.FieldByName('GroupSubNum').AsInteger=0 then
      with (Sender as TDBGrid).Canvas do
      begin
           Font.Color:=clBlack;
@@ -165,9 +165,9 @@ end;
 procedure TDialogBillKindForm.FormCreate(Sender: TObject);
 begin
   inherited;
-  spData.Params.AddParam('inRootId', ftInteger, ptInput, CurSetting.ScaleNum);
-  spData.Execute;
-  ClientDataSet.Locate('Code',CurSetting.DefaultToolsCode,[]);
+  spSelect.Params.AddParam('inMasterId', ftInteger, ptInput, CurSetting.ScaleNum);
+  spSelect.Execute;
+  CDS.Locate('Code',CurSetting.DefaultToolsCode,[]);
   bbOk.Visible := false;
   ActiveControl:=EditPartnerCode;
 end;

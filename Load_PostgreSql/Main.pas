@@ -3437,6 +3437,7 @@ begin
                             +'                                           , '+FormatToVarCharServer_notNULL('31.12.2020')
                             +'                                           , '+IntToStr(JuridicalId_pg)
                             +'                                           , zc_Juridical_Basis()'
+                            +'                                           , NULL'
                             +'                                           , '+IntToStr(FieldByName('InfoMoneyId_PG').AsInteger)
                             +'                                           , NULL'
                             +'                                           , zc_Enum_PaidKind_SecondForm()'
@@ -9822,6 +9823,7 @@ begin
                                      +'                                           , '+FormatToVarCharServer_notNULL('31.12.2020')
                                      +'                                           , '+IntToStr(JuridicalId_pg)
                                      +'                                           , zc_Juridical_Basis()'
+                                     +'                                           , NULL'
                                      +'                                           , '+IntToStr(FieldByName('InfoMoneyId_PG').AsInteger)
                                      +'                                           , NULL'
                                      +'                                           , zc_Enum_PaidKind_SecondForm()'
@@ -10088,6 +10090,7 @@ begin
                                      +'                                           , '+FormatToVarCharServer_notNULL('31.12.2020')
                                      +'                                           , '+IntToStr(JuridicalId_pg)
                                      +'                                           , zc_Juridical_Basis()'
+                                     +'                                           , NULL'
                                      +'                                           , '+IntToStr(FieldByName('InfoMoneyId_PG').AsInteger)
                                      +'                                           , NULL'
                                      +'                                           , zc_Enum_PaidKind_SecondForm()'

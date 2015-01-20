@@ -182,7 +182,7 @@ BEGIN
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = tmpMIContainer.MovementId
-                                        AND MovementLinkObject_Partner.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_Partner() END
+                                        AND MovementLinkObject_Partner.DescId = CASE WHEN tmpMIContainer.MovementDescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() WHEN tmpMIContainer.MovementDescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_Partner() END
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMIContainer.MovementDescId
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpMIContainer.MovementItemId

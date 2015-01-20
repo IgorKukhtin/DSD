@@ -115,6 +115,7 @@ type
     Return_Summ_10300: TcxGridDBColumn;
     GoodsGroupAnalystName: TcxGridDBColumn;
     clContractTagGroupName: TcxGridDBColumn;
+    Address: TcxGridDBColumn;
   private
     { Private declarations }
   public

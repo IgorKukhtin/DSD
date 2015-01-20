@@ -33,7 +33,6 @@ object DialogBillKindForm: TDialogBillKindForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitTop = 55
       object gbPartnerCode: TGroupBox
         Left = 0
         Top = 0
@@ -42,8 +41,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
-        ExplicitTop = 13
-        ExplicitHeight = 43
         object EditPartnerCode: TEdit
           Left = 6
           Top = 15
@@ -61,9 +58,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alClient
         Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
         TabOrder = 1
-        ExplicitTop = 13
-        ExplicitWidth = 469
-        ExplicitHeight = 43
         object PanelPartnerName: TPanel
           Left = 2
           Top = 15
@@ -80,8 +74,6 @@ object DialogBillKindForm: TDialogBillKindForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 465
-          ExplicitHeight = 26
         end
       end
     end
@@ -93,7 +85,6 @@ object DialogBillKindForm: TDialogBillKindForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 95
       object gbRouteUnitCode: TGroupBox
         Left = 0
         Top = 0
@@ -102,8 +93,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
-        ExplicitTop = 13
-        ExplicitHeight = 43
         object EditRouteUnitCode: TEdit
           Left = 6
           Top = 15
@@ -121,9 +110,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alClient
         Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1079#1072#1103#1074#1082#1072')'
         TabOrder = 1
-        ExplicitTop = 13
-        ExplicitWidth = 471
-        ExplicitHeight = 43
         object PanelRouteUnitName: TPanel
           Left = 2
           Top = 15
@@ -138,8 +124,6 @@ object DialogBillKindForm: TDialogBillKindForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 467
-          ExplicitHeight = 26
         end
       end
     end
@@ -151,7 +135,6 @@ object DialogBillKindForm: TDialogBillKindForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 15
       object gbPriceListCode: TGroupBox
         Left = 0
         Top = 0
@@ -160,8 +143,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
-        ExplicitTop = 13
-        ExplicitHeight = 42
         object EditPriceListCode: TEdit
           Left = 6
           Top = 15
@@ -179,10 +160,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alClient
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         TabOrder = 1
-        ExplicitLeft = 46
-        ExplicitTop = 13
-        ExplicitWidth = 596
-        ExplicitHeight = 35
         object PanelPriceListName: TPanel
           Left = 2
           Top = 15
@@ -197,8 +174,6 @@ object DialogBillKindForm: TDialogBillKindForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 592
-          ExplicitHeight = 18
         end
       end
     end
@@ -211,9 +186,6 @@ object DialogBillKindForm: TDialogBillKindForm
     Align = alClient
     Caption = #1054#1087#1077#1088#1072#1094#1080#1080
     TabOrder = 1
-    ExplicitTop = 152
-    ExplicitWidth = 548
-    ExplicitHeight = 550
     object DBGrid: TDBGrid
       Left = 2
       Top = 15
@@ -246,25 +218,26 @@ object DialogBillKindForm: TDialogBillKindForm
         end>
     end
   end
-  object ClientDataSet: TClientDataSet
+  object CDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 272
     Top = 384
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = CDS
     Left = 336
     Top = 384
   end
-  object spData: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ToolsWeighing_Guide'
-    DataSet = ClientDataSet
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ToolsWeighing_MovementDesc'
+    DataSet = CDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = CDS
       end>
     Params = <>
+    PackSize = 1
     Left = 264
     Top = 296
   end

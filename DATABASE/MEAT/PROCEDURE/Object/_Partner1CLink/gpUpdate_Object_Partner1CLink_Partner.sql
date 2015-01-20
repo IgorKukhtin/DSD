@@ -128,6 +128,7 @@ BEGIN
     
                                                              , inJuridicalId        := tmpJuridical.JuridicalId
                                                              , inJuridicalBasisId   := zc_Juridical_Basis()
+                                                             , inJuridicalDocumentId := NULL
                                                              , inInfoMoneyId        := zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                              , inContractKindId     := NULL
                                                              , inPaidKindId         := zc_Enum_PaidKind_SecondForm()

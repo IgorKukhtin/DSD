@@ -30,7 +30,7 @@ object MainForm: TMainForm
       Width = 767
       Height = 523
       Align = alClient
-      DataSource = DataSource1
+      DataSource = DS
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
@@ -1890,222 +1890,6 @@ object MainForm: TMainForm
       end
     end
   end
-  object DataSource: TDataSource
-    DataSet = Query
-    Left = 490
-    Top = 160
-  end
-  object Query: TQuery
-    DatabaseName = 'MainDB'
-    SQL.Strings = (
-      
-        'SELECT ScaleHistory.Id, ScaleHistory.InsertDate, ScaleHistory.Up' +
-        'dateDate, ScaleHistory.PartionDate, ScaleHistory.PartionStr_MB, ' +
-        'ScaleHistory.NumberTare, ScaleHistory.NumberLevel, ScaleHistory.' +
-        'Production_Weight,ScaleHistory.DiscountWeight, case when ScaleHi' +
-        'story.DiscountWeight=0 then ScaleHistory.Production_Weight else ' +
-        'zf_MyRound(ScaleHistory.Production_Weight*(1-ScaleHistory.Discou' +
-        'ntWeight/100)) end as Production_Weight_Discount,(ScaleHistory.T' +
-        'are_Weight*ScaleHistory.Tare_Count)as Tare_Weight,ScaleHistory.T' +
-        'are_Count,isnull(LastPrice.NewPrice,0)as LastPrice,isnull(LastPr' +
-        'ice.NewPrice,0)*Production_Weight_Discount as ToatlSumm'
-      
-        '     , GoodsProperty_Production.GoodsName AS Production_Name, Go' +
-        'odsProperty_Production.GoodsCode AS Production_Code,ScaleHistory' +
-        '.OperCount_Upakovka,ScaleHistory.OperCount_sh'
-      
-        '     , GoodsProperty_Tare.GoodsName AS Tare_Name, GoodsProperty_' +
-        'Tare.GoodsCode AS Tare_Code'
-      
-        '     , PriceList.PriceListName, KindPackage.KindPackageName,Kind' +
-        'Package.Id as KindPackageId,ScaleHistory.isErased,zc__rvGetConst' +
-        'Value_bk(ScaleHistory.BillKind)as BillKindName'
-      'FROM dba.ScaleHistory'
-      
-        '     LEFT OUTER JOIN dba.GoodsProperty AS GoodsProperty_Producti' +
-        'on ON GoodsProperty_Production.Id = ScaleHistory.Production_Good' +
-        'sId'
-      
-        '     LEFT OUTER JOIN dba.GoodsProperty AS GoodsProperty_Tare ON ' +
-        'GoodsProperty_Tare.Id = ScaleHistory.Tare_GoodsId'
-      
-        '     LEFT OUTER JOIN dba.KindPackage ON KindPackage.Id = ScaleHi' +
-        'story.KindPackageId'
-      
-        '     LEFT OUTER JOIN dba.PriceList_byHistory as PriceList ON Pri' +
-        'ceList.Id = ScaleHistory.PriceListId'
-      
-        '     LEFT OUTER JOIN dba.PriceListItems_byHistory as LastPrice O' +
-        'N LastPrice.PriceListID=ScaleHistory.PriceListID and LastPrice.G' +
-        'oodsPropertyID=ScaleHistory.Production_GoodsId and fCalcCurrentB' +
-        'illDate_byProduction() between LastPrice.StartDate and LastPrice' +
-        '.EndDate'
-      
-        'WHERE ScaleHistory.isNewItem = zc_rvYes() AND ScaleHistory.UserI' +
-        'd= :@UserId'
-      'ORDER By ScaleHistory.Id desc')
-    Left = 490
-    Top = 220
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = '@UserId'
-        ParamType = ptUnknown
-      end>
-    object QueryProduction_Code: TIntegerField
-      DisplayLabel = #1050#1086#1076' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
-      DisplayWidth = 12
-      FieldName = 'Production_Code'
-    end
-    object QueryProduction_Name: TStringField
-      DisplayLabel = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
-      DisplayWidth = 40
-      FieldName = 'Production_Name'
-      Size = 50
-    end
-    object QueryKindPackageName: TStringField
-      DisplayLabel = #1042#1080#1076' '#1091#1087#1072#1082'.'
-      DisplayWidth = 10
-      FieldName = 'KindPackageName'
-      Size = 50
-    end
-    object QueryPartionStr_MB: TStringField
-      DisplayLabel = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
-      DisplayWidth = 15
-      FieldName = 'PartionStr_MB'
-      Size = 50
-    end
-    object QueryPartionDate: TDateField
-      DisplayLabel = #1055#1072#1088#1090#1080#1103
-      DisplayWidth = 8
-      FieldName = 'PartionDate'
-    end
-    object QueryPriceListName: TStringField
-      DisplayLabel = #1053#1072#1079#1074'.'#1094#1077#1085#1099
-      DisplayWidth = 10
-      FieldName = 'PriceListName'
-      Size = 50
-    end
-    object QueryDiscountWeight: TFloatField
-      DisplayLabel = #1057#1082#1076' %'
-      DisplayWidth = 5
-      FieldName = 'DiscountWeight'
-    end
-    object QueryProduction_Weight_Discount: TFloatField
-      DisplayLabel = #1042#1077#1089' '#1089#1086' '#1089#1082#1080#1076
-      FieldName = 'Production_Weight_Discount'
-    end
-    object QueryProduction_Weight: TFloatField
-      DisplayLabel = #1042#1077#1089' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
-      DisplayWidth = 15
-      FieldName = 'Production_Weight'
-    end
-    object QueryTare_Weight: TFloatField
-      DisplayLabel = #1048#1090#1086#1075#1086' '#1042#1077#1089' '#1090#1072#1088#1099
-      DisplayWidth = 10
-      FieldName = 'Tare_Weight'
-    end
-    object QueryTare_Count: TFloatField
-      DisplayLabel = #1050#1086#1083' '#1090#1072#1088
-      DisplayWidth = 5
-      FieldName = 'Tare_Count'
-    end
-    object QueryTare_Code: TIntegerField
-      DisplayLabel = #1050#1086#1076' '#1090#1072#1088#1099
-      DisplayWidth = 10
-      FieldName = 'Tare_Code'
-    end
-    object QueryTare_Name: TStringField
-      DisplayLabel = #1042#1080#1076' '#1090#1072#1088#1099
-      DisplayWidth = 12
-      FieldName = 'Tare_Name'
-      Size = 50
-    end
-    object QueryNumberTare: TIntegerField
-      FieldName = 'NumberTare'
-    end
-    object QueryNumberLevel: TIntegerField
-      DisplayWidth = 7
-      FieldName = 'NumberLevel'
-    end
-    object QueryInsertDate: TDateTimeField
-      DisplayLabel = #1044#1072#1090#1072'('#1074#1088') '#1089#1086#1079#1076#1072#1085#1080#1103
-      DisplayWidth = 21
-      FieldName = 'InsertDate'
-    end
-    object QueryUpdateDate: TDateTimeField
-      DisplayLabel = #1044#1072#1090#1072'('#1074#1088') '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
-      FieldName = 'UpdateDate'
-    end
-    object QueryLastPrice: TFloatField
-      DisplayLabel = #1062#1077#1085#1072
-      FieldName = 'LastPrice'
-    end
-    object QueryToatlSumm: TFloatField
-      FieldName = 'ToatlSumm'
-    end
-    object QueryId: TIntegerField
-      FieldName = 'Id'
-      Visible = False
-    end
-    object QueryKindPackageId: TIntegerField
-      FieldName = 'KindPackageId'
-    end
-    object QueryisErased: TSmallintField
-      FieldName = 'isErased'
-    end
-    object QueryOperCount_Upakovka: TFloatField
-      FieldName = 'OperCount_Upakovka'
-    end
-    object QueryBillKindName: TStringField
-      FieldName = 'BillKindName'
-      Size = 110
-    end
-    object QueryOperCount_sh: TFloatField
-      FieldName = 'OperCount_sh'
-    end
-  end
-  object QueryZakaz: TQuery
-    DatabaseName = 'MainDB'
-    SQL.Strings = (
-      
-        'call dba.pCalculateReport_Match_Zakaz_onScaleHistory(:@UserId, :' +
-        '@ClientId, :@BillDate, :@isMinus, :@isScale_byObvalka, :@isAll)'
-      '')
-    Left = 552
-    Top = 208
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = '@UserId'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftInteger
-        Name = '@ClientId'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftDate
-        Name = '@BillDate'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftInteger
-        Name = '@isMinus'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftInteger
-        Name = '@isScale_byObvalka'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftInteger
-        Name = '@isAll'
-        ParamType = ptUnknown
-      end>
-  end
   object PopupMenu: TPopupMenu
     Left = 256
     Top = 184
@@ -2194,30 +1978,24 @@ object MainForm: TMainForm
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1056#1077#1083#1100#1089#1086#1074#1099#1077' '#1042#1077#1089#1099' (BI)'
     end
   end
-  object LockTimer: TTimer
-    Enabled = False
-    Interval = 30000
-    Left = 152
-    Top = 232
-  end
-  object spTest: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
-    DataSet = DataSetMI
+    DataSet = CDS
     DataSets = <
       item
-        DataSet = DataSetMI
+        DataSet = CDS
       end>
     Params = <>
     PackSize = 1
     Left = 224
     Top = 384
   end
-  object DataSource1: TDataSource
-    DataSet = DataSetMI
+  object DS: TDataSource
+    DataSet = CDS
     Left = 320
     Top = 400
   end
-  object DataSetMI: TClientDataSet
+  object CDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 304

@@ -155,6 +155,7 @@ IF /*inId IN (293467, 296066) AND */ TRIM (inStreetKindName) = '' THEN inStreetK
 IF inStreetKindName = 'Шосе' THEN inStreetKindName:= 'шосе'; END IF;
 IF inStreetKindName = 'улица' THEN inStreetKindName:= 'вулиця'; END IF;
 IF inStreetKindName = 'площадь' THEN inStreetKindName:= 'площа'; END IF;
+IF inStreetKindName = 'пер.' THEN inStreetKindName:= 'провулок'; END IF;
 
 
 IF inPartnerTag = 'дистритриб`ютор' OR inPartnerTag = 'дистриб' || CHR (39) || 'ютор' THEN inPartnerTag:= 'дистриб`ютор'; END IF;

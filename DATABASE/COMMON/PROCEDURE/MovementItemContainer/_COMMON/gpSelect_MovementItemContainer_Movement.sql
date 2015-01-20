@@ -89,12 +89,35 @@ BEGIN
                -- проводки: только суммовые + определяется Счет
              , tmpMIContainer_Summ_all AS (SELECT tmpMIContainer_all.*
                                                 , Container.ObjectId AS AccountId
-                                                , COALESCE (tmpMIContainerCurrency_all.ContainerId, 0) AS ContainerId_Currency, COALESCE (tmpMIContainerCurrency_all.Amount, 0) AS Amount_Currency
+                                                -- , COALESCE (Container_Parent.Id, 0) AS ContainerId_Currency, 0 AS Amount_Currency
+                                                , 0 AS ContainerId_Currency, 0 AS Amount_Currency
                                            FROM tmpMIContainer_all
                                                 LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
-                                                LEFT JOIN Container AS Container_Parent ON Container_Parent.ParentId = Container.Id
-                                                LEFT JOIN tmpMIContainer_all AS tmpMIContainerCurrency_all ON tmpMIContainerCurrency_all.ContainerId = Container_Parent.Id
+                                                -- LEFT JOIN Container AS Container_Parent ON Container_Parent.ParentId = Container.Id
+                                                -- LEFT JOIN tmpMIContainer_all AS tmpMIContainerCurrency_all ON tmpMIContainerCurrency_all.ContainerId = Container_Parent.Id
                                            WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_Summ()
+                                          UNION ALL
+                                           SELECT tmpMIContainer_all.MIContainerDescId
+                                                , tmpMIContainer_all.Id
+                                                , tmpMIContainer_all.MovementItemId -- !!!может быть NULL!!!
+                                                , tmpMIContainer_all.AccountId_110101
+                                                , tmpMIContainer_all.ParentId
+                                                , Container_Parent.Id AS ContainerId
+                                                , tmpMIContainer_all.OperDate
+                                                , tmpMIContainer_all.isActive
+                                                , 0 AS Amount
+                                                , tmpMIContainer_all.MovementId
+                                                , tmpMIContainer_all.MovementDescId
+                                                , tmpMIContainer_all.InvNumber
+                                                , tmpMIContainer_all.isDestination
+                                                , tmpMIContainer_all.isParentDetail
+                                                , tmpMIContainer_all.isInfoMoneyDetail
+                                                , Container.ObjectId AS AccountId
+                                                , COALESCE (tmpMIContainer_all.ContainerId, 0) AS ContainerId_Currency, COALESCE (tmpMIContainer_all.Amount, 0) AS Amount_Currency
+                                           FROM tmpMIContainer_all
+                                                LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
+                                                LEFT JOIN Container AS Container_Parent ON Container_Parent.Id = Container.ParentId
+                                           WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_SummCurrency()
                                           )
                -- проводки: только количественные + определяется GoodsId + (нужны для расчета цены)
             , tmpMIContainer_Count_all AS (SELECT tmpMIContainer_all.*

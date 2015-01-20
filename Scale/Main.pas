@@ -9,7 +9,7 @@ uses
   Vcl.DBGrids, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdDB, Datasnap.DBClient, Util, Inifiles, dxSkinsCore,
+  cxCalendar, dsdDB, Datasnap.DBClient, Inifiles, dxSkinsCore,
   dxSkinsDefaultPainters;
 
 type
@@ -140,34 +140,6 @@ type
     PanelRouteUnitCode: TPanel;
     PanelRouteUnitName: TPanel;
     PanelIsRecalc: TPanel;
-    DataSource: TDataSource;
-    Query: TQuery;
-    QueryProduction_Code: TIntegerField;
-    QueryProduction_Name: TStringField;
-    QueryKindPackageName: TStringField;
-    QueryPartionStr_MB: TStringField;
-    QueryPartionDate: TDateField;
-    QueryPriceListName: TStringField;
-    QueryDiscountWeight: TFloatField;
-    QueryProduction_Weight_Discount: TFloatField;
-    QueryProduction_Weight: TFloatField;
-    QueryTare_Weight: TFloatField;
-    QueryTare_Count: TFloatField;
-    QueryTare_Code: TIntegerField;
-    QueryTare_Name: TStringField;
-    QueryNumberTare: TIntegerField;
-    QueryNumberLevel: TIntegerField;
-    QueryInsertDate: TDateTimeField;
-    QueryUpdateDate: TDateTimeField;
-    QueryLastPrice: TFloatField;
-    QueryToatlSumm: TFloatField;
-    QueryId: TIntegerField;
-    QueryKindPackageId: TIntegerField;
-    QueryisErased: TSmallintField;
-    QueryOperCount_Upakovka: TFloatField;
-    QueryBillKindName: TStringField;
-    QueryOperCount_sh: TFloatField;
-    QueryZakaz: TQuery;
     PopupMenu: TPopupMenu;
     miPrintZakazMinus: TMenuItem;
     miPrintZakazAll: TMenuItem;
@@ -197,12 +169,11 @@ type
     miScaleRun_BI: TMenuItem;
     miScaleRun_Zeus: TMenuItem;
     miScaleRun_BI_R: TMenuItem;
-    LockTimer: TTimer;
     PartionDateEdit: TcxDateEdit;
     BillDateEdit: TcxDateEdit;
-    spTest: TdsdStoredProc;
-    DataSource1: TDataSource;
-    DataSetMI: TClientDataSet;
+    spSelect: TdsdStoredProc;
+    DS: TDataSource;
+    CDS: TClientDataSet;
     procedure ButtonExportToEDIClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -220,10 +191,9 @@ var
   MainForm: TMainForm;
 
 implementation
-
 {$R *.dfm}
 
-uses DialogBillKind, GuideGoods;
+uses DMMainScale, UtilScale, DialogMovementDesc, GuideGoods;
 
 function TMainForm.myCheckPartionStr:boolean;
 begin
@@ -271,13 +241,14 @@ var
   Ini: TInifile;
 begin
   Ini:=TIniFile.Create('INI\scale.ini');
-  CurSetting.ScaleNum:=Ini.ReadInteger('Main','ScaleNum',1);
-  CurSetting.ToolsCode:=Ini.ReadInteger('Main','DefaultToolsCode',1);
+  SettingMain.ScaleNum:=Ini.ReadInteger('Main','ScaleNum',1);
+  SettingMain.ComPort :=Ini.ReadString('Main','ComPort','1');
   Ini.Free;
+  //
+  BillDateEdit.Text:=DateToStr(DMMainScaleForm.gpSelect_Scale_OperDate(SettingMovement));
 end;
 
-procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if Key = VK_F2 then GetParams;
      if Key = VK_SPACE then begin Key:=0;ButtonNewGetParamsClick(self);end
@@ -285,27 +256,24 @@ end;
 
 
 procedure TMainForm.GetParams;
-
 begin
-     if DialogBillKindForm.Execute
+
+     if DialogMovementDescForm.Execute
      then begin
-      PanelPriceListName.Caption:= CurSetting.PriceListName;
-      PanelPartnerCode.Caption:= IntToStr(CurSetting.PartnerCode);
-      PanelPartnerName.Caption:= CurSetting.PartnerName;
-      PanelRouteUnitCode.Caption:= IntToStr(CurSetting.RouteSortingCode);
-      PanelRouteUnitName.Caption:= CurSetting.RouteSortingName;
+      PanelPriceListName.Caption:= SettingMovement.PriceListName;
+{      PanelPartnerCode.Caption:= IntToStr(SettingMovement.PartnerCode);
+      PanelPartnerName.Caption:= SettingMovement.PartnerName;
+      PanelRouteUnitCode.Caption:= IntToStr(SettingMovement.RouteSortingCode);
+      PanelRouteUnitName.Caption:= SettingMovement.RouteSortingName;
 
       PanelBillKind.Caption:= CurSetting.DescName+' ';
-      if CurSetting.FromId<>0 then
+      if SettingMovement.FromId<>0 then
          PanelBillKind.Caption:= PanelBillKind.Caption+ ' (От Кого) = ' + CurSetting.FromName + ' ';
       if CurSetting.ToId<>0 then
          PanelBillKind.Caption:= PanelBillKind.Caption+ ' (Кому) = ' + CurSetting.ToName + ' ';
       if CurSetting.PaidKindId<>0 then
          PanelBillKind.Caption:= PanelBillKind.Caption + ' (' + CurSetting.PaidKindName + ')' ;
-
-
-//      PanelBillKind.Caption:= 'Перемещение кому =' +
-
+}
      end;
 
 end;
