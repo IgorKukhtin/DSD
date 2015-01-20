@@ -13,6 +13,7 @@ object DialogMovementDescForm: TDialogMovementDescForm
   KeyPreview = True
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   PixelsPerInch = 96
@@ -112,8 +113,10 @@ object DialogMovementDescForm: TDialogMovementDescForm
           Properties.Buttons = <
             item
               Default = True
+              Enabled = False
               Kind = bkEllipsis
             end>
+          Properties.ReadOnly = False
           TabOrder = 0
           Text = 'EditPartnerCode'
           Width = 102
@@ -146,6 +149,7 @@ object DialogMovementDescForm: TDialogMovementDescForm
           Alignment = taLeftJustify
           AutoSize = True
           BevelOuter = bvNone
+          Caption = 'PanelPartnerName'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -12

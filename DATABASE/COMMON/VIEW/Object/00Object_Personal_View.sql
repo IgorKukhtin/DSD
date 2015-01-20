@@ -18,6 +18,9 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , Object_PositionLevel.ObjectCode                 AS PositionLevelCode
        , Object_PositionLevel.ValueData                  AS PositionLevelName
 
+       , Object_Branch.Id                            AS BranchId
+       , Object_Branch.ObjectCode                    AS BranchCode
+       , Object_Branch.ValueData                     AS BranchName
 
        , COALESCE (ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId
        , Object_Unit.ObjectCode                    AS UnitCode
@@ -54,6 +57,11 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
                            AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
+       LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                            ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+       LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
        LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                             ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
                            AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
@@ -81,6 +89,7 @@ ALTER TABLE Object_Personal_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.01.15                                        * add Branch...
  12.09.14                                        * add isOffical and isDateOut and isMain
  21.05.14                        * add Offical
  08.12.13                                        * add AccessKeyId

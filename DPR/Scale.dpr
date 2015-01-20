@@ -58,12 +58,26 @@ uses
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
-  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas';
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
+  UtilPrint in '..\Scale\Util\UtilPrint.pas' {UtilPrintForm};
 
 {$R *.res}
 
 begin
   Application.Initialize;
+
+  if FindCmdLineSwitch('autologin', true) then begin
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+
+         //TUpdater.AutomaticUpdateProgram;
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         Application.CreateForm(TMainForm, MainForm);
+         Application.CreateForm(TUtilPrintForm, UtilPrintForm);
+  // !!!важно первым!!!
+         Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
+         Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
+  end
+  else
 
   // Процесс аутентификации
   with TLoginForm.Create(Application)
@@ -74,11 +88,17 @@ begin
          //TUpdater.AutomaticUpdateProgram;
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
          Application.CreateForm(TMainForm, MainForm);
-         // !!!важно первым!!!
+         Application.CreateForm(TUtilPrintForm, UtilPrintForm);
+  // !!!важно первым!!!
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
+
+        //
+        ParamsMovement.Free;
+
   end;
 
 //  Application.CreateForm(TMainForm, MainForm);
   Application.Run;
+  //
 end.

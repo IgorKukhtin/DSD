@@ -25,7 +25,6 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 20
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -607,8 +606,6 @@ object ContractForm: TContractForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 335
-    ExplicitWidth = 624
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -763,7 +760,7 @@ object ContractForm: TContractForm
     Top = 30
     Action = actRefresh
     Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1087#1086' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086
-    TabOrder = 10
+    TabOrder = 9
     Width = 278
   end
   object cxGrid1: TcxGrid
@@ -1593,11 +1590,17 @@ object ContractForm: TContractForm
           DataType = ftString
         end
         item
-          Name = 'inJuridicalId'
+          Name = 'MasterJuridicalId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
           ParamType = ptInput
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
         end>
       isShowModal = False
     end
@@ -1985,8 +1988,8 @@ object ContractForm: TContractForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 880
-    Top = 408
+    Left = 896
+    Top = 432
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

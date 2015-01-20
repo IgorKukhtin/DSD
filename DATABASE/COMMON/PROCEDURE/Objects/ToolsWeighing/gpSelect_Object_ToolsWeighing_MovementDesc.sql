@@ -9,8 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc(
 )
 RETURNS TABLE (Number         Integer
              , MovementDescId Integer
-             , FromId         Integer, FromName     TVarChar
-             , ToId           Integer, ToName       TVarChar
+             , FromId         Integer, FromCode         Integer, FromName     TVarChar
+             , ToId           Integer, ToCode           Integer, ToName       TVarChar
              , PaidKindId     Integer, PaidKindName TVarChar
              , ColorGridValue Integer
              , GuideName      TVarChar
@@ -80,12 +80,14 @@ BEGIN
       SELECT _tmpToolsWeighing.Number                        AS Number
            , _tmpToolsWeighing.MovementDescId                AS MovementDescId
            , Object_From.Id                                  AS FromId
+           , Object_From.ObjectCode                          AS FromCode
            , Object_From.ValueData                           AS FromName
            , Object_To.Id                                    AS ToId
+           , Object_To.ObjectCode                            AS ToCode
            , Object_To.ValueData                             AS ToName
            , Object_PaidKind.Id                              AS PaidKindId
            , Object_PaidKind.ValueData                       AS PaidKindName
-           , _tmpToolsWeighing.ColorGridValue                 AS ColorGridValue
+           , _tmpToolsWeighing.ColorGridValue                AS ColorGridValue
 
            , CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')'
@@ -109,8 +111,10 @@ BEGIN
        SELECT 0                                   AS Number
             , 0                                   AS MovementDescId
             , 0                                   AS FromId
+            , 0                                   AS FromCode
             , '' :: TVarChar                      AS FromName
             , 0                                   AS ToId
+            , 0                                   AS ToCode
             , '' :: TVarChar                      AS ToName
             , 0                                   AS PaidKindId
             , '' :: TVarChar                      AS PaidKindName
@@ -119,7 +123,7 @@ BEGIN
             , tmp.OrderById                       AS OrderById
        FROM (SELECT _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById FROM _tmpToolsWeighing WHERE _tmpToolsWeighing.MovementDescId <> 0 GROUP BY _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById) AS tmp
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmp.MovementDescId
-      ORDER BY 10;
+      ORDER BY 11;
 
 END;
 $BODY$

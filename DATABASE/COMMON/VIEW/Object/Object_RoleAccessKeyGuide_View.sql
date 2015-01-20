@@ -54,8 +54,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideNikolaev()
                     THEN 8373 -- филиал Николаев (Херсон)
 
-               -- WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_()
-               --      THEN 8374 -- филиал Одесса
+               WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideOdessa()
+                    THEN 8374 -- филиал Одесса
 
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideCherkassi()
                     THEN 8375 -- филиал Черкассы (Кировоград)
@@ -92,6 +92,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                              , zc_Enum_Process_AccessKey_GuideCherkassi()
                                              , zc_Enum_Process_AccessKey_GuideDoneck()
                                              , zc_Enum_Process_AccessKey_GuideZaporozhye()
+                                             , zc_Enum_Process_AccessKey_GuideOdessa()
                                               )
                                THEN AccessKeyId
                           ELSE 0
@@ -172,6 +173,7 @@ ALTER TABLE Object_RoleAccessKeyGuide_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.01.15                                        * add ...Odessa
  20.10.14                                        * add ...Zaporozhye
  23.09.14                                        * add AccessKeyId_PeriodClose
  17.09.14                                        *

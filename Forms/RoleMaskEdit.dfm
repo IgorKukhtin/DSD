@@ -1,7 +1,7 @@
-﻿object RoleEditForm: TRoleEditForm
+﻿object RoleMaskEditForm: TRoleMaskEditForm
   Left = 0
   Top = 0
-  Caption = #1056#1086#1083#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+  Caption = #1056#1086#1083#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' ('#1087#1086' '#1084#1072#1089#1082#1077')'
   ClientHeight = 156
   ClientWidth = 298
   Color = clBtnFace
@@ -16,7 +16,7 @@
   AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object edMeasureName: TcxTextEdit
+  object edName: TcxTextEdit
     Left = 11
     Top = 72
     TabOrder = 0
@@ -62,7 +62,7 @@
     Width = 273
   end
   object ActionList: TActionList
-    Left = 240
+    Left = 256
     Top = 96
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -92,7 +92,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Role'
+    StoredProcName = 'gpInsert_Object_RoleMask'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -112,7 +112,7 @@
       item
         Name = 'inName'
         Value = ''
-        Component = edMeasureName
+        Component = edName
         DataType = ftString
         ParamType = ptInput
       end>
@@ -139,7 +139,7 @@
         Name = 'Id'
         Value = Null
         Component = dsdFormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'MaskId'
         ParamType = ptInput
       end
       item
@@ -150,7 +150,7 @@
       item
         Name = 'Name'
         Value = ''
-        Component = edMeasureName
+        Component = edName
         DataType = ftString
       end>
     PackSize = 1

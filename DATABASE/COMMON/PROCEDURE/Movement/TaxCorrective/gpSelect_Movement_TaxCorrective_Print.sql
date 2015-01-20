@@ -207,11 +207,16 @@ BEGIN
                   THEN 'X' ELSE '' END                                      AS CopyForClient
            , CASE WHEN inisClientCopy=TRUE
                   THEN '' ELSE 'X' END                                      AS CopyForUs
-           , CASE WHEN (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
-                  THEN 'X' ELSE '' END                                      AS ERPN
+           , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
+                  THEN 'X'
+                  WHEN Movement.OperDate >= '01.01.2015' AND OH_JuridicalDetails_To.INN <> vbNotNDSPayer_INN
+                  THEN 'X'
+                  ELSE ''
+             END AS ERPN
 
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN '' ELSE 'X' END                                      AS ERPN2
+
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN 'X' ELSE '' END                                      AS NotNDSPayer
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
