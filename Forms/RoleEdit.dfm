@@ -116,6 +116,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 248
     Top = 56
   end
@@ -152,6 +153,7 @@
         Component = edMeasureName
         DataType = ftString
       end>
+    PackSize = 1
     Left = 168
     Top = 80
   end

@@ -62,7 +62,7 @@
     Width = 273
   end
   object ActionList: TActionList
-    Left = 240
+    Left = 256
     Top = 96
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -138,6 +138,8 @@
       item
         Name = 'Id'
         Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'MaskId'
         ParamType = ptInput
       end
       item

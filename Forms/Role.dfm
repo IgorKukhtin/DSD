@@ -517,6 +517,8 @@ object RoleForm: TRoleForm
         item
           Name = 'Id'
           Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
           ParamType = ptInput
         end>
       isShowModal = False
@@ -861,8 +863,8 @@ object RoleForm: TRoleForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 440
-    Top = 72
+    Left = 424
+    Top = 88
   end
   object ActionAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
