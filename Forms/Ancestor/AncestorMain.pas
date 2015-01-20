@@ -23,16 +23,12 @@ type
     frxXLSExport: TfrxXLSExport;
     frxXMLExport: TfrxXMLExport;
     ActionList: TActionList;
-    dxBarManager: TdxBarManager;
     actAbout: TAction;
     actUpdateProgram: TAction;
-    bbSeparator: TdxBarSeparator;
     cxPropertiesStore: TcxPropertiesStore;
     actLookAndFeel: TAction;
-    bbLookAndFillSettings: TdxBarButton;
     actImportExportLink: TdsdOpenForm;
-    bbImportExportLink: TdxBarButton;
-    MainMenu1: TMainMenu;
+    MainMenu: TMainMenu;
     miGuides: TMenuItem;
     miService: TMenuItem;
     miProtocol: TMenuItem;
@@ -184,24 +180,28 @@ begin
 
   ClientDataSet.EmptyDataSet;
   // Отображаем видимые пункты меню
-  for i := 0 to dxBarManager.ItemCount - 1 do
-      if dxBarManager.Items[i] is TdxBarButton then
-         if Assigned(dxBarManager.Items[i].Action) then
-            if not TCustomAction(dxBarManager.Items[i].Action).Enabled then
-               dxBarManager.Items[i].Visible := ivNever;
+  for i := 0 to MainMenu.Items.Count - 1 do
+         if Assigned(MainMenu.Items[i].Action) then
+            if not TCustomAction(MainMenu.Items[i].Action).Enabled then
+               MainMenu.Items[i].Visible := false;
+
+    for i := 0 to ComponentCount - 1 do  //Items.Count
+        if Components[i] is TMenuItem then
+           if TMenuItem(Components[i]).Count > 0 then
+               TMenuItem(Components[i]).Visible := false;
 
   for k := 1 to 3 do
     // А теперь бы пройтись по группам меню и отрубить те, у которых нет видимых чайлдов
-    for i := 0 to dxBarManager.ItemCount - 1 do
-        if dxBarManager.Items[i] is TdxBarSubItem then begin
-           dxBarManager.Items[i].Visible := ivNever;
-           for j := 0 to TdxBarSubItem(dxBarManager.Items[i]).ItemLinks.Count - 1 do
-               if (TdxBarSubItem(dxBarManager.Items[i]).ItemLinks[j].Item.Visible = ivAlways)
-                  and not (TdxBarSubItem(dxBarManager.Items[i]).ItemLinks[j].Item is TdxBarSeparator) then begin
-                  dxBarManager.Items[i].Visible := ivAlways;
-                  break;
-               end;
-        end;
+    for i := 0 to ComponentCount - 1 do
+        if Components[i] is TMenuItem then
+          if TMenuItem(Components[i]).Count > 0 then
+             for j := 0 to TMenuItem(Components[i]).Count - 1 do
+                 if (TMenuItem(Components[i]).Items[j].Visible)
+                    and not (TMenuItem(Components[i]).Items[j].IsLine) then begin
+                    TMenuItem(Components[i]).Visible := true;
+                    break;
+                 end;
+
 end;
 
 end.

@@ -10,162 +10,13 @@ object AncestorMainForm: TAncestorMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  Menu = MainMenu1
+  Menu = MainMenu
   OldCreateOrder = False
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object dxBarManager: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
-    Categories.ItemsVisibles = (
-      2)
-    Categories.Visibles = (
-      True)
-    ImageOptions.Images = dmMain.ImageList
-    PopupMenuLinks = <>
-    UseSystemFont = True
-    Left = 128
-    Top = 48
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
-    object dxBar: TdxBar
-      AllowClose = False
-      Caption = 'MainMenu'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 0
-      DockedTop = 0
-      DockingStyle = dsTop
-      FloatLeft = 683
-      FloatTop = 8
-      FloatClientWidth = 0
-      FloatClientHeight = 0
-      IsMainMenu = True
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'bbService'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExit'
-        end>
-      MultiLine = True
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = True
-    end
-    object bbAbout: TdxBarButton
-      Action = actAbout
-      Category = 0
-    end
-    object bbUpdateProgramm: TdxBarButton
-      Action = actUpdateProgram
-      Category = 0
-    end
-    object bbExit: TdxBarButton
-      Action = actExit
-      Category = 0
-    end
-    object bbService: TdxBarSubItem
-      Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUserProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbLookAndFillSettings'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAbout'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateProgramm'
-        end>
-    end
-    object bbLoadLoad: TdxBarButton
-      Action = actImportGroup
-      Category = 0
-    end
-    object bbImportType: TdxBarButton
-      Action = actImportType
-      Category = 0
-    end
-    object bbImportSettings: TdxBarButton
-      Action = actImportSettings
-      Category = 0
-    end
-    object bbGuides: TdxBarSubItem
-      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <>
-    end
-    object bbProtocol: TdxBarButton
-      Action = actProtocol
-      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074
-      Category = 0
-    end
-    object bbUserProtocol: TdxBarButton
-      Action = actProtocolUser
-      Category = 0
-    end
-    object bbMovementProtocol: TdxBarButton
-      Action = actProtocolMovement
-      Category = 0
-    end
-    object bbSeparator: TdxBarSeparator
-      Category = 0
-      Visible = ivAlways
-    end
-    object bbLookAndFillSettings: TdxBarButton
-      Action = actLookAndFeel
-      Category = 0
-    end
-    object bbImportExportLink: TdxBarButton
-      Action = actImportExportLink
-      Category = 0
-    end
-  end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 192
@@ -363,7 +214,8 @@ object AncestorMainForm: TAncestorMainForm
     Left = 240
     Top = 56
   end
-  object MainMenu1: TMainMenu
+  object MainMenu: TMainMenu
+    Images = dmMain.ImageList
     Left = 496
     Top = 56
     object miGuides: TMenuItem

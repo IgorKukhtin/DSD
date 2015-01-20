@@ -32,15 +32,12 @@ uses dsdDB, SysUtils, DateUtils, cxCalendar, Storage, DB, Dialogs,
 
 procedure TComponentDBTest.BinaryFlowTest;
 const  pXML =
-  (*'<xml Session = "" AutoWidht = "false" >' +
+  '<xml Session = "" AutoWidht = "false" >' +
     '<gpExecSql OutputType="otDataSet">' +
          '<inSqlText DataType="ftString" Value="''SELECT 1 AS test''" />' +
     '</gpExecSql>' +
-  '</xml>'(*)
-    '<xml Session = "" AutoWidht = "false" >' +
-    '<gpSelect_Object_PaidKind OutputType="otDataSet">' +
-    '</gpSelect_Object_PaidKind>' +
   '</xml>';
+//'<xml Session = "9458" AutoWidth = "0" ><gpSelect_Object_Partner OutputType = "otDataSet" DataSetType = "TClientDataSet" ><inJuridicalId  DataType="ftInteger"   Value="0" /></gpSelect_Object_Partner></xml>';
 
 var St: AnsiString;
     ClientDataSet: TClientDataSet;
@@ -53,14 +50,17 @@ begin
   FileStream := TFileStream.Create('c:\datanew.hhh', fmOpenRead  );
   try
     St := TStorageFactory.GetStorage.ExecuteProc(pXML);
-    StringStream := TStringStream.Create(St);
+//    ClientDataSet.XMLData := St;
+  //  ClientDataSet.SaveToFile('c:\datanew.hhh');
+    StringStream := TStringStream.Create(st);
     StringStream.SaveToFile('c:\datanewnew.hhh');
-//    ClientDataSet.LoadFromStream(StringStream);
     StringStream.LoadFromStream(FileStream);
+  //  ClientDataSet.LoadFromStream(StringStream);
     Stt := StringStream.DataString;
 
     for I := 1 to length(st) do
-        check(st[i] = stt[i], IntToStr(i)+'   '+IntToStr(byte(st[i]))+ ' '+IntToStr(byte(stt[i])));
+        if i <> 23 then // здесь размер пакета и он может отличаться
+           check(st[i] = stt[i], IntToHex(i, 1) + '  ' + IntToStr(i)+'   '+IntToStr(byte(st[i]))+ ' '+IntToStr(byte(stt[i])));
 
    // ClientDataSet.XMLData := St;
    // ClientDataSet.SaveToFile('c:\datanew.hhh', dfBinary);
@@ -77,7 +77,41 @@ end;
 procedure TComponentDBTest.DBFOpenTest;
 {var ZConnection : TZConnection;
     ZTable : TZTable;}
+var DateTime: TDateTime;
+    I:Int64;
+    DDW: Int64;
+    TimeStamp: TTimeStamp;
+  buf: int64;
+  d: TDateTime;
+  a : Pointer;
+const
+  b: array[0..7] of Byte = ($00, $B0, $2A, $60, $01, $E8, $CC, $42);
+var
+  x: Double;
 begin
+  Move(b, x, SizeOf(x));
+  buf:=$42CCE801602AB000;
+  a:=@buf;
+  d:=Double(a^);
+  // 63565562140000  -- миллисекунды
+  // 63565562140 - секунды
+  TimeStamp := MSecsToTimeStamp(d);
+  // 735712 -Day - 45340000 мсек - 45340 сек
+  // 62135578800
+  DateTime := TimeStampToDateTime(TimeStamp);
+  //buf:=4675728260250941765;
+  //buf:=$42CCE801602AB000;
+  //a:=@buf;
+  //d:=Double(a^);
+  check(false, DateTimeToStr(DateTime));
+
+{  I := $40E3118000000000;//42CCE360E0495C00;
+  DDW := StrToInt64('$' + '40E3118000000000'); // '$' отдельно для привлечения внимания
+                           //42CCE360E0495C00
+  TimeStamp := MSecsToTimeStamp(I);
+  DateTime. := TimeStampToDateTime(TimeStamp);
+  check(false, DateToStr(DateTime));}
+
   {ZConnection := TZConnection.Create(nil);
   ZConnection.Protocol := 'ado';
   ZConnection.Database := 'Provider=MSDASQL.1;Persist Security Info=False;Data Source=dBASE Files;Initial Catalog=c:\';
