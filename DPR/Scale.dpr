@@ -58,7 +58,8 @@ uses
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
-  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas';
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
+  UtilPrint in '..\Scale\Util\UtilPrint.pas' {UtilPrintForm};
 
 {$R *.res}
 
@@ -74,7 +75,8 @@ begin
          //TUpdater.AutomaticUpdateProgram;
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
          Application.CreateForm(TMainForm, MainForm);
-         // !!!важно первым!!!
+         Application.CreateForm(TUtilPrintForm, UtilPrintForm);
+  // !!!важно первым!!!
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
   end;

@@ -305,6 +305,7 @@ object MainForm: TMainForm
           8888888777778888888888888888888888888888888888888888}
         ParentShowHint = False
         ShowHint = True
+        OnClick = ButtonRefreshZakazClick
       end
       object ButtonNewGetParams: TSpeedButton
         Left = 2
@@ -329,7 +330,7 @@ object MainForm: TMainForm
       object ButtonPrintBill_detail_byInvNumber: TSpeedButton
         Left = 541
         Top = 3
-        Width = 12
+        Width = 36
         Height = 29
         Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
         Glyph.Data = {
@@ -833,7 +834,7 @@ object MainForm: TMainForm
       object EnterGoodsCodeScanerLabel: TLabel
         Left = 1
         Top = 1
-        Width = 85
+        Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -844,6 +845,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 85
       end
       object EnterGoodsCodeScanerEdit: TEdit
         Left = 5
@@ -870,7 +872,7 @@ object MainForm: TMainForm
       object EnterWeightLabel: TLabel
         Left = 1
         Top = 1
-        Width = 105
+        Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -881,6 +883,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 105
       end
       object EnterWeightEdit: TEdit
         Left = 8
@@ -930,7 +933,7 @@ object MainForm: TMainForm
       object EnterGoodsCode_byZakazLabel: TLabel
         Left = 1
         Top = 1
-        Width = 87
+        Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -941,6 +944,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 87
       end
       object EnterGoodsCode_byZakazEdit: TEdit
         Left = 6
@@ -967,7 +971,7 @@ object MainForm: TMainForm
       object LabelCountTare: TLabel
         Left = 1
         Top = 1
-        Width = 66
+        Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -978,6 +982,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 66
       end
       object CountTareEdit: TEdit
         Left = 3
@@ -998,7 +1003,7 @@ object MainForm: TMainForm
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
-        Width = 88
+        Width = 131
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -1009,6 +1014,7 @@ object MainForm: TMainForm
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
+        ExplicitWidth = 88
       end
       object Panel_Scale: TPanel
         Left = 1
@@ -1043,7 +1049,7 @@ object MainForm: TMainForm
       object EnterKindPackageCode_byZakazLabel: TLabel
         Left = 1
         Top = 1
-        Width = 92
+        Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -1054,6 +1060,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 92
       end
       object EnterKindPackageCode_byZakazEdit: TEdit
         Left = 6
@@ -1119,7 +1126,7 @@ object MainForm: TMainForm
       object LabelCountPoddon: TLabel
         Left = 1
         Top = 1
-        Width = 80
+        Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -1130,6 +1137,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 80
       end
       object CountPoddonEdit: TEdit
         Left = 3
@@ -1156,7 +1164,7 @@ object MainForm: TMainForm
       object LabelCountVanna: TLabel
         Left = 1
         Top = 1
-        Width = 51
+        Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -1167,6 +1175,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 51
       end
       object CountVannaEdit: TEdit
         Left = 3
@@ -1193,7 +1202,7 @@ object MainForm: TMainForm
       object LabelCountUpakovka: TLabel
         Left = 1
         Top = 1
-        Width = 69
+        Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -1204,6 +1213,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 69
       end
       object CountUpakovkaEdit: TEdit
         Left = 3
@@ -1231,7 +1241,7 @@ object MainForm: TMainForm
       object PartionStr_MBLabel: TLabel
         Left = 0
         Top = 7
-        Width = 119
+        Width = 133
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -1242,6 +1252,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 119
       end
       object Panel1: TPanel
         Left = 0
@@ -1285,7 +1296,7 @@ object MainForm: TMainForm
       object LabelOperCount_sh: TLabel
         Left = 1
         Top = 1
-        Width = 57
+        Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -1296,6 +1307,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 57
       end
       object OperCount_shEdit: TEdit
         Left = 3
@@ -1328,7 +1340,7 @@ object MainForm: TMainForm
       object LabelProduction_Goods: TLabel
         Left = 0
         Top = 0
-        Width = 115
+        Width = 0
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -1339,6 +1351,7 @@ object MainForm: TMainForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 115
       end
       object GBProduction_GoodsCode: TGroupBox
         Left = 0
@@ -1435,7 +1448,7 @@ object MainForm: TMainForm
       object LabelTare_Goods: TLabel
         Left = 0
         Top = 0
-        Width = 30
+        Width = 0
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -1446,6 +1459,7 @@ object MainForm: TMainForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 30
       end
       object GBTare_GoodsCode: TGroupBox
         Left = 0
@@ -1710,7 +1724,7 @@ object MainForm: TMainForm
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 390
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1721,6 +1735,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 71
         end
         object PanelPartnerCode: TPanel
           Left = 1
@@ -1768,7 +1783,7 @@ object MainForm: TMainForm
         object PriceListNameLabel: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 115
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1779,6 +1794,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 71
         end
         object PanelPriceListName: TPanel
           Left = 1
@@ -1810,7 +1826,7 @@ object MainForm: TMainForm
         object LabelRouteUnit: TLabel
           Left = 1
           Top = 1
-          Width = 44
+          Width = 282
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1821,6 +1837,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 44
         end
         object PanelRouteUnitCode: TPanel
           Left = 1

@@ -179,6 +179,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure ButtonNewGetParamsClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
+    procedure ButtonRefreshZakazClick(Sender: TObject);
   private
     procedure GetParams;
     procedure newGetParamsGoods;
@@ -193,7 +194,7 @@ var
 implementation
 {$R *.dfm}
 
-uses DMMainScale, UtilScale, DialogMovementDesc, GuideGoods;
+uses DMMainScale, UtilScale, DialogMovementDesc, GuideGoods,UtilPrint;
 
 function TMainForm.myCheckPartionStr:boolean;
 begin
@@ -234,6 +235,11 @@ end;
 procedure TMainForm.ButtonNewGetParamsClick(Sender: TObject);
 begin
   newGetParamsGoods;
+end;
+
+procedure TMainForm.ButtonRefreshZakazClick(Sender: TObject);
+begin
+    PrintSale(StrToInt(PartionStr_MBEdit.Text));
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
