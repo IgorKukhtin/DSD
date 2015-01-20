@@ -10,7 +10,8 @@ uses
   dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore,
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxSplitter, Vcl.ExtCtrls,
-  cxButtonEdit;
+  cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TRoleForm = class(TParentForm)
@@ -96,6 +97,8 @@ type
     AccessGridLevel: TcxGridLevel;
     ProcessAccessChoiceForm: TOpenChoiceForm;
     ProcessAccessUpdateDataSet: TdsdUpdateDataSet;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

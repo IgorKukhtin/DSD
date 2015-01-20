@@ -19,15 +19,14 @@ object RoleForm: TRoleForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 385
-    Height = 499
+    Height = 501
     Align = alLeft
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 501
+    ExplicitLeft = 2
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -75,23 +74,19 @@ object RoleForm: TRoleForm
   end
   object cxLeftSplitter: TcxSplitter
     Left = 385
-    Top = 28
+    Top = 26
     Width = 8
-    Height = 499
+    Height = 501
     Control = cxGrid
-    ExplicitTop = 26
-    ExplicitHeight = 501
   end
   object Panel1: TPanel
     Left = 393
-    Top = 28
+    Top = 26
     Width = 372
-    Height = 499
+    Height = 501
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitTop = 26
-    ExplicitHeight = 501
     object UserGrid: TcxGrid
       Left = 0
       Top = 248
@@ -338,8 +333,8 @@ object RoleForm: TRoleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -357,7 +352,7 @@ object RoleForm: TRoleForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -374,6 +369,10 @@ object RoleForm: TRoleForm
         item
           Visible = True
           ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
         end
         item
           Visible = True
@@ -449,6 +448,10 @@ object RoleForm: TRoleForm
       Action = dsdChoiceGuides
       Category = 0
     end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -500,6 +503,27 @@ object RoleForm: TRoleForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      ImageIndex = 54
+      FormName = 'TRoleMaskEditForm'
+      FormNameParam.Value = 'TRoleMaskEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInput
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -513,6 +537,7 @@ object RoleForm: TRoleForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -569,12 +594,14 @@ object RoleForm: TRoleForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -593,11 +620,13 @@ object RoleForm: TRoleForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = UserCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = UserCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -624,11 +653,13 @@ object RoleForm: TRoleForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ProcessAccessCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ProcessAccessCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -645,11 +676,13 @@ object RoleForm: TRoleForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ProcessCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ProcessCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -666,11 +699,13 @@ object RoleForm: TRoleForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ActionCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ActionCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -719,6 +754,7 @@ object RoleForm: TRoleForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 56
     Top = 104
   end
@@ -757,11 +793,13 @@ object RoleForm: TRoleForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 72
+    PackSize = 1
+    Left = 64
     Top = 120
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -806,6 +844,7 @@ object RoleForm: TRoleForm
         DataSet = ActionCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 528
     Top = 40
   end
@@ -836,8 +875,8 @@ object RoleForm: TRoleForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 448
-    Top = 32
+    Left = 456
+    Top = 48
   end
   object spProcess: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_RoleProcess'
@@ -847,6 +886,7 @@ object RoleForm: TRoleForm
         DataSet = ProcessCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 480
     Top = 208
   end
@@ -874,6 +914,7 @@ object RoleForm: TRoleForm
         DataSet = UserCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 464
     Top = 320
   end
@@ -898,22 +939,26 @@ object RoleForm: TRoleForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = UserCDS
         ComponentItem = 'UserRoleId'
         ParamType = ptInputOutput
       end
       item
         Name = 'inUserId'
+        Value = Null
         Component = UserCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'RoleId'
+        Value = Null
         Component = UserCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 520
     Top = 296
   end
@@ -924,22 +969,26 @@ object RoleForm: TRoleForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ActionCDS
         ComponentItem = 'RoleActionId'
         ParamType = ptInputOutput
       end
       item
         Name = 'inRoleId'
+        Value = Null
         Component = ActionCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
       end
       item
         Name = 'inActionId'
+        Value = Null
         Component = ActionCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 520
     Top = 88
   end
@@ -950,22 +999,26 @@ object RoleForm: TRoleForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ProcessCDS
         ComponentItem = 'RoleProcessId'
         ParamType = ptInputOutput
       end
       item
         Name = 'inRoleId'
+        Value = Null
         Component = ProcessCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
       end
       item
         Name = 'inProcessId'
+        Value = Null
         Component = ProcessCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 544
     Top = 208
   end
@@ -1007,6 +1060,7 @@ object RoleForm: TRoleForm
         DataSet = ProcessAccessCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 648
     Top = 464
   end
@@ -1017,22 +1071,26 @@ object RoleForm: TRoleForm
     Params = <
       item
         Name = 'ioid'
+        Value = Null
         Component = ProcessAccessCDS
         ComponentItem = 'RoleProcessId'
         ParamType = ptInputOutput
       end
       item
         Name = 'inroleid'
+        Value = Null
         Component = ProcessAccessCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
       end
       item
         Name = 'inprocessid'
+        Value = Null
         Component = ProcessAccessCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 712
     Top = 464
   end
