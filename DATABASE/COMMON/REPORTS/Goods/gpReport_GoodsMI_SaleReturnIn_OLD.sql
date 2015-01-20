@@ -1,11 +1,8 @@
 -- Function: gpReport_Goods_Movement ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_OLD (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_OLD (
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inBranchId     Integer   , -- Филиал
@@ -21,24 +18,27 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inIsGoods      Boolean   , --
     IN inSession      TVarChar    -- сессия пользователя
 )
+
+
+
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
-             , TradeMarkName TVarChar, GoodsTagName TVarChar, GoodsGroupStatName TVarChar
+             , TradeMarkName TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, GoodsGroupStatName TVarChar
              , JuridicalGroupName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar
-             , RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar
+             , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
-             , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar
+             , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , PersonalName TVarChar, UnitName_Personal TVarChar, BranchName_Personal TVarChar
              , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AccountName TVarChar
              , Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10300 TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
              , Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
-             , Return_Summ TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
+             , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
              , Sale_Amount_40200_Weight TFloat
@@ -327,6 +327,7 @@ BEGIN
           , Object_GoodsKind.ValueData  AS GoodsKindName
           , Object_Measure.ValueData    AS MeasureName
           , Object_TradeMark.ValueData  AS TradeMarkName
+          , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
           , Object_GoodsTag.ValueData   AS GoodsTagName
           , Object_GoodsGroupStat.ValueData  AS GoodsGroupStatName
 
@@ -339,23 +340,10 @@ BEGIN
 
           , Object_Retail.ValueData       AS RetailName
           , Object_RetailReport.ValueData AS RetailReportName
-/*
-       , Object_Area.ValueData                AS AreaName
-       , Object_PartnerTag.ValueData          AS PartnerTagName
-       , Object_Region.ValueData              AS RegionName
-       , Object_Province.ValueData            AS ProvinceName
-       , Object_CityKind.ValueData            AS CityKindName
-       , Object_Street_View.CityName          AS CityName
-       , Object_Street_View.ProvinceCityName  AS ProvinceCityName
-       , Object_Street_View.StreetKindName    AS StreetKindName
-       , Object_Street_View.Name              AS StreetName
-
-       , Object_Partner.Id                          AS PartnerId
-       , Object_Partner.ObjectCode                  AS PartnerCode
-       , Object_Partner.ValueData                   AS PartnerName*/
 
           , View_Partner_Address.AreaName
           , View_Partner_Address.PartnerTagName
+          , ObjectString_Address.ValueData AS Address
           , View_Partner_Address.RegionName
           , View_Partner_Address.ProvinceName
           , View_Partner_Address.CityKindName
@@ -371,6 +359,7 @@ BEGIN
           , View_Contract_InvNumber.ContractCode
           , View_Contract_InvNumber.InvNumber              AS ContractNumber
           , View_Contract_InvNumber.ContractTagName
+          , View_Contract_InvNumber.ContractTagGroupName
 
           , View_Personal.PersonalName       AS PersonalName
           , View_Personal.UnitName           AS UnitName_Personal
@@ -401,6 +390,7 @@ BEGIN
          , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
 
          , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
+         , 0                                      :: TFloat AS Return_Summ_10300
          , tmpOperationGroup.Return_SummCost      :: TFloat AS Return_SummCost
          , tmpOperationGroup.Return_SummCost_40200:: TFloat AS Return_SummCost_40200
 
@@ -586,6 +576,11 @@ BEGIN
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpOperationGroup.TradeMarkId
           LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpOperationGroup.GoodsTagId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                               ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+          LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
@@ -606,6 +601,9 @@ BEGIN
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpOperationGroup.PartnerId
+          LEFT JOIN ObjectString AS ObjectString_Address
+                                 ON ObjectString_Address.ObjectId = tmpOperationGroup.PartnerId
+                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
 
@@ -662,4 +660,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.11.2014', inEndDate:= '30.11.2014', inBranchId:= 0, inAreaId:= 0, inRetailId:= 1, inJuridicalId:= 0, inPaidKindId:= 0, inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= 0, inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate:= '01.11.2014', inEndDate:= '30.11.2014', inBranchId:= 0, inAreaId:= 0, inRetailId:= 1, inJuridicalId:= 0, inPaidKindId:= 0, inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= 0, inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inSession:= zfCalc_UserAdmin());

@@ -146,12 +146,8 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
-     kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit, EDI, ExternalSave, Medoc,
+     cxButtonEdit, EDI, ExternalSave, Medoc,
      cxMemo, dsdInternetAction;
-
-var
-  DefaultStreamFormat: TkbmCSVStreamFormat;
-
 
 procedure Register;
 begin
@@ -193,8 +189,8 @@ end;
 
 procedure TdsdStoredProc.DataSetRefresh;
 var B: TBookMark;
-    StringStream: TStringStream;
     OldDateFormat: String;
+    FStringStream: TStringStream;
 begin
   if (DataSets.Count > 0) and
       Assigned(DataSets[0]) and
@@ -207,23 +203,13 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
   //   DataSets[0].DataSet.DisableControls;
      try
-        if DataSets[0].DataSet is TClientDataSet then
-           TClientDataSet(DataSets[0].DataSet).XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
-     finally
-    //    DataSets[0].DataSet.EnableControls;
-     end;
-     if DataSets[0].DataSet is TkbmMemTable then begin
-
-        StringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
-        OldDateFormat := FormatSettings.ShortDateFormat;
-        FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
-        FormatSettings.DateSeparator := '-';
-        try
-           TkbmMemTable(DataSets[0].DataSet).LoadFromStreamViaFormat(StringStream, DefaultStreamFormat);
-        finally
-           StringStream.Free;
-           FormatSettings.ShortDateFormat := OldDateFormat;
+        if DataSets[0].DataSet is TClientDataSet then begin
+           FStringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
+           TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
         end;
+     finally
+       FreeAndNil(FStringStream);
+    //    DataSets[0].DataSet.EnableControls;
      end;
      if Assigned(B) then
      begin
@@ -982,13 +968,8 @@ begin
 end;
 
 initialization
-  DefaultStreamFormat := TkbmCSVStreamFormat.Create(nil);
-  DefaultStreamFormat.sfLocalFormat := [sfLoadAsASCII, sfLoadLocalFormat];
 
-  Classes.RegisterClass(TdsdDataSets);
   VerifyBoolStrArray;
-
-finalization
-  DefaultStreamFormat.Free;
+  Classes.RegisterClass(TdsdDataSets);
 
 end.

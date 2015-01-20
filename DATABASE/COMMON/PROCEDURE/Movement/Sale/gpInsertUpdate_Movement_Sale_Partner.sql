@@ -61,10 +61,9 @@ BEGIN
      THEN
          IF NOT EXISTS (SELECT Movement.Id
                         FROM Movement
-                             JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                  ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
-                                                 AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-                                                 AND MovementBoolean_PriceWithVAT.ValueData = outPriceWithVAT
+                             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
                              LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                                      ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                                     AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -101,6 +100,7 @@ BEGIN
                           AND Movement.InvNumber = inInvNumber
                           -- AND COALESCE (MovementFloat_VATPercent.ValueData, 0) = COALESCE (outVATPercent, 0)
                           -- AND COALESCE (MovementFloat_ChangePercent.ValueData, 0) = COALESCE (inChangePercent, 0)
+                          AND MovementBoolean_PriceWithVAT.ValueData = outPriceWithVAT
                           AND COALESCE (MovementString_InvNumberOrder.ValueData, '') = COALESCE (inInvNumberOrder, '')
                           -- AND COALESCE (MovementLinkObject_RouteSorting.ObjectId, 0) = COALESCE (inRouteSortingId, 0)
                        )
