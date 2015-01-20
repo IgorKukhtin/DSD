@@ -20,6 +20,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
    DECLARE vbIsAllUnit Boolean;
+   DECLARE vbObjectId_Constraint Integer;
 
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbInfoMoneyName TVarChar;
@@ -32,6 +33,10 @@ BEGIN
    vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
    vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId);
+
+   -- определяется уровень доступа
+   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+
 
    -- определяется Дефолт
    SELECT View_InfoMoney.InfoMoneyId, View_InfoMoney.InfoMoneyName, View_InfoMoney.InfoMoneyName_all
@@ -79,10 +84,12 @@ BEGIN
           LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
+         OR Object_Personal_View.BranchId = vbObjectId_Constraint
          OR Object_Personal_View.UnitId = 8429 -- Отдел логистики
            )
        AND (View_RoleAccessKeyGuide.UnitId_PersonalService > 0
             OR vbIsAllUnit = TRUE
+            OR Object_Personal_View.BranchId = vbObjectId_Constraint
            )
        AND (Object_Personal_View.isErased = FALSE
             OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE)
@@ -134,4 +141,4 @@ WHERE Object_Personal_View.isErased <> COALESCE (Object.isErased, TRUE)
     and COALESCE (Object.isErased, TRUE) = TRUE);
 */
 -- тест
--- SELECT * FROM gpSelect_Object_Personal (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Personal (inStartDate:= null, inEndDate:= null, inIsPeriod:= FALSE, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())

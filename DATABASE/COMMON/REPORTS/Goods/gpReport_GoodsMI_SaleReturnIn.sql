@@ -66,6 +66,26 @@ BEGIN
     END IF;
 */
 
+    IF inEndDate < '01.06.2014' THEN
+       RETURN QUERY
+       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
+                                                      , inEndDate
+                                                      , inBranchId
+                                                      , inAreaId
+                                                      , inRetailId
+                                                      , inJuridicalId
+                                                      , inPaidKindId
+                                                      , inTradeMarkId
+                                                      , inGoodsGroupId
+                                                      , inInfoMoneyId
+                                                      , inIsPartner
+                                                      , inIsTradeMark
+                                                      , inIsGoods
+                                                      , inSession
+                                                       );
+       RETURN;
+    END IF;
+
     -- определяется уровень доступа
     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
      -- !!!меняется параметр!!!
