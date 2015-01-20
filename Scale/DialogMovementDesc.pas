@@ -68,6 +68,7 @@ begin
 
      IsOrderExternal:=false;
      IsPartnerCode:=false;
+
      CDS.Filtered:=false;
 
      ChoiceNumber:=0;
@@ -88,10 +89,7 @@ end;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
-     if ActiveControl=EditPartnerCode then EditPartnerCodeExit(Self);
-     if ActiveControl=EditPartnerCode then EditPartnerCodeExit(Self);
-
-     Result:=(IsOrderExternal=true);//and(IsPartnerCode=true);
+     Result:=(IsOrderExternal=true)and(IsPartnerCode=true);
      if not Result then exit;
 
 
@@ -141,6 +139,7 @@ begin
               else begin
                         EditPartnerCode.Text:= IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);
                         PanelPartnerName.Caption:= ParamsMovement_local.ParamByName('calcPartnerName').asString;
+                        IsPartnerCode:=true;
                    end;
     end
     else begin //обнуление

@@ -111,8 +111,10 @@ BEGIN
        SELECT 0                                   AS Number
             , 0                                   AS MovementDescId
             , 0                                   AS FromId
+            , 0                                   AS FromCode
             , '' :: TVarChar                      AS FromName
             , 0                                   AS ToId
+            , 0                                   AS ToCode
             , '' :: TVarChar                      AS ToName
             , 0                                   AS PaidKindId
             , '' :: TVarChar                      AS PaidKindName

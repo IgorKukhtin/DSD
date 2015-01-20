@@ -66,6 +66,19 @@ uses
 begin
   Application.Initialize;
 
+  if FindCmdLineSwitch('autologin', true) then begin
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+
+         //TUpdater.AutomaticUpdateProgram;
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         Application.CreateForm(TMainForm, MainForm);
+         Application.CreateForm(TUtilPrintForm, UtilPrintForm);
+  // !!!важно первым!!!
+         Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
+         Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
+  end
+  else
+
   // Процесс аутентификации
   with TLoginForm.Create(Application)
   do
@@ -79,11 +92,13 @@ begin
   // !!!важно первым!!!
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
+
+        //
+        ParamsMovement.Free;
+
   end;
 
 //  Application.CreateForm(TMainForm, MainForm);
   Application.Run;
-  //
-  ParamsMovement.Free;
   //
 end.
