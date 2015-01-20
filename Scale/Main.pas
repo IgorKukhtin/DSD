@@ -65,7 +65,7 @@ type
     EnterWeightPanel: TPanel;
     EnterWeightLabel: TLabel;
     EnterWeightEdit: TEdit;
-    gbBillDate: TGroupBox;
+    gbOperDate: TGroupBox;
     EnterGoodsCode_byZakazPanel: TPanel;
     EnterGoodsCode_byZakazLabel: TLabel;
     EnterGoodsCode_byZakazEdit: TEdit;
@@ -170,7 +170,7 @@ type
     miScaleRun_Zeus: TMenuItem;
     miScaleRun_BI_R: TMenuItem;
     PartionDateEdit: TcxDateEdit;
-    BillDateEdit: TcxDateEdit;
+    OperDateEdit: TcxDateEdit;
     spSelect: TdsdStoredProc;
     DS: TDataSource;
     CDS: TClientDataSet;
@@ -210,7 +210,7 @@ begin
      calcClientId:=0;//ParamsBill_ScaleHistory.ParamByName('@inToId').AsInteger
 
 
-     if GuideGoodsForm.Execute(calcClientId,StrToDate(BillDateEdit.Text))
+     if GuideGoodsForm.Execute(calcClientId,ParamsMovement.ParamByName('OperDate').AsDateTime)
 //     if GuideGoodsForm.Execute
      then begin
 
@@ -240,12 +240,23 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   Ini: TInifile;
 begin
+  //global Initialize
   Ini:=TIniFile.Create('INI\scale.ini');
   SettingMain.ScaleNum:=Ini.ReadInteger('Main','ScaleNum',1);
   SettingMain.ComPort :=Ini.ReadString('Main','ComPort','1');
   Ini.Free;
+  //global Initialize
+  DMMainScaleForm.gpInitialize_MovementDesc;
+  //global Initialize
+  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'Default');
+  Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'Service');
+  //global Initialize
+  Create_ParamsMovement(ParamsMovement);
   //
-  BillDateEdit.Text:=DateToStr(DMMainScaleForm.gpSelect_Scale_OperDate(SettingMovement));
+  //local Initialize
+  ParamsMovement.ParamByName('MovementNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber');
+  //local Initialize
+  OperDateEdit.Text:=DateToStr(DMMainScaleForm.gpInitialize_OperDate(ParamsMovement));
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
@@ -260,7 +271,7 @@ begin
 
      if DialogMovementDescForm.Execute
      then begin
-      PanelPriceListName.Caption:= SettingMovement.PriceListName;
+      //PanelPriceListName.Caption:= SettingMovement.PriceListName;
 {      PanelPartnerCode.Caption:= IntToStr(SettingMovement.PartnerCode);
       PanelPartnerName.Caption:= SettingMovement.PartnerName;
       PanelRouteUnitCode.Caption:= IntToStr(SettingMovement.RouteSortingCode);

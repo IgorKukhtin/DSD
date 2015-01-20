@@ -10,8 +10,6 @@ object AncestorDialogForm: TAncestorDialogForm
   Font.Name = 'Arial'
   Font.Style = []
   OldCreateOrder = False
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 14

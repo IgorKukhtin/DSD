@@ -38,8 +38,8 @@ BEGIN
                                                        WHEN vbCode_calc = 3 -- филиал Николаев (Херсон)
                                                             THEN zc_Enum_Process_AccessKey_TrasportNikolaev()
 
-                                                       -- WHEN vbCode_calc = 4 -- филиал Одесса
-                                                       --      THEN zc_Enum_Process_AccessKey_()
+                                                       WHEN vbCode_calc = 4 -- филиал Одесса
+                                                            THEN zc_Enum_Process_AccessKey_TrasportOdessa()
 
                                                        WHEN vbCode_calc = 5 -- филиал Черкассы ( Кировоград)
                                                             THEN zc_Enum_Process_AccessKey_TrasportCherkassi()

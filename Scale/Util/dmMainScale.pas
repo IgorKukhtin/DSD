@@ -15,8 +15,11 @@ type
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
     function gpGetObject_byCode (inCode, inDescId: integer): TDBObject;
 
-    function gpSelect_Scale_OrderExternal(var SettingMovement_local:TSettingMovement;inOperDate:TDateTime;inBarCode:String): Boolean;
-    function gpSelect_Scale_OperDate(var SettingMovement_global:TSettingMovement):TDateTime;
+    function gpSelect_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
+    //function gpSelect_Scale_ParnerCode(var execParams:TParams;ParnerCode:String): Boolean;
+
+    function gpInitialize_OperDate(var execParams:TParams):TDateTime;
+    function gpInitialize_MovementDesc: Boolean;
   end;
 
 var
@@ -102,38 +105,63 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpSelect_Scale_OrderExternal(var SettingMovement_local:TSettingMovement;inOperDate:TDateTime;inBarCode: String): Boolean;
+function TDMMainScaleForm.gpSelect_Scale_OrderExternal(var execParams:TParams;inBarCode: String): Boolean;
 begin
     with spSelect do
     begin
        StoredProcName:='gpSelect_Scale_OrderExternal';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inOperDate', ftDateTime, ptInput, inOperDate);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
        //try
          Execute;
          //
          Result:=DataSet.RecordCount=1;
-         //
-         SettingMovement_local.OrderExternalId         := DataSet.FieldByName('MovementId').asInteger;
-         SettingMovement_local.OrderExternal_BarCode   := DataSet.FieldByName('BarCode').asString;
-         SettingMovement_local.OrderExternal_InvNumber := DataSet.FieldByName('InvNumber').asString;
+       with execParams do
+       begin
+         ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
+         ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
+         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
+         ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
+         ParamByName('ToId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
+         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
+         ParamByName('ToName').asString:= DataSet.FieldByName('FromName').asString;
+         ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
+         ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
 
-         SettingMovement_local.MovementDescId:= DataSet.FieldByName('MovementDescId').asInteger;
-         SettingMovement_local.FromId        := DataSet.FieldByName('ToId').asInteger;
-         SettingMovement_local.FromName      := DataSet.FieldByName('ToName').asString;
-         SettingMovement_local.ToId          := DataSet.FieldByName('FromId').asInteger;
-         SettingMovement_local.ToName        := DataSet.FieldByName('FromName').asString;
-         SettingMovement_local.PaidKindId    := DataSet.FieldByName('PaidKindId').asInteger;
-         SettingMovement_local.PaidKindName  := DataSet.FieldByName('PaidKindName').asString;
+         if  (DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Sale)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnOut)
+         then begin
+                   ParamByName('calcPartnerId').AsInteger:= ParamByName('ToId').AsInteger;
+                   ParamByName('calcPartnerCode').AsInteger:= ParamByName('ToCode').AsInteger;
+                   ParamByName('calcPartnerName').asString:= ParamByName('ToName').asString;
+              end
+         else if (DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
+               or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Income)
+              then begin
+                        ParamByName('calcPartnerId').AsInteger:= ParamByName('FromId').AsInteger;
+                        ParamByName('calcPartnerCode').AsInteger:= ParamByName('FromCode').AsInteger;
+                        ParamByName('calcPartnerName').asString:= ParamByName('FromName').asString;
+                   end
+              else begin
+                        ParamByName('calcPartnerId').AsInteger:= 0;
+                        ParamByName('calcPartnerCode').AsInteger:= 0;
+                        ParamByName('calcPartnerName').asString:= '';
+                   end;
 
-         SettingMovement_local.PriceListId   := DataSet.FieldByName('PriceListId').asInteger;
-         SettingMovement_local.PriceListCode := DataSet.FieldByName('PriceListCode').asInteger;
-         SettingMovement_local.PriceListName := DataSet.FieldByName('PriceListName').asString;
+         ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+         ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
+         ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
 
-         SettingMovement_local.ContractId    := DataSet.FieldByName('ContractId').asInteger;
-         SettingMovement_local.ContractNumber:= DataSet.FieldByName('ContractNumber').asString;
+         ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
+         ParamByName('ContractNumber').asString := DataSet.FieldByName('ContractNumber').asString;
+
+         ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
+         ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
+         ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
+
+       end;
 
 
        {except
@@ -145,7 +173,7 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpSelect_Scale_OperDate(var SettingMovement_global:TSettingMovement):TDateTime;
+function TDMMainScaleForm.gpInitialize_OperDate(var execParams:TParams):TDateTime;
 begin
     with spSelect do
     begin
@@ -156,7 +184,7 @@ begin
          Execute;
          //
          Result:=DataSet.FieldByName('OperDate').asDateTime;
-         SettingMovement_global.OperDate:=DataSet.FieldByName('OperDate').asDateTime;
+         execParams.ParamByName('OperDate').AsDateTime:=DataSet.FieldByName('OperDate').asDateTime;
 
        {except
          result.Code := Code;
@@ -165,6 +193,69 @@ begin
          ShowMessage('Ошибка получения - gpGetObject_byCode');
        end;}
     end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpInitialize_MovementDesc: Boolean;
+begin
+    Result:=false;
+
+    with spSelect do
+    begin
+       StoredProcName:='gpExecSql_Value';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inSqlText', ftString, ptInput, '');
+
+       //try
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_Income() :: TVarChar';
+         Execute;
+         zc_Movement_Income:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_ReturnOut() :: TVarChar';
+         Execute;
+         zc_Movement_ReturnOut:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_Sale() :: TVarChar';
+         Execute;
+         zc_Movement_Sale:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_ReturnIn() :: TVarChar';
+         Execute;
+         zc_Movement_ReturnIn:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_Send() :: TVarChar';
+         Execute;
+         zc_Movement_Send:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_SendOnPrice() :: TVarChar';
+         Execute;
+         zc_Movement_SendOnPrice:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_Loss() :: TVarChar';
+         Execute;
+         zc_Movement_Loss:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_Inventory() :: TVarChar';
+         Execute;
+         zc_Movement_Inventory:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_ProductionUnion() :: TVarChar';
+         Execute;
+         zc_Movement_ProductionUnion:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_ProductionSeparate() :: TVarChar';
+         Execute;
+         zc_Movement_ProductionSeparate:=DataSet.FieldByName('Value').asInteger;
+
+       {except
+         result.Code := Code;
+         result.Id   := 0;
+         result.Name := '';
+         ShowMessage('Ошибка получения - gpMovementDesc');
+       end;}
+    end;
+
+    Result:=true;
 end;
 {------------------------------------------------------------------------}
 end.

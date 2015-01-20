@@ -81,4 +81,7 @@ begin
 
 //  Application.CreateForm(TMainForm, MainForm);
   Application.Run;
+  //
+  ParamsMovement.Free;
+  //
 end.
