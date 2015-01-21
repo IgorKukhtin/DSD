@@ -499,10 +499,148 @@ inherited MainForm: TMainForm
       end>
     Left = 200
   end
-  object bbPriceListLoad: TdxBarButton
-    Action = actPriceListLoad
-    Category = -1
-    Left = 16
-    Top = 64
+  inherited MainMenu: TMainMenu
+    inherited miGuides: TMenuItem
+      object miCommon: TMenuItem
+        Action = actGoods
+      end
+      object miAdditionalGoods: TMenuItem
+        Action = actAdditionalGoods
+      end
+      object N1: TMenuItem
+        Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+        object miGoodsPartnerCode: TMenuItem
+          Action = actGoodsPartnerCode
+        end
+        object miGoodsPartnerCodeMaster: TMenuItem
+          Action = actGoodsPartnerCodeMaster
+        end
+      end
+      object N4: TMenuItem
+        Caption = '-'
+      end
+      object miUnit: TMenuItem
+        Action = actUnit
+      end
+      object N5: TMenuItem
+        Caption = '-'
+      end
+      object miJuridical: TMenuItem
+        Action = actJuridical
+      end
+      object miContract: TMenuItem
+        Action = actContract
+      end
+      object miContactPerson: TMenuItem
+        Action = actContactPerson
+      end
+    end
+    object miLoad: TMenuItem [1]
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1080
+      object miImportGroup: TMenuItem
+        Action = actImportGroup
+      end
+      object miMovementLoad: TMenuItem
+        Action = actMovementLoad
+      end
+      object miPriceListLoad: TMenuItem
+        Action = actPriceListLoad
+      end
+    end
+    object miDocuments: TMenuItem [2]
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      object N11: TMenuItem
+        Action = actIncome
+      end
+      object N12: TMenuItem
+        Action = actOrderExternal
+      end
+      object N13: TMenuItem
+        Action = actOrderInternal
+      end
+      object N14: TMenuItem
+        Action = actOrderInternalLite
+      end
+      object N15: TMenuItem
+        Action = actPriceList
+      end
+    end
+    object miReports: TMenuItem [3]
+      Caption = #1054#1090#1095#1077#1090#1099
+      object miBalance: TMenuItem
+        Action = actBalance
+      end
+      object miReportGoodsOrder: TMenuItem
+        Action = actReportGoodsOrder
+      end
+      object miSearchGoods: TMenuItem
+        Action = actSearchGoods
+      end
+    end
+    inherited miService: TMenuItem
+      object miGoodsCommon: TMenuItem [0]
+        Action = actGoodsMain
+      end
+      object miUser: TMenuItem [2]
+        Action = actUser
+      end
+      object miRole: TMenuItem [3]
+        Action = actRole
+      end
+      object miSetDefault: TMenuItem [4]
+        Action = actSetDefault
+      end
+      object N7: TMenuItem [5]
+        Caption = '-'
+      end
+      object miSaveData: TMenuItem [6]
+        Action = actSaveData
+      end
+      object miPriceGroupSettings: TMenuItem [7]
+        Action = actPriceGroupSettings
+      end
+      object miJuridicalSettings: TMenuItem [8]
+        Action = actJuridicalSettings
+      end
+      object miJuridicalSettingsPriceList: TMenuItem [9]
+        Action = actJuridicalSettingsPriceList
+      end
+      object N6: TMenuItem [10]
+        Caption = '-'
+      end
+      object miMeasure: TMenuItem [11]
+        Action = actMeasure
+      end
+      object miNDSKind: TMenuItem [12]
+        Action = actNDSKind
+      end
+      object miRetail: TMenuItem [13]
+        Action = actRetail
+      end
+      object miOrderKind: TMenuItem [14]
+        Action = actOrderKind
+      end
+      object N9: TMenuItem [15]
+        Caption = '-'
+      end
+      object miImportType: TMenuItem [16]
+        Action = actImportType
+      end
+      object miImportSettings: TMenuItem [17]
+        Action = actImportSettings
+      end
+      object miImportExportLink: TMenuItem [18]
+        Action = actImportExportLink
+      end
+      object N8: TMenuItem [19]
+        Caption = '-'
+      end
+      object N10: TMenuItem
+        Caption = '-'
+      end
+      object miTest: TMenuItem
+        Action = actTestFormOpen
+      end
+    end
   end
 end

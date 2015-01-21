@@ -24,16 +24,21 @@
 
 $dbconn = pg_pconnect($connectstring)
     or die('Could not connect: ' . pg_last_error());
+$query = 'set client_encoding=WIN1251';
+$result = pg_query_params($query, array());
+pg_free_result($result);
+
 
 $doc = new DOMDocument('1.0','windows-1251');
 $doc->loadXML($_POST["XML"]);
 
 $Session = $doc->documentElement->getAttribute('Session');
+$AutoWidht = ($doc->documentElement->getAttribute('AutoWidht') == 'true');
 $StoredProcNode = $doc->documentElement->firstChild;
 $StoredProcName = $StoredProcNode->nodeName;
 $OutputType = $StoredProcNode->getAttribute('OutputType');
 $DataSetType = $StoredProcNode->getAttribute('DataSetType');
-
+  
 $ParamName = '';
 $ParamValues = array();
 
@@ -54,7 +59,7 @@ else
 if ($OutputType=='otMultiExecute')
 {
   $data = $doc->documentElement->childNodes->Item(1);
-  // выполняем прорцедуру со всеми параметрами из $data
+  // выполняем процедуру со всеми параметрами из $data
   foreach ($data->childNodes as $dataitem) {
       $i = 0;
       // заполняем прорцедуру параметрами из $dataitem
@@ -80,7 +85,7 @@ else
      $result = pg_get_result($dbconn);
      $result_error = pg_result_error($result);
 };
-
+          
 if ($result_error != false)
 {
      $res = '<error ';                                                   
@@ -122,7 +127,7 @@ else
   
   if ($OutputType=='otDataSet')
   {
-     $res = FillDataSet($result, $DataSetType);
+     $res = FillDataSet($result, $DataSetType, $AutoWidht);
      // возвращаем результат
      echo 'DataSet      '.PrepareStr($res);
   };
@@ -140,7 +145,7 @@ else
            $CursorsClose .= 'CLOSE "'.$col_value.'";';
         };
         $result_cursor = pg_query($query);
-        $DataSetStr = FillDataSet($result_cursor, $DataSetType);
+        $DataSetStr = FillDataSet($result_cursor, $DataSetType, $AutoWidht);
         $res .= $DataSetStr;
         $XMLStructure .= '<DataSet length = "'.strlen($DataSetStr).'"/>';
     };
