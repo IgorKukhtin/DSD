@@ -9422,6 +9422,9 @@ begin
         Add('     , BillItems.OperCount_Upakovka as LiveWeight');
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
+        Add('     , isnull (zf_ChangeTVarCharMediumToNull (BillItems.PartionStr_MB), zf_Calc_PartionIncome_byObvalka (Bill.BillDate, UnitFrom.UnitCode, GoodsProperty.GoodsCode)) as PartionGoods_calc');
+        Add('     , UnitFrom.UnitCode AS UnitCode_from');
+
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , null as AssetId_Postgres');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
@@ -9472,6 +9475,13 @@ begin
         begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
+
+             //
+             fOpenSqToQuery (' select Object.ObjectCode'
+                            +' from MovementLinkObject'
+                            +'      LEFT JOIN Object ON Object.Id = MovementLinkObject.ObjectId'
+                            +' where MovementLinkObject.MovementId='+IntToStr(FieldByName('MovementId_Postgres').AsInteger)
+                            +'   and MovementLinkObject.DescId=zc_MovementLinkObject_From()');
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
@@ -9483,7 +9493,14 @@ begin
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
              toStoredProc.Params.ParamByName('inLiveWeight').Value:=FieldByName('LiveWeight').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
-             toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
+
+             if(toSqlQuery.FieldByName('ObjectCode').AsInteger <> FieldByName('UnitCode_from').AsInteger)
+             then begin
+             showMessage ('<'+IntToStr(toSqlQuery.FieldByName('ObjectCode').AsInteger)+'>  <'+IntToStr(FieldByName('UnitCode_from').AsInteger)+'>');
+               toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods_calc').AsString;
+             end
+             else toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
+
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
@@ -10427,6 +10444,9 @@ begin
         Add('     , BillItems.OperCount_Upakovka as LiveWeight');
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
+        Add('     , isnull (zf_ChangeTVarCharMediumToNull (BillItems.PartionStr_MB), zf_Calc_PartionIncome_byObvalka (Bill.BillDate, UnitFrom.UnitCode, GoodsProperty.GoodsCode)) as PartionGoods_calc');
+        Add('     , UnitFrom.UnitCode AS UnitCode_from');
+
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , null as AssetId_Postgres');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
@@ -10484,6 +10504,12 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
+             fOpenSqToQuery (' select Object.ObjectCode'
+                            +' from MovementLinkObject'
+                            +'      LEFT JOIN Object ON Object.Id = MovementLinkObject.ObjectId'
+                            +' where MovementLinkObject.MovementId='+IntToStr(FieldByName('MovementId_Postgres').AsInteger)
+                            +'   and MovementLinkObject.DescId=zc_MovementLinkObject_From()');
+             //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
@@ -10494,7 +10520,11 @@ begin
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
              toStoredProc.Params.ParamByName('inLiveWeight').Value:=FieldByName('LiveWeight').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
-             toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
+
+             if(toSqlQuery.FieldByName('ObjectCode').AsInteger <> FieldByName('UnitCode_from').AsInteger)
+             then toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods_calc').AsString
+             else toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
+
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
