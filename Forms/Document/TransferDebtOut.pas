@@ -124,6 +124,7 @@ type
     GuidesInvNumberOrder: TdsdGuides;
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
+    spSelectPrintTTN: TdsdStoredProc;
   private
     { Private declarations }
   public
