@@ -1154,7 +1154,11 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object actPrint_TTN: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spSelectPrintTTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTTN
+        end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       Hint = #1058#1058#1053
       ImageIndex = 15
@@ -2853,5 +2857,28 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end>
     Left = 212
     Top = 48
+  end
+  object spSelectPrintTTN: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TTN_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 743
+    Top = 296
   end
 end

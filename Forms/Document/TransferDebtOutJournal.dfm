@@ -815,7 +815,11 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
         end>
-      StoredProcList = <>
+      StoredProc = spSelectPrintTTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTTN
+        end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       Hint = #1058#1058#1053
       ImageIndex = 15
@@ -1378,5 +1382,28 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     PackSize = 1
     Left = 320
     Top = 435
+  end
+  object spSelectPrintTTN: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TTN_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 567
+    Top = 288
   end
 end

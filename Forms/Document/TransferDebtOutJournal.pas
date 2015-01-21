@@ -84,6 +84,7 @@ type
     colInvNumberOrder: TcxGridDBColumn;
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
+    spSelectPrintTTN: TdsdStoredProc;
   private
     { Private declarations }
   public
