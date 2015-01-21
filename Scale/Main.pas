@@ -10,7 +10,8 @@ uses
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, dsdDB, Datasnap.DBClient, Inifiles, dxSkinsCore,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters
+ ,SysScalesLib_TLB;
 
 type
   TMainForm = class(TForm)
@@ -57,7 +58,6 @@ type
     GroupBox7: TGroupBox;
     TotalZakazCountPanel: TPanel;
     PanelSaveItem: TPanel;
-    ButtonSaveItem: TSpeedButton;
     CodeInfoPanel: TPanel;
     EnterGoodsCodeScanerPanel: TPanel;
     EnterGoodsCodeScanerLabel: TLabel;
@@ -66,37 +66,9 @@ type
     EnterWeightLabel: TLabel;
     EnterWeightEdit: TEdit;
     gbOperDate: TGroupBox;
-    EnterGoodsCode_byZakazPanel: TPanel;
-    EnterGoodsCode_byZakazLabel: TLabel;
-    EnterGoodsCode_byZakazEdit: TEdit;
-    PanelCountTare: TPanel;
-    LabelCountTare: TLabel;
-    CountTareEdit: TEdit;
     infoPanel_Scale: TPanel;
     ScaleLabel: TLabel;
-    Panel_Scale: TPanel;
-    EnterKindPackageCode_byZakazPanel: TPanel;
-    EnterKindPackageCode_byZakazLabel: TLabel;
-    EnterKindPackageCode_byZakazEdit: TEdit;
-    EnterKindPackageName_byZakazPanel: TPanel;
-    gbPartionDate: TGroupBox;
-    PanelCountPoddon: TPanel;
-    LabelCountPoddon: TLabel;
-    CountPoddonEdit: TEdit;
-    PanelCountVanna: TPanel;
-    LabelCountVanna: TLabel;
-    CountVannaEdit: TEdit;
-    PanelCountUpakovka: TPanel;
-    LabelCountUpakovka: TLabel;
-    CountUpakovkaEdit: TEdit;
-    PanelPartionStr_MB: TPanel;
-    PartionStr_MBLabel: TLabel;
-    Panel1: TPanel;
-    infoPanelPartionStr_MB: TPanel;
-    PartionStr_MBEdit: TEdit;
-    PanelOperCount_sh: TPanel;
-    LabelOperCount_sh: TLabel;
-    OperCount_shEdit: TEdit;
+    PanelWeight_Scale: TPanel;
     PanelInfoItem: TPanel;
     PanelProduction_Goods: TPanel;
     LabelProduction_Goods: TLabel;
@@ -169,7 +141,6 @@ type
     miScaleRun_BI: TMenuItem;
     miScaleRun_Zeus: TMenuItem;
     miScaleRun_BI_R: TMenuItem;
-    PartionDateEdit: TcxDateEdit;
     OperDateEdit: TcxDateEdit;
     spSelect: TdsdStoredProc;
     DS: TDataSource;
@@ -180,16 +151,23 @@ type
     procedure ButtonNewGetParamsClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonRefreshZakazClick(Sender: TObject);
+    procedure PanelWeight_ScaleClick(Sender: TObject);
   private
+  Scale_BI: TCasBI;
+  Scale_DB: TCasDB;
+
     procedure GetParams;
     procedure newGetParamsGoods;
     function myCheckPartionStr:boolean;
+    procedure Initialize_Scale;
+    function fGetScale_CurrentWeight:Double;
   public
     { Public declarations }
   end;
 
 var
   MainForm: TMainForm;
+
 
 implementation
 {$R *.dfm}
@@ -221,6 +199,11 @@ begin
 end;
 
 
+procedure TMainForm.PanelWeight_ScaleClick(Sender: TObject);
+begin
+     fGetScale_CurrentWeight;
+end;
+
 procedure TMainForm.ButtonExitClick(Sender: TObject);
 begin
  Close;
@@ -229,7 +212,6 @@ end;
 procedure TMainForm.ButtonExportToEDIClick(Sender: TObject);
 begin
 // spTest.Execute;
-
 end;
 
 procedure TMainForm.ButtonNewGetParamsClick(Sender: TObject);
@@ -239,17 +221,19 @@ end;
 
 procedure TMainForm.ButtonRefreshZakazClick(Sender: TObject);
 begin
-    PrintSale(StrToInt(PartionStr_MBEdit.Text));
+    PrintSale(StrToInt(EnterGoodsCodeScanerEdit.Text));
 end;
-
+//------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   Ini: TInifile;
 begin
   //global Initialize
-  Ini:=TIniFile.Create('INI\scale.ini');
+  Ini:=TIniFile.Create('D:\Project-Basis\Bin\INI\scale.ini');
   SettingMain.ScaleNum:=Ini.ReadInteger('Main','ScaleNum',1);
-  SettingMain.ComPort :=Ini.ReadString('Main','ComPort','1');
+  SettingMain.ComPort :=Ini.ReadString('Main','ComPort','COM1');
+  if AnsiUpperCase(Ini.ReadString('Main','BI','FALSE')) = AnsiUpperCase('TRUE') then SettingMain.BI :=TRUE else SettingMain.BI := FALSE ;
+  if AnsiUpperCase(Ini.ReadString('Main','DB','TRUE')) = AnsiUpperCase('TRUE') then SettingMain.DB :=TRUE else SettingMain.DB := FALSE ;
   Ini.Free;
   //global Initialize
   DMMainScaleForm.gpInitialize_MovementDesc;
@@ -258,13 +242,73 @@ begin
   Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'Service');
   //global Initialize
   Create_ParamsMovement(ParamsMovement);
+  //global Initialize
+  Scale_DB:=TCasDB.Create(self);
+  Scale_BI:=TCasBI.Create(self);
+  Initialize_Scale;
   //
   //local Initialize
   ParamsMovement.ParamByName('MovementNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber');
   //local Initialize
   OperDateEdit.Text:=DateToStr(DMMainScaleForm.gpInitialize_OperDate(ParamsMovement));
 end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.Initialize_Scale;
+begin
+     if SettingMain.BI = TRUE
+     then
+          // !!! SCALE BI !!!
+          try
+             Scale_BI.Active := 0;
+             Scale_BI.CommPort:=SettingMain.ComPort;
+             Scale_BI.CommSpeed := 9600;//NEW!!!
+             Scale_BI.Active := 1;//NEW!!!
+             if Scale_BI.Active=1
+             then ScaleLabel.Caption:='BI.Active = OK'
+             else ScaleLabel.Caption:='BI.Active = Error';
+          except
+               ScaleLabel.Caption:='BI.Active = Error-ALL';
+          end;
 
+     if SettingMain.DB = TRUE
+     then try
+             // !!! SCALE DB !!!
+             Scale_DB.Active:=0;
+             Scale_DB.CommPort:=SettingMain.ComPort;
+             Scale_DB.Active := 1;
+             //
+             if Scale_BI.Active=1
+             then ScaleLabel.Caption:='DB.Active = OK'
+             else ScaleLabel.Caption:='DB.Active = Error';
+          except
+             ScaleLabel.Caption:='DB.Active = Error-ALL';
+         end;
+
+     //
+     PanelWeight_Scale.Caption:='';
+end;
+//------------------------------------------------------------------------------------------------
+function TMainForm.fGetScale_CurrentWeight:Double;
+begin
+     // открываем ВЕСЫ, только когда НУЖЕН вес
+     //Initialize_Scale_DB;
+     // считывание веса
+     try
+        if SettingMain.BI = TRUE
+        then Result:=Scale_BI.Weight
+             else if SettingMain.DB = TRUE
+                  then Result:=Scale_DB.Weight
+                  else Result:=0;
+     except Result:=0;end;
+     // закрываем ВЕСЫ
+     // Scale_DB.Active:=0;
+     //
+//*****
+     // if (_Weight_Main<>'')and(_beginUser=1) then Weight:=_Weight_Main;
+//     Weight:='0,123456';
+     PanelWeight_Scale.Caption:=FloatToStr(Result);
+end;
+//------------------------------------------------------------------------------------------------
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if Key = VK_F2 then GetParams;

@@ -51,9 +51,9 @@ BEGIN
             , View_Contract_InvNumber.ContractId             AS ContractId
             , View_Contract_InvNumber.InvNumber              AS ContractNumber
 
-       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.BarCode :: Integer AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY'
+       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.BarCode :: Integer AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
            UNION
-             SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 1) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY'
+             SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 1) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
             ) AS Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -97,4 +97,4 @@ ALTER FUNCTION gpSelect_Scale_OrderExternal (TDateTime, TVarChar, TVarChar) OWNE
 */
 
 -- тест
---	 SELECT * FROM gpSelect_Scale_OrderExternal ('01.01.2014', '123', zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_OrderExternal ('01.01.2015', '0000000744830', zfCalc_UserAdmin())

@@ -123,7 +123,7 @@ BEGIN
             , tmp.OrderById                       AS OrderById
        FROM (SELECT _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById FROM _tmpToolsWeighing WHERE _tmpToolsWeighing.MovementDescId <> 0 GROUP BY _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById) AS tmp
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmp.MovementDescId
-      ORDER BY 11;
+      ORDER BY OrderById;
 
 END;
 $BODY$

@@ -214,6 +214,13 @@ BEGIN
                   ELSE ''
              END AS ERPN
 
+           , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
+                  THEN TRUE
+                  WHEN Movement.OperDate >= '01.01.2015' AND OH_JuridicalDetails_To.INN <> vbNotNDSPayer_INN
+                  THEN TRUE
+                  ELSE FALSE
+             END :: Boolean AS isERPN
+
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN '' ELSE 'X' END                                      AS ERPN2
 
