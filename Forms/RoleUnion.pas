@@ -68,8 +68,6 @@ type
     ActionGridView: TcxGridDBTableView;
     cxGridDBColumn5: TcxGridDBColumn;
     ActionGridLevel: TcxGridLevel;
-    cxSplitterTop: TcxSplitter;
-    cxSplitterClient: TcxSplitter;
     cldescName: TcxGridDBColumn;
   private
     { Private declarations }

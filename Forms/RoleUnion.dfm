@@ -26,7 +26,6 @@ object RoleUnionForm: TRoleUnionForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitHeight = 501
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -76,8 +75,11 @@ object RoleUnionForm: TRoleUnionForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 34
       end
     end
@@ -88,35 +90,34 @@ object RoleUnionForm: TRoleUnionForm
   object cxLeftSplitter: TcxSplitter
     Left = 465
     Top = 26
-    Width = 16
+    Width = 7
     Height = 605
     Control = cxGrid
-    ExplicitLeft = 385
-    ExplicitHeight = 501
+    ExplicitLeft = 459
   end
   object Panel1: TPanel
-    Left = 481
+    Left = 472
     Top = 26
-    Width = 297
+    Width = 306
     Height = 605
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = 385
-    ExplicitTop = 8
-    ExplicitWidth = 372
-    ExplicitHeight = 501
+    ExplicitLeft = 481
+    ExplicitWidth = 297
     object ActionGrid: TcxGrid
       Left = 0
-      Top = 12
-      Width = 297
-      Height = 593
-      Align = alRight
+      Top = 0
+      Width = 306
+      Height = 605
+      Align = alClient
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 232
-      ExplicitHeight = 373
+      ExplicitLeft = 104
+      ExplicitTop = 12
+      ExplicitWidth = 202
+      ExplicitHeight = 593
       object ActionGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ActionDS
@@ -137,13 +138,6 @@ object RoleUnionForm: TRoleUnionForm
         object cxGridDBColumn5: TcxGridDBColumn
           Caption = #1056#1086#1083#1100
           DataBinding.FieldName = 'roleName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = ActionChoiceForm
-              Default = True
-              Kind = bkEllipsis
-            end>
           HeaderAlignmentVert = vaCenter
           Width = 224
         end
@@ -151,23 +145,6 @@ object RoleUnionForm: TRoleUnionForm
       object ActionGridLevel: TcxGridLevel
         GridView = ActionGridView
       end
-    end
-    object cxSplitterTop: TcxSplitter
-      Left = 0
-      Top = 605
-      Width = 297
-      Height = 6
-      AlignSplitter = salTop
-      Control = ActionGrid
-    end
-    object cxSplitterClient: TcxSplitter
-      Left = 0
-      Top = 6
-      Width = 297
-      Height = 6
-      AlignSplitter = salTop
-      ExplicitTop = 242
-      ExplicitWidth = 372
     end
   end
   object DataSource: TDataSource
@@ -319,12 +296,6 @@ object RoleUnionForm: TRoleUnionForm
         end
         item
           StoredProc = spAction
-        end
-        item
-        end
-        item
-        end
-        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -666,7 +637,7 @@ object RoleUnionForm: TRoleUnionForm
   object ActionCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'RoleId'
+    IndexFieldNames = 'Id'
     MasterFields = 'Id'
     MasterSource = DataSource
     PacketRecords = 0
