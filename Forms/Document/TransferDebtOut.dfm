@@ -2,27 +2,29 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1268
-  ExplicitWidth = 1284
-  ExplicitHeight = 703
+  ExplicitWidth = 1276
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 133
     Width = 1268
-    Height = 537
-    ExplicitTop = 131
+    Height = 535
+    ExplicitTop = 133
     ExplicitWidth = 1268
-    ExplicitHeight = 537
-    ClientRectBottom = 537
-    ClientRectRight = 1268
+    ExplicitHeight = 535
+    ClientRectBottom = 531
+    ClientRectRight = 1264
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1268
-      ExplicitHeight = 513
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1262
+      ExplicitHeight = 509
       inherited cxGrid: TcxGrid
-        Width = 1268
-        Height = 513
-        ExplicitWidth = 1268
-        ExplicitHeight = 513
+        Width = 1262
+        Height = 509
+        ExplicitWidth = 1262
+        ExplicitHeight = 509
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -56,6 +58,11 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -149,8 +156,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1268
-        Height = 513
+        Width = 1262
+        Height = 509
         Align = alClient
         TabOrder = 0
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
@@ -488,6 +495,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 163
+      ExplicitHeight = 24
       Width = 163
     end
     object cxLabel3: TcxLabel
@@ -1143,6 +1151,35 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Status = mtComplete
       DataSource = TaxDS
     end
+    object actPrint_TTN: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1058#1058#1053
+      ImageIndex = 15
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1199,7 +1236,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1314,6 +1351,10 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_TTN'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1359,6 +1400,10 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     end
     object bbSetErasedTaxCorrective: TdxBarButton
       Action = actSetErasedTaxCorrective
+      Category = 0
+    end
+    object bbPrint_TTN: TdxBarButton
+      Action = actPrint_TTN
       Category = 0
     end
   end

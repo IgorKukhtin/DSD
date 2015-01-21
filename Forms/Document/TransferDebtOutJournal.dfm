@@ -8,20 +8,23 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1073
-    Height = 478
+    Height = 476
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1073
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1073
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1069
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1067
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1073
-        Height = 478
-        ExplicitWidth = 1073
-        ExplicitHeight = 478
+        Width = 1067
+        Height = 470
+        ExplicitWidth = 1067
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -799,6 +802,45 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint_TTN: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1058#1058#1053
+      ImageIndex = 15
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -840,7 +882,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -944,6 +986,10 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_TTN'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -981,6 +1027,10 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     end
     object bbspChecked: TdxBarButton
       Action = actChecked
+      Category = 0
+    end
+    object bbPrint_TTN: TdxBarButton
+      Action = actPrint_TTN
       Category = 0
     end
   end
