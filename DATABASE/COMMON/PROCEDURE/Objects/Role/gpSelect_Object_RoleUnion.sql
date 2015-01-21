@@ -1,12 +1,14 @@
 -- Function: gpSELECT_Object_RoleUNION()
 
-DROP FUNCTION IF EXISTS gpSELECT_Object_RoleUNION (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSELECT_Object_RoleUnion (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSELECT_Object_RoleUNION(
+CREATE OR REPLACE FUNCTION gpSELECT_Object_RoleUnion (
     IN inValue       Integer,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Code Integer, Name TVarChar, process_enumname TVarChar, descName TVarChar, roleid Integer, roleName TVarChar) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, process_enumname TVarChar
+             , descName TVarChar, roleid Integer, roleName TVarChar
+              ) AS
 $BODY$
 BEGIN
    
@@ -14,7 +16,8 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
-   SELECT tmpAll.Code
+   SELECT tmpAll.Id
+        , tmpAll.Code
         , tmpAll.NAME
         , CAST (COALESCE (tmpAll.process_enumname, '') AS TVarChar) process_enumname
         , Objectdesc.itemName   AS descName
@@ -43,7 +46,7 @@ BEGIN
      ) AS tmpAll
      JOIN Objectdesc on Objectdesc.Id = tmpAll.DeckId
      LEFT JOIN Object AS Object_Role  on Object_Role.Id = tmpAll.RoleId
-   GROUP BY tmpAll.Code, tmpAll.Name, tmpAll.process_enumname, Objectdesc.itemName ,tmpAll.RoleId,Object_Role.ValueData
+   GROUP BY tmpAll.Id, tmpAll.Code, tmpAll.Name, tmpAll.process_enumname, Objectdesc.itemName ,tmpAll.RoleId,Object_Role.ValueData
    ORDER BY 2;
   
 
