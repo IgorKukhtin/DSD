@@ -59,7 +59,8 @@ uses
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
-  UtilPrint in '..\Scale\Util\UtilPrint.pas' {UtilPrintForm};
+  UtilPrint in '..\Scale\Util\UtilPrint.pas' {UtilPrintForm},
+  SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas';
 
 {$R *.res}
 
@@ -71,8 +72,8 @@ begin
 
          //TUpdater.AutomaticUpdateProgram;
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-         Application.CreateForm(TMainForm, MainForm);
-         Application.CreateForm(TUtilPrintForm, UtilPrintForm);
+  Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TUtilPrintForm, UtilPrintForm);
   // !!!важно первым!!!
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);

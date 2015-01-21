@@ -199,7 +199,9 @@ BEGIN
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate
-                   ON ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId = CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut()
+                   ON ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId = CASE WHEN Movement.DescId = zc_Movement_PriceCorrective()
+                                                                                        THEN MovementLinkObject_From.ObjectId
+                                                                                   WHEN Movement.DescId = zc_Movement_TransferDebtOut()
                                                                                         THEN MovementLinkObject_To.ObjectId
                                                                                    WHEN Movement.DescId = zc_Movement_TransferDebtIn()
                                                                                         THEN MovementLinkObject_From.ObjectId

@@ -112,17 +112,17 @@ begin
           ParamByName('FromId').AsInteger:= CDS.FieldByName('FromId').asInteger;
           ParamByName('FromCode').asString:= CDS.FieldByName('FromCode').asString;
           ParamByName('FromName').asString:= CDS.FieldByName('FromName').asString;
-          ParamByName('ToId').AsInteger:= CDS.FieldByName('calcPartnerId').asInteger;
-          ParamByName('ToCode').AsInteger:= CDS.FieldByName('calcPartnerCode').asInteger;
-          ParamByName('ToName').asString:= CDS.FieldByName('calcPartnerName').asString;
+          ParamByName('ToId').AsInteger:= ParamsMovement_local.ParamByName('calcPartnerId').asInteger;
+          ParamByName('ToCode').AsInteger:= ParamsMovement_local.ParamByName('calcPartnerCode').asInteger;
+          ParamByName('ToName').asString:= ParamsMovement_local.ParamByName('calcPartnerName').asString;
           end;
 
           if  (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Sale)
            and(CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_ReturnOut)
           then begin
-          ParamByName('FromId').AsInteger:= CDS.FieldByName('calcPartnerId').asInteger;
-          ParamByName('FromCode').AsInteger:= CDS.FieldByName('calcPartnerCode').asInteger;
-          ParamByName('FromName').asString:= CDS.FieldByName('calcPartnerName').asString;
+          ParamByName('FromId').AsInteger:= ParamsMovement_local.ParamByName('calcPartnerId').asInteger;
+          ParamByName('FromCode').AsInteger:= ParamsMovement_local.ParamByName('calcPartnerCode').asInteger;
+          ParamByName('FromName').asString:= ParamsMovement_local.ParamByName('calcPartnerName').asString;
           ParamByName('ToId').AsInteger:= CDS.FieldByName('ToId').asInteger;
           ParamByName('ToCode').AsInteger:= CDS.FieldByName('ToCode').asInteger;
           ParamByName('ToName').asString:= CDS.FieldByName('ToName').asString;
