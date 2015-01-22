@@ -1115,6 +1115,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TToolsWeighingEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TToolsWeighingTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TToolsWeighingTreeForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TToolsWeighingPlace_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TToolsWeighingPlace_ObjectForm');
 end;
 
 
