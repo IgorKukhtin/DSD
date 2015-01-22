@@ -243,7 +243,7 @@ DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (250904, 244751);
                , MIContainer_Count_Out.ContainerId
         ;
 
-
+/*
      -- добавляются связи которых нет (т.к. нулевые проводки не формируются)
      INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount)
         SELECT HistoryCostContainerLink.MasterContainerId_Summ
@@ -277,7 +277,7 @@ DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (250904, 244751);
                                                AND HistoryCostContainerLink.ChildContainerId_Summ   = _tmpChild.ContainerId
         WHERE HistoryCostContainerLink.MasterContainerId_Count IS NULL
         GROUP BY _tmpChild.MasterContainerId_Count, _tmpChild.ContainerId_Count, _tmpChild.MasterContainerId, _tmpChild.ContainerId;
-
+*/
 
      -- проверка1
      IF EXISTS (SELECT _tmpMaster.ContainerId FROM _tmpMaster GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1)

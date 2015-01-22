@@ -106,6 +106,20 @@ begin
                Result:=false;
                exit;
      end;
+     // проверка для формы оплаты
+     if ((CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Income)
+       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnOut)
+       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Sale)
+       or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnIn)
+        )
+       and(ParamsMovement_local.ParamByName('PaidKindId').AsInteger<>CDS.FieldByName('PaidKindId').asInteger)
+       and(ParamsMovement_local.ParamByName('PaidKindId').AsInteger>0)
+     then begin
+               ShowMessage('Ошибка.Выберите значение <Форма оплаты> = <'+ParamsMovement_local.ParamByName('PaidKindName').asString+'>.');
+               ActiveControl:=DBGrid;
+               Result:=false;
+               exit;
+     end;
 
 
      with ParamsMovement_local do
@@ -113,6 +127,7 @@ begin
           ParamByName('ColorGridValue').AsInteger:=CDS.FieldByName('ColorGridValue').asInteger;
           ParamByName('MovementNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
           ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
+          ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Income)
@@ -123,6 +138,8 @@ begin
                     ParamByName('ToId').AsInteger:= CDS.FieldByName('ToId').asInteger;
                     ParamByName('ToCode').AsInteger:= CDS.FieldByName('ToCode').asInteger;
                     ParamByName('ToName').asString:= CDS.FieldByName('ToName').asString;
+                    ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
+                    ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
           end
           else
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Sale)
@@ -134,6 +151,8 @@ begin
                     ParamByName('ToId').AsInteger:= ParamByName('calcPartnerId').asInteger;
                     ParamByName('ToCode').AsInteger:= ParamByName('calcPartnerCode').asInteger;
                     ParamByName('ToName').asString:= ParamByName('calcPartnerName').asString;
+                    ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
+                    ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
           end
           else begin
                     ParamByName('FromId').AsInteger:= CDS.FieldByName('FromId').asInteger;
@@ -142,13 +161,20 @@ begin
                     ParamByName('ToId').AsInteger:= CDS.FieldByName('ToId').asInteger;
                     ParamByName('ToCode').AsInteger:= CDS.FieldByName('ToCode').asInteger;
                     ParamByName('ToName').asString:= CDS.FieldByName('ToName').asString;
+                    ParamByName('PriceListId').AsInteger   := CDS.FieldByName('PriceListId').asInteger;
+                    ParamByName('PriceListCode').AsInteger := CDS.FieldByName('PriceListCode').asInteger;
+                    ParamByName('PriceListName').asString  := CDS.FieldByName('PriceListName').asString;
                     ParamByName('calcPartnerId').asInteger:=0;
                     ParamByName('calcPartnerCode').asInteger:=0;
                     ParamByName('calcPartnerName').asString:='';
+                    ParamByName('ContractId').AsInteger    := 0;
+                    ParamByName('ContractCode').AsInteger    := 0;
+                    ParamByName('ContractNumber').asString := '';
+                    ParamByName('ContractTagName').asString := '';
+                    ParamByName('PaidKindId').AsInteger:= 0;
+                    ParamByName('PaidKindName').asString:= '';
                end;
 
-          ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
-          ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
     end;
 
     CopyValuesParamsFrom(ParamsMovement_local,ParamsMovement);
@@ -158,6 +184,8 @@ end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EdiBarCodeExit(Sender: TObject);
 begin
+    if CDS.Filtered then CDS.Filtered:=false;
+    //
     if Length(trim(EdiBarCode.Text))>0
     then begin
               //поиск по номеру или ш-к
@@ -206,8 +234,28 @@ begin
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodeExit(Sender: TObject);
+var PartnerCode_int:Integer;
 begin
-     if not DMMainScaleForm.gpGet_Scale_Partner(ParamsMovement_local,EditPartnerCode.Text)
+    if CDS.Filtered then CDS.Filtered:=false;
+    //
+    try PartnerCode_int:= StrToInt(EditPartnerCode.Text);
+    except
+      PartnerCode_int:= 0;
+    end;
+
+    if (ParamsMovement_local.ParamByName('OrderExternalId').AsInteger<>0)
+    then exit;//!!!выход в этом случае!!!
+    if (PartnerCode_int=0)
+    then exit;//!!!выход в этом случае!!!
+
+     //заполняются параметры
+     if DMMainScaleForm.gpGet_Scale_Partner(ParamsMovement_local,PartnerCode_int) = true then
+     begin
+          EditPartnerCode.Text:= IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);
+          PanelPartnerName.Caption:= ParamsMovement_local.ParamByName('calcPartnerName').asString;
+     end;
+
+     if ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=0
      then begin
                ShowMessage('Ошибка.Значение <Код контрагента> не найдено.');
                ActiveControl:=EditPartnerCode;

@@ -790,7 +790,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
       Visible = False
-      ExplicitTop = 113
     end
     object EnterGoodsCodeScanerPanel: TPanel
       Left = 0
@@ -805,7 +804,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
-      ExplicitTop = 186
       object EnterGoodsCodeScanerLabel: TLabel
         Left = 1
         Top = 1
@@ -899,7 +897,6 @@ object MainForm: TMainForm
       Height = 29
       Align = alTop
       TabOrder = 4
-      ExplicitTop = 84
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -932,8 +929,6 @@ object MainForm: TMainForm
         ParentFont = False
         TabOrder = 0
         OnClick = PanelWeight_ScaleClick
-        ExplicitLeft = 0
-        ExplicitTop = 9
       end
     end
   end
@@ -1270,7 +1265,7 @@ object MainForm: TMainForm
       end
     end
   end
-  object PanelInfo: TPanel
+  object infoPanel_mastre: TPanel
     Left = 0
     Top = 0
     Width = 900
@@ -1300,14 +1295,14 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
     end
-    object PanelBillKind: TPanel
+    object PanelMovementDesc: TPanel
       Left = 0
       Top = 0
       Width = 633
       Height = 28
       Align = alLeft
       BevelOuter = bvNone
-      Caption = 'PanelBillKind'
+      Caption = 'PanelMovementDesc'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
       Font.Height = -11
@@ -1315,6 +1310,8 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
+      ExplicitLeft = -6
+      ExplicitTop = -5
     end
     object infoPanel: TPanel
       Left = 0
@@ -1330,10 +1327,10 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 2
-      object PanelPartner: TPanel
+      object infoPanelPartner: TPanel
         Left = 117
         Top = 0
-        Width = 392
+        Width = 378
         Height = 38
         Align = alLeft
         BevelInner = bvRaised
@@ -1342,27 +1339,30 @@ object MainForm: TMainForm
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 390
+          Width = 376
           Height = 13
           Align = alTop
           Alignment = taCenter
-          Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+          Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 71
+          ExplicitLeft = 5
+          ExplicitTop = 6
+          ExplicitWidth = 390
         end
-        object PanelPartnerCode: TPanel
+        object PanelPartner: TPanel
           Left = 1
           Top = 14
-          Width = 47
+          Width = 376
           Height = 23
-          Align = alLeft
+          Align = alClient
+          Alignment = taLeftJustify
           BevelOuter = bvNone
-          Caption = 'PanelPartnerCode'
+          Caption = 'PanelPartner'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -11
@@ -1370,26 +1370,11 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-        end
-        object PanelPartnerName: TPanel
-          Left = 48
-          Top = 14
-          Width = 343
-          Height = 23
-          Align = alClient
-          Alignment = taLeftJustify
-          BevelOuter = bvNone
-          Caption = 'PanelPartnerName'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clNavy
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 1
+          ExplicitLeft = -3
+          ExplicitTop = 9
         end
       end
-      object PanelPriceList: TPanel
+      object infoPanelPriceList: TPanel
         Left = 0
         Top = 0
         Width = 117
@@ -1414,7 +1399,7 @@ object MainForm: TMainForm
           ParentFont = False
           ExplicitWidth = 71
         end
-        object PanelPriceListName: TPanel
+        object PanelPriceList: TPanel
           Left = 1
           Top = 14
           Width = 115
@@ -1422,7 +1407,7 @@ object MainForm: TMainForm
           Align = alClient
           Alignment = taLeftJustify
           BevelOuter = bvNone
-          Caption = 'PanelPriceListName'
+          Caption = 'PanelPriceList'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clPurple
           Font.Height = -11
@@ -1432,8 +1417,8 @@ object MainForm: TMainForm
           TabOrder = 0
         end
       end
-      object PanelRouteUnit: TPanel
-        Left = 509
+      object infoPanelOrderExternal: TPanel
+        Left = 649
         Top = 0
         Width = 284
         Height = 38
@@ -1441,7 +1426,8 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 2
-        object LabelRouteUnit: TLabel
+        ExplicitLeft = 509
+        object LabelOrderExternal: TLabel
           Left = 1
           Top = 1
           Width = 282
@@ -1457,14 +1443,15 @@ object MainForm: TMainForm
           ParentFont = False
           ExplicitWidth = 44
         end
-        object PanelRouteUnitCode: TPanel
+        object PanelOrderExternal: TPanel
           Left = 1
           Top = 14
-          Width = 47
+          Width = 282
           Height = 23
-          Align = alLeft
+          Align = alClient
+          Alignment = taLeftJustify
           BevelOuter = bvNone
-          Caption = 'PanelRouteUnitCode'
+          Caption = 'PanelOrderExternal'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -11
@@ -1472,40 +1459,57 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitLeft = 5
+          ExplicitTop = 12
         end
-        object PanelRouteUnitName: TPanel
-          Left = 48
+      end
+      object infoPanelContract: TPanel
+        Left = 495
+        Top = 0
+        Width = 154
+        Height = 38
+        Align = alLeft
+        BevelInner = bvRaised
+        BevelOuter = bvNone
+        TabOrder = 3
+        ExplicitLeft = 509
+        object LabelContract: TLabel
+          Left = 1
+          Top = 1
+          Width = 152
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1044#1086#1075#1086#1074#1086#1088
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitLeft = -3
+          ExplicitTop = 6
+          ExplicitWidth = 157
+        end
+        object PanelContract: TPanel
+          Left = 1
           Top = 14
-          Width = 235
+          Width = 152
           Height = 23
           Align = alClient
           Alignment = taLeftJustify
           BevelOuter = bvNone
-          Caption = 'PanelRouteUnitName'
+          Caption = 'PanelContract'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
-          TabOrder = 1
+          TabOrder = 0
+          ExplicitLeft = 48
+          ExplicitWidth = 235
         end
-      end
-      object PanelIsRecalc: TPanel
-        Left = 794
-        Top = 0
-        Width = 106
-        Height = 38
-        Align = alRight
-        BevelOuter = bvNone
-        Caption = 'PanelIsRecalc'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        TabOrder = 3
       end
     end
   end

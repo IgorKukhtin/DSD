@@ -14,7 +14,7 @@ RETURNS TABLE (PartnerId    Integer
              , PaidKindName TVarChar
 
              , PriceListId    Integer, PriceListCode  Integer, PriceListName TVarChar
-             , ContractId     Integer, ContractNumber TVarChar
+             , ContractId     Integer, ContractCode   Integer, ContractNumber TVarChar, ContractTagName TVarChar
               )
 AS
 $BODY$
@@ -45,7 +45,9 @@ BEGIN
             , Object_PriceList.ObjectCode                    AS PriceListCode
             , Object_PriceList.ValueData                     AS PriceListName
             , Object_Contract_View.ContractId                AS ContractId
+            , Object_Contract_View.ContractCode              AS ContractCode
             , Object_Contract_View.InvNumber                 AS ContractNumber
+            , Object_Contract_View.ContractTagName           AS ContractTagName
 
        FROM Object_Partner
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_Partner.PriceListId

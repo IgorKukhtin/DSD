@@ -19,6 +19,7 @@ RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , ContractTagGroupName TVarChar, ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
+             , PersonalTradeName TVarChar
              , PersonalCollationName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , DebetRemains TFloat, KreditRemains TFloat
@@ -70,6 +71,7 @@ BEGIN
              , a.ContractId, a.ContractCode, a.ContractNumber
              , a.ContractTagGroupName, a.ContractTagName, a.ContractStateKindCode
              , a.PersonalName
+             , a.PersonalTradeName
              , a.PersonalCollationName
              , a.StartDate, a.EndDate
              , a.DebetRemains, a.KreditRemains
@@ -102,6 +104,7 @@ from (
    , View_Contract.ContractTagName
    , View_Contract.ContractStateKindCode
    , Object_Personal_View.PersonalName      AS PersonalName
+   , Object_PersonalTrade.PersonalName      AS PersonalTradeName
    , Object_PersonalCollation.PersonalName  AS PersonalCollationName
    , View_Contract.StartDate
    , View_Contract.EndDate
@@ -296,6 +299,10 @@ from (
                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId               
 
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                                ON ObjectLink_Contract_PersonalTrade.ObjectId = RESULT.ContractId
+                               AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+           LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Contract_PersonalTrade.ChildObjectId
            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
                                 ON ObjectLink_Contract_PersonalCollation.ObjectId = RESULT.ContractId
                                AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
