@@ -18,11 +18,13 @@ RETURNS TABLE (ItemName TVarChar, Amount TFloat,
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
---     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);
+     vbUnitId := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '0')::Integer;
 
      RETURN QUERY
       SELECT MovementDesc.ItemName,  MovementItem.Amount, Object.ObjectCode, Object.ValueData, 
@@ -62,6 +64,7 @@ BEGIN
             LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
 
    WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal())
+     AND ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
      AND Movement.OperDate BETWEEN inStartDate AND inEndDate AND Object.Id = inGoodsId;
 
 END;
@@ -73,6 +76,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.01.15                        *
  02.12.14                        *
 
 */

@@ -392,9 +392,17 @@ begin
     ('BuyerGLNCode').asString;
 
   if C_DOC_VER <> '7' then
-     DECLAR.DECLARBODY.HORIG := '1';
-//  else
-  //   DECLAR.DECLARBODY.HERPN := '1';
+     DECLAR.DECLARBODY.HORIG := '1'
+  else begin
+     if HeaderDataSet.FieldByName('isERPN').AsBoolean then
+        DECLAR.DECLARBODY.HERPN := '1';
+     if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then begin
+         // Не видається покупцю
+        DECLAR.DECLARBODY.HORIG1 := '1';
+        // Не видається покупцю (тип причини)
+        DECLAR.DECLARBODY.HTYPR := HeaderDataSet.FieldByName('NotNDSPayerC1').asString + HeaderDataSet.FieldByName('NotNDSPayerC2').asString;
+     end;
+  end;
 
   DECLAR.DECLARBODY.HNUM := trim(HeaderDataSet.FieldByName('InvNumberPartner')
     .asString);

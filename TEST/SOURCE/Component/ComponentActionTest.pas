@@ -13,11 +13,12 @@ type
     procedure SetUp; override;
   published
     procedure InternetActionTest;
+    procedure ScaleTest;
   end;
 
 implementation
 
-uses dsdInternetAction;
+uses dsdInternetAction, classes, vcl.ActnList;
 
 { TActionTest }
 
@@ -36,6 +37,14 @@ begin
     finally
       Free;
     end;
+end;
+
+procedure TActionTest.ScaleTest;
+var Action: TAction;
+begin
+   Action := TAction(GetClass('TScaleAction').NewInstance);
+   Action.Create(nil);
+   Action.Execute;
 end;
 
 procedure TActionTest.SetUp;

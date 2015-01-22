@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Object_Unit()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings_PriceList(Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings_PriceList(Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings_PriceList(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Установки для ценовых групп>
     IN inJuridicalId             Integer   ,    -- Юр. лицо
+    IN inMainJuridicalId         Integer   ,    -- Юр. лицо
     IN inContractId              Integer   ,    -- Договор
     IN inisPriceClose            Boolean   ,    -- Закрыт прайс
     IN inSession                 TVarChar       -- сессия пользователя
@@ -28,6 +30,9 @@ BEGIN
    -- сохранили связь с <Юр. лицом>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalSettings_Juridical(), ioId, inJuridicalId);
 
+   -- сохранили связь с <Юр. лицом>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalSettings_MainJuridical(), ioId, inMainJuridicalId);
+
    -- сохранили связь с <Договор>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalSettings_Contract(), ioId, inContractId);
 
@@ -40,13 +45,14 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_JuridicalSettings_PriceList(Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_JuridicalSettings_PriceList(Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.01.15                          *
  13.10.14                          *
 
 */

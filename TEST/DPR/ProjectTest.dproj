@@ -1834,6 +1834,7 @@
 				<Form>RoleMaskEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\Scale\Scales.pas"/>
 			<DCCReference Include="..\..\Forms\RoleUnion.pas">
 				<Form>RoleUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
