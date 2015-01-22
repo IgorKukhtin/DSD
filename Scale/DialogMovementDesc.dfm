@@ -197,7 +197,7 @@ object DialogMovementDescForm: TDialogMovementDescForm
       Columns = <
         item
           Expanded = False
-          FieldName = 'guidename'
+          FieldName = 'MovementDescName'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13

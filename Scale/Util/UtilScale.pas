@@ -96,13 +96,18 @@ begin
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_BarCode',ftString);
      ParamAdd(Params,'OrderExternal_InvNumber',ftString);
+     ParamAdd(Params,'OrderExternalName_master',ftString);
 
      ParamAdd(Params,'ContractId',ftInteger);
+     ParamAdd(Params,'ContractCode',ftInteger);
      ParamAdd(Params,'ContractNumber',ftString);
+     ParamAdd(Params,'ContractTagName',ftString);
 
      ParamAdd(Params,'PriceListId',ftInteger);
      ParamAdd(Params,'PriceListCode',ftInteger);
      ParamAdd(Params,'PriceListName',ftString);
+
+     ParamAdd(Params,'MovementDescName_master',ftString);
 
 end;
 {------------------------------------------------------------------------}

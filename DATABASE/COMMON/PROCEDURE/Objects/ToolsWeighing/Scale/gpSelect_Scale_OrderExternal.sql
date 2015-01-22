@@ -18,11 +18,13 @@ RETURNS TABLE (MovementId       Integer
              , PaidKindId     Integer, PaidKindName   TVarChar
 
              , PriceListId    Integer, PriceListCode  Integer, PriceListName TVarChar
-             , ContractId     Integer, ContractNumber TVarChar
+             , ContractId     Integer, ContractCode   Integer, ContractNumber TVarChar, ContractTagName TVarChar
 
              , PartnerId_calc   Integer
              , PartnerCode_calc Integer
              , PartnerName_calc TVarChar
+
+             , OrderExternalName_master TVarChar
               )
 AS
 $BODY$
@@ -53,30 +55,19 @@ BEGIN
             , Object_PriceList.ObjectCode                    AS PriceListCode
             , Object_PriceList.ValueData                     AS PriceListName
             , View_Contract_InvNumber.ContractId             AS ContractId
+            , View_Contract_InvNumber.ContractCode           AS ContractCode
             , View_Contract_InvNumber.InvNumber              AS ContractNumber
+            , View_Contract_InvNumber.ContractTagName        AS ContractTagName
 
-            , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
-                        THEN Object_To.ObjectCode
-                   WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
-                        THEN Object_From.ObjectCode
-                   ELSE 0
-              END :: Integer AS PartnerId_calc
-            , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
-                        THEN Object_To.ObjectCode
-                   WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
-                        THEN Object_From.ObjectCode
-                   ELSE 0
-              END :: Integer AS PartnerCode_calc
-            , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
-                        THEN Object_To.ValueData
-                   WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
-                        THEN Object_From.ValueData
-                   ELSE ''
-              END :: TVarChar AS PartnerName_calc
+            , Object_From.Id         AS PartnerId_calc
+            , Object_From.ObjectCode AS PartnerCode_calc
+            , Object_From.ValueData  AS PartnerName_calc
 
-       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.BarCode :: Integer AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
+            , ('№ <' || Movement.InvNumber || '>' || ' от <' || DATE (Movement.OperDate) :: TVarChar || '>') :: TVarChar AS OrderExternalName_master
+
+       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.BarCode :: Integer AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
            UNION
-             SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 1) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
+             SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
             ) AS Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

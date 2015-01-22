@@ -13,11 +13,9 @@ type
   public
     function gpSelect_ToolsWeighing_onLevelChild(inScaleNum:Integer;inLevelChild: String): TArrayList;
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
-    function gpGetObject_byCode (inCode, inDescId: integer): TDBObject;
-    function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:String): Boolean;
 
+    function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpSelect_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
-    //function gpSelect_Scale_ParnerCode(var execParams:TParams;ParnerCode:String): Boolean;
 
     function gpInitialize_OperDate(var execParams:TParams):TDateTime;
     function gpInitialize_MovementDesc: Boolean;
@@ -80,51 +78,15 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpGetObject_byCode(inCode, inDescId: integer): TDBObject;
+function TDMMainScaleForm.gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
 begin
-    with spSelect do
-    begin
-       StoredProcName:='gpGetObject_byCode';
-       OutputType:=otDataSet;
-       Params.Clear;
-       Params.AddParam('inCode', ftInteger, ptInput, inCode);
-       Params.AddParam('inDescId', ftInteger, ptInput, inDescId);
-       Params.AddParam('outId', ftInteger, ptOutput, 0);
-       Params.AddParam('outName', ftString, ptOutput, '');
-
-       //try
-         Execute;
-         Result.Code := inCode;
-         Result.Id   := ParamByName('outId').Value;
-         Result.Name := ParamByName('outName').Value;
-       {except
-         result.Code := Code;
-         result.Id   := 0;
-         result.Name := '';
-         ShowMessage('Ошибка получения - gpGetObject_byCode');
-       end;}
-    end;
-end;
-{------------------------------------------------------------------------}
-function TDMMainScaleForm.gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:String): Boolean;
-var PartnerCode_int:Integer;
-begin
-    try PartnerCode_int:= StrToInt(inPartnerCode);
-    except
-      PartnerCode_int:= 0;
-    end;
-
-    //!!!выход в этом случае!!!
-    if (execParams.ParamByName('OrderExternalId').AsInteger<>0)or(PartnerCode_int=0)
-    then begin Result:=true;exit;end;
-
     with spSelect do
     begin
        StoredProcName:='gpGet_Scale_Partner';
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
-       Params.AddParam('inPartnerCode', ftInteger, ptInput, PartnerCode_int);
+       Params.AddParam('inPartnerCode', ftInteger, ptInput, inPartnerCode);
        //try
          Execute;
          //
@@ -138,8 +100,17 @@ begin
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
 
-         ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
-         ParamByName('ContractNumber').asString := DataSet.FieldByName('ContractNumber').asString;
+         if DataSet.RecordCount=1 then
+         begin ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
+               ParamByName('ContractCode').AsInteger  := DataSet.FieldByName('ContractCode').asInteger;
+               ParamByName('ContractNumber').asString := DataSet.FieldByName('ContractNumber').asString;
+               ParamByName('ContractTagName').asString:= DataSet.FieldByName('ContractTagName').asString;
+         end
+         else begin ParamByName('ContractId').AsInteger    := 0;
+                    ParamByName('ContractCode').AsInteger  := 0;
+                    ParamByName('ContractNumber').asString := '';
+                    ParamByName('ContractTagName').asString:= '';
+         end;
 
          ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
@@ -187,9 +158,12 @@ begin
          ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
          ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
+         ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
 
          ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
+         ParamByName('ContractCode').AsInteger  := DataSet.FieldByName('ContractCode').asInteger;
          ParamByName('ContractNumber').asString := DataSet.FieldByName('ContractNumber').asString;
+         ParamByName('ContractTagName').asString:= DataSet.FieldByName('ContractTagName').asString;
 
          ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;

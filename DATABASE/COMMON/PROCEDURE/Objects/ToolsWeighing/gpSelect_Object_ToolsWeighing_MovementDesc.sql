@@ -7,14 +7,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc(
     IN inScaleNum    Integer   ,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Number         Integer
-             , MovementDescId Integer
-             , FromId         Integer, FromCode         Integer, FromName     TVarChar
-             , ToId           Integer, ToCode           Integer, ToName       TVarChar
-             , PaidKindId     Integer, PaidKindName TVarChar
-             , ColorGridValue Integer
-             , GuideName      TVarChar
-             , OrderById      Integer
+RETURNS TABLE (Number           Integer
+             , MovementDescId   Integer
+             , FromId           Integer, FromCode         Integer, FromName     TVarChar
+             , ToId             Integer, ToCode           Integer, ToName       TVarChar
+             , PaidKindId       Integer, PaidKindName     TVarChar
+             , PriceListId      Integer, PriceListCode    Integer, PriceListName TVarChar
+             , ColorGridValue   Integer
+             , MovementDescName        TVarChar
+             , MovementDescName_master TVarChar
+             , OrderById        Integer
                )
 AS
 $BODY$
@@ -87,6 +89,9 @@ BEGIN
            , Object_To.ValueData                             AS ToName
            , Object_PaidKind.Id                              AS PaidKindId
            , Object_PaidKind.ValueData                       AS PaidKindName
+           , Object_PriceList.Id                             AS PriceListId
+           , Object_PriceList.ObjectCode                     AS PriceListCode
+           , Object_PriceList.ValueData                      AS PriceListName
            , _tmpToolsWeighing.ColorGridValue                AS ColorGridValue
 
            , CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
@@ -98,14 +103,28 @@ BEGIN
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')'
 
                   ELSE TRIM (COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')')
-             END :: TVarChar AS GuideName
+             END :: TVarChar AS MovementDescName
+
+           , (MovementDesc.ItemName
+  || ': '  || CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')'
+                  WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_Income())
+                       THEN COALESCE (Object_PaidKind.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')'
+
+                  WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
+                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')'
+
+                  ELSE TRIM (COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')')
+             END) :: TVarChar AS MovementDescName_master
 
            , (_tmpToolsWeighing.OrderById + _tmpToolsWeighing.Number) :: Integer AS OrderById
 
        FROM _tmpToolsWeighing
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis() AND _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
             LEFT JOIN Object AS Object_From ON Object_From.Id = CAST (CASE WHEN _tmpToolsWeighing.FromId <> '' THEN _tmpToolsWeighing.FromId ELSE '0' END AS Integer)
             LEFT JOIN Object AS Object_To ON Object_To.Id = CAST (CASE WHEN _tmpToolsWeighing.ToId <> '' THEN _tmpToolsWeighing.ToId ELSE '0' END AS Integer)
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CAST (CASE WHEN _tmpToolsWeighing.PaidKindId <> '' THEN _tmpToolsWeighing.PaidKindId ELSE '0' END AS Integer)
+            LEFT JOIN MovementDesc ON MovementDesc.Id = _tmpToolsWeighing.MovementDescId
        WHERE _tmpToolsWeighing.MovementDescId <> 0
       UNION 
        SELECT 0                                   AS Number
@@ -118,8 +137,12 @@ BEGIN
             , '' :: TVarChar                      AS ToName
             , 0                                   AS PaidKindId
             , '' :: TVarChar                      AS PaidKindName
+            , 0                                   AS PriceListId
+            , 0                                   AS PriceListCode
+            , '' :: TVarChar                      AS PriceListName
             , 0                                   AS ColorGridValue
-            , MovementDesc.ItemName               AS GuideName
+            , MovementDesc.ItemName               AS MovementDescName
+            , '' :: TVarChar                      AS MovementDescName_master
             , tmp.OrderById                       AS OrderById
        FROM (SELECT _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById FROM _tmpToolsWeighing WHERE _tmpToolsWeighing.MovementDescId <> 0 GROUP BY _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById) AS tmp
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmp.MovementDescId

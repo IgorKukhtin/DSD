@@ -96,22 +96,19 @@ type
     PanelTotalWeight: TPanel;
     GBDiscountWeight: TGroupBox;
     PanelDiscountWeight: TPanel;
-    PanelInfo: TPanel;
+    infoPanel_mastre: TPanel;
     PanelMessage: TPanel;
-    PanelBillKind: TPanel;
+    PanelMovementDesc: TPanel;
     infoPanel: TPanel;
-    PanelPartner: TPanel;
+    infoPanelPartner: TPanel;
     LabelPartner: TLabel;
-    PanelPartnerCode: TPanel;
-    PanelPartnerName: TPanel;
-    PanelPriceList: TPanel;
+    PanelPartner: TPanel;
+    infoPanelPriceList: TPanel;
     PriceListNameLabel: TLabel;
-    PanelPriceListName: TPanel;
-    PanelRouteUnit: TPanel;
-    LabelRouteUnit: TLabel;
-    PanelRouteUnitCode: TPanel;
-    PanelRouteUnitName: TPanel;
-    PanelIsRecalc: TPanel;
+    PanelPriceList: TPanel;
+    infoPanelOrderExternal: TPanel;
+    LabelOrderExternal: TLabel;
+    PanelOrderExternal: TPanel;
     PopupMenu: TPopupMenu;
     miPrintZakazMinus: TMenuItem;
     miPrintZakazAll: TMenuItem;
@@ -145,6 +142,9 @@ type
     spSelect: TdsdStoredProc;
     DS: TDataSource;
     CDS: TClientDataSet;
+    infoPanelContract: TPanel;
+    LabelContract: TLabel;
+    PanelContract: TPanel;
     procedure ButtonExportToEDIClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -158,7 +158,6 @@ type
 
     procedure GetParams;
     procedure newGetParamsGoods;
-    function myCheckPartionStr:boolean;
     procedure Initialize_Scale;
     function fGetScale_CurrentWeight:Double;
   public
@@ -174,12 +173,6 @@ implementation
 
 uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,UtilPrint;
 
-function TMainForm.myCheckPartionStr:boolean;
-begin
-     Result:=false;
-
-     Result:=true;
-end;
 
 procedure TMainForm.newGetParamsGoods;
 var GoodsWeight_two,GoodsWeight_set:Double;
@@ -326,9 +319,26 @@ end;
 
 procedure TMainForm.GetParams;
 begin
+     if DialogMovementDescForm.Execute then
+     with ParamsMovement do
+     begin
+          PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
+          PanelPriceList.Caption:=ParamByName('PriceListName').asString;
+          if ParamByName('calcPartnerId').AsInteger<>0
+          then PanelPartner.Caption:='('+IntToStr(ParamByName('calcPartnerCode').asInteger)+') '+ParamByName('calcPartnerName').asString
+          else PanelPartner.Caption:='';
 
-     if DialogMovementDescForm.Execute
-     then begin
+          if ParamByName('ContractId').AsInteger<>0
+          then PanelContract.Caption:='(ContractNumber)'
+                                     +' ¹ '+ParamByName('PriceListName').asString
+                                     +' '+ParamByName('ContractTagName').asString
+                                     +'  ('+ParamByName('PaidKindName').asString+')'
+          else PanelContract.Caption:='';
+
+          if ParamByName('OrderExternalId').AsInteger<>0
+          then PanelOrderExternal.Caption:=ParamByName('OrderExternalName_master').asString
+          else PanelOrderExternal.Caption:='';
+
       //PanelPriceListName.Caption:= SettingMovement.PriceListName;
 {      PanelPartnerCode.Caption:= IntToStr(SettingMovement.PartnerCode);
       PanelPartnerName.Caption:= SettingMovement.PartnerName;
