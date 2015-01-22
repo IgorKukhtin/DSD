@@ -120,13 +120,12 @@ BEGIN
            , Object_GoodsKind.Id        		AS GoodsKindId
            , Object_GoodsKind.ValueData 		AS GoodsKindName
 
-           , Object_Box.Id                              AS BoxId
-           , Object_Box.ValueData                       AS BoxName
+
 
            , Object_Measure.ValueData                   AS MeasureName
 
-           , 0 ::Integer                AS BoxId
-           , '' ::TVarChar              AS BoxName
+           , Object_Box.Id                              AS BoxId
+           , Object_Box.ValueData                       AS BoxName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                         THEN CAST ( (COALESCE (MovementItem.Amount, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -180,9 +179,11 @@ BEGIN
 
            , Object_GoodsKind.Id        		AS GoodsKindId
            , Object_GoodsKind.ValueData 		AS GoodsKindName
+
+           , Object_Measure.ValueData                   AS MeasureName
+
            , Object_Box.Id                              AS BoxId
            , Object_Box.ValueData                       AS BoxName
-           , Object_Measure.ValueData                   AS MeasureName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))

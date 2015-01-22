@@ -3,28 +3,26 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1028
-  ExplicitHeight = 702
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1020
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1020
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1016
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1014
-      ExplicitHeight = 514
+      ExplicitWidth = 1020
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 514
-        ExplicitWidth = 1014
-        ExplicitHeight = 514
+        Width = 1020
+        Height = 518
+        ExplicitWidth = 1020
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -323,7 +321,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -1216,6 +1214,16 @@ inherited Sale_OrderForm: TSale_OrderForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' '#1074#1072#1083#1102#1090#1077'?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' '#1074#1072#1083#1102#1090#1077'.'
     end
+    object ScaleAction: TScaleAction
+      Category = 'Scale'
+      MoveParams = <>
+      Caption = #1042#1045#1057#1067
+      ComPort = 'COM1'
+      ComSpeed = 9600
+      Weight.Value = Null
+      Weight.Component = MasterCDS
+      Weight.ComponentItem = 'Amount'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1272,7 +1280,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1300,6 +1308,10 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbScale'
         end
         item
           Visible = True
@@ -1486,6 +1498,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbPrint_TTN: TdxBarButton
       Action = actPrint_TTN
+      Category = 0
+    end
+    object bbScale: TdxBarButton
+      Action = ScaleAction
       Category = 0
     end
   end

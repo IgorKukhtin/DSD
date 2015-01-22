@@ -25,7 +25,6 @@ object PartnerAddressForm: TPartnerAddressForm
     Height = 438
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 1177
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -590,7 +589,7 @@ object PartnerAddressForm: TPartnerAddressForm
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 9
+    TabOrder = 7
     Width = 85
   end
   object cxLabel5: TcxLabel
@@ -610,7 +609,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 305
   end
   object cbPeriod: TcxCheckBox
@@ -670,8 +669,8 @@ object PartnerAddressForm: TPartnerAddressForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1474,6 +1473,7 @@ object PartnerAddressForm: TPartnerAddressForm
         end>
       Caption = #1086#1075#1088#1072#1085#1080#1095#1080#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
       Hint = #1086#1075#1088#1072#1085#1080#1095#1080#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end

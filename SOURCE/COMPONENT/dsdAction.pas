@@ -1447,7 +1447,7 @@ begin
     begin
       lActiveControl := TForm(Owner).ActiveControl;
       TForm(Owner).ActiveControl := nil;
-      if not(lActiveControl.ClassType = TcxCustomInnerTextEdit) then
+      if (lActiveControl <> Nil) and (not(lActiveControl.ClassType = TcxCustomInnerTextEdit)) then
         TForm(Owner).ActiveControl := lActiveControl;
     end;
 
@@ -1707,9 +1707,10 @@ begin
       exit;
   if PostDataSetBeforeExecute then
     PostDataSet;
-  for i := 0 to MoveParams.Count - 1 do
-    TParamMoveItem(MoveParams.Items[i]).ToParam.Value :=
-      TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
+  if Assigned(MoveParams) then
+     for i := 0 to MoveParams.Count - 1 do
+        TParamMoveItem(MoveParams.Items[i]).ToParam.Value :=
+           TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
   result := LocalExecute;
   if not result then
     if Assigned(CancelAction) then

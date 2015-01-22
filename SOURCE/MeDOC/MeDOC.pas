@@ -336,6 +336,7 @@ begin
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_NAME', HeaderDataSet.FieldByName('JuridicalName_From').AsString);
   //Телефон підприємства
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'PHON', HeaderDataSet.FieldByName('Phone_From').AsString);
+
   //Порядковий номер ПН (системне поле)
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_1', HeaderDataSet.FieldByName('InvNumberPartner').AsString);
   //Порядковий номер ПН
@@ -763,29 +764,39 @@ begin
 
   with ZVIT.ORG.CARD.FIELDS do begin
     PERTYPE := '0';
-    //перший день періоду
+    // перший день періоду
     PERDATE := FormatDateTime('dd.mm.yyyy', StartOfTheMonth(HeaderDataSet.FieldByName('OperDate').AsDateTime));
-    //код документу
+    // код документу
     CHARCODE := 'J1201207';//HeaderDataSet.FieldByName('CHARCODE').AsString;
-    //Id документа
+    // Id документа
     DOCID := HeaderDataSet.FieldByName('Id').AsString;
   end;
 
-  //Код ЄДРПОУ підприємства
+  // Код ЄДРПОУ підприємства
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_EDRPOU', HeaderDataSet.FieldByName('OKPO_To').AsString);
-  //ІПН підприємства
+  // ІПН підприємства
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_INN', HeaderDataSet.FieldByName('INN_To').AsString);
-  //Найменування підприємства
+  // Найменування підприємства
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_NAME', HeaderDataSet.FieldByName('JuridicalName_To').AsString);
-  //Телефон підприємства
+  // Телефон підприємства
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'PHON', HeaderDataSet.FieldByName('Phone_To').AsString);
-  //Номер свідоцтва про реєстрацію платника
+  // Номер свідоцтва про реєстрацію платника
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_SRPNDS', HeaderDataSet.FieldByName('NumberVAT_To').AsString);
-  //Адреса підприємства
+  // Адреса підприємства
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_ADR', HeaderDataSet.FieldByName('JuridicalAddress_To').AsString);
-
-  //Код податкових зобов'язань
+  // Код податкових зобов'язань
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'PZOB', '5');
+
+  if HeaderDataSet.FieldByName('isERPN').asBoolean then
+     // Підлягає реєстрації в ЄРПН покупцем
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N16', '1');
+  if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then begin
+     // Не видається покупцю
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N17', '1');
+     // Не видається покупцю (тип причини)
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N18',
+             HeaderDataSet.FieldByName('NotNDSPayerC1').asString + HeaderDataSet.FieldByName('NotNDSPayerC2').asString);
+  end;
   //Дата складання розрахунку коригування
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N12', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
   //Дата розрахунку коригування

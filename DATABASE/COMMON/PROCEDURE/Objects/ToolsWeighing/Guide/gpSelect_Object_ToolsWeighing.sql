@@ -1,3 +1,4 @@
+
 -- Function: gpSelect_Object_ToolsWeighing()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ToolsWeighing (TVarChar);
@@ -8,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                NameFull TVarChar, NameUser TVarChar, ValueData TVarChar,
                ParentId Integer, ParentName TVarChar,
-               isErased boolean, isLeaf boolean) AS
+               isErased boolean, isLeaf boolean,
+               ToolsWeighingPlaceName TVarChar) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
@@ -32,7 +34,10 @@ BEGIN
            , Object_ToolsWeighing_View.ParentName
            , Object_ToolsWeighing_View.isErased
            , Object_ToolsWeighing_View.isLeaf
-       FROM Object_ToolsWeighing_View
+           , COALESCE (Object_ToolsWeighingPlace.ValueData, '') :: TVarChar as ToolsWeighingPlaceName
+
+       FROM Object_ToolsWeighing_View 
+	LEFT JOIN Object Object_ToolsWeighingPlace ON CAST(Object_ToolsWeighingPlace.Id as TVarChar) =  COALESCE (Object_ToolsWeighing_View.ValueData, '')
 
       ;
 
@@ -49,4 +54,6 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ToolsWeighing (zfCalc_UserAdmin())
+SELECT * FROM gpSelect_Object_ToolsWeighing (zfCalc_UserAdmin())
+    
+ 

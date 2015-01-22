@@ -85,6 +85,8 @@ type
     ['{C71FD00F-DC4D-4D88-B552-5595D3AF198F}']
     { Property Accessors }
     function Get_HORIG: UnicodeString;
+    function Get_HORIG1: UnicodeString;
+    function Get_HTYPR: UnicodeString;
     function Get_HERPN: UnicodeString;
     function Get_HFILL: UnicodeString;
     function Get_HPODFILL: UnicodeString;
@@ -136,6 +138,8 @@ type
     function Get_R04G7: UnicodeString;
     function Get_R04G11: UnicodeString;
     procedure Set_HORIG(Value: UnicodeString);
+    procedure Set_HORIG1(Value: UnicodeString);
+    procedure Set_HTYPR(Value: UnicodeString);
     procedure Set_HERPN(Value: UnicodeString);
     procedure Set_HFILL(Value: UnicodeString);
     procedure Set_HPODFILL(Value: UnicodeString);
@@ -174,6 +178,8 @@ type
     procedure Set_R04G11(Value: UnicodeString);
     { Methods & Properties }
     property HORIG: UnicodeString read Get_HORIG write Set_HORIG;
+    property HORIG1: UnicodeString read Get_HORIG1 write Set_HORIG1;
+    property HTYPR: UnicodeString read Get_HTYPR write Set_HTYPR;
     property HERPN: UnicodeString read Get_HERPN write Set_HERPN;
     property HFILL: UnicodeString read Get_HFILL write Set_HFILL;
     property HPODFILL: UnicodeString read Get_HPODFILL write Set_HPODFILL;
@@ -327,6 +333,8 @@ type
   protected
     { IXMLDECLARBODYType }
     function Get_HORIG: UnicodeString;
+    function Get_HORIG1: UnicodeString;
+    function Get_HTYPR: UnicodeString;
     function Get_HERPN: UnicodeString;
     function Get_HFILL: UnicodeString;
     function Get_HPODFILL: UnicodeString;
@@ -378,6 +386,8 @@ type
     function Get_R04G7: UnicodeString;
     function Get_R04G11: UnicodeString;
     procedure Set_HORIG(Value: UnicodeString);
+    procedure Set_HORIG1(Value: UnicodeString);
+    procedure Set_HTYPR(Value: UnicodeString);
     procedure Set_HERPN(Value: UnicodeString);
     procedure Set_HFILL(Value: UnicodeString);
     procedure Set_HPODFILL(Value: UnicodeString);
@@ -679,6 +689,11 @@ begin
   Result := ChildNodes['HORIG'].Text;
 end;
 
+function TXMLDECLARBODYType.Get_HORIG1: UnicodeString;
+begin
+  Result := ChildNodes['HORIG1'].Text;
+end;
+
 function TXMLDECLARBODYType.Get_HPODFILL: UnicodeString;
 begin
   Result := ChildNodes['HPODFILL'].Text;
@@ -692,6 +707,11 @@ end;
 procedure TXMLDECLARBODYType.Set_HORIG(Value: UnicodeString);
 begin
   ChildNodes['HORIG'].NodeValue := Value;
+end;
+
+procedure TXMLDECLARBODYType.Set_HORIG1(Value: UnicodeString);
+begin
+  ChildNodes['HORIG1'].NodeValue := Value;
 end;
 
 procedure TXMLDECLARBODYType.Set_HPODFILL(Value: UnicodeString);
@@ -789,9 +809,19 @@ begin
   Result := ChildNodes['HTELSEL'].Text;
 end;
 
+function TXMLDECLARBODYType.Get_HTYPR: UnicodeString;
+begin
+  Result := ChildNodes['HTYPR'].Text;
+end;
+
 procedure TXMLDECLARBODYType.Set_HTELSEL(Value: UnicodeString);
 begin
   ChildNodes['HTELSEL'].NodeValue := Value;
+end;
+
+procedure TXMLDECLARBODYType.Set_HTYPR(Value: UnicodeString);
+begin
+  ChildNodes['HTYPR'].NodeValue := Value;
 end;
 
 function TXMLDECLARBODYType.Get_HTELBUY: UnicodeString;
