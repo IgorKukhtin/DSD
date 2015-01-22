@@ -1,6 +1,4 @@
 inherited AncestorDBGridForm: TAncestorDBGridForm
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl: TcxPageControl [0]
@@ -20,6 +18,8 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       Caption = 'tsMain'
       ImageIndex = 0
       TabVisible = False
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0

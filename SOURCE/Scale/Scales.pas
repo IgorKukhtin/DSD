@@ -32,6 +32,11 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
+    property SecondaryShortCuts;
     property ScaleType: TScaleType read FScaleType write FScaleType default stBI;
     property ComPort: String read FComPort write FComPort;
     property ComSpeed: Integer read FComSpeed write FComSpeed;
