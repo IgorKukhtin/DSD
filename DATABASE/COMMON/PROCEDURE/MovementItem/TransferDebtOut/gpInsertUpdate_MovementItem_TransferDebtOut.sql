@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_TransferDebtOut()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TransferDebtOut (integer, integer, integer, tfloat, tfloat, tfloat, integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TransferDebtOut (integer, integer, integer, tfloat, tfloat, tfloat, tfloat, integer, integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TransferDebtOut(
@@ -10,8 +11,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TransferDebtOut(
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
+IN inBoxCount                TFloat    , -- Количество ящиков
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
+    IN inBoxCount            TFloat    , -- Количество ящиков
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inBoxId               Integer   , -- Ящики
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -32,7 +36,9 @@ BEGIN
                                           , inAmount             := inAmount
                                           , inPrice              := inPrice
                                           , ioCountForPrice      := ioCountForPrice
+                                          , inBoxCount           := inBoxCount
                                           , inGoodsKindId        := inGoodsKindId
+                                          , inBoxId              := inBoxId
                                           , inUserId             := vbUserId
                                            ) AS tmp;
 
@@ -43,6 +49,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.01.15         * add inBoxCount, inBoxId
  22.04.14         *
 */
 
