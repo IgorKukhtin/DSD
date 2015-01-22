@@ -614,7 +614,8 @@ uses
   ContractPartner in '..\..\Forms\Guides\ContractPartner.pas' {ContractPartnerForm: TParentForm},
   ContractPartnerEdit in '..\..\Forms\Guides\ContractPartnerEdit.pas' {ContractPartnerEditForm: TParentForm},
   RoleMaskEdit in '..\..\Forms\RoleMaskEdit.pas' {RoleMaskEditForm: TParentForm},
-  RoleUnion in '..\..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm};
+  RoleUnion in '..\..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
+  ToolsWeighingPlace_Object in '..\..\Forms\Guides\ToolsWeighingPlace_Object.pas' {ToolsWeighingPlace_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
