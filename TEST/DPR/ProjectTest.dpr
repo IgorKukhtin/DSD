@@ -613,7 +613,8 @@ uses
   TransferDebtOut_OrderJournal in '..\..\Forms\Document\TransferDebtOut_OrderJournal.pas' {TransferDebtOut_OrderJournalForm: TParentForm},
   ContractPartner in '..\..\Forms\Guides\ContractPartner.pas' {ContractPartnerForm: TParentForm},
   ContractPartnerEdit in '..\..\Forms\Guides\ContractPartnerEdit.pas' {ContractPartnerEditForm: TParentForm},
-  RoleMaskEdit in '..\..\Forms\RoleMaskEdit.pas' {RoleMaskEditForm: TParentForm};
+  RoleMaskEdit in '..\..\Forms\RoleMaskEdit.pas' {RoleMaskEditForm: TParentForm},
+  Scales in '..\..\SOURCE\Scale\Scales.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
