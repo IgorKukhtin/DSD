@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox,
-  dxBarExtItems, cxImageComboBox;
+  dxBarExtItems, cxImageComboBox, cxButtonEdit;
 
 type
   TToolsWeighingTreeForm = class(TParentForm)
@@ -70,6 +70,8 @@ type
     ceValueData: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    ceGuidesName: TcxGridDBColumn;
+    ToolsWeighingPlaceChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

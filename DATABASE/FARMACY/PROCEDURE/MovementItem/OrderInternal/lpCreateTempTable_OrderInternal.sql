@@ -14,7 +14,15 @@ RETURNS VOID
 
 AS
 $BODY$
+  DECLARE vbMainJuridicalId Integer;
 BEGIN
+
+     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId
+         FROM Object_Unit_View 
+               JOIN  MovementLinkObject ON MovementLinkObject.ObjectId = Object_Unit_View.Id 
+                AND  MovementLinkObject.MovementId = inMovementId 
+                AND  MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
+
      CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
              , Price TFloat
              , PartionGoodsDate TDateTime
@@ -106,6 +114,7 @@ BEGIN
 
    LEFT JOIN JuridicalSettingsPriceList 
                     ON JuridicalSettingsPriceList.JuridicalId = LastPriceList_View.JuridicalId 
+                   AND JuridicalSettingsPriceList.MainJuridicalId = vbMainJuridicalId 
                    AND JuridicalSettingsPriceList.ContractId = LastPriceList_View.ContractId 
 
               
@@ -141,6 +150,7 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.01.15                         *  учитываем наше юрлицо в закрытии прайсов
  05.12.14                         *  чуть оптимизировал
  06.11.14                         *  add PartionGoodsDate
  22.10.14                         *  add inGoodsId

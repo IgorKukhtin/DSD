@@ -1,23 +1,31 @@
 inherited JuridicalSettingsPriceListForm: TJuridicalSettingsPriceListForm
   Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
-  ClientWidth = 415
-  ExplicitWidth = 423
+  ClientWidth = 584
+  ExplicitWidth = 592
   ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 415
-    ExplicitWidth = 395
-    ClientRectRight = 415
+    Width = 584
+    ExplicitWidth = 415
+    ClientRectRight = 584
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 415
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 415
-        ExplicitWidth = 395
+        Width = 584
+        ExplicitWidth = 415
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colMainJuridical: TcxGridDBColumn
+            Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'MainJuridicalName'
+            Width = 122
+          end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -38,6 +46,7 @@ inherited JuridicalSettingsPriceListForm: TJuridicalSettingsPriceListForm
             PropertiesClassName = 'TcxCheckBoxProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 108
           end
         end
       end
@@ -56,8 +65,15 @@ inherited JuridicalSettingsPriceListForm: TJuridicalSettingsPriceListForm
       DataSource = MasterDS
     end
   end
+  inherited MasterDS: TDataSource
+    Top = 8
+  end
+  inherited MasterCDS: TClientDataSet
+    Top = 8
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_JuridicalSettingsPriceList'
+    Top = 0
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -73,24 +89,35 @@ inherited JuridicalSettingsPriceListForm: TJuridicalSettingsPriceListForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
+        Name = 'inMainJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MainJuridicalId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inContractId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item
         Name = 'inisPriceClose'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'isPriceClose'
         DataType = ftBoolean

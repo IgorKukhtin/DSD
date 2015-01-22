@@ -119,6 +119,8 @@ object DialogMovementDescForm: TDialogMovementDescForm
           Properties.ReadOnly = False
           TabOrder = 0
           Text = 'EditPartnerCode'
+          OnExit = EditPartnerCodeExit
+          OnKeyDown = EditPartnerCodeKeyDown
           Width = 102
         end
       end

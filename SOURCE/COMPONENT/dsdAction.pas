@@ -1707,9 +1707,10 @@ begin
       exit;
   if PostDataSetBeforeExecute then
     PostDataSet;
-  for i := 0 to MoveParams.Count - 1 do
-    TParamMoveItem(MoveParams.Items[i]).ToParam.Value :=
-      TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
+  if Assigned(MoveParams) then
+     for i := 0 to MoveParams.Count - 1 do
+        TParamMoveItem(MoveParams.Items[i]).ToParam.Value :=
+           TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
   result := LocalExecute;
   if not result then
     if Assigned(CancelAction) then

@@ -19,6 +19,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     UpdateDataSet: TdsdUpdateDataSet;
     colisPriceClose: TcxGridDBColumn;
+    colMainJuridical: TcxGridDBColumn;
   private
     { Private declarations }
   public

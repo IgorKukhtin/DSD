@@ -125,6 +125,9 @@ type
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
     spSelectPrintTTN: TdsdStoredProc;
+    colBoxCount: TcxGridDBColumn;
+    colBoxName: TcxGridDBColumn;
+    actGoodsBoxChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

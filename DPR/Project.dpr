@@ -1,7 +1,6 @@
 program Project;
 
 uses
-//  MidasLib,
   Windows,
   Vcl.Forms,
   Controls,
@@ -68,7 +67,8 @@ uses
   OLAPSales in '..\FormsMeat\Report\OLAP\OLAPSales.pas' {OLAPSalesForm},
   GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas',
   MainForm in '..\FormsMeat\MainForm.pas' {MainForm},
-  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm};
+  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
+  Scales in '..\SOURCE\Scale\Scales.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -81,7 +81,7 @@ begin
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
      TUpdater.AutomaticUpdateProgram;
-     Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TMainFormInstance, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   end
   else

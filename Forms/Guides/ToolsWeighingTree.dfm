@@ -20,9 +20,9 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 28
+    Top = 26
     Width = 313
-    Height = 662
+    Height = 664
     Align = alLeft
     Bands = <
       item
@@ -59,16 +59,16 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
   end
   object cxSplitter1: TcxSplitter
     Left = 313
-    Top = 28
+    Top = 26
     Width = 8
-    Height = 662
+    Height = 664
     Control = cxDBTreeList
   end
   object cxGrid: TcxGrid
     Left = 321
-    Top = 28
+    Top = 26
     Width = 730
-    Height = 662
+    Height = 664
     Align = alClient
     TabOrder = 6
     object cxGridDBTableView: TcxGridDBTableView
@@ -144,13 +144,28 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       object ceNameFull: TcxGridDBColumn
         Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'NameFull'
+        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 250
       end
       object ceValueData: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'ValueData'
+        HeaderAlignmentVert = vaCenter
         Width = 130
+      end
+      object ceGuidesName: TcxGridDBColumn
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+        DataBinding.FieldName = 'ToolsWeighingPlaceName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ToolsWeighingPlaceChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 120
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -210,7 +225,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -321,6 +336,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Top = 176
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spTree
       StoredProcList = <
         item
@@ -336,6 +352,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TToolsWeighingEditForm'
@@ -349,9 +366,11 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       isShowModal = True
       DataSource = GridDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TToolsWeighingEditForm'
@@ -360,6 +379,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -368,9 +388,11 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       ActionType = acUpdate
       DataSource = GridDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -380,21 +402,25 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'ParentId'
+          Value = Null
           Component = TreeDataSet
           ComponentItem = 'Id'
           DataType = ftString
@@ -406,6 +432,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -414,8 +441,32 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       isSetErased = False
       DataSource = TreeDS
     end
+    object ToolsWeighingPlaceChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ToolsWeighingPlace_ObjectForm'
+      FormName = 'TToolsWeighingPlace_ObjectForm'
+      FormNameParam.Value = 'TToolsWeighingPlace_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ValueData'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ToolsWeighingPlaceName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -433,6 +484,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
         DataSet = TreeDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 152
     Top = 152
   end
@@ -459,6 +511,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 416
     Top = 160
   end
@@ -475,12 +528,14 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Params = <
       item
         Name = 'Key'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         DataType = ftString
       end
       item
         Name = 'TextValue'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Name'
         DataType = ftString
@@ -515,6 +570,8 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 432
     Top = 240
   end
@@ -525,18 +582,21 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inNameUser'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'NameUser'
         DataType = ftString
@@ -544,11 +604,13 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       end
       item
         Name = 'inValueData'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ValueData'
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 552
     Top = 240
   end
