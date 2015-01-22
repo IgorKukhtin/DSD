@@ -11,7 +11,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TransferDebtOut(
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
-IN inBoxCount                TFloat    , -- Количество ящиков
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inBoxCount            TFloat    , -- Количество ящиков
     IN inGoodsKindId         Integer   , -- Виды товаров
