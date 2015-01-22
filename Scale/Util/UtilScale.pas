@@ -25,6 +25,8 @@ type
   TSettingMain = record
     ScaleNum:         integer;
     ComPort:          string;
+    BI:               Boolean;
+    DB:               Boolean;
     UserId:           integer;
   end;
 

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_TransferDebtOut()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TransferDebtOut(integer, integer, integer, tfloat, tfloat, tfloat, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TransferDebtOut(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, integer, integer, integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TransferDebtOut(
@@ -11,7 +12,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TransferDebtOut(
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
+    IN inBoxCount            TFloat    , -- Количество ящиков
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inBoxId               Integer   , -- Ящики
     IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD
@@ -30,9 +33,16 @@ BEGIN
      -- сохранили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
+     
+     -- сохранили свойство <Количество ящиков>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BoxCount(), ioId, inBoxCount);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+
+     -- сохранили связь с <Ящики>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box(), ioId, inBoxId);
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -53,6 +63,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.01.15         * add inBoxCount, inBoxId
  11.05.14                                        * all
  07.05.14                                        * add lpInsert_MovementItemProtocol
  05.05.14                                        * del zc_MIFloat_AmountPartner

@@ -289,8 +289,8 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object ButtonRefreshZakaz: TSpeedButton
-        Left = 411
-        Top = 3
+        Left = 407
+        Top = -2
         Width = 31
         Height = 29
         Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
@@ -776,36 +776,9 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
-    object ButtonSaveItem: TSpeedButton
-      Left = 11
-      Top = 214
-      Width = 76
-      Height = 20
-      BiDiMode = bdRightToLeft
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-      Flat = True
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      Glyph.Data = {
-        F6000000424DF600000000000000760000002800000010000000100000000100
-        0400000000008000000000000000000000001000000000000000000000000000
-        8000008000000080800080000000800080008080000080808000C0C0C0000000
-        FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00000000000000
-        0000F777777777777770F888888788888870F8888887F8888870F88888878F88
-        8870F888888788F88870FFFFFFFF888F8870888888888888F870888888888888
-        807088888888888808700000000008808870F888888708088870F88888870088
-        8870F888888708888870F888888788888870FFFFFFFFFFFFFFF0}
-      Layout = blGlyphTop
-      ParentFont = False
-      ParentBiDiMode = False
-      Visible = False
-    end
     object CodeInfoPanel: TPanel
       Left = 0
-      Top = 113
+      Top = 71
       Width = 133
       Height = 22
       Align = alTop
@@ -817,10 +790,11 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
       Visible = False
+      ExplicitTop = 113
     end
     object EnterGoodsCodeScanerPanel: TPanel
       Left = 0
-      Top = 186
+      Top = 93
       Width = 133
       Height = 41
       Align = alTop
@@ -831,6 +805,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
+      ExplicitTop = 186
       object EnterGoodsCodeScanerLabel: TLabel
         Left = 1
         Top = 1
@@ -858,9 +833,9 @@ object MainForm: TMainForm
     end
     object EnterWeightPanel: TPanel
       Left = 0
-      Top = 583
+      Top = 586
       Width = 133
-      Height = 51
+      Height = 48
       Align = alBottom
       Font.Charset = RUSSIAN_CHARSET
       Font.Color = clWindowText
@@ -917,89 +892,14 @@ object MainForm: TMainForm
         Width = 109
       end
     end
-    object EnterGoodsCode_byZakazPanel: TPanel
-      Left = 0
-      Top = 493
-      Width = 133
-      Height = 45
-      Align = alBottom
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clNavy
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 4
-      object EnterGoodsCode_byZakazLabel: TLabel
-        Left = 1
-        Top = 1
-        Width = 131
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1042#1074#1086#1076' '#1050#1086#1076' ('#1079#1072#1103#1074')'
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clNavy
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 87
-      end
-      object EnterGoodsCode_byZakazEdit: TEdit
-        Left = 6
-        Top = 20
-        Width = 89
-        Height = 24
-        TabOrder = 0
-        Text = 'EnterGoodsCode_byZakazEdit'
-      end
-    end
-    object PanelCountTare: TPanel
-      Left = 0
-      Top = 370
-      Width = 133
-      Height = 41
-      Align = alBottom
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 5
-      object LabelCountTare: TLabel
-        Left = 1
-        Top = 1
-        Width = 131
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1050#1086#1083' '#1103#1097#1080#1082#1086#1074
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 66
-      end
-      object CountTareEdit: TEdit
-        Left = 3
-        Top = 14
-        Width = 97
-        Height = 24
-        TabOrder = 0
-        Text = 'CountTareEdit'
-      end
-    end
     object infoPanel_Scale: TPanel
       Left = 0
-      Top = 84
+      Top = 42
       Width = 133
       Height = 29
       Align = alTop
-      TabOrder = 8
+      TabOrder = 4
+      ExplicitTop = 84
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -1007,23 +907,23 @@ object MainForm: TMainForm
         Height = 13
         Align = alTop
         Alignment = taCenter
-        Caption = 'Scale.Active = NO'
+        Caption = 'Scale.Active = ???'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clTeal
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
-        ExplicitWidth = 88
+        ExplicitWidth = 90
       end
-      object Panel_Scale: TPanel
+      object PanelWeight_Scale: TPanel
         Left = 1
         Top = 14
         Width = 131
         Height = 14
         Align = alClient
         BevelOuter = bvNone
-        Caption = 'Panel_Scale'
+        Caption = 'Weight=???'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clTeal
         Font.Height = -11
@@ -1031,291 +931,9 @@ object MainForm: TMainForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-      end
-    end
-    object EnterKindPackageCode_byZakazPanel: TPanel
-      Left = 0
-      Top = 538
-      Width = 133
-      Height = 45
-      Align = alBottom
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clNavy
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 9
-      object EnterKindPackageCode_byZakazLabel: TLabel
-        Left = 1
-        Top = 1
-        Width = 131
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1042#1074#1086#1076' '#1059#1087#1072#1082' ('#1079#1072#1103#1074')'
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clNavy
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 92
-      end
-      object EnterKindPackageCode_byZakazEdit: TEdit
-        Left = 6
-        Top = 20
-        Width = 26
-        Height = 24
-        TabOrder = 0
-        Text = 'EnterKindPackageCode_byZakazEdit'
-      end
-      object EnterKindPackageName_byZakazPanel: TPanel
-        Left = 60
-        Top = 15
-        Width = 72
-        Height = 29
-        Align = alRight
-        Alignment = taLeftJustify
-        BevelOuter = bvNone
-        Caption = 'EnterKindPackageName_byZakazPanel'
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clNavy
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 1
-      end
-    end
-    object gbPartionDate: TGroupBox
-      Left = 0
-      Top = 42
-      Width = 133
-      Height = 42
-      Align = alTop
-      Caption = #1055#1072#1088#1090#1080#1103' '#1079#1072
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clRed
-      Font.Height = -12
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 10
-      object PartionDateEdit: TcxDateEdit
-        Left = 6
-        Top = 15
-        ParentFont = False
-        TabOrder = 0
-        Width = 109
-      end
-    end
-    object PanelCountPoddon: TPanel
-      Left = 0
-      Top = 411
-      Width = 133
-      Height = 41
-      Align = alBottom
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 6
-      object LabelCountPoddon: TLabel
-        Left = 1
-        Top = 1
-        Width = 131
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1050#1086#1083' '#1087#1086#1076#1076#1086#1085#1086#1074
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 80
-      end
-      object CountPoddonEdit: TEdit
-        Left = 3
-        Top = 14
-        Width = 97
-        Height = 24
-        TabOrder = 0
-        Text = 'CountPoddonEdit'
-      end
-    end
-    object PanelCountVanna: TPanel
-      Left = 0
-      Top = 452
-      Width = 133
-      Height = 41
-      Align = alBottom
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 7
-      object LabelCountVanna: TLabel
-        Left = 1
-        Top = 1
-        Width = 131
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1050#1086#1083' '#1074#1072#1085#1085
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 51
-      end
-      object CountVannaEdit: TEdit
-        Left = 3
-        Top = 14
-        Width = 97
-        Height = 24
-        TabOrder = 0
-        Text = 'CountVannaEdit'
-      end
-    end
-    object PanelCountUpakovka: TPanel
-      Left = 0
-      Top = 329
-      Width = 133
-      Height = 41
-      Align = alBottom
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 11
-      object LabelCountUpakovka: TLabel
-        Left = 1
-        Top = 1
-        Width = 131
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1050#1086#1083' '#1087#1072#1082#1077#1090#1086#1074
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 69
-      end
-      object CountUpakovkaEdit: TEdit
-        Left = 3
-        Top = 14
-        Width = 97
-        Height = 24
-        TabOrder = 0
-        Text = 'CountUpakovkaEdit'
-      end
-    end
-    object PanelPartionStr_MB: TPanel
-      Left = 0
-      Top = 135
-      Width = 133
-      Height = 51
-      Align = alTop
-      BevelOuter = bvNone
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 12
-      object PartionStr_MBLabel: TLabel
-        Left = 0
-        Top = 7
-        Width = 133
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1042#1074#1086#1076' '#1055#1040#1056#1058#1048#1071' '#1057#1067#1056#1068#1071
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 119
-      end
-      object Panel1: TPanel
-        Left = 0
-        Top = 0
-        Width = 133
-        Height = 7
-        Align = alTop
-        BevelOuter = bvNone
-        TabOrder = 0
-      end
-      object infoPanelPartionStr_MB: TPanel
-        Left = 0
-        Top = 21
-        Width = 133
-        Height = 30
-        Align = alClient
-        TabOrder = 1
-        object PartionStr_MBEdit: TEdit
-          Left = 3
-          Top = 3
-          Width = 197
-          Height = 24
-          TabOrder = 0
-          Text = 'PartionStr_MBEdit'
-        end
-      end
-    end
-    object PanelOperCount_sh: TPanel
-      Left = 0
-      Top = 288
-      Width = 133
-      Height = 41
-      Align = alBottom
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 13
-      object LabelOperCount_sh: TLabel
-        Left = 1
-        Top = 1
-        Width = 131
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1050#1086#1083' '#1043#1086#1083#1086#1074
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 57
-      end
-      object OperCount_shEdit: TEdit
-        Left = 3
-        Top = 14
-        Width = 97
-        Height = 24
-        TabOrder = 0
-        Text = 'OperCount_shEdit'
+        OnClick = PanelWeight_ScaleClick
+        ExplicitLeft = 0
+        ExplicitTop = 9
       end
     end
   end

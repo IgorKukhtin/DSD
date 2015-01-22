@@ -184,7 +184,8 @@ BEGIN
            , Movement.InvNumber				                                AS InvNumber
            , Movement.OperDate				                                AS OperDate
            , 'J1201006'::TVarChar                                           AS CHARCODE
-           , 'Неграш О.В.'::TVarChar                                        AS N10
+           -- , 'Неграш О.В.'::TVarChar                                        AS N10
+           , 'Рудик Н.В.'::TVarChar                                        AS N10
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice() THEN 'Змiна цiни'  ELSE 'повернення' END :: TVarChar AS KindName
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
@@ -207,18 +208,28 @@ BEGIN
                   THEN 'X' ELSE '' END                                      AS CopyForClient
            , CASE WHEN inisClientCopy=TRUE
                   THEN '' ELSE 'X' END                                      AS CopyForUs
+
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN 'X'
-                  WHEN Movement.OperDate >= '01.01.2015' AND OH_JuridicalDetails_To.INN <> vbNotNDSPayer_INN
+                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_To.INN <> vbNotNDSPayer_INN
                   THEN 'X'
                   ELSE ''
              END AS ERPN
 
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
+                  THEN TRUE
+                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_To.INN <> vbNotNDSPayer_INN
+                  THEN TRUE
+                  ELSE FALSE
+             END :: Boolean AS isERPN
+
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.01.2015'
                   THEN '' ELSE 'X' END                                      AS ERPN2
 
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN 'X' ELSE '' END                                      AS NotNDSPayer
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN TRUE ELSE FALSE END :: Boolean                       AS isNotNDSPayer
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN '0' ELSE '' END                                      AS NotNDSPayerC1
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN

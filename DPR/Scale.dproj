@@ -168,6 +168,7 @@
 			<DCCReference Include="..\Scale\Util\UtilPrint.pas">
 				<Form>UtilPrintForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\Scale\Util\SysScalesLib_TLB.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

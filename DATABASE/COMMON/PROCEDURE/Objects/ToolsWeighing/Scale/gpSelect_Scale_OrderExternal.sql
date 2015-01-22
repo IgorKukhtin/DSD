@@ -19,6 +19,10 @@ RETURNS TABLE (MovementId       Integer
 
              , PriceListId    Integer, PriceListCode  Integer, PriceListName TVarChar
              , ContractId     Integer, ContractNumber TVarChar
+
+             , PartnerId_calc   Integer
+             , PartnerCode_calc Integer
+             , PartnerName_calc TVarChar
               )
 AS
 $BODY$
@@ -37,10 +41,10 @@ BEGIN
 
             , zc_Movement_Sale()                             AS MovementDescId
             , Object_From.Id                                 AS FromId
-            , Object_From.ObjectCode                          AS FromCode
+            , Object_From.ObjectCode                         AS FromCode
             , Object_From.ValueData                          AS FromName
             , Object_To.Id                                   AS ToId
-            , Object_To.ObjectCode                            AS ToCode
+            , Object_To.ObjectCode                           AS ToCode
             , Object_To.ValueData                            AS ToName
             , Object_PaidKind.Id                             AS PaidKindId
             , Object_PaidKind.ValueData                      AS PaidKindName
@@ -51,9 +55,28 @@ BEGIN
             , View_Contract_InvNumber.ContractId             AS ContractId
             , View_Contract_InvNumber.InvNumber              AS ContractNumber
 
-       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.BarCode :: Integer AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY'
+            , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+                        THEN Object_To.ObjectCode
+                   WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
+                        THEN Object_From.ObjectCode
+                   ELSE 0
+              END :: Integer AS PartnerId_calc
+            , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+                        THEN Object_To.ObjectCode
+                   WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
+                        THEN Object_From.ObjectCode
+                   ELSE 0
+              END :: Integer AS PartnerCode_calc
+            , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+                        THEN Object_To.ValueData
+                   WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
+                        THEN Object_From.ValueData
+                   ELSE ''
+              END :: TVarChar AS PartnerName_calc
+
+       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.BarCode :: Integer AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
            UNION
-             SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 1) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY'
+             SELECT Movement.Id, Movement.InvNumber, Movement.DescId FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 1) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
             ) AS Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -97,4 +120,4 @@ ALTER FUNCTION gpSelect_Scale_OrderExternal (TDateTime, TVarChar, TVarChar) OWNE
 */
 
 -- тест
---	 SELECT * FROM gpSelect_Scale_OrderExternal ('01.01.2014', '123', zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_OrderExternal ('01.01.2015', '0000000744830', zfCalc_UserAdmin())

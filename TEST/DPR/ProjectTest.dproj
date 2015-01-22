@@ -1835,6 +1835,10 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\Scale\Scales.pas"/>
+			<DCCReference Include="..\..\Forms\RoleUnion.pas">
+				<Form>RoleUnionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

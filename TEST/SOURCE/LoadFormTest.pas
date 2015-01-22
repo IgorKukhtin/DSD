@@ -1351,6 +1351,9 @@ begin
   //по маске
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleEditForm');
+  //подробно
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleUnionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoleUnionForm');
 end;
 
 procedure TLoadFormTest.LoadRouteFormTest;

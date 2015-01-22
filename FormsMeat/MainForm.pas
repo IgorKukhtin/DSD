@@ -487,6 +487,8 @@ type
     N38: TMenuItem;
     actContractPartner: TdsdOpenForm;
     miContractPartner: TMenuItem;
+    actRoleUnion: TdsdOpenForm;
+    miRoleUnion: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

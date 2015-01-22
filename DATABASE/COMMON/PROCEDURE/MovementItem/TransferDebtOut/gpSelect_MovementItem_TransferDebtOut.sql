@@ -13,8 +13,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TransferDebtOut(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, Price TFloat, CountForPrice TFloat
+             , Amount TFloat, Price TFloat, CountForPrice TFloat, BoxCount TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
+             , BoxId Integer, BoxName TVarChar
              , AmountSumm TFloat, isErased Boolean
              )
 AS
@@ -45,9 +46,13 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            , CAST (NULL AS TFloat)      AS CountForPrice
+           , CAST (NULL AS TFloat)      AS BoxCount
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
+           , 0 ::Integer                AS BoxId
+           , '' ::TVarChar              AS BoxName
+
            , CAST (NULL AS TFloat)      AS AmountSumm
            , FALSE                      AS isErased
 
@@ -110,10 +115,17 @@ BEGIN
            , MovementItem.Amount			AS Amount
            , MIFloat_Price.ValueData 			AS Price
            , MIFloat_CountForPrice.ValueData 	        AS CountForPrice
+           , MIFloat_BoxCount.ValueData                 AS BoxCount
 
            , Object_GoodsKind.Id        		AS GoodsKindId
            , Object_GoodsKind.ValueData 		AS GoodsKindName
+
+
+
            , Object_Measure.ValueData                   AS MeasureName
+
+           , Object_Box.Id                              AS BoxId
+           , Object_Box.ValueData                       AS BoxName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                         THEN CAST ( (COALESCE (MovementItem.Amount, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -136,11 +148,19 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+            LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                                        ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
+                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+            LEFT JOIN Object AS Object_Box ON Object_Box.Id = MILinkObject_Box.ObjectId
 
             ;
 
@@ -155,10 +175,15 @@ BEGIN
            , MovementItem.Amount			AS Amount
            , MIFloat_Price.ValueData 			AS Price
            , MIFloat_CountForPrice.ValueData 	        AS CountForPrice
+           , MIFloat_BoxCount.ValueData                 AS BoxCount
 
            , Object_GoodsKind.Id        		AS GoodsKindId
            , Object_GoodsKind.ValueData 		AS GoodsKindName
+
            , Object_Measure.ValueData                   AS MeasureName
+
+           , Object_Box.Id                              AS BoxId
+           , Object_Box.ValueData                       AS BoxName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -183,11 +208,19 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+            LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                                        ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
+                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+            LEFT JOIN Object AS Object_Box ON Object_Box.Id = MILinkObject_Box.ObjectId
 
             ;
      END IF;
@@ -200,6 +233,8 @@ ALTER FUNCTION gpSelect_MovementItem_TransferDebtOut (Integer, Integer, TDateTim
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.01.15         * add MIFloat_BoxCount
+                        MILinkObject_Box
  13.06.14                                        * add zc_Enum_InfoMoneyDestination_10100
  07.05.14                                        * add tmpParams
  24.04.14         *

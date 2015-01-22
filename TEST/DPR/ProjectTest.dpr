@@ -614,7 +614,8 @@ uses
   ContractPartner in '..\..\Forms\Guides\ContractPartner.pas' {ContractPartnerForm: TParentForm},
   ContractPartnerEdit in '..\..\Forms\Guides\ContractPartnerEdit.pas' {ContractPartnerEditForm: TParentForm},
   RoleMaskEdit in '..\..\Forms\RoleMaskEdit.pas' {RoleMaskEditForm: TParentForm},
-  Scales in '..\..\SOURCE\Scale\Scales.pas';
+  Scales in '..\..\SOURCE\Scale\Scales.pas',
+  RoleUnion in '..\..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
