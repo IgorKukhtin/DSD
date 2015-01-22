@@ -9322,6 +9322,7 @@ begin
                   PartnerId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
              end
              else if (toSqlQuery.FieldByName('PartnerCode').AsInteger=0)  // <> FieldByName('UnitCodeFrom').AsString
+             //else if (toSqlQuery.FieldByName('PartnerCode').AsInteger <> FieldByName('UnitCodeFrom').AsInteger)
                      and (FieldByName('UnitCodeFrom').AsInteger > 0)
                        //меняем код контрагента !!!если надо!!!
                   then fExecSqToQuery ('update Object set ObjectCode ='+FieldByName('UnitCodeFrom').AsString+' where Id = '+IntToStr(PartnerId_pg));
@@ -9422,7 +9423,9 @@ begin
         Add('     , BillItems.OperCount_Upakovka as LiveWeight');
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
-        Add('     , isnull (zf_ChangeTVarCharMediumToNull (BillItems.PartionStr_MB), zf_Calc_PartionIncome_byObvalka (Bill.BillDate, UnitFrom.UnitCode, GoodsProperty.GoodsCode)) as PartionGoods_calc');
+        Add('     , case when _toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG.GoodsPropertyId is not null'
+           +'                 then isnull (zf_ChangeTVarCharMediumToNull (BillItems.PartionStr_MB), zf_Calc_PartionIncome_byObvalka (Bill.BillDate, UnitFrom.UnitCode, GoodsProperty.GoodsCode))'
+           +'       end as PartionGoods_calc');
         Add('     , UnitFrom.UnitCode AS UnitCode_from');
 
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
@@ -9433,6 +9436,7 @@ begin
         Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
+        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG on _toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG.GoodsPropertyId = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
@@ -9496,7 +9500,7 @@ begin
 
              if(toSqlQuery.FieldByName('ObjectCode').AsInteger <> FieldByName('UnitCode_from').AsInteger)
              then begin
-             showMessage ('<'+IntToStr(toSqlQuery.FieldByName('ObjectCode').AsInteger)+'>  <'+IntToStr(FieldByName('UnitCode_from').AsInteger)+'>');
+               //if FieldByName('PartionGoods_calc').AsString<>'' then showMessage ('<'+IntToStr(toSqlQuery.FieldByName('ObjectCode').AsInteger)+'>  <'+IntToStr(FieldByName('UnitCode_from').AsInteger)+'>');
                toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods_calc').AsString;
              end
              else toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
@@ -10360,6 +10364,7 @@ begin
                        PartnerId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
                   end
                   else if (toSqlQuery.FieldByName('PartnerCode').AsInteger=0)  // <> FieldByName('UnitCodeFrom').AsString
+                  //else if (toSqlQuery.FieldByName('PartnerCode').AsInteger<> FieldByName('UnitCodeFrom').AsInteger)
                           and (FieldByName('UnitCodeFrom').AsInteger > 0)
                             //меняем код контрагента !!!если надо!!!
                        then fExecSqToQuery ('update Object set ObjectCode ='+FieldByName('UnitCodeFrom').AsString+' where Id = '+IntToStr(PartnerId_pg));
@@ -10444,7 +10449,9 @@ begin
         Add('     , BillItems.OperCount_Upakovka as LiveWeight');
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
-        Add('     , isnull (zf_ChangeTVarCharMediumToNull (BillItems.PartionStr_MB), zf_Calc_PartionIncome_byObvalka (Bill.BillDate, UnitFrom.UnitCode, GoodsProperty.GoodsCode)) as PartionGoods_calc');
+        Add('     , case when _toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG.GoodsPropertyId is not null'
+           +'                 then isnull (zf_ChangeTVarCharMediumToNull (BillItems.PartionStr_MB), zf_Calc_PartionIncome_byObvalka (Bill.BillDate, UnitFrom.UnitCode, GoodsProperty.GoodsCode))'
+           +'       end as PartionGoods_calc');
         Add('     , UnitFrom.UnitCode AS UnitCode_from');
 
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
@@ -10456,6 +10463,7 @@ begin
         Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
+        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG on _toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG.GoodsPropertyId = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА

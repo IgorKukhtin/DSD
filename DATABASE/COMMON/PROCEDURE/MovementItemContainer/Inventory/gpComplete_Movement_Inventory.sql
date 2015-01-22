@@ -609,9 +609,11 @@ BEGIN
                                OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                  )
-                              AND vbOperDate < '01.06.2014' -- !!!временно для первого раза!!!
+                              AND vbOperDate < '01.07.2014' -- !!!временно для первого раза!!!
                                        -- !!!временно для первого раза!!!
-                                  THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20509) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + ГСМ
+                                  -- THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20509) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + ГСМ
+                                       -- !!!временно для второго раза!!!
+                                  THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20508) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + Прочие ТМЦ
 
                              WHEN tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                               AND vbOperDate < '01.06.2014' -- !!!временно для первого раза!!!

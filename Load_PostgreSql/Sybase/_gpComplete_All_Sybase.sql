@@ -93,7 +93,7 @@ BEGIN
      IF vbMovementDescId = zc_Movement_Send()
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
-             PERFORM lpComplete_Movement_Send_CreateTemp();
+             -- PERFORM lpComplete_Movement_Send_CreateTemp();
              -- !!! проводим - Send !!!
              PERFORM gpComplete_Movement_Send (inMovementId     := inMovementId
                                              , inIsLastComplete := NULL
@@ -103,7 +103,7 @@ BEGIN
      IF vbMovementDescId = zc_Movement_ProductionUnion()
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
-             PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();
+             -- PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();
              -- !!! проводим - ProductionUnion !!!
              PERFORM gpComplete_Movement_ProductionUnion (inMovementId     := inMovementId
                                                         , inIsLastComplete := NULL
@@ -113,7 +113,7 @@ BEGIN
      IF vbMovementDescId = zc_Movement_ProductionSeparate()
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
-             PERFORM lpComplete_Movement_ProductionSeparate_CreateTemp();
+             -- PERFORM lpComplete_Movement_ProductionSeparate_CreateTemp();
              -- !!! проводим - ProductionSeparate !!!
              PERFORM gpComplete_Movement_ProductionSeparate (inMovementId     := inMovementId
                                                            , inIsLastComplete := NULL

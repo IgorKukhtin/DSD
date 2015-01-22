@@ -30,11 +30,11 @@ BEGIN
 
        LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
               ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-             AND MovementLinkObject_PaidKind.DescId IN ( zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
+             AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
 
        LEFT JOIN PrintForms_View
               ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
-             AND PrintForms_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+             AND PrintForms_View.JuridicalId = CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_To.ObjectId ELSE ObjectLink_Partner_Juridical.ChildObjectId END
              AND PrintForms_View.ReportType = 'Sale'
 --             AND PrintForms_View.DescId = zc_Movement_Sale()
 
