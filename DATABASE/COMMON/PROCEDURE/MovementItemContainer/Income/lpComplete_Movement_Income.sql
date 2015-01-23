@@ -745,25 +745,35 @@ BEGIN
 
                                                                                 ELSE vbAccountDirectionId_To
                                                                            END
-                                             , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
+                                             , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId
                                               ) AS AccountId
                 , _tmpItem_group.InfoMoneyId
            FROM (SELECT _tmpItem.InfoMoneyDestinationId
                       , _tmpItem.InfoMoneyId
-                      , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                      , CASE /*WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
                                OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
                                   THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+                             */
+                             WHEN vbAccountDirectionId_To = zc_Enum_AccountDirection_20300() -- Запасы + на хранении
+                              AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
+                                  THEN zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+
                              ELSE _tmpItem.InfoMoneyDestinationId
                         END AS InfoMoneyDestinationId_calc
                  FROM _tmpItem
                  WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
                  GROUP BY _tmpItem.InfoMoneyDestinationId
                         , _tmpItem.InfoMoneyId
-                        , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                        , CASE /*WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
                                  OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
                                     THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+                               */
+                               WHEN vbAccountDirectionId_To = zc_Enum_AccountDirection_20300() -- Запасы + на хранении
+                                AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
+                                    THEN zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+
                                ELSE _tmpItem.InfoMoneyDestinationId
                           END
                 ) AS _tmpItem_group

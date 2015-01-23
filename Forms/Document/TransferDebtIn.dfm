@@ -464,7 +464,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 49
+            Width = 45
           end
           object colDocument: TcxGridDBColumn
             Caption = #1055#1086#1076#1087#1080#1089#1072#1085
@@ -472,7 +472,34 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 29
+            Width = 45
+          end
+          object colIsEDI: TcxGridDBColumn
+            Caption = 'EXITE'
+            DataBinding.FieldName = 'isEDI'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object colIsElectron: TcxGridDBColumn
+            Caption = #1069#1083#1077#1082#1090#1088'.'
+            DataBinding.FieldName = 'isElectron'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object colIsMedoc: TcxGridDBColumn
+            Caption = #1052#1077#1076#1086#1082
+            DataBinding.FieldName = 'IsMedoc'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
           end
         end
         object cxGridTaxCorrectiveLevel: TcxGridLevel
@@ -770,10 +797,17 @@ inherited TransferDebtInForm: TTransferDebtInForm
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
     end
+    object MedocAction: TMedocAction [4]
+      Category = 'TaxLib'
+      MoveParams = <>
+      Caption = 'MedocAction'
+      HeaderDataSet = PrintHeaderCDS
+      ItemsDataSet = PrintItemsCDS
+    end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
     end
-    object actTaxJournalChoice: TOpenChoiceForm [6]
+    object actTaxJournalChoice: TOpenChoiceForm [7]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'TaxJournalSelectForm'
@@ -817,7 +851,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       isShowModal = True
     end
-    object mactPrint: TMultiAction [10]
+    object mactPrint: TMultiAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -870,7 +904,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -1161,6 +1195,46 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
     end
+    object actMedocProcedure: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = 'actMedocProcedure'
+    end
+    object actUpdateIsMedoc: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      StoredProc = spUpdateIsMedoc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIsMedoc
+        end>
+      Caption = 'actUpdateIsMedoc'
+    end
+    object mactMeDoc: TMultiAction
+      Category = 'TaxLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      Enabled = False
+      ActionList = <
+        item
+          Action = actMedocProcedure
+        end
+        item
+          Action = MedocAction
+        end
+        item
+          Action = actUpdateIsMedoc
+        end>
+      InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1292,6 +1366,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Visible = True
+          ItemName = 'bbtMeDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1372,6 +1454,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
     object bbPrint_ReturnIn_by_TaxCorrective: TdxBarButton
       Action = actPrint_ReturnIn_by_TaxCorrective
+      Category = 0
+    end
+    object bbtMeDoc: TdxBarButton
+      Action = mactMeDoc
       Category = 0
     end
   end
@@ -2669,5 +2755,21 @@ inherited TransferDebtInForm: TTransferDebtInForm
     PackSize = 1
     Left = 400
     Top = 520
+  end
+  object spUpdateIsMedoc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_IsMedoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 808
+    Top = 464
   end
 end

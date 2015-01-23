@@ -2,7 +2,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 535
   ClientWidth = 1106
-  ExplicitLeft = -124
   ExplicitWidth = 1122
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -430,7 +429,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Width = 39
           end
           object colIsEDI: TcxGridDBColumn
-            Caption = 'EDI'
+            Caption = 'EXITE'
             DataBinding.FieldName = 'isEDI'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

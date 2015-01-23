@@ -22,7 +22,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         ExplicitWidth = 371
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -43,8 +42,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
-            SortIndex = 0
-            SortOrder = soAscending
             Width = 301
           end
           object ceIsErased: TcxGridDBColumn
@@ -142,7 +139,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    SearchAsFilter = False
     Left = 136
     Top = 184
   end

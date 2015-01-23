@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, MeDOC;
 
 type
   TTransferDebtOutForm = class(TAncestorDocumentForm)
@@ -128,6 +128,15 @@ type
     colBoxCount: TcxGridDBColumn;
     colBoxName: TcxGridDBColumn;
     actGoodsBoxChoice: TOpenChoiceForm;
+    MedocAction: TMedocAction;
+    actMedocProcedure: TdsdExecStoredProc;
+    spUpdateIsMedoc: TdsdStoredProc;
+    actUpdateIsMedoc: TdsdExecStoredProc;
+    mactMeDoc: TMultiAction;
+    bbMeDoc: TdxBarButton;
+    colIsEDI: TcxGridDBColumn;
+    colIsElectron: TcxGridDBColumn;
+    colIsMedoc: TcxGridDBColumn;
   private
     { Private declarations }
   public

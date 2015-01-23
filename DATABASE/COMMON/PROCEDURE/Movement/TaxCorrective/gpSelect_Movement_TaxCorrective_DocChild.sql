@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , InvNumberBranch TVarChar
              , isEDI Boolean
              , isElectron Boolean
+             , isMedoc Boolean
               )
 AS
 $BODY$
@@ -110,6 +111,7 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
 
            , COALESCE (MovementLinkMovement_ChildEDI.MovementId, 0) <> 0     AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean AS isElectron
+           , COALESCE(MovementBoolean_Medoc.ValueData, FALSE)                AS isMedoc
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
@@ -138,6 +140,10 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Medoc
+                                      ON MovementBoolean_Medoc.MovementId =  Movement.Id
+                                     AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -260,10 +266,8 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_DocChild (integer, TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
-
  07.10.14         *
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_TaxCorrective_DocChild (inDocumentMasterId:= 327826, inSession:= zfCalc_UserAdmin())
-
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_DocChild (inDocumentMasterId:= 327826, inSession:= zfCalc_UserAdmin())

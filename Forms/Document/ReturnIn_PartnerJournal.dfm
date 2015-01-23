@@ -429,7 +429,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             Width = 39
           end
           object colIsEDI: TcxGridDBColumn
-            Caption = 'EDI'
+            Caption = 'EXITE'
             DataBinding.FieldName = 'isEDI'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

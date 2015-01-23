@@ -103,9 +103,9 @@ BEGIN
            , MovementString_InvNumberBranch.ValueData AS InvNumberBranch
            , Object_Branch.ValueData                  AS BranchName
 
-           , COALESCE(MovementLinkMovement_Tax.MovementChildId, 0) <> 0 AS isEDI
-           , COALESCE(MovementBoolean_Electron.ValueData, FALSE)        AS isElectron
-           , COALESCE(MovementBoolean_Medoc.ValueData, FALSE)           AS isMedoc
+           , COALESCE (MovementLinkMovement_Tax.MovementChildId, 0) <> 0 AS isEDI
+           , COALESCE (MovementBoolean_Electron.ValueData, FALSE)        AS isElectron
+           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)           AS isMedoc
 
        FROM (SELECT Movement.Id
              FROM tmpStatus
