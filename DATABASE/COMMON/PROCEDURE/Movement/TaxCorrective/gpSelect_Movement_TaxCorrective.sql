@@ -122,7 +122,7 @@ BEGIN
 
            , COALESCE (MovementLinkMovement_ChildEDI.MovementChildId, 0) <> 0 AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean  AS isElectron
-           , COALESCE(MovementBoolean_Medoc.ValueData, FALSE)           AS isMedoc
+           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)                AS isMedoc
 
        FROM (SELECT Movement.Id
              FROM tmpStatus

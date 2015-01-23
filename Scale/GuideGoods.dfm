@@ -2,8 +2,8 @@ object GuideGoodsForm: TGuideGoodsForm
   Left = 578
   Top = 242
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
-  ClientHeight = 527
-  ClientWidth = 711
+  ClientHeight = 563
+  ClientWidth = 825
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,16 +19,18 @@ object GuideGoodsForm: TGuideGoodsForm
   object GridPanel: TPanel
     Left = 0
     Top = 224
-    Width = 711
-    Height = 258
+    Width = 825
+    Height = 294
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 711
+    ExplicitHeight = 258
     object DBGrid1: TDBGrid
       Left = 0
       Top = 33
-      Width = 711
-      Height = 225
+      Width = 825
+      Height = 261
       Align = alClient
       DataSource = DataSource
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
@@ -39,15 +41,28 @@ object GuideGoodsForm: TGuideGoodsForm
       TitleFont.Name = 'MS Sans Serif'
       TitleFont.Style = []
       OnCellClick = DBGrid1CellClick
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'GoodsCode'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'GoodsName'
+          Width = 250
+          Visible = True
+        end>
     end
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 711
+      Width = 825
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 711
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -110,11 +125,12 @@ object GuideGoodsForm: TGuideGoodsForm
   object ParamsPanel: TPanel
     Left = 0
     Top = 0
-    Width = 711
+    Width = 825
     Height = 224
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 711
     object TarePanel: TPanel
       Left = 244
       Top = 0
@@ -568,141 +584,37 @@ object GuideGoodsForm: TGuideGoodsForm
   end
   object SummPanel: TPanel
     Left = 0
-    Top = 482
-    Width = 711
+    Top = 518
+    Width = 825
     Height = 45
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
+    ExplicitTop = 482
+    ExplicitWidth = 711
   end
   object DataSource: TDataSource
-    DataSet = Query
+    DataSet = CDS
     OnDataChange = DataSourceDataChange
-    Left = 280
-    Top = 216
+    Left = 320
+    Top = 336
   end
-  object Query: TQuery
-    DatabaseName = 'MainDB'
-    FilterOptions = [foCaseInsensitive]
-    OnFilterRecord = QueryFilterRecord
-    SQL.Strings = (
-      
-        'call dba.pCalculateReport_Match_Zakaz_onScaleHistory(:@UserId, :' +
-        '@ClientId, :@BillDate, :@isMinus, :@isScale_byObvalka, :@isAll)'
-      '')
-    Left = 224
-    Top = 288
-    ParamData = <
+  object spSelect: TdsdStoredProc
+    DataSet = CDS
+    DataSets = <
       item
-        DataType = ftInteger
-        Name = '@UserId'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftInteger
-        Name = '@ClientId'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftDate
-        Name = '@BillDate'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftInteger
-        Name = '@isMinus'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftInteger
-        Name = '@isScale_byObvalka'
-        ParamType = ptUnknown
-      end
-      item
-        DataType = ftInteger
-        Name = '@isAll'
-        ParamType = ptUnknown
+        DataSet = CDS
       end>
-    object QueryGoodsCode: TIntegerField
-      DisplayLabel = #1050#1086#1076
-      DisplayWidth = 12
-      FieldName = 'GoodsCode'
-    end
-    object QueryGoodsName: TStringField
-      DisplayLabel = #1053#1072#1079#1074#1072#1085#1080#1077
-      DisplayWidth = 30
-      FieldName = 'GoodsName'
-      Size = 50
-    end
-    object QueryKindPackageName: TStringField
-      DisplayLabel = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
-      DisplayWidth = 14
-      FieldName = 'KindPackageName'
-      Visible = False
-      Size = 50
-    end
-    object QueryOperCount: TFloatField
-      DisplayLabel = #1054#1090#1075#1088#1091#1079#1082#1072
-      DisplayWidth = 7
-      FieldName = 'OperCount'
-      Visible = False
-    end
-    object QueryTotalZakazCount: TFloatField
-      DisplayLabel = #1047#1072#1103#1074#1082#1072
-      FieldName = 'TotalZakazCount'
-      Visible = False
-    end
-    object QueryDiffCount: TFloatField
-      DisplayLabel = #1054#1089#1090#1072#1083#1086#1089#1100
-      DisplayWidth = 7
-      FieldName = 'DiffCount'
-      Visible = False
-    end
-    object QueryGroupsName: TStringField
-      DisplayLabel = #1043#1088#1091#1087#1087#1072
-      DisplayWidth = 42
-      FieldName = 'GroupsName'
-      Size = 110
-    end
-    object QueryZakazChange: TFloatField
-      DisplayLabel = #1044#1086#1079#1072#1103#1074#1082#1072
-      FieldName = 'ZakazChange'
-      Visible = False
-    end
-    object QueryMeasureName: TStringField
-      FieldName = 'MeasureName'
-      Visible = False
-    end
-    object QueryZakazCount1: TFloatField
-      FieldName = 'ZakazCount1'
-      Visible = False
-    end
-    object QueryZakazCount2: TFloatField
-      FieldName = 'ZakazCount2'
-      Visible = False
-    end
-    object QueryZakazCount: TFloatField
-      DisplayLabel = #1047#1072#1103#1074#1082#1072
-      DisplayWidth = 5
-      FieldName = 'ZakazCount'
-      Visible = False
-    end
-    object QuerySaleCount: TFloatField
-      FieldName = 'SaleCount'
-      Visible = False
-    end
-    object QueryDiffCountMinus: TFloatField
-      FieldName = 'DiffCountMinus'
-      Visible = False
-    end
-    object QueryDiffCountPlus: TFloatField
-      FieldName = 'DiffCountPlus'
-      Visible = False
-    end
-    object QueryKindPackageId: TIntegerField
-      FieldName = 'KindPackageId'
-      Visible = False
-    end
+    Params = <>
+    PackSize = 1
+    Left = 264
+    Top = 296
+  end
+  object CDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 272
+    Top = 384
   end
 end

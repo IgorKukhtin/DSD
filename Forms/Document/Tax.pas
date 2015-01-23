@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  MeDOC, cxLookAndFeelPainters;
+  MeDOC, cxLookAndFeelPainters, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter;
 
 type
   TTaxForm = class(TAncestorDocumentForm)
@@ -75,6 +76,8 @@ type
     spTax: TdsdStoredProc;
     GuidesPartner: TdsdGuides;
     bbMeDoc: TdxBarButton;
+    spUpdateIsMedoc: TdsdStoredProc;
+    actUpdateIsMedoc: TdsdExecStoredProc;
   private
     { Private declarations }
   public

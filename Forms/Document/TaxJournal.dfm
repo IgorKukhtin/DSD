@@ -359,7 +359,7 @@ inherited TaxJournalForm: TTaxJournalForm
             Width = 59
           end
           object colIsEDI: TcxGridDBColumn
-            Caption = 'EDI'
+            Caption = 'EXITE'
             DataBinding.FieldName = 'isEDI'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -377,7 +377,7 @@ inherited TaxJournalForm: TTaxJournalForm
             DataBinding.FieldName = 'IsMedoc'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 45
           end
         end
       end
@@ -419,7 +419,8 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 31
+    Top = 202
     object MedocListAction: TMedocAction [0]
       Category = 'TaxLib'
       MoveParams = <>
@@ -907,6 +908,10 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           Visible = True
           ItemName = 'bbMeDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

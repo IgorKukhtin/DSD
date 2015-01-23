@@ -333,16 +333,7 @@ object UtilPrintForm: TUtilPrintForm
     Top = 74
     object mactPrint_Sale: TMultiAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
+      MoveParams = <>
       ActionList = <
         item
           Action = actSPPrintSaleProcName

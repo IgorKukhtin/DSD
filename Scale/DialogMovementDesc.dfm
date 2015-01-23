@@ -197,7 +197,7 @@ object DialogMovementDescForm: TDialogMovementDescForm
       Columns = <
         item
           Expanded = False
-          FieldName = 'guidename'
+          FieldName = 'MovementDescName'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13
@@ -220,7 +220,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
     Top = 384
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ToolsWeighing_MovementDesc'
     DataSet = CDS
     DataSets = <
       item

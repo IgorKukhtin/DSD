@@ -9,7 +9,7 @@ uses
   Vcl.DBGrids, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdDB, Datasnap.DBClient, Inifiles, dxSkinsCore,
+  cxCalendar, dsdDB, Datasnap.DBClient, dxSkinsCore,
   dxSkinsDefaultPainters
  ,SysScalesLib_TLB;
 
@@ -18,21 +18,15 @@ type
     GridPanel: TPanel;
     DBGrid: TDBGrid;
     ButtonPanel: TPanel;
-    ButtonSaveAllItem: TSpeedButton;
     ButtonDeleteItem: TSpeedButton;
     ButtonExit: TSpeedButton;
-    ButtonCancelItem: TSpeedButton;
     ButtonRefresh: TSpeedButton;
     ButtonRefreshZakaz: TSpeedButton;
-    ButtonNewGetParams: TSpeedButton;
-    ButtonPrintBill_detail_byInvNumber: TSpeedButton;
-    ButtonChangePartionDate: TSpeedButton;
     ButtonChangeNumberTare: TSpeedButton;
     ButtonChangeNumberLevel: TSpeedButton;
     ButtonExportToMail: TSpeedButton;
     ButtonChangeMember: TSpeedButton;
     ButtonExportToEDI: TSpeedButton;
-    ButtonChangePartionStr: TSpeedButton;
     infoPanelTotalSumm: TPanel;
     GBTotalSummGoods_Weight: TGroupBox;
     PanelTotalSummGoods_Weight: TPanel;
@@ -96,22 +90,19 @@ type
     PanelTotalWeight: TPanel;
     GBDiscountWeight: TGroupBox;
     PanelDiscountWeight: TPanel;
-    PanelInfo: TPanel;
+    infoPanel_mastre: TPanel;
     PanelMessage: TPanel;
-    PanelBillKind: TPanel;
+    PanelMovementDesc: TPanel;
     infoPanel: TPanel;
-    PanelPartner: TPanel;
+    infoPanelPartner: TPanel;
     LabelPartner: TLabel;
-    PanelPartnerCode: TPanel;
-    PanelPartnerName: TPanel;
-    PanelPriceList: TPanel;
+    PanelPartner: TPanel;
+    infoPanelPriceList: TPanel;
     PriceListNameLabel: TLabel;
-    PanelPriceListName: TPanel;
-    PanelRouteUnit: TPanel;
-    LabelRouteUnit: TLabel;
-    PanelRouteUnitCode: TPanel;
-    PanelRouteUnitName: TPanel;
-    PanelIsRecalc: TPanel;
+    PanelPriceList: TPanel;
+    infoPanelOrderExternal: TPanel;
+    LabelOrderExternal: TLabel;
+    PanelOrderExternal: TPanel;
     PopupMenu: TPopupMenu;
     miPrintZakazMinus: TMenuItem;
     miPrintZakazAll: TMenuItem;
@@ -145,20 +136,20 @@ type
     spSelect: TdsdStoredProc;
     DS: TDataSource;
     CDS: TClientDataSet;
-    procedure ButtonExportToEDIClick(Sender: TObject);
+    infoPanelContract: TPanel;
+    LabelContract: TLabel;
+    PanelContract: TPanel;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure ButtonNewGetParamsClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonRefreshZakazClick(Sender: TObject);
-    procedure PanelWeight_ScaleClick(Sender: TObject);
   private
-  Scale_BI: TCasBI;
-  Scale_DB: TCasDB;
+    Scale_BI: TCasBI;
+    Scale_DB: TCasDB;
 
-    procedure GetParams;
-    procedure newGetParamsGoods;
-    function myCheckPartionStr:boolean;
+    function GetParams_MovementDesc:Boolean;
+    function GetParams_Goods:Boolean;
     procedure Initialize_Scale;
     function fGetScale_CurrentWeight:Double;
   public
@@ -171,75 +162,70 @@ var
 
 implementation
 {$R *.dfm}
-
 uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,UtilPrint;
-
-function TMainForm.myCheckPartionStr:boolean;
+//------------------------------------------------------------------------------------------------
+function TMainForm.GetParams_MovementDesc:Boolean;
 begin
-     Result:=false;
+     Result:=DialogMovementDescForm.Execute;
+     if Result then
+     with ParamsMovement do
+     begin
+          PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
+          PanelPriceList.Caption:=ParamByName('PriceListName').asString;
 
-     Result:=true;
+          if ParamByName('calcPartnerId').AsInteger<>0
+          then PanelPartner.Caption:='  ('+IntToStr(ParamByName('calcPartnerCode').asInteger)+') '+ParamByName('calcPartnerName').asString
+          else PanelPartner.Caption:='';
+
+          if ParamByName('ContractId').AsInteger<>0
+          then PanelContract.Caption:='  ('+ParamByName('ContractCode').asString+')'
+                                     +' № '+ParamByName('ContractNumber').asString
+                                     +' '+ParamByName('ContractTagName').asString
+                                     //+'  ('+ParamByName('PaidKindName').asString+')'
+          else PanelContract.Caption:='';
+
+          if ParamByName('OrderExternalId').AsInteger<>0
+          then PanelOrderExternal.Caption:='  '+ParamByName('OrderExternalName_master').asString
+          else PanelOrderExternal.Caption:='';
+     end;
 end;
-
-procedure TMainForm.newGetParamsGoods;
+{------------------------------------------------------------------------}
+function TMainForm.GetParams_Goods:Boolean;
 var GoodsWeight_two,GoodsWeight_set:Double;
     calcClientId:Integer;
 begin
+     if ParamsMovement.ParamByName('MovementDescId').asInteger=0
+     then if not GetParams_MovementDesc then exit;
 
-     calcClientId:=0;//ParamsBill_ScaleHistory.ParamByName('@inToId').AsInteger
-
-
-     if GuideGoodsForm.Execute(calcClientId,ParamsMovement.ParamByName('OperDate').AsDateTime)
-//     if GuideGoodsForm.Execute
+     if GuideGoodsForm.Execute(1, ParamsMovement.ParamByName('OperDate').AsDateTime)
      then begin
 
      end;
-
-//
 end;
-
-
-procedure TMainForm.PanelWeight_ScaleClick(Sender: TObject);
-begin
-     fGetScale_CurrentWeight;
-end;
-
-procedure TMainForm.ButtonExitClick(Sender: TObject);
-begin
- Close;
-end;
-
-procedure TMainForm.ButtonExportToEDIClick(Sender: TObject);
-begin
-// spTest.Execute;
-end;
-
+//------------------------------------------------------------------------------------------------
 procedure TMainForm.ButtonNewGetParamsClick(Sender: TObject);
 begin
-  newGetParamsGoods;
+     GetParams_Goods;
 end;
 
+//------------------------------------------------------------------------------------------------
 procedure TMainForm.ButtonRefreshZakazClick(Sender: TObject);
 begin
     PrintSale(StrToInt(EnterGoodsCodeScanerEdit.Text));
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
-var
-  Ini: TInifile;
 begin
   //global Initialize
-  Ini:=TIniFile.Create('D:\Project-Basis\Bin\INI\scale.ini');
-  SettingMain.ScaleNum:=Ini.ReadInteger('Main','ScaleNum',1);
-  SettingMain.ComPort :=Ini.ReadString('Main','ComPort','COM1');
-  if AnsiUpperCase(Ini.ReadString('Main','BI','FALSE')) = AnsiUpperCase('TRUE') then SettingMain.BI :=TRUE else SettingMain.BI := FALSE ;
-  if AnsiUpperCase(Ini.ReadString('Main','DB','TRUE')) = AnsiUpperCase('TRUE') then SettingMain.DB :=TRUE else SettingMain.DB := FALSE ;
-  Ini.Free;
-  //global Initialize
-  DMMainScaleForm.gpInitialize_MovementDesc;
-  //global Initialize
+  gpInitialize_Const;
+  //global Initialize Array
   Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'Default');
   Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'Service');
+
+  PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'PriceList');
+  TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'TareCount');
+  TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'TareWeight');
+  ChangePercent_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'ChangePercent');
   //global Initialize
   Create_ParamsMovement(ParamsMovement);
   //global Initialize
@@ -247,10 +233,10 @@ begin
   Scale_BI:=TCasBI.Create(self);
   Initialize_Scale;
   //
-  //local Initialize
+  //local Movement Initialize
   ParamsMovement.ParamByName('MovementNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber');
-  //local Initialize
-  OperDateEdit.Text:=DateToStr(DMMainScaleForm.gpInitialize_OperDate(ParamsMovement));
+  //local Movement Initialize
+  OperDateEdit.Text:=DateToStr(gpInitialize_OperDate(ParamsMovement));
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_Scale;
@@ -311,41 +297,19 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
-     if Key = VK_F2 then GetParams;
-     if Key = VK_SPACE then begin Key:=0;ButtonNewGetParamsClick(self);end;
-
-  if ShortCut(Key, Shift) = 24659 then begin
-     gc_isDebugMode := not gc_isDebugMode;
-     if gc_isDebugMode then
-        ShowMessage('Установлен режим отладки')
-      else
-        ShowMessage('Снят режим отладки');
-  end;
-end;
-
-
-procedure TMainForm.GetParams;
-begin
-
-     if DialogMovementDescForm.Execute
-     then begin
-      //PanelPriceListName.Caption:= SettingMovement.PriceListName;
-{      PanelPartnerCode.Caption:= IntToStr(SettingMovement.PartnerCode);
-      PanelPartnerName.Caption:= SettingMovement.PartnerName;
-      PanelRouteUnitCode.Caption:= IntToStr(SettingMovement.RouteSortingCode);
-      PanelRouteUnitName.Caption:= SettingMovement.RouteSortingName;
-
-      PanelBillKind.Caption:= CurSetting.DescName+' ';
-      if SettingMovement.FromId<>0 then
-         PanelBillKind.Caption:= PanelBillKind.Caption+ ' (От Кого) = ' + CurSetting.FromName + ' ';
-      if CurSetting.ToId<>0 then
-         PanelBillKind.Caption:= PanelBillKind.Caption+ ' (Кому) = ' + CurSetting.ToName + ' ';
-      if CurSetting.PaidKindId<>0 then
-         PanelBillKind.Caption:= PanelBillKind.Caption + ' (' + CurSetting.PaidKindName + ')' ;
-}
+     if Key = VK_F2 then GetParams_MovementDesc;
+     if Key = VK_SPACE then GetParams_Goods;
+     //
+     if ShortCut(Key, Shift) = 24659 then
+     begin
+          gc_isDebugMode := not gc_isDebugMode;
+          if gc_isDebugMode
+          then ShowMessage('Установлен режим отладки')
+          else ShowMessage('Снят режим отладки');
      end;
-
 end;
-
-
+{------------------------------------------------------------------------}
+procedure TMainForm.ButtonExitClick(Sender: TObject);
+begin Close;end;
+{------------------------------------------------------------------------}
 end.

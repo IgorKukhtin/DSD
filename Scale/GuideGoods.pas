@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons
- ,UtilScale;
+ ,UtilScale, Datasnap.DBClient, dsdDB;
 
 type
   TGuideGoodsForm = class(TForm)
@@ -25,21 +25,6 @@ type
     gbPriceListCode: TGroupBox;
     EditPriceListCode: TEdit;
     DataSource: TDataSource;
-    Query: TQuery;
-    QueryMeasureName: TStringField;
-    QueryGoodsCode: TIntegerField;
-    QueryGroupsName: TStringField;
-    QueryGoodsName: TStringField;
-    QueryZakazCount1: TFloatField;
-    QueryZakazCount2: TFloatField;
-    QueryZakazChange: TFloatField;
-    QueryZakazCount: TFloatField;
-    QueryTotalZakazCount: TFloatField;
-    QuerySaleCount: TFloatField;
-    QueryOperCount: TFloatField;
-    QueryDiffCount: TFloatField;
-    QueryDiffCountMinus: TFloatField;
-    QueryDiffCountPlus: TFloatField;
     GoodsPanel: TPanel;
     gbGoodsName: TGroupBox;
     EditGoodsName: TEdit;
@@ -59,14 +44,14 @@ type
     rgKindPackage: TRadioGroup;
     gbKindPackageCode: TGroupBox;
     EditKindPackageCode: TEdit;
-    QueryKindPackageName: TStringField;
-    QueryKindPackageId: TIntegerField;
     gbZakazDiffCount: TGroupBox;
     PanelZakazDiffCount: TPanel;
     gblZakazTotalCount: TGroupBox;
     PanelZakazTotalCount: TPanel;
     gbTareWeightEnter: TGroupBox;
     EditTareWeightEnter: TEdit;
+    spSelect: TdsdStoredProc;
+    CDS: TClientDataSet;
     procedure FormCreate(Sender: TObject);
     procedure ButtonRefreshClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
@@ -120,11 +105,6 @@ type
 var
   GuideGoodsForm: TGuideGoodsForm;
 
-  PriceList_Array     :TArrayList;
-  TareCount_Array     :TArrayList;
-  TareWeight_Array    :TArrayList;
-  ChangePercent_Array :TArrayList;
-
 implementation
 
 {$R *.dfm}
@@ -133,7 +113,12 @@ implementation
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Execute(ClientId:Integer;BillDate:TDateTime): boolean;
 begin
-{
+  EditGoodsCode.Text:='';
+  EditPriceListCode.Text:=GetArrayList_Value_byName(Default_Array,'PriceListNumber');
+  EditTareCode.Text:=GetArrayList_Value_byName(Default_Array,'TareCountNumber');
+  EditDiscountCode.Text:=GetArrayList_Value_byName(Default_Array,'TareWeightNumber');
+
+  {
      with Query do
         if (not Active)
         begin
@@ -170,23 +155,29 @@ end;
 procedure TGuideGoodsForm.FormCreate(Sender: TObject);
 var i:Integer;
 begin
-  PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'PriceList');
-  TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'TareCount');
-  TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'TareWeight');
-  ChangePercent_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'ChangePercent');
-  //
   //прайс-лист
   for i := 0 to Length(PriceList_Array)-1 do
     rgPriceList.Items.Add('('+IntToStr(PriceList_Array[i].Number)+') '+ PriceList_Array[i].Name);
-  EditPriceListCode.Text:=GetArrayList_Value_byName(Default_Array,'PriceListNumber');
   //вес тары
   for i := 0 to Length(TareWeight_Array)-1 do
     rgTare.Items.Add('('+IntToStr(TareWeight_Array[i].Number)+') '+ TareWeight_Array[i].Name);
-  EditTareCode.Text:=GetArrayList_Value_byName(Default_Array,'TareCountNumber');
   //Скидка по весу
   for I := 0 to Length(ChangePercent_Array)-1 do
     rgDiscount.Items.Add('('+IntToStr(ChangePercent_Array[i].Number)+') '+ ChangePercent_Array[i].Name);
-  EditDiscountCode.Text:=GetArrayList_Value_byName(Default_Array,'TareWeightNumber');
+
+  with spSelect do
+  begin
+       StoredProcName:='gpSelect_Scale_Goods';
+       OutputType:=otDataSet;
+       Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
+       Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
+       Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
+       Execute;
+  end;
+  //
+
+
   //код вида товара(упаковки)
   //EditKindPackageCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','GoodsKindCode','','1');
   //for I := 0 to Length(GoodsKindWeighing)-1 do

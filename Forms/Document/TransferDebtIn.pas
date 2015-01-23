@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImageComboBox;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImageComboBox,
+  MeDOC;
 
 type
   TTransferDebtInForm = class(TAncestorDocumentForm)
@@ -105,6 +106,15 @@ type
     actPrint_TaxCorrective_Client: TdsdPrintAction;
     mactPrint_TaxCorrective_Client: TMultiAction;
     mactPrint_TaxCorrective_Us: TMultiAction;
+    spUpdateIsMedoc: TdsdStoredProc;
+    MedocAction: TMedocAction;
+    actMedocProcedure: TdsdExecStoredProc;
+    actUpdateIsMedoc: TdsdExecStoredProc;
+    mactMeDoc: TMultiAction;
+    bbtMeDoc: TdxBarButton;
+    colIsEDI: TcxGridDBColumn;
+    colIsElectron: TcxGridDBColumn;
+    colIsMedoc: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -60,12 +60,16 @@ uses
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   UtilPrint in '..\Scale\Util\UtilPrint.pas' {UtilPrintForm},
-  SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas';
+  SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
+  FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
+
+  //global Initialize
+  gpInitialize_Ini;
 
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);

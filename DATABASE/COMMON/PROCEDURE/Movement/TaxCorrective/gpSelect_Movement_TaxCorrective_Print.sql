@@ -186,6 +186,7 @@ BEGIN
            , 'J1201006'::TVarChar                                           AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
            , 'Рудик Н.В.'::TVarChar                                        AS N10
+           -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice() THEN 'Змiна цiни'  ELSE 'повернення' END :: TVarChar AS KindName
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
@@ -211,37 +212,37 @@ BEGIN
 
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN 'X'
-                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_To.INN <> vbNotNDSPayer_INN
+                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
                   THEN 'X'
                   ELSE ''
              END AS ERPN
+           , Movement_child.Id as x11
+           , Movement_child.OperDate as x12
 
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE
-                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_To.INN <> vbNotNDSPayer_INN
+                  WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
                   THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isERPN
 
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.01.2015'
-                  THEN '' ELSE 'X' END                                      AS ERPN2
+           , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.01.2015'
+                  THEN 'X' ELSE '' END                                      AS ERPN2
 
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
                   THEN 'X' ELSE '' END                                      AS NotNDSPayer
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
                   THEN TRUE ELSE FALSE END :: Boolean                       AS isNotNDSPayer
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
                   THEN '0' ELSE '' END                                      AS NotNDSPayerC1
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
                   THEN '2' ELSE '' END                                      AS NotNDSPayerC2
 
            , ObjectString_FromAddress.ValueData                             AS PartnerAddress_From
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
-                  THEN 'НЕПЛАТНИК'
-             ELSE OH_JuridicalDetails_To.FullName END                       AS JuridicalName_To
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
-                  THEN ''
-             ELSE OH_JuridicalDetails_To.JuridicalAddress END               AS JuridicalAddress_To
+
+           , OH_JuridicalDetails_To.FullName                                AS JuridicalName_To
+           , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
+
            , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
@@ -249,13 +250,16 @@ BEGIN
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
-                  THEN ''
-             ELSE OH_JuridicalDetails_To.Phone END                          AS Phone_To
+           , OH_JuridicalDetails_To.Phone                                   AS Phone_To
            , ObjectString_BuyerGLNCode.ValueData                            AS BuyerGLNCode
 
-           , OH_JuridicalDetails_From.FullName                              AS JuridicalName_From
-           , OH_JuridicalDetails_From.JuridicalAddress                      AS JuridicalAddress_From
+           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+                  THEN 'НЕПЛАТНИК'
+             ELSE OH_JuridicalDetails_From.FullName END                     AS JuridicalName_From
+           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+                  THEN 'НЕПЛАТНИК'
+             ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
+
            , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
            , OH_JuridicalDetails_From.INN                                   AS INN_From
            , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From
@@ -263,7 +267,9 @@ BEGIN
            , OH_JuridicalDetails_From.BankAccount                           AS BankAccount_From
            , OH_JuridicalDetails_From.BankName                              AS BankName_From
            , OH_JuridicalDetails_From.MFO                                   AS BankMFO_From
-           , OH_JuridicalDetails_From.Phone                                 AS Phone_From
+           , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
+                  THEN ''
+             ELSE OH_JuridicalDetails_From.Phone END                        AS Phone_From
            , ObjectString_SupplierGLNCode.ValueData                         AS SupplierGLNCode
 
            , MovementItem.Id                                                AS Id

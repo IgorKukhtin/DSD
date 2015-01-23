@@ -132,10 +132,12 @@ BEGIN
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
-     AND COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
+     AND (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                                           , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                           , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                                            )
+       OR Object_InfoMoney_View.InfoMoneyId = 8942 -- Кротон
+         )
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
           OR vbIsConstraint = FALSE
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
@@ -243,10 +245,13 @@ BEGIN
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
    WHERE Object_Partner.DescId = zc_Object_Partner()
-     AND COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
+     AND (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                                           , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                           , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                                            )
+       OR Object_InfoMoney_View.InfoMoneyId = 8942 -- Кротон
+         )
+
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
           OR vbIsConstraint = FALSE
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400

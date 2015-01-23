@@ -77,6 +77,7 @@ type
     JuridicalGroupGuides: TdsdGuides;
     clRetailName_main: TcxGridDBColumn;
     clContractTagGroupName: TcxGridDBColumn;
+    clPersonalTradeName: TcxGridDBColumn;
   private
     { Private declarations }
   public

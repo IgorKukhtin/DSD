@@ -1,9 +1,8 @@
 inherited EDIJournalForm: TEDIJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EDI>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EXITE>'
   ClientHeight = 424
   ClientWidth = 1119
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -137
   ExplicitWidth = 1135
   ExplicitHeight = 459
   PixelsPerInch = 96
@@ -13,18 +12,18 @@ inherited EDIJournalForm: TEDIJournalForm
     Width = 1119
     Height = 367
     ExplicitTop = 57
-    ExplicitWidth = 1020
+    ExplicitWidth = 1119
     ExplicitHeight = 367
     ClientRectBottom = 367
     ClientRectRight = 1119
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1119
       ExplicitHeight = 367
       inherited cxGrid: TcxGrid
         Width = 1119
         Height = 209
         Align = alTop
-        ExplicitWidth = 1020
+        ExplicitWidth = 1119
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -386,7 +385,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Height = 3
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitWidth = 1020
       end
       object BottomPanel: TPanel
         Left = 0
@@ -396,7 +394,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitWidth = 1020
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
@@ -640,7 +637,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitWidth = 66
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -712,7 +708,6 @@ inherited EDIJournalForm: TEDIJournalForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1020
     object deStart: TcxDateEdit
       Left = 107
       Top = 5

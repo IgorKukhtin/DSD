@@ -1447,7 +1447,7 @@ begin
     begin
       lActiveControl := TForm(Owner).ActiveControl;
       TForm(Owner).ActiveControl := nil;
-      if not(lActiveControl.ClassType = TcxCustomInnerTextEdit) then
+      if (lActiveControl <> Nil) and (not(lActiveControl.ClassType = TcxCustomInnerTextEdit)) then
         TForm(Owner).ActiveControl := lActiveControl;
     end;
 

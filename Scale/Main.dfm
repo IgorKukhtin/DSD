@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = #1069#1082#1089#1087#1077#1076#1080#1094#1080#1103
   ClientHeight = 700
-  ClientWidth = 900
+  ClientWidth = 953
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,15 +19,16 @@ object MainForm: TMainForm
   object GridPanel: TPanel
     Left = 133
     Top = 66
-    Width = 767
+    Width = 820
     Height = 634
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 767
     object DBGrid: TDBGrid
       Left = 0
       Top = 33
-      Width = 767
+      Width = 820
       Height = 523
       Align = alClient
       DataSource = DS
@@ -159,30 +160,12 @@ object MainForm: TMainForm
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 767
+      Width = 820
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      object ButtonSaveAllItem: TSpeedButton
-        Left = 16
-        Top = 3
-        Width = 15
-        Height = 29
-        Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          888888888888888888888888888888888888873333333333338887BB3B33B3B3
-          B38887B3B3B13B3B3388873B3B9913B3B38887B3B399973B3388873B397B9973
-          B38887B397BBB997338887FFFFFFFF91BB8888FBBBBB88891888888FFFF88888
-          9188888888888888898888888888888888988888888888888888}
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-      end
+      ExplicitWidth = 767
       object ButtonDeleteItem: TSpeedButton
         Left = 148
         Top = 3
@@ -251,25 +234,6 @@ object MainForm: TMainForm
         ShowHint = True
         OnClick = ButtonExitClick
       end
-      object ButtonCancelItem: TSpeedButton
-        Left = 31
-        Top = 3
-        Width = 15
-        Height = 29
-        Hint = #1054#1090#1084#1077#1085#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          8888808800000000000888F0888888888888880F808888888888888FF0088888
-          888888800B308888888888880BB308888888888880BB308888888888880BB308
-          888888888880BB308888888888880BB308888888888880BB0088888888888800
-          0508888888888880FD0888888888888800888888888888888888}
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-      end
       object ButtonRefresh: TSpeedButton
         Left = 444
         Top = 3
@@ -290,7 +254,7 @@ object MainForm: TMainForm
       end
       object ButtonRefreshZakaz: TSpeedButton
         Left = 407
-        Top = -2
+        Top = 3
         Width = 31
         Height = 29
         Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
@@ -306,63 +270,6 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
         OnClick = ButtonRefreshZakazClick
-      end
-      object ButtonNewGetParams: TSpeedButton
-        Left = 2
-        Top = 3
-        Width = 15
-        Height = 29
-        Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1076#1083#1103' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00777777777777
-          77777777477774077777747C77774780777774C77774794807777C4477479994
-          8077777777799999480777777777999994777771077779999977771780777799
-          9777717C18077779777717CCC180777777777CCCCC180771117777CCCCC17777
-          9177777CCCCC777971777777CCC77797777777777C7777777777}
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-        OnClick = ButtonNewGetParamsClick
-      end
-      object ButtonPrintBill_detail_byInvNumber: TSpeedButton
-        Left = 541
-        Top = 3
-        Width = 36
-        Height = 29
-        Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          888880888808080808088800088888888888880F708888888888880FF7088888
-          88888880FF708888888888880FF708888888888880FF708088888888880FF000
-          0888888888800B0080888888888800F708088888888880FF708888888888880F
-          F708888888888880FF0888888888888800808888888888888808}
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-      end
-      object ButtonChangePartionDate: TSpeedButton
-        Left = 184
-        Top = 3
-        Width = 31
-        Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1090#1091' '#1087#1072#1088#1090#1080#1080'> '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00880000000000
-          000000000000000000000FFFFFFFFFFFFF000FF1111FFF1FFF000FF1FFFFFF1F
-          FF000FFF1FFFFF1FFF000FFFF1FFFF1FFF000FF1FF1FF11FFF000FFF11FFFF1F
-          FF000FFFFFFFFFFFFF0000000000000000000EEEEEEEEEEEEE000E0EEEEEEEEE
-          0E00000000000000000880888088880888088800088888800088}
-        ParentShowHint = False
-        ShowHint = True
       end
       object ButtonChangeNumberTare: TSpeedButton
         Left = 50
@@ -437,8 +344,8 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object ButtonExportToEDI: TSpeedButton
-        Left = 326
-        Top = 4
+        Left = 327
+        Top = 5
         Width = 31
         Height = 29
         Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' EDI'
@@ -453,35 +360,17 @@ object MainForm: TMainForm
           9188888888888888898888888888888888988888888888888888}
         ParentShowHint = False
         ShowHint = True
-        OnClick = ButtonExportToEDIClick
-      end
-      object ButtonChangePartionStr: TSpeedButton
-        Left = 221
-        Top = 4
-        Width = 31
-        Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1072#1088#1090#1080#1102' '#1057#1099#1088#1100#1103'>'
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          8888888888888888888888888888888888888888888888888888888888888800
-          88888888888880BB0888888888800BBB0B0880303333BBBB08B807777773BBBB
-          08B8BBBBBBBBBBBB08B888888880BBBB0B088888888880BBB888888888888800
-          8888888888888888888888888888888888888888888888888888}
-        ParentShowHint = False
-        ShowHint = True
       end
     end
     object infoPanelTotalSumm: TPanel
       Left = 0
       Top = 593
-      Width = 767
+      Width = 820
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitWidth = 767
       object GBTotalSummGoods_Weight: TGroupBox
         Left = 130
         Top = 0
@@ -558,13 +447,14 @@ object MainForm: TMainForm
         end
       end
       object gbTotalSumm: TGroupBox
-        Left = 659
+        Left = 712
         Top = 0
         Width = 108
         Height = 41
         Align = alRight
         Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1075#1088#1085
         TabOrder = 3
+        ExplicitLeft = 659
         object PanelTotalSumm: TPanel
           Left = 2
           Top = 15
@@ -586,11 +476,12 @@ object MainForm: TMainForm
     object PanelZakaz: TPanel
       Left = 0
       Top = 556
-      Width = 767
+      Width = 820
       Height = 37
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 3
+      ExplicitWidth = 767
       object GroupBox1: TGroupBox
         Left = 249
         Top = 0
@@ -717,7 +608,7 @@ object MainForm: TMainForm
         end
       end
       object GroupBox6: TGroupBox
-        Left = 690
+        Left = 743
         Top = 0
         Width = 77
         Height = 37
@@ -730,6 +621,7 @@ object MainForm: TMainForm
         Font.Style = []
         ParentFont = False
         TabOrder = 5
+        ExplicitLeft = 690
         object TotalDiffZakazSalePanel: TPanel
           Left = 2
           Top = 15
@@ -742,13 +634,14 @@ object MainForm: TMainForm
         end
       end
       object GroupBox7: TGroupBox
-        Left = 599
+        Left = 652
         Top = 0
         Width = 91
         Height = 37
         Align = alRight
         Caption = #1048#1058#1054#1043#1054' '#1047#1072#1103#1074#1082#1072
         TabOrder = 6
+        ExplicitLeft = 599
         object TotalZakazCountPanel: TPanel
           Left = 2
           Top = 15
@@ -776,6 +669,8 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
+    ExplicitLeft = -2
+    ExplicitTop = 71
     object CodeInfoPanel: TPanel
       Left = 0
       Top = 71
@@ -790,7 +685,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
       Visible = False
-      ExplicitTop = 113
     end
     object EnterGoodsCodeScanerPanel: TPanel
       Left = 0
@@ -805,7 +699,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
-      ExplicitTop = 186
       object EnterGoodsCodeScanerLabel: TLabel
         Left = 1
         Top = 1
@@ -825,7 +718,7 @@ object MainForm: TMainForm
       object EnterGoodsCodeScanerEdit: TEdit
         Left = 5
         Top = 14
-        Width = 97
+        Width = 110
         Height = 24
         TabOrder = 0
         Text = 'EnterGoodsCodeScanerEdit'
@@ -837,6 +730,7 @@ object MainForm: TMainForm
       Width = 133
       Height = 48
       Align = alBottom
+      BevelOuter = bvLowered
       Font.Charset = RUSSIAN_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -861,9 +755,9 @@ object MainForm: TMainForm
         ExplicitWidth = 105
       end
       object EnterWeightEdit: TEdit
-        Left = 8
+        Left = 5
         Top = 20
-        Width = 89
+        Width = 110
         Height = 24
         TabOrder = 0
         Text = 'EnterWeightEdit'
@@ -878,18 +772,27 @@ object MainForm: TMainForm
       Caption = #1057#1084#1077#1085#1072' '#1079#1072
       Font.Charset = RUSSIAN_CHARSET
       Font.Color = clBlue
-      Font.Height = -16
+      Font.Height = -13
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 3
       object OperDateEdit: TcxDateEdit
-        Left = 6
+        Left = 5
         Top = 16
         EditValue = 41640d
         ParentFont = False
+        Properties.DateButtons = [btnToday]
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
         TabOrder = 0
-        Width = 109
+        Width = 110
       end
     end
     object infoPanel_Scale: TPanel
@@ -899,7 +802,6 @@ object MainForm: TMainForm
       Height = 29
       Align = alTop
       TabOrder = 4
-      ExplicitTop = 84
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -931,9 +833,6 @@ object MainForm: TMainForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        OnClick = PanelWeight_ScaleClick
-        ExplicitLeft = 0
-        ExplicitTop = 9
       end
     end
   end
@@ -1270,10 +1169,10 @@ object MainForm: TMainForm
       end
     end
   end
-  object PanelInfo: TPanel
+  object infoPanel_mastre: TPanel
     Left = 0
     Top = 0
-    Width = 900
+    Width = 953
     Height = 66
     Align = alTop
     BevelOuter = bvNone
@@ -1284,10 +1183,11 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
+    ExplicitWidth = 900
     object PanelMessage: TPanel
       Left = 633
       Top = 0
-      Width = 267
+      Width = 320
       Height = 28
       Align = alClient
       BevelOuter = bvNone
@@ -1299,15 +1199,16 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      ExplicitWidth = 267
     end
-    object PanelBillKind: TPanel
+    object PanelMovementDesc: TPanel
       Left = 0
       Top = 0
       Width = 633
       Height = 28
       Align = alLeft
       BevelOuter = bvNone
-      Caption = 'PanelBillKind'
+      Caption = 'PanelMovementDesc'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
       Font.Height = -11
@@ -1319,7 +1220,7 @@ object MainForm: TMainForm
     object infoPanel: TPanel
       Left = 0
       Top = 28
-      Width = 900
+      Width = 953
       Height = 38
       Align = alBottom
       BevelOuter = bvNone
@@ -1330,39 +1231,43 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 2
-      object PanelPartner: TPanel
-        Left = 117
+      ExplicitWidth = 900
+      object infoPanelPartner: TPanel
+        Left = 131
         Top = 0
-        Width = 392
+        Width = 366
         Height = 38
-        Align = alLeft
+        Align = alClient
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitLeft = 117
+        ExplicitWidth = 378
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 390
+          Width = 364
           Height = 13
           Align = alTop
           Alignment = taCenter
-          Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+          Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 71
+          ExplicitWidth = 69
         end
-        object PanelPartnerCode: TPanel
+        object PanelPartner: TPanel
           Left = 1
           Top = 14
-          Width = 47
+          Width = 364
           Height = 23
-          Align = alLeft
+          Align = alClient
+          Alignment = taLeftJustify
           BevelOuter = bvNone
-          Caption = 'PanelPartnerCode'
+          Caption = 'PanelPartner'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -11
@@ -1370,29 +1275,13 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-        end
-        object PanelPartnerName: TPanel
-          Left = 48
-          Top = 14
-          Width = 343
-          Height = 23
-          Align = alClient
-          Alignment = taLeftJustify
-          BevelOuter = bvNone
-          Caption = 'PanelPartnerName'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clNavy
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 1
+          ExplicitWidth = 376
         end
       end
-      object PanelPriceList: TPanel
+      object infoPanelPriceList: TPanel
         Left = 0
         Top = 0
-        Width = 117
+        Width = 131
         Height = 38
         Align = alLeft
         BevelInner = bvRaised
@@ -1401,7 +1290,7 @@ object MainForm: TMainForm
         object PriceListNameLabel: TLabel
           Left = 1
           Top = 1
-          Width = 115
+          Width = 129
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1414,15 +1303,15 @@ object MainForm: TMainForm
           ParentFont = False
           ExplicitWidth = 71
         end
-        object PanelPriceListName: TPanel
+        object PanelPriceList: TPanel
           Left = 1
           Top = 14
-          Width = 115
+          Width = 129
           Height = 23
           Align = alClient
           Alignment = taLeftJustify
           BevelOuter = bvNone
-          Caption = 'PanelPriceListName'
+          Caption = 'PanelPriceList'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clPurple
           Font.Height = -11
@@ -1430,18 +1319,20 @@ object MainForm: TMainForm
           Font.Style = []
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 115
         end
       end
-      object PanelRouteUnit: TPanel
-        Left = 509
+      object infoPanelOrderExternal: TPanel
+        Left = 669
         Top = 0
         Width = 284
         Height = 38
-        Align = alLeft
+        Align = alRight
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 2
-        object LabelRouteUnit: TLabel
+        ExplicitLeft = 649
+        object LabelOrderExternal: TLabel
           Left = 1
           Top = 1
           Width = 282
@@ -1457,14 +1348,15 @@ object MainForm: TMainForm
           ParentFont = False
           ExplicitWidth = 44
         end
-        object PanelRouteUnitCode: TPanel
+        object PanelOrderExternal: TPanel
           Left = 1
           Top = 14
-          Width = 47
+          Width = 282
           Height = 23
-          Align = alLeft
+          Align = alClient
+          Alignment = taLeftJustify
           BevelOuter = bvNone
-          Caption = 'PanelRouteUnitCode'
+          Caption = 'PanelOrderExternal'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -11
@@ -1473,39 +1365,51 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 0
         end
-        object PanelRouteUnitName: TPanel
-          Left = 48
+      end
+      object infoPanelContract: TPanel
+        Left = 497
+        Top = 0
+        Width = 172
+        Height = 38
+        Align = alRight
+        BevelInner = bvRaised
+        BevelOuter = bvNone
+        TabOrder = 3
+        ExplicitLeft = 495
+        object LabelContract: TLabel
+          Left = 1
+          Top = 1
+          Width = 170
+          Height = 13
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1044#1086#1075#1086#1074#1086#1088
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          ExplicitWidth = 52
+        end
+        object PanelContract: TPanel
+          Left = 1
           Top = 14
-          Width = 235
+          Width = 170
           Height = 23
           Align = alClient
           Alignment = taLeftJustify
           BevelOuter = bvNone
-          Caption = 'PanelRouteUnitName'
+          Caption = 'PanelContract'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
-          TabOrder = 1
+          TabOrder = 0
+          ExplicitWidth = 152
         end
-      end
-      object PanelIsRecalc: TPanel
-        Left = 794
-        Top = 0
-        Width = 106
-        Height = 38
-        Align = alRight
-        BevelOuter = bvNone
-        Caption = 'PanelIsRecalc'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        TabOrder = 3
       end
     end
   end
