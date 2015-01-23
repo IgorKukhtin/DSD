@@ -337,8 +337,13 @@ end;
 procedure TDialogMovementDescForm.FormCreate(Sender: TObject);
 begin
   inherited;
-  spSelect.Params.AddParam('inScaleNum', ftInteger, ptInput, SettingMain.ScaleNum);
-  spSelect.Execute;
+  with spSelect do
+  begin
+       StoredProcName:='gpSelect_Object_ToolsWeighing_MovementDesc';
+       OutputType:=otDataSet;
+       Params.AddParam('inScaleNum', ftInteger, ptInput, SettingMain.ScaleNum);
+       Execute;
+  end;
   //
   Create_ParamsMovement(ParamsMovement_local);
   //

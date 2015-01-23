@@ -16,15 +16,17 @@ type
 
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpSelect_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
+  end;
 
     function gpInitialize_OperDate(var execParams:TParams):TDateTime;
-    function gpInitialize_MovementDesc: Boolean;
-  end;
+    function gpInitialize_Const: Boolean;
+    function gpInitialize_Ini: Boolean;
 
 var
   DMMainScaleForm: TDMMainScaleForm;
 
 implementation
+uses Inifiles;
 {$R *.dfm}
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(inScaleNum:Integer;inLevelChild: String): TArrayList;
@@ -180,9 +182,9 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpInitialize_OperDate(var execParams:TParams):TDateTime;
+function gpInitialize_OperDate(var execParams:TParams):TDateTime;
 begin
-    with spSelect do
+    with DMMainScaleForm.spSelect do
     begin
        StoredProcName:='gpSelect_Scale_OperDate';
        OutputType:=otDataSet;
@@ -202,11 +204,11 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpInitialize_MovementDesc: Boolean;
+function gpInitialize_Const: Boolean;
 begin
     Result:=false;
 
-    with spSelect do
+    with DMMainScaleForm.spSelect do
     begin
        StoredProcName:='gpExecSql_Value';
        OutputType:=otDataSet;
@@ -263,6 +265,26 @@ begin
     end;
 
     Result:=true;
+end;
+{------------------------------------------------------------------------}
+function gpInitialize_Ini: Boolean;
+var
+  Ini: TInifile;
+begin
+  Result:=false;
+
+  Ini:=TIniFile.Create('INI\scale.ini');
+  SettingMain.ScaleNum:=Ini.ReadInteger('Main','ScaleNum',1);
+  if SettingMain.ScaleNum=1 then Ini.WriteInteger('Main','ScaleNum',1);
+  SettingMain.ComPort :=Ini.ReadString('Main','ComPort','COM1');
+  if SettingMain.ScaleNum=1 then Ini.WriteString('Main','ComPort','COM1');
+  if AnsiUpperCase(Ini.ReadString('Main','BI','FALSE')) = AnsiUpperCase('TRUE') then SettingMain.BI :=TRUE else SettingMain.BI := FALSE;
+  if SettingMain.BI=FALSE then Ini.WriteString('Main','BI','FALSE');
+  if AnsiUpperCase(Ini.ReadString('Main','DB','TRUE')) = AnsiUpperCase('TRUE') then SettingMain.DB :=TRUE else SettingMain.DB := FALSE;
+  if SettingMain.DB=TRUE then Ini.WriteString('Main','DB','TRUE');
+  Ini.Free;
+
+  Result:=true;
 end;
 {------------------------------------------------------------------------}
 end.

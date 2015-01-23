@@ -68,6 +68,9 @@ uses
 begin
   Application.Initialize;
 
+  //global Initialize
+  gpInitialize_Ini;
+
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
 

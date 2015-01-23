@@ -215,6 +215,8 @@ BEGIN
                   THEN 'X'
                   ELSE ''
              END AS ERPN
+           , Movement_child.Id as x11
+           , Movement_child.OperDate as x12
 
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE
@@ -223,8 +225,8 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isERPN
 
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.01.2015'
-                  THEN '' ELSE 'X' END                                      AS ERPN2
+           , CASE WHEN OH_JuridicalDetails_To.INN <> vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.01.2015'
+                  THEN 'X' ELSE '' END                                      AS ERPN2
 
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN 'X' ELSE '' END                                      AS NotNDSPayer

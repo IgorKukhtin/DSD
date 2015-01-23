@@ -47,7 +47,8 @@ type
   // возвращаят индекс парамтра сназванием FindName в TParams
   function GetIndexParams(execParams:TParams;FindName:String):integer;
   //
-  procedure CopyValuesParamsFrom(fromParams,toParams:TParams);
+  procedure CopyValuesParamsFrom(var fromParams,toParams:TParams);
+  procedure EmptyValuesParams(var execParams:TParams);
 
 var
   SettingMain   : TSettingMain;
@@ -55,6 +56,11 @@ var
 
   Default_Array       :TArrayList;
   Service_Array       :TArrayList;
+
+  PriceList_Array     :TArrayList;
+  TareCount_Array     :TArrayList;
+  TareWeight_Array    :TArrayList;
+  ChangePercent_Array :TArrayList;
 
   zc_Movement_Income: integer;
   zc_Movement_ReturnOut: integer;
@@ -199,12 +205,24 @@ begin
           if UpperCase(execParams[i].Name)=UpperCase(FindName)then begin Result:=i;break;end;
 end;
 {------------------------------------------------------------------------------}
-procedure CopyValuesParamsFrom(fromParams,toParams:TParams);
+procedure CopyValuesParamsFrom(var fromParams,toParams:TParams);
 var i:integer;
 begin
    if not Assigned(fromParams)then exit;
    with fromParams do
     for i:=0 to Count-1 do toParams.ParamValues[Items[i].Name]:=ParamValues[Items[i].Name];
+end;
+{------------------------------------------------------------------------------}
+procedure EmptyValuesParams(var execParams:TParams);
+var i:integer;
+begin
+   if not Assigned(execParams)then exit;
+   with execParams do
+    for i:=0 to Count-1 do
+    begin
+         if execParams[i].DataType=ftString then execParams.ParamByName(Items[i].Name).AsString:='';
+         if execParams[i].DataType=ftInteger then execParams.ParamByName(Items[i].Name).AsInteger:=0;
+    end;
 end;
 {------------------------------------------------------------------------------}
 end.

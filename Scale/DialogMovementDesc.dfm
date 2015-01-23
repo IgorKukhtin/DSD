@@ -220,7 +220,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
     Top = 384
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ToolsWeighing_MovementDesc'
     DataSet = CDS
     DataSets = <
       item

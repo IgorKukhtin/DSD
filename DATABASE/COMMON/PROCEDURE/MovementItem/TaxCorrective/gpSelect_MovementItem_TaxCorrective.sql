@@ -15,12 +15,15 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
               )
 AS
 $BODY$
+  DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_TaxCorrective());
 
      --
      IF inShowAll THEN
+
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      -- Результат
      RETURN QUERY
@@ -30,8 +33,7 @@ BEGIN
            , tmpGoods.GoodsCode                     AS GoodsCode
            , tmpGoods.GoodsName                     AS GoodsName
            , CAST (NULL AS TFloat)                  AS Amount
---           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
-           , CAST (NULL AS TFloat)                  AS Price
+           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            , CAST (1 AS TFloat)                     AS CountForPrice
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
@@ -63,8 +65,8 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
---            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= vbOperDate)
---                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDate)
+                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
 
        WHERE tmpMI.GoodsId IS NULL
 

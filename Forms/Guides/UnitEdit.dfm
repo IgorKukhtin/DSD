@@ -271,6 +271,7 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 48
     Top = 248
   end
@@ -384,6 +385,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 16
     Top = 176
   end
@@ -393,7 +395,7 @@
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

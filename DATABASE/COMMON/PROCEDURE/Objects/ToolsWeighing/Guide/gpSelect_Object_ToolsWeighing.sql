@@ -1,4 +1,3 @@
-
 -- Function: gpSelect_Object_ToolsWeighing()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ToolsWeighing (TVarChar);
@@ -13,13 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ToolsWeighingPlaceName TVarChar) AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_ToolsWeighing());
---   vbUserId:= lpGetUserBySession (inSession);
-   -- определяется - может ли пользовать видеть весь справочник
---   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+   -- vbUserId:= lpGetUserBySession (inSession);
 
    -- Результат
    RETURN QUERY
@@ -34,11 +29,17 @@ BEGIN
            , Object_ToolsWeighing_View.ParentName
            , Object_ToolsWeighing_View.isErased
            , Object_ToolsWeighing_View.isLeaf
-           , COALESCE (Object_ToolsWeighingPlace.ValueData, '') :: TVarChar as ToolsWeighingPlaceName
-
+           , COALESCE (Object_ToolsWeighingPlace.ValueData, MovementDesc.ItemName) :: TVarChar as ToolsWeighingPlaceName
        FROM Object_ToolsWeighing_View 
-	LEFT JOIN Object Object_ToolsWeighingPlace ON CAST(Object_ToolsWeighingPlace.Id as TVarChar) =  COALESCE (Object_ToolsWeighing_View.ValueData, '')
-
+            LEFT JOIN Object AS Object_ToolsWeighingPlace ON Object_ToolsWeighingPlace.Id = CASE WHEN CHAR_LENGTH (Object_ToolsWeighing_View.ValueData) > 0
+                                                                                                  AND POSITION ('Id' IN Object_ToolsWeighing_View.Name) > 0
+                                                                                                  AND POSITION ('DescId' IN Object_ToolsWeighing_View.Name) = 0
+                                                                                                 THEN Object_ToolsWeighing_View.ValueData :: Integer ELSE 0
+                                                                                            END 
+            LEFT JOIN MovementDesc ON MovementDesc.Id = CASE WHEN CHAR_LENGTH (Object_ToolsWeighing_View.ValueData) > 0
+                                                              AND POSITION ('DescId' IN Object_ToolsWeighing_View.Name) > 0
+                                                             THEN Object_ToolsWeighing_View.ValueData :: Integer ELSE 0
+                                                        END 
       ;
 
 END;
@@ -50,10 +51,9 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.01.15                                        *
  13.03.14                                                         *
 */
 
 -- тест
-SELECT * FROM gpSelect_Object_ToolsWeighing (zfCalc_UserAdmin())
-    
- 
+-- SELECT * FROM gpSelect_Object_ToolsWeighing (zfCalc_UserAdmin())

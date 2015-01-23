@@ -43,6 +43,13 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_PaidKind.DescId
      WHERE Object_PaidKind.DescId = zc_Object_PaidKind()
     
+    UNION ALL
+     SELECT MovementDesc.Id
+          , MovementDesc.Id       AS Code     
+          , MovementDesc.ItemName AS Name
+          , '' :: TVarChar        AS ItemName
+          , FALSE isErased
+     FROM MovementDesc
  
     ;
 
