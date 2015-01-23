@@ -47,7 +47,7 @@ type
 
 implementation
 
-uses VCL.ActnList, Variants, ComObj;
+uses VCL.ActnList, Variants, ComObj, IniFiles, SysUtils, TypInfo;
 
 procedure Register;
 begin
@@ -100,14 +100,29 @@ procedure TScale.Active;
 const
   CLASS_CasDB: TGUID = '{B6D98687-BC2C-4E24-A0CD-2C5339DE1388}';
   CLASS_CasBI: TGUID = '{D7B9499D-59B2-4951-AD37-06227C403315}';
+  IniFileName = 'scale.ini';
+  Section = 'ScaleInit';
+var
+  IniFile: TIniFile;
 begin
   if FScale = Unassigned then begin
-     case FScaleType of
-        stBI: FScale := CreateComObject(CLASS_CasBI) as IDispatch;
-        stDB: FScale := CreateComObject(CLASS_CasDB) as IDispatch;
+     IniFile := TIniFile.Create( ExtractFilePath(ParamStr(0)) + IniFileName);
+     try
+       FComPort := IniFile.ReadString(Section, 'ComPort', 'COM1');
+       FComSpeed := IniFile.ReadInteger(Section, 'ComSpeed', 9600);
+       FScaleType := TScaleType(GetEnumValue(TypeInfo(TScaleType), IniFile.ReadString(Section, 'ScaleType', 'stBI')));
+       case FScaleType of
+          stBI: FScale := CreateComObject(CLASS_CasBI) as IDispatch;
+          stDB: FScale := CreateComObject(CLASS_CasDB) as IDispatch;
+       end;
+       FScale.CommPort := FComPort;
+       FScale.CommSpeed := FComSpeed;
+     finally
+       IniFile.WriteString(Section, 'ComPort', FComPort);
+       IniFile.WriteInteger(Section, 'ComSpeed', FComSpeed);
+       IniFile.WriteString(Section, 'ScaleType', GetEnumName(TypeInfo(TScaleType), ord(FScaleType)));
+       IniFile.Free;
      end;
-     FScale.CommPort := FComPort;
-     FScale.CommSpeed := FComSpeed;
   end;
 end;
 

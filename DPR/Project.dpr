@@ -81,7 +81,7 @@ begin
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
      TUpdater.AutomaticUpdateProgram;
-     Application.CreateForm(TMainFormInstance, MainFormInstance);
+     Application.CreateForm(TMainForm, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   end
   else
