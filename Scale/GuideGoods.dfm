@@ -7,50 +7,60 @@ object GuideGoodsForm: TGuideGoodsForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Height = -12
+  Font.Name = 'Tahoma'
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 14
   object GridPanel: TPanel
     Left = 0
-    Top = 224
+    Top = 235
     Width = 825
-    Height = 294
+    Height = 283
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 711
-    ExplicitHeight = 258
+    ExplicitTop = 224
+    ExplicitHeight = 294
     object DBGrid1: TDBGrid
       Left = 0
       Top = 33
       Width = 825
-      Height = 261
+      Height = 250
       Align = alClient
       DataSource = DataSource
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'MS Sans Serif'
+      TitleFont.Height = -12
+      TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
-      OnCellClick = DBGrid1CellClick
+      OnDblClick = DBGrid1DblClick
       Columns = <
         item
           Expanded = False
           FieldName = 'GoodsCode'
+          Title.Caption = #1050#1086#1076
+          Width = 70
           Visible = True
         end
         item
           Expanded = False
           FieldName = 'GoodsName'
-          Width = 250
+          Title.Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          Width = 300
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'GoodsGroupNameFull'
+          Title.Caption = #1043#1088#1091#1087#1087#1072
+          Width = 400
           Visible = True
         end>
     end
@@ -62,7 +72,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 711
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -126,43 +135,40 @@ object GuideGoodsForm: TGuideGoodsForm
     Left = 0
     Top = 0
     Width = 825
-    Height = 224
+    Height = 235
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 711
     object TarePanel: TPanel
-      Left = 244
+      Left = 300
       Top = 0
       Width = 182
-      Height = 224
+      Height = 235
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitLeft = 244
+      ExplicitHeight = 224
       object rgTare: TRadioGroup
         Left = 0
-        Top = 70
+        Top = 80
         Width = 182
-        Height = 62
+        Height = 63
         Align = alClient
-        Caption = #1058#1072#1088#1072
+        Caption = #1058#1072#1088#1072' '#1074#1077#1089
         Color = clBtnFace
         Columns = 2
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clMaroon
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ParentColor = False
-        ParentFont = False
         TabOrder = 2
         OnClick = rgTareClick
+        ExplicitTop = 70
+        ExplicitHeight = 62
       end
       object PanelTare: TPanel
         Left = 0
         Top = 0
         Width = 182
-        Height = 35
+        Height = 39
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
@@ -170,21 +176,16 @@ object GuideGoodsForm: TGuideGoodsForm
           Left = 0
           Top = 0
           Width = 107
-          Height = 35
+          Height = 39
           Align = alClient
           Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
           TabOrder = 0
+          ExplicitHeight = 36
           object EditTareCount: TEdit
             Left = 5
-            Top = 12
+            Top = 17
             Width = 85
-            Height = 21
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            ParentFont = False
+            Height = 22
             TabOrder = 0
             Text = 'EditTareCount'
             OnEnter = EditTareCountEnter
@@ -196,27 +197,16 @@ object GuideGoodsForm: TGuideGoodsForm
           Left = 107
           Top = 0
           Width = 75
-          Height = 35
+          Height = 39
           Align = alRight
-          Caption = #1050#1086#1076
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clMaroon
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
+          Caption = #1050#1086#1076' '#1074#1077#1089
           TabOrder = 1
+          ExplicitHeight = 35
           object EditTareCode: TEdit
             Left = 5
-            Top = 12
+            Top = 17
             Width = 60
-            Height = 21
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clMaroon
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            ParentFont = False
+            Height = 22
             TabOrder = 0
             Text = 'EditTareCode'
             OnChange = EditTareCodeChange
@@ -228,56 +218,41 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object DiscountPanel: TPanel
         Left = 0
-        Top = 132
+        Top = 143
         Width = 182
         Height = 92
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 3
+        ExplicitTop = 132
         object rgDiscount: TRadioGroup
           Left = 0
-          Top = 35
+          Top = 41
           Width = 182
-          Height = 57
+          Height = 51
           Align = alClient
           Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1074#1077#1089#1091
           Color = clBtnFace
           Columns = 2
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 8404992
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
           ParentColor = False
-          ParentFont = False
           TabOrder = 1
           OnClick = rgDiscountClick
+          ExplicitTop = 35
+          ExplicitHeight = 57
         end
         object gbDiscountCode: TGroupBox
           Left = 0
           Top = 0
           Width = 182
-          Height = 35
+          Height = 41
           Align = alTop
-          Caption = #1050#1086#1076
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 8404992
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
+          Caption = #1050#1086#1076' '#1089#1082#1080#1076#1082#1080
           TabOrder = 0
           object EditDiscountCode: TEdit
             Left = 5
-            Top = 12
+            Top = 17
             Width = 85
-            Height = 21
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 8404992
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = []
-            ParentFont = False
+            Height = 22
             TabOrder = 0
             Text = 'EditDiscountCode'
             OnChange = EditDiscountCodeChange
@@ -289,29 +264,17 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object gbTareWeightEnter: TGroupBox
         Left = 0
-        Top = 35
+        Top = 39
         Width = 182
-        Height = 35
+        Height = 41
         Align = alTop
         Caption = #1042#1077#1089' '#1090#1072#1088#1099
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = 8404992
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
         TabOrder = 1
         object EditTareWeightEnter: TEdit
           Left = 5
-          Top = 12
+          Top = 17
           Width = 85
-          Height = 21
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 8404992
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
+          Height = 22
           TabOrder = 0
           Text = 'EditTareWeightEnter'
           OnEnter = EditTareCountEnter
@@ -320,13 +283,15 @@ object GuideGoodsForm: TGuideGoodsForm
       end
     end
     object PriceListPanel: TPanel
-      Left = 426
+      Left = 482
       Top = 0
       Width = 277
-      Height = 224
+      Height = 235
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 3
+      ExplicitLeft = 426
+      ExplicitHeight = 224
       object rgPriceList: TRadioGroup
         Left = 0
         Top = 35
@@ -363,12 +328,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Top = 12
           Width = 140
           Height = 21
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 12615808
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
           TabOrder = 0
           Text = 'EditPriceListCode'
           OnChange = EditPriceListCodeChange
@@ -382,29 +341,24 @@ object GuideGoodsForm: TGuideGoodsForm
       Left = 0
       Top = 0
       Width = 134
-      Height = 224
+      Height = 235
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitHeight = 224
       object gbGoodsName: TGroupBox
         Left = 0
-        Top = 35
+        Top = 41
         Width = 134
-        Height = 35
+        Height = 41
         Align = alTop
-        Caption = #1055#1088#1086#1076#1091#1082#1094#1080#1103
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         TabOrder = 1
         object EditGoodsName: TEdit
           Left = 5
-          Top = 12
+          Top = 17
           Width = 125
-          Height = 21
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
+          Height = 22
           TabOrder = 0
           Text = 'EditGoodsName'
           OnChange = EditGoodsNameChange
@@ -418,21 +372,15 @@ object GuideGoodsForm: TGuideGoodsForm
         Left = 0
         Top = 0
         Width = 134
-        Height = 35
+        Height = 41
         Align = alTop
         Caption = #1050#1086#1076
         TabOrder = 0
         object EditGoodsCode: TEdit
-          Left = 5
-          Top = 12
+          Left = 3
+          Top = 13
           Width = 125
-          Height = 21
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
+          Height = 22
           TabOrder = 0
           Text = 'EditGoodsCode'
           OnChange = EditGoodsCodeChange
@@ -444,12 +392,13 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object gbGoodsWieghtValue: TGroupBox
         Left = 0
-        Top = 70
+        Top = 82
         Width = 134
         Height = 41
         Align = alTop
         Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
         TabOrder = 2
+        ExplicitTop = 70
         object PanelGoodsWieghtValue: TPanel
           Left = 2
           Top = 15
@@ -467,111 +416,45 @@ object GuideGoodsForm: TGuideGoodsForm
           TabOrder = 0
         end
       end
-      object gbZakazDiffCount: TGroupBox
-        Left = 0
-        Top = 111
-        Width = 134
-        Height = 41
-        Align = alTop
-        Caption = #1054#1089#1090#1072#1083#1086#1089#1100
-        TabOrder = 3
-        Visible = False
-        object PanelZakazDiffCount: TPanel
-          Left = 2
-          Top = 15
-          Width = 130
-          Height = 24
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'PanelZakazDiffCount'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlue
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 0
-        end
-      end
-      object gblZakazTotalCount: TGroupBox
-        Left = 0
-        Top = 152
-        Width = 134
-        Height = 41
-        Align = alTop
-        Caption = #1048#1090#1086#1075#1086' '#1079#1072#1103#1074#1082#1072
-        TabOrder = 4
-        Visible = False
-        object PanelZakazTotalCount: TPanel
-          Left = 2
-          Top = 15
-          Width = 130
-          Height = 24
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'PanelZakazTotalCount'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clNavy
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 0
-        end
-      end
     end
     object KindPackagePanel: TPanel
       Left = 134
       Top = 0
-      Width = 110
-      Height = 224
+      Width = 166
+      Height = 235
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitHeight = 224
       object rgKindPackage: TRadioGroup
         Left = 0
-        Top = 35
-        Width = 110
-        Height = 189
+        Top = 41
+        Width = 166
+        Height = 194
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
         Color = clBtnFace
         Columns = 2
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = 8404992
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ParentColor = False
-        ParentFont = False
         TabOrder = 1
         OnClick = rgKindPackageClick
+        ExplicitTop = 35
+        ExplicitWidth = 111
+        ExplicitHeight = 189
       end
       object gbKindPackageCode: TGroupBox
         Left = 0
         Top = 0
-        Width = 110
-        Height = 35
+        Width = 166
+        Height = 41
         Align = alTop
         Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = 8404992
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
         TabOrder = 0
         object EditKindPackageCode: TEdit
           Left = 5
-          Top = 12
-          Width = 90
-          Height = 21
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 8404992
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
+          Top = 17
+          Width = 108
+          Height = 22
           TabOrder = 0
           Text = 'EditKindPackageCode'
           OnChange = EditKindPackageCodeChange
@@ -591,8 +474,6 @@ object GuideGoodsForm: TGuideGoodsForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitTop = 482
-    ExplicitWidth = 711
   end
   object DataSource: TDataSource
     DataSet = CDS
@@ -614,6 +495,7 @@ object GuideGoodsForm: TGuideGoodsForm
   object CDS: TClientDataSet
     Aggregates = <>
     Params = <>
+    OnFilterRecord = CDSFilterRecord
     Left = 272
     Top = 384
   end
