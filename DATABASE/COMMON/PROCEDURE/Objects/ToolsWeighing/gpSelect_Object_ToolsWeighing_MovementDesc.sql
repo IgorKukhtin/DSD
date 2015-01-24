@@ -128,7 +128,7 @@ BEGIN
        WHERE _tmpToolsWeighing.MovementDescId <> 0
       UNION 
        SELECT 0                                   AS Number
-            , 0                                   AS MovementDescId
+            ,(-1 * tmp.MovementDescId) :: Integer AS MovementDescId
             , 0                                   AS FromId
             , 0                                   AS FromCode
             , '' :: TVarChar                      AS FromName

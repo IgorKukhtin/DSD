@@ -3,11 +3,11 @@ object DialogMovementDescForm: TDialogMovementDescForm
   Top = 0
   Caption = #1042#1099#1073#1086#1088' <'#1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
   ClientHeight = 702
-  ClientWidth = 646
+  ClientWidth = 651
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
+  Font.Charset = RUSSIAN_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -13
   Font.Name = 'Tahoma'
   Font.Style = []
   KeyPreview = True
@@ -17,25 +17,20 @@ object DialogMovementDescForm: TDialogMovementDescForm
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 16
   object InfoPanel: TPanel
     Left = 0
     Top = 0
-    Width = 646
+    Width = 651
     Height = 63
     Align = alTop
     BevelOuter = bvNone
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
     TabOrder = 0
+    ExplicitWidth = 646
     object Label4: TLabel
       Left = 0
       Top = 0
-      Width = 646
+      Width = 651
       Height = 16
       Align = alTop
       Alignment = taCenter
@@ -76,6 +71,7 @@ object DialogMovementDescForm: TDialogMovementDescForm
           TabOrder = 0
           Text = 'EdiBarCode'
           OnChange = EdiBarCodeChange
+          OnEnter = EdiBarCodeEnter
           OnExit = EdiBarCodeExit
         end
       end
@@ -83,12 +79,13 @@ object DialogMovementDescForm: TDialogMovementDescForm
     object Panel2: TPanel
       Left = 173
       Top = 16
-      Width = 473
+      Width = 478
       Height = 47
       Align = alClient
       Alignment = taLeftJustify
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 473
       object Panel3: TPanel
         Left = 0
         Top = 0
@@ -127,16 +124,17 @@ object DialogMovementDescForm: TDialogMovementDescForm
       object Panel4: TPanel
         Left = 115
         Top = 0
-        Width = 358
+        Width = 363
         Height = 47
         Align = alClient
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 1
+        ExplicitWidth = 358
         object Label3: TLabel
           Left = 1
           Top = 1
-          Width = 356
+          Width = 361
           Height = 16
           Align = alTop
           Caption = '  '#1053#1072#1079#1074#1072#1085#1080#1077
@@ -145,20 +143,21 @@ object DialogMovementDescForm: TDialogMovementDescForm
         object PanelPartnerName: TPanel
           Left = 1
           Top = 17
-          Width = 356
+          Width = 361
           Height = 29
           Align = alClient
           Alignment = taLeftJustify
           AutoSize = True
           BevelOuter = bvNone
           Caption = 'PanelPartnerName'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clNavy
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clWindowText
           Font.Height = -12
-          Font.Name = 'MS Sans Serif'
+          Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 356
         end
       end
     end
@@ -166,16 +165,17 @@ object DialogMovementDescForm: TDialogMovementDescForm
   object Panel6: TPanel
     Left = 0
     Top = 63
-    Width = 646
+    Width = 651
     Height = 639
     Align = alClient
     Alignment = taLeftJustify
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 646
     object DBGrid: TDBGrid
       Left = 0
       Top = 0
-      Width = 646
+      Width = 651
       Height = 639
       Align = alClient
       DataSource = DataSource

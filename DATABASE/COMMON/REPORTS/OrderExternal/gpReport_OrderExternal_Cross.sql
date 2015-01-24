@@ -32,11 +32,12 @@ BEGIN
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
     END IF;
 
-    CREATE TEMP TABLE tmpMovement (Id Integer, Num INTEGER) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMovement (Id Integer, InvNumber TVarChar, Num INTEGER) ON COMMIT DROP;
     INSERT INTO tmpMovement
 
        SELECT
               Movement.Id
+            , Movement.InvNumber
             , CAST(row_number() over (ORDER BY Object_From.ValueData) AS INTEGER)
 
        FROM Movement
@@ -71,7 +72,7 @@ BEGIN
 
 --       GROUP BY
 --             Movement.Id
---            , CAST (MovementString_InvNumberPartner.ValueData  AS TVarChar)
+--            , CAST (Movement.InvNumber  AS TVarChar)
 
        ORDER BY Object_From.ValueData;
 --       LIMIT 25;
@@ -84,55 +85,55 @@ BEGIN
 --            , CAST (MovementString_InvNumberPartner.ValueData  AS TVarChar)         AS InvNumberPartner
 --            , Num                                                                   AS Num
              MAX(CASE WHEN Movement.Num = 1 THEN Object_From.ValueData ELSE NULL END)                       AS Name1
-           , MAX(CASE WHEN Movement.Num = 1 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber1
+           , MAX(CASE WHEN Movement.Num = 1 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber1
            , MAX(CASE WHEN Movement.Num = 2 THEN Object_From.valuedata ELSE NULL END)                       AS Name2
-           , MAX(CASE WHEN Movement.Num = 2 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber2
+           , MAX(CASE WHEN Movement.Num = 2 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber2
            , MAX(CASE WHEN Movement.Num = 3 THEN Object_From.valuedata ELSE NULL END)                       AS Name3
-           , MAX(CASE WHEN Movement.Num = 3 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber3
+           , MAX(CASE WHEN Movement.Num = 3 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber3
            , MAX(CASE WHEN Movement.Num = 4 THEN Object_From.valuedata ELSE NULL END)                       AS Name4
-           , MAX(CASE WHEN Movement.Num = 4 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber4
+           , MAX(CASE WHEN Movement.Num = 4 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber4
            , MAX(CASE WHEN Movement.Num = 5 THEN Object_From.valuedata ELSE NULL END)                       AS Name5
-           , MAX(CASE WHEN Movement.Num = 5 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber5
+           , MAX(CASE WHEN Movement.Num = 5 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber5
            , MAX(CASE WHEN Movement.Num = 6 THEN Object_From.valuedata ELSE NULL END)                       AS Name6
-           , MAX(CASE WHEN Movement.Num = 6 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber6
+           , MAX(CASE WHEN Movement.Num = 6 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber6
            , MAX(CASE WHEN Movement.Num = 7 THEN Object_From.valuedata ELSE NULL END)                       AS Name7
-           , MAX(CASE WHEN Movement.Num = 7 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber7
+           , MAX(CASE WHEN Movement.Num = 7 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber7
            , MAX(CASE WHEN Movement.Num = 8 THEN Object_From.valuedata ELSE NULL END)                       AS Name8
-           , MAX(CASE WHEN Movement.Num = 8 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber8
+           , MAX(CASE WHEN Movement.Num = 8 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber8
            , MAX(CASE WHEN Movement.Num = 9 THEN Object_From.valuedata ELSE NULL END)                       AS Name9
-           , MAX(CASE WHEN Movement.Num = 9 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber9
+           , MAX(CASE WHEN Movement.Num = 9 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber9
            , MAX(CASE WHEN Movement.Num = 10 THEN Object_From.valuedata ELSE NULL END)                       AS Name10
-           , MAX(CASE WHEN Movement.Num = 10 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber10
+           , MAX(CASE WHEN Movement.Num = 10 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber10
            , MAX(CASE WHEN Movement.Num = 11 THEN Object_From.ValueData ELSE NULL END)                       AS Name11
-           , MAX(CASE WHEN Movement.Num = 11 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber11
+           , MAX(CASE WHEN Movement.Num = 11 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber11
            , MAX(CASE WHEN Movement.Num = 12 THEN Object_From.valuedata ELSE NULL END)                       AS Name12
-           , MAX(CASE WHEN Movement.Num = 12 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber12
+           , MAX(CASE WHEN Movement.Num = 12 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber12
            , MAX(CASE WHEN Movement.Num = 13 THEN Object_From.valuedata ELSE NULL END)                       AS Name13
-           , MAX(CASE WHEN Movement.Num = 13 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber13
+           , MAX(CASE WHEN Movement.Num = 13 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber13
            , MAX(CASE WHEN Movement.Num = 14 THEN Object_From.valuedata ELSE NULL END)                       AS Name14
-           , MAX(CASE WHEN Movement.Num = 14 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber14
+           , MAX(CASE WHEN Movement.Num = 14 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber14
            , MAX(CASE WHEN Movement.Num = 15 THEN Object_From.valuedata ELSE NULL END)                       AS Name15
-           , MAX(CASE WHEN Movement.Num = 15 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber15
+           , MAX(CASE WHEN Movement.Num = 15 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber15
            , MAX(CASE WHEN Movement.Num = 16 THEN Object_From.valuedata ELSE NULL END)                       AS Name16
-           , MAX(CASE WHEN Movement.Num = 16 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber16
+           , MAX(CASE WHEN Movement.Num = 16 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber16
            , MAX(CASE WHEN Movement.Num = 17 THEN Object_From.valuedata ELSE NULL END)                       AS Name17
-           , MAX(CASE WHEN Movement.Num = 17 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber17
+           , MAX(CASE WHEN Movement.Num = 17 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber17
            , MAX(CASE WHEN Movement.Num = 18 THEN Object_From.valuedata ELSE NULL END)                       AS Name18
-           , MAX(CASE WHEN Movement.Num = 18 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber18
+           , MAX(CASE WHEN Movement.Num = 18 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber18
            , MAX(CASE WHEN Movement.Num = 19 THEN Object_From.valuedata ELSE NULL END)                       AS Name19
-           , MAX(CASE WHEN Movement.Num = 19 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber19
+           , MAX(CASE WHEN Movement.Num = 19 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber19
            , MAX(CASE WHEN Movement.Num = 20 THEN Object_From.valuedata ELSE NULL END)                       AS Name20
-           , MAX(CASE WHEN Movement.Num = 20 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber20
+           , MAX(CASE WHEN Movement.Num = 20 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber20
            , MAX(CASE WHEN Movement.Num = 21 THEN Object_From.ValueData ELSE NULL END)                       AS Name21
-           , MAX(CASE WHEN Movement.Num = 21 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber21
+           , MAX(CASE WHEN Movement.Num = 21 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber21
            , MAX(CASE WHEN Movement.Num = 22 THEN Object_From.valuedata ELSE NULL END)                       AS Name22
-           , MAX(CASE WHEN Movement.Num = 22 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber22
+           , MAX(CASE WHEN Movement.Num = 22 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber22
            , MAX(CASE WHEN Movement.Num = 23 THEN Object_From.valuedata ELSE NULL END)                       AS Name23
-           , MAX(CASE WHEN Movement.Num = 23 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber23
+           , MAX(CASE WHEN Movement.Num = 23 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber23
            , MAX(CASE WHEN Movement.Num = 24 THEN Object_From.valuedata ELSE NULL END)                       AS Name24
-           , MAX(CASE WHEN Movement.Num = 24 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber24
+           , MAX(CASE WHEN Movement.Num = 24 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber24
            , MAX(CASE WHEN Movement.Num = 25 THEN Object_From.valuedata ELSE NULL END)                       AS Name25
-           , MAX(CASE WHEN Movement.Num = 25 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber25
+           , MAX(CASE WHEN Movement.Num = 25 THEN Movement.InvNumber ELSE NULL END)   AS InvNumber25
            , CAST(MAX(Movement.Num) AS INTEGER)                                                              AS ColCount
 
        FROM tmpMovement AS Movement

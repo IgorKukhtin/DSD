@@ -45,6 +45,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure EditPartnerCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure EdiBarCodeEnter(Sender: TObject);
 
   private
     ChoiceNumber:Integer;
@@ -90,7 +91,7 @@ end;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
-     Result:=(IsOrderExternal=true)and(CDS.FieldByName('MovementDescId').AsInteger<>0);
+     Result:=(IsOrderExternal=true)and(CDS.FieldByName('MovementDescId').AsInteger>0)and(ActiveControl=DBGrid);
      if not Result then exit;
 
      // проверка для контрагента
@@ -116,7 +117,9 @@ begin
        and(ParamsMovement_local.ParamByName('PaidKindId').AsInteger>0)
      then begin
                ShowMessage('Ошибка.Выберите значение <Форма оплаты> = <'+ParamsMovement_local.ParamByName('PaidKindName').asString+'>.');
-               ActiveControl:=DBGrid;
+               if(Length(trim(EdiBarCode.Text))=1)or(Length(trim(EdiBarCode.Text))=2)
+               then ActiveControl:=EdiBarCode
+               else ActiveControl:=DBGrid;
                Result:=false;
                exit;
      end;
@@ -177,16 +180,27 @@ begin
 
     end;
 
+    if(Length(trim(EdiBarCode.Text))<=2)
+    then EdiBarCode.Text:=CDS.FieldByName('Number').asString;
+
     CopyValuesParamsFrom(ParamsMovement_local,ParamsMovement);
 
-    MyDelay(700);
+    MyDelay(400);
+end;
+{------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.EdiBarCodeEnter(Sender: TObject);
+begin
+    if CDS.Filtered then CDS.Filtered:=false;
+    CDS.Locate('Number',ParamsMovement_local.ParamByName('MovementNumber').AsString,[]);
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EdiBarCodeExit(Sender: TObject);
+var Number:Integer;
+    fOK:Boolean;
 begin
     if CDS.Filtered then CDS.Filtered:=false;
     //
-    if Length(trim(EdiBarCode.Text))>0
+    if Length(trim(EdiBarCode.Text))>2
     then begin
               //поиск по номеру или ш-к
               isOrderExternal:=DMMainScaleForm.gpSelect_Scale_OrderExternal(ParamsMovement_local,EdiBarCode.Text);
@@ -206,16 +220,45 @@ begin
                ParamsMovement_local.ParamByName('OrderExternalId').AsInteger:=0;
                ParamsMovement_local.ParamByName('OrderExternal_BarCode').asString :='';
                ParamsMovement_local.ParamByName('OrderExternal_InvNumber').asString :='';
+               //
+               try Number:=StrToInt(trim(EdiBarCode.Text)) except Number:=0;end;
+               // если это код операции
+               if Number>0 then
+               begin
+                    CDS.Locate('Number',IntToStr(Number),[]);
+                    fOK:=CDS.FieldByName('Number').asInteger=Number;
+                    CDS.Filter:='Number='+IntToStr(Number)+' or MovementDescId='+IntToStr(-1*CDS.FieldByName('MovementDescId').asInteger);
+                    CDS.Filtered:=true;
+                    CDS.Locate('Number',IntToStr(Number),[]);
+                    if not fOK then
+                    begin
+                         ShowMessage('Ошибка.Значение <Вид документа> не определено.');
+                         ActiveControl:=EdiBarCode;
+                         exit;
+                    end;
+                    //
+                    ParamsMovement_local.ParamByName('MovementNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
+                    ChoiceNumber:=CDS.FieldByName('Number').asInteger;
+                    // завершение
+                    if   (CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Income)
+                      and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_ReturnOut)
+                      and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Sale)
+                      and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_ReturnIn)
+                    then begin ActiveControl:=DBGrid;DBGridCellClick(DBGrid.Columns[0]);end;
+               end;
           end;
     //
     if ParamsMovement_local.ParamByName('OrderExternal_BarCode').asString<>''
     then begin
-              CDS.Filter:='MovementDescId='+IntToStr(ParamsMovement_local.ParamByName('MovementDescId').asInteger)
-                    +' and PaidKindId='+IntToStr(ParamsMovement_local.ParamByName('PaidKindId').asInteger)
-                    //+' and FromId='+IntToStr(ParamsMovement_local.ParamByName('FromId').asInteger)
+              CDS.Filter:='(MovementDescId='+IntToStr(ParamsMovement_local.ParamByName('MovementDescId').asInteger)
+                    +'  and PaidKindId='+IntToStr(ParamsMovement_local.ParamByName('PaidKindId').asInteger)
+                    //+'  and FromId='+IntToStr(ParamsMovement_local.ParamByName('FromId').asInteger)
+                    +'     )'
+                    +'  or MovementDescId='+IntToStr(-1*ParamsMovement_local.ParamByName('MovementDescId').asInteger)
                     ;
               CDS.Filtered:=true;
-              if CDS.RecordCount<>1 then
+              CDS.Locate('MovementDescId',ParamsMovement_local.ParamByName('MovementDescId').asString,[]);
+              if CDS.RecordCount<>2 then
               begin
                    ShowMessage('Ошибка.Значение <Вид документа> не определено.');
                    ActiveControl:=EdiBarCode;
@@ -236,7 +279,7 @@ end;
 procedure TDialogMovementDescForm.EditPartnerCodeExit(Sender: TObject);
 var PartnerCode_int:Integer;
 begin
-    if CDS.Filtered then CDS.Filtered:=false;
+    //if CDS.Filtered then CDS.Filtered:=false;
     //
     try PartnerCode_int:= StrToInt(EditPartnerCode.Text);
     except
@@ -282,15 +325,17 @@ begin
      end;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EditPartnerCodeKeyDown(Sender: TObject;
-  var Key: Word; Shift: TShiftState);
+procedure TDialogMovementDescForm.EditPartnerCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
 begin
-     if Key = VK_RETURN then ActiveControl:=DBGrid;
+     if Key = VK_RETURN
+     then if CDS.RecordCount=2
+          then begin ActiveControl:=DBGrid;DBGridCellClick(DBGrid.Columns[0]);end
+          else ActiveControl:=DBGrid;
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.DBGridCellClick(Column: TColumn);
 begin
-     if (CDS.FieldByName('MovementDescId').AsInteger=0)
+     if (CDS.FieldByName('MovementDescId').AsInteger<=0)
      then CDS.Next
      else begin
                ChoiceNumber:=CDS.FieldByName('Number').AsInteger;
@@ -307,7 +352,7 @@ begin
      //if ChoiceNumber <> 0 then ShowMessage (CDS.FieldByName('Number').AsString);
 
      with (Sender as TDBGrid).Canvas do
-     if CDS.FieldByName('MovementDescId').AsInteger=0 then
+     if CDS.FieldByName('MovementDescId').AsInteger<=0 then
      begin
           Font.Color:=clNavy;
           Font.Size:=11;
@@ -369,7 +414,7 @@ end;
 procedure TDialogMovementDescForm.FormKeyUp(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if (Key = VK_UP)or(Key = VK_DOWN)or(Key = VK_HOME)or(Key = VK_END)or(Key = VK_PRIOR)or(Key = VK_NEXT)
-     then if (CDS.FieldByName('MovementDescId').AsInteger=0)
+     then if (CDS.FieldByName('MovementDescId').AsInteger<=0)
           then CDS.Next;
 end;
 {------------------------------------------------------------------------}
