@@ -75,7 +75,6 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 717
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
