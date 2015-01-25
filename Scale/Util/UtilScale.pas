@@ -13,11 +13,11 @@ type
   end;
 
   TListItem = record
-    Number:  integer;
-    Id:   integer;
-    Code: integer;
-    Name: string;
-    Value: string;
+    Number: integer;
+    Id:     integer;
+    Code:   integer;
+    Name:   string;
+    Value:  string;
   end;
 
   TArrayList = array of TListItem;
@@ -34,8 +34,12 @@ type
   function GetArrayList_Value_byName   (ArrayList:TArrayList;Name:String):String;
   function GetArrayList_Index_byName   (ArrayList:TArrayList;Name:String):Integer;
   function GetArrayList_Index_byNumber (ArrayList:TArrayList;Number:Integer):Integer;
+  function GetArrayList_Index_byCode   (ArrayList:TArrayList;Code:Integer):Integer;
+  function GetArrayList_lpIndex_GoodsKind(ArrayList:TArrayList;GoodsKindWeighingGroupId,Code:Integer):Integer;
+  function GetArrayList_gpIndex_GoodsKind(ArrayList:TArrayList;GoodsKindWeighingGroupId,lpIndex:Integer):Integer;
 
   function isEqualFloatValues (Value1,Value2:Double):boolean;
+
   procedure MyDelay(mySec:Integer);
 
   procedure Create_ParamsMovement(var Params:TParams);
@@ -61,6 +65,7 @@ var
   TareCount_Array     :TArrayList;
   TareWeight_Array    :TArrayList;
   ChangePercent_Array :TArrayList;
+  GoodsKind_Array     :TArrayList;
 
   zc_Movement_Income: integer;
   zc_Movement_ReturnOut: integer;
@@ -113,6 +118,8 @@ begin
      ParamAdd(Params,'PriceListCode',ftInteger);
      ParamAdd(Params,'PriceListName',ftString);
 
+     ParamAdd(Params,'GoodsKindWeighingGroupId',ftInteger);
+
      ParamAdd(Params,'MovementDescName_master',ftString);
 
 end;
@@ -122,7 +129,7 @@ var i: Integer;
 begin
   Result:='';
   for i := 0 to Length(ArrayList)-1 do
-    if ArrayList[i].Name = Name then begin Result:=ArrayList[i].Value;break;end;
+    if ArrayList[i].Name = Name then begin Result:=AnsiUpperCase(ArrayList[i].Value);break;end;
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_Index_byName(ArrayList:TArrayList;Name:String):Integer;
@@ -139,6 +146,40 @@ begin
   Result:=-1;
   for i := 0 to Length(ArrayList)-1 do
     if ArrayList[i].Number = Number then begin Result:=i;break;end;
+end;
+{------------------------------------------------------------------------}
+function GetArrayList_Index_byCode(ArrayList:TArrayList;Code:Integer):Integer;
+var i: Integer;
+begin
+  Result:=-1;
+  for i := 0 to Length(ArrayList)-1 do
+    if ArrayList[i].Code = Code then begin Result:=i;break;end;
+end;
+{------------------------------------------------------------------------}
+function GetArrayList_lpIndex_GoodsKind(ArrayList:TArrayList;GoodsKindWeighingGroupId,Code:Integer):Integer;
+var i,ii: Integer;
+begin
+  Result:=-1;
+  ii:=-1;
+  for i := 0 to Length(ArrayList)-1 do
+    if ArrayList[i].Number = GoodsKindWeighingGroupId
+    then begin
+              ii:=ii+1;
+              if (ArrayList[i].Code = Code)or(Code<=0) then begin Result:=ii;break;end;
+         end;
+end;
+{------------------------------------------------------------------------}
+function GetArrayList_gpIndex_GoodsKind(ArrayList:TArrayList;GoodsKindWeighingGroupId,lpIndex:Integer):Integer;
+var i,ii: Integer;
+begin
+  Result:=-1;
+  ii:=-1;
+  for i := 0 to Length(ArrayList)-1 do
+    if ArrayList[i].Number = GoodsKindWeighingGroupId
+    then begin
+              ii:=ii+1;
+              if (ii = lpIndex)or(lpIndex<0) then begin Result:=i;break;end;
+         end;
 end;
 {------------------------------------------------------------------------}
 function isEqualFloatValues(Value1,Value2:Double):boolean;

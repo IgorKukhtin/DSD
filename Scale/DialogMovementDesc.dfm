@@ -26,7 +26,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 646
     object Label4: TLabel
       Left = 0
       Top = 0
@@ -85,7 +84,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
       Alignment = taLeftJustify
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 473
       object Panel3: TPanel
         Left = 0
         Top = 0
@@ -130,7 +128,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 1
-        ExplicitWidth = 358
         object Label3: TLabel
           Left = 1
           Top = 1
@@ -157,7 +154,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 356
         end
       end
     end
@@ -171,7 +167,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
     Alignment = taLeftJustify
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 646
     object DBGrid: TDBGrid
       Left = 0
       Top = 0

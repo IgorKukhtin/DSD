@@ -10,22 +10,22 @@ uses
 type
   TGuideGoodsForm = class(TForm)
     GridPanel: TPanel;
-    DBGrid1: TDBGrid;
+    DBGrid: TDBGrid;
     ParamsPanel: TPanel;
-    TarePanel: TPanel;
-    rgTare: TRadioGroup;
+    infoPanelTare: TPanel;
+    rgTareWeight: TRadioGroup;
     SummPanel: TPanel;
-    PriceListPanel: TPanel;
+    infoPanelPriceList: TPanel;
     rgPriceList: TRadioGroup;
     PanelTare: TPanel;
     gbTareCount: TGroupBox;
     EditTareCount: TEdit;
-    gbTareCode: TGroupBox;
-    EditTareCode: TEdit;
+    gbTareWeightCode: TGroupBox;
+    EditTareWeightCode: TEdit;
     gbPriceListCode: TGroupBox;
     EditPriceListCode: TEdit;
     DataSource: TDataSource;
-    GoodsPanel: TPanel;
+    infoPanelGoods: TPanel;
     gbGoodsName: TGroupBox;
     EditGoodsName: TEdit;
     gbGoodsCode: TGroupBox;
@@ -33,17 +33,17 @@ type
     gbGoodsWieghtValue: TGroupBox;
     PanelGoodsWieghtValue: TPanel;
     DiscountPanel: TPanel;
-    rgDiscount: TRadioGroup;
-    gbDiscountCode: TGroupBox;
-    EditDiscountCode: TEdit;
+    rgChangePercent: TRadioGroup;
+    gbChangePercentCode: TGroupBox;
+    EditChangePercentCode: TEdit;
     ButtonPanel: TPanel;
     ButtonExit: TSpeedButton;
     ButtonRefresh: TSpeedButton;
     ButtonSaveAllItem: TSpeedButton;
-    KindPackagePanel: TPanel;
-    rgKindPackage: TRadioGroup;
-    gbKindPackageCode: TGroupBox;
-    EditKindPackageCode: TEdit;
+    infoPanelGoodsKind: TPanel;
+    rgGoodsKind: TRadioGroup;
+    gbGoodsKindCode: TGroupBox;
+    EditGoodsKindCode: TEdit;
     gbTareWeightEnter: TGroupBox;
     EditTareWeightEnter: TEdit;
     spSelect: TdsdStoredProc;
@@ -63,37 +63,36 @@ type
     procedure EditGoodsCodeExit(Sender: TObject);
     procedure EditGoodsNameExit(Sender: TObject);
     procedure EditGoodsCodeChange(Sender: TObject);
-    procedure QueryFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure EditGoodsNameChange(Sender: TObject);
     procedure EditTareCountKeyPress(Sender: TObject; var Key: Char);
     procedure EditTareCountExit(Sender: TObject);
-    procedure EditTareCodeKeyPress(Sender: TObject; var Key: Char);
-    procedure EditTareCodeExit(Sender: TObject);
-    procedure EditDiscountCodeKeyPress(Sender: TObject; var Key: Char);
-    procedure EditDiscountCodeExit(Sender: TObject);
-    procedure EditTareCodeChange(Sender: TObject);
-    procedure EditDiscountCodeChange(Sender: TObject);
+    procedure EditTareWeightCodeKeyPress(Sender: TObject; var Key: Char);
+    procedure EditTareWeightCodeExit(Sender: TObject);
+    procedure EditChangePercentCodeKeyPress(Sender: TObject; var Key: Char);
+    procedure EditChangePercentCodeExit(Sender: TObject);
+    procedure EditTareWeightCodeChange(Sender: TObject);
+    procedure EditChangePercentCodeChange(Sender: TObject);
     procedure EditPriceListCodeKeyPress(Sender: TObject; var Key: Char);
     procedure EditPriceListCodeExit(Sender: TObject);
     procedure EditPriceListCodeChange(Sender: TObject);
-    procedure rgTareClick(Sender: TObject);
-    procedure rgDiscountClick(Sender: TObject);
+    procedure rgTareWeightClick(Sender: TObject);
+    procedure rgChangePercentClick(Sender: TObject);
     procedure rgPriceListClick(Sender: TObject);
     procedure EditGoodsCodeEnter(Sender: TObject);
     procedure EditTareCountEnter(Sender: TObject);
-    procedure rgKindPackageClick(Sender: TObject);
-    procedure EditKindPackageCodeChange(Sender: TObject);
-    procedure EditKindPackageCodeExit(Sender: TObject);
-    procedure EditKindPackageCodeKeyPress(Sender: TObject; var Key: Char);
-    procedure DataSourceDataChange(Sender: TObject; Field: TField);
+    procedure rgGoodsKindClick(Sender: TObject);
+    procedure EditGoodsKindCodeChange(Sender: TObject);
+    procedure EditGoodsKindCodeExit(Sender: TObject);
+    procedure EditGoodsKindCodeKeyPress(Sender: TObject; var Key: Char);
     procedure EditTareWeightEnterExit(Sender: TObject);
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
-    procedure DBGrid1DblClick(Sender: TObject);
+    procedure DBGridDblClick(Sender: TObject);
+    procedure EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
   private
     fEnterGoodsCode:Boolean;
     fEnterGoodsName:Boolean;
     function Checked: boolean;
-    function myReplaceFloat(Value:String):String;
+    procedure InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
   public
     GoodsWeight:Double;
     function Execute(ClientId:Integer;BillDate:TDateTime): boolean;
@@ -111,210 +110,71 @@ implementation
 function TGuideGoodsForm.Execute(ClientId:Integer;BillDate:TDateTime): boolean;
 begin
   GoodsWeight:=1.23;
-  ActiveControl:=EditGoodsCode;
   EditGoodsCode.Text:='';
   EditGoodsName.Text:='';
-  EditTareCount.Text:=GetArrayList_Value_byName(Default_Array,'TareCountNumber');
-  EditTareCode.Text:=GetArrayList_Value_byName(Default_Array,'TareWeightNumber');
-  EditPriceListCode.Text:=GetArrayList_Value_byName(Default_Array,'PriceListNumber');
-  EditDiscountCode.Text:=GetArrayList_Value_byName(Default_Array,'TareWeightNumber');
+  EditGoodsKindCode.Text:='';
+  EditTareWeightEnter.Text:='';
+  EditTareCount.Text:=         GetArrayList_Value_byName(Default_Array,'TareCountNumber');
+  EditTareWeightCode.Text:=    GetArrayList_Value_byName(Default_Array,'TareWeightNumber');
+  EditPriceListCode.Text:=     GetArrayList_Value_byName(Default_Array,'PriceListNumber');
+  EditChangePercentCode.Text:= GetArrayList_Value_byName(Default_Array,'ChangePercentNumber');
 
-  {
-     with Query do
-        if (not Active)
-        begin
-                  Close;
-                  ParamByName('@UserId').AsInteger:=_beginUser;
-                  ParamByName('@ClientId').AsInteger:=ClientId;
-                  ParamByName('@BillDate').AsDateTime:=BillDate;
-                  ParamByName('@isMinus').AsInteger:=zc_rvNo;
-                  //if _isScale_byZeus=zc_rvYes
-                  //then ParamByName('@isScale_byObvalka').AsInteger:=_isScale_byZeus
-                  //else
-                        ParamByName('@isScale_byObvalka').AsInteger:=_isScale_byObvalka;
-                  ParamByName('@isAll').AsInteger:=zc_rvYes;
-                  Open;
-        end
-        else Filtered:=false;
-}
+  InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
+
+     ActiveControl:=EditGoodsCode;
      result:=ShowModal=mrOk;
 end;
 {------------------------------------------------------------------------------}
-function TGuideGoodsForm.myReplaceFloat(Value:String):String;
-begin
-     Result:=trim(Value);
-     if (LengTh(Result)=0)or(Result='0')then exit;
-     //
-     if Result[LengTh(Result)]='0' then System.Delete(Result,LengTh(Result),1);
-     if Result[LengTh(Result)]='.' then System.Delete(Result,LengTh(Result),1);
-     //
-     if (Result[LengTh(Result)]='0')or(Result[LengTh(Result)]='.') then Result:=myReplaceFloat(Result);
-     //
-     if Result[1]='.' then Result:='0'+Result;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.FormCreate(Sender: TObject);
+procedure TGuideGoodsForm.InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
 var i:Integer;
 begin
-  //прайс-лист
-  for i := 0 to Length(PriceList_Array)-1 do
-    rgPriceList.Items.Add('('+IntToStr(PriceList_Array[i].Number)+') '+ PriceList_Array[i].Name);
-  //вес тары
-  for i := 0 to Length(TareWeight_Array)-1 do
-    rgTare.Items.Add('('+IntToStr(TareWeight_Array[i].Number)+') '+ TareWeight_Array[i].Name);
-  //Скидка по весу
-  for I := 0 to Length(ChangePercent_Array)-1 do
-    rgDiscount.Items.Add('('+IntToStr(ChangePercent_Array[i].Number)+') '+ ChangePercent_Array[i].Name);
+     EditGoodsKindCode.Text:='';
+     with rgGoodsKind do
+     begin
+          Items.Clear;
+          for i:=0 to Length(GoodsKind_Array)-1 do
+          if GoodsKind_Array[i].Number = GoodsKindWeighingGroupId
+          then Items.Add('('+IntToStr(GoodsKind_Array[i].Code)+') '+ GoodsKind_Array[i].Name);
 
-  with spSelect do
-  begin
-       StoredProcName:='gpSelect_Scale_Goods';
-       OutputType:=otDataSet;
-       Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
-       Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
-       Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
-       Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
-       Execute;
-  end;
-  //
+          if i<10 then Columns:=1 else Columns:=2;
 
-
-  //код вида товара(упаковки)
-  //EditKindPackageCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','GoodsKindCode','','1');
-  //for I := 0 to Length(GoodsKindWeighing)-1 do
-  //  rgKindPackage.Items.Add('('+IntToStr(GoodsKindWeighing[i].Num)+') '+ GoodsKindWeighing[i].Name);
-  //rgKindPackage.ItemIndex:=   GetListOrder_ByCode(StrToInt(EditKindPackageCode.Text), GoodsKindWeighing);
-
-{
-  for I := 0 to Length(GoodsKindWeighing)-1 do
-   if IntToStr(GoodsKindWeighing[i].Num) = EditKindPackageCode.Text then
-       rgKindPackage.ItemIndex:=  StrToInt(EditKindPackageCode.Text)-1;
-}
-{
-     if Length(PriceList) >0
-     then begin
-            rgKindPackage.Columns:=2;
-            rgPriceList.Columns:=1;
-            PriceListPanel.Width:=PriceListPanel.Width-100;
-            EditPriceListCode.Width:=EditPriceListCode.Width-100;
-            KindPackagePanel.Width:=KindPackagePanel.Width+100;
      end;
-}
-
-{
-     fEnterGoodsCode:=false;
-     fEnterGoodsName:=false;
-     // Tare
-     for i:=0 to _CountTare-1 do
-        rgTare.Items.Add('('+IntToStr(i+1)+') '+myReplaceFloat(GetStringValue('select case when Tare_Weight=-1 then GoodsName else cast (Tare_Weight as TVarCharMedium)end AS RetV from dba.GoodsProperty where GoodsCode = '+IntToStr(_CodeStartTare+i+1)))+' кг');
-     // TareWeight
-     gbTareWeightEnter.Visible:=_CountTareWeightEnter>0;
-     // TareWeightEnter
-     EditTareWeightEnter.Text:='';
-     // PriceList
-     if _isCalcPriceList=zc_rvYes
-     then begin
-            rgKindPackage.Columns:=2;
-            rgPriceList.Columns:=1;
-            PriceListPanel.Width:=PriceListPanel.Width-100;
-            EditPriceListCode.Width:=EditPriceListCode.Width-100;
-            KindPackagePanel.Width:=KindPackagePanel.Width+100;
-            rgPriceList.Items.Add('(1) '+_PriceListName_byCalc_new);
-            rgPriceList.Items.Add('(2) '+_PriceListName_byCalc_old);
-          end
-     else
-         for i:=0 to ParamsPriceList.Count-1 do
-            rgPriceList.Items.Add('('+IntToStr(i+1)+') '+GetStringValue('select PriceListName AS RetV from dba.PriceList_byHistory where Id = '+ParamsPriceList.Items[i].AsString));
-     // Discount
-     for i:=0 to ParamsDiscount.Count-1 do
-        rgDiscount.Items.Add('('+IntToStr(i+1)+') '+ParamsDiscount.Items[i].AsString+' %');
-     // KindPackage
-     for i:=0 to ParamsKindPackage.Count-1 do
-        rgKindPackage.Items.Add('('+IntToStr(i+1)+') '+GetStringValue('select isnull((select KindPackageName AS RetV from dba.KindPackage where Id = '+ParamsKindPackage.Items[i].AsString+'),'+FormatToVarCharServer('-')+') AS RetV'));
-      if rgKindPackage.Items.Count=1 then rgKindPackage.ItemIndex:=0;
-      if rgPriceList.Items.Count=1 then rgPriceList.ItemIndex:=0;
-}
-
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.ButtonRefreshClick(Sender: TObject);
-var GoodsCode:String;
-begin
-    with spSelect do begin
-        GoodsCode:= DataSet.FieldByName('GoodsCode').AsString;
-        Execute;
-        if GoodsCode <> '' then
-          DataSet.Locate('GoodsCode',GoodsCode,[loCaseInsensitive]);
-    end;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.ButtonExitClick(Sender: TObject);
-begin Close end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditTareCountEnter(Sender: TObject);
-var Key:Word;
-    findTareCode:Integer;
-begin
-{
-      TEdit(Sender).SelectAll;
-      Key:=13;
-      //
-      if (ActiveControl=EditKindPackageCode)and(rgKindPackage.ItemIndex>=0)and(rgKindPackage.Items.Count=1)then begin rgKindPackage.ItemIndex:=0;FormKeyDown(Sender,Key,[]);end;
-      if (ActiveControl=EditPriceListCode)and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)then FormKeyDown(Sender,Key,[]);
-      //
-      try findTareCode:=StrToInt(trim(EditTareCode.Text))+_CodeStartTare;except findTareCode:=0;end;
-      if (ActiveControl=EditTareWeightEnter)and(FindParamName(ParamsCodeTareWeightEnter,IntToStr(findTareCode))='')then FormKeyDown(Sender,Key,[]);
-}
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditGoodsCodeEnter(Sender: TObject);
-begin TEdit(Sender).SelectAll;end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditGoodsNameEnter(Sender: TObject);
-var GoodsCode:String;
-begin
-  GoodsCode:= CDS.FieldByName('GoodsCode').AsString;
-  //
-  TEdit(Sender).SelectAll;
-  EditGoodsCode.Text:='';
-  CDS.Filtered:=false;
-  if EditGoodsName.Text<>'' then begin fEnterGoodsName:=true;CDS.Filtered:=true;end;
-  //
-  if GoodsCode <> '' then
-    CDS.Locate('GoodsCode',GoodsCode,[loCaseInsensitive,loPartialKey]);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 var findTareCode:Integer;
 begin
-//      if (ActiveControl=EditGoodsCode)or(ActiveControl=EditGoodsName) then showMessage('');
-//    if Key=13 then
-//      ActiveControl:=EditTareCount;
-//      exit;
-    //
-    //****try findTareCode:=StrToInt(trim(EditTareCode.Text))+_CodeStartTare;except findTareCode:=0;end;
-    //
     if Key=13 then
-      if (ActiveControl=EditGoodsCode)or(ActiveControl=EditGoodsName) then ActiveControl:=EditKindPackageCode
-      else if ActiveControl=EditKindPackageCode then ActiveControl:=EditTareCount
-           else if ActiveControl=EditTareCount then ActiveControl:=EditTareCode
-                else if ActiveControl=EditTareCode then if (rgTare.ItemIndex>0)//and(FindParamName(ParamsCodeTareWeightEnter,IntToStr(findTareCode))<>'')
+    begin
+      if (ActiveControl=EditGoodsCode) then EditGoodsCodeExit(EditGoodsCode);
+      if (ActiveControl=EditGoodsName) then EditGoodsNameExit(EditGoodsName);
+
+      if (ActiveControl=EditGoodsCode)and(CDS.RecordCount=1)
+      then ActiveControl:=EditGoodsKindCode
+      else if (ActiveControl=EditGoodsCode)
+           then ActiveControl:=EditGoodsName
+           else if (ActiveControl=EditGoodsName)and(CDS.RecordCount=1)
+                then ActiveControl:=EditGoodsKindCode
+                else if (ActiveControl=EditGoodsName)
+                then ActiveControl:=EditGoodsCode
+                else if (ActiveControl=DBGrid)and(CDS.RecordCount>0)
+                     then DBGridDblClick(DBGrid)
+
+      else if ActiveControl=EditGoodsKindCode then ActiveControl:=EditTareCount
+           else if ActiveControl=EditTareCount then ActiveControl:=EditTareWeightCode
+                else if ActiveControl=EditTareWeightCode then if (rgTareWeight.ItemIndex=rgTareWeight.Items.Count-1)and(gbTareWeightEnter.Visible)
                                                         then ActiveControl:=EditTareWeightEnter
-                                                        else ActiveControl:=EditDiscountCode
-                     else if ActiveControl=EditTareWeightEnter then ActiveControl:=EditDiscountCode
-                          else if ActiveControl=EditDiscountCode then ActiveControl:=EditPriceListCode
+                                                        else ActiveControl:=EditChangePercentCode
+                     else if ActiveControl=EditTareWeightEnter then ActiveControl:=EditChangePercentCode
+                          else if ActiveControl=EditChangePercentCode then ActiveControl:=EditPriceListCode
                                else if ActiveControl=EditPriceListCode then ButtonSaveAllItemClick(Self);
+    end;
     //
-    if Key=32 then
+    {if Key=32 then
       if ActiveControl=EditGoodsCode then ActiveControl:=EditGoodsName
-      else if ActiveControl=EditGoodsName then ActiveControl:=EditGoodsCode;
+      else if ActiveControl=EditGoodsName then ActiveControl:=EditGoodsCode;}
     //
     //if Key=27 then Close;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.ButtonSaveAllItemClick(Sender: TObject);
-begin
-     if Checked then ModalResult:=mrOK;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
@@ -336,46 +196,7 @@ end;
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
-     Result:=(rgKindPackage.ItemIndex>=0)and(rgTare.ItemIndex>=0)and(rgDiscount.ItemIndex>=0)and(rgPriceList.ItemIndex>=0);
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditGoodsCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
-begin
-     if(Key<>32)and(Key<>27)and(Key<>13)then begin fEnterGoodsCode:=true;fEnterGoodsName:=false;end
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditGoodsNameKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
-begin
-     if(Key<>32)and(Key<>27)and(Key<>13)then fEnterGoodsCode:=false;fEnterGoodsName:=true;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditGoodsCodeKeyPress(Sender: TObject;var Key: Char);
-begin if(Key=' ')or(Key='+')then key:=#0;end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditGoodsCodeExit(Sender: TObject);
-var GoodsCode:Integer;
-begin fEnterGoodsCode:=false;
-     //???if (EditGoodsCode.Text='') then exit;
-     try GoodsCode:=StrToInt(EditGoodsCode.Text) except GoodsCode:=0;end;
-     if (GoodsWeight<0.0001)//and(not((GoodsCode>=_CodeStartGoods_onEnterWeight)and(GoodsCode<=_CodeEndGoods_onEnterWeight)))
-     then ActiveControl:=EditGoodsCode
-     else
-         if (ActiveControl<>EditGoodsName)and((GoodsCode<=0)or(GoodsCode<>CDS.FieldByName('GoodsCode').AsInteger))
-         then ActiveControl:=EditGoodsCode;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditGoodsNameExit(Sender: TObject);
-var GoodsCode:Integer;
-begin {fEnterGoodsName:=false;}
-     //???if EditGoodsName.Text='' then exit;
-     //
-     GoodsCode:=CDS.FieldByName('GoodsCode').AsInteger;
-     //
-     if (GoodsWeight<0.0001)//and(not((GoodsCode>=_CodeStartGoods_onEnterWeight)and(GoodsCode<=_CodeEndGoods_onEnterWeight)))
-     then ActiveControl:=EditGoodsCode
-     else
-        if GoodsCode<=0 then ActiveControl:=EditGoodsName
-        else EditGoodsCode.Text:=IntToStr(GoodsCode);
+     Result:=(rgGoodsKind.ItemIndex>=0)and(rgTareWeight.ItemIndex>=0)and(rgChangePercent.ItemIndex>=0)and(rgPriceList.ItemIndex>=0);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeChange(Sender: TObject);
@@ -383,264 +204,371 @@ begin
      if fEnterGoodsCode then
        with CDS do begin
            Filtered:=false;
-           if EditGoodsCode.Text<>'' then Filtered:=true;
+           if trim(EditGoodsCode.Text)<>'' then Filtered:=true;
        end;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditGoodsCodeEnter(Sender: TObject);
+begin TEdit(Sender).SelectAll;end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditGoodsCodeExit(Sender: TObject);
+var Code_begin:Integer;
+begin
+     {try Code_begin:=StrToInt(EditGoodsCode.Text) except Code_begin:=0;end;
+     if (GoodsWeight<0.0001)//and(not((GoodsCode>=_CodeStartGoods_onEnterWeight)and(GoodsCode<=_CodeEndGoods_onEnterWeight)))
+     then ActiveControl:=EditGoodsCode;
+     else
+         if (ActiveControl<>EditGoodsName)and((Code_begin<=0)or(Code_begin<>CDS.FieldByName('GoodsCode').AsInteger))
+         then ActiveControl:=EditGoodsCode;}
+     //
+     if (CDS.Filtered=false)and(Length(trim(EditGoodsCode.Text))>0)
+     then begin fEnterGoodsCode:=true;CDS.Filtered:=true;end;
+
+     if CDS.RecordCount=0 then ActiveControl:=EditGoodsCode
+     else fEnterGoodsCode:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditGoodsCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
+begin
+     if(Key<>32)and(Key<>27)and(Key<>13)then begin fEnterGoodsCode:=true;fEnterGoodsName:=false;EditGoodsName.Text:='';end
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditGoodsCodeKeyPress(Sender: TObject;var Key: Char);
+begin if(Key=' ')or(Key='+')then Key:=#0;end;
+{------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsNameChange(Sender: TObject);
-var GoodsCode:String;
+var Code_begin:String;
 begin
      if fEnterGoodsName then
        with CDS do begin
-           GoodsCode:= FieldByName('GoodsCode').AsString;
+           Code_begin:= FieldByName('GoodsCode').AsString;
            Filtered:=false;
-           if EditGoodsName.Text<>'' then Filtered:=true;
-           if GoodsCode <> '' then Locate('GoodsCode',GoodsCode,[loCaseInsensitive,loPartialKey]);
+           if trim(EditGoodsName.Text)<>'' then Filtered:=true;
+           if Code_begin <> '' then Locate('GoodsCode',Code_begin,[loCaseInsensitive,loPartialKey]);
        end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.QueryFilterRecord(DataSet: TDataSet;  var Accept: Boolean);
-//var
-//   KindPackageId:Integer;
+procedure TGuideGoodsForm.EditGoodsNameEnter(Sender: TObject);
+var Code_begin:String;
 begin
-{
-     if fEnterGoodsCode then
-       if  (EditGoodsCode.Text=DataSet.FieldByName('GoodsCode').AsString)
-       then Accept:=true else Accept:=false;
-     if fEnterGoodsName then
-       if  (pos(AnsiUpperCase(EditGoodsName.Text),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
-
-       then Accept:=true else Accept:=false;
-}
+  TEdit(Sender).SelectAll;
+  CDS.Filtered:=false;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditTareCountKeyPress(Sender: TObject;var Key: Char);
-var TareCountCode:Integer;
+procedure TGuideGoodsForm.EditGoodsNameExit(Sender: TObject);
+var Code_begin:Integer;
 begin
-{
+     {Code_begin:=CDS.FieldByName('GoodsCode').AsInteger;
+     //
+     if (GoodsWeight<0.0001)//and(not((GoodsCode>=_CodeStartGoods_onEnterWeight)and(GoodsCode<=_CodeEndGoods_onEnterWeight)))
+     then ActiveControl:=EditGoodsCode;
+     else
+        if (Code_begin<=0)and(CDS.RecordCount<=1) then ActiveControl:=EditGoodsName
+        else if (Code_begin>0)and(CDS.RecordCount=1) then EditGoodsCode.Text:=IntToStr(Code_begin);}
+
+     if (CDS.Filtered=false)and(Length(trim(EditGoodsName.Text))>0)
+     then begin fEnterGoodsName:=true;CDS.Filtered:=true;end;
+
+     if CDS.RecordCount=0 then ActiveControl:=EditGoodsName
+     else fEnterGoodsName:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditGoodsNameKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
+begin
+     if(Key<>27)and(Key<>13)then begin fEnterGoodsCode:=false;fEnterGoodsName:=true;EditGoodsCode.Text:='';end
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
+begin if(Key='+')then Key:=#0;end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditGoodsKindCodeChange(Sender: TObject);
+var Code_begin:Integer;
+begin
+     try Code_begin:=StrToInt(EditGoodsKindCode.Text) except Code_begin:=-1;end;
+     if (Code_begin<=0)
+     then rgGoodsKind.ItemIndex:=-1
+     else rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,Code_begin);
+     //
+//     if EditGoodsCode.Text<>''then fEnterGoodsCode:=true else if EditGoodsName.Text<>''then fEnterGoodsName:=true;
+//     with Query do
+//        if (EditGoodsCode.Text='')and(EditGoodsName.Text='') then Filtered:=false else Filtered:=true;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditGoodsKindCodeExit(Sender: TObject);
+begin if (rgGoodsKind.ItemIndex=-1)then ActiveControl:=EditGoodsKindCode
+      else
+        if CDS.RecordCount<>1 then
+        begin
+             ShowMessage('Ошибка.Не выбран <Код товара>.');
+             ActiveControl:=EditGoodsCode;
+        end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditGoodsKindCodeKeyPress(Sender: TObject;var Key: Char);
+var findIndex:Integer;
+begin
      if Key=' ' then Key:=#0;
      if Key='+' then
      begin
           Key:=#0;
-          try TareCountCode:=StrToInt(trim(EditTareCount.Text))+_CodeStartCountTare-1+1;except TareCountCode:=0;end;
-          if (TareCountCode>=_CodeStartCountTare+_CountCountTare-1)or(TareCountCode<_CodeStartCountTare)
-          then TareCountCode:=_CodeStartCountTare
-          else TareCountCode:=TareCountCode+1;
-          EditTareCount.Text:=IntToStr(TareCountCode-_CodeStartCountTare+1-1);
-          EditTareCountExit(Self);
+
+          if (rgGoodsKind.ItemIndex = rgGoodsKind.Items.Count-1)or(rgGoodsKind.ItemIndex = -1)
+          then findIndex:=GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,-1)
+          else findIndex:=1+GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex);
           //
+          EditGoodsKindCode.Text:=IntToStr(GoodsKind_Array[findIndex].Code);
           TEdit(Sender).SelectAll;
      end;
-}
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.rgGoodsKindClick(Sender: TObject);
+var findIndex:Integer;
+begin
+    findIndex:=GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex);
+    EditGoodsKindCode.Text:=IntToStr(GoodsKind_Array[findIndex].Code);
+    ActiveControl:=EditGoodsKindCode;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTareCountEnter(Sender: TObject);
+var Key:Word;
+begin
+      TEdit(Sender).SelectAll;
+      Key:=13;
+      //
+      //if (ActiveControl=EditTareCount)and(GBUpak.Visible)
+      //then begin
+      //          PanelUpak.Caption:=GetStringValue('select zf_MyRound0(zf_CalcDivisionNoRound('+FormatToFloatServer(GoodsWeight)+',GoodsProperty_Detail.Ves_onUpakovka))as RetV from dba.GoodsProperty join dba.KindPackage on KindPackage.KindPackageCode = '+trim(EditKindPackageCode.Text)+' join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId=GoodsProperty.Id and GoodsProperty_Detail.KindPackageID=KindPackage.Id where GoodsProperty.GoodsCode = '+trim(EditGoodsCode.Text));
+      //end;
+      //
+      if (ActiveControl=EditGoodsKindCode)and(rgGoodsKind.ItemIndex>=0)and(rgGoodsKind.Items.Count=1)then begin rgGoodsKind.ItemIndex:=0;FormKeyDown(Sender,Key,[]);end;
+      if (ActiveControl=EditPriceListCode)and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)then FormKeyDown(Sender,Key,[]);
+      //
+      if (ActiveControl=EditTareWeightEnter)and(rgTareWeight.ItemIndex<>rgTareWeight.Items.Count-1)
+      then FormKeyDown(Sender,Key,[]);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareCountExit(Sender: TObject);
 var TareCount:Integer;
 begin
-{
-     try TareCount:=StrToInt(trim(EditTareCount.Text));except TareCount:=-1;end;
+     try TareCount:=StrToInt(trim(EditTareCount.Text));except TareCount:=0;end;
      //
-     if FindParamName(ParamsCountTare,IntToStr(TareCount))=''
+     if (TareCount>Length(TareCount_Array))
      then ActiveControl:=EditTareCount;
-}
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTareCountKeyPress(Sender: TObject;var Key: Char);
+var Code_begin:Integer;
+begin
+     if Key=' ' then Key:=#0;
+     if Key='+' then
+     begin
+          Key:=#0;
+          //
+          try Code_begin:=StrToInt(trim(EditTareCount.Text));except Code_begin:=0;end;
+          //
+          if Code_begin>=Length(TareCount_Array) then EditTareCount.Text:= '0' else EditTareCount.Text:= IntToStr(Code_begin+1);
+          //
+          TEdit(Sender).SelectAll;
+     end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTareWeightCodeChange(Sender: TObject);
+var Code_begin:Integer;
+begin
+     try Code_begin:=StrToInt(EditTareWeightCode.Text) except Code_begin:=-1;end;
+     if (Code_begin<0)
+     then rgTareWeight.ItemIndex:=-1
+     else rgTareWeight.ItemIndex:=GetArrayList_Index_byCode(TareWeight_Array,Code_begin);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTareWeightCodeExit(Sender: TObject);
+begin
+     if rgTareWeight.ItemIndex=-1 then ActiveControl:=EditTareWeightCode;
+     if (rgTareWeight.ItemIndex <> rgTareWeight.Items.Count-1)and(gbTareWeightEnter.Visible)
+     then EditTareWeightEnter.Text:='';
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTareWeightCodeKeyPress(Sender: TObject;var Key: Char);
+var findIndex:Integer;
+begin
+     if Key=' ' then Key:=#0;
+     if Key='+' then
+     begin
+          Key:=#0;
+          //
+          if (rgTareWeight.ItemIndex = rgTareWeight.Items.Count-1)or(rgTareWeight.ItemIndex = -1)
+          then findIndex:=0
+          else findIndex:=1+rgTareWeight.ItemIndex;
+          //
+          EditTareWeightCode.Text:=IntToStr(TareWeight_Array[findIndex].Code);
+          TEdit(Sender).SelectAll;
+     end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.rgTareWeightClick(Sender: TObject);
+begin
+    EditTareWeightCode.Text:=IntToStr(TareWeight_Array[rgTareWeight.ItemIndex].Code);
+    ActiveControl:=EditTareWeightCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareWeightEnterExit(Sender: TObject);
 var TareWeight:Double;
 begin
-{
      if trim (EditTareWeightEnter.Text)='' then EditTareWeightEnter.Text:='0';
      //
      try TareWeight:=StrToFloat(trim(EditTareWeightEnter.Text));except TareWeight:=-1;end;
      //
      if TareWeight<0
      then ActiveControl:=EditTareWeightEnter;
-}
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditTareCodeKeyPress(Sender: TObject;var Key: Char);
-var TareCode:Integer;
+procedure TGuideGoodsForm.EditChangePercentCodeChange(Sender: TObject);
+var Code_begin:Integer;
 begin
-{
+     try Code_begin:=StrToInt(EditChangePercentCode.Text) except Code_begin:=-1;end;
+     if (Code_begin<0)
+     then rgChangePercent.ItemIndex:=-1
+     else rgChangePercent.ItemIndex:=GetArrayList_Index_byCode(ChangePercent_Array,Code_begin);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditChangePercentCodeExit(Sender: TObject);
+begin
+     if rgChangePercent.ItemIndex=-1 then ActiveControl:=EditChangePercentCode;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditChangePercentCodeKeyPress(Sender: TObject;var Key: Char);
+var findIndex:Integer;
+begin
      if Key=' ' then Key:=#0;
      if Key='+' then
      begin
           Key:=#0;
-          try TareCode:=StrToInt(trim(EditTareCode.Text))+_CodeStartTare-1;except TareCode:=0;end;
-          if (TareCode>=_CodeStartTare+_CountTare-1)or(TareCode<_CodeStartTare)
-          then TareCode:=_CodeStartTare
-          else TareCode:=TareCode+1;
-          EditTareCode.Text:=IntToStr(TareCode-_CodeStartTare+1);
-          EditTareCodeExit(Self);
           //
+          if (rgChangePercent.ItemIndex = rgChangePercent.Items.Count-1)or(rgChangePercent.ItemIndex = -1)
+          then findIndex:=0
+          else findIndex:=1+rgChangePercent.ItemIndex;
+          //
+          EditChangePercentCode.Text:=IntToStr(ChangePercent_Array[findIndex].Code);
           TEdit(Sender).SelectAll;
      end;
-}
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditTareCodeExit(Sender: TObject);
+procedure TGuideGoodsForm.rgChangePercentClick(Sender: TObject);
 begin
-     if rgTare.ItemIndex=-1 then ActiveControl:=EditTareCode;
+    EditChangePercentCode.Text:=IntToStr(rgChangePercent.ItemIndex+1);
+    ActiveControl:=EditChangePercentCode;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditDiscountCodeKeyPress(Sender: TObject;var Key: Char);
-var DiscountCode:Integer;
+procedure TGuideGoodsForm.EditPriceListCodeChange(Sender: TObject);
+var Code_begin:Integer;
 begin
-{
-     if Key=' ' then Key:=#0;
-     if Key='+' then
-     begin
-          Key:=#0;
-          try DiscountCode:=StrToInt(trim(EditDiscountCode.Text))+_CodeStartDiscount-1;except DiscountCode:=0;end;
-          if (DiscountCode>=_CodeStartDiscount+_CountDiscount-1)or(DiscountCode<_CodeStartDiscount)
-          then DiscountCode:=_CodeStartDiscount
-          else DiscountCode:=DiscountCode+1;
-          EditDiscountCode.Text:=IntToStr(DiscountCode-_CodeStartDiscount+1);
-          EditDiscountCodeExit(Self);
-          //
-          TEdit(Sender).SelectAll;
-     end;
-}
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditKindPackageCodeKeyPress(Sender: TObject;var Key: Char);
-var KindPackageCode:Integer;
-begin
-{
-     if Key=' ' then Key:=#0;
-     if Key='+' then
-     begin
-          Key:=#0;
-          try KindPackageCode:=StrToInt(trim(EditKindPackageCode.Text));except KindPackageCode:=0;end;
-          if (KindPackageCode>=rgKindPackage.Items.Count)or(KindPackageCode<1)
-          then KindPackageCode:=1
-          else KindPackageCode:=KindPackageCode+1;
-          EditKindPackageCode.Text:=IntToStr(KindPackageCode);
-          EditKindPackageCodeExit(Self);
-          //
-          TEdit(Sender).SelectAll;
-     end;
-}
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditDiscountCodeExit(Sender: TObject);
-begin if rgDiscount.ItemIndex=-1 then ActiveControl:=EditDiscountCode;end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditKindPackageCodeExit(Sender: TObject);
-begin //if (rgKindPackage.ItemIndex=-1)and(trim(EditGoodsCode.Text)<>'') then ActiveControl:=EditKindPackageCode;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditPriceListCodeKeyPress(Sender: TObject;var Key: Char);
-var PriceListCode:Integer;
-begin
-{
-     if Key=' ' then Key:=#0;
-     if Key='+' then
-     begin
-          Key:=#0;
-          try PriceListCode:=StrToInt(trim(EditPriceListCode.Text));except PriceListCode:=0;end;
-          if (PriceListCode>=Length(PriceList)) or(PriceListCode<1)
-          then PriceListCode:=1
-          else PriceListCode:=PriceListCode+1;
-          EditPriceListCode.Text:=IntToStr(PriceListCode);
-          EditPriceListCodeExit(Self);
-          //
-          TEdit(Sender).SelectAll;
-     end;
- }
+     try Code_begin:=StrToInt(EditPriceListCode.Text) except Code_begin:=-1;end;
+     if (Code_begin<0)
+     then rgPriceList.ItemIndex:=-1
+     else rgPriceList.ItemIndex:=GetArrayList_Index_byCode(PriceList_Array,Code_begin);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditPriceListCodeExit(Sender: TObject);
 begin if rgPriceList.ItemIndex=-1 then ActiveControl:=EditPriceListCode;end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditKindPackageCodeChange(Sender: TObject);
-var KindPackageCode:Integer;
+procedure TGuideGoodsForm.EditPriceListCodeKeyPress(Sender: TObject;var Key: Char);
+var findIndex:Integer;
 begin
-{
-     try KindPackageCode:=StrToInt(EditKindPackageCode.Text) except KindPackageCode:=-1;end;
-     if (rgKindPackage.Items.Count<KindPackageCode)or(KindPackageCode<0)
-     then rgKindPackage.ItemIndex:=-1
-     else rgKindPackage.ItemIndex:=KindPackageCode-1;
-}
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditTareCodeChange(Sender: TObject);
-var TareCode:Integer;
-begin
-{
-     try TareCode:=StrToInt(EditTareCode.Text) except TareCode:=-1;end;
-     if (rgTare.Items.Count<TareCode)or(TareCode<0) then rgTare.ItemIndex:=-1
-     else rgTare.ItemIndex:=TareCode-1;
-     if (rgTare.ItemIndex<0)or(FindParamName(ParamsCodeTareWeightEnter,IntToStr(TareCode+_CodeStartTare))='')
-     then EditTareWeightEnter.Text:=''
-}
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditDiscountCodeChange(Sender: TObject);
-var DiscountCode:Integer;
-begin
-{
-     try DiscountCode:=StrToInt(EditDiscountCode.Text) except DiscountCode:=-1;end;
-     if (rgDiscount.Items.Count<DiscountCode)or(DiscountCode<0) then rgDiscount.ItemIndex:=-1
-     else rgDiscount.ItemIndex:=DiscountCode-1;
-}
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.EditPriceListCodeChange(Sender: TObject);
-var PriceListCode:Integer;
-begin
-{
-     try PriceListCode:=StrToInt(EditPriceListCode.Text) except PriceListCode:=-1;end;
-     if (rgPriceList.Items.Count<PriceListCode)or(PriceListCode<0) then rgPriceList.ItemIndex:=-1
-     else rgPriceList.ItemIndex:=PriceListCode-1;
-}
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.rgTareClick(Sender: TObject);
-begin
-    EditTareCode.Text:=IntToStr(rgTare.ItemIndex+1);
-    ActiveControl:=EditTareCode;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.rgDiscountClick(Sender: TObject);
-begin
-    EditDiscountCode.Text:=IntToStr(rgDiscount.ItemIndex+1);
-    ActiveControl:=EditDiscountCode;
+     if Key=' ' then Key:=#0;
+     if Key='+' then
+     begin
+          Key:=#0;
+          //
+          if (rgPriceList.ItemIndex = rgPriceList.Items.Count-1)or(rgPriceList.ItemIndex = -1)
+          then findIndex:=0
+          else findIndex:=1+rgPriceList.ItemIndex;
+          //
+          EditPriceListCode.Text:=IntToStr(PriceList_Array[findIndex].Code);
+          TEdit(Sender).SelectAll;
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.rgPriceListClick(Sender: TObject);
 begin
-    EditPriceListCode.Text:=IntToStr(rgPriceList.ItemIndex+1);
-    ActiveControl:=EditPriceListCode;
+    EditChangePercentCode.Text:=IntToStr(rgChangePercent.ItemIndex+1);
+    ActiveControl:=EditChangePercentCode;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.rgKindPackageClick(Sender: TObject);
-begin
-    //EditKindPackageCode.Text:=IntToStr(GoodsKindWeighing[rgKindPackage.ItemIndex].Num );
-    ActiveControl:=EditKindPackageCode;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.DataSourceDataChange(Sender: TObject;Field: TField);
-begin
-{     if Query.RecordCount=1 then
-     begin
-          PanelZakazDiffCount.Caption:=FormatFloat(_fmtFloat+' кг.',Query.FieldByName('DiffCount').AsFloat);
-          PanelZakazTotalCount.Caption:=FormatFloat(_fmtFloat+' кг.',Query.FieldByName('TotalZakazCount').AsFloat);
-     end
-     else begin
-               PanelZakazDiffCount.Caption:='???';
-               PanelZakazTotalCount.Caption:='???';
-          end;
-//     if ((EditGoodsCode.Text<>'')or(EditGoodsName.Text<>''))and(rgKindPackage.ItemIndex)
-}
-end;
-procedure TGuideGoodsForm.DBGrid1DblClick(Sender: TObject);
+procedure TGuideGoodsForm.DBGridDblClick(Sender: TObject);
 begin
      EditGoodsCode.Text:=CDS.FieldByName('GoodsCode').AsString;
-     ActiveControl:=EditKindPackageCode;
-     EditKindPackageCode.SelectAll;
+     fEnterGoodsCode:=true;
+     EditGoodsCodeChange(EditGoodsCode);
+     //
+     ActiveControl:=EditGoodsKindCode;
+     EditGoodsKindCode.SelectAll;
 end;
-
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.ButtonRefreshClick(Sender: TObject);
+var GoodsCode:String;
+begin
+    with spSelect do begin
+        GoodsCode:= DataSet.FieldByName('GoodsCode').AsString;
+        Execute;
+        if GoodsCode <> '' then
+          DataSet.Locate('GoodsCode',GoodsCode,[loCaseInsensitive]);
+    end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.ButtonSaveAllItemClick(Sender: TObject);
+begin
+     if Checked then ModalResult:=mrOK;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.ButtonExitClick(Sender: TObject);
+begin Close end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.FormCreate(Sender: TObject);
+var i:Integer;
+begin
+  fEnterGoodsCode:=false;
+  fEnterGoodsName:=false;
 
+  //вес тары (ручной режим)
+  gbTareWeightEnter.Visible:=GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE');
+  //вес тары
+  for i := 0 to Length(TareWeight_Array)-1 do
+    if TareWeight_Array[i].Number>=1000
+    then rgTareWeight.Items.Add('('+IntToStr(0)+') '+ TareWeight_Array[i].Name)
+    else rgTareWeight.Items.Add('('+IntToStr(TareWeight_Array[i].Number)+') '+ TareWeight_Array[i].Name);
+  //Скидка по весу
+  for i := 0 to Length(ChangePercent_Array)-1 do
+    rgChangePercent.Items.Add('('+IntToStr(ChangePercent_Array[i].Number)+') '+ ChangePercent_Array[i].Name);
+  //прайс-лист
+  for i := 0 to Length(PriceList_Array)-1 do
+    rgPriceList.Items.Add('('+IntToStr(PriceList_Array[i].Number)+') '+ PriceList_Array[i].Name);
+
+  with spSelect do
+  begin
+       StoredProcName:='gpSelect_Scale_Goods';
+       OutputType:=otDataSet;
+       Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
+       Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
+       Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
+       Execute;
+  end;
+  //
+
+     // PriceList
+     if _isCalcPriceList=zc_rvYes
+     then begin
+            rgKindPackage.Columns:=2;
+            rgPriceList.Columns:=1;
+            PriceListPanel.Width:=PriceListPanel.Width-100;
+            EditPriceListCode.Width:=EditPriceListCode.Width-100;
+            KindPackagePanel.Width:=KindPackagePanel.Width+100;
+            rgPriceList.Items.Add('(1) '+_PriceListName_byCalc_new);
+            rgPriceList.Items.Add('(2) '+_PriceListName_byCalc_old);
+          end
+     else
+         for i:=0 to ParamsPriceList.Count-1 do
+            rgPriceList.Items.Add('('+IntToStr(i+1)+') '+GetStringValue('select PriceListName AS RetV from dba.PriceList_byHistory where Id = '+ParamsPriceList.Items[i].AsString));
+end;
+{------------------------------------------------------------------------------}
 end.

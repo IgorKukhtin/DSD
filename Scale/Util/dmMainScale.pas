@@ -14,6 +14,7 @@ type
     function gpSelect_ToolsWeighing_onLevelChild(inScaleNum:Integer;inLevelChild: String): TArrayList;
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
 
+    function gpSelect_Scale_GoodsKindWeighing: TArrayList;
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpSelect_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
   end;
@@ -30,8 +31,7 @@ uses Inifiles;
 {$R *.dfm}
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(inScaleNum:Integer;inLevelChild: String): TArrayList;
-var
-    i: integer;
+var i: integer;
 begin
     with spSelect do
     begin
@@ -42,8 +42,9 @@ begin
        Params.AddParam('inLevelChild', ftString, ptInput, inLevelChild);
        //try
          Execute;
+         DataSet.First;
          SetLength(Result, DataSet.RecordCount);
-         for I := 0 to DataSet.RecordCount-1 do
+         for i:= 0 to DataSet.RecordCount-1 do
          begin
           Result[i].Number := DataSet.FieldByName('Number').asInteger;
           Result[i].Id     := DataSet.FieldByName('Id').asInteger;
@@ -57,6 +58,7 @@ begin
          ShowMessage('Ошибка получения - gpSelect_ToolsWeighing_onLevelChild');
        end;}
     end;
+    //
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
@@ -76,6 +78,34 @@ begin
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpSelect_Scale_GoodsKindWeighing: TArrayList;
+var i: integer;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpSelect_Scale_GoodsKindWeighing';
+       OutputType:=otDataSet;
+       Params.Clear;
+       //try
+         Execute;
+         DataSet.First;
+         SetLength(Result, DataSet.RecordCount);
+         for i:= 0 to DataSet.RecordCount-1 do
+         begin
+          Result[i].Number := DataSet.FieldByName('GroupId').asInteger;
+          Result[i].Id     := DataSet.FieldByName('GoodsKindId').asInteger;
+          Result[i].Code   := DataSet.FieldByName('GoodsKindCode').asInteger;
+          Result[i].Name   := DataSet.FieldByName('GoodsKindName').asString;
+          Result[i].Value  := '';
+          DataSet.Next;
+         end;
+       {except
+         SetLength(Result, 0);
+         ShowMessage('Ошибка получения - gpSelect_ToolsWeighing_onLevelChild');
        end;}
     end;
 end;

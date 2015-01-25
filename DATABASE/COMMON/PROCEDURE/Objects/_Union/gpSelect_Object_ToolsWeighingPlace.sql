@@ -44,6 +44,16 @@ BEGIN
      WHERE Object_PaidKind.DescId = zc_Object_PaidKind()
     
     UNION ALL
+     SELECT Object_GoodsKindWeighingGroup.Id
+          , Object_GoodsKindWeighingGroup.ObjectCode AS Code     
+          , Object_GoodsKindWeighingGroup.ValueData AS Name
+          , ObjectDesc.ItemName
+          , Object_GoodsKindWeighingGroup.isErased
+     FROM Object AS Object_GoodsKindWeighingGroup
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_GoodsKindWeighingGroup.DescId
+     WHERE Object_GoodsKindWeighingGroup.DescId = zc_Object_GoodsKindWeighingGroup()
+
+    UNION ALL
      SELECT MovementDesc.Id
           , MovementDesc.Id       AS Code     
           , MovementDesc.ItemName AS Name
