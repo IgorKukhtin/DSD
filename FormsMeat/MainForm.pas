@@ -11,7 +11,7 @@ uses
   Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
   dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter, Vcl.Menus,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
-  cxEdit, cxLabel;
+  cxEdit, cxLabel, frxBarcode;
 
 const
   WM_ChangeKeyboard = WM_USER + 1;
