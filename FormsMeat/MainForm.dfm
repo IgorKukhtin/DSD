@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList

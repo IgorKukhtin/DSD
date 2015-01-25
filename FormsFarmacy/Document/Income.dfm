@@ -2,6 +2,7 @@ inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 776
+  ExplicitTop = -170
   ExplicitWidth = 784
   ExplicitHeight = 553
   PixelsPerInch = 96
@@ -476,8 +477,8 @@ inherited IncomeForm: TIncomeForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actChoiceGoods'
-      FormName = 'TGoodsMainForm'
-      FormNameParam.Value = 'TGoodsMainForm'
+      FormName = 'TGoodsLiteForm'
+      FormNameParam.Value = 'TGoodsLiteForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
