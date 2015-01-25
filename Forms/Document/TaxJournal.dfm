@@ -2,9 +2,8 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitLeft = -128
-  ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitWidth = 1118
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -469,6 +468,47 @@ inherited TaxJournalForm: TTaxJournalForm
       FormName = 'TTaxForm'
       FormNameParam.Name = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      FormName = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+        end>
     end
     object actMovementCheck: TdsdOpenForm [9]
       Category = 'DSDLib'
@@ -814,6 +854,10 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           Visible = True
           ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
         end
         item
           Visible = True
@@ -1298,8 +1342,8 @@ inherited TaxJournalForm: TTaxJournalForm
     ConnectionParams.User.Value = Null
     ConnectionParams.Password.Value = Null
     SendToFTP = False
-    Left = 544
-    Top = 88
+    Left = 776
+    Top = 192
   end
   object spGetDirectoryName: TdsdStoredProc
     StoredProcName = 'gpGetDirectoryName'
