@@ -2,8 +2,8 @@ object GuideGoodsForm: TGuideGoodsForm
   Left = 578
   Top = 242
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
-  ClientHeight = 563
-  ClientWidth = 825
+  ClientHeight = 572
+  ClientWidth = 799
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,19 +18,20 @@ object GuideGoodsForm: TGuideGoodsForm
   TextHeight = 14
   object GridPanel: TPanel
     Left = 0
-    Top = 235
-    Width = 825
-    Height = 283
+    Top = 250
+    Width = 799
+    Height = 277
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 224
-    ExplicitHeight = 294
-    object DBGrid1: TDBGrid
+    ExplicitTop = 235
+    ExplicitWidth = 825
+    ExplicitHeight = 283
+    object DBGrid: TDBGrid
       Left = 0
       Top = 33
-      Width = 825
-      Height = 250
+      Width = 799
+      Height = 244
       Align = alClient
       DataSource = DataSource
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit]
@@ -40,7 +41,7 @@ object GuideGoodsForm: TGuideGoodsForm
       TitleFont.Height = -12
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
-      OnDblClick = DBGrid1DblClick
+      OnDblClick = DBGridDblClick
       Columns = <
         item
           Expanded = False
@@ -67,11 +68,12 @@ object GuideGoodsForm: TGuideGoodsForm
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 825
+      Width = 799
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 825
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -134,57 +136,64 @@ object GuideGoodsForm: TGuideGoodsForm
   object ParamsPanel: TPanel
     Left = 0
     Top = 0
-    Width = 825
-    Height = 235
+    Width = 799
+    Height = 250
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    object TarePanel: TPanel
-      Left = 300
+    object infoPanelTare: TPanel
+      Left = 389
       Top = 0
-      Width = 182
-      Height = 235
-      Align = alLeft
+      Width = 230
+      Height = 250
+      Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitLeft = 244
-      ExplicitHeight = 224
-      object rgTare: TRadioGroup
+      ExplicitLeft = 352
+      object rgTareWeight: TRadioGroup
         Left = 0
-        Top = 80
-        Width = 182
-        Height = 63
+        Top = 82
+        Width = 230
+        Height = 83
         Align = alClient
         Caption = #1058#1072#1088#1072' '#1074#1077#1089
         Color = clBtnFace
         Columns = 2
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
         ParentColor = False
+        ParentFont = False
         TabOrder = 2
-        OnClick = rgTareClick
-        ExplicitTop = 70
-        ExplicitHeight = 62
+        OnClick = rgTareWeightClick
+        ExplicitTop = 80
+        ExplicitWidth = 182
+        ExplicitHeight = 63
       end
       object PanelTare: TPanel
         Left = 0
         Top = 0
-        Width = 182
-        Height = 39
+        Width = 230
+        Height = 41
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitWidth = 182
         object gbTareCount: TGroupBox
           Left = 0
           Top = 0
-          Width = 107
-          Height = 39
+          Width = 155
+          Height = 41
           Align = alClient
           Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
           TabOrder = 0
-          ExplicitHeight = 36
+          ExplicitWidth = 107
           object EditTareCount: TEdit
             Left = 5
             Top = 17
-            Width = 85
+            Width = 100
             Height = 22
             TabOrder = 0
             Text = 'EditTareCount'
@@ -193,87 +202,90 @@ object GuideGoodsForm: TGuideGoodsForm
             OnKeyPress = EditTareCountKeyPress
           end
         end
-        object gbTareCode: TGroupBox
-          Left = 107
+        object gbTareWeightCode: TGroupBox
+          Left = 155
           Top = 0
           Width = 75
-          Height = 39
+          Height = 41
           Align = alRight
           Caption = #1050#1086#1076' '#1074#1077#1089
           TabOrder = 1
-          ExplicitHeight = 35
-          object EditTareCode: TEdit
+          ExplicitLeft = 107
+          object EditTareWeightCode: TEdit
             Left = 5
             Top = 17
             Width = 60
             Height = 22
             TabOrder = 0
-            Text = 'EditTareCode'
-            OnChange = EditTareCodeChange
+            Text = 'EditTareWeightCode'
+            OnChange = EditTareWeightCodeChange
             OnEnter = EditTareCountEnter
-            OnExit = EditTareCodeExit
-            OnKeyPress = EditTareCodeKeyPress
+            OnExit = EditTareWeightCodeExit
+            OnKeyPress = EditTareWeightCodeKeyPress
           end
         end
       end
       object DiscountPanel: TPanel
         Left = 0
-        Top = 143
-        Width = 182
-        Height = 92
+        Top = 165
+        Width = 230
+        Height = 85
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 3
-        ExplicitTop = 132
-        object rgDiscount: TRadioGroup
+        ExplicitWidth = 182
+        object rgChangePercent: TRadioGroup
           Left = 0
           Top = 41
-          Width = 182
-          Height = 51
+          Width = 230
+          Height = 44
           Align = alClient
           Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1074#1077#1089#1091
           Color = clBtnFace
           Columns = 2
           ParentColor = False
           TabOrder = 1
-          OnClick = rgDiscountClick
-          ExplicitTop = 35
-          ExplicitHeight = 57
+          OnClick = rgChangePercentClick
+          ExplicitWidth = 182
+          ExplicitHeight = 51
         end
-        object gbDiscountCode: TGroupBox
+        object gbChangePercentCode: TGroupBox
           Left = 0
           Top = 0
-          Width = 182
+          Width = 230
           Height = 41
           Align = alTop
           Caption = #1050#1086#1076' '#1089#1082#1080#1076#1082#1080
           TabOrder = 0
-          object EditDiscountCode: TEdit
+          ExplicitWidth = 182
+          object EditChangePercentCode: TEdit
             Left = 5
             Top = 17
-            Width = 85
+            Width = 100
             Height = 22
             TabOrder = 0
-            Text = 'EditDiscountCode'
-            OnChange = EditDiscountCodeChange
+            Text = 'EditChangePercentCode'
+            OnChange = EditChangePercentCodeChange
             OnEnter = EditTareCountEnter
-            OnExit = EditDiscountCodeExit
-            OnKeyPress = EditDiscountCodeKeyPress
+            OnExit = EditChangePercentCodeExit
+            OnKeyPress = EditChangePercentCodeKeyPress
           end
         end
       end
       object gbTareWeightEnter: TGroupBox
         Left = 0
-        Top = 39
-        Width = 182
+        Top = 41
+        Width = 230
         Height = 41
         Align = alTop
         Caption = #1042#1077#1089' '#1090#1072#1088#1099
         TabOrder = 1
+        ExplicitTop = 39
+        ExplicitWidth = 182
         object EditTareWeightEnter: TEdit
           Left = 5
           Top = 17
-          Width = 85
+          Width = 100
           Height = 22
           TabOrder = 0
           Text = 'EditTareWeightEnter'
@@ -282,52 +294,44 @@ object GuideGoodsForm: TGuideGoodsForm
         end
       end
     end
-    object PriceListPanel: TPanel
-      Left = 482
+    object infoPanelPriceList: TPanel
+      Left = 619
       Top = 0
-      Width = 277
-      Height = 235
-      Align = alLeft
+      Width = 180
+      Height = 250
+      Align = alRight
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitLeft = 426
-      ExplicitHeight = 224
       object rgPriceList: TRadioGroup
         Left = 0
-        Top = 35
-        Width = 277
-        Height = 189
+        Top = 41
+        Width = 180
+        Height = 209
+        Align = alClient
         Caption = #1055#1088#1072#1081#1089'-'#1051#1080#1089#1090
         Color = clBtnFace
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = 12615808
-        Font.Height = -8
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ParentColor = False
-        ParentFont = False
         TabOrder = 1
         OnClick = rgPriceListClick
+        ExplicitLeft = -4
+        ExplicitTop = 38
+        ExplicitWidth = 236
+        ExplicitHeight = 194
       end
       object gbPriceListCode: TGroupBox
         Left = 0
         Top = 0
-        Width = 277
-        Height = 35
+        Width = 180
+        Height = 41
         Align = alTop
         Caption = #1050#1086#1076
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = 12615808
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
         TabOrder = 0
+        ExplicitWidth = 277
         object EditPriceListCode: TEdit
           Left = 5
-          Top = 12
+          Top = 17
           Width = 140
-          Height = 21
+          Height = 22
           TabOrder = 0
           Text = 'EditPriceListCode'
           OnChange = EditPriceListCodeChange
@@ -337,15 +341,15 @@ object GuideGoodsForm: TGuideGoodsForm
         end
       end
     end
-    object GoodsPanel: TPanel
+    object infoPanelGoods: TPanel
       Left = 0
       Top = 0
       Width = 134
-      Height = 235
+      Height = 250
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 224
+      ExplicitHeight = 235
       object gbGoodsName: TGroupBox
         Left = 0
         Top = 41
@@ -365,7 +369,7 @@ object GuideGoodsForm: TGuideGoodsForm
           OnEnter = EditGoodsNameEnter
           OnExit = EditGoodsNameExit
           OnKeyDown = EditGoodsNameKeyDown
-          OnKeyPress = EditGoodsCodeKeyPress
+          OnKeyPress = EditGoodsNameKeyPress
         end
       end
       object gbGoodsCode: TGroupBox
@@ -398,12 +402,11 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
         TabOrder = 2
-        ExplicitTop = 70
         object PanelGoodsWieghtValue: TPanel
           Left = 2
-          Top = 15
+          Top = 16
           Width = 130
-          Height = 24
+          Height = 23
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelGoodsWieghtValue'
@@ -417,67 +420,75 @@ object GuideGoodsForm: TGuideGoodsForm
         end
       end
     end
-    object KindPackagePanel: TPanel
+    object infoPanelGoodsKind: TPanel
       Left = 134
       Top = 0
-      Width = 166
-      Height = 235
-      Align = alLeft
+      Width = 255
+      Height = 250
+      Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitHeight = 224
-      object rgKindPackage: TRadioGroup
+      ExplicitWidth = 250
+      ExplicitHeight = 235
+      object rgGoodsKind: TRadioGroup
         Left = 0
         Top = 41
-        Width = 166
-        Height = 194
+        Width = 255
+        Height = 209
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
         Color = clBtnFace
         Columns = 2
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
         ParentColor = False
+        ParentFont = False
         TabOrder = 1
-        OnClick = rgKindPackageClick
-        ExplicitTop = 35
-        ExplicitWidth = 111
-        ExplicitHeight = 189
+        OnClick = rgGoodsKindClick
+        ExplicitLeft = 2
+        ExplicitTop = 38
       end
-      object gbKindPackageCode: TGroupBox
+      object gbGoodsKindCode: TGroupBox
         Left = 0
         Top = 0
-        Width = 166
+        Width = 255
         Height = 41
         Align = alTop
         Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
         TabOrder = 0
-        object EditKindPackageCode: TEdit
+        ExplicitWidth = 166
+        object EditGoodsKindCode: TEdit
           Left = 5
           Top = 17
           Width = 108
           Height = 22
           TabOrder = 0
-          Text = 'EditKindPackageCode'
-          OnChange = EditKindPackageCodeChange
+          Text = 'EditGoodsKindCode'
+          OnChange = EditGoodsKindCodeChange
           OnEnter = EditTareCountEnter
-          OnExit = EditKindPackageCodeExit
-          OnKeyPress = EditKindPackageCodeKeyPress
+          OnExit = EditGoodsKindCodeExit
+          OnKeyPress = EditGoodsKindCodeKeyPress
         end
       end
     end
   end
   object SummPanel: TPanel
     Left = 0
-    Top = 518
-    Width = 825
+    Top = 527
+    Width = 799
     Height = 45
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
+    ExplicitTop = 518
+    ExplicitWidth = 825
   end
   object DataSource: TDataSource
     DataSet = CDS
-    OnDataChange = DataSourceDataChange
     Left = 320
     Top = 336
   end

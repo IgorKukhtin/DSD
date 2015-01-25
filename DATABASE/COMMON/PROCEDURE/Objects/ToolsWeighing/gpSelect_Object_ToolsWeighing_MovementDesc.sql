@@ -13,6 +13,7 @@ RETURNS TABLE (Number           Integer
              , ToId             Integer, ToCode           Integer, ToName       TVarChar
              , PaidKindId       Integer, PaidKindName     TVarChar
              , PriceListId      Integer, PriceListCode    Integer, PriceListName TVarChar
+             , GoodsKindWeighingGroupId Integer
              , ColorGridValue   Integer
              , MovementDescName        TVarChar
              , MovementDescName_master TVarChar
@@ -30,22 +31,24 @@ BEGIN
     vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inScaleNum, 'Movement', '', 'Count', '10', inSession));
 
     -- временные таблица
-    CREATE TEMP TABLE _tmpToolsWeighing (Number         Integer
-                                       , MovementDescId Integer
-                                       , FromId         TVarChar
-                                       , ToId           TVarChar
-                                       , PaidKindId     TVarChar
-                                       , ColorGridValue Integer
-                                       , OrderById        Integer
+    CREATE TEMP TABLE _tmpToolsWeighing (Number                   Integer
+                                       , MovementDescId           Integer
+                                       , FromId                   TVarChar
+                                       , ToId                     TVarChar
+                                       , PaidKindId               TVarChar
+                                       , GoodsKindWeighingGroupId TVarChar
+                                       , ColorGridValue           Integer
+                                       , OrderById                Integer
                                         ) ON COMMIT DROP;
     -- формирование
-    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, ColorGridValue, OrderById)
+    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById)
        SELECT tmp.Number
-            , CASE WHEN tmp.MovementDescId <> '' THEN tmp.MovementDescId ELSE '0' END :: Integer AS MovementDescId
+            , CASE WHEN TRIM (tmp.MovementDescId) <> '' THEN tmp.MovementDescId ELSE '0' END :: Integer AS MovementDescId
             , tmp.FromId
             , tmp.ToId
             , tmp.PaidKindId
-            , CASE WHEN tmp.ColorGridValue <> '' THEN tmp.ColorGridValue ELSE '0' END :: Integer AS ColorGridValue
+            , tmp.GoodsKindWeighingGroupId
+            , CASE WHEN TRIM (tmp.ColorGridValue) <> '' THEN tmp.ColorGridValue ELSE '0' END :: Integer AS ColorGridValue
             , CASE WHEN tmp.MovementDescId = zc_Movement_Income() :: TVarChar
                         THEN 1
                    WHEN tmp.MovementDescId = zc_Movement_ReturnOut() :: TVarChar
@@ -68,11 +71,12 @@ BEGIN
               END * 1000 AS OrderById
        FROM
       (SELECT tmp.Number
-            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'DescId'    , '0', inSession) AS MovementDescId
-            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'    , '0', inSession) AS FromId
-            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'      , '0', inSession) AS ToId
-            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'PaidKindId', '0', inSession) AS PaidKindId
-            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid' , '0', inSession) AS ColorGridValue
+            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'DescId'    ,               '0', inSession) AS MovementDescId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'    ,               '0', inSession) AS FromId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'      ,               '0', inSession) AS ToId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'PaidKindId',               '0', inSession) AS PaidKindId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsKindWeighingGroupId', '0', inSession) AS GoodsKindWeighingGroupId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid' ,               '0', inSession) AS ColorGridValue
        FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
       ) AS tmp;
 
@@ -92,18 +96,20 @@ BEGIN
            , Object_PriceList.Id                             AS PriceListId
            , Object_PriceList.ObjectCode                     AS PriceListCode
            , Object_PriceList.ValueData                      AS PriceListName
+           , Object_GoodsKindWeighingGroup.Id                AS GoodsKindWeighingGroupId
            , _tmpToolsWeighing.ColorGridValue                AS ColorGridValue
 
-           , CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
-                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')'
+           , ('(' || _tmpToolsWeighing.Number :: TVarChar ||') '
+           || CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '')
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_Income())
-                       THEN COALESCE (Object_PaidKind.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')'
+                       THEN COALESCE (Object_PaidKind.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
-                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')'
+                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
 
-                  ELSE TRIM (COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '') || '   (' || _tmpToolsWeighing.Number :: TVarChar ||')')
-             END :: TVarChar AS MovementDescName
+                  ELSE TRIM (COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, ''))
+              END) :: TVarChar AS MovementDescName
 
            , (MovementDesc.ItemName
   || ': '  || CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
@@ -120,10 +126,11 @@ BEGIN
            , (_tmpToolsWeighing.OrderById + _tmpToolsWeighing.Number) :: Integer AS OrderById
 
        FROM _tmpToolsWeighing
-            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis() AND _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = CAST (CASE WHEN _tmpToolsWeighing.FromId <> '' THEN _tmpToolsWeighing.FromId ELSE '0' END AS Integer)
-            LEFT JOIN Object AS Object_To ON Object_To.Id = CAST (CASE WHEN _tmpToolsWeighing.ToId <> '' THEN _tmpToolsWeighing.ToId ELSE '0' END AS Integer)
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CAST (CASE WHEN _tmpToolsWeighing.PaidKindId <> '' THEN _tmpToolsWeighing.PaidKindId ELSE '0' END AS Integer)
+            LEFT JOIN Object AS Object_PriceList              ON Object_PriceList.Id              = zc_PriceList_Basis() AND _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
+            LEFT JOIN Object AS Object_From                   ON Object_From.Id                   = CAST (CASE WHEN TRIM (_tmpToolsWeighing.FromId) <> ''                   THEN _tmpToolsWeighing.FromId                   ELSE '0' END AS Integer)
+            LEFT JOIN Object AS Object_To                     ON Object_To.Id                     = CAST (CASE WHEN TRIM (_tmpToolsWeighing.ToId) <> ''                     THEN _tmpToolsWeighing.ToId                     ELSE '0' END AS Integer)
+            LEFT JOIN Object AS Object_PaidKind               ON Object_PaidKind.Id               = CAST (CASE WHEN TRIM (_tmpToolsWeighing.PaidKindId) <> ''               THEN _tmpToolsWeighing.PaidKindId               ELSE '0' END AS Integer)
+            LEFT JOIN Object AS Object_GoodsKindWeighingGroup ON Object_GoodsKindWeighingGroup.Id = CAST (CASE WHEN TRIM (_tmpToolsWeighing.GoodsKindWeighingGroupId) <> '' THEN _tmpToolsWeighing.GoodsKindWeighingGroupId ELSE '0' END AS Integer)
             LEFT JOIN MovementDesc ON MovementDesc.Id = _tmpToolsWeighing.MovementDescId
        WHERE _tmpToolsWeighing.MovementDescId <> 0
       UNION 
@@ -140,6 +147,7 @@ BEGIN
             , 0                                   AS PriceListId
             , 0                                   AS PriceListCode
             , '' :: TVarChar                      AS PriceListName
+            , 0                                   AS GoodsKindWeighingGroupId
             , 0                                   AS ColorGridValue
             , MovementDesc.ItemName               AS MovementDescName
             , '' :: TVarChar                      AS MovementDescName_master

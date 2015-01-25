@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
     IN inInfoMoneyId      Integer,
     IN inSession          TVarChar      -- сессия пользователя
 )
-RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (GoodsGroupNameFull TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , Price TFloat
@@ -24,7 +25,8 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       SELECT tmpGoods.GoodsId           AS GoodsId
+       SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , tmpGoods.GoodsId           AS GoodsId
             , tmpGoods.GoodsCode         AS GoodsCode
             , tmpGoods.GoodsName         AS GoodsName
             , Object_GoodsKind.Id        AS GoodsKindId
@@ -47,6 +49,11 @@ BEGIN
                                                         AND 1=0
              WHERE Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
             ) AS tmpGoods
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -55,6 +62,8 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+       ORDER BY ObjectString_Goods_GoodsGroupFull.ValueData
+              , tmpGoods.GoodsName
       ;
 
 END;
