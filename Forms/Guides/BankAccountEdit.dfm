@@ -70,12 +70,12 @@
   object cxLabel2: TcxLabel
     Left = 40
     Top = 159
-    Caption = #1041#1072#1085#1082#1080
+    Caption = #1041#1072#1085#1082
   end
   object cxLabel4: TcxLabel
     Left = 40
     Top = 215
-    Caption = #1042#1072#1083#1102#1090#1099
+    Caption = #1042#1072#1083#1102#1090#1072
   end
   object edJuridical: TcxButtonEdit
     Left = 40

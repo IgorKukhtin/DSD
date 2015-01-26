@@ -14,7 +14,7 @@ type
   TBank = class(TObjectTest)
      function InsertDefault: integer; override;
   public
-    function InsertUpdateBank(const Id, Code: Integer; Name: string; MFO: string; JuridicalId: integer): integer;
+    function InsertUpdateBank(const Id, Code: Integer; Name, MFO, SWIFT, IBAN: string; JuridicalId: integer): integer;
     constructor Create; override;
   end;
 
@@ -66,7 +66,7 @@ var
   JuridicalId: Integer;
 begin
   JuridicalId := TJuridical.Create.GetDefault;
-  result := InsertUpdateBank(0, -1, '¡‡ÌÍ', 'Ã‘Œ', JuridicalId);
+  result := InsertUpdateBank(0, -1, '¡‡ÌÍ', 'Ã‘Œ', 'SWIFT', 'IBAN', JuridicalId);
   inherited;
 end;
 
@@ -77,6 +77,8 @@ begin
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inMFO', ftString, ptInput, MFO);
+  FParams.AddParam('inSWIFT', ftString, ptInput, SWIFT);
+  FParams.AddParam('inIBAN', ftString, ptInput, IBAN);
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
   result := InsertUpdate(FParams);
 end;

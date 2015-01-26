@@ -58,6 +58,9 @@ type
     cxLabel8: TcxLabel;
     colPartitionGoods: TcxGridDBColumn;
     colMakerName: TcxGridDBColumn;
+    actRefreshGoodsCode: TdsdExecStoredProc;
+    bbRefreshGoodsCode: TdxBarButton;
+    spIncome_GoodsId: TdsdStoredProc;
   private
     { Private declarations }
   public

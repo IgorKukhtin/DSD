@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Bank(Integer,Integer,TVarChar,TVarChar,Integer,TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_Bank(Integer,Integer,TVarChar,TVarChar,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Bank(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Bank(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Bank(
  INOUT ioId	                 Integer,       -- ключ объекта < Банк>
@@ -62,12 +63,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Bank (Integer,Integer,TVarChar,TVarChar,Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Bank (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.01.15                         * Подправил список параметров на ALTER FUNCTION
  10.10.14                                                       *
  08.05.14                                        * add lpCheckRight
  04.07.13          * vbCode_calc

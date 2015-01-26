@@ -409,14 +409,6 @@
 				<Form>UnitTreeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Bank.pas">
-				<Form>BankForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\BankEdit.pas">
-				<Form>BankEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsEdit.pas">
 				<Form>GoodsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -590,6 +582,25 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\ComponentDBTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
+				<Form>BankAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BankAccountEdit.pas">
+				<Form>BankAccountEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Bank.pas">
+				<Form>BankForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BankEdit.pas">
+				<Form>BankEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\BankAccountTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\CurrencyTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

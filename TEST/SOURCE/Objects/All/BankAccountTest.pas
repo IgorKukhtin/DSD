@@ -22,7 +22,7 @@ type
 
 implementation
 
-uses DB, dbObjectMeatTest, UtilConst, TestFramework, SysUtils, JuridicalTest,
+uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest,
      BankTest, CurrencyTest;
 
 { TdbUnitTest }

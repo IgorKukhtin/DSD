@@ -616,8 +616,8 @@ uses
   RoleMaskEdit in '..\..\Forms\RoleMaskEdit.pas' {RoleMaskEditForm: TParentForm},
   RoleUnion in '..\..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
   ToolsWeighingPlace_Object in '..\..\Forms\Guides\ToolsWeighingPlace_Object.pas' {ToolsWeighingPlace_ObjectForm: TParentForm},
-  Scales in '..\..\SOURCE\Scale\Scales.pas';
-
+  Scales in '..\..\SOURCE\Scale\Scales.pas',
+  SysScalesLib_TLB in '..\..\Scale\Util\SysScalesLib_TLB.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

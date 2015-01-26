@@ -1843,6 +1843,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\Scale\Scales.pas"/>
+			<DCCReference Include="..\..\Scale\Util\SysScalesLib_TLB.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

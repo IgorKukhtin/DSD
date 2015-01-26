@@ -2,7 +2,7 @@ unit Scales;
 
 interface
 
-uses dsdAction, Classes, dsdDb;
+uses dsdAction, Classes, dsdDb, SysScalesLib_TLB;
 
 type
 
@@ -10,6 +10,8 @@ type
 
   TScale = class(TObject)
   private
+    Scale_DB: TCasDB;
+    Scale_BI: TCasBI;
     FScale: OleVariant;
     FComPort: String;
     FComSpeed: Integer;
@@ -47,7 +49,8 @@ type
 
 implementation
 
-uses VCL.ActnList, Variants, ComObj, IniFiles, SysUtils, TypInfo, Dialogs;
+uses VCL.ActnList, Variants, ComObj, IniFiles, SysUtils, TypInfo,
+     Dialogs;
 
 procedure Register;
 begin
@@ -110,7 +113,38 @@ const
 var
   IniFile: TIniFile;
 begin
-  if FScale = Unassigned then begin
+  if not Assigned(Scale_DB) and not Assigned(Scale_BI) then begin
+     IniFile := TIniFile.Create( ExtractFilePath(ParamStr(0)) + IniFileName);
+     try
+       FComPort := IniFile.ReadString(Section, 'ComPort', 'COM1');
+       FComSpeed := IniFile.ReadInteger(Section, 'ComSpeed', 9600);
+       FScaleType := TScaleType(GetEnumValue(TypeInfo(TScaleType), IniFile.ReadString(Section, 'ScaleType', 'stBI')));
+       case FScaleType of
+          stBI: begin
+                   Scale_BI := TCasBI.Create(nil);
+                   Scale_BI.Active := 0;
+                   Scale_BI.CommPort := FComPort;
+                   Scale_BI.CommSpeed := 9600;//NEW!!!
+                   Scale_BI.Active := 1;//NEW!!!
+                end;
+          stDB: begin
+                  Scale_DB := TCasDB.Create(nil);
+                  Scale_DB.Active := 0;
+                  Scale_DB.CommPort := FComPort;
+                  Scale_DB.Active := 1;
+                end;
+       end;
+       //FScale.CommPort := FComPort;
+//       FScale.CommSpeed := FComSpeed;
+     finally
+       IniFile.WriteString(Section, 'ComPort', FComPort);
+       IniFile.WriteInteger(Section, 'ComSpeed', FComSpeed);
+       IniFile.WriteString(Section, 'ScaleType', GetEnumName(TypeInfo(TScaleType), ord(FScaleType)));
+       IniFile.Free;
+     end;
+  end;
+
+(*  if FScale = Unassigned then begin
      IniFile := TIniFile.Create( ExtractFilePath(ParamStr(0)) + IniFileName);
      try
        FComPort := IniFile.ReadString(Section, 'ComPort', 'COM1');
@@ -121,23 +155,26 @@ begin
           stDB: FScale := CreateComObject(CLASS_CasDB) as IDispatch;
        end;
        FScale.CommPort := FComPort;
-       FScale.CommSpeed := FComSpeed;
+//       FScale.CommSpeed := FComSpeed;
      finally
        IniFile.WriteString(Section, 'ComPort', FComPort);
        IniFile.WriteInteger(Section, 'ComSpeed', FComSpeed);
        IniFile.WriteString(Section, 'ScaleType', GetEnumName(TypeInfo(TScaleType), ord(FScaleType)));
        IniFile.Free;
      end;
-  end;
+  end;*)
 end;
 
 function TScale.GetWeight: Double;
 begin
-  FScale.Active := 1;
+//  FScale.Active := 1;
   try
-    result := FScale.Weight
+    if Assigned(Scale_DB) then
+       result := Scale_DB.Weight;
+    if Assigned(Scale_BI) then
+       result := Scale_BI.Weight;
   finally
-    FScale.Active := 0;
+//    FScale.Active := 0;
   end;
 end;
 

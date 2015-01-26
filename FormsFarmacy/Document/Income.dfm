@@ -2,7 +2,6 @@ inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 776
-  ExplicitTop = -170
   ExplicitWidth = 784
   ExplicitHeight = 553
   PixelsPerInch = 96
@@ -516,6 +515,23 @@ inherited IncomeForm: TIncomeForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actRefreshGoodsCode: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spIncome_GoodsId
+      StoredProcList = <
+        item
+          StoredProc = spIncome_GoodsId
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -598,6 +614,10 @@ inherited IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbRefreshGoodsCode'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -674,6 +694,10 @@ inherited IncomeForm: TIncomeForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       Visible = ivAlways
       ImageIndex = 41
+    end
+    object bbRefreshGoodsCode: TdxBarButton
+      Action = actRefreshGoodsCode
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1328,5 +1352,21 @@ inherited IncomeForm: TIncomeForm
       end>
     Left = 687
     Top = 144
+  end
+  object spIncome_GoodsId: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Income_GoodsId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 264
+    Top = 296
   end
 end

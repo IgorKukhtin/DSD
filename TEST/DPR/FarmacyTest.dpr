@@ -136,8 +136,6 @@ uses
   Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm},
   UnitsTest in '..\SOURCE\Objects\All\Farmacy\UnitsTest.pas',
   UnitTree in '..\..\FormsFarmacy\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
-  Bank in '..\..\Forms\Bank.pas' {BankForm: TParentForm},
-  BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm: TParentForm},
   GoodsEdit in '..\..\FormsFarmacy\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   GoodsMain in '..\..\FormsFarmacy\Guides\GoodsMain.pas' {GoodsMainForm: TParentForm},
   GoodsPartnerCode in '..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas' {GoodsPartnerCodeForm: TParentForm},
@@ -206,7 +204,14 @@ uses
   MovementProtocol in '..\..\Forms\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
   ImportExportLinkTypeTest in '..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas',
   NDSKind in '..\..\Forms\Kind\NDSKind.pas' {NDSKindForm: TParentForm},
-  ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas';
+  ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas',
+  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
+  Bank in '..\..\Forms\Bank.pas' {BankForm: TParentForm},
+  BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm: TParentForm},
+  BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
+  BankTest in '..\SOURCE\Objects\All\BankTest.pas',
+  CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
