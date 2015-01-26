@@ -97,6 +97,7 @@
 			<DCCReference Include="..\SOURCE\Storage.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\Updater.pas"/>
 			<DCCReference Include="..\SOURCE\MessagesUnit.pas">
 				<Form>MessagesForm</Form>
 			</DCCReference>
