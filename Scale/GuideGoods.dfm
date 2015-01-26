@@ -24,9 +24,6 @@ object GuideGoodsForm: TGuideGoodsForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 235
-    ExplicitWidth = 825
-    ExplicitHeight = 283
     object DBGrid: TDBGrid
       Left = 0
       Top = 33
@@ -98,11 +95,6 @@ object GuideGoodsForm: TGuideGoodsForm
         item
           Expanded = False
           FieldName = 'Price_Return'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = 'Tahoma'
-          Font.Style = []
           Title.Alignment = taCenter
           Title.Caption = #1062#1077#1085#1072' ('#1074#1086#1079#1074#1088')'
           Title.Font.Charset = DEFAULT_CHARSET
@@ -135,7 +127,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 825
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -211,8 +202,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitLeft = 352
-      ExplicitHeight = 250
       object rgTareWeight: TRadioGroup
         Left = 0
         Top = 82
@@ -231,9 +220,6 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 2
         OnClick = rgTareWeightClick
-        ExplicitTop = 80
-        ExplicitWidth = 182
-        ExplicitHeight = 63
       end
       object PanelTare: TPanel
         Left = 0
@@ -243,7 +229,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 182
         object gbTareCount: TGroupBox
           Left = 0
           Top = 0
@@ -252,7 +237,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alClient
           Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
           TabOrder = 0
-          ExplicitWidth = 107
           object EditTareCount: TEdit
             Left = 5
             Top = 17
@@ -273,7 +257,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alRight
           Caption = #1050#1086#1076' '#1074#1077#1089
           TabOrder = 1
-          ExplicitLeft = 107
           object EditTareWeightCode: TEdit
             Left = 5
             Top = 17
@@ -296,8 +279,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 3
-        ExplicitTop = 165
-        ExplicitWidth = 182
         object rgChangePercent: TRadioGroup
           Left = 0
           Top = 41
@@ -311,8 +292,6 @@ object GuideGoodsForm: TGuideGoodsForm
           TabOrder = 1
           OnClick = rgChangePercentClick
           OnEnter = rgChangePercentClick
-          ExplicitWidth = 182
-          ExplicitHeight = 51
         end
         object gbChangePercentCode: TGroupBox
           Left = 0
@@ -322,7 +301,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alTop
           Caption = #1050#1086#1076' '#1089#1082#1080#1076#1082#1080
           TabOrder = 0
-          ExplicitWidth = 182
           object EditChangePercentCode: TEdit
             Left = 5
             Top = 17
@@ -345,8 +323,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1077#1089' '#1090#1072#1088#1099
         TabOrder = 1
-        ExplicitTop = 39
-        ExplicitWidth = 182
         object EditTareWeightEnter: TEdit
           Left = 5
           Top = 17
@@ -367,7 +343,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitHeight = 250
       object rgPriceList: TRadioGroup
         Left = 0
         Top = 41
@@ -380,10 +355,6 @@ object GuideGoodsForm: TGuideGoodsForm
         TabOrder = 1
         OnClick = rgPriceListClick
         OnEnter = rgPriceListClick
-        ExplicitLeft = -4
-        ExplicitTop = 38
-        ExplicitWidth = 236
-        ExplicitHeight = 194
       end
       object gbPriceListCode: TGroupBox
         Left = 0
@@ -393,7 +364,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1050#1086#1076
         TabOrder = 0
-        ExplicitWidth = 277
         object EditPriceListCode: TEdit
           Left = 5
           Top = 17
@@ -411,20 +381,20 @@ object GuideGoodsForm: TGuideGoodsForm
     object infoPanelGoods: TPanel
       Left = 0
       Top = 0
-      Width = 134
+      Width = 135
       Height = 256
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 235
       object gbGoodsName: TGroupBox
         Left = 0
         Top = 41
-        Width = 134
+        Width = 135
         Height = 41
         Align = alTop
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         TabOrder = 1
+        ExplicitWidth = 134
         object EditGoodsName: TEdit
           Left = 5
           Top = 17
@@ -442,14 +412,15 @@ object GuideGoodsForm: TGuideGoodsForm
       object gbGoodsCode: TGroupBox
         Left = 0
         Top = 0
-        Width = 134
+        Width = 135
         Height = 41
         Align = alTop
         Caption = #1050#1086#1076
         TabOrder = 0
+        ExplicitWidth = 134
         object EditGoodsCode: TEdit
-          Left = 3
-          Top = 13
+          Left = 5
+          Top = 17
           Width = 125
           Height = 22
           TabOrder = 0
@@ -464,15 +435,16 @@ object GuideGoodsForm: TGuideGoodsForm
       object gbGoodsWieghtValue: TGroupBox
         Left = 0
         Top = 82
-        Width = 134
+        Width = 135
         Height = 41
         Align = alTop
         Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
         TabOrder = 2
+        ExplicitWidth = 134
         object PanelGoodsWieghtValue: TPanel
           Left = 2
           Top = 16
-          Width = 130
+          Width = 131
           Height = 23
           Align = alClient
           BevelOuter = bvNone
@@ -484,23 +456,24 @@ object GuideGoodsForm: TGuideGoodsForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 130
         end
       end
     end
     object infoPanelGoodsKind: TPanel
-      Left = 134
+      Left = 135
       Top = 0
-      Width = 262
+      Width = 261
       Height = 256
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 332
-      ExplicitHeight = 250
+      ExplicitLeft = 134
+      ExplicitWidth = 262
       object rgGoodsKind: TRadioGroup
         Left = 0
         Top = 41
-        Width = 262
+        Width = 261
         Height = 215
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
@@ -515,20 +488,17 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 1
         OnClick = rgGoodsKindClick
-        ExplicitLeft = 2
-        ExplicitTop = 38
-        ExplicitWidth = 255
-        ExplicitHeight = 209
+        ExplicitWidth = 262
       end
       object gbGoodsKindCode: TGroupBox
         Left = 0
         Top = 0
-        Width = 262
+        Width = 261
         Height = 41
         Align = alTop
         Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
         TabOrder = 0
-        ExplicitWidth = 166
+        ExplicitWidth = 262
         object EditGoodsKindCode: TEdit
           Left = 5
           Top = 17
@@ -553,8 +523,6 @@ object GuideGoodsForm: TGuideGoodsForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitTop = 518
-    ExplicitWidth = 825
   end
   object DataSource: TDataSource
     DataSet = CDS

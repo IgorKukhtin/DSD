@@ -89,6 +89,7 @@ type
     procedure DBGridDblClick(Sender: TObject);
     procedure EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
   private
+    fStartWtrite:Boolean;
     fEnterGoodsCode:Boolean;
     fEnterGoodsName:Boolean;
     function Checked: boolean;
@@ -110,6 +111,8 @@ implementation
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Execute(ClientId:Integer;BillDate:TDateTime): boolean;
 begin
+     fStartWtrite:=true;
+
   GoodsWeight:=1.23;
   EditGoodsCode.Text:='';
   EditGoodsName.Text:='';
@@ -126,6 +129,11 @@ begin
   CDS.Filtered:=false;
 
      ActiveControl:=EditGoodsCode;
+     Application.ProcessMessages;
+     Application.ProcessMessages;
+     Application.ProcessMessages;
+     fStartWtrite:=false;
+
      result:=ShowModal=mrOk;
 end;
 {------------------------------------------------------------------------------}
@@ -184,8 +192,8 @@ begin
                                                         then ActiveControl:=EditTareWeightEnter
                                                         else ActiveControl:=EditChangePercentCode
                      else if ActiveControl=EditTareWeightEnter then ActiveControl:=EditChangePercentCode
-                          else if ActiveControl=EditChangePercentCode then ActiveControl:=EditPriceListCode
-                               else if ActiveControl=EditPriceListCode then ActiveControl:=EditGoodsCode ; //ButtonSaveAllItemClick(Self);
+                          else if ActiveControl=EditChangePercentCode then ButtonSaveAllItemClick(Self) //ActiveControl:=EditPriceListCode
+                               else if ActiveControl=EditPriceListCode then ButtonSaveAllItemClick(Self);
     end;
     //
     {if Key=32 then
@@ -236,6 +244,8 @@ begin TEdit(Sender).SelectAll;end;
 procedure TGuideGoodsForm.EditGoodsCodeExit(Sender: TObject);
 var Code_begin:Integer;
 begin
+      if fStartWtrite=true then exit;
+
      {try Code_begin:=StrToInt(EditGoodsCode.Text) except Code_begin:=0;end;
      if (GoodsWeight<0.0001)//and(not((GoodsCode>=_CodeStartGoods_onEnterWeight)and(GoodsCode<=_CodeEndGoods_onEnterWeight)))
      then ActiveControl:=EditGoodsCode;
@@ -280,6 +290,8 @@ end;
 procedure TGuideGoodsForm.EditGoodsNameExit(Sender: TObject);
 var Code_begin:Integer;
 begin
+     if fStartWtrite=true then exit;
+
      {Code_begin:=CDS.FieldByName('GoodsCode').AsInteger;
      //
      if (GoodsWeight<0.0001)//and(not((GoodsCode>=_CodeStartGoods_onEnterWeight)and(GoodsCode<=_CodeEndGoods_onEnterWeight)))
@@ -317,7 +329,10 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeExit(Sender: TObject);
-begin if (rgGoodsKind.ItemIndex=-1)then ActiveControl:=EditGoodsKindCode
+begin
+      if (fStartWtrite=true)or(ActiveControl=EditGoodsCode) then exit;
+
+      if (rgGoodsKind.ItemIndex=-1)then ActiveControl:=EditGoodsKindCode
       else
         if CDS.RecordCount<>1 then
         begin
@@ -381,6 +396,8 @@ end;
 procedure TGuideGoodsForm.EditTareCountExit(Sender: TObject);
 var TareCount:Integer;
 begin
+     if fStartWtrite=true then exit;
+
      try TareCount:=StrToInt(trim(EditTareCount.Text));except TareCount:=0;end;
      //
      if (TareCount>Length(TareCount_Array))
@@ -414,6 +431,8 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareWeightCodeExit(Sender: TObject);
 begin
+     if fStartWtrite=true then exit;
+
      if rgTareWeight.ItemIndex=-1 then ActiveControl:=EditTareWeightCode;
      if (rgTareWeight.ItemIndex <> rgTareWeight.Items.Count-1)and(gbTareWeightEnter.Visible)
      then EditTareWeightEnter.Text:='';
@@ -445,6 +464,8 @@ end;
 procedure TGuideGoodsForm.EditTareWeightEnterExit(Sender: TObject);
 var TareWeight:Double;
 begin
+     if fStartWtrite=true then exit;
+
      if trim (EditTareWeightEnter.Text)='' then EditTareWeightEnter.Text:='0';
      //
      try TareWeight:=StrToFloat(trim(EditTareWeightEnter.Text));except TareWeight:=-1;end;
@@ -464,6 +485,8 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditChangePercentCodeExit(Sender: TObject);
 begin
+     if fStartWtrite=true then exit;
+
      if rgChangePercent.ItemIndex=-1 then ActiveControl:=EditChangePercentCode;
 end;
 {------------------------------------------------------------------------------}
@@ -509,7 +532,10 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditPriceListCodeExit(Sender: TObject);
-begin {if rgPriceList.ItemIndex=-1 then ActiveControl:=EditPriceListCode;}end;
+begin
+     if fStartWtrite=true then exit;
+     {if rgPriceList.ItemIndex=-1 then ActiveControl:=EditPriceListCode;}
+end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditPriceListCodeKeyPress(Sender: TObject;var Key: Char);
 var findIndex:Integer;
@@ -531,7 +557,7 @@ end;
 procedure TGuideGoodsForm.rgPriceListClick(Sender: TObject);
 begin
     {EditPriceListCodeChange(EditPriceListCode);}
-    ActiveControl:=EditGoodsCode;
+    if ActiveControl=rgPriceList then ActiveControl:=EditGoodsCode;
     {EditPriceListCode.Text:=IntToStr(PriceList_Array[rgPriceList.ItemIndex].Code);
     ActiveControl:=EditPriceListCode;}
 end;
@@ -570,6 +596,7 @@ var i:Integer;
 begin
   fEnterGoodsCode:=false;
   fEnterGoodsName:=false;
+  fStartWtrite:=true;
 
   //вес тары (ручной режим)
   gbTareWeightEnter.Visible:=GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE');
