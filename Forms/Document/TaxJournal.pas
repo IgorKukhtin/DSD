@@ -92,6 +92,7 @@ type
     spUpdateIsMedoc: TdsdStoredProc;
     MedocListAction: TMedocAction;
     actUpdateIsMedoc: TdsdExecStoredProc;
+    actInsertMaskMulti: TMultiAction;
   private
     { Private declarations }
   public

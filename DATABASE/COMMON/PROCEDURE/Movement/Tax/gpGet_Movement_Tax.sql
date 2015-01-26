@@ -2,11 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Tax (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Tax (Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Tax(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inMovementId_Value  Integer  ,
+    IN inMask              Boolean  ,
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -23,12 +24,22 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
+DECLARE vbUserId Integer;
+
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Tax());
+     
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_Tax_Mask (ioId        := inMovementId
+                                              , inOperDate  := inOperDate
+                                              , inSession   := inSession); 
+     END If;
 
-     IF COALESCE (inMovementId_Value, 0) = 0
+
+     IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
          SELECT
@@ -69,10 +80,10 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             inMovementId						AS Id
+             Movement.Id						AS Id
 
-           , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
-           , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END AS OperDate
+           , Movement.InvNumber                                         AS InvNumber
+           , Movement.OperDate                                          AS OperDate
 
            , Object_Status.ObjectCode    				AS StatusCode
            , Object_Status.ValueData     				AS StatusName
@@ -176,19 +187,20 @@ BEGIN
 
 
 
-       WHERE Movement.Id = inMovementId_Value
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Tax();
      END IF;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_Tax (Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.01.15         * add Mask
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  24.04.14                                                        * add zc_MovementString_InvNumberBranch
  09.04.14                                        * add PartnerId
