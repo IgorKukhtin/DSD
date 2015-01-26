@@ -499,7 +499,20 @@ inherited TaxForm: TTaxForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrintTax_Client: TdsdPrintAction [19]
+    object actInsertMaskMulti: TMultiAction [19]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMaskDoc
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
+    object actPrintTax_Client: TdsdPrintAction [20]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -537,6 +550,38 @@ inherited TaxForm: TTaxForm
       ReportNameParam.ComponentItem = 'ReportNameTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object actInsertMaskDoc: TdsdInsertUpdateAction [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      FormName = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inMask'
+          Value = 'True'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = edOperDate
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -697,6 +742,14 @@ inherited TaxForm: TTaxForm
           ItemName = 'bbShowAll'
         end
         item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -780,6 +833,10 @@ inherited TaxForm: TTaxForm
     end
     object bbMeDoc: TdxBarButton
       Action = mactMeDoc
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actInsertMaskMulti
       Category = 0
     end
   end
@@ -1308,6 +1365,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
