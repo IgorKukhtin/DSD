@@ -474,8 +474,9 @@ inherited TaxJournalForm: TTaxJournalForm
           Value = Null
         end
         item
-          Name = 'inMovementId_Value'
-          Value = Null
+          Name = 'inMask'
+          Value = 'False'
+          DataType = ftBoolean
         end
         item
           Name = 'ShowAll'
@@ -496,12 +497,13 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           Name = 'Id'
           Value = Null
-        end
-        item
-          Name = 'inMovementId_Value'
-          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'inMask'
+          Value = 'True'
+          DataType = ftBoolean
         end
         item
           Name = 'inOperDate'
@@ -533,6 +535,28 @@ inherited TaxJournalForm: TTaxJournalForm
       FormName = 'TTaxForm'
       FormNameParam.Name = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inMask'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False

@@ -834,8 +834,9 @@ inherited TaxForm: TTaxForm
         Value = '0'
       end
       item
-        Name = 'inMovementId_Value'
+        Name = 'inMask'
         Value = '0'
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 280
@@ -861,10 +862,11 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'inMovementId_Value'
+        Name = 'inMask'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'inMovementId_Value'
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
