@@ -144,6 +144,7 @@ type
     procedure ButtonNewGetParamsClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonRefreshZakazClick(Sender: TObject);
+    procedure PanelWeight_ScaleDblClick(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -274,6 +275,11 @@ begin
      //
      PanelWeight_Scale.Caption:='';
 end;
+procedure TMainForm.PanelWeight_ScaleDblClick(Sender: TObject);
+begin
+   fGetScale_CurrentWeight;
+end;
+
 //------------------------------------------------------------------------------------------------
 function TMainForm.fGetScale_CurrentWeight:Double;
 begin

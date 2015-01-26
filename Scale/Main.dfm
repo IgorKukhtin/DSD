@@ -824,6 +824,7 @@ object MainForm: TMainForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
+        OnDblClick = PanelWeight_ScaleDblClick
       end
     end
   end

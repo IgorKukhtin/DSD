@@ -121,7 +121,7 @@ begin
           stDB: FScale := CreateComObject(CLASS_CasDB) as IDispatch;
        end;
        FScale.CommPort := FComPort;
-       FScale.CommSpeed := FComSpeed;
+       //FScale.CommSpeed := FComSpeed;
      finally
        IniFile.WriteString(Section, 'ComPort', FComPort);
        IniFile.WriteInteger(Section, 'ComSpeed', FComSpeed);
