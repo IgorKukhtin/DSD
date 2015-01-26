@@ -46,15 +46,16 @@ BEGIN
             , 0 AS Code
             , tmp.Name :: TVarChar AS Name
             , gpGet_ToolsWeighing_Value ('Scale_' || inScaleNum, inLevelChild, '', tmp.Name, CASE WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is' THEN 'FALSE' ELSE '1' END, inSession) AS Value
-       FROM (SELECT 'MovementNumber'       AS Name
-       UNION SELECT 'PriceListNumber'      AS Name
-       UNION SELECT 'TareCountNumber'      AS Name
-       UNION SELECT 'TareWeightNumber'     AS Name
-       UNION SELECT 'ChangePercentNumber'  AS Name
-       UNION SELECT 'GoodsKindNumber'      AS Name
+       FROM (SELECT 'MovementNumber'         AS Name
+       UNION SELECT 'TareCount'              AS Name
+       UNION SELECT 'TareWeightNumber'       AS Name
+       UNION SELECT 'ChangePercentNumber'    AS Name
+       UNION SELECT 'PriceListNumber'        AS Name
 
-       UNION SELECT 'isPreviewPrint'       AS Name
-       UNION SELECT 'isTareWeightEnter'    AS Name
+       UNION SELECT 'isPreviewPrint'         AS Name
+       UNION SELECT 'isTareWeightEnter'      AS Name
+
+       UNION SELECT 'DayPrior_PriceReturn' AS Name
             ) AS tmp
        ORDER BY 1
        ;
