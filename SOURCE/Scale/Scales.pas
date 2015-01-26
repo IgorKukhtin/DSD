@@ -47,7 +47,7 @@ type
 
 implementation
 
-uses VCL.ActnList, Variants, ComObj, IniFiles, SysUtils, TypInfo;
+uses VCL.ActnList, Variants, ComObj, IniFiles, SysUtils, TypInfo, Dialogs;
 
 procedure Register;
 begin
@@ -90,8 +90,13 @@ begin
 end;
 
 function TScaleAction.LocalExecute: Boolean;
+var Weight: double;
 begin
-  FWeight.Value := TScaleFactory.GetScale(ScaleType, ComPort, ComSpeed).Weight;
+  Weight := TScaleFactory.GetScale(ScaleType, ComPort, ComSpeed).Weight;
+  if Weight = 0 then
+     ShowMessage('Вес от весов не получен!')
+  else
+     FWeight.Value := Weight;
 end;
 
 { TScale }
