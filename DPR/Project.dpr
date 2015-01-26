@@ -68,7 +68,8 @@ uses
   GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas',
   MainForm in '..\FormsMeat\MainForm.pas' {MainForm},
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
-  Scales in '..\SOURCE\Scale\Scales.pas';
+  Scales in '..\SOURCE\Scale\Scales.pas',
+  SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -109,6 +109,7 @@ contains
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
-  Scales in '..\SOURCE\Scale\Scales.pas';
+  Scales in '..\SOURCE\Scale\Scales.pas',
+  SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas';
 
 end.
