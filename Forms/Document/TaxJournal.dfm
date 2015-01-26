@@ -474,8 +474,9 @@ inherited TaxJournalForm: TTaxJournalForm
           Value = Null
         end
         item
-          Name = 'inMovementId_Value'
-          Value = Null
+          Name = 'inMask'
+          Value = 'False'
+          DataType = ftBoolean
         end
         item
           Name = 'ShowAll'
@@ -489,19 +490,34 @@ inherited TaxJournalForm: TTaxJournalForm
           DataType = ftDateTime
         end>
     end
+    object actInsertMaskMulti: TMultiAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMask
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
     inherited actInsertMask: TdsdInsertUpdateAction
+      ImageIndex = -1
       FormName = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
-        end
-        item
-          Name = 'inMovementId_Value'
-          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'inMask'
+          Value = 'True'
+          DataType = ftBoolean
         end
         item
           Name = 'inOperDate'
@@ -510,7 +526,7 @@ inherited TaxJournalForm: TTaxJournalForm
           DataType = ftDateTime
         end>
     end
-    object actMovementCheck: TdsdOpenForm [9]
+    object actMovementCheck: TdsdOpenForm [10]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -533,6 +549,29 @@ inherited TaxJournalForm: TTaxJournalForm
       FormName = 'TTaxForm'
       FormNameParam.Name = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inMask'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
@@ -973,6 +1012,9 @@ inherited TaxJournalForm: TTaxJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited bbInsertMask: TdxBarButton
+      Action = actInsertMaskMulti
     end
     object bbTax: TdxBarButton
       Action = actTax

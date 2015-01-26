@@ -78,6 +78,9 @@ type
     bbMeDoc: TdxBarButton;
     spUpdateIsMedoc: TdsdStoredProc;
     actUpdateIsMedoc: TdsdExecStoredProc;
+    actInsertMaskDoc: TdsdInsertUpdateAction;
+    actInsertMaskMulti: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

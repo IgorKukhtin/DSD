@@ -93,6 +93,7 @@ type
     fEnterGoodsName:Boolean;
     function Checked: boolean;
     procedure InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
+    procedure InitializePriceList(execParams:TParams);
   public
     GoodsWeight:Double;
     function Execute(ClientId:Integer;BillDate:TDateTime): boolean;
@@ -114,12 +115,15 @@ begin
   EditGoodsName.Text:='';
   EditGoodsKindCode.Text:='';
   EditTareWeightEnter.Text:='';
-  EditTareCount.Text:=         GetArrayList_Value_byName(Default_Array,'TareCountNumber');
-  EditTareWeightCode.Text:=    GetArrayList_Value_byName(Default_Array,'TareWeightNumber');
-  EditPriceListCode.Text:=     GetArrayList_Value_byName(Default_Array,'PriceListNumber');
-  EditChangePercentCode.Text:= GetArrayList_Value_byName(Default_Array,'ChangePercentNumber');
+  EditTareCount.Text:=         GetArrayList_Value_byName(Default_Array,'TareCount');
+  EditTareWeightCode.Text:=    IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
+  EditChangePercentCode.Text:= IntToStr(ChangePercent_Array[GetArrayList_Index_byValue(ChangePercent_Array,ParamsMovement.ParamByName('ChangePercent').AsString)].Code); //IntToStr(ChangePercent_Array[GetArrayList_Index_byNumber(ChangePercent_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'ChangePercentNumber')))].Code);
+  EditPriceListCode.Text:=     IntToStr(PriceList_Array[GetArrayList_Index_byNumber(PriceList_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'PriceListNumber')))].Code);
 
   InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
+  InitializePriceList(ParamsMovement);
+
+  CDS.Filtered:=false;
 
      ActiveControl:=EditGoodsCode;
      result:=ShowModal=mrOk;
@@ -138,6 +142,20 @@ begin
 
           if i<10 then Columns:=1 else Columns:=2;
 
+     end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.InitializePriceList(execParams:TParams);
+var i:Integer;
+begin
+     with rgPriceList do
+     begin
+          Items.Clear;
+          if execParams.ParamByName('PriceListId').AsInteger=0
+          then Items.Add('нет значения')
+          else Items.Add('('+IntToStr(execParams.ParamByName('PriceListCode').AsInteger)+') '+ execParams.ParamByName('PriceListName').AsString);
+          EditPriceListCode.Text:=IntToStr(execParams.ParamByName('PriceListCode').AsInteger);
+          rgPriceList.ItemIndex:=0;
      end;
 end;
 {------------------------------------------------------------------------------}
@@ -167,14 +185,14 @@ begin
                                                         else ActiveControl:=EditChangePercentCode
                      else if ActiveControl=EditTareWeightEnter then ActiveControl:=EditChangePercentCode
                           else if ActiveControl=EditChangePercentCode then ActiveControl:=EditPriceListCode
-                               else if ActiveControl=EditPriceListCode then ButtonSaveAllItemClick(Self);
+                               else if ActiveControl=EditPriceListCode then ActiveControl:=EditGoodsCode ; //ButtonSaveAllItemClick(Self);
     end;
     //
     {if Key=32 then
       if ActiveControl=EditGoodsCode then ActiveControl:=EditGoodsName
       else if ActiveControl=EditGoodsName then ActiveControl:=EditGoodsCode;}
     //
-    //if Key=27 then Close;
+    if Key=27 then Close;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
@@ -196,7 +214,11 @@ end;
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
-     Result:=(rgGoodsKind.ItemIndex>=0)and(rgTareWeight.ItemIndex>=0)and(rgChangePercent.ItemIndex>=0)and(rgPriceList.ItemIndex>=0);
+     Result:=(CDS.RecordCount=1)
+          and(rgGoodsKind.ItemIndex>=0)
+          and(rgTareWeight.ItemIndex>=0)
+          and(rgChangePercent.ItemIndex>=0)
+          and(rgPriceList.ItemIndex>=0);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeChange(Sender: TObject);
@@ -340,8 +362,17 @@ begin
       //          PanelUpak.Caption:=GetStringValue('select zf_MyRound0(zf_CalcDivisionNoRound('+FormatToFloatServer(GoodsWeight)+',GoodsProperty_Detail.Ves_onUpakovka))as RetV from dba.GoodsProperty join dba.KindPackage on KindPackage.KindPackageCode = '+trim(EditKindPackageCode.Text)+' join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId=GoodsProperty.Id and GoodsProperty_Detail.KindPackageID=KindPackage.Id where GoodsProperty.GoodsCode = '+trim(EditGoodsCode.Text));
       //end;
       //
+      if (ActiveControl=EditGoodsKindCode)
+      then begin
+           if CDS.FieldByName('ChangePercent').AsFloat=0
+           then EditChangePercentCode.Text:= IntToStr(ChangePercent_Array[GetArrayList_Index_byValue(ChangePercent_Array,FloatToStr(CDS.FieldByName('ChangePercent').AsFloat))].Code)
+           else EditChangePercentCode.Text:= IntToStr(ChangePercent_Array[GetArrayList_Index_byValue(ChangePercent_Array,ParamsMovement.ParamByName('ChangePercent').AsString)].Code);
+           ActiveControl:=EditGoodsKindCode;
+      end;
+
       if (ActiveControl=EditGoodsKindCode)and(rgGoodsKind.ItemIndex>=0)and(rgGoodsKind.Items.Count=1)then begin rgGoodsKind.ItemIndex:=0;FormKeyDown(Sender,Key,[]);end;
-      if (ActiveControl=EditPriceListCode)and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)then FormKeyDown(Sender,Key,[]);
+      if (ActiveControl=EditChangePercentCode)then begin FormKeyDown(Sender,Key,[]);end;
+      if (ActiveControl=EditPriceListCode){and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)}then FormKeyDown(Sender,Key,[]);
       //
       if (ActiveControl=EditTareWeightEnter)and(rgTareWeight.ItemIndex<>rgTareWeight.Items.Count-1)
       then FormKeyDown(Sender,Key,[]);
@@ -454,27 +485,36 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.rgChangePercentClick(Sender: TObject);
+var newValue:String;
 begin
-    EditChangePercentCode.Text:=IntToStr(rgChangePercent.ItemIndex+1);
-    ActiveControl:=EditChangePercentCode;
+    EditChangePercentCodeChange(EditChangePercentCode);
+    ActiveControl:=EditGoodsCode;
+    {newValue:=IntToStr(ChangePercent_Array[rgChangePercent.ItemIndex].Code);
+    if newValue<>EditChangePercentCode.Text
+    then begin
+              EditChangePercentCode.Text:=newValue;
+              ActiveControl:=EditChangePercentCode;
+    end;}
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditPriceListCodeChange(Sender: TObject);
 var Code_begin:Integer;
 begin
-     try Code_begin:=StrToInt(EditPriceListCode.Text) except Code_begin:=-1;end;
+{     try Code_begin:=StrToInt(EditPriceListCode.Text) except Code_begin:=-1;end;
      if (Code_begin<0)
      then rgPriceList.ItemIndex:=-1
-     else rgPriceList.ItemIndex:=GetArrayList_Index_byCode(PriceList_Array,Code_begin);
+     else rgPriceList.ItemIndex:=1;//GetArrayList_Index_byCode(PriceList_Array,Code_begin);
+     }
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditPriceListCodeExit(Sender: TObject);
-begin if rgPriceList.ItemIndex=-1 then ActiveControl:=EditPriceListCode;end;
+begin {if rgPriceList.ItemIndex=-1 then ActiveControl:=EditPriceListCode;}end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditPriceListCodeKeyPress(Sender: TObject;var Key: Char);
 var findIndex:Integer;
 begin
-     if Key=' ' then Key:=#0;
+     {if Key=' ' then Key:=#0;
      if Key='+' then
      begin
           Key:=#0;
@@ -485,13 +525,15 @@ begin
           //
           EditPriceListCode.Text:=IntToStr(PriceList_Array[findIndex].Code);
           TEdit(Sender).SelectAll;
-     end;
+     end;}
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.rgPriceListClick(Sender: TObject);
 begin
-    EditChangePercentCode.Text:=IntToStr(rgChangePercent.ItemIndex+1);
-    ActiveControl:=EditChangePercentCode;
+    {EditPriceListCodeChange(EditPriceListCode);}
+    ActiveControl:=EditGoodsCode;
+    {EditPriceListCode.Text:=IntToStr(PriceList_Array[rgPriceList.ItemIndex].Code);
+    ActiveControl:=EditPriceListCode;}
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.DBGridDblClick(Sender: TObject);
@@ -535,13 +577,13 @@ begin
   for i := 0 to Length(TareWeight_Array)-1 do
     if TareWeight_Array[i].Number>=1000
     then rgTareWeight.Items.Add('('+IntToStr(0)+') '+ TareWeight_Array[i].Name)
-    else rgTareWeight.Items.Add('('+IntToStr(TareWeight_Array[i].Number)+') '+ TareWeight_Array[i].Name);
+    else rgTareWeight.Items.Add('('+IntToStr(TareWeight_Array[i].Code)+') '+ TareWeight_Array[i].Name);
   //Скидка по весу
   for i := 0 to Length(ChangePercent_Array)-1 do
-    rgChangePercent.Items.Add('('+IntToStr(ChangePercent_Array[i].Number)+') '+ ChangePercent_Array[i].Name);
+    rgChangePercent.Items.Add('('+IntToStr(ChangePercent_Array[i].Code)+') '+ ChangePercent_Array[i].Name);
   //прайс-лист
-  for i := 0 to Length(PriceList_Array)-1 do
-    rgPriceList.Items.Add('('+IntToStr(PriceList_Array[i].Number)+') '+ PriceList_Array[i].Name);
+  {for i := 0 to Length(PriceList_Array)-1 do
+    rgPriceList.Items.Add('('+IntToStr(PriceList_Array[i].Code)+') '+ PriceList_Array[i].Name);}
 
   with spSelect do
   begin
@@ -551,10 +593,11 @@ begin
        Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
        Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
        Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
+       Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput,GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn'));
        Execute;
   end;
   //
-
+{
      // PriceList
      if _isCalcPriceList=zc_rvYes
      then begin
@@ -569,6 +612,7 @@ begin
      else
          for i:=0 to ParamsPriceList.Count-1 do
             rgPriceList.Items.Add('('+IntToStr(i+1)+') '+GetStringValue('select PriceListName AS RetV from dba.PriceList_byHistory where Id = '+ParamsPriceList.Items[i].AsString));
+}
 end;
 {------------------------------------------------------------------------------}
 end.

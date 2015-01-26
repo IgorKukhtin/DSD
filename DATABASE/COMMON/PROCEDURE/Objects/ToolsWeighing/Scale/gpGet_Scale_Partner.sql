@@ -13,8 +13,10 @@ RETURNS TABLE (PartnerId    Integer
              , PaidKindId   Integer
              , PaidKindName TVarChar
 
-             , PriceListId    Integer, PriceListCode  Integer, PriceListName TVarChar
-             , ContractId     Integer, ContractCode   Integer, ContractNumber TVarChar, ContractTagName TVarChar
+             , PriceListId  Integer, PriceListCode  Integer, PriceListName TVarChar
+             , ContractId   Integer, ContractCode   Integer, ContractNumber TVarChar, ContractTagName TVarChar
+
+             , ChangePercent TFloat
               )
 AS
 $BODY$
@@ -48,6 +50,8 @@ BEGIN
             , Object_Contract_View.ContractCode              AS ContractCode
             , Object_Contract_View.InvNumber                 AS ContractNumber
             , Object_Contract_View.ContractTagName           AS ContractTagName
+
+            , CASE WHEN Object_Partner.PartnerCode = 1 THEN 1.5 WHEN Object_Partner.PartnerCode = 3 THEN 0 ELSE 1 END :: TFloat AS ChangePercent
 
        FROM Object_Partner
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_Partner.PriceListId

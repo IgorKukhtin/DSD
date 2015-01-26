@@ -2140,8 +2140,10 @@ begin
 
                      +'        when Goods.Id in (3924,8214,6504) then 10101' // !!!Живой вес!!!
 
-                     +'        when fCheckGoodsParentID(2648,Goods.ParentId) =zc_rvYes() then 10204' // СО-СЫРЬЕ СЫР - 10204		Основное сырье Прочее сырье Прочее сырье
+                     +'        when fCheckGoodsParentID(1670,Goods.ParentId) =zc_rvYes() then 10106' // СЫР - 20701		Основное сырье Мясное сырье Сыр
+                     +'        when fCheckGoodsParentID(2648,Goods.ParentId) =zc_rvYes() then 10106' // СО-СЫРЬЕ СЫР - 10204		Основное сырье Прочее сырье Прочее сырье
                      +'        when Goods.Id in (2792, 7001, 6710) then 10103' // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10103		Основное сырье Мясное сырье Говядина
+
                      +'        when fCheckGoodsParentID(6435,Goods.ParentId) =zc_rvYes() then 10102' // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10102		Основное сырье Мясное сырье Свинина
                      +'        when fCheckGoodsParentID(3859,Goods.ParentId) =zc_rvYes() then 10105' // СО-БАРАНИНА - 10105		Основное сырье Мясное сырье Прочее мясное сырье
                      +'        when fCheckGoodsParentID(5676,Goods.ParentId) =zc_rvYes() then 10105' // СО-КАБАН и др. - 10105		Основное сырье Мясное сырье Прочее мясное сырье
@@ -2171,7 +2173,6 @@ begin
                                                                       // ЭМУЛЬСИЯ ЖИРОВАЯ
                                                                       // ЛЕД
 
-                     +'        when fCheckGoodsParentID(1670,Goods.ParentId) =zc_rvYes() then 10105' // СЫР - 20701		Общефирменные Товары Прочие товары
                      +'        when fCheckGoodsParentID(686,Goods.ParentId) =zc_rvYes() then 20501' // Тара - 20501		Общефирменные Оборотная тара	Оборотная тара
 
                      +'        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203' // 0)!!!СД-СЫРЬЕ!!! - 10203		Основное сырье Прочее сырье	Упаковка
