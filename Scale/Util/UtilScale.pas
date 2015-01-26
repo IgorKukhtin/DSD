@@ -32,9 +32,11 @@ type
 
 
   function GetArrayList_Value_byName   (ArrayList:TArrayList;Name:String):String;
-  function GetArrayList_Index_byName   (ArrayList:TArrayList;Name:String):Integer;
   function GetArrayList_Index_byNumber (ArrayList:TArrayList;Number:Integer):Integer;
   function GetArrayList_Index_byCode   (ArrayList:TArrayList;Code:Integer):Integer;
+  function GetArrayList_Index_byName   (ArrayList:TArrayList;Name:String):Integer;
+  function GetArrayList_Index_byValue  (ArrayList:TArrayList;Value:String):Integer;
+
   function GetArrayList_lpIndex_GoodsKind(ArrayList:TArrayList;GoodsKindWeighingGroupId,Code:Integer):Integer;
   function GetArrayList_gpIndex_GoodsKind(ArrayList:TArrayList;GoodsKindWeighingGroupId,lpIndex:Integer):Integer;
 
@@ -61,11 +63,11 @@ var
   Default_Array       :TArrayList;
   Service_Array       :TArrayList;
 
-  PriceList_Array     :TArrayList;
+  GoodsKind_Array     :TArrayList;
   TareCount_Array     :TArrayList;
   TareWeight_Array    :TArrayList;
   ChangePercent_Array :TArrayList;
-  GoodsKind_Array     :TArrayList;
+  PriceList_Array     :TArrayList;
 
   zc_Movement_Income: integer;
   zc_Movement_ReturnOut: integer;
@@ -103,6 +105,7 @@ begin
      ParamAdd(Params,'calcPartnerId',ftInteger);
      ParamAdd(Params,'calcPartnerCode',ftInteger);
      ParamAdd(Params,'calcPartnerName',ftString);
+     ParamAdd(Params,'ChangePercent',ftFloat);
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_BarCode',ftString);
@@ -132,14 +135,6 @@ begin
     if ArrayList[i].Name = Name then begin Result:=AnsiUpperCase(ArrayList[i].Value);break;end;
 end;
 {------------------------------------------------------------------------}
-function GetArrayList_Index_byName(ArrayList:TArrayList;Name:String):Integer;
-var i: Integer;
-begin
-  Result:=-1;
-  for i := 0 to Length(ArrayList)-1 do
-    if ArrayList[i].Name = Name then begin Result:=i;break;end;
-end;
-{------------------------------------------------------------------------}
 function GetArrayList_Index_byNumber(ArrayList:TArrayList;Number:Integer):Integer;
 var i: Integer;
 begin
@@ -154,6 +149,22 @@ begin
   Result:=-1;
   for i := 0 to Length(ArrayList)-1 do
     if ArrayList[i].Code = Code then begin Result:=i;break;end;
+end;
+{------------------------------------------------------------------------}
+function GetArrayList_Index_byName(ArrayList:TArrayList;Name:String):Integer;
+var i: Integer;
+begin
+  Result:=-1;
+  for i := 0 to Length(ArrayList)-1 do
+    if ArrayList[i].Name = Name then begin Result:=i;break;end;
+end;
+{------------------------------------------------------------------------}
+function GetArrayList_Index_byValue(ArrayList:TArrayList;Value:String):Integer;
+var i: Integer;
+begin
+  Result:=-1;
+  for i := 0 to Length(ArrayList)-1 do
+    if ArrayList[i].Value = Value then begin Result:=i;break;end;
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_lpIndex_GoodsKind(ArrayList:TArrayList;GoodsKindWeighingGroupId,Code:Integer):Integer;

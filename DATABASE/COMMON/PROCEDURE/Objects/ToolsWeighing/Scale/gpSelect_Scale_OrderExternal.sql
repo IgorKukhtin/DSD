@@ -23,6 +23,7 @@ RETURNS TABLE (MovementId       Integer
              , PartnerId_calc   Integer
              , PartnerCode_calc Integer
              , PartnerName_calc TVarChar
+             , ChangePercent    TFloat
 
              , OrderExternalName_master TVarChar
               )
@@ -62,6 +63,7 @@ BEGIN
             , Object_From.Id         AS PartnerId_calc
             , Object_From.ObjectCode AS PartnerCode_calc
             , Object_From.ValueData  AS PartnerName_calc
+            , 1 :: TFloat            AS ChangePercent
 
             , ('№ <' || Movement.InvNumber || '>' || ' от <' || DATE (Movement.OperDate) :: TVarChar || '>') :: TVarChar AS OrderExternalName_master
 

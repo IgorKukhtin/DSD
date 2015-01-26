@@ -144,6 +144,7 @@ begin
                     ParamByName('ToName').asString:= CDS.FieldByName('ToName').asString;
                     ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
                     ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
+                    ParamByName('ChangePercent').asFloat:= 0;
           end
           else
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Sale)
@@ -157,6 +158,8 @@ begin
                     ParamByName('ToName').asString:= ParamByName('calcPartnerName').asString;
                     ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
                     ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
+                    if (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Sale)
+                    then ParamByName('ChangePercent').asFloat:= 0;
           end
           else begin
                     ParamByName('FromId').AsInteger:= CDS.FieldByName('FromId').asInteger;
@@ -171,6 +174,7 @@ begin
                     ParamByName('calcPartnerId').asInteger:=0;
                     ParamByName('calcPartnerCode').asInteger:=0;
                     ParamByName('calcPartnerName').asString:='';
+                    ParamByName('ChangePercent').asFloat:= 0;
                     ParamByName('ContractId').AsInteger    := 0;
                     ParamByName('ContractCode').AsInteger    := 0;
                     ParamByName('ContractNumber').asString := '';

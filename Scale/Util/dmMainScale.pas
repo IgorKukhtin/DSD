@@ -128,6 +128,7 @@ begin
          ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId').AsInteger;
          ParamByName('calcPartnerCode').AsInteger:= DataSet.FieldByName('PartnerCode').AsInteger;
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName').asString;
+         ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
 
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
@@ -186,6 +187,7 @@ begin
          ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId_calc').AsInteger;
          ParamByName('calcPartnerCode').AsInteger:= DataSet.FieldByName('PartnerCode_calc').AsInteger;
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
+         ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
 
          ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
