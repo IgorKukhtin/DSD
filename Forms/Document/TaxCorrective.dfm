@@ -7,24 +7,22 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1113
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1113
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1109
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1113
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1107
-      ExplicitHeight = 514
+      ExplicitWidth = 1113
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1107
-        Height = 514
-        ExplicitWidth = 1107
-        ExplicitHeight = 514
+        Width = 1113
+        Height = 518
+        ExplicitWidth = 1113
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -172,7 +170,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 175
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 175
     end
     object cxLabel3: TcxLabel
@@ -620,7 +618,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -638,6 +636,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -684,6 +690,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_TaxCorrective_Us
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
     end
     object bbPrint_TaxCorrective_Client: TdxBarButton [5]
       Action = mactPrint_TaxCorrective_Client
@@ -1208,7 +1215,62 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 440
+    StoredProcName = 'gpInsertUpdate_MovementItem_TaxCorrective'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = '0'
+        DataType = ftFloat
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end>
+    Left = 80
+    Top = 432
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
