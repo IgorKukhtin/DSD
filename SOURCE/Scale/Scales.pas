@@ -69,18 +69,17 @@ type
 
 { TScaleFactory }
 
-class function TScaleFactory.GetScale(ScaleType: TScaleType; ComPort: string;
-  ComSpeed: integer): TScale;
+class function TScaleFactory.GetScale(ScaleType: TScaleType; ComPort: string;ComSpeed: integer): TScale;
 begin
-  if Assigned(FScale) then
-     result := FScale
-  else begin
-       result := TScale(TScale.NewInstance);
-       result.FScaleType := ScaleType;
-       result.FComPort  := ComPort;
-       result.FComSpeed := ComSpeed;
-       result.Active;
+  if not Assigned(FScale) then begin
+     FScale := TScale(TScale.NewInstance);
+     FScale.FScaleType := ScaleType;
+     FScale.FComPort  := ComPort;
+     FScale.FComSpeed := ComSpeed;
+     FScale.Active;
+     Sleep(1000);
   end;
+  result := FScale
 end;
 
 { TScaleAction }
@@ -90,6 +89,7 @@ begin
   inherited;
   ScaleType := stBI;
   FWeight := TdsdParam.Create(nil);
+  TScaleFactory.GetScale(ScaleType, ComPort, ComSpeed);
 end;
 
 function TScaleAction.LocalExecute: Boolean;
@@ -119,6 +119,7 @@ begin
        FComPort := IniFile.ReadString(Section, 'ComPort', 'COM1');
        FComSpeed := IniFile.ReadInteger(Section, 'ComSpeed', 9600);
        FScaleType := TScaleType(GetEnumValue(TypeInfo(TScaleType), IniFile.ReadString(Section, 'ScaleType', 'stBI')));
+       try
        case FScaleType of
           stBI: begin
                    Scale_BI := TCasBI.Create(nil);
@@ -133,6 +134,9 @@ begin
                   Scale_DB.CommPort := FComPort;
                   Scale_DB.Active := 1;
                 end;
+       end;
+       except
+
        end;
        //FScale.CommPort := FComPort;
 //       FScale.CommSpeed := FComSpeed;
@@ -168,6 +172,7 @@ end;
 function TScale.GetWeight: Double;
 begin
 //  FScale.Active := 1;
+  result := 0;
   try
     if Assigned(Scale_DB) then
        result := Scale_DB.Weight;

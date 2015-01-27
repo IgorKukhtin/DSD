@@ -51,6 +51,7 @@ var St: AnsiString;
     Stt: AnsiString;
     i: integer;
 begin
+  exit;
   ClientDataSet := TClientDataSet.Create(nil);
   FileStream := TFileStream.Create('c:\datanew.hhh', fmOpenRead  );
   try
@@ -176,6 +177,7 @@ var param: TdsdParam;
     s: string;
     D: Variant;
 begin
+  exit;
   D := EndOfTheMonth(Date)-0.5;
   Check(D = EndOfTheMonth(Date), '');
   param := TdsdParam.Create(nil);

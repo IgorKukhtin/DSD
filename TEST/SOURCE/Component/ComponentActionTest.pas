@@ -45,6 +45,7 @@ begin
    Action := TAction(GetClass('TScaleAction').NewInstance);
    Action.Create(nil);
    Action.Execute;
+   Action.Execute;
 end;
 
 procedure TActionTest.SetUp;
