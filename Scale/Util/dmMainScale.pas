@@ -288,6 +288,14 @@ begin
          Execute;
          zc_Movement_ProductionSeparate:=DataSet.FieldByName('Value').asInteger;
 
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';
+         Execute;
+         zc_Measure_Sh:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Kg() :: TVarChar';
+         Execute;
+         zc_Measure_Kg:=DataSet.FieldByName('Value').asInteger;
+
        {except
          result.Code := Code;
          result.Id   := 0;

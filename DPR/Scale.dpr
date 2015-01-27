@@ -10,6 +10,7 @@ uses
   Storage in '..\SOURCE\Storage.pas',
   UtilConst in '..\SOURCE\UtilConst.pas',
   UtilConvert in '..\SOURCE\UtilConvert.pas',
+  Updater in '..\SOURCE\COMPONENT\Updater.pas',
   MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
   SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   Log in '..\SOURCE\Log.pas',
@@ -74,7 +75,7 @@ begin
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
 
-         //TUpdater.AutomaticUpdateProgram;
+         TUpdater.AutomaticUpdateProgram;
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TUtilPrintForm, UtilPrintForm);
@@ -90,7 +91,7 @@ begin
     //Если все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then
     begin
-         //TUpdater.AutomaticUpdateProgram;
+         TUpdater.AutomaticUpdateProgram;
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
          Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
