@@ -21,15 +21,15 @@ type
     colProtocolData: TcxGridDBColumn;
     colObjectName: TcxGridDBColumn;
     edUser: TcxButtonEdit;
-    edObjectDesc: TcxButtonEdit;
+    edMovementDesc: TcxButtonEdit;
     edObject: TcxButtonEdit;
     cxLabel3: TcxLabel;
     UserGuides: TdsdGuides;
     cxLabel4: TcxLabel;
-    ObjectDescGuides: TdsdGuides;
-    ObjectGuides: TdsdGuides;
+    MovementDescGuides: TdsdGuides;
     cxLabel5: TcxLabel;
     colObjectTypeName: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

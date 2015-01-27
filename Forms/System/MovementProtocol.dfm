@@ -4,7 +4,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
   ClientWidth = 782
   AddOnFormData.RefreshAction = nil
   ExplicitWidth = 790
-  ExplicitHeight = 350
+  ExplicitHeight = 357
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -18,14 +18,12 @@ inherited MovementProtocolForm: TMovementProtocolForm
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
-      ExplicitHeight = 241
       inherited cxGrid: TcxGrid
         Width = 782
-        Height = 241
         ExplicitWidth = 782
-        ExplicitHeight = 241
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -90,7 +88,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
       TabOrder = 4
       Width = 121
     end
-    object edObjectDesc: TcxButtonEdit [4]
+    object edMovementDesc: TcxButtonEdit [4]
       Left = 335
       Top = 29
       Properties.Buttons = <
@@ -124,13 +122,19 @@ inherited MovementProtocolForm: TMovementProtocolForm
     object cxLabel4: TcxLabel
       Left = 241
       Top = 30
-      Caption = #1058#1080#1087' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072':'
+      Caption = #1058#1080#1087' '#1044#1086#1082#1091#1084#1077#1085#1090#1072':'
     end
     object cxLabel5: TcxLabel
-      Left = 463
+      Left = 519
       Top = 30
-      Caption = #1069#1083#1077#1084#1077#1085#1090' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072':'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090':'
     end
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 59
+  end
+  inherited ActionList: TActionList
+    Left = 103
   end
   inherited MasterDS: TDataSource
     Top = 55
@@ -139,7 +143,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
     Top = 55
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Protocol'
+    StoredProcName = 'gpSelect_MovementProtocol'
     Params = <
       item
         Name = 'inStartDate'
@@ -163,20 +167,20 @@ inherited MovementProtocolForm: TMovementProtocolForm
         ParamType = ptInput
       end
       item
-        Name = 'inObjectDescId'
+        Name = 'inMovementDescId'
         Value = ''
-        Component = ObjectDescGuides
+        Component = MovementDescGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inObjectId'
+        Name = 'inMovementId'
         Value = ''
-        Component = ObjectGuides
-        ComponentItem = 'Key'
-        ParamType = ptInputOutput
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
       end>
-    Top = 55
+    Top = 87
   end
   inherited BarManager: TdxBarManager
     Top = 55
@@ -186,8 +190,18 @@ inherited MovementProtocolForm: TMovementProtocolForm
       26
       0)
   end
+  inherited PopupMenu: TPopupMenu
+    Left = 152
+    Top = 256
+  end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 120
+    Top = 160
+  end
   inherited RefreshDispatcher: TRefreshDispatcher
     RefreshAction = nil
+    Left = 224
+    Top = 168
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
@@ -210,61 +224,40 @@ inherited MovementProtocolForm: TMovementProtocolForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 160
-    Top = 32
+    Left = 152
+    Top = 24
   end
-  object ObjectDescGuides: TdsdGuides
+  object MovementDescGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edObjectDesc
-    FormNameParam.Value = 'TObjectDescForm'
+    LookupControl = edMovementDesc
+    FormNameParam.Value = 'TMovementDescFormsForm'
     FormNameParam.DataType = ftString
-    FormName = 'TObjectDescForm'
+    FormName = 'TMovementDescFormsForm'
     PositionDataSet = 'MainDataCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = ObjectDescGuides
+        Component = MovementDescGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ObjectDescGuides
+        Component = MovementDescGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 376
-    Top = 48
+    Left = 384
+    Top = 24
   end
-  object ObjectGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edObject
-    FormNameParam.Value = 'TObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TObjectForm'
-    PositionDataSet = 'MainDataCDS'
+  object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'Key'
-        Value = ''
-        Component = ObjectGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ObjectGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'ObjectDescId'
-        Value = ''
-        Component = ObjectDescGuides
-        ComponentItem = 'Key'
+        Name = 'MovementId'
+        Value = Null
       end>
-    Left = 560
-    Top = 48
+    Left = 296
+    Top = 224
   end
 end
