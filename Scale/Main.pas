@@ -195,13 +195,32 @@ function TMainForm.GetParams_Goods:Boolean;
 var GoodsWeight_two,GoodsWeight_set:Double;
     calcClientId:Integer;
 begin
+     Result:=false;
+     //
      if ParamsMovement.ParamByName('MovementDescId').asInteger=0
      then if not GetParams_MovementDesc then exit;
+     //
+     with ParamsMI do begin
+        try ParamByName('RealWeight_Enter').AsFloat:=StrToFloat(trim(EnterWeightEdit.Text));
+        except ParamByName('RealWeight_Enter').AsFloat:=0;
+        end;
+        ParamByName('RealWeight_Get').AsFloat:=fGetScale_CurrentWeight;
+        //
+        if (ParamByName('RealWeight_Get').AsFloat<=0.0001)and(ParamByName('RealWeight_Enter').AsFloat<=0.0001)then
+        begin
+             ShowMessage('Ошибка.Не определен <Вес на Табло> или <Количество>.');
+             ActiveControl:=EnterWeightEdit;
+             exit;
+        end;
+     end;
+     //
 
-     if GuideGoodsForm.Execute(1, ParamsMovement.ParamByName('OperDate').AsDateTime)
+     if GuideGoodsForm.Execute(ParamsMovement.ParamByName('OperDate').AsDateTime)
      then begin
 
      end;
+     //
+     Result:=true;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.ButtonNewGetParamsClick(Sender: TObject);
@@ -230,6 +249,7 @@ begin
   GoodsKind_Array:=     DMMainScaleForm.gpSelect_Scale_GoodsKindWeighing;
   //global Initialize
   Create_ParamsMovement(ParamsMovement);
+  Create_ParamsMI(ParamsMI);
   //global Initialize
   Scale_DB:=TCasDB.Create(self);
   Scale_BI:=TCasBI.Create(self);
@@ -297,8 +317,11 @@ begin
      // Scale_DB.Active:=0;
      //
 //*****
-     // if (_Weight_Main<>'')and(_beginUser=1) then Weight:=_Weight_Main;
-//     Weight:='0,123456';
+     if (System.Pos('ves=',ParamStr(1))>0)and(Result=0)
+     then Result:=StrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-5));
+     if (System.Pos('ves=',ParamStr(2))>0)and(Result=0)
+     then Result:=StrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-5));
+//*****
      PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;
 //------------------------------------------------------------------------------------------------

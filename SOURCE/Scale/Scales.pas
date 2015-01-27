@@ -78,7 +78,7 @@ begin
        result := TScale(TScale.NewInstance);
        result.FScaleType := ScaleType;
        result.FComPort  := ComPort;
-       result.FComSpeed := ComSpeed;
+       // result.FComSpeed := ComSpeed;
        result.Active;
   end;
 end;
@@ -97,7 +97,7 @@ var Weight: double;
 begin
   Weight := TScaleFactory.GetScale(ScaleType, ComPort, ComSpeed).Weight;
   if Weight = 0 then
-     ShowMessage('Вес от весов не получен!')
+     ShowMessage('Ошибка.Значение <Вес> не получен.')
   else
      FWeight.Value := Weight;
 end;

@@ -88,6 +88,7 @@ type
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure DBGridDblClick(Sender: TObject);
     procedure EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
+    procedure DataSourceDataChange(Sender: TObject; Field: TField);
   private
     fStartWtrite:Boolean;
     fEnterGoodsCode:Boolean;
@@ -97,7 +98,7 @@ type
     procedure InitializePriceList(execParams:TParams);
   public
     GoodsWeight:Double;
-    function Execute(ClientId:Integer;BillDate:TDateTime): boolean;
+    function Execute(BillDate:TDateTime): boolean;
   end;
 
 var
@@ -109,11 +110,14 @@ implementation
 
  uses dmMainScale;
 {------------------------------------------------------------------------------}
-function TGuideGoodsForm.Execute(ClientId:Integer;BillDate:TDateTime): boolean;
+function TGuideGoodsForm.Execute(BillDate:TDateTime): boolean;
 begin
      fStartWtrite:=true;
 
-  GoodsWeight:=1.23;
+  if ParamsMI.ParamByName('RealWeight').AsFloat <> 0
+  then PanelGoodsWieghtValue.Caption:=ParamsMI.ParamByName('RealWeight').AsString
+  else PanelGoodsWieghtValue.Caption:=ParamsMI.ParamByName('RealWeight_Enter').AsString;
+
   EditGoodsCode.Text:='';
   EditGoodsName.Text:='';
   EditGoodsKindCode.Text:='';
@@ -226,7 +230,57 @@ begin
           and(rgGoodsKind.ItemIndex>=0)
           and(rgTareWeight.ItemIndex>=0)
           and(rgChangePercent.ItemIndex>=0)
-          and(rgPriceList.ItemIndex>=0);
+          and(rgPriceList.ItemIndex>=0)
+          and(ParamsMI.ParamByName('RealWeight').AsFloat>0.0001)
+          ;
+
+
+     //
+     if not Result then ActiveControl:=EditGoodsCode
+     else
+     with ParamsMI do begin
+        ParamByName('GoodsId').AsInteger:=CDS.FieldByName('GoodsId').AsInteger;
+        ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id;
+
+        // Количество тары
+        try ParamByName('CountTare').AsFloat:=StrToFloat(EditTareCount.Text);
+        except ParamByName('CountTare').AsFloat:=0;
+        end;
+        // Вес тары
+        if  (GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'))
+         and(gbTareWeightEnter.Visible)
+        then
+            try ParamByName('WeightTare').AsFloat:=StrToFloat(EditTareWeightEnter.Text);
+            except ParamByName('WeightTare').AsFloat:=0;
+            end;
+            //change Количество тары
+            if (ParamByName('WeightTare').AsFloat<>0) and (ParamByName('CountTare').AsFloat=0)
+            then ParamByName('CountTare').AsFloat:=1;
+{
+
+        then
+
+        try ParamByName('WeightTare').AsFloat:=FloatToStr(EditTareCount.Text);
+        except ParamByName('CountTare').AsFloat:=0;
+        end;
+        ParamByName('WeightTare',ftFloat);          //
+        ParamByName('ChangePercentAmount',ftFloat); // % скидки для кол-ва
+
+        ParamByName('RealWeight').AsFloat:=
+        ParamByName('Amount').AsFloat:=ParamByName('RealWeight').AsFloat;            // Количество (склад)
+     ParamAdd(Params,'AmountPartner',ftFloat);       // Количество у контрагента
+
+     ParamAdd(Params,'BoxCount',ftFloat);      // Количество Ящик(гофро)
+     ParamAdd(Params,'BoxNumber',ftFloat);     // Номер ящика
+     ParamAdd(Params,'LevelNumber',ftFloat);   // Номер слоя
+     ParamAdd(Params,'Price',ftFloat);         // Цена
+     ParamAdd(Params,'CountForPrice',ftFloat); // Цена за количество
+
+     ParamAdd(Params,'PriceListId',ftInteger); // Прайс
+     ParamAdd(Params,'BoxId',ftInteger);       // Ящик(гофро)
+     }
+     end;
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeChange(Sender: TObject);
@@ -332,13 +386,21 @@ procedure TGuideGoodsForm.EditGoodsKindCodeExit(Sender: TObject);
 begin
       if (fStartWtrite=true)or(ActiveControl=EditGoodsCode) then exit;
 
-      if (rgGoodsKind.ItemIndex=-1)then ActiveControl:=EditGoodsKindCode
+      if (rgGoodsKind.ItemIndex=-1)then begin ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');ActiveControl:=EditGoodsKindCode;end
       else
         if CDS.RecordCount<>1 then
         begin
              ShowMessage('Ошибка.Не выбран <Код товара>.');
              ActiveControl:=EditGoodsCode;
-        end;
+        end
+        else if ParamsMI.ParamByName('RealWeight').AsFloat<=0.0001 then
+             begin
+                  if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+                  then ShowMessage('Ошибка.Не определено значение <Количество>.')
+                  else ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');
+                  //
+                  ActiveControl:=EditGoodsCode;
+             end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeKeyPress(Sender: TObject;var Key: Char);
@@ -560,6 +622,22 @@ begin
     if ActiveControl=rgPriceList then ActiveControl:=EditGoodsCode;
     {EditPriceListCode.Text:=IntToStr(PriceList_Array[rgPriceList.ItemIndex].Code);
     ActiveControl:=EditPriceListCode;}
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.DataSourceDataChange(Sender: TObject; Field: TField);
+begin
+     with ParamsMI do begin
+        if CDS.RecordCount=1 then
+         if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+         then ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Enter').AsFloat
+         else ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Get').AsFloat
+        else
+         if ParamByName('RealWeight_Get').AsFloat <> 0
+         then ParamByName('RealWeight').AsFloat:=ParamsMI.ParamByName('RealWeight_Get').AsFloat
+         else ParamByName('RealWeight').AsFloat:=ParamsMI.ParamByName('RealWeight_Enter').AsFloat;
+        //
+        PanelGoodsWieghtValue.Caption:=ParamByName('RealWeight').AsString;
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.DBGridDblClick(Sender: TObject);

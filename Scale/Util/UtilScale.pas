@@ -7,15 +7,15 @@ uses
 type
 
   TDBObject = record
-    Id:   integer;
-    Code: integer;
+    Id:   Integer;
+    Code: Integer;
     Name: string;
   end;
 
   TListItem = record
-    Number: integer;
-    Id:     integer;
-    Code:   integer;
+    Number: Integer;
+    Id:     Integer;
+    Code:   Integer;
     Name:   string;
     Value:  string;
   end;
@@ -23,11 +23,11 @@ type
   TArrayList = array of TListItem;
 
   TSettingMain = record
-    ScaleNum:         integer;
+    ScaleNum:         Integer;
     ComPort:          string;
     BI:               Boolean;
     DB:               Boolean;
-    UserId:           integer;
+    UserId:           Integer;
   end;
 
 
@@ -45,13 +45,14 @@ type
   procedure MyDelay(mySec:Integer);
 
   procedure Create_ParamsMovement(var Params:TParams);
+  procedure Create_ParamsMI(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
   procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams со значением _Value
   procedure ParamAddValue(var execParams: TParams;_Name:String;_DataType:TFieldType;_Value: variant);
   // возвращаят индекс парамтра сназванием FindName в TParams
-  function GetIndexParams(execParams:TParams;FindName:String):integer;
+  function GetIndexParams(execParams:TParams;FindName:String):Integer;
   //
   procedure CopyValuesParamsFrom(var fromParams,toParams:TParams);
   procedure EmptyValuesParams(var execParams:TParams);
@@ -59,6 +60,7 @@ type
 var
   SettingMain   : TSettingMain;
   ParamsMovement: TParams;
+  ParamsMI: TParams;
 
   Default_Array       :TArrayList;
   Service_Array       :TArrayList;
@@ -69,19 +71,22 @@ var
   ChangePercent_Array :TArrayList;
   PriceList_Array     :TArrayList;
 
-  zc_Movement_Income: integer;
-  zc_Movement_ReturnOut: integer;
-  zc_Movement_Sale: integer;
-  zc_Movement_ReturnIn: integer;
-  zc_Movement_Send: integer;
-  zc_Movement_SendOnPrice: integer;
+  zc_Movement_Income: Integer;
+  zc_Movement_ReturnOut: Integer;
+  zc_Movement_Sale: Integer;
+  zc_Movement_ReturnIn: Integer;
+  zc_Movement_Send: Integer;
+  zc_Movement_SendOnPrice: Integer;
 
-  zc_Movement_Loss: integer;
-  zc_Movement_Inventory: integer;
-  zc_Movement_ProductionUnion: integer;
-  zc_Movement_ProductionSeparate: integer;
+  zc_Movement_Loss: Integer;
+  zc_Movement_Inventory: Integer;
+  zc_Movement_ProductionUnion: Integer;
+  zc_Movement_ProductionSeparate: Integer;
 
-implementation
+  zc_Measure_Sh: Integer;
+  zc_Measure_Kg: Integer;
+
+  implementation
 
 {------------------------------------------------------------------------}
 procedure Create_ParamsMovement(var Params:TParams);
@@ -125,6 +130,35 @@ begin
 
      ParamAdd(Params,'MovementDescName_master',ftString);
 
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsMI(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'GoodsId',ftInteger);     // Товары
+     ParamAdd(Params,'GoodsKindId',ftInteger); // Виды товаров
+
+     ParamAdd(Params,'RealWeight_Get',ftFloat);      //
+     ParamAdd(Params,'RealWeight_Enter',ftFloat);    //
+     ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета тары и % скидки для кол-ва)
+     ParamAdd(Params,'Amount',ftFloat);              // Количество (склад)
+     ParamAdd(Params,'AmountPartner',ftFloat);       // Количество у контрагента
+     ParamAdd(Params,'CountTare',ftFloat);           // Количество тары
+     ParamAdd(Params,'WeightTare',ftFloat);          // Вес тары
+     ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва
+
+     ParamAdd(Params,'PartionGoodsDate',ftDateTime); // Партия
+     ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
+     ParamAdd(Params,'Count',ftFloat);               // Количество батонов или упаковок
+
+     ParamAdd(Params,'BoxCount',ftFloat);      // Количество Ящик(гофро)
+     ParamAdd(Params,'BoxNumber',ftFloat);     // Номер ящика
+     ParamAdd(Params,'LevelNumber',ftFloat);   // Номер слоя
+     ParamAdd(Params,'Price',ftFloat);         // Цена
+     ParamAdd(Params,'CountForPrice',ftFloat); // Цена за количество
+
+     ParamAdd(Params,'PriceListId',ftInteger); // Прайс
+     ParamAdd(Params,'BoxId',ftInteger);       // Ящик(гофро)
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_Value_byName(ArrayList:TArrayList;Name:String):String;
@@ -248,8 +282,8 @@ begin
   execParams.Items[GetIndexParams(execParams,_Name)].Value:=_Value;
 end;
 {------------------------------------------------------------------------------}
-function GetIndexParams(execParams:TParams;FindName:String):integer;//возвращаят индекс парамтра сназванием FindName в TParams
-var i:integer;
+function GetIndexParams(execParams:TParams;FindName:String):Integer;//возвращаят индекс парамтра сназванием FindName в TParams
+var i:Integer;
 begin
   Result:=-1;
   if not Assigned(execParams) then exit;
@@ -258,7 +292,7 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure CopyValuesParamsFrom(var fromParams,toParams:TParams);
-var i:integer;
+var i:Integer;
 begin
    if not Assigned(fromParams)then exit;
    with fromParams do
@@ -266,7 +300,7 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure EmptyValuesParams(var execParams:TParams);
-var i:integer;
+var i:Integer;
 begin
    if not Assigned(execParams)then exit;
    with execParams do
