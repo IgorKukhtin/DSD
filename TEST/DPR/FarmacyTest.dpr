@@ -183,7 +183,6 @@ uses
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
   dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
-  ComponentActionTest in '..\SOURCE\Component\ComponentActionTest.pas',
   Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
   Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm: TParentForm},
   MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
@@ -222,7 +221,7 @@ begin
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
   LocalProcedurePath := '..\DATABASE\FARMACY\PROCEDURE\';
-  LocalProcessPath := '..\DATABASE\FARMACY\PROCESS\';
+  LocalProcessPath := '..\DATABASE\COMMON\PROCESS\';
 
   gc_AdminPassword := 'Админ';
   gc_ProgramName := 'Farmacy.exe';

@@ -59,6 +59,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_Contrac
                             AND tmpData.ProcessId = tmpProcess.ProcessId
  ;
 
+/*
  -- заливка прав - Get
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
                                           , inRoleId    := tmpRole.RoleId
@@ -99,7 +100,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_Contrac
                  WHERE ObjectLink_RoleRight_Role.DescId = zc_ObjectLink_RoleRight_Role()        
                 ) AS tmpData ON tmpData.RoleId    = tmpRole.RoleId
                             AND tmpData.ProcessId = tmpProcess.ProcessId
- ;
+ ;*/
 
 END $$;
 

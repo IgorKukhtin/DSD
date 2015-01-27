@@ -79,5 +79,5 @@ ALTER FUNCTION gpGetDataForSend (Integer, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 --
-SELECT * FROM gpGetDataForSend (inMovementId:= 13735  , inSession:= '2')
+--SELECT * FROM gpGetDataForSend (inMovementId:= 13735  , inSession:= '2')
 

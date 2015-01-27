@@ -41,6 +41,20 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load
            Boolean,
            TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load 
+          (Integer, TVarChar, TDateTime,
+           Integer, TVarChar, TVarChar, TVarChar, 
+           TFloat, TFloat,
+           TDateTime, 
+           TVarChar,
+           TDateTime, 
+           Boolean,
+           TFloat, 
+           TVarChar,
+           TVarChar,
+           Boolean,
+           TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inInvNumber           TVarChar  , 
@@ -56,6 +70,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inPartitionGoods      TVarChar  ,   
     IN inPaymentDate         TDateTime , -- Дата оплаты
     IN inPriceWithVAT        Boolean   ,
+    IN inVAT                 TFloat    ,
     IN inUnitName            TVarChar  ,
     IN inMakerName           TVarChar  ,
     IN inisLastRecord        Boolean   ,
@@ -93,47 +108,67 @@ BEGIN
                                     ON MovementLinkObject_From.MovementId = Movement.Id
                                    AND MovementLinkObject_From.ObjectId = inJuridicalId
                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
+
+
+   -- Аж вот тут мы будем менять, если документа нет или НДС определен точно
+     IF (COALESCE(vbMovementId, 0) = 0) THEN
  
-     -- Ищем подразделение и Договор. Два в одном
-     SELECT MainId, ValueId INTO vbUnitId, vbContractId
-       FROM Object_ImportExportLink_View
-            LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = inJuridicalId
-      WHERE ValueId = Object_Contract_View.Id  AND StringKey = inUnitName;
-
-     IF COALESCE(vbUnitId, 0) = 0 THEN
-        -- Ищем подразделение по Юрлицу.
-        SELECT MainId INTO vbUnitId 
+        -- Ищем подразделение и Договор. Два в одном
+        SELECT MainId, ValueId INTO vbUnitId, vbContractId
           FROM Object_ImportExportLink_View
-         WHERE ValueId = inJuridicalId AND StringKey = inUnitName;
-     END IF;
+               LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = inJuridicalId
+         WHERE ValueId = Object_Contract_View.Id  AND StringKey = inUnitName;
 
-  -- Если не нашли, то сразу ругнемся. Подразделение должно быть!
-     IF COALESCE(vbUnitId, 0) = 0 THEN
-        RAISE EXCEPTION 'Не установлено Подразделение';
-     END IF;
+       IF COALESCE(vbUnitId, 0) = 0 THEN
+          -- Ищем подразделение по Юрлицу.
+          SELECT MainId INTO vbUnitId 
+            FROM Object_ImportExportLink_View
+           WHERE ValueId = inJuridicalId AND StringKey = inUnitName;
+       END IF;
+
+    -- Если не нашли, то сразу ругнемся. Подразделение должно быть!
+       IF COALESCE(vbUnitId, 0) = 0 THEN
+          RAISE EXCEPTION 'Не установлено Подразделение';
+       END IF;
         
 
-     IF COALESCE(vbContractId, 0) = 0 THEN
-      -- А вот тут попытка угадать договор.
-        -- Если даты не равны, то ищем любой договор с отсрочкой платежа
-        IF inPaymentDate > (inOperDate + interval '1 day') THEN
-           SELECT MAX(Id) INTO vbContractId 
-     	     FROM Object_Contract_View 
-     	    WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) <> 0;
-        ELSE
-        -- иначе любой договор без отсрочки платежа
-           SELECT MAX(Id) INTO vbContractId 
-     	     FROM Object_Contract_View 
-     	    WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) = 0;
-        END IF;	     	
+       IF COALESCE(vbContractId, 0) = 0 THEN
+        -- А вот тут попытка угадать договор.
+          -- Если даты не равны, то ищем любой договор с отсрочкой платежа
+          IF inPaymentDate > (inOperDate + interval '1 day') THEN
+             SELECT MAX(Id) INTO vbContractId 
+     	       FROM Object_Contract_View 
+              WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) <> 0;
+          ELSE
+          -- иначе любой договор без отсрочки платежа
+             SELECT MAX(Id) INTO vbContractId 
+               FROM Object_Contract_View 
+              WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) = 0;
+          END IF;	     	
 
-        -- Ищем хоть какой-нить договор
-        IF COALESCE(vbContractId, 0) = 0 THEN 
-           SELECT MAX(Id) INTO vbContractId 
-     	     FROM Object_Contract_View 
-     	   WHERE Object_Contract_View.JuridicalId = inJuridicalId;
-        END IF;
+          -- Ищем хоть какой-нить договор
+          IF COALESCE(vbContractId, 0) = 0 THEN 
+             SELECT MAX(Id) INTO vbContractId 
+               FROM Object_Contract_View 
+              WHERE Object_Contract_View.JuridicalId = inJuridicalId;
+          END IF;
+       END IF;
+ 
+       -- определяем НДС
+       SELECT Id INTO vbNDSKindId 
+         FROM Object_NDSKind_View
+         WHERE NDS = inVAT;
+      
+       IF COALESCE(vbNDSKindId, 0) = 0 THEN 
+
+       END IF;
+
+       vbMovementId := lpInsertUpdate_Movement_Income(vbMovementId, inInvNumber, inOperDate, inPriceWithVAT, 
+                                                      inJuridicalId, vbUnitId, vbNDSKindId, 
+                                                      inContractId := vbContractId , inPaymentDate := inPaymentDate, inUserId := vbUserId);
      END IF;
+
+
 
   -- Ищем товар 
       SELECT Goods_Juridical.Id INTO vbPartnerGoodsId
@@ -154,14 +189,6 @@ BEGIN
         LEFT JOIN Object_Goods_View ON Goods_Retail.GoodsId = Object_Goods_View.Id                                          
 
        WHERE Goods_Juridical.GoodsId = vbPartnerGoodsId;
-
-   -- Аж вот тут мы будем менять, если документа нет или НДС определен точно
-     IF (COALESCE(vbMovementId, 0) = 0) OR (COALESCE(vbNDSKindId, 0) <> 0) THEN
-        vbMovementId := lpInsertUpdate_Movement_Income(vbMovementId, inInvNumber, inOperDate, inPriceWithVAT, 
-                                                       inJuridicalId, vbUnitId, vbNDSKindId, 
-                                                       inContractId := vbContractId , inPaymentDate := inPaymentDate, inUserId := vbUserId);
-     END IF;
-
 
   -- Ищем товар в документе. Пока ключи: код поставщика, документ, цена, партия, срок годности. 
      SELECT MovementItem.Id INTO vbMovementItemId
