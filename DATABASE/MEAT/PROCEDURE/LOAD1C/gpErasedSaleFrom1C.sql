@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_BankAccount()
+-- Function: gpErasedSaleFrom1C()
 
 DROP FUNCTION IF EXISTS gpErasedSaleFrom1C (TDateTime, TDateTime, integer, TVarChar);
 
@@ -125,4 +125,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpLoadSaleFrom1C('01-01-2013'::TDateTime, '01-01-2014'::TDateTime, '')
+-- SELECT * FROM gpErasedSaleFrom1C ('01-01-2013'::TDateTime, '01-01-2014'::TDateTime, '')

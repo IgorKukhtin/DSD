@@ -66,9 +66,10 @@ BEGIN
                         , CASE WHEN Object_To.DescId = zc_Object_ArticleLoss()
                                     THEN Object_To.Id
                           END AS ArticleLossId
-                        , Sale.Id AS MovementId
+                        , 0 AS MovementId -- Sale.Id AS MovementId
                         , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END AS MovementDescId
-                        , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END) AS MovementDescId_find
+                        -- , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END) AS MovementDescId_find
+                        , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END AS MovementDescId_find
                         , zfGetPaidKindFrom1CType (Sale1C.VidDoc) AS PaidKindId
                         , round (Sale1C.Tax)
                         , MAX (SumaPDV) AS SumaPDV
@@ -94,7 +95,7 @@ BEGIN
                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                LEFT JOIN Object AS Object_To ON Object_To.Id= ObjectLink_Partner1CLink_Partner.ChildObjectId
-               LEFT JOIN (SELECT Movement.Id, Movement.DescId, Movement.InvNumber, Movement.OperDate
+               /*LEFT JOIN (SELECT Movement.Id, Movement.DescId, Movement.InvNumber, Movement.OperDate
                                , CASE WHEN Movement.DescId = zc_Movement_Sale()
                                            THEN MLO_To.ObjectId
                                       WHEN Object_To.DescId = zc_Object_Personal()
@@ -130,7 +131,7 @@ BEGIN
                           ) AS Sale
                             ON Sale.InvNumber = Sale1C.InvNumber
                            AND Sale.OperDate = Sale1C.OperDate
-                           AND ObjectLink_Partner1CLink_Partner.ChildObjectId = Sale.PartnerId
+                           AND ObjectLink_Partner1CLink_Partner.ChildObjectId = Sale.PartnerId*/
             
           WHERE Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
             AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -144,9 +145,9 @@ BEGIN
                         , CASE WHEN Object_To.DescId = zc_Object_ArticleLoss()
                                     THEN Object_To.Id
                           END
-                        , Sale.Id
+                        -- , Sale.Id
                         , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END
-                        , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END)
+                        -- , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END)
                         , zfGetPaidKindFrom1CType (Sale1C.VidDoc)
                         , round (Sale1C.Tax)
          ;
@@ -162,7 +163,7 @@ BEGIN
           END IF;
 
           -- Распровели существующий документ
-          IF COALESCE (vbMovementId, 0) <> 0 AND vbMovementDescId_find = vbMovementDescId
+          /*IF COALESCE (vbMovementId, 0) <> 0 AND vbMovementDescId_find = vbMovementDescId
           THEN
               PERFORM lpUnComplete_Movement (inMovementId := vbMovementId
                                            , inUserId     := vbUserId);
@@ -173,7 +174,7 @@ BEGIN
                   PERFORM lpSetErased_Movement (inMovementId     := vbMovementId
                                               , inUserId         := vbUserId);
           END IF;
-          END IF;
+          END IF;*/
 
           IF vbMovementDescId = zc_Movement_Sale() AND vbMovementDescId = vbMovementDescId_find
           THEN
@@ -213,11 +214,11 @@ BEGIN
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
 
-          IF vbMovementDescId_find <> vbMovementDescId
-          THEN
+          -- IF vbMovementDescId_find <> vbMovementDescId
+          -- THEN
                -- пометим записи на удаление ПОКА
-               PERFORM gpSetErased_MovementItem (MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
-          END IF;
+               -- PERFORM gpSetErased_MovementItem (MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
+          -- END IF;
          
          
           -- открыли курсор
@@ -332,7 +333,7 @@ BEGIN
                         , Sale1C.UnitId AS vbUnitId
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
                         , tmpPartner1CLink.ContractId
-                        , MovementReturn.Id
+                        , 0 AS MovementId -- MovementReturn.Id AS MovementId
                         , zfGetPaidKindFrom1CType(Sale1C.VidDoc) AS PaidKindId
                         , round(Sale1C.Tax)
                         , MAX (SumaPDV) AS SumaPDV
@@ -357,7 +358,7 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate, MLO_From.ObjectId AS PartnerId 
+               /*LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate, MLO_From.ObjectId AS PartnerId 
                                 FROM Movement  
           JOIN MovementLinkObject AS MLO_From
                                   ON MLO_From.MovementId = Movement.Id
@@ -377,7 +378,7 @@ BEGIN
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId <> zc_Enum_Status_Erased()) AS MovementReturn
                           ON MovementReturn.InvNumber = Sale1C.InvNumber AND MovementReturn.OperDate = Sale1C.OperDate
-                         AND MovementReturn.PartnerId = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                         AND MovementReturn.PartnerId = ObjectLink_Partner1CLink_Partner.ChildObjectId*/
 
           WHERE  Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
             AND ((Sale1C.VIDDOC = '4') OR (Sale1C.VIDDOC = '3')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -389,7 +390,7 @@ BEGIN
                         , Sale1C.UnitId
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId
                         , tmpPartner1CLink.ContractId
-                        , MovementReturn.Id
+                        -- , MovementReturn.Id
                         , zfGetPaidKindFrom1CType(Sale1C.VidDoc)
                         , round(Sale1C.Tax)
       ;
@@ -428,7 +429,7 @@ BEGIN
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
 
           -- пометим записи на удаление ПОКА
-          -- PERFORM gpSetErased_MovementItem(MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
+          -- PERFORM gpSetErased_MovementItem (MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
 
           -- открыли курсор
           OPEN curMovementItem FOR 

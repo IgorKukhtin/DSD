@@ -78,7 +78,7 @@ BEGIN
 
 
      -- Нашли Документ
-     vbMovementId:= (SELECT Movement.Id
+     vbMovementId:= 0; /*(SELECT Movement.Id
                      FROM Movement
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
                                                  AND MovementItem.ObjectId = vbCashId
@@ -90,26 +90,29 @@ BEGIN
                        AND Movement.OperDate = vbOperDate
                        AND Movement.InvNumber = vbInvNumber
                        AND Movement.StatusId = zc_Enum_Status_Complete()
-                     );
+                     );*/
          
      -- Сохранение Документа + Проведение/Распроведение
-     PERFORM gpInsertUpdate_Movement_Cash (ioId          := vbMovementId      -- Ключ объекта <Документ>
-                                         , inInvNumber   := vbInvNumber       -- Номер документа
-                                         , inOperDate    := vbOperDate        -- Дата документа
-                                         , inServiceDate := NULL              -- Дата начисления
-                                         , inAmountIn    := vbSummaIn         -- Сумма прихода
-                                         , inAmountOut   := vbSummaOut        -- Сумма расхода
-                                         , inComment     := ''                -- Комментарий
-                                         , inCashId      := vbCashId          -- Касса
-                                         , inMoneyPlaceId:= vbPartnerId       -- Объекты работы с деньгами
-                                         , inPositionId  := NULL              -- Должность
-                                         , inMemberId    := NULL              -- Физ лицо (через кого)
-                                         , inContractId  := vbContractId      -- Договора
-                                         , inInfoMoneyId := vbInfoMoneyId     -- Управленческие статьи
-                                         , inUnitId      := NULL              -- Подразделения
-                                         , inSession     := inSession         -- сессия пользователя
-                                          );
+     vbMovementId:= gpInsertUpdate_Movement_Cash (ioId          := vbMovementId      -- Ключ объекта <Документ>
+                                                , inInvNumber   := vbInvNumber       -- Номер документа
+                                                , inOperDate    := vbOperDate        -- Дата документа
+                                                , inServiceDate := NULL              -- Дата начисления
+                                                , inAmountIn    := vbSummaIn         -- Сумма прихода
+                                                , inAmountOut   := vbSummaOut        -- Сумма расхода
+                                                , inComment     := ''                -- Комментарий
+                                                , inCashId      := vbCashId          -- Касса
+                                                , inMoneyPlaceId:= vbPartnerId       -- Объекты работы с деньгами
+                                                , inPositionId  := NULL              -- Должность
+                                                , inMemberId    := NULL              -- Физ лицо (через кого)
+                                                , inContractId  := vbContractId      -- Договора
+                                                , inInfoMoneyId := vbInfoMoneyId     -- Управленческие статьи
+                                                , inUnitId      := NULL              -- Подразделения
+                                                , inSession     := inSession         -- сессия пользователя
+                                                 );
    
+     -- сохранили свойство <Загружен из 1С>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -117,6 +120,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.01.15                                        * all
  08.09.14                                        * 
  02.09.14                         * 
 */

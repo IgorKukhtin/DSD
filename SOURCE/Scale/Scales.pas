@@ -78,7 +78,7 @@ begin
        result := TScale(TScale.NewInstance);
        result.FScaleType := ScaleType;
        result.FComPort  := ComPort;
-       // result.FComSpeed := ComSpeed;
+       result.FComSpeed := ComSpeed;
        result.Active;
   end;
 end;

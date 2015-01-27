@@ -1,6 +1,6 @@
 -- Function: lpInsert_Movement_Tax_Mask()
 
-DROP FUNCTION lpInsert_Movement_Tax_Mask (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsert_Movement_Tax_Mask (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsert_Movement_Tax_Mask (
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
