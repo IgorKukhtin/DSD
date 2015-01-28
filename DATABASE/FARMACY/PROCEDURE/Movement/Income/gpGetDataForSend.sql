@@ -46,15 +46,18 @@ BEGIN
        FROM (SELECT 
      'call "DBA"."LoadIncomeBillItems"('''||Movement_Income_View.InvNumber||''','''||to_char(Movement_Income_View.OperDate, 'yyyy-mm-dd')||
           ''','''||to_char(Movement_Income_View.PaymentDate, 'yyyy-mm-dd')||
-          ''','||Movement_Income_View.PriceWithVAT::integer||','''||coalesce(Juridical.OKPO,'')||''','||COALESCE(vbClientId, 0)||','||vbUnitId||','||ObjectFloat_NDSKind_NDS.ValueData||
+          ''','||0::integer||','''||coalesce(Juridical.OKPO,'')||''','||COALESCE(vbClientId, 0)||','||vbUnitId||','||ObjectFloat_NDSKind_NDS.ValueData||
           ','||MovementItem.GoodsCode||','''||MovementItem.GoodsName||''','||MovementItem.Amount||','||
              CASE WHEN Movement_Income_View.PriceWithVAT THEN MovementItem.Price
              ELSE MovementItem.Price * (1 + Movement_Income_View.NDS/100)
              END||')'::text AS OneProcedure
        FROM Movement_Income_View    
          LEFT JOIN ObjectHistory_JuridicalDetails_View AS Juridical ON Juridical.JuridicalId = Movement_Income_View.FromId
-         LEFT JOIN MovementItem_Income_View AS MovementItem ON MovementItem.MovementId = Movement_Income_View.Id
-               AND MovementItem.isErased = false
+         LEFT JOIN (SELECT GoodsCode, GoodsName, SUM(Amount) AS Amount, Price
+                      FROM MovementItem_Income_View AS MovementItem 
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.isErased = false
+                     GROUP BY GoodsCode, GoodsName, Price) AS MovementItem ON true
         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                               ON ObjectFloat_NDSKind_NDS.ObjectId = Movement_Income_View.NDSKindId 
                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
@@ -69,6 +72,7 @@ ALTER FUNCTION gpGetDataForSend (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.01.15                         *
  12.01.15                         *
  26.12.14                         *
  09.12.14                         *
@@ -79,5 +83,6 @@ ALTER FUNCTION gpGetDataForSend (Integer, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 --
---SELECT * FROM gpGetDataForSend (inMovementId:= 13735  , inSession:= '2')
+--SELECT * FROM gpGetDataForSend (inMovementId:= 15532  , inSession:= '2') --15532 --15476
+--call "DBA"."LoadIncomeBillItems"('БН8687','2015-01-20','2015-01-20',1,'35341093',0,79,7.0000,12654,'Тонометр Росма (...)"
 

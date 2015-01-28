@@ -19,12 +19,17 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
      vbUserId:= lpGetUserBySession (inSession);
-     vbUnitId := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '0')::Integer;
+     vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+     IF vbUnitKey = '' THEN
+        vbUnitKey := '0';
+     END IF;   
+     vbUnitId := vbUnitKey::Integer;
 
      RETURN QUERY
       SELECT MovementDesc.ItemName,  MovementItem.Amount, Object.ObjectCode, Object.ValueData, 
@@ -76,6 +81,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.01.15                        *
  21.01.15                        *
  02.12.14                        *
 

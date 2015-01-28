@@ -46,7 +46,7 @@ BEGIN
 
      -- Перенос элементов прайса
      PERFORM gpInsertUpdate_MovementItem_PriceList(
-                      0 , -- Ключ объекта <Элемент документа>
+        MovementItem.Id , -- Ключ объекта <Элемент документа>
           vbPriceListId , -- Ключ объекта <Документ>
                 GoodsId , -- Товары
         Object_Goods.Id , -- Товар прайс-листа
@@ -70,13 +70,15 @@ BEGIN
                                 FROM Object_Goods_View 
                                WHERE ObjectId = vbJuridicalId
                     ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
-      WHERE GoodsId <> 0 AND LoadPriceListId = inId
-        AND (GoodsId, Object_Goods.Id)  
-             NOT IN (SELECT MovementItem.ObjectId, MILinkObject_Goods.ObjectId FROM MovementItem 
-                       JOIN MovementItemLinkObject AS MILinkObject_Goods
+                    
+          LEFT JOIN MovementItem ON LoadPriceListItem.GoodsId = MovementItem.ObjectId and MovementId = vbPriceListId
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                      WHERE MovementId = vbPriceListId);
+                                                  AND MILinkObject_Goods.ObjectId = Object_Goods.Id
+                    
+                    
+      WHERE GoodsId <> 0 AND LoadPriceListId = inId;
 
 
      -- сохранили протокол
@@ -89,6 +91,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.01.15                        *  меняем цены в случае изменения прайса
  26.10.14                        *  
  18.09.14                        *  
  10.09.14                        *  

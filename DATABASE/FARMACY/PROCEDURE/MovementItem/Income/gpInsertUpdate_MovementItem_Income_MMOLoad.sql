@@ -67,6 +67,7 @@ BEGIN
                                                     inPartitionGoods := inPartitionGoods,   
                                                     inPaymentDate    := inPaymentDate   , -- Дата оплаты
                                                     inPriceWithVAT   := inPriceWithVAT  ,
+                                                    inVAT            := inVAT           ,
                                                     inUnitName       := inRemark        ,
                                                     inMakerName      := inMakerName     ,
                                                     inisLastRecord   := inisLastRecord  ,

@@ -1,7 +1,5 @@
 inherited MovementDescDataForm: TMovementDescDataForm
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -10,6 +8,7 @@ inherited MovementDescDataForm: TMovementDescDataForm
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -40,6 +39,7 @@ inherited MovementDescDataForm: TMovementDescDataForm
   inherited ActionList: TActionList
     object actOpenMovementForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actOpenMovementForm'
       FormName = 'TFormsForm'
       FormNameParam.Value = 'TFormsForm'
@@ -47,11 +47,13 @@ inherited MovementDescDataForm: TMovementDescDataForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'FormId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'FormName'
           DataType = ftString
@@ -60,6 +62,7 @@ inherited MovementDescDataForm: TMovementDescDataForm
     end
     object actInsertUpdateForm: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = InsertUpdateForm
       StoredProcList = <
         item
@@ -69,10 +72,22 @@ inherited MovementDescDataForm: TMovementDescDataForm
       DataSource = MasterDS
     end
   end
+  inherited MasterDS: TDataSource
+    Left = 80
+    Top = 104
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 24
+    Top = 104
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementDesc'
+    Left = 112
+    Top = 120
   end
   inherited BarManager: TdxBarManager
+    Left = 168
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -86,16 +101,19 @@ inherited MovementDescDataForm: TMovementDescDataForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inFormId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'FormId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 160
     Top = 168
   end

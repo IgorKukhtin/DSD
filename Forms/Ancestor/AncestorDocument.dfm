@@ -1,10 +1,11 @@
 inherited AncestorDocumentForm: TAncestorDocumentForm
+  Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
   ClientHeight = 416
   ClientWidth = 829
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 845
-  ExplicitHeight = 451
+  ExplicitWidth = 837
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,6 +31,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ExplicitWidth = 829
         ExplicitHeight = 306
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -296,6 +298,25 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         end>
       isShowModal = False
     end
+    object MovementItemProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     object MultiAction: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -447,6 +468,14 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -497,6 +526,10 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     end
     object bbMovementItemContainer: TdxBarButton
       Action = actMovementItemContainer
+      Category = 0
+    end
+    object bbMovementItemProtocol: TdxBarButton
+      Action = MovementItemProtocolOpenForm
       Category = 0
     end
   end
@@ -678,7 +711,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 256
-    Top = 200
+    Top = 240
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'

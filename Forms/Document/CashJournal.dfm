@@ -9,15 +9,12 @@ inherited CashJournalForm: TCashJournalForm
     Width = 982
     TabOrder = 3
     ExplicitWidth = 982
-    ExplicitHeight = 450
-    ClientRectRight = 978
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 976
-      ExplicitHeight = 444
+      ExplicitWidth = 982
       inherited cxGrid: TcxGrid
-        Width = 976
-        ExplicitWidth = 976
-        ExplicitHeight = 444
+        Width = 982
+        ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -315,6 +312,10 @@ inherited CashJournalForm: TCashJournalForm
           ComponentItem = 'Key'
         end>
     end
+    inherited MovementProtocolOpenForm: TdsdOpenForm
+      ImageIndex = 34
+      FormNameParam.Value = ''
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -364,7 +365,7 @@ inherited CashJournalForm: TCashJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

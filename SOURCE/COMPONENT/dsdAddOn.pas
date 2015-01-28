@@ -1088,11 +1088,11 @@ begin
            if Assigned(TreeList) then
               TreeList.RestoreFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))));
         end;
-        if ChildNodes[i].NodeName = 'dxBarManager' then begin
+{        if ChildNodes[i].NodeName = 'dxBarManager' then begin
            BarManager := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TdxBarManager;
            if Assigned(BarManager) then
               BarManager.LoadFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))));
-        end;
+        end;}
         if ChildNodes[i].NodeName = 'cxPropertiesStore' then begin
            PropertiesStore := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxPropertiesStore;
            if Assigned(PropertiesStore) then begin
@@ -1143,12 +1143,12 @@ begin
     xml := '<root>';
     // Сохраняем установки гридов
     for i := 0 to Owner.ComponentCount - 1 do begin
-      if Owner.Components[i] is TdxBarManager then
+{      if Owner.Components[i] is TdxBarManager then
          with TdxBarManager(Owner.Components[i]) do begin
            SaveToStream(TempStream);
            xml := xml + '<dxBarManager name = "' + Name + '" data = "' + ConvertConvert(TempStream.DataString) + '" />';
            TempStream.Clear;
-         end;
+         end;}
       if Owner.Components[i] is TcxCustomGridView then
          with TcxCustomGridView(Owner.Components[i]) do begin
            StoreToStream(TempStream);

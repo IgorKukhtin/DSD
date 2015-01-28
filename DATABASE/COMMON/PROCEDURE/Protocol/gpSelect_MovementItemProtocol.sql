@@ -1,10 +1,15 @@
 -- Function: gpSelect_Protocol()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItemProtocol (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItemProtocol (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItemProtocol (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItemProtocol(
-    IN inMovementId    Integer,    -- Документ  
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate           TDateTime , -- 
+    IN inEndDate             TDateTime , --
+    IN inUserId              Integer,    -- пользователь  
+    IN inMovementItemId      Integer,    -- Документ  
+    IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime, ProtocolData TVarChar, UserName TVarChar, MovementItemId Integer)
 AS
@@ -22,8 +27,9 @@ BEGIN
      MovementItemProtocol.MovementItemId
   FROM MovementItem
        JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-       JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId
- WHERE MovementItem.MovementId = inMovementId;
+       JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+                                 AND (Object_User.Id = inUserId or inUserId = 0)
+ WHERE MovementItem.Id = inMovementItemId;
 
 --inUserId        Integer,    -- пользователь  
   --  IN inObjectDescId  Integer,    -- тип объекта
@@ -32,15 +38,16 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItemProtocol (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_MovementItemProtocol (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.01.15         *              
  14.02.14                         *  
 */
 
 -- тест
--- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inSession:= '2'); 
+--SELECT * FROM gpSelect_MovementItemProtocol (inStartDate:= '01.10.2014', inEndDate:= '01.10.2014', inMovementId:= null, inSession:= '2'); 
                                                                 

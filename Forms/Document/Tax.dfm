@@ -2,8 +2,8 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitWidth = 1083
-  ExplicitHeight = 703
+  ExplicitWidth = 1075
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -170,7 +170,6 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 151
-      ExplicitHeight = 22
       Width = 151
     end
     object cxLabel3: TcxLabel
@@ -809,6 +808,14 @@ inherited TaxForm: TTaxForm
         item
           Visible = True
           ItemName = 'bbPrint_Us'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True
@@ -1590,7 +1597,7 @@ inherited TaxForm: TTaxForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     ComponentList = <>
-    Left = 496
+    Left = 608
     Top = 96
   end
   object PrintHeaderCDS: TClientDataSet

@@ -58,8 +58,7 @@ requires
   cxVerticalGridRS16,
   dxSkinsCoreRS16,
   kbmMemRunDXE2Pro,
-  adortl,
-  ZLibEx;
+  adortl;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -110,6 +109,7 @@ contains
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   Scales in '..\SOURCE\Scale\Scales.pas',
-  SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas';
+  SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
+  dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas';
 
 end.

@@ -12,13 +12,13 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxButtonEdit, dsdGuides, cxMemo, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus;
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus,
+  dsdXMLTransform, cxSplitter;
 
 type
   TProtocolForm = class(TAncestorReportForm)
     colDate: TcxGridDBColumn;
     colUserName: TcxGridDBColumn;
-    colProtocolData: TcxGridDBColumn;
     colObjectName: TcxGridDBColumn;
     edUser: TcxButtonEdit;
     edObjectDesc: TcxButtonEdit;
@@ -31,6 +31,17 @@ type
     cxLabel5: TcxLabel;
     colObjectTypeName: TcxGridDBColumn;
     colInsert: TcxGridDBColumn;
+    dsdXMLTransform: TdsdXMLTransform;
+    ProtocolDataCDS: TClientDataSet;
+    ProtocolDataDS: TDataSource;
+    ProtocolDataCDSFieldName: TStringField;
+    ProtocolDataCDSFieldValue: TStringField;
+    cxSplitter: TcxSplitter;
+    cxGridProtocolData: TcxGrid;
+    cxGridViewProtocolData: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    cxGridDBColumn2: TcxGridDBColumn;
+    cxGridLevelProtocolData: TcxGridLevel;
   private
     { Private declarations }
   public
@@ -43,6 +54,7 @@ implementation
 
 initialization
   RegisterClass(TProtocolForm);
+  RegisterClass(TStringField);
 
 
 end.
