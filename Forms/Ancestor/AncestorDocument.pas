@@ -40,6 +40,8 @@ type
     spInsertMaskMIMaster: TdsdStoredProc;
     bbAddMask: TdxBarButton;
     spGetTotalSumm: TdsdStoredProc;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbMovementItemProtocol: TdxBarButton;
   private
     { Private declarations }
   public

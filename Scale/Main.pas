@@ -36,29 +36,11 @@ type
     PanelTotalSummGoods_Weight_Discount: TPanel;
     gbTotalSumm: TGroupBox;
     PanelTotalSumm: TPanel;
-    PanelZakaz: TPanel;
-    GroupBox1: TGroupBox;
-    DiffZakazSalePanel: TPanel;
-    GroupBox2: TGroupBox;
-    ZakazCountPanel: TPanel;
-    GroupBox3: TGroupBox;
-    ZakazChangePanel: TPanel;
-    GroupBox4: TGroupBox;
-    calcZakazCountPanel: TPanel;
-    GroupBox5: TGroupBox;
-    SaleCountPanel: TPanel;
-    GroupBox6: TGroupBox;
-    TotalDiffZakazSalePanel: TPanel;
-    GroupBox7: TGroupBox;
-    TotalZakazCountPanel: TPanel;
     PanelSaveItem: TPanel;
     CodeInfoPanel: TPanel;
     EnterGoodsCodeScanerPanel: TPanel;
     EnterGoodsCodeScanerLabel: TLabel;
     EnterGoodsCodeScanerEdit: TEdit;
-    EnterWeightPanel: TPanel;
-    EnterWeightLabel: TLabel;
-    EnterWeightEdit: TEdit;
     gbOperDate: TGroupBox;
     infoPanel_Scale: TPanel;
     ScaleLabel: TLabel;
@@ -134,7 +116,7 @@ type
     miScaleRun_BI_R: TMenuItem;
     OperDateEdit: TcxDateEdit;
     spSelect: TdsdStoredProc;
-    DS: TDataSource;
+    DataSource: TDataSource;
     CDS: TClientDataSet;
     infoPanelContract: TPanel;
     LabelContract: TLabel;
@@ -200,19 +182,7 @@ begin
      if ParamsMovement.ParamByName('MovementDescId').asInteger=0
      then if not GetParams_MovementDesc then exit;
      //
-     with ParamsMI do begin
-        try ParamByName('RealWeight_Enter').AsFloat:=StrToFloat(trim(EnterWeightEdit.Text));
-        except ParamByName('RealWeight_Enter').AsFloat:=0;
-        end;
-        ParamByName('RealWeight_Get').AsFloat:=fGetScale_CurrentWeight;
-        //
-        if (ParamByName('RealWeight_Get').AsFloat<=0.0001)and(ParamByName('RealWeight_Enter').AsFloat<=0.0001)then
-        begin
-             ShowMessage('Ошибка.Не определен <Вес на Табло> или <Количество>.');
-             ActiveControl:=EnterWeightEdit;
-             exit;
-        end;
-     end;
+     ParamsMI.ParamByName('RealWeight_Get').AsFloat:=fGetScale_CurrentWeight;
      //
 
      if GuideGoodsForm.Execute(ParamsMovement.ParamByName('OperDate').AsDateTime)

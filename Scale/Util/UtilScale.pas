@@ -95,6 +95,8 @@ begin
      ParamAdd(Params,'ColorGridValue',ftInteger);
      ParamAdd(Params,'OperDate',ftDateTime);
 
+     ParamAdd(Params,'MovementId',ftInteger);
+
      ParamAdd(Params,'MovementNumber',ftInteger);
 
      ParamAdd(Params,'MovementDescId',ftInteger);
@@ -137,28 +139,11 @@ begin
      Params:=nil;
      ParamAdd(Params,'GoodsId',ftInteger);     // Товары
      ParamAdd(Params,'GoodsKindId',ftInteger); // Виды товаров
-
      ParamAdd(Params,'RealWeight_Get',ftFloat);      //
-     ParamAdd(Params,'RealWeight_Enter',ftFloat);    //
      ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета тары и % скидки для кол-ва)
-     ParamAdd(Params,'Amount',ftFloat);              // Количество (склад)
-     ParamAdd(Params,'AmountPartner',ftFloat);       // Количество у контрагента
      ParamAdd(Params,'CountTare',ftFloat);           // Количество тары
-     ParamAdd(Params,'WeightTare',ftFloat);          // Вес тары
+     ParamAdd(Params,'WeightTare',ftFloat);          // Вес 1-ой тары
      ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва
-
-     ParamAdd(Params,'PartionGoodsDate',ftDateTime); // Партия
-     ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
-     ParamAdd(Params,'Count',ftFloat);               // Количество батонов или упаковок
-
-     ParamAdd(Params,'BoxCount',ftFloat);      // Количество Ящик(гофро)
-     ParamAdd(Params,'BoxNumber',ftFloat);     // Номер ящика
-     ParamAdd(Params,'LevelNumber',ftFloat);   // Номер слоя
-     ParamAdd(Params,'Price',ftFloat);         // Цена
-     ParamAdd(Params,'CountForPrice',ftFloat); // Цена за количество
-
-     ParamAdd(Params,'PriceListId',ftInteger); // Прайс
-     ParamAdd(Params,'BoxId',ftInteger);       // Ящик(гофро)
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_Value_byName(ArrayList:TArrayList;Name:String):String;

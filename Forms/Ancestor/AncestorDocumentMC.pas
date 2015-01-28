@@ -83,6 +83,8 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbMovementItemProtocol: TdxBarButton;
   private
     { Private declarations }
   public

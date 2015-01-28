@@ -428,7 +428,7 @@ BEGIN
                   END AS DirectionObjectCode
                 , CASE WHEN Object_ProfitLoss_View.ProfitLossName_all IS NOT NULL
                             THEN Object_ProfitLoss_View.ProfitLossName_all
-                       ELSE Object_Direction.ValueData
+                       ELSE Object_Direction.ValueData || COALESCE (' *** ' || Object_Partner.ValueData, '')
                   END AS DirectionObjectName
 
 
@@ -502,6 +502,8 @@ BEGIN
                        WHEN ContainerLinkObject_Unit.ObjectId <> 0
                             THEN ContainerLinkObject_Unit.ObjectId
                   END AS DirectionId
+                , ContainerLinkObject_Partner.ObjectId AS PartnerId
+
                 , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN tmpMIContainer_Summ.GoodsId ELSE 0 END     AS DestinationId
                 , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN tmpMIContainer_Summ.GoodsKindId ELSE 0 END AS GoodsKindId
 
@@ -527,6 +529,9 @@ BEGIN
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Partner
+                                               ON ContainerLinkObject_Partner.ContainerId = tmpMIContainer_Summ.ContainerId_find
+                                              AND ContainerLinkObject_Partner.DescId = zc_ContainerLinkObject_Partner()
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Founder
                                                ON ContainerLinkObject_Founder.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_Founder.DescId = zc_ContainerLinkObject_Founder()
@@ -579,6 +584,7 @@ BEGIN
                  LEFT JOIN Object_ProfitLoss_View ON Object_ProfitLoss_View.ProfitLossId = tmpMIContainer_Summ.ProfitLossId
                  LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = tmpMIContainer_Summ.DirectionId
                  LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpMIContainer_Summ.DestinationId
+                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpMIContainer_Summ.PartnerId
 
                  LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpMIContainer_Summ.JuridicalBasisId
                  LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpMIContainer_Summ.BusinessId
@@ -616,6 +622,8 @@ BEGIN
                    , Object_Business.ValueData
                    , Object_Direction.ObjectCode
                    , Object_Direction.ValueData
+                   , Object_Partner.ObjectCode
+                   , Object_Partner.ValueData
                    , Object_ProfitLoss_View.ProfitLossCode
                    , Object_ProfitLoss_View.ProfitLossName_all
                    , Object_GoodsGroup.ObjectCode

@@ -69,8 +69,7 @@ type
 
 { TScaleFactory }
 
-class function TScaleFactory.GetScale(ScaleType: TScaleType; ComPort: string;
-  ComSpeed: integer): TScale;
+class function TScaleFactory.GetScale(ScaleType: TScaleType; ComPort: string;ComSpeed: integer): TScale;
 begin
   if not Assigned(FScale) then begin
      FScale := TScale(TScale.NewInstance);

@@ -100,8 +100,6 @@ begin
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
 
         //
-        ParamsMovement.Free;
-
   end;
 
 //  Application.CreateForm(TMainForm, MainForm);

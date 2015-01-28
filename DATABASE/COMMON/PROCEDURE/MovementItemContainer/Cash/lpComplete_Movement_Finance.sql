@@ -199,6 +199,7 @@ BEGIN
                                                            THEN zc_Enum_ProfitLossDirection_11100() -- Результат основной деятельности + Маркетинг
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- Доходы + услуги предоставленные
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40500() -- Финансовая деятельность + Ссуды
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40600() -- Финансовая деятельность + Депозиты
                                                            THEN zc_Enum_ProfitLossDirection_70200() -- Дополнительная прибыль + Прочее

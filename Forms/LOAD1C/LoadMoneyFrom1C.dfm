@@ -354,6 +354,9 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
       StoredProcList = <
         item
           StoredProc = spCheckLoad
+        end
+        item
+          StoredProc = spErased
         end>
       Caption = 'actBeforeMove'
     end
@@ -544,6 +547,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
     Top = 16
   end
   object spErased: TdsdStoredProc
+    StoredProcName = 'gpErasedMoneyFrom1C'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -569,8 +573,8 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 336
-    Top = 216
+    Left = 376
+    Top = 168
   end
   object spCheckLoad: TdsdStoredProc
     StoredProcName = 'gpCheckLoadMoneyFrom1C'

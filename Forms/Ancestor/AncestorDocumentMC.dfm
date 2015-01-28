@@ -3,8 +3,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   ClientWidth = 935
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 951
-  ExplicitHeight = 767
+  ExplicitWidth = 943
+  ExplicitHeight = 766
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -41,6 +41,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
               Kind = skSum
               Column = colAmount
             end>
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -85,7 +86,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         Align = alBottom
         PopupMenu = PopupMenuChild
         TabOrder = 1
-        ExplicitTop = 236
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -622,6 +622,25 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end>
       isShowModal = False
     end
+    object MovementItemProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inMovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 752
@@ -748,6 +767,14 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -815,6 +842,10 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
+      Category = 0
+    end
+    object bbMovementItemProtocol: TdxBarButton
+      Action = MovementItemProtocolOpenForm
       Category = 0
     end
   end
