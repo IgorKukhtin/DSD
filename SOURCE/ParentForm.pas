@@ -253,6 +253,7 @@ initialization
   RegisterClass (TFileExit);
   RegisterClass (TPopupMenu);
   RegisterClass (TPanel);
+  RegisterClass (TStringField);
 
   // Библиотека DevExpress
   RegisterClass (TdxBarDockControl);

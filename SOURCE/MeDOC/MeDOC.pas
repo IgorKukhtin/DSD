@@ -347,6 +347,15 @@ begin
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N11', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
   //Прізвище особи, яка склала ПН
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N10', HeaderDataSet.FieldByName('N10').AsString);
+
+  if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then begin
+     // Не видається покупцю
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N13', '1');
+     // Не видається покупцю (тип причини)
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N14',
+             HeaderDataSet.FieldByName('NotNDSPayerC1').asString + HeaderDataSet.FieldByName('NotNDSPayerC2').asString);
+  end;
+
   //Найменування покупця
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N3', HeaderDataSet.FieldByName('JuridicalName_To').AsString);
   //ІПН покупця

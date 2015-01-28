@@ -1808,7 +1808,7 @@ type
 {$ENDIF}
 
 
-procedure Register;
+//procedure Register;
 
 resourcestring
   dtlServerPage = 'ActiveX';
@@ -4241,11 +4241,11 @@ end;
 
 {$ENDIF}
 
-procedure Register;
+{procedure Register;
 begin
-  RegisterComponents(dtlServerPage, [TCasDB, TCasCI, TCasBI, TDigiDS425, 
-    TLP15v15, TCasLP15v16, TDigiDS788, TJadeverJPS, TDigiDS980, 
+  RegisterComponents(dtlServerPage, [TCasDB, TCasCI, TCasBI, TDigiDS425,
+    TLP15v15, TCasLP15v16, TDigiDS788, TJadeverJPS, TDigiDS980,
     TAxisDB, TTiger]);
-end;
+end;}
 
 end.

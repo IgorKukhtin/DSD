@@ -4,7 +4,8 @@ interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
   cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
-  cxGridDBTableView, frxClass, cxGridCustomView, Dialogs, Controls;
+  cxGridDBTableView, frxClass, cxGridCustomView, Dialogs, Controls,
+  dsdDataSetDataLink;
 
 type
 
@@ -62,12 +63,6 @@ type
     property GridView: TcxGridTableView read FGridView write SetGridView;
   end;
 
-  // Вызываем события при изменении каких параметров датасета
-  IDataSetAction = interface
-    procedure DataSetChanged;
-    procedure UpdateData;
-  end;
-
   // Вызываем события у формы
   IFormAction = interface
     ['{9647E6F2-B61C-46FC-83E7-F3E1C69B8699}']
@@ -118,19 +113,6 @@ type
     // действие вызывается если результат вызова основного действия false
     property CancelAction: TAction read FCancelAction write FCancelAction;
     property Enabled;
-  end;
-
-  TDataSetDataLink = class(TDataLink)
-  private
-    FAction: IDataSetAction;
-    // вешаем флаг, потому что UpdateData срабатывает ДВАЖДЫ!!!
-    FModified: Boolean;
-  protected
-    procedure EditingChanged; override;
-    procedure DataSetChanged; override;
-    procedure UpdateData; override;
-  public
-    constructor Create(Action: IDataSetAction);
   end;
 
   TdsdCustomDataSetAction = class(TdsdCustomAction, IDataSetAction)
@@ -954,36 +936,6 @@ end;
 procedure TdsdInsertUpdateAction.UpdateData;
 begin
 
-end;
-
-{ TActionDataLink }
-
-constructor TDataSetDataLink.Create(Action: IDataSetAction);
-begin
-  inherited Create;
-  FAction := Action;
-end;
-
-procedure TDataSetDataLink.DataSetChanged;
-begin
-  inherited;
-  if Assigned(FAction) then
-    FAction.DataSetChanged;
-end;
-
-procedure TDataSetDataLink.EditingChanged;
-begin
-  inherited;
-  if Assigned(DataSource) and (DataSource.State in [dsEdit, dsInsert]) then
-    FModified := true;
-end;
-
-procedure TDataSetDataLink.UpdateData;
-begin
-  inherited;
-  if Assigned(FAction) and FModified then
-    FAction.UpdateData;
-  FModified := false;
 end;
 
 { TdsdUpdateErased }

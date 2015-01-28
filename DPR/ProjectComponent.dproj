@@ -113,7 +113,6 @@
 			<DCCReference Include="dxSkinsCoreRS16.dcp"/>
 			<DCCReference Include="kbmMemRunDXE2Pro.dcp"/>
 			<DCCReference Include="adortl.dcp"/>
-			<DCCReference Include="ZLibEx.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -171,6 +170,7 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
 			<DCCReference Include="..\SOURCE\Scale\Scales.pas"/>
 			<DCCReference Include="..\Scale\Util\SysScalesLib_TLB.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
