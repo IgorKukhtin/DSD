@@ -350,7 +350,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Width = 250
         Height = 215
         Align = alClient
-        Caption = #1055#1088#1072#1081#1089'-'#1051#1080#1089#1090
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         Color = clBtnFace
         ParentColor = False
         TabOrder = 1

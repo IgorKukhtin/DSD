@@ -208,6 +208,11 @@ BEGIN
            , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
 
+           , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Áàáåíêî Â.Ï.' ELSE '' END AS StoreKeeper -- êëàäîâùèê
+           , Object_BankAccount.Name                            AS BankAccount_ByContract
+           , Object_BankAccount.MFO                             AS BankMFO_ByContract
+           , Object_BankAccount.BankName                        AS BankName_ByContract
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -278,13 +283,39 @@ BEGIN
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_From.Id)
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate 
+                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                                 ON OH_JuridicalDetails_To.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, Object_To.Id)
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate 
+                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
+-- bank account
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
+                                 ON ObjectLink_Contract_BankAccount.ObjectId = View_Contract.ContractId
+                                AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
+
+            LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
+                                 ON ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
+                                AND ObjectLink_BankAccountContract_InfoMoney.ChildObjectId = View_Contract.InfoMoneyId
+                                AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
+            LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_BankAccount
+                                 ON ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
+                                AND ObjectLink_BankAccountContract_BankAccount.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
+            LEFT JOIN (SELECT ObjectLink_BankAccountContract_BankAccount.ChildObjectId
+                       FROM ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
+                            JOIN ObjectLink AS ObjectLink_BankAccountContract_BankAccount
+                                                 ON ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
+                                                AND ObjectLink_BankAccountContract_BankAccount.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
+                                                AND ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NOT NULL
+
+                       WHERE ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
+                         AND ObjectLink_BankAccountContract_InfoMoney.ChildObjectId IS NULL
+                      ) AS ObjectLink_BankAccountContract_BankAccount_all ON ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NULL -- !!!íå îøèáêà!!!, âûáèðàåòñÿ ñ ïóñòîé ÓÏ
+                                                                         AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
+
+            LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (ObjectLink_BankAccountContract_BankAccount.ChildObjectId, ObjectLink_BankAccountContract_BankAccount_all.ChildObjectId))
+
 
 
        WHERE Movement.Id =  inMovementId
@@ -495,6 +526,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 28.01.15                                                       *
  16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
  20.06.14                                                       * change InvNumberPartner
  17.06.14                                                       *

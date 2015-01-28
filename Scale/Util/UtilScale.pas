@@ -96,6 +96,7 @@ begin
      ParamAdd(Params,'OperDate',ftDateTime);
 
      ParamAdd(Params,'MovementId',ftInteger);
+     ParamAdd(Params,'InvNumber',ftString);
 
      ParamAdd(Params,'MovementNumber',ftInteger);
 
