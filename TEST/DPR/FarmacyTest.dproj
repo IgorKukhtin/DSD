@@ -600,6 +600,7 @@
 			<DCCReference Include="..\SOURCE\Objects\All\BankAccountTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CurrencyTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
