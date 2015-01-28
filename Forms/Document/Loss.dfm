@@ -2,8 +2,8 @@ inherited LossForm: TLossForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 985
-  ExplicitWidth = 1001
-  ExplicitHeight = 703
+  ExplicitWidth = 993
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -50,6 +50,7 @@ inherited LossForm: TLossForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -260,7 +261,6 @@ inherited LossForm: TLossForm
     end
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 166
-      ExplicitHeight = 22
       Width = 166
     end
     object cxLabel3: TcxLabel
@@ -580,6 +580,14 @@ inherited LossForm: TLossForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True

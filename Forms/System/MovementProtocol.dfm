@@ -35,28 +35,28 @@ inherited MovementProtocolForm: TMovementProtocolForm
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 54
+            Width = 83
           end
           object colObjectName: TcxGridDBColumn
             Caption = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 110
+            Width = 101
           end
           object colObjectTypeName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'MovementDescName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 106
+            Width = 138
           end
           object colUserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 99
+            Width = 135
           end
           object colProtocolData: TcxGridDBColumn
             Caption = #1044#1072#1085#1085#1099#1077
@@ -140,10 +140,11 @@ inherited MovementProtocolForm: TMovementProtocolForm
     Left = 103
   end
   inherited MasterDS: TDataSource
-    Top = 55
+    Top = 119
   end
   inherited MasterCDS: TClientDataSet
-    Top = 55
+    Left = 16
+    Top = 119
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementProtocol'
@@ -183,11 +184,11 @@ inherited MovementProtocolForm: TMovementProtocolForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 152
-    Top = 103
+    Left = 160
+    Top = 143
   end
   inherited BarManager: TdxBarManager
-    Top = 55
+    Top = 111
     DockControlHeights = (
       0
       0
