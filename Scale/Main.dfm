@@ -64,14 +64,12 @@ object MainForm: TMainForm
           Expanded = False
           FieldName = 'PartionString'
           Title.Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
-          Width = -1
           Visible = False
         end
         item
           Expanded = False
           FieldName = 'PartionDate'
           Title.Caption = #1055#1072#1088#1090#1080#1103' '#1044#1040#1058#1040
-          Width = -1
           Visible = False
         end
         item
@@ -392,18 +390,19 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      object GBTotalSummGoods_Weight: TGroupBox
-        Left = 130
+      object gbRealWeight: TGroupBox
+        Left = 249
         Top = 0
-        Width = 98
+        Width = 119
         Height = 41
         Align = alLeft
-        Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1087#1088#1086#1076'.'
+        Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
         TabOrder = 0
+        ExplicitLeft = 130
         object PanelRealWeight: TPanel
           Left = 2
           Top = 15
-          Width = 94
+          Width = 115
           Height = 24
           Align = alClient
           BevelOuter = bvNone
@@ -415,24 +414,27 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 94
         end
       end
-      object TotalSummTare_Weight: TGroupBox
-        Left = 228
+      object gbPanelWeightTare: TGroupBox
+        Left = 368
         Top = 0
         Width = 108
         Height = 41
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1090#1072#1088#1099
         TabOrder = 1
-        object PanelTotalSummTare_Weight: TPanel
+        ExplicitLeft = 372
+        ExplicitTop = 6
+        object PanelWeightTare: TPanel
           Left = 2
           Top = 15
           Width = 104
           Height = 24
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelWeightTareTotal'
+          Caption = 'PanelWeightTare'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -442,7 +444,7 @@ object MainForm: TMainForm
           TabOrder = 0
         end
       end
-      object GBTotalSummGoods_Weight_Discount: TGroupBox
+      object gbAmountPartnerWeight: TGroupBox
         Left = 0
         Top = 0
         Width = 130
@@ -450,14 +452,14 @@ object MainForm: TMainForm
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         TabOrder = 2
-        object PanelTotalSummGoods_Weight_Discount: TPanel
+        object PanelAmountPartnerWeight: TPanel
           Left = 2
           Top = 15
           Width = 126
           Height = 24
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelTotalSummGoods_Weight_Discount'
+          Caption = 'PanelAmountPartnerWeight'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -483,6 +485,31 @@ object MainForm: TMainForm
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelTotalSumm'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+      end
+      object gbAmountWeight: TGroupBox
+        Left = 130
+        Top = 0
+        Width = 119
+        Height = 41
+        Align = alLeft
+        Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1057#1082#1083#1072#1076
+        TabOrder = 4
+        object PanelAmountWeight: TPanel
+          Left = 2
+          Top = 15
+          Width = 115
+          Height = 24
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelAmountWeight'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11

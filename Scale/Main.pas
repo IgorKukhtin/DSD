@@ -28,12 +28,12 @@ type
     ButtonChangeMember: TSpeedButton;
     ButtonExportToEDI: TSpeedButton;
     infoPanelTotalSumm: TPanel;
-    GBTotalSummGoods_Weight: TGroupBox;
+    gbRealWeight: TGroupBox;
     PanelRealWeight: TPanel;
-    TotalSummTare_Weight: TGroupBox;
-    PanelTotalSummTare_Weight: TPanel;
-    GBTotalSummGoods_Weight_Discount: TGroupBox;
-    PanelTotalSummGoods_Weight_Discount: TPanel;
+    gbPanelWeightTare: TGroupBox;
+    PanelWeightTare: TPanel;
+    gbAmountPartnerWeight: TGroupBox;
+    PanelAmountPartnerWeight: TPanel;
     gbTotalSumm: TGroupBox;
     PanelTotalSumm: TPanel;
     PanelSaveItem: TPanel;
@@ -121,6 +121,8 @@ type
     infoPanelContract: TPanel;
     LabelContract: TLabel;
     PanelContract: TPanel;
+    gbAmountWeight: TGroupBox;
+    PanelAmountWeight: TPanel;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure ButtonNewGetParamsClick(Sender: TObject);
@@ -135,6 +137,7 @@ type
     function GetParams_Goods:Boolean;
     procedure Initialize_Scale;
     function fGetScale_CurrentWeight:Double;
+    procedure RefreshDataSet;
   public
     { Public declarations }
   end;
@@ -218,7 +221,7 @@ begin
   ChangePercent_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'ChangePercent');
   GoodsKind_Array:=     DMMainScaleForm.gpSelect_Scale_GoodsKindWeighing;
   //global Initialize
-  Create_ParamsMovement(ParamsMovement);
+  gpInitialize_ParamsMovement;
   Create_ParamsMI(ParamsMI);
   //global Initialize
   Scale_DB:=TCasDB.Create(self);
@@ -229,6 +232,24 @@ begin
   ParamsMovement.ParamByName('MovementNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber');
   //local Movement Initialize
   OperDateEdit.Text:=DateToStr(gpInitialize_OperDate(ParamsMovement));
+  //
+  with spSelect do
+  begin
+       StoredProcName:='gpSelect_Scale_MI';
+       OutputType:=otDataSet;
+       RefreshDataSet;
+       Params.AddParam('inMovementId', ftInteger, ptInput,0);
+       Execute;
+  end;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.RefreshDataSet;
+begin
+  with spSelect do
+  begin
+       Params.ParamByName('inMovementId').Value:=ParamsMovement.ParamByName('MovementId').AsInteger;
+       Execute;
+  end;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_Scale;
