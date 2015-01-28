@@ -215,7 +215,7 @@ BEGIN
                                           , inHouseNumber       := inHouseNumber
                                           , inCaseNumber        := inCaseNumber  
                                           , inRoomNumber        := inRoomNumber
-                                          , inIsCheckUnique     := TRUE
+                                          , inIsCheckUnique     := FALSE
                                           , inSession           := inSession
                                           , inUserId            := vbUserId
                                            ) AS tmp;

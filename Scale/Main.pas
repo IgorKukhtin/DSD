@@ -29,7 +29,7 @@ type
     ButtonExportToEDI: TSpeedButton;
     infoPanelTotalSumm: TPanel;
     GBTotalSummGoods_Weight: TGroupBox;
-    PanelTotalSummGoods_Weight: TPanel;
+    PanelRealWeight: TPanel;
     TotalSummTare_Weight: TGroupBox;
     PanelTotalSummTare_Weight: TPanel;
     GBTotalSummGoods_Weight_Discount: TGroupBox;

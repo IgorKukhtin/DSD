@@ -41,7 +41,6 @@ BEGIN
          vbStartWeighing:= CURRENT_TIMESTAMP;
      ELSE
          SELECT InvNumber, ParentId INTO vbInvNumber, vbParentId FROM Movement WHERE Id = ioId;
-         vbStartWeighing:= (SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_StartWeighing());
      END IF;
 
 
@@ -51,8 +50,11 @@ BEGIN
      -- сохранили <ƒокумент>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_WeighingPartner(), vbInvNumber, inOperDate, vbParentId, vbAccessKeyId);
 
-     -- сохранили свойство <ѕротокол начало взвешивани€>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartWeighing(), ioId, inStartWeighing);
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <ѕротокол начало взвешивани€>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartWeighing(), ioId, vbStartWeighing);
+     END IF;
      
      -- сохранили свойство <¬ид документа>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), ioId, inMovementDescId);

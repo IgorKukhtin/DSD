@@ -229,23 +229,27 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'NameAll'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyCode'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
         end
         item
           Name = 'InfoMoneyGroupName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyGroupName'
           DataType = ftString
@@ -258,6 +262,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -272,6 +277,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 256
     Top = 184
   end

@@ -41,118 +41,142 @@ object MainForm: TMainForm
       Columns = <
         item
           Expanded = False
-          FieldName = 'Production_Code'
-          Width = 26
+          FieldName = 'GoodsCode'
+          Title.Caption = #1050#1086#1076
+          Width = 55
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'Production_Name'
+          FieldName = 'GoodsName'
+          Title.Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          Width = 250
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'KindPackageName'
+          FieldName = 'GoodsKindName'
+          Title.Caption = #1042#1080#1076' '#1091#1087#1072#1082'.'
+          Width = 100
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'PartionStr_MB'
-          Visible = True
+          FieldName = 'PartionString'
+          Title.Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
+          Width = -1
+          Visible = False
         end
         item
           Expanded = False
-          FieldName = 'OperCount_sh'
-          Title.Caption = #1050#1086#1083' '#1075#1086#1083#1086#1074
-          Width = 53
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'OperCount_Upakovka'
-          Title.Caption = #1050#1086#1083' '#1087#1072#1082
-          Width = 43
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'Production_Weight_Discount'
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'DiscountWeight'
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'Tare_Count'
-          Visible = True
+          FieldName = 'PartionDate'
+          Title.Caption = #1055#1072#1088#1090#1080#1103' '#1044#1040#1058#1040
+          Width = -1
+          Visible = False
         end
         item
           Expanded = False
           FieldName = 'PriceListName'
-          Width = 71
+          Title.Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+          Width = 70
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'Tare_Weight'
+          FieldName = 'Price'
+          Title.Caption = #1062#1077#1085#1072
+          Width = 50
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'NumberTare'
-          Title.Caption = #1053#1086#1084'.'#1103#1097'.'
+          FieldName = 'ChangePercentAmount'
+          Title.Caption = '%'#1057#1082#1076
+          Width = 35
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'AmountPartner'
+          Title.Caption = #1050#1086#1083'.'#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+          Width = 70
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'Amount'
+          Title.Caption = #1050#1086#1083'.'#1089#1082#1083#1072#1076
+          Width = 55
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'RealWeight'
+          Title.Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
+          Width = 70
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'WeightTareTotal'
+          Title.Caption = #1042#1077#1089' '#1090#1072#1088#1099
+          Width = 50
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'WeightTare'
+          Title.Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099
+          Width = 50
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CountTare'
+          Title.Caption = #1050#1086#1083'.'#1090#1072#1088#1099
           Width = 44
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'NumberLevel'
-          Title.Caption = #1053#1086#1084'.'#1096'.'
+          FieldName = 'LevelNumber'
+          Title.Caption = #8470' '#1096'.'
+          Width = 30
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'PartionDate'
+          FieldName = 'BoxNumber'
+          Title.Caption = #8470' '#1103#1097'.'
+          Width = 35
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'Tare_Code'
+          FieldName = 'BoxName'
+          Title.Caption = #1053#1072#1079#1074'.'#1075#1086#1092#1088#1086
+          Width = 70
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'Tare_Name'
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'BillKindName'
-          Title.Caption = #1053#1072#1079#1074'.'#1086#1087#1077#1088#1072#1094#1080#1080
-          Width = 150
+          FieldName = 'BoxCount'
+          Title.Caption = #1050#1086#1083'.'#1075#1086#1092#1088#1086
+          Width = 45
           Visible = True
         end
         item
           Expanded = False
           FieldName = 'InsertDate'
+          Title.Caption = #1044#1072#1090#1072'('#1074#1088') '#1089#1086#1079#1076#1072#1085#1080#1103
+          Width = 80
           Visible = True
         end
         item
           Expanded = False
           FieldName = 'UpdateDate'
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'Id'
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'LastPrice'
+          Title.Caption = #1044#1072#1090#1072'('#1074#1088') '#1080#1079#1084'.'
+          Width = 80
           Visible = True
         end>
     end
@@ -376,14 +400,14 @@ object MainForm: TMainForm
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1087#1088#1086#1076'.'
         TabOrder = 0
-        object PanelTotalSummGoods_Weight: TPanel
+        object PanelRealWeight: TPanel
           Left = 2
           Top = 15
           Width = 94
           Height = 24
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelTotalSummGoods_Weight'
+          Caption = 'PanelRealWeight'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -408,7 +432,7 @@ object MainForm: TMainForm
           Height = 24
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelTotalSummTare_Weight'
+          Caption = 'PanelWeightTareTotal'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11

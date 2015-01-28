@@ -27,10 +27,12 @@ $BODY$
    DECLARE vbContractId Integer;
    DECLARE vbOperCount TFloat;
    DECLARE vbOperPrice TFloat;
+   DECLARE vbSumma TFloat;
    DECLARE vbGoodsId Integer; 
    DECLARE vbGoodsKindId Integer;
    DECLARE vbPaidKindId Integer;
-   DECLARE vbDiscount TFloat;
+   DECLARE vbDiscount_min TFloat;
+   DECLARE vbDiscount_max TFloat;
    DECLARE vbSumaPDV TFloat;
    DECLARE vbMovementDescId Integer;
    DECLARE vbMovementDescId_find Integer;
@@ -71,7 +73,8 @@ BEGIN
                         -- , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END) AS MovementDescId_find
                         , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END AS MovementDescId_find
                         , zfGetPaidKindFrom1CType (Sale1C.VidDoc) AS PaidKindId
-                        , round (Sale1C.Tax)
+                        , MAX (round (COALESCE (Sale1C.Tax, 0))) AS Discount_min
+                        , MIN (round (COALESCE (Sale1C.Tax, 0))) AS Discount_max
                         , MAX (SumaPDV) AS SumaPDV
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id          AS Partner1CLinkId
@@ -149,13 +152,13 @@ BEGIN
                         , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END
                         -- , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END)
                         , zfGetPaidKindFrom1CType (Sale1C.VidDoc)
-                        , round (Sale1C.Tax)
+                        -- , round (Sale1C.Tax)
          ;
 
      -- начало цикла по курсору
      LOOP
           -- данные для Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbArticleLossId, vbMovementId, vbMovementDescId, vbMovementDescId_find, vbPaidKindId, vbDiscount, vbSumaPDV;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbArticleLossId, vbMovementId, vbMovementDescId, vbMovementDescId_find, vbPaidKindId, vbDiscount_min, vbDiscount_max, vbSumaPDV;
 
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
@@ -182,7 +185,11 @@ BEGIN
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberOrder := ''
                                            , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE --, inPriceWithVAT := FALSE, inVATPercent := 20
-                                           , inChangePercent := - vbDiscount, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
+                                           , inChangePercent := -1 * CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbDiscount_max
+                                                                          WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN vbDiscount_max
+                                                                          ELSE 0
+                                                                     END
+                                           , inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
                                            , inContractId:= vbContractId, inRouteSortingId:= 0
                                            , inCurrencyDocumentId:= NULL
                                            , inCurrencyPartnerId:= NULL
@@ -223,7 +230,7 @@ BEGIN
          
           -- открыли курсор
           OPEN curMovementItem FOR 
-               SELECT OperCount, OperPrice, ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId AS GoodsId, ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId AS GoodsKindId
+               SELECT OperCount, OperPrice, SUMA, ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId AS GoodsId, ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId AS GoodsKindId
                FROM Sale1C 
                     JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id AS ObjectId
                                , Object_GoodsByGoodsKind1CLink.ObjectCode
@@ -251,7 +258,7 @@ BEGIN
           -- начало цикла по курсору
           LOOP
                -- данные для Элемента документа
-               FETCH curMovementItem INTO vbOperCount, vbOperPrice, vbGoodsId, vbGoodsKindId;
+               FETCH curMovementItem INTO vbOperCount, vbOperPrice, vbSumma, vbGoodsId, vbGoodsKindId;
                -- если такого периода и не возникнет, то мы выходим
                IF NOT FOUND THEN 
                   EXIT;
@@ -262,7 +269,13 @@ BEGIN
                -- сохранили Элемент документа - Sale
                PERFORM lpInsertUpdate_MovementItem_Sale (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                        , inAmount := vbOperCount, inAmountPartner := vbOperCount, inAmountChangePercent := vbOperCount
-                                                       , inChangePercentAmount := 0, inPrice := vbOperPrice, ioCountForPrice := 1 , inHeadCount := 0, inBoxCount:= 0
+                                                       , inChangePercentAmount := 0
+                                                       , inPrice := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbOperPrice
+                                                                         WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN vbOperPrice
+                                                                         WHEN vbOperCount <> 0 THEN vbSumma / vbOperCount
+                                                                         ELSE 0
+                                                                    END
+                                                       , ioCountForPrice := 1 , inHeadCount := 0, inBoxCount:= 0
                                                        , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inBoxId:= 0, inUserId := vbUserId);
 
                ELSE
@@ -335,7 +348,8 @@ BEGIN
                         , tmpPartner1CLink.ContractId
                         , 0 AS MovementId -- MovementReturn.Id AS MovementId
                         , zfGetPaidKindFrom1CType(Sale1C.VidDoc) AS PaidKindId
-                        , round(Sale1C.Tax)
+                        , MAX (round (COALESCE (Sale1C.Tax, 0))) AS Discount_min
+                        , MIN (round (COALESCE (Sale1C.Tax, 0))) AS Discount_max
                         , MAX (SumaPDV) AS SumaPDV
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
@@ -392,13 +406,13 @@ BEGIN
                         , tmpPartner1CLink.ContractId
                         -- , MovementReturn.Id
                         , zfGetPaidKindFrom1CType(Sale1C.VidDoc)
-                        , round(Sale1C.Tax)
+                        -- , round(Sale1C.Tax)
       ;
 
      -- начало цикла по курсору
      LOOP
           -- данные для создания Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId, vbDiscount, vbSumaPDV;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId, vbDiscount_min, vbDiscount_max, vbSumaPDV;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
@@ -418,7 +432,11 @@ BEGIN
                                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE
                                                           , inPriceWithVAT := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN TRUE ELSE FALSE END
                                                           , inVATPercent := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN 0 ELSE 20 END
-                                                          , inChangePercent := - vbDiscount, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
+                                                          , inChangePercent := -1 * CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbDiscount_max
+                                                                                         WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN vbDiscount_max
+                                                                                         ELSE 0
+                                                                                    END
+                                                          , inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
                                                           , inContractId := vbContractId
                                                           , inCurrencyDocumentId:= 14461 -- грн
                                                           , inCurrencyPartnerId := NULL
@@ -433,7 +451,7 @@ BEGIN
 
           -- открыли курсор
           OPEN curMovementItem FOR 
-               SELECT OperCount, OperPrice, ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId AS GoodsId, ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId AS GoodsKindId
+               SELECT OperCount, OperPrice, SUMA, ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId AS GoodsId, ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId AS GoodsKindId
                FROM Sale1C
                     JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id AS ObjectId
                                , Object_GoodsByGoodsKind1CLink.ObjectCode
@@ -462,7 +480,7 @@ BEGIN
           -- начало цикла по курсору
           LOOP
                -- данные для Элемента документа
-               FETCH curMovementItem INTO vbOperCount, vbOperPrice, vbGoodsId, vbGoodsKindId;
+               FETCH curMovementItem INTO vbOperCount, vbOperPrice, vbSumma, vbGoodsId, vbGoodsKindId;
                -- если такого периода и не возникнет, то мы выходим
                IF NOT FOUND THEN 
                   EXIT;
@@ -471,7 +489,12 @@ BEGIN
                -- сохранили Элемент документа
               PERFORM lpInsertUpdate_MovementItem_ReturnIn (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                           , inAmount := vbOperCount, inAmountPartner := vbOperCount
-                                                          , inPrice := vbOperPrice, ioCountForPrice := 1 , inHeadCount := 0
+                                                          , inPrice := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbOperPrice
+                                                                            WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN vbOperPrice
+                                                                            WHEN vbOperCount <> 0 THEN vbSumma / vbOperCount
+                                                                            ELSE 0
+                                                                       END
+                                                          , ioCountForPrice := 1 , inHeadCount := 0
                                                           , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
 
           END LOOP; -- финиш цикла по курсору

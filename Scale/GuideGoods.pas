@@ -292,6 +292,9 @@ begin
             exit;
        end;
      end;
+     //
+     //Save MI
+     if Result then Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeChange(Sender: TObject);
@@ -474,17 +477,18 @@ begin
            then EditChangePercentCode.Text:= IntToStr(ChangePercent_Array[GetArrayList_Index_byValue(ChangePercent_Array,FloatToStr(CDS.FieldByName('ChangePercent').AsFloat))].Code)
            else EditChangePercentCode.Text:= IntToStr(ChangePercent_Array[GetArrayList_Index_byValue(ChangePercent_Array,ParamsMovement.ParamByName('ChangePercent').AsString)].Code);
            ActiveControl:=EditGoodsKindCode;
+           exit;
       end;
 
-      if (ActiveControl=EditGoodsKindCode)and(rgGoodsKind.ItemIndex>=0)and(rgGoodsKind.Items.Count=1)then begin rgGoodsKind.ItemIndex:=0;FormKeyDown(Sender,Key,[]);end;
-      if (ActiveControl=EditTareCount)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin EditTareCount.Text:='0';FormKeyDown(Sender,Key,[]);end;
-      if (ActiveControl=EditTareWeightCode)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin FormKeyDown(Sender,Key,[]);end;
-      if (ActiveControl=EditTareWeightEnter)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin FormKeyDown(Sender,Key,[]);end;
-      if (ActiveControl=EditChangePercentCode)then begin FormKeyDown(Sender,Key,[]);end;
-      if (ActiveControl=EditPriceListCode){and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)}then FormKeyDown(Sender,Key,[]);
+      if (ActiveControl=EditGoodsKindCode)and(rgGoodsKind.ItemIndex>=0)and(rgGoodsKind.Items.Count=1)then begin rgGoodsKind.ItemIndex:=0;FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditTareCount)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin EditTareCount.Text:='0';FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditTareWeightCode)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditTareWeightEnter)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditChangePercentCode)then begin FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditPriceListCode){and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)}then begin FormKeyDown(Sender,Key,[]);exit;end;
       //
       if (ActiveControl=EditTareWeightEnter)and(rgTareWeight.ItemIndex<>rgTareWeight.Items.Count-1)
-      then FormKeyDown(Sender,Key,[]);
+      then begin FormKeyDown(Sender,Key,[]);exit;end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareCountExit(Sender: TObject);

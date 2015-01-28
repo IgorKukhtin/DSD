@@ -19,12 +19,12 @@ type
     function gpSelect_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
 
     function gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
-    function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParams:TParams): Boolean;
+    function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
   end;
 
-    function gpInitialize_OperDate(var execParams:TParams):TDateTime;
-    function gpInitialize_Const: Boolean;
-    function gpInitialize_Ini: Boolean;
+  function gpInitialize_OperDate(var execParams:TParams):TDateTime;
+  function gpInitialize_Const: Boolean;
+  function gpInitialize_Ini: Boolean;
 
 var
   DMMainScaleForm: TDMMainScaleForm;
@@ -35,6 +35,7 @@ uses Inifiles;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
 begin
+    Result:=false;
     with spSelect do begin
        StoredProcName:='gpInsertUpdate_Scale_Movement';
        OutputType:=otResult;
@@ -56,30 +57,33 @@ begin
          ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
        end;}
     end;
+    Result:=true;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpInsert_Scale_MI(var execParamsMovement:TParams;var execParams:TParams): Boolean;
+function TDMMainScaleForm.gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
 begin
     if execParamsMovement.ParamByName('MovementId').AsInteger = 0
-    then Result:= gpInsertUpdate_Scale_Movement(execParamsMovement);
+    then Result:= gpInsertUpdate_Scale_Movement(execParamsMovement)
+    else Result:= true;
     //
     if Result then
     with spSelect do begin
-       StoredProcName:='gpInsertUpdate_Scale_Movement';
+       StoredProcName:='gpInsert_Scale_MI';
        OutputType:=otResult;
        Params.Clear;
-       Params.AddParam('ioId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
-       Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
-       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
-       Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
-       Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
-       Params.AddParam('inContractId', ftInteger, ptInput, execParamsMovement.ParamByName('ContractId').AsInteger);
-       Params.AddParam('inPaidKindId', ftInteger, ptInput, execParamsMovement.ParamByName('PaidKindId').AsInteger);
+       Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inGoodsId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId').AsInteger);
+       Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
+       Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
+       Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('ChangePercentAmount').AsFloat);
+       Params.AddParam('inCountTare', ftFloat, ptInput, execParamsMI.ParamByName('CountTare').AsFloat);
+       Params.AddParam('inWeightTare', ftFloat, ptInput, execParamsMI.ParamByName('WeightTare').AsFloat);
+       Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn')));
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
-       Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
        //try
          Execute;
-         execParamsMovement.ParamByName('MovementId').AsInteger:=Params.ParamByName('ioId').Value;
+         //execParamsMI.ParamByName('MovementItemId').AsInteger:=Params.ParamByName('ioId').Value;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
