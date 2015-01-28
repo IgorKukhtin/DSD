@@ -492,7 +492,7 @@ BEGIN
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                        , inObjectId_5        := tmp.PartionMovementId
                                                        , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN tmp.PartnerId ELSE NULL END
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
                                                        , inDescId_7          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Branch() ELSE NULL END
                                                        , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_Branch_Basis() ELSE NULL END -- долг всегда на Главном филиале
                                                         )
@@ -513,7 +513,7 @@ BEGIN
                                                        , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
                                                        , inObjectId_4        := tmp.InfoMoneyId
                                                        , inDescId_5          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                       , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN tmp.PartnerId ELSE NULL END
+                                                       , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
                                                        , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
                                                        , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг всегда на Главном филиале
                                                         )
@@ -560,7 +560,7 @@ BEGIN
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                        , inObjectId_5        := tmp.PartionMovementId
                                                        , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN tmp.PartnerId ELSE NULL END
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
                                                        , inDescId_7          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Branch() ELSE NULL END
                                                        , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_Branch_Basis() ELSE NULL END -- долг всегда на Главном филиале
                                                         )
@@ -581,7 +581,7 @@ BEGIN
                                                        , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
                                                        , inObjectId_4        := tmp.InfoMoneyId
                                                        , inDescId_5          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                       , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN tmp.PartnerId ELSE NULL END
+                                                       , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
                                                        , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
                                                        , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг всегда на Главном филиале
                                                         )

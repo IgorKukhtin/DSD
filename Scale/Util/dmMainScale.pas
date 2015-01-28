@@ -17,6 +17,9 @@ type
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpSelect_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
+
+    function gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
+    function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParams:TParams): Boolean;
   end;
 
     function gpInitialize_OperDate(var execParams:TParams):TDateTime;
@@ -29,6 +32,61 @@ var
 implementation
 uses Inifiles;
 {$R *.dfm}
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
+begin
+    with spSelect do begin
+       StoredProcName:='gpInsertUpdate_Scale_Movement';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('ioId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+       Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
+       Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+       Params.AddParam('inContractId', ftInteger, ptInput, execParamsMovement.ParamByName('ContractId').AsInteger);
+       Params.AddParam('inPaidKindId', ftInteger, ptInput, execParamsMovement.ParamByName('PaidKindId').AsInteger);
+       Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
+       Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
+       //try
+         Execute;
+         execParamsMovement.ParamByName('MovementId').AsInteger:=Params.ParamByName('ioId').Value;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpInsert_Scale_MI(var execParamsMovement:TParams;var execParams:TParams): Boolean;
+begin
+    if execParamsMovement.ParamByName('MovementId').AsInteger = 0
+    then Result:= gpInsertUpdate_Scale_Movement(execParamsMovement);
+    //
+    if Result then
+    with spSelect do begin
+       StoredProcName:='gpInsertUpdate_Scale_Movement';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('ioId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+       Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
+       Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+       Params.AddParam('inContractId', ftInteger, ptInput, execParamsMovement.ParamByName('ContractId').AsInteger);
+       Params.AddParam('inPaidKindId', ftInteger, ptInput, execParamsMovement.ParamByName('PaidKindId').AsInteger);
+       Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
+       Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
+       //try
+         Execute;
+         execParamsMovement.ParamByName('MovementId').AsInteger:=Params.ParamByName('ioId').Value;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+       end;}
+    end;
+
+end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(inScaleNum:Integer;inLevelChild: String): TArrayList;
 var i: integer;

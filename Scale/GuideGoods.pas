@@ -5,7 +5,9 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons
- ,UtilScale, Datasnap.DBClient, dsdDB;
+ ,UtilScale, Datasnap.DBClient, dsdDB, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, cxTextEdit, cxCurrencyEdit;
 
 type
   TGuideGoodsForm = class(TForm)
@@ -48,6 +50,8 @@ type
     EditTareWeightEnter: TEdit;
     spSelect: TdsdStoredProc;
     CDS: TClientDataSet;
+    gbWeightValue: TGroupBox;
+    EditWeightValue: TcxCurrencyEdit;
     procedure FormCreate(Sender: TObject);
     procedure ButtonRefreshClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
@@ -89,6 +93,10 @@ type
     procedure DBGridDblClick(Sender: TObject);
     procedure EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
     procedure DataSourceDataChange(Sender: TObject; Field: TField);
+    procedure FormDestroy(Sender: TObject);
+    procedure EditWeightValueExit(Sender: TObject);
+    procedure EditWeightValueKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     fStartWtrite:Boolean;
     fEnterGoodsCode:Boolean;
@@ -114,14 +122,15 @@ function TGuideGoodsForm.Execute(BillDate:TDateTime): boolean;
 begin
      fStartWtrite:=true;
 
-  if ParamsMI.ParamByName('RealWeight').AsFloat <> 0
-  then PanelGoodsWieghtValue.Caption:=ParamsMI.ParamByName('RealWeight').AsString
-  else PanelGoodsWieghtValue.Caption:=ParamsMI.ParamByName('RealWeight_Enter').AsString;
+  PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
 
   EditGoodsCode.Text:='';
   EditGoodsName.Text:='';
   EditGoodsKindCode.Text:='';
   EditTareWeightEnter.Text:='';
+
+  EditWeightValue.Text:='0';
+
   EditTareCount.Text:=         GetArrayList_Value_byName(Default_Array,'TareCount');
   EditTareWeightCode.Text:=    IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
   EditChangePercentCode.Text:= IntToStr(ChangePercent_Array[GetArrayList_Index_byValue(ChangePercent_Array,ParamsMovement.ParamByName('ChangePercent').AsString)].Code); //IntToStr(ChangePercent_Array[GetArrayList_Index_byNumber(ChangePercent_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'ChangePercentNumber')))].Code);
@@ -180,11 +189,19 @@ begin
       if (ActiveControl=EditGoodsName) then EditGoodsNameExit(EditGoodsName);
 
       if (ActiveControl=EditGoodsCode)and(CDS.RecordCount=1)
+      then if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+           then ActiveControl:=EditWeightValue
+           else ActiveControl:=EditGoodsKindCode
+      else
+      if ActiveControl=EditWeightValue
       then ActiveControl:=EditGoodsKindCode
       else if (ActiveControl=EditGoodsCode)
            then ActiveControl:=EditGoodsName
            else if (ActiveControl=EditGoodsName)and(CDS.RecordCount=1)
-                then ActiveControl:=EditGoodsKindCode
+                then if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+                     then ActiveControl:=EditWeightValue
+                     else ActiveControl:=EditGoodsKindCode
+
                 else if (ActiveControl=EditGoodsName)
                 then ActiveControl:=EditGoodsCode
                 else if (ActiveControl=DBGrid)and(CDS.RecordCount>0)
@@ -234,9 +251,9 @@ begin
           and(ParamsMI.ParamByName('RealWeight').AsFloat>0.0001)
           ;
 
-
      //
-     if not Result then ActiveControl:=EditGoodsCode
+     if not Result
+     then ActiveControl:=EditGoodsCode
      else
      with ParamsMI do begin
         ParamByName('GoodsId').AsInteger:=CDS.FieldByName('GoodsId').AsInteger;
@@ -246,41 +263,35 @@ begin
         try ParamByName('CountTare').AsFloat:=StrToFloat(EditTareCount.Text);
         except ParamByName('CountTare').AsFloat:=0;
         end;
-        // Вес тары
+        // Вес 1-ой тары
         if  (GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'))
          and(gbTareWeightEnter.Visible)
-        then
+         and(rgTareWeight.ItemIndex = rgTareWeight.Items.Count-1)
+        then begin
             try ParamByName('WeightTare').AsFloat:=StrToFloat(EditTareWeightEnter.Text);
             except ParamByName('WeightTare').AsFloat:=0;
             end;
             //change Количество тары
             if (ParamByName('WeightTare').AsFloat<>0) and (ParamByName('CountTare').AsFloat=0)
             then ParamByName('CountTare').AsFloat:=1;
-{
+        end
+        else
+            try ParamByName('WeightTare').AsFloat:=StrToFloat(TareWeight_Array[rgTareWeight.ItemIndex].Value);
+            except ParamByName('WeightTare').AsFloat:=0;
+            end;
+       // % скидки для кол-ва
+       try ParamByName('ChangePercentAmount').AsFloat:=StrToFloat(ChangePercent_Array[rgChangePercent.ItemIndex].Value);
+       except ParamByName('ChangePercentAmount').AsFloat:=0;
+       end;
 
-        then
-
-        try ParamByName('WeightTare').AsFloat:=FloatToStr(EditTareCount.Text);
-        except ParamByName('CountTare').AsFloat:=0;
-        end;
-        ParamByName('WeightTare',ftFloat);          //
-        ParamByName('ChangePercentAmount',ftFloat); // % скидки для кол-ва
-
-        ParamByName('RealWeight').AsFloat:=
-        ParamByName('Amount').AsFloat:=ParamByName('RealWeight').AsFloat;            // Количество (склад)
-     ParamAdd(Params,'AmountPartner',ftFloat);       // Количество у контрагента
-
-     ParamAdd(Params,'BoxCount',ftFloat);      // Количество Ящик(гофро)
-     ParamAdd(Params,'BoxNumber',ftFloat);     // Номер ящика
-     ParamAdd(Params,'LevelNumber',ftFloat);   // Номер слоя
-     ParamAdd(Params,'Price',ftFloat);         // Цена
-     ParamAdd(Params,'CountForPrice',ftFloat); // Цена за количество
-
-     ParamAdd(Params,'PriceListId',ftInteger); // Прайс
-     ParamAdd(Params,'BoxId',ftInteger);       // Ящик(гофро)
-     }
+       //ПРОВЕРКА - Количество (склад) с учетом тары
+       Result:=(ParamByName('RealWeight').AsFloat-ParamByName('CountTare').AsFloat*ParamByName('WeightTare').AsFloat)>0;
+       if not Result then
+       begin
+            ShowMessage('Ошибка.Количество за минусом тары не может быть меньше 0.');
+            exit;
+       end;
      end;
-
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeChange(Sender: TObject);
@@ -369,6 +380,27 @@ end;
 procedure TGuideGoodsForm.EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
 begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditWeightValueExit(Sender: TObject);
+begin
+     if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Sh
+     then exit;
+
+     try StrToFloat(EditWeightValue.Text)
+     except ActiveControl:=EditWeightValue;
+            exit;
+     end;
+     if StrToFloat(EditWeightValue.Text)<=0
+     then ActiveControl:=EditWeightValue
+     else if CDS.RecordCount=1
+          then try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
+          except ParamsMI.ParamByName('RealWeight').AsFloat:=0;end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditWeightValueKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
+begin
+    if Key=13 then ActiveControl:=EditGoodsKindCode;
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeChange(Sender: TObject);
 var Code_begin:Integer;
 begin
@@ -393,14 +425,11 @@ begin
              ShowMessage('Ошибка.Не выбран <Код товара>.');
              ActiveControl:=EditGoodsCode;
         end
-        else if ParamsMI.ParamByName('RealWeight').AsFloat<=0.0001 then
-             begin
+        else if ParamsMI.ParamByName('RealWeight').AsFloat<=0.0001
+             then
                   if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
-                  then ShowMessage('Ошибка.Не определено значение <Количество>.')
-                  else ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');
-                  //
-                  ActiveControl:=EditGoodsCode;
-             end;
+                  then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');ActiveControl:=EditWeightValue;end
+                  else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeKeyPress(Sender: TObject;var Key: Char);
@@ -448,6 +477,9 @@ begin
       end;
 
       if (ActiveControl=EditGoodsKindCode)and(rgGoodsKind.ItemIndex>=0)and(rgGoodsKind.Items.Count=1)then begin rgGoodsKind.ItemIndex:=0;FormKeyDown(Sender,Key,[]);end;
+      if (ActiveControl=EditTareCount)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin EditTareCount.Text:='0';FormKeyDown(Sender,Key,[]);end;
+      if (ActiveControl=EditTareWeightCode)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin FormKeyDown(Sender,Key,[]);end;
+      if (ActiveControl=EditTareWeightEnter)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin FormKeyDown(Sender,Key,[]);end;
       if (ActiveControl=EditChangePercentCode)then begin FormKeyDown(Sender,Key,[]);end;
       if (ActiveControl=EditPriceListCode){and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)}then FormKeyDown(Sender,Key,[]);
       //
@@ -573,7 +605,7 @@ procedure TGuideGoodsForm.rgChangePercentClick(Sender: TObject);
 var newValue:String;
 begin
     EditChangePercentCodeChange(EditChangePercentCode);
-    ActiveControl:=EditGoodsCode;
+    // ActiveControl:=EditGoodsCode;
     {newValue:=IntToStr(ChangePercent_Array[rgChangePercent.ItemIndex].Code);
     if newValue<>EditChangePercentCode.Text
     then begin
@@ -629,14 +661,10 @@ begin
      with ParamsMI do begin
         if CDS.RecordCount=1 then
          if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
-         then ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Enter').AsFloat
+         then try ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text); except ParamByName('RealWeight').AsFloat:=0;end
          else ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Get').AsFloat
         else
-         if ParamByName('RealWeight_Get').AsFloat <> 0
-         then ParamByName('RealWeight').AsFloat:=ParamsMI.ParamByName('RealWeight_Get').AsFloat
-         else ParamByName('RealWeight').AsFloat:=ParamsMI.ParamByName('RealWeight_Enter').AsFloat;
-        //
-        PanelGoodsWieghtValue.Caption:=ParamByName('RealWeight').AsString;
+            ParamByName('RealWeight').AsFloat:=0;
      end;
 end;
 {------------------------------------------------------------------------------}
@@ -646,8 +674,9 @@ begin
      fEnterGoodsCode:=true;
      EditGoodsCodeChange(EditGoodsCode);
      //
-     ActiveControl:=EditGoodsKindCode;
-     EditGoodsKindCode.SelectAll;
+     if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+     then ActiveControl:=EditWeightValue
+     else ActiveControl:=EditGoodsKindCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.ButtonRefreshClick(Sender: TObject);
@@ -719,5 +748,10 @@ begin
             rgPriceList.Items.Add('('+IntToStr(i+1)+') '+GetStringValue('select PriceListName AS RetV from dba.PriceList_byHistory where Id = '+ParamsPriceList.Items[i].AsString));
 }
 end;
+procedure TGuideGoodsForm.FormDestroy(Sender: TObject);
+begin
+  ParamsMI.Free;
+end;
+
 {------------------------------------------------------------------------------}
 end.
