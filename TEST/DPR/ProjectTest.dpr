@@ -618,7 +618,8 @@ uses
   ToolsWeighingPlace_Object in '..\..\Forms\Guides\ToolsWeighingPlace_Object.pas' {ToolsWeighingPlace_ObjectForm: TParentForm},
   Scales in '..\..\SOURCE\Scale\Scales.pas',
   SysScalesLib_TLB in '..\..\Scale\Util\SysScalesLib_TLB.pas',
-  dsdDataSetDataLink in '..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas';
+  dsdDataSetDataLink in '..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
+  dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

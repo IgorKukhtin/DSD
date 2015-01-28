@@ -210,7 +210,8 @@ uses
   BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm: TParentForm},
   BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
-  CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas';
+  CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas',
+  dsdDataSetDataLink in '..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

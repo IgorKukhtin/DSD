@@ -1845,6 +1845,7 @@
 			<DCCReference Include="..\..\SOURCE\Scale\Scales.pas"/>
 			<DCCReference Include="..\..\Scale\Util\SysScalesLib_TLB.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
