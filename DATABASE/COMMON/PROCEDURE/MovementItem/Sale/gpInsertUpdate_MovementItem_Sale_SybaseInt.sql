@@ -50,20 +50,20 @@ BEGIN
                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
                       )
      THEN
-          IF ioId <> 0
+          IF ioId <> 0 OR 1=1
           THEN
           -- сохранили <Ёлемент документа>
           SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
                  INTO ioId, ioCountForPrice, outAmountSumm
           FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                                , inMovementId         := inMovementId
-                                               , inGoodsId            := (SELECT ObjectId FROM MovementItem WHERE Id = ioId)
+                                               , inGoodsId            := CASE WHEN COALESCE (ioId, 0) = 0 THEN inGoodsId ELSE (SELECT ObjectId FROM MovementItem WHERE Id = ioId) END
                                                , inAmount             := inAmount
                                                , inAmountPartner      := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountPartner()), 0)
                                                , inAmountChangePercent:= inAmountChangePercent
                                                , inChangePercentAmount:= inChangePercentAmount
-                                               , inPrice              := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_Price()), 0)
-                                               , ioCountForPrice      := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_CountForPrice()), 0)
+                                               , inPrice              := CASE WHEN COALESCE (ioId, 0) = 0 THEN inPrice ELSE COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_Price()), 0) END
+                                               , ioCountForPrice      := CASE WHEN COALESCE (ioId, 0) = 0 THEN ioCountForPrice ELSE COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_CountForPrice()), 0) END
                                                , inHeadCount          := inHeadCount
                                                , inBoxCount           := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_BoxCount()), 0)
                                                , inPartionGoods       := inPartionGoods

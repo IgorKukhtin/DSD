@@ -25,6 +25,7 @@ type
   function gpInitialize_OperDate(var execParams:TParams):TDateTime;
   function gpInitialize_Const: Boolean;
   function gpInitialize_Ini: Boolean;
+  function gpInitialize_ParamsMovement: Boolean;
 
 var
   DMMainScaleForm: TDMMainScaleForm;
@@ -32,6 +33,61 @@ var
 implementation
 uses Inifiles;
 {$R *.dfm}
+{------------------------------------------------------------------------}
+function gpInitialize_ParamsMovement: Boolean;
+begin
+    Result:=false;
+    //
+    Create_ParamsMovement(ParamsMovement);
+    //
+    with DMMainScaleForm.spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_Movement';
+       OutputType:=otDataSet;
+       Params.Clear;
+
+       with ParamsMovement do
+       begin
+         ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
+         ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
+         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
+         ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
+         ParamByName('ToId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
+         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
+         ParamByName('ToName').asString:= DataSet.FieldByName('FromName').asString;
+         ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
+         ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
+
+         ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId_calc').AsInteger;
+         ParamByName('calcPartnerCode').AsInteger:= DataSet.FieldByName('PartnerCode_calc').AsInteger;
+         ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
+         ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
+
+         ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+         ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
+         ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
+         ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
+
+         ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
+         ParamByName('ContractCode').AsInteger  := DataSet.FieldByName('ContractCode').asInteger;
+         ParamByName('ContractNumber').asString := DataSet.FieldByName('ContractNumber').asString;
+         ParamByName('ContractTagName').asString:= DataSet.FieldByName('ContractTagName').asString;
+
+         ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
+         ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
+         ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
+       end;
+
+       {except
+         result.Code := Code;
+         result.Id   := 0;
+         result.Name := '';
+         ShowMessage('Ошибка получения - gpMovementDesc');
+       end;}
+    end;
+
+    Result:=true;
+end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
 begin
