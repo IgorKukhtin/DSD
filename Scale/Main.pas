@@ -189,9 +189,7 @@ begin
      //
 
      if GuideGoodsForm.Execute(ParamsMovement.ParamByName('OperDate').AsDateTime)
-     then begin
-
-     end;
+     then RefreshDataSet;
      //
      Result:=true;
 end;
@@ -231,15 +229,14 @@ begin
   //local Movement Initialize
   ParamsMovement.ParamByName('MovementNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber');
   //local Movement Initialize
-  OperDateEdit.Text:=DateToStr(gpInitialize_OperDate(ParamsMovement));
+  OperDateEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime);
   //
   with spSelect do
   begin
        StoredProcName:='gpSelect_Scale_MI';
        OutputType:=otDataSet;
-       RefreshDataSet;
        Params.AddParam('inMovementId', ftInteger, ptInput,0);
-       Execute;
+       RefreshDataSet;
   end;
 end;
 //------------------------------------------------------------------------------------------------

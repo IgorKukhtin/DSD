@@ -39,16 +39,19 @@ begin
     Result:=false;
     //
     Create_ParamsMovement(ParamsMovement);
+    gpInitialize_OperDate(ParamsMovement);
     //
     with DMMainScaleForm.spSelect do
     begin
        StoredProcName:='gpGet_Scale_Movement';
        OutputType:=otDataSet;
        Params.Clear;
+       Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
 
        with ParamsMovement do
        begin
-         ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
+         ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+{         ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
          ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
          ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
          ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
@@ -75,7 +78,7 @@ begin
 
          ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
-         ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
+         ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString; }
        end;
 
        {except
