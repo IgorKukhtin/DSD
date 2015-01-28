@@ -13,6 +13,7 @@ object GuideGoodsForm: TGuideGoodsForm
   KeyPreview = True
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 14
@@ -432,7 +433,7 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object gbGoodsWieghtValue: TGroupBox
         Left = 0
-        Top = 82
+        Top = 123
         Width = 135
         Height = 41
         Align = alTop
@@ -445,7 +446,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 23
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelGoodsWieghtValue'
+          Caption = 'PanelWieghtValue'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlue
           Font.Height = -11
@@ -453,6 +454,28 @@ object GuideGoodsForm: TGuideGoodsForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+        end
+      end
+      object gbWeightValue: TGroupBox
+        Left = 0
+        Top = 82
+        Width = 135
+        Height = 41
+        Align = alTop
+        Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
+        TabOrder = 3
+        object EditWeightValue: TcxCurrencyEdit
+          Left = 5
+          Top = 18
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0'
+          TabOrder = 0
+          OnEnter = EditTareCountEnter
+          OnExit = EditWeightValueExit
+          OnKeyDown = EditWeightValueKeyDown
+          Width = 125
         end
       end
     end

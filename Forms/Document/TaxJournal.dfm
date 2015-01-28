@@ -2,8 +2,8 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1118
-  ExplicitHeight = 569
+  ExplicitWidth = 1126
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -499,8 +499,8 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
     inherited actInsertMask: TdsdInsertUpdateAction
@@ -896,14 +896,18 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertMask'
-        end
-        item
-          Visible = True
           ItemName = 'bbEdit'
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end

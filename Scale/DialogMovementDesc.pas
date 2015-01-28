@@ -403,6 +403,7 @@ end;
 procedure TDialogMovementDescForm.FormDestroy(Sender: TObject);
 begin
   ParamsMovement_local.Free;
+  ParamsMovement.Free;
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.FormKeyDown(Sender: TObject; var Key: Word;  Shift: TShiftState);

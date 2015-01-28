@@ -28,9 +28,9 @@ object MainForm: TMainForm
       Left = 0
       Top = 33
       Width = 820
-      Height = 523
+      Height = 560
       Align = alClient
-      DataSource = DS
+      DataSource = DataSource
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
@@ -469,184 +469,6 @@ object MainForm: TMainForm
         end
       end
     end
-    object PanelZakaz: TPanel
-      Left = 0
-      Top = 556
-      Width = 820
-      Height = 37
-      Align = alBottom
-      BevelOuter = bvNone
-      TabOrder = 3
-      object GroupBox1: TGroupBox
-        Left = 249
-        Top = 0
-        Width = 63
-        Height = 37
-        Align = alLeft
-        Caption = #1054#1089#1090#1072#1090#1086#1082
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-        object DiffZakazSalePanel: TPanel
-          Left = 2
-          Top = 15
-          Width = 59
-          Height = 20
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'DiffZakazSalePanel'
-          TabOrder = 0
-        end
-      end
-      object GroupBox2: TGroupBox
-        Left = 0
-        Top = 0
-        Width = 52
-        Height = 37
-        Align = alLeft
-        Caption = #1047#1072#1103#1074#1082#1072
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clNavy
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 1
-        object ZakazCountPanel: TPanel
-          Left = 2
-          Top = 15
-          Width = 48
-          Height = 20
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'ZakazCountPanel'
-          TabOrder = 0
-        end
-      end
-      object GroupBox3: TGroupBox
-        Left = 52
-        Top = 0
-        Width = 64
-        Height = 37
-        Align = alLeft
-        Caption = #1044#1086#1079#1072#1103#1074#1082#1072
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clNavy
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 2
-        object ZakazChangePanel: TPanel
-          Left = 2
-          Top = 15
-          Width = 60
-          Height = 20
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'ZakazChangePanel'
-          TabOrder = 0
-        end
-      end
-      object GroupBox4: TGroupBox
-        Left = 116
-        Top = 0
-        Width = 71
-        Height = 37
-        Align = alLeft
-        Caption = #1048#1090#1086#1075#1086
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clNavy
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 3
-        object calcZakazCountPanel: TPanel
-          Left = 2
-          Top = 15
-          Width = 67
-          Height = 20
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'calcZakazCountPanel'
-          TabOrder = 0
-        end
-      end
-      object GroupBox5: TGroupBox
-        Left = 187
-        Top = 0
-        Width = 62
-        Height = 37
-        Align = alLeft
-        Caption = #1054#1090#1075#1088#1091#1079#1082#1072
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clNavy
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 4
-        object SaleCountPanel: TPanel
-          Left = 2
-          Top = 15
-          Width = 58
-          Height = 20
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'SaleCountPanel'
-          TabOrder = 0
-        end
-      end
-      object GroupBox6: TGroupBox
-        Left = 743
-        Top = 0
-        Width = 77
-        Height = 37
-        Align = alRight
-        Caption = #1048#1058#1054#1043#1054' '#1054#1089#1090'.'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 5
-        object TotalDiffZakazSalePanel: TPanel
-          Left = 2
-          Top = 15
-          Width = 73
-          Height = 20
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'TotalDiffZakazSalePanel'
-          TabOrder = 0
-        end
-      end
-      object GroupBox7: TGroupBox
-        Left = 652
-        Top = 0
-        Width = 91
-        Height = 37
-        Align = alRight
-        Caption = #1048#1058#1054#1043#1054' '#1047#1072#1103#1074#1082#1072
-        TabOrder = 6
-        object TotalZakazCountPanel: TPanel
-          Left = 2
-          Top = 15
-          Width = 87
-          Height = 20
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'TotalZakazCountPanel'
-          TabOrder = 0
-        end
-      end
-    end
   end
   object PanelSaveItem: TPanel
     Left = 0
@@ -715,45 +537,6 @@ object MainForm: TMainForm
         Text = 'EnterGoodsCodeScanerEdit'
       end
     end
-    object EnterWeightPanel: TPanel
-      Left = 0
-      Top = 586
-      Width = 133
-      Height = 48
-      Align = alBottom
-      BevelOuter = bvLowered
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 2
-      object EnterWeightLabel: TLabel
-        Left = 1
-        Top = 1
-        Width = 131
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 105
-      end
-      object EnterWeightEdit: TEdit
-        Left = 5
-        Top = 20
-        Width = 110
-        Height = 24
-        TabOrder = 0
-        Text = 'EnterWeightEdit'
-      end
-    end
     object gbOperDate: TGroupBox
       Left = 0
       Top = 0
@@ -767,7 +550,7 @@ object MainForm: TMainForm
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 3
+      TabOrder = 2
       object OperDateEdit: TcxDateEdit
         Left = 5
         Top = 16
@@ -792,7 +575,7 @@ object MainForm: TMainForm
       Width = 133
       Height = 29
       Align = alTop
-      TabOrder = 4
+      TabOrder = 3
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -1495,7 +1278,7 @@ object MainForm: TMainForm
     Left = 224
     Top = 384
   end
-  object DS: TDataSource
+  object DataSource: TDataSource
     DataSet = CDS
     Left = 320
     Top = 400

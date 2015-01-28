@@ -29,11 +29,10 @@ object DialogMovementDescForm: TDialogMovementDescForm
     object Label4: TLabel
       Left = 0
       Top = 0
-      Width = 651
+      Width = 4
       Height = 16
       Align = alTop
       Alignment = taCenter
-      ExplicitWidth = 4
     end
     object Panel1: TPanel
       Left = 0
@@ -56,11 +55,10 @@ object DialogMovementDescForm: TDialogMovementDescForm
         object ScaleLabel: TLabel
           Left = 1
           Top = 1
-          Width = 176
+          Width = 164
           Height = 16
           Align = alTop
           Caption = '  '#1064#1090#1088#1080#1093' '#1082#1086#1076' / '#1053#1086#1084#1077#1088' '#1079#1072#1103#1074#1082#1080
-          ExplicitWidth = 164
         end
         object EdiBarCode: TEdit
           Left = 7
@@ -96,11 +94,10 @@ object DialogMovementDescForm: TDialogMovementDescForm
         object Label2: TLabel
           Left = 1
           Top = 1
-          Width = 113
+          Width = 105
           Height = 16
           Align = alTop
           Caption = '  '#1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-          ExplicitWidth = 105
         end
         object EditPartnerCode: TcxButtonEdit
           Left = 6
@@ -131,11 +128,10 @@ object DialogMovementDescForm: TDialogMovementDescForm
         object Label3: TLabel
           Left = 1
           Top = 1
-          Width = 361
+          Width = 64
           Height = 16
           Align = alTop
           Caption = '  '#1053#1072#1079#1074#1072#1085#1080#1077
-          ExplicitWidth = 64
         end
         object PanelPartnerName: TPanel
           Left = 1
