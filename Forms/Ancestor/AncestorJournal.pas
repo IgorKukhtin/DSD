@@ -68,6 +68,8 @@ type
     spMovementReComplete: TdsdStoredProc;
     miReComplete: TMenuItem;
     actReCompleteList: TMultiAction;
+    bbMovementProtocol: TdxBarButton;
+    MovementProtocolOpenForm: TdsdOpenForm;
   private
     { Private declarations }
   public

@@ -8,23 +8,20 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 476
+    Height = 478
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1016
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1014
-      ExplicitHeight = 470
+      ExplicitWidth = 1020
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 470
-        ExplicitWidth = 1014
-        ExplicitHeight = 470
+        Width = 1020
+        Height = 478
+        ExplicitWidth = 1020
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -435,6 +432,9 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
         #1087#1088#1080#1074#1103#1079#1082#1080')>.'
     end
+    inherited MovementProtocolOpenForm: TdsdOpenForm
+      FormNameParam.Value = ''
+    end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -681,7 +681,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

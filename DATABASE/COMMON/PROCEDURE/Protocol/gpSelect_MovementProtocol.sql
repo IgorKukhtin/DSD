@@ -1,3 +1,4 @@
+
 -- Function: gpSelect_Protocol() 
 
 DROP FUNCTION IF EXISTS gpSelect_MovementProtocol (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
@@ -21,18 +22,18 @@ BEGIN
 
   RETURN QUERY 
   SELECT 
-     ObjectProtocol.OperDate,
-     ObjectProtocol.ProtocolData::TVarChar,
+     MovementProtocol.OperDate,
+     MovementProtocol.ProtocolData::TVarChar,
      Object_User.ValueData,
      Movement.InvNumber, 
      Movement.OperDate, 
      MovementDesc.ItemName AS MovementDescName
-  FROM ObjectProtocol 
-  JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId
-  JOIN Movement ON Movement.Id = ObjectProtocol.MovementId AND (Movement.Id = inMovementId OR 0 = inMovementId)
+  FROM MovementProtocol 
+  JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
+  JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND (Movement.Id = inMovementId OR 0 = inMovementId)
    AND (Movement.DescId = inMovementDescId OR inMovementDescId = 0)
   JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
- WHERE ObjectProtocol.OperDate BETWEEN inStartDate AND inEndDate;
+ WHERE MovementProtocol.OperDate BETWEEN inStartDate AND inEndDate;
 
 --inUserId        Integer,    -- пользователь  
   --  IN inObjectDescId  Integer,    -- тип объекта
@@ -54,3 +55,4 @@ ALTER FUNCTION gpSelect_MovementProtocol (TDateTime, TDateTime, Integer, Integer
 -- тест
 -- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inSession:= '2'); 
                                                                 
+--select * from gpSelect_MovementProtocol(inStartDate := ('01.05.2013')::TDateTime , inEndDate := ('01.05.2015')::TDateTime , inUserId := 0 , inMovementDescId := 0 , inMovementId :=  354233 ,  inSession := '5');
