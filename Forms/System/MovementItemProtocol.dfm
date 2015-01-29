@@ -20,6 +20,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       inherited cxGrid: TcxGrid
         Width = 481
         Align = alLeft
+        ExplicitLeft = -6
         ExplicitWidth = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -167,7 +168,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
     Top = 88
   end
   inherited MasterCDS: TClientDataSet
-    Top = 112
+    Top = 144
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemProtocol'
@@ -213,8 +214,8 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 456
-    Top = 256
+    Left = 416
+    Top = 192
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -223,8 +224,8 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Value = Null
         ParamType = ptInput
       end>
-    Left = 272
-    Top = 216
+    Left = 312
+    Top = 128
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
