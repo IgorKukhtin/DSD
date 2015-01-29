@@ -437,8 +437,8 @@ object SendDebtJournalForm: TSendDebtJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -526,6 +526,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -586,6 +594,10 @@ object SendDebtJournalForm: TSendDebtJournalForm
     end
     object bbAddBonus: TdxBarButton
       Action = actInsertProfitLossService
+      Category = 0
+    end
+    object bbMovementProtocol: TdxBarButton
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end
@@ -765,6 +777,24 @@ object SendDebtJournalForm: TSendDebtJournalForm
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
           ComponentItem = 'Id'
           ParamType = ptInput
         end>

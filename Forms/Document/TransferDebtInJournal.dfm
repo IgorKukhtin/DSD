@@ -8,23 +8,20 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 476
+    Height = 478
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1016
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1014
-      ExplicitHeight = 470
+      ExplicitWidth = 1020
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 470
-        ExplicitWidth = 1014
-        ExplicitHeight = 470
+        Width = 1020
+        Height = 478
+        ExplicitWidth = 1020
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -779,7 +776,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -880,6 +877,14 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         item
           Visible = True
           ItemName = 'bbPrintTaxCorrective_Us'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True
