@@ -21,8 +21,11 @@ inherited MovementProtocolForm: TMovementProtocolForm
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
       inherited cxGrid: TcxGrid
-        Width = 782
-        ExplicitWidth = 782
+        Left = 4
+        Width = 477
+        Align = alLeft
+        ExplicitLeft = 4
+        ExplicitWidth = 477
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
@@ -56,18 +59,66 @@ inherited MovementProtocolForm: TMovementProtocolForm
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 135
-          end
-          object colProtocolData: TcxGridDBColumn
-            Caption = #1044#1072#1085#1085#1099#1077
-            DataBinding.FieldName = 'ProtocolData'
-            PropertiesClassName = 'TcxMemoProperties'
-            Properties.ScrollBars = ssVertical
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 505
+            Width = 144
           end
         end
+      end
+      object cxGridProtocolData: TcxGrid
+        Left = 481
+        Top = 0
+        Width = 301
+        Height = 241
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        ExplicitLeft = 448
+        ExplicitWidth = 334
+        object cxGridViewProtocolData: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ProtocolDataDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object cxGridDBColumn1: TcxGridDBColumn
+            Caption = #1048#1084#1103' '#1087#1086#1083#1103
+            DataBinding.FieldName = 'FieldName'
+            HeaderAlignmentVert = vaCenter
+            Width = 127
+          end
+          object cxGridDBColumn2: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'FieldValue'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 128
+          end
+        end
+        object cxGridLevelProtocolData: TcxGridLevel
+          GridView = cxGridViewProtocolData
+        end
+      end
+      object cxSplitter: TcxSplitter
+        Left = 0
+        Top = 0
+        Width = 4
+        Height = 241
+        Control = cxGrid
       end
     end
   end
@@ -195,6 +246,10 @@ inherited MovementProtocolForm: TMovementProtocolForm
       26
       0)
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 424
+    Top = 168
+  end
   inherited PopupMenu: TPopupMenu
     Left = 152
     Top = 256
@@ -273,7 +328,34 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Value = Null
         ParamType = ptInput
       end>
-    Left = 296
-    Top = 224
+    Left = 352
+    Top = 152
+  end
+  object dsdXMLTransform: TdsdXMLTransform
+    DataSource = MasterDS
+    XMLDataFieldName = 'ProtocolData'
+    DataSet = ProtocolDataCDS
+    Left = 496
+    Top = 112
+  end
+  object ProtocolDataCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 584
+    Top = 119
+    object ProtocolDataCDSFieldName: TStringField
+      FieldName = 'FieldName'
+      Size = 100
+    end
+    object ProtocolDataCDSFieldValue: TStringField
+      FieldName = 'FieldValue'
+      Size = 255
+    end
+  end
+  object ProtocolDataDS: TDataSource
+    DataSet = ProtocolDataCDS
+    Left = 648
+    Top = 119
   end
 end

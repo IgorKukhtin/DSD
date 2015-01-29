@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementProtocol(
     IN inMovementId      Integer,    -- объект
     IN inSession         TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, ProtocolData TVarChar, UserName TVarChar, 
+RETURNS TABLE (OperDate TDateTime, ProtocolData Text, UserName TVarChar, 
                InvNumber TVarChar, MovementOperDate TDateTime, MovementDescName TVarChar)
 AS
 $BODY$
@@ -23,7 +23,7 @@ BEGIN
   RETURN QUERY 
   SELECT 
      MovementProtocol.OperDate,
-     MovementProtocol.ProtocolData::TVarChar,
+     MovementProtocol.ProtocolData::Text,
      Object_User.ValueData,
      Movement.InvNumber, 
      Movement.OperDate, 
