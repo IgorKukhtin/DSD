@@ -2,7 +2,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 446
+  ClientHeight = 670
   ClientWidth = 1329
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,9 +20,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 80
+    Top = 82
     Width = 1329
-    Height = 366
+    Height = 588
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -1230,10 +1230,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; '
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 75
       end
       object SummSale_10500: TcxGridDBColumn
@@ -1323,10 +1321,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; '
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 75
       end
       object SummReturnIn_40208: TcxGridDBColumn
@@ -1949,8 +1945,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1968,7 +1964,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -2088,6 +2084,30 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actDisabled: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Enabled = False
+      Caption = 'actDisabled'
+      FormName = 'actDisabled'
+      FormNameParam.Value = 'actDisabled'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2325,6 +2345,116 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
       ReportNameParam.DataType = ftString
     end
+    object SaleJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'SaleJournal'
+      FormName = 'TMovementGoodsJournalForm'
+      FormNameParam.Value = 'TMovementGoodsJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = 0
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'PartionGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+        end
+        item
+          Name = 'LocationId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LocationId'
+        end
+        item
+          Name = 'DescSet'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SaleDesc'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'PartionGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'LocationName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LocationName'
+          DataType = ftString
+        end
+        item
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
+        end
+        item
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
+        end
+        item
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
+        end
+        item
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
+        end
+        item
+          Value = Null
+          ParamType = ptUnknown
+        end
+        item
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_MotionGoods'
@@ -2391,8 +2521,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 168
-    Top = 192
+    Left = 256
+    Top = 176
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2402,11 +2532,17 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
-    ColumnAddOnList = <>
+    ColumnAddOnList = <
+      item
+        Column = SummSale
+        Action = SaleJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 216
-    Top = 264
+    Left = 456
+    Top = 392
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 344
@@ -2436,8 +2572,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 864
-    Top = 65528
+    Left = 968
   end
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
@@ -2463,14 +2598,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 496
+    Left = 664
     Top = 24
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 136
-    Top = 200
+    Left = 176
+    Top = 176
   end
   object UnitGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -2497,7 +2632,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 568
+    Left = 600
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -2603,8 +2738,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 272
-    Top = 13
+    Left = 320
+    Top = 65533
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2665,5 +2800,112 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       end>
     Left = 424
     Top = 224
+  end
+  object spGetDescSets: TdsdStoredProc
+    StoredProcName = 'gpGetDescSets'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'IncomeDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IncomeDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnOutDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReturnOutDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'SaleDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SaleDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnInDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReturnInDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'MoneyDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MoneyDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ServiceDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ServiceDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'SendDebtDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SendDebtDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'OtherDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OtherDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'SaleRealDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SaleRealDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnInRealDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReturnInRealDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'TransferDebtDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TransferDebtDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'PriceCorrectiveDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PriceCorrectiveDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ServiceRealDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ServiceRealDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ChangeCurrencyDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ChangeCurrencyDesc'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 272
   end
 end

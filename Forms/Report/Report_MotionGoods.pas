@@ -167,6 +167,9 @@ type
     CountInventory_Weight: TcxGridDBColumn;
     CountTotalIn_Weight: TcxGridDBColumn;
     CountTotalOut_Weight: TcxGridDBColumn;
+    spGetDescSets: TdsdStoredProc;
+    SaleJournal: TdsdOpenForm;
+    actDisabled: TOpenChoiceForm;
   private
   public
   end;
