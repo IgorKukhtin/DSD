@@ -15,19 +15,19 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     TabOrder = 3
     ExplicitTop = 82
     ExplicitWidth = 1164
-    ExplicitHeight = 314
+    ExplicitHeight = 402
     ClientRectBottom = 398
     ClientRectRight = 1160
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
       ExplicitWidth = 1158
-      ExplicitHeight = 308
+      ExplicitHeight = 396
       inherited cxGrid: TcxGrid
         Width = 1158
         Height = 396
         ExplicitWidth = 1158
-        ExplicitHeight = 308
+        ExplicitHeight = 396
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -692,7 +692,19 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         DataType = ftString
       end
       item
+        Name = 'GoodsName'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Value = Null
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
         DataType = ftString
         ParamType = ptUnknown
       end
@@ -720,18 +732,9 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
       end
       item
         Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
         Component = GoodsPartionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
         ParamType = ptUnknown
       end
       item
@@ -843,7 +846,6 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ParamType = ptInput
       end>
     Left = 608
-    Top = 8
   end
   object LocationGuides: TdsdGuides
     KeyField = 'Id'

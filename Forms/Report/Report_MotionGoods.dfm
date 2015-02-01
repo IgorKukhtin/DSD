@@ -2404,13 +2404,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           DataType = ftString
         end
         item
-          Name = 'GoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-        end
-        item
           Name = 'PartionGoodsName'
           Value = Null
           Component = MasterCDS
@@ -2419,9 +2412,16 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'LocationName'
-          Value = Null
+          Value = ''
           Component = MasterCDS
           ComponentItem = 'LocationName'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
           DataType = ftString
         end
         item

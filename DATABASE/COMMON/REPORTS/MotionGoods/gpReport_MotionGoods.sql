@@ -601,9 +601,9 @@ BEGIN
         , Object_Car.ValueData           AS CarName
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
-        , tmpMIContainer_group.GoodsId   AS GoodsId
+        , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)                 AS GoodsId
         , Object_Goods.ObjectCode        AS GoodsCode
-        , Object_Goods.ValueData         AS GoodsName
+        , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
         , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
         , Object_Measure.ValueData       AS MeasureName
