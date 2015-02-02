@@ -21,10 +21,8 @@ inherited MovementProtocolForm: TMovementProtocolForm
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
       inherited cxGrid: TcxGrid
-        Left = 4
         Width = 477
         Align = alLeft
-        ExplicitLeft = 4
         ExplicitWidth = 477
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
@@ -71,8 +69,6 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 448
-        ExplicitWidth = 334
         object cxGridViewProtocolData: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ProtocolDataDS
@@ -114,7 +110,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         end
       end
       object cxSplitter: TcxSplitter
-        Left = 0
+        Left = 477
         Top = 0
         Width = 4
         Height = 241
@@ -326,6 +322,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
       item
         Name = 'Id'
         Value = Null
+        Component = edObject
         ParamType = ptInput
       end>
     Left = 352
