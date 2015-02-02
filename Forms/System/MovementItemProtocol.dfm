@@ -12,15 +12,14 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
     Top = 59
     Width = 751
     ExplicitTop = 59
-    ExplicitWidth = 769
+    ExplicitWidth = 751
     ClientRectRight = 751
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 769
+      ExplicitWidth = 751
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 481
         Align = alLeft
-        ExplicitLeft = -6
         ExplicitWidth = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -67,9 +66,6 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 448
-        ExplicitWidth = 334
-        ExplicitHeight = 241
         object cxGridViewProtocolData: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ProtocolDataDS
@@ -96,6 +92,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
             Caption = #1048#1084#1103' '#1087#1086#1083#1103
             DataBinding.FieldName = 'FieldName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 127
           end
           object cxGridDBColumn2: TcxGridDBColumn
@@ -119,7 +116,6 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 769
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
