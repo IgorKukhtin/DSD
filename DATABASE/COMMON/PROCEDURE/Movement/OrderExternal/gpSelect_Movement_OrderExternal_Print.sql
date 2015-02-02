@@ -84,6 +84,7 @@ BEGIN
      --
      OPEN Cursor1 FOR
       SELECT Movement.Id                                AS Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
@@ -281,7 +282,8 @@ BEGIN
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
        SELECT
-             Object_Goods.ObjectCode  			AS GoodsCode
+             zfFormat_BarCode (zc_BarCodePref_Object(), COALESCE (View_GoodsByGoodsKind.Id, Object_Goods.Id)) AS IdBarCode
+           , Object_Goods.ObjectCode  			AS GoodsCode
            , Object_Goods.ValueData                     AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , Object_GoodsKind.ValueData      AS GoodsKindName
@@ -358,6 +360,9 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+
+            LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.GoodsId = Object_Goods.Id
+                                                                           AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId

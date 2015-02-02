@@ -62,7 +62,9 @@ uses
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   UtilPrint in '..\Scale\Util\UtilPrint.pas' {UtilPrintForm},
   SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
-  FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas';
+  FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
+  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
+  GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm};
 
 {$R *.res}
 
@@ -72,16 +74,17 @@ begin
   //global Initialize
   gpInitialize_Ini;
 
-  if FindCmdLineSwitch('autologin', true) then begin
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
-
-         TUpdater.AutomaticUpdateProgram;
+  if FindCmdLineSwitch('autologin', true) then
+  begin
+         TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+         //TUpdater.AutomaticUpdateProgram;
+         //
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TUtilPrintForm, UtilPrintForm);
-  // !!!важно первым!!!
+         Application.CreateForm(TMainForm, MainForm);// !!!важно первым!!!
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
+         Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
+         Application.CreateForm(TUtilPrintForm, UtilPrintForm);
   end
   else
 
@@ -92,17 +95,15 @@ begin
     if ShowModal = mrOk then
     begin
          TUpdater.AutomaticUpdateProgram;
+         //
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-         Application.CreateForm(TMainForm, MainForm);
-         Application.CreateForm(TUtilPrintForm, UtilPrintForm);
-  // !!!важно первым!!!
+         Application.CreateForm(TMainForm, MainForm); // !!!важно первым!!!
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
-
-        //
+         Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
+         Application.CreateForm(TUtilPrintForm, UtilPrintForm);
   end;
-
-//  Application.CreateForm(TMainForm, MainForm);
-  Application.Run;
   //
+  Application.Run;
+
 end.

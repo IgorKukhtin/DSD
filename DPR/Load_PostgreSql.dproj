@@ -142,6 +142,7 @@
 			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Movement_WeighingPartner_Sybase()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner_Sybase (Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner_Sybase (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner_Sybase(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inParentId            Integer   , -- Документ родитель
+    IN inInvNumber           TVarChar  , -- Номер
     IN inOperDate            TDateTime , -- Дата документа
 
     IN inStartWeighing       TDateTime , -- Протокол начало взвешивания
@@ -54,9 +56,9 @@ BEGIN
      ELSE
          IF COALESCE (ioId, 0) = 0
          THEN
-             vbInvNumber:= CAST (NEXTVAL ('Movement_WeighingPartner_seq') AS TVarChar);
+             vbInvNumber:= inInvNumber; -- CAST (NEXTVAL ('Movement_WeighingPartner_seq') AS TVarChar);
          ELSE
-             vbInvNumber:= (SELECT InvNumber FROM Movement WHERE Id = ioId);
+             vbInvNumber:= inInvNumber; -- (SELECT InvNumber FROM Movement WHERE Id = ioId);
          END IF;
      END IF;
 

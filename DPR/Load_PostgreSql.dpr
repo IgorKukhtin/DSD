@@ -49,7 +49,8 @@ uses
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
-  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas';
+  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas';
 
 {$R *.res}
 

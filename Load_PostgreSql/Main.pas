@@ -2221,6 +2221,7 @@ begin
            +'              or fCheckGoodsParentID(9323,Goods.ParentId)=zc_rvYes()' // ТОВАРЫ ПАВИЛЬОНЫ
            +'              or fCheckGoodsParentID(5874,Goods.ParentId)=zc_rvYes()' // ТУШЕНКА
            +'              or fCheckGoodsParentID(3482,Goods.ParentId)=zc_rvYes()' // эксперименты
+           +'              or fCheckGoodsParentID(2387,Goods.ParentId)=zc_rvYes()' // ХЛЕБ
            +'                 then zc_rvYes()'
            +'            else zc_rvNo()'
            +'       end as isMeasure');
@@ -19416,6 +19417,8 @@ begin
         Clear;
         Add('select ScaleHistory.BillId as ObjectId');
         Add('     , ScaleHistory.Date_pg as inOperDate');
+        Add('     , Bill.BillNumber as inInvNumber');
+
         Add('     , isnull(Bill.Id_Postgres,-1*ScaleHistory.BillId) as inParentId');
 
         Add('     , ScaleHistory.minInsertDate as inStartWeighing');
@@ -19525,6 +19528,7 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inStartWeighing',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inEndWeighing',ftDateTime,ptInput, '');
@@ -19600,6 +19604,7 @@ begin
              //сохранение
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('inParentId').AsInteger;
+             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('inOperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inStartWeighing').Value:=FieldByName('inStartWeighing').AsDateTime;
              toStoredProc.Params.ParamByName('inEndWeighing').Value:=FieldByName('inEndWeighing').AsDateTime;

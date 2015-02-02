@@ -192,6 +192,9 @@ BEGIN
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN 'X' ELSE '' END                  AS NotNDSPayer
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                  THEN TRUE ELSE FALSE END :: Boolean   AS isNotNDSPayer
+
+           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN '0' ELSE '' END                  AS NotNDSPayerC1
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN '2' ELSE '' END                  AS NotNDSPayerC2
@@ -425,7 +428,7 @@ BEGIN
             INNER JOIN MovementItemFloat AS MIFloat_Price
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                        AND MIFloat_Price.ValueData <> 0
+                                        -- AND MIFloat_Price.ValueData <> 0
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -478,7 +481,7 @@ BEGIN
             INNER JOIN MovementItemFloat AS MIFloat_Price
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                        AND MIFloat_Price.ValueData <> 0
+                                        -- AND MIFloat_Price.ValueData <> 0
        WHERE MovementItem.MovementId = vbMovementId_Tax
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
@@ -499,7 +502,7 @@ BEGIN
             INNER JOIN MovementItemFloat AS MIFloat_Price
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                        AND MIFloat_Price.ValueData <> 0
+                                        -- AND MIFloat_Price.ValueData <> 0
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()

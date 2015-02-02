@@ -31,6 +31,12 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+     -- 
+     IF COALESCE (inMovementId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.В документе не определено значение <Ведомость начислений>.';
+     END IF;
+
+
      -- рассчитываем сумму (затраты)
      outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0); -- - COALESCE (inSummSocialIn, 0);
      -- рассчитываем сумму к выплате
