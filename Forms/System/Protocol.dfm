@@ -3,6 +3,7 @@ inherited ProtocolForm: TProtocolForm
   ClientHeight = 359
   ClientWidth = 933
   AddOnFormData.isSingle = False
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 941
   ExplicitHeight = 393
   PixelsPerInch = 96
@@ -12,17 +13,19 @@ inherited ProtocolForm: TProtocolForm
     Width = 933
     Height = 277
     ExplicitTop = 82
-    ExplicitWidth = 798
-    ExplicitHeight = 241
+    ExplicitWidth = 933
+    ExplicitHeight = 277
     ClientRectBottom = 277
     ClientRectRight = 933
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 798
+      ExplicitWidth = 933
+      ExplicitHeight = 277
       inherited cxGrid: TcxGrid
         Width = 521
         Height = 277
         Align = alLeft
         ExplicitWidth = 521
+        ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
@@ -72,7 +75,6 @@ inherited ProtocolForm: TProtocolForm
         Width = 4
         Height = 277
         Control = cxGrid
-        ExplicitHeight = 241
       end
       object cxGridProtocolData: TcxGrid
         Left = 525
@@ -82,8 +84,6 @@ inherited ProtocolForm: TProtocolForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 273
-        ExplicitHeight = 241
         object cxGridViewProtocolData: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ProtocolDataDS
@@ -129,7 +129,7 @@ inherited ProtocolForm: TProtocolForm
   inherited Panel: TPanel
     Width = 933
     Height = 56
-    ExplicitWidth = 798
+    ExplicitWidth = 933
     ExplicitHeight = 56
     inherited deStart: TcxDateEdit
       EditValue = 41640d
@@ -375,5 +375,24 @@ inherited ProtocolForm: TProtocolForm
     DataSet = ProtocolDataCDS
     Left = 672
     Top = 119
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = ''
+        Component = ObjectGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = ObjectGuides
+        ComponentItem = 'TextValue'
+        ParamType = ptInput
+      end>
+    Left = 320
+    Top = 136
   end
 end
