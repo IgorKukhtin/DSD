@@ -366,7 +366,7 @@ uses
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   SaveMarketingDocumentTo1C in '..\..\Forms\Export\SaveMarketingDocumentTo1C.pas' {SaveMarketingDocumentTo1CForm: TParentForm},
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
-  Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm},
+  MovementGoods_Journal in '..\..\Forms\Report\MovementGoods_Journal.pas' {MovementGoodsJournalForm: TParentForm},
   UnitTree in '..\..\Forms\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
   UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
@@ -619,7 +619,8 @@ uses
   Scales in '..\..\SOURCE\Scale\Scales.pas',
   SysScalesLib_TLB in '..\..\Scale\Util\SysScalesLib_TLB.pas',
   dsdDataSetDataLink in '..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas';
+  dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas',
+  Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

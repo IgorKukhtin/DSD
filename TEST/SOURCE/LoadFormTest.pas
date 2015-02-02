@@ -1443,6 +1443,10 @@ procedure TLoadFormTest.LoadMovementFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementGoodsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementGoodsJournalForm');
+
+
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;
