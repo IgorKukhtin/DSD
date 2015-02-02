@@ -2,8 +2,8 @@ inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
   ClientHeight = 649
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 684
+  ExplicitWidth = 1028
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -50,6 +50,7 @@ inherited ServiceJournalForm: TServiceJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -373,6 +374,14 @@ inherited ServiceJournalForm: TServiceJournalForm
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True

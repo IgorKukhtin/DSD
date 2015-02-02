@@ -2,25 +2,25 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072'>'
   ClientHeight = 649
   ClientWidth = 910
-  ExplicitWidth = 926
-  ExplicitHeight = 684
+  ExplicitWidth = 918
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 910
     Height = 592
     TabOrder = 3
-    ExplicitWidth = 894
+    ExplicitWidth = 910
     ExplicitHeight = 592
     ClientRectBottom = 592
     ClientRectRight = 910
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 894
+      ExplicitWidth = 910
       ExplicitHeight = 592
       inherited cxGrid: TcxGrid
         Width = 910
         Height = 592
-        ExplicitWidth = 894
+        ExplicitWidth = 910
         ExplicitHeight = 592
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -104,7 +104,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited Panel: TPanel
     Width = 910
-    ExplicitWidth = 894
+    ExplicitWidth = 910
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -246,6 +246,14 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True

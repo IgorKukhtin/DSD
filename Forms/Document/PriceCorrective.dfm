@@ -7,24 +7,22 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 133
+    Top = 131
     Width = 998
-    Height = 409
-    ExplicitTop = 133
+    Height = 411
+    ExplicitTop = 131
     ExplicitWidth = 998
-    ExplicitHeight = 409
-    ClientRectBottom = 405
-    ClientRectRight = 994
+    ExplicitHeight = 411
+    ClientRectBottom = 411
+    ClientRectRight = 998
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 992
-      ExplicitHeight = 383
+      ExplicitWidth = 998
+      ExplicitHeight = 387
       inherited cxGrid: TcxGrid
-        Width = 992
-        Height = 383
-        ExplicitWidth = 992
-        ExplicitHeight = 383
+        Width = 998
+        Height = 387
+        ExplicitWidth = 998
+        ExplicitHeight = 387
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -185,7 +183,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -635,7 +633,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -715,6 +713,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         item
           Visible = True
           ItemName = 'bbPrintTaxCorrective_Us'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True

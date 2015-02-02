@@ -82,6 +82,8 @@ type
     clRetailName: TcxGridDBColumn;
     actChoiceRetailForm: TOpenChoiceForm;
     InfoMoneyName_all: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public
