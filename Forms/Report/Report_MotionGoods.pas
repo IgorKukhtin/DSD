@@ -170,6 +170,8 @@ type
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
     actDisabled: TOpenChoiceForm;
+    actPrintBy_Goods_Partion_Grid: TdsdPrintAction;
+    bbPrintBy_Goods_Partion_Grid: TdxBarButton;
   private
   public
   end;

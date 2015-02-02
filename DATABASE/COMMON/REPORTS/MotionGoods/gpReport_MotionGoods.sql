@@ -107,8 +107,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , PriceTotalIn TFloat
              , PriceTotalOut TFloat
 
-             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
              , ContainerId_Summ Integer
              , LineNum Integer
@@ -446,24 +446,24 @@ BEGIN
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MovementBoolean_HistoryCost.ValueData = TRUE
-                                                   AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
+                                                   AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  --
                                                        THEN MIContainer.Amount
                                                   WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MIContainer.isActive = TRUE
-                                                   AND tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
+                                                   AND tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_60000()  --
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_SendOnPriceIn
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE
-                                                   AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
+                                                   AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  --
                                                        THEN -1 * MIContainer.Amount
                                                   WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MIContainer.isActive = FALSE
-                                                   AND tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
+                                                   AND tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_60000()  --
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_SendOnPriceOut
@@ -472,7 +472,7 @@ BEGIN
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- РЎСѓРјРјР° СЃ/СЃ, СЂРµР°Р»РёР·Р°С†РёСЏ, Сѓ РїРѕРєСѓРїР°С‚РµР»СЏ
                                                    AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
-                                                   -- AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
+                                                   -- AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  --
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Sale
@@ -759,21 +759,22 @@ BEGIN
                           THEN tmpMIContainer_group.SummTotalOut / tmpMIContainer_group.CountTotalOut
                      ELSE 0
                 END AS TFloat) AS PriceTotalOut
-
+        , View_InfoMoney.InfoMoneyId
         , View_InfoMoney.InfoMoneyCode
         , View_InfoMoney.InfoMoneyGroupName
         , View_InfoMoney.InfoMoneyDestinationName
         , View_InfoMoney.InfoMoneyName
         , View_InfoMoney.InfoMoneyName_all
 
-        , View_InfoMoneyDetail.InfoMoneyCode AS InfoMoneyCode_Detail
-        , View_InfoMoneyDetail.InfoMoneyGroupName AS InfoMoneyGroupName_Detail
+        , View_InfoMoneyDetail.InfoMoneyId              AS InfoMoneyId_Detail
+        , View_InfoMoneyDetail.InfoMoneyCode            AS InfoMoneyCode_Detail
+        , View_InfoMoneyDetail.InfoMoneyGroupName       AS InfoMoneyGroupName_Detail
         , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
-        , View_InfoMoneyDetail.InfoMoneyName AS InfoMoneyName_Detail
-        , View_InfoMoneyDetail.InfoMoneyName_all AS InfoMoneyName_all_Detail
+        , View_InfoMoneyDetail.InfoMoneyName            AS InfoMoneyName_Detail
+        , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
 
         , tmpMIContainer_group.ContainerId_Summ
-        , CAST (row_number() OVER () AS INTEGER) AS LineNum
+        , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
       FROM
         (SELECT (tmpMIContainer_all.AccountId) AS AccountId
