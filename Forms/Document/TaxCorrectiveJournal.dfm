@@ -421,7 +421,19 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       ItemsDataSet = PrintItemsCDS
       AskFilePath = False
     end
-    object actElectron: TdsdExecStoredProc [3]
+    object actMedocFalse: TdsdExecStoredProc [2]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMedoc_False
+      StoredProcList = <
+        item
+          StoredProc = spMedoc_False
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1077#1076#1086#1082'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1077#1076#1086#1082'"'
+      ImageIndex = 72
+    end
+    object actElectron: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spElectron
@@ -433,7 +445,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
     end
-    object actChecked: TdsdExecStoredProc [4]
+    object actChecked: TdsdExecStoredProc [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChecked
@@ -445,7 +457,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actDocument: TdsdExecStoredProc [5]
+    object actDocument: TdsdExecStoredProc [6]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spDocument
@@ -470,7 +482,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
     end
-    object actMovementCheck: TdsdOpenForm [11]
+    object actMovementCheck: TdsdOpenForm [12]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -884,6 +896,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMedocFalse'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbDocument'
         end
         item
@@ -978,6 +998,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbSaveDeclarForMedoc: TdxBarButton
       Action = mactMedocDECLAR
+      Category = 0
+    end
+    object bbMedocFalse: TdxBarButton
+      Action = actMedocFalse
       Category = 0
     end
   end
@@ -1287,5 +1311,28 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     PackSize = 1
     Left = 520
     Top = 224
+  end
+  object spMedoc_False: TdsdStoredProc
+    StoredProcName = 'gpUpdate_IsMedoc_False'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'onisMedoc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMedoc'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 387
   end
 end
