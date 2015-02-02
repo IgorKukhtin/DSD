@@ -347,6 +347,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
         end>
       isShowModal = False
     end

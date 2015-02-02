@@ -1,24 +1,27 @@
 inherited MovementItemProtocolForm: TMovementItemProtocolForm
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'> '
-  ClientHeight = 341
-  ClientWidth = 751
+  ClientHeight = 293
+  ClientWidth = 785
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 759
-  ExplicitHeight = 375
+  ExplicitWidth = 793
+  ExplicitHeight = 327
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
-    Width = 751
+    Top = 83
+    Width = 785
+    Height = 210
     ExplicitTop = 59
     ExplicitWidth = 751
-    ClientRectRight = 751
+    ClientRectBottom = 210
+    ClientRectRight = 785
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 751
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 481
+        Height = 210
         Align = alLeft
         ExplicitWidth = 481
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -48,24 +51,18 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
             Options.Editing = False
             Width = 169
           end
-          object clProtocolData: TcxGridDBColumn
-            Caption = #1044#1072#1085#1085#1099#1077
-            DataBinding.FieldName = 'ProtocolData'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 111
-          end
         end
       end
       object cxGridProtocolData: TcxGrid
         Left = 481
         Top = 0
-        Width = 270
-        Height = 282
+        Width = 304
+        Height = 210
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 270
+        ExplicitHeight = 282
         object cxGridViewProtocolData: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ProtocolDataDS
@@ -112,12 +109,13 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 751
-    Height = 33
+    Width = 785
+    Height = 57
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 898
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 100
       Top = 5
       EditValue = 42005d
       Properties.ShowTime = False
@@ -125,7 +123,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 312
+      Left = 302
       Top = 5
       EditValue = 42005d
       Properties.ShowTime = False
@@ -138,8 +136,8 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object edUser: TcxButtonEdit
-      Left = 497
-      Top = 5
+      Left = 100
+      Top = 32
       Properties.Buttons = <
         item
           Default = True
@@ -149,14 +147,32 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       Width = 206
     end
     object cxLabel3: TcxLabel
-      Left = 413
-      Top = 6
+      Left = 10
+      Top = 32
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100':'
     end
     object cxLabel2: TcxLabel
-      Left = 201
+      Left = 195
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel5: TcxLabel
+      Left = 329
+      Top = 32
+      Caption = #1054#1073#1098#1077#1082#1090':'
+    end
+    object edObject: TcxButtonEdit
+      Left = 376
+      Top = 32
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 217
     end
   end
   inherited MasterDS: TDataSource
@@ -219,6 +235,13 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = edObject
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 312
     Top = 128
@@ -245,7 +268,8 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 544
+    Left = 176
+    Top = 32
   end
   object ProtocolDataCDS: TClientDataSet
     Aggregates = <>

@@ -332,7 +332,13 @@ inherited MovementProtocolForm: TMovementProtocolForm
       item
         Name = 'Id'
         Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
         Component = edObject
+        DataType = ftString
         ParamType = ptInput
       end>
     Left = 352

@@ -37,6 +37,7 @@ inherited ProtocolForm: TProtocolForm
             Caption = '+'
             DataBinding.FieldName = 'IsInsert'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 30
           end
           object colDate: TcxGridDBColumn
@@ -110,6 +111,7 @@ inherited ProtocolForm: TProtocolForm
             Caption = #1048#1084#1103' '#1087#1086#1083#1103
             DataBinding.FieldName = 'FieldName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 127
           end
           object cxGridDBColumn2: TcxGridDBColumn
