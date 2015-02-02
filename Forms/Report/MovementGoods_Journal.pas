@@ -39,6 +39,15 @@ type
     edLocation: TcxButtonEdit;
     LocationGuides: TdsdGuides;
     cxLabel6: TcxLabel;
+    ceAccountGroup: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    AccountGroupGuides: TdsdGuides;
+    edUnitGroup: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    UnitGroupGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
   private
     { Private declarations }
   public

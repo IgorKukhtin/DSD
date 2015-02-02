@@ -1,31 +1,31 @@
 inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1086#1087#1077#1088#1072#1094#1080#1081' ('#1090#1086#1074#1072#1088#1085#1099#1081')'
   ClientHeight = 484
-  ClientWidth = 1164
+  ClientWidth = 1220
   Position = poDesigned
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1172
+  ExplicitWidth = 1228
   ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 82
-    Width = 1164
-    Height = 402
+    Top = 125
+    Width = 1220
+    Height = 359
     TabOrder = 3
     ExplicitTop = 82
     ExplicitWidth = 1164
     ExplicitHeight = 402
-    ClientRectBottom = 398
-    ClientRectRight = 1160
+    ClientRectBottom = 355
+    ClientRectRight = 1216
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
       ExplicitWidth = 1158
       ExplicitHeight = 396
       inherited cxGrid: TcxGrid
-        Width = 1158
-        Height = 396
+        Width = 1214
+        Height = 353
         ExplicitWidth = 1158
         ExplicitHeight = 396
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -288,10 +288,10 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1164
-    Height = 54
-    ExplicitWidth = 1164
-    ExplicitHeight = 54
+    Width = 1220
+    Height = 97
+    ExplicitWidth = 1220
+    ExplicitHeight = 97
     inherited deStart: TcxDateEdit
       Left = 118
       ExplicitLeft = 118
@@ -313,13 +313,13 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
       ExplicitTop = 30
     end
     object cxLabel4: TcxLabel
-      Left = 243
-      Top = 4
+      Left = 871
+      Top = 28
       Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072':'
     end
     object edGoodsKind: TcxButtonEdit
-      Left = 315
-      Top = 4
+      Left = 937
+      Top = 27
       Properties.Buttons = <
         item
           Default = True
@@ -327,15 +327,15 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 190
+      Width = 213
     end
     object cxLabel5: TcxLabel
-      Left = 523
+      Left = 899
       Top = 4
       Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 561
+      Left = 937
       Top = 4
       Properties.Buttons = <
         item
@@ -344,16 +344,16 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 229
+      Width = 213
     end
     object cxLabel3: TcxLabel
-      Left = 795
-      Top = 4
+      Left = 892
+      Top = 52
       Caption = #1055#1072#1088#1090#1080#1103':'
     end
     object edPartionGoods: TcxButtonEdit
-      Left = 840
-      Top = 4
+      Left = 937
+      Top = 52
       Properties.Buttons = <
         item
           Default = True
@@ -361,10 +361,10 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 229
+      Width = 213
     end
     object edLocation: TcxButtonEdit
-      Left = 315
+      Left = 334
       Top = 27
       Properties.Buttons = <
         item
@@ -373,12 +373,63 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 203
+      Width = 231
     end
     object cxLabel6: TcxLabel
-      Left = 237
+      Left = 261
       Top = 30
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
+    end
+    object ceAccountGroup: TcxButtonEdit
+      Left = 638
+      Top = 3
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 229
+    end
+    object cxLabel7: TcxLabel
+      Left = 565
+      Top = 4
+      Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072':'
+    end
+    object edUnitGroup: TcxButtonEdit
+      Left = 334
+      Top = 3
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 231
+    end
+    object cxLabel8: TcxLabel
+      Left = 207
+      Top = 4
+      Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
+    end
+    object cxLabel9: TcxLabel
+      Left = 210
+      Top = 52
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 334
+      Top = 51
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 231
     end
   end
   inherited ActionList: TActionList
@@ -507,32 +558,47 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inAccountGroupId'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitGroupId'
+        Value = ''
+        Component = UnitGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLocationId'
+        Value = ''
+        Component = LocationGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoodsId'
+        Value = ''
+        Component = GoodsPartionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inDescSet'
         Value = Null
         Component = FormParams
         ComponentItem = 'DescSet'
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end>
     Left = 528
     Top = 235
@@ -659,18 +725,6 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'Key'
       end
       item
-        Name = 'GoodsId'
-        Value = ''
-        Component = GoodsGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartionGoodsId'
-        Value = ''
-        Component = GoodsPartionGuides
-        ComponentItem = 'Key'
-      end
-      item
         Name = 'GoodsKindName'
         Value = ''
         Component = GoodsKindGuides
@@ -678,18 +732,10 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         DataType = ftString
       end
       item
-        Name = 'PartionGoodsName'
+        Name = 'GoodsId'
         Value = ''
-        Component = GoodsPartionGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'LocationName'
-        Value = ''
-        Component = LocationGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        Component = GoodsGuides
+        ComponentItem = 'Key'
       end
       item
         Name = 'GoodsName'
@@ -699,47 +745,74 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         DataType = ftString
       end
       item
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
+        Name = 'PartionGoodsId'
         Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = GoodsPartionGuides
+        ComponentItem = 'Key'
       end
       item
-        Value = ''
-        Component = GoodsKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
+        Name = 'PartionGoodsName'
         Value = ''
         Component = GoodsPartionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
       end
       item
+        Name = 'LocationId'
         Value = ''
-        ParamType = ptUnknown
+        Component = LocationGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'LocationName'
+        Value = ''
+        Component = LocationGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = Null
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'AccountGroupName'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'UnitGroupId'
+        Value = ''
+        Component = UnitGroupGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitGroupName'
+        Value = ''
+        Component = UnitGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'DescSet'
+        Value = ''
+        DataType = ftString
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -792,7 +865,8 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 472
+    Left = 1024
+    Top = 24
   end
   object GoodsPartionGuides: TdsdGuides
     KeyField = 'Id'
@@ -818,8 +892,8 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 888
-    Top = 8
+    Left = 960
+    Top = 56
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -845,7 +919,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 608
+    Left = 968
   end
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
@@ -871,7 +945,110 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 400
-    Top = 32
+    Left = 360
+    Top = 24
+  end
+  object AccountGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAccountGroup
+    FormNameParam.Value = 'TAccountGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccountGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountDirectionName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 736
+    Top = 5
+  end
+  object UnitGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitGroup
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 416
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 440
+    Top = 53
   end
 end
