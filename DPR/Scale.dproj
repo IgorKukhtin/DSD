@@ -71,8 +71,8 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
 			<Debugger_RunParams>/autologin ves=123.456</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>1</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>3</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -173,6 +173,11 @@
 			</DCCReference>
 			<DCCReference Include="..\Scale\Util\SysScalesLib_TLB.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\FastReportAddOn.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
+			<DCCReference Include="..\Scale\GuideGoodsMovement.pas">
+				<Form>GuideGoodsMovementForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

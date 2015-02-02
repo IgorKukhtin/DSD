@@ -12,28 +12,28 @@ unit SysScalesLib_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : $Revision:   1.130  $
-// File generated on 30.01.2015 19:16:42 from Type Library described below.
+// File generated on 19.03.2010 21:30:05 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll (1)
+// Type Lib: D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll (1)
 // LIBID: {B5F987B1-FA14-4B54-ADCB-BE463BDD122B}
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\Windows\SysWOW64\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\Windows\SysWOW64\stdvcl40.dll)
+//   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINDOWS\system32\stdvcl40.dll)
 // Errors:
-//   Error creating palette bitmap of (TCasDB) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TCasCI) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TCasBI) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TDigiDS425) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TLP15v15) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TCasLP15v16) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TDigiDS788) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TJadeverJPS) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TDigiDS980) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TAxisDB) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
-//   Error creating palette bitmap of (TTiger) : Server D:\Borland\DELPHLIB.6_0\vvs-2015\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TCasDB) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TCasCI) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TCasBI) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TDigiDS425) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TLP15v15) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TCasLP15v16) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TDigiDS788) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TJadeverJPS) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TDigiDS980) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TAxisDB) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
+//   Error creating palette bitmap of (TTiger) : Server D:\Borland\DELPHLIB.6_0\vvs.last\SysScales.dll contains no icons
 // ************************************************************************ //
 // *************************************************************************//
 // NOTE:                                                                      
@@ -487,12 +487,16 @@ type
     procedure Set_Active(pVal: Integer); safecall;
     function  Get_Stable: Integer; safecall;
     function  Get_Weight: Double; safecall;
+    function  Get_Tare: Double; safecall;
+    function  Get_Price: Double; safecall;
     property CommPort: WideString read Get_CommPort write Set_CommPort;
     property CommSpeed: Integer read Get_CommSpeed write Set_CommSpeed;
     property Registered: Integer read Get_Registered;
     property Active: Integer read Get_Active write Set_Active;
     property Stable: Integer read Get_Stable;
     property Weight: Double read Get_Weight;
+    property Tare: Double read Get_Tare;
+    property Price: Double read Get_Price;
   end;
 
 // *********************************************************************//
@@ -508,6 +512,8 @@ type
     property Active: Integer dispid 4;
     property Stable: Integer readonly dispid 6;
     property Weight: Double readonly dispid 7;
+    property Tare: Double readonly dispid 8;
+    property Price: Double readonly dispid 9;
   end;
 
 // *********************************************************************//
@@ -1359,6 +1365,8 @@ type
     procedure Set_Active(pVal: Integer);
     function  Get_Stable: Integer;
     function  Get_Weight: Double;
+    function  Get_Tare: Double;
+    function  Get_Price: Double;
   public
     constructor Create(AOwner: TComponent); override;
     destructor  Destroy; override;
@@ -1369,6 +1377,8 @@ type
     property Registered: Integer read Get_Registered;
     property Stable: Integer read Get_Stable;
     property Weight: Double read Get_Weight;
+    property Tare: Double read Get_Tare;
+    property Price: Double read Get_Price;
     property CommPort: WideString read Get_CommPort write Set_CommPort;
     property CommSpeed: Integer read Get_CommSpeed write Set_CommSpeed;
     property Active: Integer read Get_Active write Set_Active;
@@ -1400,6 +1410,8 @@ type
     procedure Set_Active(pVal: Integer);
     function  Get_Stable: Integer;
     function  Get_Weight: Double;
+    function  Get_Tare: Double;
+    function  Get_Price: Double;
   public
     property DefaultInterface: IDigiDS788 read GetDefaultInterface;
   published
@@ -3348,6 +3360,16 @@ begin
   Result := DefaultInterface.Weight;
 end;
 
+function  TDigiDS788.Get_Tare: Double;
+begin
+  Result := DefaultInterface.Tare;
+end;
+
+function  TDigiDS788.Get_Price: Double;
+begin
+  Result := DefaultInterface.Price;
+end;
+
 {$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
 constructor TDigiDS788Properties.Create(AServer: TDigiDS788);
 begin
@@ -3409,6 +3431,16 @@ end;
 function  TDigiDS788Properties.Get_Weight: Double;
 begin
   Result := DefaultInterface.Weight;
+end;
+
+function  TDigiDS788Properties.Get_Tare: Double;
+begin
+  Result := DefaultInterface.Tare;
+end;
+
+function  TDigiDS788Properties.Get_Price: Double;
+begin
+  Result := DefaultInterface.Price;
 end;
 
 {$ENDIF}
@@ -4208,13 +4240,12 @@ begin
 end;
 
 {$ENDIF}
-{
-procedure Register;
+
+{procedure Register;
 begin
-  RegisterComponents(dtlServerPage, [TCasDB, TCasCI, TCasBI, TDigiDS425, 
-    TLP15v15, TCasLP15v16, TDigiDS788, TJadeverJPS, TDigiDS980, 
+  RegisterComponents(dtlServerPage, [TCasDB, TCasCI, TCasBI, TDigiDS425,
+    TLP15v15, TCasLP15v16, TDigiDS788, TJadeverJPS, TDigiDS980,
     TAxisDB, TTiger]);
-end;
-2015
-}
+end;}
+
 end.

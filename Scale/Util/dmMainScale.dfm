@@ -1,5 +1,6 @@
 object DMMainScaleForm: TDMMainScaleForm
   OldCreateOrder = False
+  OnCreate = DataModuleCreate
   Height = 530
   Width = 576
   object ClientDataSet: TClientDataSet

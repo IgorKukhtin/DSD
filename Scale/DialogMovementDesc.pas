@@ -51,11 +51,12 @@ type
     ChoiceNumber:Integer;
 
     IsOrderExternal: Boolean;
+    IsBarCodeMaster: Boolean;
     ParamsMovement_local: TParams;
 
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
-    function Execute: boolean; override;
+    function Execute(BarCode: String): boolean; virtual;
   end;
 
 var
@@ -65,10 +66,12 @@ implementation
 {$R *.dfm}
 uses DMMainScale;
 {------------------------------------------------------------------------}
-function TDialogMovementDescForm.Execute: Boolean; //Проверка корректного ввода в Edit
+function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
      CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
+     if BarCode<>'' then ParamsMovement_local.ParamByName('OrderExternal_BarCode').AsString:=BarCode;
 
+     IsBarCodeMaster:=BarCode<>'';
      IsOrderExternal:=false;
 
      CDS.Filtered:=false;
@@ -76,7 +79,7 @@ begin
      ChoiceNumber:=0;
      with ParamsMovement_local do
      begin
-          CDS.Locate('Number',ParamByName('MovementNumber').AsString,[]);
+          CDS.Locate('Number',ParamByName('MovementDescNumber').AsString,[]);
           if ParamByName('OrderExternal_BarCode').AsString<>''
           then EdiBarCode.Text:=ParamByName('OrderExternal_BarCode').AsString
           else EdiBarCode.Text:=ParamByName('OrderExternal_InvNumber').AsString;
@@ -86,11 +89,15 @@ begin
      end;
 
      ActiveControl:=EdiBarCode;
-     Result:=(ShowModal=mrOk);
+
+     if BarCode<>'' then begin EdiBarCodeExit(EdiBarCode);Result:=true;end
+     else Result:=(ShowModal=mrOk);
 end;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
+     ChoiceNumber:=0;
+     //
      Result:=(IsOrderExternal=true)and(CDS.FieldByName('MovementDescId').AsInteger>0)and(ActiveControl=DBGrid);
      if not Result then exit;
 
@@ -128,7 +135,7 @@ begin
      with ParamsMovement_local do
      begin
           ParamByName('ColorGridValue').AsInteger:=CDS.FieldByName('ColorGridValue').asInteger;
-          ParamByName('MovementNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
+          ParamByName('MovementDescNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
           ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
           ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
           ParamByName('GoodsKindWeighingGroupId').asInteger:= CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
@@ -144,7 +151,7 @@ begin
                     ParamByName('ToName').asString:= CDS.FieldByName('ToName').asString;
                     ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
                     ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
-                    ParamByName('ChangePercent').asFloat:= 0;
+                    ParamByName('ChangePercentAmount').asFloat:= 0;
           end
           else
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Sale)
@@ -159,7 +166,7 @@ begin
                     ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
                     ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
                     if (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Sale)
-                    then ParamByName('ChangePercent').asFloat:= 0;
+                    then ParamByName('ChangePercentAmount').asFloat:= 0;
           end
           else begin
                     ParamByName('FromId').AsInteger:= CDS.FieldByName('FromId').asInteger;
@@ -175,6 +182,7 @@ begin
                     ParamByName('calcPartnerCode').asInteger:=0;
                     ParamByName('calcPartnerName').asString:='';
                     ParamByName('ChangePercent').asFloat:= 0;
+                    ParamByName('ChangePercentAmount').asFloat:= 0;
                     ParamByName('ContractId').AsInteger    := 0;
                     ParamByName('ContractCode').AsInteger    := 0;
                     ParamByName('ContractNumber').asString := '';
@@ -196,7 +204,7 @@ end;
 procedure TDialogMovementDescForm.EdiBarCodeEnter(Sender: TObject);
 begin
     if CDS.Filtered then CDS.Filtered:=false;
-    CDS.Locate('Number',ParamsMovement_local.ParamByName('MovementNumber').AsString,[]);
+    CDS.Locate('Number',ParamsMovement_local.ParamByName('MovementDescNumber').AsString,[]);
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EdiBarCodeExit(Sender: TObject);
@@ -208,7 +216,7 @@ begin
     if Length(trim(EdiBarCode.Text))>2
     then begin
               //поиск по номеру или ш-к
-              isOrderExternal:=DMMainScaleForm.gpSelect_Scale_OrderExternal(ParamsMovement_local,EdiBarCode.Text);
+              isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EdiBarCode.Text);
               if isOrderExternal=false then
               begin
                    ShowMessage('Ошибка.Значение <Штрих код/Номер заявки> не найдено.');
@@ -237,12 +245,12 @@ begin
                     CDS.Locate('Number',IntToStr(Number),[]);
                     if not fOK then
                     begin
-                         ShowMessage('Ошибка.Значение <Вид документа> не определено.');
+                         if not IsBarCodeMaster then ShowMessage('Ошибка.Значение <Вид документа> не определено.');
                          ActiveControl:=EdiBarCode;
                          exit;
                     end;
                     //
-                    ParamsMovement_local.ParamByName('MovementNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
+                    ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
                     ChoiceNumber:=CDS.FieldByName('Number').asInteger;
                     // завершение
                     if   (CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Income)
@@ -278,7 +286,7 @@ end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EdiBarCodeChange(Sender: TObject);
 begin
-    if Length(trim(EdiBarCode.Text))>=13 then EdiBarCodeExit(Self);
+    if (Length(trim(EdiBarCode.Text))>=13)and(not IsBarCodeMaster) then EdiBarCodeExit(Self);
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodeExit(Sender: TObject);
@@ -363,7 +371,10 @@ begin
           Font.Size:=11;
           Font.Style:=[fsBold];
           FillRect(Rect);
-          TextOut(Rect.Left + 30, Rect.Top + 0, Column.Field.Text);
+          //TextOut(Rect.Left + 30, Rect.Top + 0, Column.Field.Text);
+          if (Column.Alignment=taLeftJustify)or(Rect.Left>=Rect.Right - LengTh(Column.Field.Text))
+          then TextOut(Rect.Left+32, Rect.Top+2, Column.Field.Text)
+          else TextOut(Rect.Right - TextWidth(Column.Field.Text) - 2, Rect.Top+2 , Column.Field.Text);
      end
      else
      if CDS.FieldByName('Number').AsInteger=ChoiceNumber then
@@ -372,7 +383,10 @@ begin
           Font.Size:=10;
           Font.Style:=[];
           FillRect(Rect);
-          TextOut(Rect.Left + 2, Rect.Top + 2, Column.Field.Text);
+          //TextOut(Rect.Left + 2, Rect.Top + 2, Column.Field.Text);
+          if (Column.Alignment=taLeftJustify)or(Rect.Left>=Rect.Right - LengTh(Column.Field.Text))
+          then TextOut(Rect.Left+2, Rect.Top+2, Column.Field.Text)
+          else TextOut(Rect.Right - TextWidth(Column.Field.Text) - 2, Rect.Top+2 , Column.Field.Text);
      end
      else
      begin
@@ -380,7 +394,10 @@ begin
           Font.Size:=10;
           Font.Style:=[];
           FillRect(Rect);
-          TextOut(Rect.Left + 5, Rect.Top + 0, Column.Field.Text);
+          //TextOut(Rect.Left + 5, Rect.Top + 0, Column.Field.Text);
+          if (Column.Alignment=taLeftJustify)or(Rect.Left>=Rect.Right - LengTh(Column.Field.Text))
+          then TextOut(Rect.Left+2, Rect.Top+2, Column.Field.Text)
+          else TextOut(Rect.Right - TextWidth(Column.Field.Text) - 2, Rect.Top+2 , Column.Field.Text);
      end;
 end;
 {------------------------------------------------------------------------}
@@ -391,11 +408,25 @@ begin
   begin
        StoredProcName:='gpSelect_Object_ToolsWeighing_MovementDesc';
        OutputType:=otDataSet;
-       Params.AddParam('inScaleNum', ftInteger, ptInput, SettingMain.ScaleNum);
+       Params.AddParam('inBrancCode', ftInteger, ptInput, SettingMain.BrancCode);
        Execute;
   end;
   //
   Create_ParamsMovement(ParamsMovement_local);
+  //
+  //global Initialize
+  if ParamsMovement.ParamByName('MovementDescNumber').asInteger<>0 then
+  begin
+       CDS.Filter:='(Number='+IntToStr(ParamsMovement.ParamByName('MovementDescNumber').asInteger)
+                  +')'
+                    ;
+       CDS.Filtered:=true;
+       if CDS.RecordCount<>1
+       then ShowMessage('Ошибка.Код операции не определен.')
+       else begin ParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
+                  ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
+            end;
+    end;
   //
   bbOk.Visible := false;
 end;

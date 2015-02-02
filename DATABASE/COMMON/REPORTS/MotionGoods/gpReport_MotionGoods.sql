@@ -445,17 +445,25 @@ BEGIN
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
-                                                   /*AND (MIContainer.isActive = TRUE
-                                                     OR MovementBoolean_HistoryCost.ValueData = TRUE)*/
                                                    AND MovementBoolean_HistoryCost.ValueData = TRUE
+                                                   AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
+                                                       THEN MIContainer.Amount
+                                                  WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                   AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                                   AND MIContainer.isActive = TRUE
+                                                   AND tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_SendOnPriceIn
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
-                                                   /*AND NOT (MIContainer.isActive = TRUE
-                                                     OR MovementBoolean_HistoryCost.ValueData = TRUE)*/
                                                    AND COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE
+                                                   AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
+                                                       THEN -1 * MIContainer.Amount
+                                                  WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                   AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                                   AND MIContainer.isActive = FALSE
+                                                   AND tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_SendOnPriceOut
@@ -464,6 +472,7 @@ BEGIN
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- РЎСѓРјРјР° СЃ/СЃ, СЂРµР°Р»РёР·Р°С†РёСЏ, Сѓ РїРѕРєСѓРїР°С‚РµР»СЏ
                                                    AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
+                                                   -- AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Sale

@@ -9,17 +9,22 @@ type
   TDMMainScaleForm = class(TDataModule)
     ClientDataSet: TClientDataSet;
     spSelect: TdsdStoredProc;
+    procedure DataModuleCreate(Sender: TObject);
   private
   public
-    function gpSelect_ToolsWeighing_onLevelChild(inScaleNum:Integer;inLevelChild: String): TArrayList;
+    function gpSelect_ToolsWeighing_onLevelChild(inBrancCode:Integer;inLevelChild: String): TArrayList;
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
+    function gpGet_Scale_User:String;
 
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
-    function gpSelect_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
+    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
+    function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
 
     function gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
     function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
+
+    function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
   end;
 
   function gpInitialize_OperDate(var execParams:TParams):TDateTime;
@@ -31,14 +36,20 @@ var
   DMMainScaleForm: TDMMainScaleForm;
 
 implementation
-uses Inifiles;
+uses Inifiles,TypInfo,DialogMovementDesc;
 {$R *.dfm}
+{------------------------------------------------------------------------}
+procedure TDMMainScaleForm.DataModuleCreate(Sender: TObject);
+begin
+  gpInitialize_ParamsMovement;
+end;
 {------------------------------------------------------------------------}
 function gpInitialize_ParamsMovement: Boolean;
 begin
     Result:=false;
     //
     Create_ParamsMovement(ParamsMovement);
+    //
     gpInitialize_OperDate(ParamsMovement);
     //
     with DMMainScaleForm.spSelect do
@@ -48,10 +59,18 @@ begin
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
 
+       //try
+         Execute;
+
        with ParamsMovement do
        begin
-         ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
-{         ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
+         ParamsMovement.ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+         ParamsMovement.ParamByName('InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
+         ParamsMovement.ParamByName('OperDate_Movement').asDateTime:= DataSet.FieldByName('OperDate').asDateTime;
+
+         ParamsMovement.ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
+
+         ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
          ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
          ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
          ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
@@ -65,10 +84,11 @@ begin
          ParamByName('calcPartnerCode').AsInteger:= DataSet.FieldByName('PartnerCode_calc').AsInteger;
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
          ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
+         ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
 
-         ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+         ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId_Order').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
-         ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
+         ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber_Order').asString;
          ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
 
          ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
@@ -78,7 +98,10 @@ begin
 
          ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
-         ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString; }
+         ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
+
+
+         ParamByName('TotalSumm').asFloat:= DataSet.FieldByName('TotalSumm').asFloat;
        end;
 
        {except
@@ -97,20 +120,25 @@ begin
     Result:=false;
     with spSelect do begin
        StoredProcName:='gpInsertUpdate_Scale_Movement';
-       OutputType:=otResult;
+       OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('ioId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+       Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
        Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
        Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
        Params.AddParam('inContractId', ftInteger, ptInput, execParamsMovement.ParamByName('ContractId').AsInteger);
        Params.AddParam('inPaidKindId', ftInteger, ptInput, execParamsMovement.ParamByName('PaidKindId').AsInteger);
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
+       Params.AddParam('inChangePercent', ftFloat, ptInput, execParamsMovement.ParamByName('ChangePercent').AsFloat);
        //try
          Execute;
-         execParamsMovement.ParamByName('MovementId').AsInteger:=Params.ParamByName('ioId').Value;
+         execParamsMovement.ParamByName('MovementId').AsInteger:=DataSet.FieldByName('Id').asInteger;
+         execParamsMovement.ParamByName('InvNumber').AsString:=DataSet.FieldByName('InvNumber').AsString;
+         execParamsMovement.ParamByName('OperDate_Movement').AsString:=DataSet.FieldByName('OperDate').AsString;
+         execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
@@ -128,9 +156,9 @@ begin
     if Result then
     with spSelect do begin
        StoredProcName:='gpInsert_Scale_MI';
-       OutputType:=otResult;
+       OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+       Params.AddParam('inId', ftInteger, ptInput, 0);
        Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
        Params.AddParam('inGoodsId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId').AsInteger);
        Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
@@ -138,11 +166,13 @@ begin
        Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('ChangePercentAmount').AsFloat);
        Params.AddParam('inCountTare', ftFloat, ptInput, execParamsMI.ParamByName('CountTare').AsFloat);
        Params.AddParam('inWeightTare', ftFloat, ptInput, execParamsMI.ParamByName('WeightTare').AsFloat);
+       Params.AddParam('inPrice', ftFloat, ptInput, execParamsMI.ParamByName('Price').AsFloat);
+       Params.AddParam('inCountForPrice', ftFloat, ptInput, execParamsMI.ParamByName('CountForPrice').AsFloat);
        Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn')));
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        //try
          Execute;
-         //execParamsMI.ParamByName('MovementItemId').AsInteger:=Params.ParamByName('ioId').Value;
+         execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
@@ -151,7 +181,28 @@ begin
 
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(inScaleNum:Integer;inLevelChild: String): TArrayList;
+function TDMMainScaleForm.gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
+begin
+    Result:= false;
+    //
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_MI_Erased';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, MovementItemId);
+       Params.AddParam('inIsErased', ftBoolean, ptInput, NewValue);
+       //try
+         Execute;
+         ParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+       end;}
+    end;
+
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(inBrancCode:Integer;inLevelChild: String): TArrayList;
 var i: integer;
 begin
     with spSelect do
@@ -159,7 +210,7 @@ begin
        StoredProcName:='gpSelect_Object_ToolsWeighing_onLevelChild';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inScaleNum', ftInteger, ptInput, inScaleNum);
+       Params.AddParam('inBrancCode', ftInteger, ptInput, inBrancCode);
        Params.AddParam('inLevelChild', ftString, ptInput, inLevelChild);
        //try
          Execute;
@@ -180,6 +231,22 @@ begin
        end;}
     end;
     //
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_User:String;
+begin
+    with spSelect do begin
+       StoredProcName:='gpGet_Scale_User';
+       OutputType:=otDataSet;
+       Params.Clear;
+       //try
+         Execute;
+         Result := DataSet.FieldByName('UserName').asString;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+       end;}
+    end;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
@@ -231,6 +298,38 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_Goods';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount<>0;
+       with execParams do
+       begin
+         ParamByName('GoodsId').AsInteger:= DataSet.FieldByName('GoodsId').AsInteger;
+         ParamByName('GoodsCode').AsInteger:= DataSet.FieldByName('GoodsCode').AsInteger;
+         ParamByName('GoodsName').asString:= DataSet.FieldByName('GoodsName').asString;
+
+         ParamByName('GoodsKindId').AsInteger:= DataSet.FieldByName('GoodsKindId').asInteger;
+         ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').AsInteger;
+         ParamByName('GoodsKindName').asString:= DataSet.FieldByName('GoodsKindName').asString;
+       end;
+
+       {except
+         result.Code := Code;
+         result.Id   := 0;
+         result.Name := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Partner');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
 begin
     with spSelect do
@@ -250,6 +349,7 @@ begin
          ParamByName('calcPartnerCode').AsInteger:= DataSet.FieldByName('PartnerCode').AsInteger;
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName').asString;
          ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
+         ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
 
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
@@ -280,11 +380,11 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpSelect_Scale_OrderExternal(var execParams:TParams;inBarCode: String): Boolean;
+function TDMMainScaleForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode: String): Boolean;
 begin
     with spSelect do
     begin
-       StoredProcName:='gpSelect_Scale_OrderExternal';
+       StoredProcName:='gpGet_Scale_OrderExternal';
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
@@ -309,6 +409,7 @@ begin
          ParamByName('calcPartnerCode').AsInteger:= DataSet.FieldByName('PartnerCode_calc').AsInteger;
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
          ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
+         ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
 
          ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
@@ -417,6 +518,18 @@ begin
          Execute;
          zc_Measure_Kg:=DataSet.FieldByName('Value').asInteger;
 
+         Params.ParamByName('inSqlText').Value:='SELECT zc_BarCodePref_Object() :: TVarChar';
+         Execute;
+         zc_BarCodePref_Object:=DataSet.FieldByName('Value').asString;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_BarCodePref_Movement() :: TVarChar';
+         Execute;
+         zc_BarCodePref_Movement:=DataSet.FieldByName('Value').asString;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_BarCodePref_MI() :: TVarChar';
+         Execute;
+         zc_BarCodePref_MI:=DataSet.FieldByName('Value').asString;
+
        {except
          result.Code := Code;
          result.Id   := 0;
@@ -431,19 +544,48 @@ end;
 function gpInitialize_Ini: Boolean;
 var
   Ini: TInifile;
+  ScaleList:TStringList;
+  i:Integer;
+  tmpValue:String;
 begin
   Result:=false;
 
-  Ini:=TIniFile.Create('INI\scale.ini');
-  SettingMain.ScaleNum:=Ini.ReadInteger('Main','ScaleNum',1);
-  if SettingMain.ScaleNum=1 then Ini.WriteInteger('Main','ScaleNum',1);
-  SettingMain.ComPort :=Ini.ReadString('Main','ComPort','COM1');
-  if SettingMain.ScaleNum=1 then Ini.WriteString('Main','ComPort','COM1');
-  if AnsiUpperCase(Ini.ReadString('Main','BI','FALSE')) = AnsiUpperCase('TRUE') then SettingMain.BI :=TRUE else SettingMain.BI := FALSE;
-  if SettingMain.BI=FALSE then Ini.WriteString('Main','BI','FALSE');
-  if AnsiUpperCase(Ini.ReadString('Main','DB','TRUE')) = AnsiUpperCase('TRUE') then SettingMain.DB :=TRUE else SettingMain.DB := FALSE;
-  if SettingMain.DB=TRUE then Ini.WriteString('Main','DB','TRUE');
+  Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'scale.ini');
+
+  SettingMain.BrancCode:=Ini.ReadInteger('Main','BrancCode',1);
+  if SettingMain.BrancCode=1 then Ini.WriteInteger('Main','BrancCode',1);
+
+  SettingMain.DefaultCOMPort:=Ini.ReadInteger('Main','DefaultCOMPort',1);
+  if SettingMain.DefaultCOMPort=1 then Ini.WriteInteger('Main','DefaultCOMPort',1);
+
+  SettingMain.ScaleCount:=Ini.ReadInteger('Main','ScaleCount',2);
+  if SettingMain.ScaleCount=2 then Ini.WriteInteger('Main','ScaleCount',2);
+
+  ScaleList:=TStringList.Create;
+  Ini.ReadSectionValues('Type_CommPort_Name',ScaleList);
+  if ScaleList.Count=0 then
+  begin
+       for i:=1 to SettingMain.ScaleCount do
+          Ini.WriteString('Type_CommPort_Name','Item'+IntToStr(i-1),' stDB : '  + IntToStr(i) + ' : ' + 'DB');
+       Ini.ReadSectionValues('Type_CommPort_Name',ScaleList);
+  end;
+
+  SetLength(Scale_Array,SettingMain.ScaleCount);
+  for i:= 0 to SettingMain.ScaleCount-1 do
+  begin
+       tmpValue:=ScaleList[i];
+
+       Scale_Array[i].Number := i;
+       Delete(tmpValue,1,Pos('=',tmpValue));
+       Scale_Array[i].ScaleType := TScaleType(GetEnumValue(TypeInfo(TScaleType), trim(Copy(tmpValue,1,Pos(':',tmpValue)-1))));
+       Delete(tmpValue,1,Pos(':',tmpValue));
+       try Scale_Array[i].ComPort := StrToInt(trim(Copy(tmpValue,1,Pos(':',tmpValue)-1))) except Scale_Array[i].ComPort:=-1;end;
+       Delete(tmpValue,1,Pos(':',tmpValue));
+       Scale_Array[i].ScaleName := trim(tmpValue);
+   end;
+
   Ini.Free;
+  ScaleList.Free;
 
   Result:=true;
 end;

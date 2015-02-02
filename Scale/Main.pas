@@ -37,7 +37,6 @@ type
     gbTotalSumm: TGroupBox;
     PanelTotalSumm: TPanel;
     PanelSaveItem: TPanel;
-    CodeInfoPanel: TPanel;
     EnterGoodsCodeScanerPanel: TPanel;
     EnterGoodsCodeScanerLabel: TLabel;
     EnterGoodsCodeScanerEdit: TEdit;
@@ -73,7 +72,7 @@ type
     GBDiscountWeight: TGroupBox;
     PanelDiscountWeight: TPanel;
     infoPanel_mastre: TPanel;
-    PanelMessage: TPanel;
+    PanelMovement: TPanel;
     PanelMovementDesc: TPanel;
     infoPanel: TPanel;
     infoPanelPartner: TPanel;
@@ -123,21 +122,31 @@ type
     PanelContract: TPanel;
     gbAmountWeight: TGroupBox;
     PanelAmountWeight: TPanel;
+    rgScale: TRadioGroup;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
-    procedure ButtonNewGetParamsClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
     procedure ButtonRefreshZakazClick(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure CDSAfterOpen(DataSet: TDataSet);
+    procedure ButtonRefreshClick(Sender: TObject);
+    procedure ButtonDeleteItemClick(Sender: TObject);
+    procedure DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure rgScaleClick(Sender: TObject);
+    procedure EnterGoodsCodeScanerEditChange(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
 
-    function GetParams_MovementDesc:Boolean;
-    function GetParams_Goods:Boolean;
+    function GetParams_MovementDesc(BarCode: String):Boolean;
+    function GetParams_Goods(BarCode: String):Boolean;
+    procedure Create_Scale;
     procedure Initialize_Scale;
     function fGetScale_CurrentWeight:Double;
     procedure RefreshDataSet;
+    procedure WriteParamsMovement;
   public
     { Public declarations }
   end;
@@ -148,86 +157,173 @@ var
 
 implementation
 {$R *.dfm}
-uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,UtilPrint;
+uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint;
 //------------------------------------------------------------------------------------------------
-function TMainForm.GetParams_MovementDesc:Boolean;
+function TMainForm.GetParams_MovementDesc(BarCode: String):Boolean;
 begin
-     Result:=DialogMovementDescForm.Execute;
+     if ParamsMovement.ParamByName('MovementDescId').AsInteger=0
+     then ParamsMovement.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber')
+     else if (ParamsMovement.ParamByName('MovementId').AsInteger<>0)and()
+          then begin
+               ShowMessage ('Ошибка.Документ взвешивания № <'+ParamsMovement.ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamsMovement.ParamByName('OperDate_Movement').AsDateTime)+'> не закрыт.'+#10+#13+'Изменение параметров не возможно.');
+               Result:=false;
+               exit;
+          end;
+     //
+     Result:=DialogMovementDescForm.Execute(BarCode);
      if Result then
-     with ParamsMovement do
      begin
-          PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
-          PanelPriceList.Caption:=ParamByName('PriceListName').asString;
-
-          if ParamByName('calcPartnerId').AsInteger<>0
-          then PanelPartner.Caption:='  ('+IntToStr(ParamByName('calcPartnerCode').asInteger)+') '+ParamByName('calcPartnerName').asString
-          else PanelPartner.Caption:='';
-
-          if ParamByName('ContractId').AsInteger<>0
-          then PanelContract.Caption:='  ('+ParamByName('ContractCode').asString+')'
-                                     +' № '+ParamByName('ContractNumber').asString
-                                     +' '+ParamByName('ContractTagName').asString
-                                     //+'  ('+ParamByName('PaidKindName').asString+')'
-          else PanelContract.Caption:='';
-
-          if ParamByName('OrderExternalId').AsInteger<>0
-          then PanelOrderExternal.Caption:='  '+ParamByName('OrderExternalName_master').asString
-          else PanelOrderExternal.Caption:='';
+          if ParamsMovement.ParamByName('MovementId').AsInteger<>0
+          then DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+          //
+          WriteParamsMovement;
      end;
+     ActiveControl:=EnterGoodsCodeScanerEdit;
 end;
 {------------------------------------------------------------------------}
-function TMainForm.GetParams_Goods:Boolean;
+function TMainForm.GetParams_Goods(BarCode: String):Boolean;
 var GoodsWeight_two,GoodsWeight_set:Double;
     calcClientId:Integer;
 begin
      Result:=false;
      //
      if ParamsMovement.ParamByName('MovementDescId').asInteger=0
-     then if not GetParams_MovementDesc then exit;
+     then if GetParams_MovementDesc('')=false then exit;
+     //
+     if BarCode<>'' then
+     begin
+          DMMainScaleForm.gpGet_Scale_Goods(ParamsMI,BarCode);
+          if ParamsMI.ParamByName('GoodsId').AsInteger=0 then
+          begin
+               ShowMessage('Ошибка.Товар не найден.');
+               Result:=false;
+               exit;
+          end;
+     end
+     else EmptyValuesParams(ParamsMI);
+
      //
      ParamsMI.ParamByName('RealWeight_Get').AsFloat:=fGetScale_CurrentWeight;
      //
-
-     if GuideGoodsForm.Execute(ParamsMovement.ParamByName('OperDate').AsDateTime)
-     then RefreshDataSet;
-     //
-     Result:=true;
+     if ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0
+     then
+         if GuideGoodsMovementForm.Execute(ParamsMovement)=true
+         then begin
+                    Result:=true;
+                    RefreshDataSet;
+                    WriteParamsMovement;
+                    CDS.First;
+              end
+         else
+     else
+         if GuideGoodsForm.Execute(ParamsMovement)=true
+         then begin
+                    Result:=true;
+                    RefreshDataSet;
+                    WriteParamsMovement;
+                    CDS.First;
+              end;
+     ActiveControl:=EnterGoodsCodeScanerEdit;
 end;
 //------------------------------------------------------------------------------------------------
-procedure TMainForm.ButtonNewGetParamsClick(Sender: TObject);
+procedure TMainForm.ButtonRefreshClick(Sender: TObject);
 begin
-     GetParams_Goods;
+    RefreshDataSet;
+    WriteParamsMovement;
 end;
-
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.ButtonRefreshZakazClick(Sender: TObject);
 begin
     PrintSale(StrToInt(EnterGoodsCodeScanerEdit.Text));
 end;
 //------------------------------------------------------------------------------------------------
+procedure TMainForm.CDSAfterOpen(DataSet: TDataSet);
+var bm: TBookmark;
+    AmountPartnerWeight,AmountWeight,RealWeight,WeightTare: Double;
+begin
+  with DataSet do
+    try
+       //
+       bm:=GetBookmark; DisableControls;
+       First;
+       AmountPartnerWeight:=0;
+       AmountWeight:=0;
+       RealWeight:=0;
+       WeightTare:=0;
+       while not EOF do begin
+          if FieldByName('isErased').AsBoolean=false then
+          begin
+            AmountPartnerWeight:=AmountPartnerWeight+FieldByName('AmountPartnerWeight').AsFloat;
+            AmountWeight:=AmountWeight+FieldByName('AmountWeight').AsFloat;
+            RealWeight:=RealWeight+FieldByName('RealWeightWeight').AsFloat;
+            WeightTare:=WeightTare+FieldByName('WeightTareTotal').AsFloat;
+          end;
+          //
+          Next;
+       end;
+    finally
+       GotoBookmark(bm);
+       FreeBookmark(bm);
+       EnableControls;
+    end;
+    PanelAmountPartnerWeight.Caption:=FormatFloat(',0.000#'+' кг.',AmountPartnerWeight);
+    PanelAmountWeight.Caption:=FormatFloat(',0.000#'+' кг.',AmountWeight);
+    PanelRealWeight.Caption:=FormatFloat(',0.000#'+' кг.',RealWeight);
+    PanelWeightTare.Caption:=FormatFloat(',0.000#'+' кг.',WeightTare);
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+     if CDS.FieldByName('isErased').AsBoolean=true then
+     with (Sender as TDBGrid).Canvas do
+     begin
+          Font.Color:=clRed;
+          FillRect(Rect);
+          if (Column.Alignment=taLeftJustify)or(Rect.Left>=Rect.Right - LengTh(Column.Field.Text))
+          then TextOut(Rect.Left+2, Rect.Top+2, Column.Field.Text)
+          else TextOut(Rect.Right - TextWidth(Column.Field.Text) - 2, Rect.Top+2 , Column.Field.Text);
+     end;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.EnterGoodsCodeScanerEditChange(Sender: TObject);
+begin
+     EnterGoodsCodeScanerEdit.Text:=trim(EnterGoodsCodeScanerEdit.Text);
+     if Length(EnterGoodsCodeScanerEdit.Text)>=13
+     then
+         if Pos(zc_BarCodePref_Object,EnterGoodsCodeScanerEdit.Text)=1
+         then begin
+                   GetParams_Goods(EnterGoodsCodeScanerEdit.Text);
+                   EnterGoodsCodeScanerEdit.Text:='';
+              end
+         else
+             if Pos(zc_BarCodePref_Movement,EnterGoodsCodeScanerEdit.Text)=1
+             then begin
+                       GetParams_MovementDesc(EnterGoodsCodeScanerEdit.Text);
+                       EnterGoodsCodeScanerEdit.Text:='';
+                  end;
+
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  Caption:='Экспедиция - <'+DMMainScaleForm.gpGet_Scale_User+'>';
+  EnterGoodsCodeScanerEdit.Text:='';
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
-  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'Default');
-  Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'Service');
+  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'Default');
+  Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'Service');
 
-  PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'PriceList');
-  TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'TareCount');
-  TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'TareWeight');
-  ChangePercent_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.ScaleNum,'ChangePercent');
+  PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'PriceList');
+  TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'TareCount');
+  TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'TareWeight');
+  ChangePercentAmount_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'ChangePercentAmount');
   GoodsKind_Array:=     DMMainScaleForm.gpSelect_Scale_GoodsKindWeighing;
   //global Initialize
-  gpInitialize_ParamsMovement;
   Create_ParamsMI(ParamsMI);
   //global Initialize
-  Scale_DB:=TCasDB.Create(self);
-  Scale_BI:=TCasBI.Create(self);
-  Initialize_Scale;
+  Create_Scale;
   //
-  //local Movement Initialize
-  ParamsMovement.ParamByName('MovementNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber');
   //local Movement Initialize
   OperDateEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime);
   //
@@ -236,7 +332,42 @@ begin
        StoredProcName:='gpSelect_Scale_MI';
        OutputType:=otDataSet;
        Params.AddParam('inMovementId', ftInteger, ptInput,0);
-       RefreshDataSet;
+  end;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.WriteParamsMovement;
+begin
+  with ParamsMovement do begin
+
+    if ParamByName('MovementId').AsInteger=0
+    then PanelMovement.Caption:='Документ не сохранен.'
+    else PanelMovement.Caption:='Документ № <'+ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamByName('OperDate_Movement').AsDateTime)+'>';
+
+    PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
+    PanelPriceList.Caption:=ParamByName('PriceListName').asString;
+
+    if ParamByName('calcPartnerId').AsInteger<>0
+    then PanelPartner.Caption:='  ('+IntToStr(ParamByName('calcPartnerCode').asInteger)+') '+ParamByName('calcPartnerName').asString
+    else PanelPartner.Caption:='';
+
+    if ParamByName('ContractId').AsInteger<>0
+    then PanelContract.Caption:=' № '+ParamByName('ContractNumber').asString
+                               +' '+ParamByName('ContractTagName').asString
+                               +'  ('+ParamByName('ContractCode').asString+')'
+                               //+'  ('+ParamByName('PaidKindName').asString+')'
+    else PanelContract.Caption:='';
+
+    if ParamByName('ChangePercent').AsFloat<=0
+    then LabelPartner.Caption:='Контрагент - скидка <'+FloatToStr(-1*ParamByName('ChangePercent').asFloat)+'%>'
+    else LabelPartner.Caption:='Контрагент - наценка <'+FloatToStr(ParamByName('ChangePercent').asFloat)+'%>';
+
+
+    PanelTotalSumm.Caption:=FormatFloat(',0.00##',ParamByName('TotalSumm').asFloat);
+
+    if ParamByName('OrderExternalId').AsInteger<>0
+    then PanelOrderExternal.Caption:='  '+ParamByName('OrderExternalName_master').asString
+    else PanelOrderExternal.Caption:='';
+
   end;
 end;
 //------------------------------------------------------------------------------------------------
@@ -249,14 +380,43 @@ begin
   end;
 end;
 //------------------------------------------------------------------------------------------------
+procedure TMainForm.Create_Scale;
+var i:Integer;
+    number:Integer;
+begin
+  Scale_DB:=TCasDB.Create(self);
+  Scale_BI:=TCasBI.Create(self);
+  SettingMain.IndexScale_old:=-1;
+
+  number:=-1;
+  for i := 0 to Length(Scale_Array)-1 do
+  begin
+    if Scale_Array[i].COMPort>=0
+    then rgScale.Items.Add(Scale_Array[i].ScaleName+' : COM' +IntToStr(Scale_Array[i].COMPort))
+    else rgScale.Items.Add(Scale_Array[i].ScaleName+' : COM?');
+    if Scale_Array[i].COMPort=SettingMain.DefaultCOMPort then number:=i;
+  end;
+  rgScale.ItemIndex:=number;
+end;
+//------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_Scale;
 begin
-     if SettingMain.BI = TRUE
+     //Close prior
+     if SettingMain.IndexScale_old>=0
+     then begin
+               if Scale_Array[SettingMain.IndexScale_old].ScaleType=stBI then Scale_BI.Active := 0;
+               if Scale_Array[SettingMain.IndexScale_old].ScaleType=stDB then Scale_DB.Active := 0;
+          end;
+     MyDelay_two(200);
+
+     ScaleLabel.Caption:='Scale-All Error';
+     //
+     if Scale_Array[rgScale.ItemIndex].ScaleType = stBI
      then
           // !!! SCALE BI !!!
           try
              Scale_BI.Active := 0;
-             Scale_BI.CommPort:=SettingMain.ComPort;
+             Scale_BI.CommPort:='COM' + IntToStr(Scale_Array[rgScale.ItemIndex].ComPort);
              Scale_BI.CommSpeed := 9600;//NEW!!!
              Scale_BI.Active := 1;//NEW!!!
              if Scale_BI.Active=1
@@ -266,11 +426,11 @@ begin
                ScaleLabel.Caption:='BI.Active = Error-ALL';
           end;
 
-     if SettingMain.DB = TRUE
+     if Scale_Array[rgScale.ItemIndex].ScaleType = stDB
      then try
              // !!! SCALE DB !!!
              Scale_DB.Active:=0;
-             Scale_DB.CommPort:=SettingMain.ComPort;
+             Scale_DB.CommPort:='COM' + IntToStr(Scale_Array[rgScale.ItemIndex].ComPort);
              Scale_DB.Active := 1;
              //
              if Scale_BI.Active=1
@@ -282,12 +442,22 @@ begin
 
      //
      PanelWeight_Scale.Caption:='';
+     //
+     SettingMain.IndexScale_old:=rgScale.ItemIndex;
+     //
+     MyDelay_two(500);
 end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.rgScaleClick(Sender: TObject);
+begin
+     Initialize_Scale;
+     ActiveControl:=EnterGoodsCodeScanerEdit;
+end;
+//------------------------------------------------------------------------------------------------
 procedure TMainForm.PanelWeight_ScaleDblClick(Sender: TObject);
 begin
    fGetScale_CurrentWeight;
 end;
-
 //------------------------------------------------------------------------------------------------
 function TMainForm.fGetScale_CurrentWeight:Double;
 begin
@@ -295,9 +465,9 @@ begin
      //Initialize_Scale_DB;
      // считывание веса
      try
-        if SettingMain.BI = TRUE
+        if Scale_Array[rgScale.ItemIndex].ScaleType = stBI
         then Result:=Scale_BI.Weight
-             else if SettingMain.DB = TRUE
+             else if Scale_Array[rgScale.ItemIndex].ScaleType = stDB
                   then Result:=Scale_DB.Weight
                   else Result:=0;
      except Result:=0;end;
@@ -315,8 +485,8 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
-     if Key = VK_F2 then GetParams_MovementDesc;
-     if Key = VK_SPACE then GetParams_Goods;
+     if Key = VK_F2 then GetParams_MovementDesc('');
+     if Key = VK_SPACE then GetParams_Goods('');
      //
      if ShortCut(Key, Shift) = 24659 then
      begin
@@ -325,6 +495,36 @@ begin
           then ShowMessage('Установлен режим отладки')
           else ShowMessage('Снят режим отладки');
      end;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+     RefreshDataSet;
+     WriteParamsMovement;
+     ActiveControl:=EnterGoodsCodeScanerEdit;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.ButtonDeleteItemClick(Sender: TObject);
+begin
+     if CDS.FieldByName('isErased').AsBoolean=false
+     then
+         if MessageDlg('Действительно удалить? ('+CDS.FieldByName('GoodsName').AsString+' '+CDS.FieldByName('GoodsKindName').AsString+') вес=('+CDS.FieldByName('RealWeight').AsString+')'
+                ,mtConfirmation,mbYesNoCancel,0) <> 6
+         then exit
+         else begin
+                   DMMainScaleForm.gpUpdate_Scale_MI_Erased(CDS.FieldByName('MovementItemId').AsInteger,true);
+                   RefreshDataSet;
+                   WriteParamsMovement;
+              end
+     else
+         if MessageDlg('Действительно воостановить? ('+CDS.FieldByName('GoodsName').AsString+' '+CDS.FieldByName('GoodsKindName').AsString+') вес=('+CDS.FieldByName('RealWeight').AsString+')'
+                ,mtConfirmation,mbYesNoCancel,0) <> 6
+         then exit
+         else begin
+                   DMMainScaleForm.gpUpdate_Scale_MI_Erased(CDS.FieldByName('MovementItemId').AsInteger,false);
+                   RefreshDataSet;
+                   WriteParamsMovement;
+              end
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.ButtonExitClick(Sender: TObject);
