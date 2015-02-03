@@ -1,14 +1,21 @@
-﻿-- Function: gpSelectGoods_Movement_Send()
-
+﻿-- Function: gpSelectGoods_Movement()
 DROP FUNCTION IF EXISTS gpSelectGoods_Movement (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelectGoods_Movement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelectGoods_Movement(
-    IN inStartDate      TDateTime , --
-    IN inEndDate        TDateTime , --
-    IN inGoodsKindId    Integer   ,
-    IN inGoodsId        Integer   ,
-    IN inDescSet        TVarChar  ,
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inStartDate          TDateTime , --
+    IN inEndDate            TDateTime , --
+    IN inGoodsKindId        Integer   ,
+    IN inGoodsId            Integer   ,
+
+    IN inAccountGroupId     Integer,    --
+    IN inUnitGroupId        Integer,    --
+    IN inLocationId         Integer,    --
+    IN inInfoMoneyId        Integer,    --
+    IN inPartionGoodsId     Integer,    --
+
+    IN inDescSet            TVarChar  ,
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, DescId Integer, DescName TVarChar
              , AmountSumm TFloat
@@ -138,11 +145,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelectGoods_Movement (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelectGoods_Movement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.02.15                                                       *
  30.01.15                                                       *
 */
 

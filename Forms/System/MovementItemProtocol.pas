@@ -27,7 +27,6 @@ type
     FormParams: TdsdFormParams;
     UserGuides: TdsdGuides;
     clOperDate: TcxGridDBColumn;
-    clProtocolData: TcxGridDBColumn;
     clUserName: TcxGridDBColumn;
     clMovementItemId: TcxGridDBColumn;
     ProtocolDataCDS: TClientDataSet;
@@ -40,6 +39,8 @@ type
     cxGridDBColumn1: TcxGridDBColumn;
     cxGridDBColumn2: TcxGridDBColumn;
     cxGridLevelProtocolData: TcxGridLevel;
+    cxLabel5: TcxLabel;
+    edObject: TcxButtonEdit;
   private
     { Private declarations }
   public

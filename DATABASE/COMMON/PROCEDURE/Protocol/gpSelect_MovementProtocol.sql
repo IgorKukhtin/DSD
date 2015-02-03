@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementProtocol(
     IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime, ProtocolData Text, UserName TVarChar, 
-               InvNumber TVarChar, MovementOperDate TDateTime, MovementDescName TVarChar)
+               InvNumber TVarChar, MovementOperDate TDateTime, MovementDescName TVarChar,
+               isInsert Boolean)
 AS
 $BODY$
 BEGIN
@@ -29,7 +30,8 @@ BEGIN
      Object_User.ValueData,
      Movement.InvNumber, 
      Movement.OperDate, 
-     MovementDesc.ItemName AS MovementDescName
+     MovementDesc.ItemName AS MovementDescName,
+     MovementProtocol.isInsert
   FROM MovementProtocol 
   JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
   JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
@@ -45,7 +47,8 @@ BEGIN
      Object_User.ValueData,
      Movement.InvNumber, 
      Movement.OperDate, 
-     MovementDesc.ItemName AS MovementDescName
+     MovementDesc.ItemName AS MovementDescName,
+     MovementProtocol.isInsert
   FROM MovementProtocol 
   JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
   JOIN Movement ON Movement.Id = MovementProtocol.MovementId

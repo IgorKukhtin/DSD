@@ -2,7 +2,6 @@ inherited MovementProtocolForm: TMovementProtocolForm
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083
   ClientHeight = 323
   ClientWidth = 782
-  AddOnFormData.RefreshAction = nil
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 790
@@ -36,7 +35,13 @@ inherited MovementProtocolForm: TMovementProtocolForm
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 83
+            Width = 85
+          end
+          object colisInsert: TcxGridDBColumn
+            Caption = #1047#1072#1075#1088#1091#1078#1077#1085
+            DataBinding.FieldName = 'isInsert'
+            HeaderAlignmentVert = vaCenter
+            Width = 67
           end
           object colObjectName: TcxGridDBColumn
             Caption = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
@@ -95,6 +100,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
             Caption = #1048#1084#1103' '#1087#1086#1083#1103
             DataBinding.FieldName = 'FieldName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 127
           end
           object cxGridDBColumn2: TcxGridDBColumn
@@ -135,6 +141,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 4
       Width = 121
     end
@@ -146,17 +153,20 @@ inherited MovementProtocolForm: TMovementProtocolForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 121
     end
     object edObject: TcxButtonEdit [5]
       Left = 583
       Top = 29
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 6
       Width = 183
     end
@@ -322,7 +332,13 @@ inherited MovementProtocolForm: TMovementProtocolForm
       item
         Name = 'Id'
         Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
         Component = edObject
+        DataType = ftString
         ParamType = ptInput
       end>
     Left = 352
