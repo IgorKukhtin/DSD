@@ -2,8 +2,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
   ClientHeight = 674
   ClientWidth = 1128
-  ExplicitWidth = 1144
-  ExplicitHeight = 709
+  ExplicitWidth = 1136
+  ExplicitHeight = 708
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -595,6 +595,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True

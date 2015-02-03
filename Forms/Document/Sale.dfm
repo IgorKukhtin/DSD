@@ -1,31 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
-  ClientWidth = 1020
+  ClientWidth = 1063
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1028
+  ExplicitWidth = 1071
   ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
-    Width = 1020
-    Height = 540
-    ExplicitTop = 128
+    Top = 126
+    Width = 1063
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1020
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1016
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1063
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1014
-      ExplicitHeight = 514
+      ExplicitWidth = 1020
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 514
-        ExplicitWidth = 1014
-        ExplicitHeight = 514
+        Width = 1063
+        Height = 518
+        ExplicitWidth = 1020
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -296,7 +294,7 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1063
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1020
@@ -333,7 +331,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -1367,7 +1365,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1511,6 +1509,10 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True
@@ -2753,8 +2755,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 992
-    Top = 80
+    Left = 984
+    Top = 56
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
