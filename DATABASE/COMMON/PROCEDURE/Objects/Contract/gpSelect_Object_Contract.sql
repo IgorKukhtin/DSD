@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_Contract()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Contract (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
@@ -302,7 +301,7 @@ BEGIN
    WHERE ((inIsPeriod = TRUE AND Object_Contract_View.EndDate BETWEEN inStartDate AND inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()) OR inIsPeriod = FALSE)
      AND ((inIsEndDate = TRUE AND Object_Contract_View.EndDate <= inEndDate  AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()) OR inIsEndDate = FALSE)
 
-     AND (Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+     AND (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_30100()) -- Общефирменные + Маркетинг OR Доходы + Продукция
           OR vbIsCommerce = FALSE)
 
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
