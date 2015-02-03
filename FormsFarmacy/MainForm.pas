@@ -102,6 +102,27 @@ type
     N13: TMenuItem;
     N14: TMenuItem;
     N15: TMenuItem;
+    N16: TMenuItem;
+    N17: TMenuItem;
+    N18: TMenuItem;
+    actReturnType: TdsdOpenForm;
+    N19: TMenuItem;
+    N20: TMenuItem;
+    N21: TMenuItem;
+    N22: TMenuItem;
+    N23: TMenuItem;
+    N24: TMenuItem;
+    N25: TMenuItem;
+    N26: TMenuItem;
+    N27: TMenuItem;
+    N28: TMenuItem;
+    N29: TMenuItem;
+    N30: TMenuItem;
+    N31: TMenuItem;
+    N32: TMenuItem;
+    N33: TMenuItem;
+    N34: TMenuItem;
+    actLossDebt: TdsdOpenForm;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

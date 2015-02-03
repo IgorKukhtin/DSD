@@ -7,9 +7,18 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbCount Integer;
+   DECLARE vbLock Boolean;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-     PERFORM Container.* FROM Container INNER JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.ContainerId = Container.Id FOR UPDATE;
+    vbLock := FALSE;
+    WHILE NOT vbLock LOOP
+        BEGIN
+           LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+           vbLock := TRUE;
+        EXCEPTION 
+            WHEN OTHERS THEN
+        END;
+    END LOOP;
 
      -- изменить значение остатка
      UPDATE Container SET Amount = Container.Amount + _tmpMIContainer.Amount

@@ -67,7 +67,6 @@ inherited PriceListLoadForm: TPriceListLoadForm
     end
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     object actOpenPriceList: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -144,6 +143,22 @@ inherited PriceListLoadForm: TPriceListLoadForm
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
       ImageIndex = 27
     end
+    object actDeletePriceListLoad: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spDelete
+      StoredProcList = <
+        item
+          StoredProc = spDelete
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1059#1076#1072#1083#1077#1085#1080#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072
+      Hint = #1059#1076#1072#1083#1077#1085#1080#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072
+      ImageIndex = 2
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -167,6 +182,10 @@ inherited PriceListLoadForm: TPriceListLoadForm
         item
           Visible = True
           ItemName = 'bbOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
         end
         item
           Visible = True
@@ -199,6 +218,10 @@ inherited PriceListLoadForm: TPriceListLoadForm
     end
     object bbLoadPriceList: TdxBarButton
       Action = actLoadPriceList
+      Category = 0
+    end
+    object bbDelete: TdxBarButton
+      Action = actDeletePriceListLoad
       Category = 0
     end
   end
@@ -245,5 +268,21 @@ inherited PriceListLoadForm: TPriceListLoadForm
     PackSize = 1
     Left = 216
     Top = 120
+  end
+  object spDelete: TdsdStoredProc
+    StoredProcName = 'gpDelete_Movement_LoadPriceList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 216
+    Top = 72
   end
 end

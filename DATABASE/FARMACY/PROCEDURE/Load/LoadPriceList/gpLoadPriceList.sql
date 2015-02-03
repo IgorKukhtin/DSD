@@ -22,7 +22,7 @@ BEGIN
      SELECT 
            LoadPriceList.OperDate	 
          , LoadPriceList.JuridicalId 
-         , LoadPriceList.ContractId INTO vbOperDate, vbJuridicalId, vbContractId
+         , COALESCE(LoadPriceList.ContractId, 0) INTO vbOperDate, vbJuridicalId, vbContractId
       FROM LoadPriceList WHERE LoadPriceList.Id = inId;
 
      UPDATE LoadPriceList SET isMoved = true WHERE Id = inId;
@@ -38,7 +38,8 @@ BEGIN
                                     ON MovementLinkObject_Contract.MovementId = Movement.Id
                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
       WHERE Movement.OperDate = vbOperDate AND Movement.DescId = zc_Movement_PriceList()
-        AND MovementLinkObject_Juridical.ObjectId = vbJuridicalId AND COALESCE(MovementLinkObject_Contract.ObjectId, 0) = vbContractId;
+        AND MovementLinkObject_Juridical.ObjectId = vbJuridicalId 
+        AND COALESCE(MovementLinkObject_Contract.ObjectId, 0) = vbContractId;
 
       IF COALESCE(vbPriceListId, 0) = 0 THEN 
          vbPriceListId := gpInsertUpdate_Movement_PriceList(0, '', vbOperDate, vbJuridicalId, vbContractId, inSession);

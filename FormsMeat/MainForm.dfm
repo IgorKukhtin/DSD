@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1430,105 +1430,6 @@ inherited MainForm: TMainForm
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
       Hint = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
       FormName = 'TPriceListForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actInfoMoneyGroup: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
-      Hint = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
-      FormName = 'TInfoMoneyGroupForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actInfoMoneyDestination: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-      Hint = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-      FormName = 'TInfoMoneyDestinationForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actInfoMoney: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-      Hint = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-      FormName = 'TInfoMoneyForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actAccountGroup: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
-      Hint = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
-      FormName = 'TAccountGroupForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actAccountDirection: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
-      Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
-      FormName = 'TAccountDirectionForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actProfitLossGroup: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
-      Hint = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
-      FormName = 'TProfitLossGroupForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actProfitLossDirection: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
-      Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
-      FormName = 'TProfitLossDirectionForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actAccount: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1057#1095#1077#1090#1072
-      Hint = #1057#1095#1077#1090#1072
-      FormName = 'TAccountForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actProfitLoss: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
-      Hint = #1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
-      FormName = 'TProfitLossForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <>

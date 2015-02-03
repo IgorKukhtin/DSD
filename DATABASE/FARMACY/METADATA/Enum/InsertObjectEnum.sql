@@ -278,6 +278,25 @@ BEGIN
      
 END $$;
 
+DO $$
+BEGIN
+
+-- !!!
+-- !!! Баланс: 1-уровень Управленческих Счетов
+-- !!!
+
+-- 20000; "Запасы"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountGroup_20000(), inDescId:= zc_Object_AccountGroup(), inCode:= 20000, inName:= 'Запасы' , inEnumName:= 'zc_Enum_AccountGroup_20000');
+
+-- 70000; "Кредиторы"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountGroup_70000(), inDescId:= zc_Object_AccountGroup(), inCode:= 70000, inName:= 'Кредиторы' , inEnumName:= 'zc_Enum_AccountGroup_70000');
+CREATE OR REPLACE FUNCTION zc_Enum_AccountGroup_70000() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountGroup_70000' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
+END $$;
+
+
+
 
 /*-------------------------------------------------------------------------------*/
 /*

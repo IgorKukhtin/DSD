@@ -593,14 +593,183 @@
 				<Form>BankForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\BankEdit.pas">
-				<Form>BankEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\BankAccountTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CurrencyTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\BankAccount_Object.pas">
+				<Form>BankAccount_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BankEdit.pas">
+				<Form>BankEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Juridical_Object.pas">
+				<Form>Juridical_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Currency.pas">
+				<Form>CurrencyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Currency_Object.pas">
+				<Form>Currency_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CurrencyEdit.pas">
+				<Form>CurrencyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CurrencyValue_Object.pas">
+				<Form>CurrencyValue_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Account.pas">
+				<Form>AccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Account_Object.pas">
+				<Form>Account_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountDirection.pas">
+				<Form>AccountDirectionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountDirection_Object.pas">
+				<Form>AccountDirection_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountDirectionEdit.pas">
+				<Form>AccountDirectionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountEdit.pas">
+				<Form>AccountEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountGroup.pas">
+				<Form>AccountGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountGroup_Object.pas">
+				<Form>AccountGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountGroupEdit.pas">
+				<Form>AccountGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\AccountDirectionTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\AccountGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\AccountTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyDestinationTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoney.pas">
+				<Form>InfoMoneyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoney_Object.pas">
+				<Form>InfoMoney_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestination.pas">
+				<Form>InfoMoneyDestinationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestination_Object.pas">
+				<Form>InfoMoneyDestination_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestinationEdit.pas">
+				<Form>InfoMoneyDestinationEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyEdit.pas">
+				<Form>InfoMoneyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup.pas">
+				<Form>InfoMoneyGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup_Object.pas">
+				<Form>InfoMoneyGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroupEdit.pas">
+				<Form>InfoMoneyGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ProfitLossDirectionTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ProfitLossGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ProfitLossTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLoss.pas">
+				<Form>ProfitLossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLoss_Object.pas">
+				<Form>ProfitLoss_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirection.pas">
+				<Form>ProfitLossDirectionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirection_Object.pas">
+				<Form>ProfitLossDirection_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirectionEdit.pas">
+				<Form>ProfitLossDirectionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossEdit.pas">
+				<Form>ProfitLossEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossGroup.pas">
+				<Form>ProfitLossGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossGroup_Object.pas">
+				<Form>ProfitLossGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossGroupEdit.pas">
+				<Form>ProfitLossGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ReturnTypeTest.pas"/>
+			<DCCReference Include="..\..\Forms\Kind\ReturnType.pas">
+				<Form>ReturnTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\ReturnTypeEdit.pas">
+				<Form>ReturnTypeEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\LossDebtTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\LossDebtMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\LossDebt.pas">
+				<Form>LossDebtForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\LossDebtJournal.pas">
+				<Form>LossDebtJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\MovementItemContainer.pas">
+				<Form>MovementItemContainerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Balance.pas">
+				<Form>Report_BalanceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

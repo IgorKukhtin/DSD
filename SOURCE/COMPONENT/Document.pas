@@ -120,6 +120,9 @@ end;
 procedure TDocument.Notification(AComponent: TComponent; Operation: TOperation);
 begin
   inherited;
+  if csDestroying in ComponentState then
+     exit;
+
   if csDesigning in ComponentState then
     if (Operation = opRemove) then
          if AComponent = FBlobProcedure then
@@ -154,6 +157,9 @@ procedure TDocumentOpenAction.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
+  if csDestroying in ComponentState then
+     exit;
+
   if csDesigning in ComponentState then
     if (Operation = opRemove) then
          if AComponent = FDocument then

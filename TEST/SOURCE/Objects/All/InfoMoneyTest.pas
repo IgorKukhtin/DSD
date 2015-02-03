@@ -19,8 +19,7 @@ type
   end;
 implementation
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB, CarModelTest,
-     InfoMoneyGroupTest, InfoMoneyDestinationTest;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, DB, InfoMoneyGroupTest, InfoMoneyDestinationTest;
 
      {TInfoMoneyTest}
  constructor TInfoMoney.Create;

@@ -20,7 +20,7 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB, CarModelTest;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, DB;
 
      { TProfitLossDirectionTest }
 constructor TProfitLossDirection.Create;

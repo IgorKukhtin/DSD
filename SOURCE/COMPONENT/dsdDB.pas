@@ -189,7 +189,6 @@ end;
 
 procedure TdsdStoredProc.DataSetRefresh;
 var B: TBookMark;
-    OldDateFormat: String;
     FStringStream: TStringStream;
 begin
   if (DataSets.Count > 0) and
@@ -201,7 +200,6 @@ begin
      end;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
-  //   DataSets[0].DataSet.DisableControls;
      try
         if DataSets[0].DataSet is TClientDataSet then begin
            FStringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
@@ -209,7 +207,6 @@ begin
         end;
      finally
        FreeAndNil(FStringStream);
-    //    DataSets[0].DataSet.EnableControls;
      end;
      if Assigned(B) then
      begin
@@ -425,6 +422,7 @@ procedure TdsdStoredProc.MultiDataSetRefresh;
 var B: TBookMark;
     i: integer;
     XMLResult: OleVariant;
+    FStringStream: TStringStream;
 begin
    for I := 0 to DataSets.Count - 1 do
        if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
@@ -434,8 +432,15 @@ begin
     for I := 0 to DataSets.Count - 1 do begin
        if DataSets[i].DataSet.Active then
           B := DataSets[i].DataSet.GetBookmark;
-       if DataSets[i].DataSet is TClientDataSet then
-          TClientDataSet(DataSets[i].DataSet).XMLData := XMLResult[i];
+        if DataSets[i].DataSet is TClientDataSet then begin
+//          TClientDataSet(DataSets[i].DataSet).XMLData := XMLResult[i];
+           FStringStream := TStringStream.Create(XMLResult[i]);
+           try
+              TClientDataSet(DataSets[i].DataSet).LoadFromStream(FStringStream);
+           finally
+             FreeAndNil(FStringStream);
+           end;
+        end;
        if Assigned(B) then
           try
             DataSets[i].DataSet.GotoBookmark(B);
@@ -471,19 +476,21 @@ procedure TdsdStoredProc.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-//  if csDesigning in ComponentState then
-    if (Operation = opRemove) then begin
-         if Assigned(Params) then
-            for i := 0 to Params.Count - 1 do
-               if Params[i].Component = AComponent then
-                  Params[i].Component := nil;
-         if (AComponent is TDataSet) and Assigned(DataSets) then
-            for i := 0 to DataSets.Count - 1 do
-                if DataSets[i].DataSet = AComponent then
-                   DataSets[i].DataSet := nil;
-         if AComponent = DataSet then
-            DataSet := nil;
-    end;
+  if csDestroying in ComponentState then
+     exit;
+  if (Operation = opRemove) then begin
+       if Assigned(Params) then begin
+          for i := 0 to Params.Count - 1 do
+             if Params[i].Component = AComponent then
+                Params[i].Component := nil;
+       end;
+       if (AComponent is TDataSet) and Assigned(DataSets) then
+          for i := 0 to DataSets.Count - 1 do
+              if DataSets[i].DataSet = AComponent then
+                 DataSets[i].DataSet := nil;
+       if AComponent = DataSet then
+          DataSet := nil;
+  end;
 end;
 
 function TdsdStoredProc.ParamByName(const Value: string): TdsdParam;
@@ -911,11 +918,12 @@ procedure TdsdFormParams.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
-    if (Operation = opRemove) and Assigned(Params) then
-       for I := 0 to Params.Count - 1 do
-           if Params[i].Component = AComponent then
-              Params[i].Component := nil;
+  if csDestroying in ComponentState then
+     exit;
+  if (Operation = opRemove) and Assigned(Params) then
+     for I := 0 to Params.Count - 1 do
+         if Params[i].Component = AComponent then
+            Params[i].Component := nil;
 end;
 
 function TdsdFormParams.ParamByName(const Value: string): TdsdParam;

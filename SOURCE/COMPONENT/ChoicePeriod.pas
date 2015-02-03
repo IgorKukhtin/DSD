@@ -224,6 +224,9 @@ procedure TPeriodChoice.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
+  if csDestroying in ComponentState then
+     exit;
+
   if csDesigning in ComponentState then
     if Operation = opRemove then begin
       if AComponent = DateStart then begin

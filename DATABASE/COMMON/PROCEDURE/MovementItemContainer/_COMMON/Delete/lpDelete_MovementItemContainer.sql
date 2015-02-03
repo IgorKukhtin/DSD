@@ -5,12 +5,18 @@
 CREATE OR REPLACE FUNCTION lpDelete_MovementItemContainer (IN inMovementId Integer)
   RETURNS void AS
 $BODY$
+  DECLARE vbLock Boolean;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-     PERFORM Container.*
-     FROM Container
-     WHERE Container.Id IN (SELECT ContainerId FROM MovementItemContainer WHERE MovementId = inMovementId GROUP BY ContainerId)
-     FOR UPDATE;
+    vbLock := FALSE;
+    WHILE NOT vbLock LOOP
+        BEGIN
+           LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+           vbLock := TRUE;
+        EXCEPTION 
+            WHEN OTHERS THEN
+        END;
+    END LOOP;
 
     -- Изменить значение остатка
     UPDATE Container SET Amount = Container.Amount - _tmpMIContainer.Amount
@@ -33,6 +39,7 @@ ALTER FUNCTION lpDelete_MovementItemContainer (Integer) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.02.15                        * add так так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
  24.08.13                                        * add так так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
  29.08.13                                        * 1251Cyr
 */

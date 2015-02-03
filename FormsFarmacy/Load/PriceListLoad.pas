@@ -29,6 +29,9 @@ type
     colIsMoved: TcxGridDBColumn;
     actOneLoadPriceList: TdsdExecStoredProc;
     mactLoadPrice1: TMultiAction;
+    actDeletePriceListLoad: TdsdExecStoredProc;
+    bbDelete: TdxBarButton;
+    spDelete: TdsdStoredProc;
   private
     { Private declarations }
   public

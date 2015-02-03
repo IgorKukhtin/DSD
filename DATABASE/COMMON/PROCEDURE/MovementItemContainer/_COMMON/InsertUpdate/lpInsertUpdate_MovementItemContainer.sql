@@ -23,9 +23,18 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
 )
 AS
 $BODY$
+  DECLARE vbLock Boolean;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-     PERFORM Container.* FROM Container WHERE Id = inContainerId FOR UPDATE;
+    vbLock := FALSE;
+    WHILE NOT vbLock LOOP
+        BEGIN
+           LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+           vbLock := TRUE;
+        EXCEPTION 
+            WHEN OTHERS THEN
+        END;
+    END LOOP;
 
      -- меняем параметр
      IF inParentId = 0 THEN inParentId:= NULL; END IF;

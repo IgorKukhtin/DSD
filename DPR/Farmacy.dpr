@@ -58,7 +58,8 @@ uses
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
-  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm};
+  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
+  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -77,7 +78,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-     Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 end.

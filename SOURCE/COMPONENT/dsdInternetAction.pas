@@ -108,7 +108,6 @@ var EMsg: TIdMessage;
     Stream: TFileStream;
     FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
 begin
-  exit;
   FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   FIdSSLIOHandlerSocketOpenSSL.MaxLineAction := maException;
   FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvTLSv1;
