@@ -111,6 +111,8 @@ begin
      ParamAdd(Params,'ColorGridValue',ftInteger);
      ParamAdd(Params,'OperDate',ftDateTime);
 
+     ParamAdd(Params,'MovementId_save',ftInteger);
+
      ParamAdd(Params,'MovementId',ftInteger);
      ParamAdd(Params,'InvNumber',ftString);
      ParamAdd(Params,'OperDate_Movement',ftDateTime);

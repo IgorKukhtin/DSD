@@ -140,7 +140,7 @@ type
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
 
-    function Save_Movement:Boolean;
+    function Save_Movement_all:Boolean;
     function GetParams_MovementDesc(BarCode: String):Boolean;
     function GetParams_Goods(BarCode: String):Boolean;
     procedure Create_Scale;
@@ -160,7 +160,7 @@ implementation
 {$R *.dfm}
 uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint;
 //------------------------------------------------------------------------------------------------
-function TMainForm.Save_Movement:Boolean;
+function TMainForm.Save_Movement_all:Boolean;
 begin
      Result:=false;
      //
@@ -169,15 +169,12 @@ begin
      if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
      then exit;
 
-     if DMMainScaleForm.gpInsert_Movement then
+     if DMMainScaleForm.gpInsert_Movement_all(ParamsMovement) then
      begin
           //Print
           //Empty
           EmptyValuesParams(ParamsMovement);
      end;
-
-
-
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.GetParams_MovementDesc(BarCode: String):Boolean;
