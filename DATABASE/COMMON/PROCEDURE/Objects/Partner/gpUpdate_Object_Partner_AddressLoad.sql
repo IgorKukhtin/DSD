@@ -47,6 +47,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_AddressLoad(
 $BODY$
    DECLARE vbUserId                Integer;
 
+   DECLARE vbIsCheckUnique         Boolean;
+
    DECLARE vbJuridicalId           Integer;
 
    DECLARE vbRetailId              Integer;
@@ -107,9 +109,13 @@ BEGIN
    THEN
       -- проверка
       IF NOT EXISTS (SELECT Id FROM Object WHERE Id = zc_Enum_PaidKind_SecondForm() AND ValueData = inPaidKindName)
-         OR COALESCE (TRIM (inStreetName), '') = ''
       THEN
          RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Ключ>.', inPartnerName;
+      END IF;
+      -- проверка
+      IF COALESCE (TRIM (inStreetName), '') = ''
+      THEN
+         RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Название (улица, проспект)>.', inPartnerName;
       END IF;
 
       -- проверка ОКПО
@@ -134,7 +140,7 @@ BEGIN
 
    -- проверка
    IF 1=0 AND COALESCE (TRIM (inStreetName), '') = '' THEN
-      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Улица>.', inPartnerName;
+      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Название (улица, проспект)>.', inPartnerName;
    END IF;
 
 
@@ -201,7 +207,7 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
    -- поиск
    vbPersonalId:= (SELECT MAX (PersonalId) FROM Object_Personal_View WHERE isMain = TRUE AND TRIM (PersonalName) = TRIM (inPersonal));
    -- проверка
-   IF COALESCE (vbPersonalId, 0) = 0 AND TRIM (inPersonal) <> '' THEN
+   IF COALESCE (vbPersonalId, 0) = 0 AND TRIM (inPersonal) <> '' AND 1=0 THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение Супервайзера <%> в справочнике <Сотрудники>.', inPartnerName, inPersonal;
    END IF;
 
@@ -211,7 +217,7 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
    -- поиск
    vbPersonalTradeId:= (SELECT MAX (PersonalId) FROM Object_Personal_View WHERE isMain = TRUE AND TRIM (PersonalName) = TRIM (inPersonalTrade));
    -- проверка
-   IF COALESCE (vbPersonalTradeId, 0) = 0 AND TRIM (inPersonalTrade) <> ''  THEN
+   IF COALESCE (vbPersonalTradeId, 0) = 0 AND TRIM (inPersonalTrade) <> '' AND 1=0 THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение Торговый представитель <%> в справочнике <Сотрудники>.', inPartnerName, inPersonalTrade;
    END IF;
 
@@ -308,12 +314,38 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                   WHERE ObjectLink.ChildObjectId = vbJuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical());
      END IF;
 
-     -- сохранили
-     inId:= lpUpdate_Object_Partner_Address( inId                := inId
-                                           , inJuridicalId       := CASE WHEN COALESCE (inId, 0) = 0
-                                                                              THEN vbJuridicalId
-                                                                         ELSE (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
-                                                                    END
+
+   -- сохранили
+   IF COALESCE (inId, 0) = 0 THEN
+   vbIsCheckUnique:= TRUE;
+   inId := lpInsertUpdate_Object_Partner (ioId              := inId
+                                        , inCode            := 0
+                                        , inGLNCode         := ''
+                                        , inPrepareDayCount := 0
+                                        , inDocumentDayCount:= 0
+                                        , inJuridicalId     := vbJuridicalId
+                                        , inRouteId         := NULL
+                                        , inRouteSortingId  := NULL
+                                        , inMemberTakeId    := NULL
+                                        , inPersonalId      := NULL
+                                        , inPersonalTradeId := NULL
+                                        , inAreaId          := NULL
+                                        , inPartnerTagId    := NULL
+           
+                                        , inPriceListId     := NULL
+                                        , inPriceListPromoId:= NULL
+                                        , inStartPromo      := NULL
+                                        , inEndPromo        := NULL
+                                        , inUserId          := vbUserId
+                                         );
+   ELSE
+       vbIsCheckUnique:= FALSE;
+   END IF;
+
+
+    -- сохранили
+    PERFORM lpUpdate_Object_Partner_Address( inId                := inId
+                                           , inJuridicalId       := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
                                            , inShortName         := inShortName
                                            , inCode              := (SELECT ObjectCode FROM Object WHERE Id = inId)
                                            , inRegionName        := inRegionName
@@ -327,10 +359,7 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                            , inHouseNumber       := inHouseNumber
                                            , inCaseNumber        := inCaseNumber  
                                            , inRoomNumber        := inRoomNumber
-                                           , inIsCheckUnique     := CASE WHEN COALESCE (inId, 0) = 0
-                                                                              THEN TRUE
-                                                                         ELSE FALSE
-                                                                    END
+                                           , inIsCheckUnique     := vbIsCheckUnique
                                            , inSession           := inSession
                                            , inUserId            := vbUserId
                                             );
@@ -343,9 +372,15 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
    END IF;
 
    -- сохранили связь с <Сотрудник (супервайзер)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), inId, vbPersonalId);
+   IF vbPersonalId <> 0
+   THEN
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), inId, vbPersonalId);
+   END IF;
    -- сохранили связь с <Сотрудник (торговый)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), inId, vbPersonalTradeId);
+   IF vbPersonalTradeId <> 0
+   THEN
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), inId, vbPersonalTradeId);
+   END IF;
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), inId, vbAreaId);
    -- сохранили связь с <Признак торговой точки>

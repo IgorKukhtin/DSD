@@ -52,7 +52,7 @@ BEGIN
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
-           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
+           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
            , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '***' || Movement.InvNumber END :: TVarChar AS InvNumber_calc
@@ -126,9 +126,9 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            LEFT JOIN ObjectFloat AS ObjectFloat_Partner_PrepareDayCount
-                                  ON ObjectFloat_Partner_PrepareDayCount.ObjectId = MovementLinkObject_From.ObjectId
-                                 AND ObjectFloat_Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
+                                  ON ObjectFloat_Partner_DocumentDayCount.ObjectId = MovementLinkObject_From.ObjectId
+                                 AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id

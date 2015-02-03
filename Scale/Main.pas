@@ -140,6 +140,7 @@ type
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
 
+    function Save_Movement:Boolean;
     function GetParams_MovementDesc(BarCode: String):Boolean;
     function GetParams_Goods(BarCode: String):Boolean;
     procedure Create_Scale;
@@ -159,11 +160,31 @@ implementation
 {$R *.dfm}
 uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint;
 //------------------------------------------------------------------------------------------------
+function TMainForm.Save_Movement:Boolean;
+begin
+     Result:=false;
+     //
+     OperDateEdit.Text:=gpInitialize_OperDate(ParamsMovement);
+     //
+     if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+     then exit;
+
+     if DMMainScaleForm.gpInsert_Movement then
+     begin
+          //Print
+          //Empty
+          EmptyValuesParams(ParamsMovement);
+     end;
+
+
+
+end;
+//------------------------------------------------------------------------------------------------
 function TMainForm.GetParams_MovementDesc(BarCode: String):Boolean;
 begin
      if ParamsMovement.ParamByName('MovementDescId').AsInteger=0
      then ParamsMovement.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber')
-     else if (ParamsMovement.ParamByName('MovementId').AsInteger<>0)and()
+     else if (DMMainScaleForm.gpUpdate_Scale_Movement_check(ParamsMovement)=false)
           then begin
                ShowMessage ('Ошибка.Документ взвешивания № <'+ParamsMovement.ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamsMovement.ParamByName('OperDate_Movement').AsDateTime)+'> не закрыт.'+#10+#13+'Изменение параметров не возможно.');
                Result:=false;
@@ -485,6 +506,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
+     if Key = VK_F5 then Save_Movement;
      if Key = VK_F2 then GetParams_MovementDesc('');
      if Key = VK_SPACE then GetParams_Goods('');
      //
