@@ -4,8 +4,8 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   ClientWidth = 1020
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1028
-  ExplicitHeight = 569
+  ExplicitWidth = 1036
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -780,6 +780,11 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
       end>
     Left = 320
     Top = 224

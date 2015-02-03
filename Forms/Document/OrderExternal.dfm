@@ -301,7 +301,6 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 168
-      ExplicitHeight = 22
       Width = 168
     end
     object cxLabel5: TcxLabel
@@ -336,6 +335,7 @@ inherited OrderExternalForm: TOrderExternalForm
     object edOperDatePartner: TcxDateEdit
       Left = 180
       Top = 63
+      Enabled = False
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
