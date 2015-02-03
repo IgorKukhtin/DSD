@@ -136,6 +136,8 @@ type
     CurrencyPartnerGuides: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbMovementItemProtocol: TdxBarButton;
   private
   public
   end;

@@ -35,7 +35,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 85
+            Width = 58
           end
           object colisInsert: TcxGridDBColumn
             Caption = #1047#1072#1075#1088#1091#1078#1077#1085

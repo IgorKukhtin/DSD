@@ -37,6 +37,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Kind = skSum
               Column = colHeadCount
             end>
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -76,6 +77,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Top = 228
         ExplicitTop = 228
         inherited cxGridDBTableViewChild: TcxGridDBTableView
+          Styles.Content = nil
           object colChildGoodsName: TcxGridDBColumn [1]
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
@@ -105,6 +107,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   inherited DataPanel: TPanel
     Height = 96
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -288,7 +293,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptInput
       end>
     Left = 418
-    Top = 104
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetErased'

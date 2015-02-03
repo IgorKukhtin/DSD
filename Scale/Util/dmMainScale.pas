@@ -25,6 +25,8 @@ type
     function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
 
     function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
+
+    function gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
   end;
 
   function gpInitialize_OperDate(var execParams:TParams):TDateTime;
@@ -113,6 +115,25 @@ begin
     end;
 
     Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
+begin
+    Result:=false;
+    if ParamsMovement.ParamByName('MovementId').AsInteger<>0 then
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_Movement_check';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       //try
+         Execute;
+         Result:=DataSet.FieldByName('isOk').asBoolean;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+       end;}
+    end;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;

@@ -180,7 +180,8 @@ BEGIN
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
 
-      SELECT Movement.Id				                                    AS MovementId
+      SELECT inMovementId AS inMovementId
+           , Movement.Id				                                    AS MovementId
            , Movement.InvNumber				                                AS InvNumber
            , Movement.OperDate				                                AS OperDate
            , 'J1201006'::TVarChar                                           AS CHARCODE

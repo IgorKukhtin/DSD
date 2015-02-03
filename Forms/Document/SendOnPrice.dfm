@@ -2,8 +2,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 668
   ClientWidth = 878
-  ExplicitWidth = 894
-  ExplicitHeight = 703
+  ExplicitWidth = 886
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -588,6 +588,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
           Visible = True
           ItemName = 'bbPrintOut'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True
