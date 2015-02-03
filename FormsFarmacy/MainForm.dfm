@@ -338,8 +338,8 @@ inherited MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1041#1072#1083#1072#1085#1089
-      FormName = 'TBalanceForm'
-      FormNameParam.Value = ''
+      FormName = 'TReport_BalanceForm'
+      FormNameParam.Value = 'TReport_BalanceForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

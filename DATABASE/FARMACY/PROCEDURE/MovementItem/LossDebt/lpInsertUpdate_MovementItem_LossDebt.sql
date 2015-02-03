@@ -26,7 +26,8 @@ BEGIN
                 FROM MovementItem
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.ObjectId = inJuridicalId
-                  AND MovementItem.DescId = zc_MI_Master())
+                  AND MovementItem.DescId = zc_MI_Master()
+                  AND MovementItem.Id <> COALESCE (ioId, 0))
      THEN
          RAISE EXCEPTION 'Ошибка.В документе уже существует <%> .Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId) ;
      END IF;

@@ -144,6 +144,9 @@ inherited LossDebtForm: TLossDebtForm
     inherited edOperDate: TcxDateEdit
       TabOrder = 3
     end
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
     object edJuridicalBasis: TcxButtonEdit
       Left = 380
       Top = 23
@@ -436,6 +439,7 @@ inherited LossDebtForm: TLossDebtForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -449,12 +453,14 @@ inherited LossDebtForm: TLossDebtForm
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
         Name = 'ioAmountDebet'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountDebet'
         DataType = ftFloat
@@ -466,12 +472,31 @@ inherited LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'AmountKredit'
         DataType = ftFloat
+        ParamType = ptInputOutput
       end
       item
+        Name = 'ioSummDebet'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummDebet'
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end
       item
+        Name = 'ioSummKredit'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummKredit'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioIsCalculated'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsCalculated'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
   end
   object GuidesJuridicalBasis: TdsdGuides
