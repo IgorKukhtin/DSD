@@ -488,6 +488,13 @@ begin
   with TSaveDialog.Create(nil) do
   try
     DefaultExt := '*.xml';
+    HeaderDataSet.First;
+
+    while not HeaderDataSet.EOF do begin
+      if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then
+         break;
+      HeaderDataSet.Next;
+    end;
     FileName := FormatDateTime('dd_mm_yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
                 trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml';
     if Directory <> '' then begin
@@ -522,6 +529,13 @@ begin
   ZVIT := NewZVIT;
   ZVIT.TRANSPORT.CREATEDATE := FormatDateTime('dd.mm.yyyy', Now);
   ZVIT.TRANSPORT.VERSION := '3.0';
+
+  while not HeaderDataSet.EOF do begin
+    if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then
+       break;
+    HeaderDataSet.Next;
+  end;
+
   ZVIT.ORG.FIELDS.EDRPOU := HeaderDataSet.FieldByName('OKPO_To').AsString;
 
 
@@ -532,7 +546,7 @@ begin
     //код документу
     CHARCODE := 'J1201205';//HeaderDataSet.FieldByName('CHARCODE').AsString;
     //Id документа
-    DOCID := HeaderDataSet.FieldByName('Id').AsString;
+    DOCID := HeaderDataSet.FieldByName('MovementId').AsString;
   end;
 
   //Код ЄДРПОУ підприємства
@@ -609,6 +623,7 @@ begin
      i := 0;
      DocumentSumm := 0;
      while not EOF do begin
+        if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then begin
          //Дата відвантаження
          CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
          //Причина коригування:
@@ -626,6 +641,7 @@ begin
          CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
          DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
          inc(i);
+        end;
          Next;
      end;
      Close;
@@ -645,6 +661,13 @@ begin
   ZVIT := NewZVIT;
   ZVIT.TRANSPORT.CREATEDATE := FormatDateTime('dd.mm.yyyy', Now);
   ZVIT.TRANSPORT.VERSION := '4.0';
+
+  while not HeaderDataSet.EOF do begin
+    if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then
+       break;
+    HeaderDataSet.Next;
+  end;
+
   ZVIT.ORG.FIELDS.EDRPOU := HeaderDataSet.FieldByName('OKPO_To').AsString;
 
 
@@ -655,7 +678,7 @@ begin
     //код документу
     CHARCODE := 'J1201206';//HeaderDataSet.FieldByName('CHARCODE').AsString;
     //Id документа
-    DOCID := HeaderDataSet.FieldByName('Id').AsString;
+    DOCID := HeaderDataSet.FieldByName('MovementId').AsString;
   end;
 
   //Код ЄДРПОУ підприємства
@@ -732,6 +755,7 @@ begin
      i := 0;
      DocumentSumm := 0;
      while not EOF do begin
+        if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then begin
          //Дата відвантаження
          CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
          //Причина коригування:
@@ -749,6 +773,7 @@ begin
          CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
          DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
          inc(i);
+        end;
          Next;
      end;
      Close;
@@ -768,6 +793,15 @@ begin
   ZVIT := NewZVIT;
   ZVIT.TRANSPORT.CREATEDATE := FormatDateTime('dd.mm.yyyy', Now);
   ZVIT.TRANSPORT.VERSION := '4.0';
+
+  HeaderDataSet.First;
+
+  while not HeaderDataSet.EOF do begin
+    if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then
+       break;
+    HeaderDataSet.Next;
+  end;
+
   ZVIT.ORG.FIELDS.EDRPOU := HeaderDataSet.FieldByName('OKPO_To').AsString;
 
 
@@ -778,7 +812,7 @@ begin
     // код документу
     CHARCODE := 'J1201207';//HeaderDataSet.FieldByName('CHARCODE').AsString;
     // Id документа
-    DOCID := HeaderDataSet.FieldByName('Id').AsString;
+    DOCID := HeaderDataSet.FieldByName('MovementId').AsString;
   end;
 
   // Код ЄДРПОУ підприємства
@@ -856,31 +890,33 @@ begin
   //Сума коригування податкового зобов'язання та податкового кредиту
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A2_9', ReplaceStr(FormatFloat('0.00', - HeaderDataSet.FieldByName('TotalSummVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
-  with ItemsDataSet do begin
+  with HeaderDataSet do begin
      First;
      i := 0;
      DocumentSumm := 0;
      while not EOF do begin
-         //Дата відвантаження
-         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
-         //Причина коригування:
-         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', 'повернення');
-         //Номенклатура поставки товарів
-         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
-         //Одиниця виміру товару
-         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
-         //Код одиниці виміру товару
-         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A41', FieldByName('MeasureCode').AsString);
-         //Коригування кількості (зміна кількості, об'єму, обсягу)
-         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.00', - FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
-         //Коригування кількості  (ціна постачання одиниці товару\послуги):
-         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
+        if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then begin
+           //Дата відвантаження
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A1', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
+           //Причина коригування:
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', 'повернення');
+           //Номенклатура поставки товарів
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
+           //Одиниця виміру товару
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
+           //Код одиниці виміру товару
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A41', FieldByName('MeasureCode').AsString);
+           //Коригування кількості (зміна кількості, об'єму, обсягу)
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A5', ReplaceStr(FormatFloat('0.00', - FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           //Коригування кількості  (ціна постачання одиниці товару\послуги):
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
-         //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
-         CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
-         DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
-         inc(i);
-         Next;
+           //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           DocumentSumm := DocumentSumm + FieldByName('AmountSumm').AsFloat;
+           inc(i);
+        end;
+        Next;
      end;
      Close;
   end;

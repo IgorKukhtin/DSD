@@ -284,7 +284,8 @@ procedure TdsdGuides.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) then begin
       if Assigned(Params) then
          for i := 0 to Params.Count - 1 do
@@ -375,7 +376,8 @@ procedure TGuidesFiller.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) then begin
       if (AComponent is TdsdGuides) and Assigned(GuidesList) then
          for i := 0 to GuidesList.Count - 1 do
@@ -619,7 +621,8 @@ procedure TCustomGuides.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) then begin
       if (AComponent = FLookupControl) then
          FLookupControl := nil;

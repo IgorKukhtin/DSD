@@ -19,8 +19,7 @@ type
   end;
 implementation
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB, CarModelTest,
-     ProfitLossDirectionTest, ProfitLossGroupTest;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, DB, ProfitLossGroupTest, ProfitLossDirectionTest;
 
 {TProfitLossTest}
  constructor TProfitLoss.Create;
@@ -39,7 +38,7 @@ var
  // InfoMoneyId: Integer;
 begin
   ProfitLossGroupId := TProfitLossGroup.Create.GetDefault;
-  ProfitLossDirectionId:= TProfitLossDirection.Create.GetDefault;;
+  ProfitLossDirectionId:= TProfitLossDirection.Create.GetDefault;
   result := InsertUpdateProfitLoss(0, -3, '”правленческие счет 1', ProfitLossGroupId, ProfitLossDirectionId, 1, 1);
   inherited;
 end;

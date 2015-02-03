@@ -177,8 +177,8 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -289,47 +289,47 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'JuridicalCode'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Code'
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName_all'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
         end
         item
           Name = 'OKPO'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'OKPO'
           DataType = ftString
         end
@@ -370,11 +370,11 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
     Top = 184
   end
   object GridDS: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 272
     Top = 88
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     PacketRecords = 0
     Params = <>
@@ -383,10 +383,10 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
   end
   object GridStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Juridical'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     PackSize = 1

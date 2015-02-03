@@ -418,7 +418,7 @@
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

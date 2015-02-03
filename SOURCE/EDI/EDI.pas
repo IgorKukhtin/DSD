@@ -503,17 +503,20 @@ begin
     HeaderDataSet.Next;
   end;
 
-  i := 1;
-  HeaderDataSet.First;
-  while not HeaderDataSet.Eof do
-  begin
-    with DECLAR.DECLARBODY.RXXXXG105_2S.Add do
+
+  if C_DOC_VER = '7' then begin
+    i := 1;
+    HeaderDataSet.First;
+    while not HeaderDataSet.Eof do
     begin
-      ROWNUM := IntToStr(i);
-      NodeValue := HeaderDataSet.FieldByName('MeasureCode').asString;
+      with DECLAR.DECLARBODY.RXXXXG105_2S.Add do
+      begin
+        ROWNUM := IntToStr(i);
+        NodeValue := HeaderDataSet.FieldByName('MeasureCode').asString;
+      end;
+      inc(i);
+      HeaderDataSet.Next;
     end;
-    inc(i);
-    HeaderDataSet.Next;
   end;
 
   i := 1;

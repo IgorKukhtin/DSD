@@ -19,8 +19,7 @@ type
 
 implementation
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB, CarModelTest,
-     ProfitLossDirectionTest, ProfitLossGroupTest;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, DB;
 
 { TInfoMoneyGroupTest }
 constructor TInfoMoneyGroup.Create;

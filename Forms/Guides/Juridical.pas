@@ -53,7 +53,7 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     GridDS: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterCDS: TClientDataSet;
     GridStoredProc: TdsdStoredProc;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;

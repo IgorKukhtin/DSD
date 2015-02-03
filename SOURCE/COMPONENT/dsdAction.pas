@@ -692,7 +692,8 @@ var
   i: Integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and Assigned(StoredProcList) then
     begin
       if AComponent is TdsdStoredProc then
@@ -802,7 +803,8 @@ var
   i: Integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and Assigned(FParams) then
       for i := 0 to GuiParams.Count - 1 do
         if GuiParams[i].Component = AComponent then
@@ -903,7 +905,8 @@ procedure TdsdInsertUpdateAction.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and (AComponent = DataSource) then
       DataSource := nil;
 end;
@@ -998,7 +1001,8 @@ procedure TdsdUpdateErased.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and (AComponent = DataSource) then
       DataSource := nil;
 end;
@@ -1092,7 +1096,8 @@ var
   i: Integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) then
     begin
       if Assigned(Params) then
@@ -1326,12 +1331,12 @@ procedure TExportGrid.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then begin
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and (AComponent = FGrid) then
        FGrid := nil;
     if (Operation = opRemove) and (AComponent = FColumnNameDataSet) then
        FColumnNameDataSet := nil;
-  end;
 end;
 
 procedure TExportGrid.SetGrid(const Value: TcxControl);
@@ -1516,7 +1521,8 @@ var
   i: Integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and Assigned(Params) then
       for i := 0 to Params.Count - 1 do
         if Params[i].Component = AComponent then
@@ -1558,7 +1564,8 @@ procedure TdsdInsertUpdateGuides.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and (FInsertUpdateAction = AComponent) then
       FInsertUpdateAction := nil
 end;
@@ -1678,8 +1685,9 @@ procedure TdsdCustomAction.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then
-    if (Operation = opRemove) and (AComponent = TabSheet) then
+  if csDestroying in ComponentState then
+     exit;
+  if (Operation = opRemove) and (AComponent = TabSheet) then
       TabSheet := nil;
   if (Operation = opRemove) and (AComponent = ActiveControl) then
       ActiveControl := nil;
@@ -1821,13 +1829,12 @@ end;
 procedure TDSAction.Notification(AComponent: TComponent; Operation: TOperation);
 begin
   inherited;
-  if (Operation = opRemove) then
-  begin
+  if csDestroying in ComponentState then
+     exit;
     if AComponent = FView then
       FView := nil;
     if AComponent = FAction then
       FAction := nil;
-  end;
 end;
 
 constructor TOpenChoiceForm.Create(AOwner: TComponent);
@@ -1908,7 +1915,8 @@ procedure TChangeGuidesStatus.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and (AComponent = FGuides) then
       FGuides := nil;
 end;
@@ -2045,7 +2053,8 @@ var
   i: Integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and Assigned(ActionList) then
       if AComponent is TCustomAction then
         for i := 0 to ActionList.Count - 1 do
@@ -2184,7 +2193,8 @@ procedure TExecServerStoredProc.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) and (MasterProcedure = AComponent) then
       MasterProcedure := nil
 end;

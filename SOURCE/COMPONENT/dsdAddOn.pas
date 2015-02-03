@@ -479,10 +479,10 @@ procedure TdsdDBTreeAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then begin
-    if (Operation = opRemove) and (AComponent = DBTreeList) then
-       DBTreeList := nil;
-  end;
+  if csDestroying in ComponentState then
+     exit;
+  if (Operation = opRemove) and (AComponent = DBTreeList) then
+     DBTreeList := nil;
 end;
 
 procedure TdsdDBTreeAddOn.onColumnHeaderClick(Sender: TcxCustomTreeList;
@@ -1404,7 +1404,8 @@ procedure TCustomDBControlAddOn.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDestroying in ComponentState then
+     exit;
     if (Operation = opRemove) then begin
       if AComponent is TCustomAction then begin
          for i := 0 to ActionItemList.Count - 1 do
@@ -1484,6 +1485,8 @@ procedure TRefreshDispatcher.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
+  if csDestroying in ComponentState then
+     exit;
   if csDesigning in ComponentState then
     if (Operation = opRemove) then begin
       if AComponent = FRefreshAction then
@@ -1591,6 +1594,9 @@ procedure TExecuteDialog.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
+  if csDestroying in ComponentState then
+     exit;
+
   if csDesigning in ComponentState then
      if (Operation = opRemove) and (AComponent = FRefreshDispatcher) then
         FRefreshDispatcher := nil;
@@ -1631,6 +1637,9 @@ procedure TCrossDBViewAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
+  if csDestroying in ComponentState then
+     exit;
+
   if csDesigning in ComponentState then
      if Operation = opRemove then begin
         if AComponent = HeaderDataSet then
@@ -1821,6 +1830,9 @@ procedure TPivotAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
+  if csDestroying in ComponentState then
+     exit;
+
   if csDesigning in ComponentState then
      if Operation = opRemove then begin
         if AComponent = PivotGrid then

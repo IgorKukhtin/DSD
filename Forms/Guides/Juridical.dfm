@@ -30,7 +30,6 @@ object JuridicalForm: TJuridicalForm
     Height = 379
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 644
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -287,8 +286,8 @@ object JuridicalForm: TJuridicalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -457,7 +456,7 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
@@ -509,13 +508,13 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'RetailId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'RetailName'
           DataType = ftString
         end>
@@ -532,13 +531,13 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'RetailReportId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'RetailReportName'
           DataType = ftString
         end>
@@ -555,13 +554,13 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
         end>
@@ -578,13 +577,13 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'PriceListId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'PriceListName'
           DataType = ftString
         end>
@@ -597,27 +596,27 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end>
@@ -656,13 +655,13 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'JuridicalGroupId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'JuridicalGroupName'
           DataType = ftString
         end>
@@ -674,11 +673,11 @@ object JuridicalForm: TJuridicalForm
     Top = 184
   end
   object GridDS: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 272
     Top = 88
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     PacketRecords = 0
     Params = <>
@@ -687,10 +686,10 @@ object JuridicalForm: TJuridicalForm
   end
   object GridStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Juridical'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     PackSize = 1
@@ -705,7 +704,7 @@ object JuridicalForm: TJuridicalForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -749,49 +748,49 @@ object JuridicalForm: TJuridicalForm
       item
         Name = 'ioId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inJuridicalGroupId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'JuridicalGroupId'
         ParamType = ptInput
       end
       item
         Name = 'inRetailId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'RetailId'
         ParamType = ptInput
       end
       item
         Name = 'inRetailReportId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'RetailReportId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PriceListId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListPromoId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PriceListPromoId'
         ParamType = ptInput
       end
       item
         Name = 'inStartPromo'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'StartPromo'
         DataType = ftDateTime
         ParamType = ptInput
@@ -799,7 +798,7 @@ object JuridicalForm: TJuridicalForm
       item
         Name = 'inEndPromo'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'EndPromo'
         DataType = ftDateTime
         ParamType = ptInput

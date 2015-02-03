@@ -78,6 +78,9 @@ procedure TdsdXMLTransform.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
+  if csDestroying in ComponentState then
+     exit;
+
   if (Operation = opRemove) and (AComponent = DataSource) then
       DataSource := nil;
   if (Operation = opRemove) and (AComponent = DataSet) then

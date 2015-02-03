@@ -88,6 +88,9 @@ procedure TDefaultKey.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
+  if csDestroying in ComponentState then
+     exit;
+
   if csDesigning in ComponentState then
     if (Operation = opRemove) and Assigned(Params) then
        for I := 0 to Params.Count - 1 do

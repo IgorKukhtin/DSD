@@ -3,7 +3,7 @@ inherited ContractEditForm: TContractEditForm
   ClientHeight = 566
   ClientWidth = 911
   ExplicitWidth = 917
-  ExplicitHeight = 598
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -266,7 +266,6 @@ inherited ContractEditForm: TContractEditForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitHeight = 567
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -404,7 +403,6 @@ inherited ContractEditForm: TContractEditForm
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
-      ExplicitHeight = 317
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -577,7 +575,7 @@ inherited ContractEditForm: TContractEditForm
     Left = 222
     Top = 38
     Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
-    TabOrder = 54
+    TabOrder = 53
     Width = 108
   end
   object cxLabel22: TcxLabel [52]
@@ -588,7 +586,7 @@ inherited ContractEditForm: TContractEditForm
   object edGLNCode: TcxTextEdit [53]
     Left = 184
     Top = 423
-    TabOrder = 57
+    TabOrder = 56
     Width = 160
   end
   object cxLabel23: TcxLabel [54]
@@ -1393,7 +1391,7 @@ inherited ContractEditForm: TContractEditForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

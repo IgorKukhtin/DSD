@@ -19,15 +19,13 @@ object UserForm: TUserForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 315
-    Height = 329
+    Height = 331
     Align = alLeft
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 331
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -80,22 +78,18 @@ object UserForm: TUserForm
   end
   object cxSplitter: TcxSplitter
     Left = 315
-    Top = 28
+    Top = 26
     Width = 2
-    Height = 329
+    Height = 331
     Control = cxGrid
-    ExplicitTop = 26
-    ExplicitHeight = 331
   end
   object Panel: TPanel
     Left = 317
-    Top = 28
+    Top = 26
     Width = 478
-    Height = 329
+    Height = 331
     Align = alClient
     TabOrder = 2
-    ExplicitTop = 26
-    ExplicitHeight = 331
     object RoleGrid: TcxGrid
       Left = 1
       Top = 1
@@ -258,8 +252,8 @@ object UserForm: TUserForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -277,7 +271,7 @@ object UserForm: TUserForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -402,7 +396,7 @@ object UserForm: TUserForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TUserEditForm'
-      FormNameParam.Value = ''
+      FormNameParam.Value = 'TUserEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -427,6 +421,7 @@ object UserForm: TUserForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -483,12 +478,14 @@ object UserForm: TUserForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -517,11 +514,13 @@ object UserForm: TUserForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = RoleCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = RoleCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -537,11 +536,13 @@ object UserForm: TUserForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = PeriodCloseCDS
           ComponentItem = 'RoleId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = PeriodCloseCDS
           ComponentItem = 'RoleName'
           DataType = ftString
@@ -557,11 +558,13 @@ object UserForm: TUserForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = PeriodCloseCDS
           ComponentItem = 'UnitId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = PeriodCloseCDS
           ComponentItem = 'UnitName'
           DataType = ftString
@@ -587,6 +590,7 @@ object UserForm: TUserForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 56
     Top = 104
   end
@@ -625,10 +629,12 @@ object UserForm: TUserForm
     Params = <
       item
         Name = 'inobjectid'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 72
     Top = 120
   end
@@ -657,6 +663,7 @@ object UserForm: TUserForm
         DataSet = RoleCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 528
     Top = 40
   end
@@ -667,22 +674,26 @@ object UserForm: TUserForm
     Params = <
       item
         Name = 'ioid'
+        Value = Null
         Component = RoleCDS
         ComponentItem = 'UserRoleId'
         ParamType = ptInputOutput
       end
       item
         Name = 'inuserid'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inroleid'
+        Value = Null
         Component = RoleCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 520
     Top = 88
   end
@@ -738,6 +749,7 @@ object UserForm: TUserForm
         DataSet = PeriodCloseCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 528
     Top = 240
   end
@@ -748,34 +760,40 @@ object UserForm: TUserForm
     Params = <
       item
         Name = 'ioid'
+        Value = Null
         Component = PeriodCloseCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inuserid'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inroleid'
+        Value = Null
         Component = PeriodCloseCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
       end
       item
         Name = 'inunitid'
+        Value = Null
         Component = PeriodCloseCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
       end
       item
         Name = 'inperiod'
+        Value = Null
         Component = PeriodCloseCDS
         ComponentItem = 'Period'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 576
     Top = 232
   end
