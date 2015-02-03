@@ -1,34 +1,15 @@
 -- Function: gpUpdate_Object_Partner_Address()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_AddressLoad (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar,  TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar);
-
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_AddressLoad (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar,  TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar);
-
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_AddressLoad (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar,  TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_AddressLoad (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                          , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                          , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_AddressLoad(
     IN inId                  Integer   ,    -- ключ объекта <Контрагент> 
-    IN inPartnerName         TVarChar  ,    -- Наименование Контрагента
-    IN inJuridicalName       TVarChar  ,    -- Наименование 
+    IN inPartnerName         TVarChar  ,    -- Наименование
+    IN inJuridicalNameNew    TVarChar  ,    -- Наименование 
     IN inOKPO                TVarChar  ,    -- ОКПО
+    IN inPaidKindName        TVarChar  ,    -- 
     IN inRegionName          TVarChar  ,    -- наименование области
     IN inProvinceName        TVarChar  ,    -- наименование район
     IN inCityName            TVarChar  ,    -- наименование населенный пункт
@@ -66,6 +47,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_AddressLoad(
 $BODY$
    DECLARE vbUserId                Integer;
 
+   DECLARE vbJuridicalId           Integer;
+
    DECLARE vbRetailId              Integer;
    DECLARE vbPersonalId            Integer;
    DECLARE vbPersonalTradeId       Integer;
@@ -81,7 +64,9 @@ BEGIN
    -- игнорируем пустую строчку в Excel
    IF COALESCE (inId, 0) = 0
       AND TRIM (COALESCE (inPartnerName, '')) = ''
+      AND TRIM (COALESCE (inJuridicalNameNew, '')) = ''
       AND TRIM (COALESCE (inOKPO, '')) = ''
+      AND TRIM (COALESCE (inPaidKindName, '')) = ''
       AND TRIM (COALESCE (inRetailName, '')) = ''
       AND TRIM (COALESCE (inRegionName, '')) = ''
       AND TRIM (COALESCE (inProvinceName, '')) = ''
@@ -118,13 +103,35 @@ BEGIN
 
 
    -- проверка
-   IF COALESCE (inId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Ключ>.', inPartnerName;
+   IF COALESCE (inId, 0) = 0
+   THEN
+      -- проверка
+      IF NOT EXISTS (SELECT Id FROM Object WHERE Id = zc_Enum_PaidKind_SecondForm() AND ValueData = inPaidKindName)
+         OR COALESCE (TRIM (inStreetName), '') = ''
+      THEN
+         RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Ключ>.', inPartnerName;
+      END IF;
+
+      -- проверка ОКПО
+      IF CHAR_LENGTH (COALESCE (TRIM (inOKPO), '')) <= 5 THEN
+         RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <ОКПО>.', inPartnerName;
+      END IF;
+       
+      -- поиск по ОКПО
+      vbJuridicalId:= (SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_View WHERE OKPO = TRIM (inOKPO));
+      -- проверка
+      IF COALESCE (vbJuridicalId, 0) = 0 THEN
+         RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено юр.лицо с ОКПО = <%>.', inPartnerName, inOKPO;
+      END IF;
+
    END IF;
+
+
    -- проверка
-   IF NOT EXISTS (SELECT Id FROM Object WHERE Id = inId AND DescId = zc_Object_Partner()) THEN
+   IF inId > 0 AND NOT EXISTS (SELECT Id FROM Object WHERE Id = inId AND DescId = zc_Object_Partner()) THEN
       RAISE EXCEPTION 'Ошибка.Не найден контрагент <%> со значением ключ <%>.', inPartnerName, inId;
    END IF;
+
    -- проверка
    IF 1=0 AND COALESCE (TRIM (inStreetName), '') = '' THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Улица>.', inPartnerName;
@@ -240,11 +247,73 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение <%> в справочнике <Вид (улица,проспект)>.', inPartnerName, inStreetKindName;
    END IF;
 
+
+
+
+   -- !!!поменяли название Юр.лица!!!
+   IF inId <> 0
+      AND TRIM (inJuridicalNameNew) <> ''
+      AND EXISTS (SELECT Id FROM Object WHERE Id = zc_Enum_PaidKind_SecondForm() AND ValueData = inPaidKindName)
+   THEN
+      -- проверка
+      IF NOT EXISTS (SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_View WHERE JuridicalId = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical()) AND OKPO = TRIM (inOKPO))
+      THEN
+         RAISE EXCEPTION 'Ошибка.Для контрагента <%> нельзя изменть на юр.лицо с ОКПО = <%>.', inPartnerName, inOKPO;
+      END IF;
+
+       -- 
+       PERFORM gpInsertUpdate_Object_Juridical (ioId               = Id
+                                              , inCode             = Code
+                                              , inName             = Name
+                                              , inGLNCode          = GLNCode
+                                              , inisCorporate      = isCorporate
+                                              , inJuridicalGroupId = JuridicalGroupId
+                                              , inGoodsPropertyId  = GoodsPropertyId
+                                              , inRetailId         = RetailId
+                                              , inRetailReportId   = RetailReportId
+                                              , inInfoMoneyId      = InfoMoneyId
+                                              , inPriceListId      = PriceListId
+                                              , inPriceListPromoId = PriceListPromoId
+                                              , inStartPromo       = StartPromo
+                                              , inEndPromo         = EndPromo
+                                              , inSession          = inSession
+                                               )
+       FROM gpGet_Object_Juridical (inId      = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
+                                  , inName    = ''
+                                  , inSession = inSession
+                                   ) AS tmp;
+   END IF;
+
+
    IF COALESCE (TRIM (inStreetName), '') <> ''
    THEN
-   -- сохранили
-   PERFORM  lpUpdate_Object_Partner_Address( inId                := inId
-                                           , inJuridicalId       := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
+     -- поиск по адресу
+     IF COALESCE (inId, 0) = 0
+     THEN
+         inId:= (SELECT ObjectLink.ObjectId
+                 FROM ObjectLink INNER JOIN ObjectString ON ObjectString.ObjectId = ObjectLink.ObjectId AND ObjectString.DescId = zc_ObjectString_Partner_Address() AND ObjectString.ValueData
+                = TRIM (COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = vbCityKindId AND DescId = zc_ObjectString_CityKind_ShortName()), '')
+              || ' ' || COALESCE (inCityName, '')
+              || ' ' || COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = vbStreetKindId AND DescId = zc_ObjectString_StreetKind_ShortName()), '')
+              || ' ' || COALESCE (inStreetName, '')
+                     || CASE WHEN COALESCE (inHouseNumber, '') <> ''
+                                  THEN ' ' || COALESCE (inHouseNumber, '')
+                             ELSE ''
+                        END
+                     || CASE WHEN COALESCE (inCaseNumber, '') <> ''
+                                  THEN ' ' || COALESCE (inCaseNumber, '')
+                             ELSE ''
+                        END
+                       )
+                  WHERE ObjectLink.ChildObjectId = vbJuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical());
+     END IF;
+
+     -- сохранили
+     inId:= lpUpdate_Object_Partner_Address( inId                := inId
+                                           , inJuridicalId       := CASE WHEN COALESCE (inId, 0) = 0
+                                                                              THEN vbJuridicalId
+                                                                         ELSE (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
+                                                                    END
                                            , inShortName         := inShortName
                                            , inCode              := (SELECT ObjectCode FROM Object WHERE Id = inId)
                                            , inRegionName        := inRegionName
@@ -258,15 +327,19 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                            , inHouseNumber       := inHouseNumber
                                            , inCaseNumber        := inCaseNumber  
                                            , inRoomNumber        := inRoomNumber
-                                           , inIsCheckUnique     := FALSE
+                                           , inIsCheckUnique     := CASE WHEN COALESCE (inId, 0) = 0
+                                                                              THEN TRUE
+                                                                         ELSE FALSE
+                                                                    END
                                            , inSession           := inSession
                                            , inUserId            := vbUserId
                                             );
    END IF;
 
-   IF TRIM (inRetailName) <> '' THEN
-   -- сохранили связь !!!Юр лица!!! с <Торговая сеть)>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Juridical_Retail(), (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical()), vbRetailId);
+   IF TRIM (inRetailName) <> ''
+   THEN
+       -- сохранили связь !!!Юр лица!!! с <Торговая сеть)>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Juridical_Retail(), (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical()), vbRetailId);
    END IF;
 
    -- сохранили связь с <Сотрудник (супервайзер)>

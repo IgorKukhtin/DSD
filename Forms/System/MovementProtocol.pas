@@ -12,13 +12,13 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxButtonEdit, dsdGuides, cxMemo, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus;
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus,
+  cxSplitter, dsdXMLTransform;
 
 type
   TMovementProtocolForm = class(TAncestorReportForm)
     colDate: TcxGridDBColumn;
     colUserName: TcxGridDBColumn;
-    colProtocolData: TcxGridDBColumn;
     colObjectName: TcxGridDBColumn;
     edUser: TcxButtonEdit;
     edMovementDesc: TcxButtonEdit;
@@ -30,6 +30,18 @@ type
     cxLabel5: TcxLabel;
     colObjectTypeName: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    dsdXMLTransform: TdsdXMLTransform;
+    cxGridProtocolData: TcxGrid;
+    cxGridViewProtocolData: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    cxGridDBColumn2: TcxGridDBColumn;
+    cxGridLevelProtocolData: TcxGridLevel;
+    cxSplitter: TcxSplitter;
+    ProtocolDataCDS: TClientDataSet;
+    ProtocolDataCDSFieldName: TStringField;
+    ProtocolDataCDSFieldValue: TStringField;
+    ProtocolDataDS: TDataSource;
+    colisInsert: TcxGridDBColumn;
   private
     { Private declarations }
   public

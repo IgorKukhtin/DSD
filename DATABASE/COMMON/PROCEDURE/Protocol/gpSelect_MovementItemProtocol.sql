@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemProtocol(
     IN inMovementItemId      Integer,    -- Документ  
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, ProtocolData TVarChar, UserName TVarChar, MovementItemId Integer)
+RETURNS TABLE (OperDate TDateTime, ProtocolData Text, UserName TVarChar, MovementItemId Integer)
 AS
 $BODY$
 BEGIN
@@ -19,10 +19,26 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
+  IF inMovementItemId <> 0 
+  THEN
+
   RETURN QUERY 
   SELECT 
      MovementItemProtocol.OperDate,
-     MovementItemProtocol.ProtocolData::TVarChar,
+     MovementItemProtocol.ProtocolData::Text,
+     Object_User.ValueData AS UserName,
+     MovementItemProtocol.MovementItemId
+  FROM MovementItem
+       JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+       JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+ WHERE MovementItem.Id = inMovementItemId;
+
+  ELSE
+
+  RETURN QUERY 
+  SELECT 
+     MovementItemProtocol.OperDate,
+     MovementItemProtocol.ProtocolData::Text,
      Object_User.ValueData AS UserName,
      MovementItemProtocol.MovementItemId
   FROM MovementItem
@@ -31,8 +47,8 @@ BEGIN
                                  AND (Object_User.Id = inUserId or inUserId = 0)
  WHERE MovementItem.Id = inMovementItemId;
 
---inUserId        Integer,    -- пользователь  
-  --  IN inObjectDescId  Integer,    -- тип объекта
+  END IF;
+
 
 END;
 $BODY$

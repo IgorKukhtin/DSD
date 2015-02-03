@@ -98,6 +98,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -523,6 +524,11 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
       end>
     Left = 320
     Top = 224

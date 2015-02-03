@@ -33,6 +33,7 @@ $BODY$
    DECLARE vbPaidKindId Integer;
    DECLARE vbDiscount_min TFloat;
    DECLARE vbDiscount_max TFloat;
+   DECLARE vbDiscount TFloat;
    DECLARE vbSumaPDV TFloat;
    DECLARE vbMovementDescId Integer;
    DECLARE vbMovementDescId_find Integer;
@@ -73,8 +74,12 @@ BEGIN
                         -- , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END) AS MovementDescId_find
                         , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END AS MovementDescId_find
                         , zfGetPaidKindFrom1CType (Sale1C.VidDoc) AS PaidKindId
-                        , MAX (round (COALESCE (Sale1C.Tax, 0))) AS Discount_min
-                        , MIN (round (COALESCE (Sale1C.Tax, 0))) AS Discount_max
+                        , MAX (round (COALESCE (Sale1C.Tax * 100, 0)) / 100) AS Discount_min
+                        , MIN (round (COALESCE (Sale1C.Tax * 100, 0)) / 100) AS Discount_max
+                        , CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+                                    THEN MAX (round (COALESCE (Sale1C.Tax, 0)))
+                               ELSE MAX (round (COALESCE (Sale1C.Tax * 10, 0))) / 10
+                          END AS Discount
                         , MAX (SumaPDV) AS SumaPDV
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id          AS Partner1CLinkId
@@ -158,7 +163,7 @@ BEGIN
      -- начало цикла по курсору
      LOOP
           -- данные для Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbArticleLossId, vbMovementId, vbMovementDescId, vbMovementDescId_find, vbPaidKindId, vbDiscount_min, vbDiscount_max, vbSumaPDV;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbArticleLossId, vbMovementId, vbMovementDescId, vbMovementDescId_find, vbPaidKindId, vbDiscount_min, vbDiscount_max, vbDiscount, vbSumaPDV;
 
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
@@ -185,8 +190,8 @@ BEGIN
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberOrder := ''
                                            , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE --, inPriceWithVAT := FALSE, inVATPercent := 20
-                                           , inChangePercent := -1 * CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbDiscount_max
-                                                                          WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN vbDiscount_max
+                                           , inChangePercent := -1 * CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbDiscount
+                                                                          WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN vbDiscount
                                                                           ELSE 0
                                                                      END
                                            , inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
@@ -348,8 +353,12 @@ BEGIN
                         , tmpPartner1CLink.ContractId
                         , 0 AS MovementId -- MovementReturn.Id AS MovementId
                         , zfGetPaidKindFrom1CType(Sale1C.VidDoc) AS PaidKindId
-                        , MAX (round (COALESCE (Sale1C.Tax, 0))) AS Discount_min
-                        , MIN (round (COALESCE (Sale1C.Tax, 0))) AS Discount_max
+                        , MAX (round (COALESCE (Sale1C.Tax * 100, 0)) / 100) AS Discount_min
+                        , MIN (round (COALESCE (Sale1C.Tax * 100, 0)) / 100) AS Discount_max
+                        , CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+                                    THEN MAX (round (COALESCE (Sale1C.Tax, 0)))
+                               ELSE MAX (round (COALESCE (Sale1C.Tax * 10, 0))) / 10
+                          END AS Discount
                         , MAX (SumaPDV) AS SumaPDV
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
@@ -412,7 +421,7 @@ BEGIN
      -- начало цикла по курсору
      LOOP
           -- данные для создания Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId, vbDiscount_min, vbDiscount_max, vbSumaPDV;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId, vbDiscount_min, vbDiscount_max, vbDiscount, vbSumaPDV;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
@@ -432,8 +441,8 @@ BEGIN
                                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE
                                                           , inPriceWithVAT := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN TRUE ELSE FALSE END
                                                           , inVATPercent := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN 0 ELSE 20 END
-                                                          , inChangePercent := -1 * CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbDiscount_max
-                                                                                         WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN vbDiscount_max
+                                                          , inChangePercent := -1 * CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbDiscount
+                                                                                         WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN vbDiscount
                                                                                          ELSE 0
                                                                                     END
                                                           , inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId

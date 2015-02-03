@@ -19,6 +19,25 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
+  IF inObjectId <> 0 
+  THEN
+
+  RETURN QUERY 
+  SELECT 
+     ObjectProtocol.OperDate,
+     ObjectProtocol.ProtocolData,
+     Object_User.ValueData AS UserName,
+     Object.ValueData AS ObjectName, 
+     ObjectDesc.ItemName AS ObjectTypeName,
+     ObjectProtocol.isInsert
+  FROM ObjectProtocol 
+       LEFT JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId 
+       LEFT JOIN Object ON Object.Id = ObjectProtocol.ObjectId 
+       LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+ WHERE Object.Id = inObjectId;
+
+  ELSE
+
   RETURN QUERY 
   SELECT 
      ObjectProtocol.OperDate,
@@ -37,8 +56,7 @@ BEGIN
    AND (Object.DescId = inObjectDescId OR inObjectDescId = 0)
    AND ((inObjectId + inUserId + inObjectDescId) <> 0 );
 
---inUserId        Integer,    -- пользователь  
-  --  IN inObjectDescId  Integer,    -- тип объекта
+  END IF;
 
 END;
 $BODY$

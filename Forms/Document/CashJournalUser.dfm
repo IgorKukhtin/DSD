@@ -9,15 +9,12 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Width = 982
     TabOrder = 3
     ExplicitWidth = 982
-    ExplicitHeight = 450
-    ClientRectRight = 978
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 976
-      ExplicitHeight = 444
+      ExplicitWidth = 982
       inherited cxGrid: TcxGrid
-        Width = 976
-        ExplicitWidth = 976
-        ExplicitHeight = 444
+        Width = 982
+        ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -263,6 +260,8 @@ inherited CashJournalUserForm: TCashJournalUserForm
     end
   end
   inherited ActionList: TActionList
+    Left = 207
+    Top = 218
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TCashOperationForm'
       GuiParams = <
@@ -402,7 +401,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -459,6 +458,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
         item
           Visible = True
           ItemName = 'bbReport_CashUser'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True

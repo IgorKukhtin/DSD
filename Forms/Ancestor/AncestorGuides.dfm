@@ -6,6 +6,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
     inherited tsMain: TcxTabSheet
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil

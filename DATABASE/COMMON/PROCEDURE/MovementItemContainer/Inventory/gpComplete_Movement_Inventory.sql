@@ -367,6 +367,8 @@ BEGIN
                    JOIN Container ON Container.Id = tmpContainerLinkObject_From.ContainerId
                                  AND Container.DescId = zc_Container_Summ()
                                  AND Container.ParentId IS NOT NULL
+                   JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container.ObjectId
+                                                           AND View_Account.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
                    LEFT JOIN MovementItemContainer AS MIContainer
                                                    ON MIContainer.Containerid = Container.Id
                                                   AND MIContainer.OperDate > vbOperDate

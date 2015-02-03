@@ -1,8 +1,9 @@
--- Function: gpSelect_Scale_OrderExternal()
+-- Function: gpGet_Scale_OrderExternal()
 
 DROP FUNCTION IF EXISTS gpSelect_Scale_OrderExternal (TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Scale_OrderExternal(
+CREATE OR REPLACE FUNCTION gpGet_Scale_OrderExternal(
     IN inOperDate    TDateTime   ,
     IN inBarCode     TVarChar    ,
     IN inSession     TVarChar      -- сессия пользователя
@@ -24,6 +25,7 @@ RETURNS TABLE (MovementId       Integer
              , PartnerCode_calc Integer
              , PartnerName_calc TVarChar
              , ChangePercent    TFloat
+             , ChangePercentAmount TFloat
 
              , OrderExternalName_master TVarChar
               )
@@ -63,11 +65,12 @@ BEGIN
             , Object_From.Id         AS PartnerId_calc
             , Object_From.ObjectCode AS PartnerCode_calc
             , Object_From.ValueData  AS PartnerName_calc
-            , 1 :: TFloat            AS ChangePercent
+            , MovementFloat_ChangePercent.ValueData AS ChangePercent
+            , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate, -1 * Object_From.Id, inSession) AS tmp WHERE tmp.ContractId = View_Contract_InvNumber.ContractId) AS ChangePercentAmount
 
             , ('№ <' || Movement.InvNumber || '>' || ' от <' || DATE (Movement.OperDate) :: TVarChar || '>') :: TVarChar AS OrderExternalName_master
 
-       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.BarCode :: Integer AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
+       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.MovementId AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
            UNION
              SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
             ) AS Movement
@@ -95,6 +98,9 @@ BEGIN
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -103,7 +109,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Scale_OrderExternal (TDateTime, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Scale_OrderExternal (TDateTime, TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -113,4 +119,4 @@ ALTER FUNCTION gpSelect_Scale_OrderExternal (TDateTime, TVarChar, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_OrderExternal ('01.01.2015', '0000000744830', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_OrderExternal ('01.01.2015', '0000007448300', zfCalc_UserAdmin())

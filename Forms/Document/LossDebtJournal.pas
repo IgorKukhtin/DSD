@@ -81,6 +81,8 @@ type
     clPaidKindName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocol: TdxBarButton;
   private
   public
   end;

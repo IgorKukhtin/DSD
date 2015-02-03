@@ -8,20 +8,20 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1151
-    Height = 590
+    Height = 592
     TabOrder = 3
     ExplicitWidth = 1151
-    ExplicitHeight = 590
-    ClientRectBottom = 586
-    ClientRectRight = 1147
+    ExplicitHeight = 592
+    ClientRectBottom = 592
+    ClientRectRight = 1151
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1145
-      ExplicitHeight = 584
+      ExplicitWidth = 1151
+      ExplicitHeight = 592
       inherited cxGrid: TcxGrid
-        Width = 1145
-        Height = 584
-        ExplicitWidth = 1145
-        ExplicitHeight = 584
+        Width = 1151
+        Height = 592
+        ExplicitWidth = 1151
+        ExplicitHeight = 592
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -50,6 +50,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -199,6 +200,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -215,12 +217,14 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -265,7 +269,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -322,6 +326,14 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True
@@ -394,6 +406,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 280
     Top = 376
   end

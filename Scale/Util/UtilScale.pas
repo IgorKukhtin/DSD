@@ -20,14 +20,23 @@ type
     Value:  string;
   end;
 
+  TScaleType = (stBI, stDB);
+
+  TListItemScale = record
+    Number   : Integer;
+    ScaleType: TScaleType;
+    ScaleName: string;
+    COMPort  : Integer;
+  end;
+
   TArrayList = array of TListItem;
+  TArrayListScale = array of TListItemScale;
 
   TSettingMain = record
-    ScaleNum:         Integer;
-    ComPort:          string;
-    BI:               Boolean;
-    DB:               Boolean;
-    UserId:           Integer;
+    BrancCode :Integer;
+    ScaleCount:Integer;
+    DefaultCOMPort:Integer;
+    IndexScale_old:Integer;
   end;
 
 
@@ -43,6 +52,7 @@ type
   function isEqualFloatValues (Value1,Value2:Double):boolean;
 
   procedure MyDelay(mySec:Integer);
+  procedure MyDelay_two(mySec:Integer);
 
   procedure Create_ParamsMovement(var Params:TParams);
   procedure Create_ParamsMI(var Params:TParams);
@@ -62,13 +72,15 @@ var
   ParamsMovement: TParams;
   ParamsMI: TParams;
 
+  Scale_Array         :TArrayListScale;
+
   Default_Array       :TArrayList;
   Service_Array       :TArrayList;
 
   GoodsKind_Array     :TArrayList;
   TareCount_Array     :TArrayList;
   TareWeight_Array    :TArrayList;
-  ChangePercent_Array :TArrayList;
+  ChangePercentAmount_Array :TArrayList;
   PriceList_Array     :TArrayList;
 
   zc_Movement_Income: Integer;
@@ -86,6 +98,10 @@ var
   zc_Measure_Sh: Integer;
   zc_Measure_Kg: Integer;
 
+  zc_BarCodePref_Object  :String;
+  zc_BarCodePref_Movement:String;
+  zc_BarCodePref_MI      :String;
+
   implementation
 
 {------------------------------------------------------------------------}
@@ -97,8 +113,9 @@ begin
 
      ParamAdd(Params,'MovementId',ftInteger);
      ParamAdd(Params,'InvNumber',ftString);
+     ParamAdd(Params,'OperDate_Movement',ftDateTime);
 
-     ParamAdd(Params,'MovementNumber',ftInteger);
+     ParamAdd(Params,'MovementDescNumber',ftInteger);
 
      ParamAdd(Params,'MovementDescId',ftInteger);
      ParamAdd(Params,'FromId',ftInteger);
@@ -113,6 +130,7 @@ begin
      ParamAdd(Params,'calcPartnerId',ftInteger);
      ParamAdd(Params,'calcPartnerCode',ftInteger);
      ParamAdd(Params,'calcPartnerName',ftString);
+     ParamAdd(Params,'ChangePercentAmount',ftFloat);
      ParamAdd(Params,'ChangePercent',ftFloat);
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
@@ -133,18 +151,26 @@ begin
 
      ParamAdd(Params,'MovementDescName_master',ftString);
 
+     ParamAdd(Params,'TotalSumm',ftFloat);
+
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsMI(var Params:TParams);
 begin
      Params:=nil;
      ParamAdd(Params,'GoodsId',ftInteger);     // Товары
+     ParamAdd(Params,'GoodsCode',ftInteger);     // Товары
+     ParamAdd(Params,'GoodsName',ftString);     // Товары
      ParamAdd(Params,'GoodsKindId',ftInteger); // Виды товаров
+     ParamAdd(Params,'GoodsKindCode',ftInteger); // Виды товаров
+     ParamAdd(Params,'GoodsKindName',ftString);     // Виды товаров
      ParamAdd(Params,'RealWeight_Get',ftFloat);      //
      ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета тары и % скидки для кол-ва)
      ParamAdd(Params,'CountTare',ftFloat);           // Количество тары
      ParamAdd(Params,'WeightTare',ftFloat);          // Вес 1-ой тары
      ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва
+     ParamAdd(Params,'Price',ftFloat);          //
+     ParamAdd(Params,'CountForPrice',ftFloat);  //
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_Value_byName(ArrayList:TArrayList;Name:String):String;
@@ -245,6 +271,29 @@ begin
           Application.ProcessMessages;
           Application.ProcessMessages;
           Application.ProcessMessages;
+     end;
+end;
+{------------------------------------------------------------------------------}
+procedure MyDelay_two(mySec:Integer);
+var
+  Present: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, MSec: Word;
+  calcSec,calcSec2:LongInt;
+begin
+     Present:=Now;
+     DecodeDate(Present, Year, Month, Day);
+     DecodeTime(Present, Hour, Min, Sec, MSec);
+     //calcSec:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     while abs(calcSec-calcSec2)<mySec do
+     begin
+          Present:=Now;
+          DecodeDate(Present, Year, Month, Day);
+          DecodeTime(Present, Hour, Min, Sec, MSec);
+          //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+          calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
      end;
 end;
 {------------------------------------------------------------------------------}

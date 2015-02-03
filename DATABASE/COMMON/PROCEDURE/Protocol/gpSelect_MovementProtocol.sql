@@ -11,8 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementProtocol(
     IN inMovementId      Integer,    -- объект
     IN inSession         TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, ProtocolData TVarChar, UserName TVarChar, 
-               InvNumber TVarChar, MovementOperDate TDateTime, MovementDescName TVarChar)
+RETURNS TABLE (OperDate TDateTime, ProtocolData Text, UserName TVarChar, 
+               InvNumber TVarChar, MovementOperDate TDateTime, MovementDescName TVarChar,
+               isInsert Boolean)
 AS
 $BODY$
 BEGIN
@@ -20,20 +21,42 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
+  IF inMovementId <> 0 
+  THEN
   RETURN QUERY 
   SELECT 
      MovementProtocol.OperDate,
-     MovementProtocol.ProtocolData::TVarChar,
+     MovementProtocol.ProtocolData::Text,
      Object_User.ValueData,
      Movement.InvNumber, 
      Movement.OperDate, 
-     MovementDesc.ItemName AS MovementDescName
+     MovementDesc.ItemName AS MovementDescName,
+     MovementProtocol.isInsert
   FROM MovementProtocol 
   JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
-  JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND (Movement.Id = inMovementId OR 0 = inMovementId)
-   AND (Movement.DescId = inMovementDescId OR inMovementDescId = 0)
+  JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
+  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+ ;
+
+  ELSE
+
+  RETURN QUERY 
+  SELECT 
+     MovementProtocol.OperDate,
+     MovementProtocol.ProtocolData::Text,
+     Object_User.ValueData,
+     Movement.InvNumber, 
+     Movement.OperDate, 
+     MovementDesc.ItemName AS MovementDescName,
+     MovementProtocol.isInsert
+  FROM MovementProtocol 
+  JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
+  JOIN Movement ON Movement.Id = MovementProtocol.MovementId
+              AND (Movement.DescId = inMovementDescId OR inMovementDescId = 0)
   JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
  WHERE MovementProtocol.OperDate BETWEEN inStartDate AND inEndDate;
+
+  END IF;
 
 --inUserId        Integer,    -- пользователь  
   --  IN inObjectDescId  Integer,    -- тип объекта

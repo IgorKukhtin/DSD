@@ -4,8 +4,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     #1086#1074')>'
   ClientHeight = 302
   ClientWidth = 990
-  ExplicitWidth = 1006
-  ExplicitHeight = 337
+  ExplicitWidth = 998
+  ExplicitHeight = 336
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -52,6 +52,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -399,6 +400,14 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True

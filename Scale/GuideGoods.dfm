@@ -3,7 +3,7 @@ object GuideGoodsForm: TGuideGoodsForm
   Top = 242
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
   ClientHeight = 572
-  ClientWidth = 876
+  ClientWidth = 867
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,25 +20,33 @@ object GuideGoodsForm: TGuideGoodsForm
   object GridPanel: TPanel
     Left = 0
     Top = 256
-    Width = 876
+    Width = 867
     Height = 271
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 876
     object DBGrid: TDBGrid
       Left = 0
       Top = 33
-      Width = 876
+      Width = 867
       Height = 238
       Align = alClient
       DataSource = DataSource
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = []
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit]
+      ParentFont = False
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
-      TitleFont.Height = -12
+      TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
+      OnDrawColumnCell = DBGridDrawColumnCell
       OnDblClick = DBGridDblClick
       Columns = <
         item
@@ -66,6 +74,18 @@ object GuideGoodsForm: TGuideGoodsForm
           Title.Font.Style = []
           Width = 300
           Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'GoodsKindName'
+          Title.Caption = #1042#1080#1076
+          Title.Font.Charset = DEFAULT_CHARSET
+          Title.Font.Color = clWindowText
+          Title.Font.Height = -11
+          Title.Font.Name = 'Tahoma'
+          Title.Font.Style = []
+          Width = -1
+          Visible = False
         end
         item
           Expanded = False
@@ -97,7 +117,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Expanded = False
           FieldName = 'Price_Return'
           Title.Alignment = taCenter
-          Title.Caption = #1062#1077#1085#1072' ('#1074#1086#1079#1074#1088')'
+          Title.Caption = #1062#1077#1085#1072'('#1074#1086#1079#1074#1088')'
           Title.Font.Charset = DEFAULT_CHARSET
           Title.Font.Color = clWindowText
           Title.Font.Height = -11
@@ -105,6 +125,42 @@ object GuideGoodsForm: TGuideGoodsForm
           Title.Font.Style = []
           Width = 70
           Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'Amount_Order'
+          Title.Caption = #1047#1072#1103#1074#1082#1072
+          Title.Font.Charset = DEFAULT_CHARSET
+          Title.Font.Color = clWindowText
+          Title.Font.Height = -11
+          Title.Font.Name = 'Tahoma'
+          Title.Font.Style = []
+          Width = -1
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'Amount_Weighing'
+          Title.Caption = #1054#1090#1075#1088#1091#1079#1082#1072
+          Title.Font.Charset = DEFAULT_CHARSET
+          Title.Font.Color = clWindowText
+          Title.Font.Height = -11
+          Title.Font.Name = 'Tahoma'
+          Title.Font.Style = []
+          Width = -1
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'Amount_diff'
+          Title.Caption = #1056#1072#1079#1085#1080#1094#1072
+          Title.Font.Charset = DEFAULT_CHARSET
+          Title.Font.Color = clWindowText
+          Title.Font.Height = -11
+          Title.Font.Name = 'Tahoma'
+          Title.Font.Style = []
+          Width = -1
+          Visible = False
         end
         item
           Expanded = False
@@ -123,11 +179,12 @@ object GuideGoodsForm: TGuideGoodsForm
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 876
+      Width = 867
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 876
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -190,19 +247,21 @@ object GuideGoodsForm: TGuideGoodsForm
   object ParamsPanel: TPanel
     Left = 0
     Top = 0
-    Width = 876
+    Width = 867
     Height = 256
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 876
     object infoPanelTare: TPanel
-      Left = 396
+      Left = 387
       Top = 0
       Width = 230
       Height = 256
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitLeft = 396
       object rgTareWeight: TRadioGroup
         Left = 0
         Top = 82
@@ -272,7 +331,7 @@ object GuideGoodsForm: TGuideGoodsForm
           end
         end
       end
-      object DiscountPanel: TPanel
+      object infoPanelChangePercentAmount: TPanel
         Left = 0
         Top = 171
         Width = 230
@@ -280,7 +339,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 3
-        object rgChangePercent: TRadioGroup
+        object rgChangePercentAmount: TRadioGroup
           Left = 0
           Top = 41
           Width = 230
@@ -291,10 +350,10 @@ object GuideGoodsForm: TGuideGoodsForm
           Columns = 2
           ParentColor = False
           TabOrder = 1
-          OnClick = rgChangePercentClick
-          OnEnter = rgChangePercentClick
+          OnClick = rgChangePercentAmountClick
+          OnEnter = rgChangePercentAmountClick
         end
-        object gbChangePercentCode: TGroupBox
+        object gbChangePercentAmountCode: TGroupBox
           Left = 0
           Top = 0
           Width = 230
@@ -302,17 +361,17 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alTop
           Caption = #1050#1086#1076' '#1089#1082#1080#1076#1082#1080
           TabOrder = 0
-          object EditChangePercentCode: TEdit
+          object EditChangePercentAmountCode: TEdit
             Left = 5
             Top = 17
             Width = 100
             Height = 22
             TabOrder = 0
-            Text = 'EditChangePercentCode'
-            OnChange = EditChangePercentCodeChange
+            Text = 'EditChangePercentAmountCode'
+            OnChange = EditChangePercentAmountCodeChange
             OnEnter = EditTareCountEnter
-            OnExit = EditChangePercentCodeExit
-            OnKeyPress = EditChangePercentCodeKeyPress
+            OnExit = EditChangePercentAmountCodeExit
+            OnKeyPress = EditChangePercentAmountCodeKeyPress
           end
         end
       end
@@ -337,13 +396,14 @@ object GuideGoodsForm: TGuideGoodsForm
       end
     end
     object infoPanelPriceList: TPanel
-      Left = 626
+      Left = 617
       Top = 0
       Width = 250
       Height = 256
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 3
+      ExplicitLeft = 626
       object rgPriceList: TRadioGroup
         Left = 0
         Top = 41
@@ -469,8 +529,8 @@ object GuideGoodsForm: TGuideGoodsForm
           Top = 18
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0'
           TabOrder = 0
           OnEnter = EditTareCountEnter
           OnExit = EditWeightValueExit
@@ -482,15 +542,16 @@ object GuideGoodsForm: TGuideGoodsForm
     object infoPanelGoodsKind: TPanel
       Left = 135
       Top = 0
-      Width = 261
+      Width = 252
       Height = 256
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 261
       object rgGoodsKind: TRadioGroup
         Left = 0
         Top = 41
-        Width = 261
+        Width = 252
         Height = 215
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
@@ -505,15 +566,17 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 1
         OnClick = rgGoodsKindClick
+        ExplicitWidth = 261
       end
       object gbGoodsKindCode: TGroupBox
         Left = 0
         Top = 0
-        Width = 261
+        Width = 252
         Height = 41
         Align = alTop
         Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
         TabOrder = 0
+        ExplicitWidth = 261
         object EditGoodsKindCode: TEdit
           Left = 5
           Top = 17
@@ -532,12 +595,13 @@ object GuideGoodsForm: TGuideGoodsForm
   object SummPanel: TPanel
     Left = 0
     Top = 527
-    Width = 876
+    Width = 867
     Height = 45
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
+    ExplicitWidth = 876
   end
   object DataSource: TDataSource
     DataSet = CDS

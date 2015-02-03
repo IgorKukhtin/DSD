@@ -42,6 +42,7 @@ type
     cxGridDBColumn1: TcxGridDBColumn;
     cxGridDBColumn2: TcxGridDBColumn;
     cxGridLevelProtocolData: TcxGridLevel;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

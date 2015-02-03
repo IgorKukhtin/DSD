@@ -14,6 +14,7 @@ object MainForm: TMainForm
   OldCreateOrder = False
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object GridPanel: TPanel
@@ -38,6 +39,7 @@ object MainForm: TMainForm
       TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
+      OnDrawColumnCell = DBGridDrawColumnCell
       Columns = <
         item
           Expanded = False
@@ -58,6 +60,13 @@ object MainForm: TMainForm
           FieldName = 'GoodsKindName'
           Title.Caption = #1042#1080#1076' '#1091#1087#1072#1082'.'
           Width = 100
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'MeasureName'
+          Title.Caption = #1045#1076'.'#1080#1079#1084'.'
+          Width = 40
           Visible = True
         end
         item
@@ -234,6 +243,7 @@ object MainForm: TMainForm
           FFFFFFFFFFFFFFFFFFFF}
         ParentShowHint = False
         ShowHint = True
+        OnClick = ButtonDeleteItemClick
       end
       object ButtonExit: TSpeedButton
         Left = 489
@@ -271,6 +281,7 @@ object MainForm: TMainForm
           0FF07770B00FFFFF0F077709070FFFFF00777770770000000777}
         ParentShowHint = False
         ShowHint = True
+        OnClick = ButtonRefreshClick
       end
       object ButtonRefreshZakaz: TSpeedButton
         Left = 407
@@ -398,7 +409,6 @@ object MainForm: TMainForm
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
         TabOrder = 0
-        ExplicitLeft = 130
         object PanelRealWeight: TPanel
           Left = 2
           Top = 15
@@ -414,7 +424,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 94
         end
       end
       object gbPanelWeightTare: TGroupBox
@@ -425,8 +434,6 @@ object MainForm: TMainForm
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1090#1072#1088#1099
         TabOrder = 1
-        ExplicitLeft = 372
-        ExplicitTop = 6
         object PanelWeightTare: TPanel
           Left = 2
           Top = 15
@@ -530,29 +537,14 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     Font.Charset = RUSSIAN_CHARSET
     Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'Arial'
+    Font.Height = -12
+    Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
-    object CodeInfoPanel: TPanel
-      Left = 0
-      Top = 71
-      Width = 133
-      Height = 22
-      Align = alTop
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 0
-      Visible = False
-    end
     object EnterGoodsCodeScanerPanel: TPanel
       Left = 0
-      Top = 93
+      Top = 42
       Width = 133
       Height = 41
       Align = alTop
@@ -562,7 +554,7 @@ object MainForm: TMainForm
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 1
+      TabOrder = 0
       object EnterGoodsCodeScanerLabel: TLabel
         Left = 1
         Top = 1
@@ -586,6 +578,7 @@ object MainForm: TMainForm
         Height = 24
         TabOrder = 0
         Text = 'EnterGoodsCodeScanerEdit'
+        OnChange = EnterGoodsCodeScanerEditChange
       end
     end
     object gbOperDate: TGroupBox
@@ -601,7 +594,7 @@ object MainForm: TMainForm
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 1
       object OperDateEdit: TcxDateEdit
         Left = 5
         Top = 16
@@ -622,11 +615,11 @@ object MainForm: TMainForm
     end
     object infoPanel_Scale: TPanel
       Left = 0
-      Top = 42
+      Top = 200
       Width = 133
       Height = 29
       Align = alTop
-      TabOrder = 3
+      TabOrder = 2
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -660,6 +653,18 @@ object MainForm: TMainForm
         TabOrder = 0
         OnDblClick = PanelWeight_ScaleDblClick
       end
+    end
+    object rgScale: TRadioGroup
+      Left = 0
+      Top = 83
+      Width = 133
+      Height = 117
+      Align = alTop
+      Caption = #1042#1077#1089#1099
+      Color = clBtnFace
+      ParentColor = False
+      TabOrder = 3
+      OnClick = rgScaleClick
     end
   end
   object PanelInfoItem: TPanel
@@ -1009,28 +1014,22 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
-    object PanelMessage: TPanel
-      Left = 633
+    object PanelMovement: TPanel
+      Left = 669
       Top = 0
-      Width = 320
+      Width = 284
       Height = 28
-      Align = alClient
+      Align = alRight
       BevelOuter = bvNone
-      Caption = 'PanelMessage'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clRed
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
+      Caption = 'PanelMovement'
       TabOrder = 0
     end
     object PanelMovementDesc: TPanel
       Left = 0
       Top = 0
-      Width = 633
+      Width = 669
       Height = 28
-      Align = alLeft
+      Align = alClient
       BevelOuter = bvNone
       Caption = 'PanelMovementDesc'
       Font.Charset = DEFAULT_CHARSET
@@ -1056,9 +1055,9 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 2
       object infoPanelPartner: TPanel
-        Left = 131
+        Left = 133
         Top = 0
-        Width = 366
+        Width = 364
         Height = 38
         Align = alClient
         BevelInner = bvRaised
@@ -1067,7 +1066,7 @@ object MainForm: TMainForm
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 364
+          Width = 362
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1083,7 +1082,7 @@ object MainForm: TMainForm
         object PanelPartner: TPanel
           Left = 1
           Top = 14
-          Width = 364
+          Width = 362
           Height = 23
           Align = alClient
           Alignment = taLeftJustify
@@ -1101,7 +1100,7 @@ object MainForm: TMainForm
       object infoPanelPriceList: TPanel
         Left = 0
         Top = 0
-        Width = 131
+        Width = 133
         Height = 38
         Align = alLeft
         BevelInner = bvRaised
@@ -1110,7 +1109,7 @@ object MainForm: TMainForm
         object PriceListNameLabel: TLabel
           Left = 1
           Top = 1
-          Width = 129
+          Width = 131
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1126,7 +1125,7 @@ object MainForm: TMainForm
         object PanelPriceList: TPanel
           Left = 1
           Top = 14
-          Width = 129
+          Width = 131
           Height = 23
           Align = alClient
           Alignment = taLeftJustify
@@ -1337,6 +1336,7 @@ object MainForm: TMainForm
   object CDS: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterOpen = CDSAfterOpen
     Left = 304
     Top = 448
   end

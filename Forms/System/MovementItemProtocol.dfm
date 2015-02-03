@@ -1,25 +1,29 @@
 inherited MovementItemProtocolForm: TMovementItemProtocolForm
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'> '
-  ClientHeight = 341
-  ClientWidth = 769
+  ClientHeight = 293
+  ClientWidth = 785
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 777
-  ExplicitHeight = 375
+  ExplicitWidth = 793
+  ExplicitHeight = 327
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
-    Width = 769
+    Top = 83
+    Width = 785
+    Height = 210
     ExplicitTop = 59
-    ExplicitWidth = 769
-    ClientRectRight = 769
+    ExplicitWidth = 751
+    ClientRectBottom = 210
+    ClientRectRight = 785
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 769
+      ExplicitWidth = 751
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 769
-        ExplicitWidth = 769
+        Width = 481
+        Height = 210
+        Align = alLeft
+        ExplicitWidth = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -45,15 +49,59 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 162
+            Width = 169
           end
-          object clProtocolData: TcxGridDBColumn
-            Caption = #1044#1072#1085#1085#1099#1077
-            DataBinding.FieldName = 'ProtocolData'
+        end
+      end
+      object cxGridProtocolData: TcxGrid
+        Left = 481
+        Top = 0
+        Width = 304
+        Height = 210
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        ExplicitWidth = 270
+        ExplicitHeight = 282
+        object cxGridViewProtocolData: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ProtocolDataDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object cxGridDBColumn1: TcxGridDBColumn
+            Caption = #1048#1084#1103' '#1087#1086#1083#1103
+            DataBinding.FieldName = 'FieldName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 388
+            Width = 127
           end
+          object cxGridDBColumn2: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'FieldValue'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 128
+          end
+        end
+        object cxGridLevelProtocolData: TcxGridLevel
+          GridView = cxGridViewProtocolData
         end
       end
     end
@@ -61,12 +109,13 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 769
-    Height = 33
+    Width = 785
+    Height = 57
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 898
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 100
       Top = 5
       EditValue = 42005d
       Properties.ShowTime = False
@@ -74,7 +123,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 312
+      Left = 302
       Top = 5
       EditValue = 42005d
       Properties.ShowTime = False
@@ -87,8 +136,8 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object edUser: TcxButtonEdit
-      Left = 497
-      Top = 5
+      Left = 100
+      Top = 32
       Properties.Buttons = <
         item
           Default = True
@@ -98,14 +147,32 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       Width = 206
     end
     object cxLabel3: TcxLabel
-      Left = 413
-      Top = 6
+      Left = 10
+      Top = 32
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100':'
     end
     object cxLabel2: TcxLabel
-      Left = 201
+      Left = 195
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel5: TcxLabel
+      Left = 329
+      Top = 32
+      Caption = #1054#1073#1098#1077#1082#1090':'
+    end
+    object edObject: TcxButtonEdit
+      Left = 376
+      Top = 32
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 217
     end
   end
   inherited MasterDS: TDataSource
@@ -113,7 +180,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
     Top = 88
   end
   inherited MasterCDS: TClientDataSet
-    Top = 112
+    Top = 144
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemProtocol'
@@ -159,8 +226,8 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 456
-    Top = 256
+    Left = 416
+    Top = 192
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -168,9 +235,16 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = edObject
+        DataType = ftString
+        ParamType = ptInput
       end>
-    Left = 272
-    Top = 216
+    Left = 312
+    Top = 128
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
@@ -194,6 +268,34 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 544
+    Left = 176
+    Top = 32
+  end
+  object ProtocolDataCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 584
+    Top = 119
+    object ProtocolDataCDSFieldName: TStringField
+      FieldName = 'FieldName'
+      Size = 100
+    end
+    object ProtocolDataCDSFieldValue: TStringField
+      FieldName = 'FieldValue'
+      Size = 255
+    end
+  end
+  object ProtocolDataDS: TDataSource
+    DataSet = ProtocolDataCDS
+    Left = 648
+    Top = 119
+  end
+  object dsdXMLTransform: TdsdXMLTransform
+    DataSource = MasterDS
+    XMLDataFieldName = 'ProtocolData'
+    DataSet = ProtocolDataCDS
+    Left = 496
+    Top = 112
   end
 end

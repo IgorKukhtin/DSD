@@ -1,27 +1,31 @@
 inherited ProtocolForm: TProtocolForm
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083
-  ClientHeight = 323
-  ClientWidth = 798
+  ClientHeight = 359
+  ClientWidth = 933
   AddOnFormData.isSingle = False
-  ExplicitWidth = 806
-  ExplicitHeight = 350
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 941
+  ExplicitHeight = 393
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 82
-    Width = 798
-    Height = 241
+    Width = 933
+    Height = 277
     ExplicitTop = 82
-    ExplicitWidth = 782
-    ExplicitHeight = 241
-    ClientRectBottom = 241
-    ClientRectRight = 798
+    ExplicitWidth = 933
+    ExplicitHeight = 277
+    ClientRectBottom = 277
+    ClientRectRight = 933
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 782
+      ExplicitWidth = 933
+      ExplicitHeight = 277
       inherited cxGrid: TcxGrid
         Width = 521
+        Height = 277
         Align = alLeft
         ExplicitWidth = 521
+        ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
@@ -33,6 +37,7 @@ inherited ProtocolForm: TProtocolForm
             Caption = '+'
             DataBinding.FieldName = 'IsInsert'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 30
           end
           object colDate: TcxGridDBColumn
@@ -61,6 +66,7 @@ inherited ProtocolForm: TProtocolForm
             DataBinding.FieldName = 'ObjectTypeName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 118
           end
         end
       end
@@ -68,18 +74,17 @@ inherited ProtocolForm: TProtocolForm
         Left = 521
         Top = 0
         Width = 4
-        Height = 241
+        Height = 277
+        Control = cxGrid
       end
       object cxGridProtocolData: TcxGrid
         Left = 525
         Top = 0
-        Width = 273
-        Height = 241
+        Width = 408
+        Height = 277
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitLeft = 0
-        ExplicitWidth = 521
         object cxGridViewProtocolData: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ProtocolDataDS
@@ -106,6 +111,7 @@ inherited ProtocolForm: TProtocolForm
             Caption = #1048#1084#1103' '#1087#1086#1083#1103
             DataBinding.FieldName = 'FieldName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 127
           end
           object cxGridDBColumn2: TcxGridDBColumn
@@ -123,9 +129,9 @@ inherited ProtocolForm: TProtocolForm
     end
   end
   inherited Panel: TPanel
-    Width = 798
+    Width = 933
     Height = 56
-    ExplicitWidth = 782
+    ExplicitWidth = 933
     ExplicitHeight = 56
     inherited deStart: TcxDateEdit
       EditValue = 41640d
@@ -232,7 +238,7 @@ inherited ProtocolForm: TProtocolForm
         ComponentItem = 'Key'
         ParamType = ptInputOutput
       end>
-    Top = 55
+    Top = 63
   end
   inherited BarManager: TdxBarManager
     Top = 55
@@ -242,9 +248,13 @@ inherited ProtocolForm: TProtocolForm
       26
       0)
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 408
+    Top = 168
+  end
   inherited PeriodChoice: TPeriodChoice
-    Left = 24
-    Top = 96
+    Left = 40
+    Top = 144
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -260,6 +270,8 @@ inherited ProtocolForm: TProtocolForm
       item
         Component = ObjectDescGuides
       end>
+    Left = 128
+    Top = 144
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
@@ -306,8 +318,8 @@ inherited ProtocolForm: TProtocolForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 376
-    Top = 48
+    Left = 384
+    Top = 24
   end
   object ObjectGuides: TdsdGuides
     KeyField = 'Id'
@@ -336,8 +348,8 @@ inherited ProtocolForm: TProtocolForm
         Component = ObjectDescGuides
         ComponentItem = 'Key'
       end>
-    Left = 560
-    Top = 48
+    Left = 616
+    Top = 16
   end
   object dsdXMLTransform: TdsdXMLTransform
     DataSource = MasterDS
@@ -350,8 +362,8 @@ inherited ProtocolForm: TProtocolForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 584
-    Top = 119
+    Left = 592
+    Top = 127
     object ProtocolDataCDSFieldName: TStringField
       FieldName = 'FieldName'
       Size = 100
@@ -363,7 +375,26 @@ inherited ProtocolForm: TProtocolForm
   end
   object ProtocolDataDS: TDataSource
     DataSet = ProtocolDataCDS
-    Left = 616
+    Left = 672
     Top = 119
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = ''
+        Component = ObjectGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = ObjectGuides
+        ComponentItem = 'TextValue'
+        ParamType = ptInput
+      end>
+    Left = 320
+    Top = 136
   end
 end

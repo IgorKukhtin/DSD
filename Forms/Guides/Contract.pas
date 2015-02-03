@@ -147,6 +147,8 @@ type
     bbRecordCP: TdxBarButton;
     colCode: TcxGridDBColumn;
     dsdUpdateDataSet1: TdsdUpdateDataSet;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public

@@ -87,6 +87,8 @@ type
     clPersonalTradeName: TcxGridDBColumn;
     Id: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

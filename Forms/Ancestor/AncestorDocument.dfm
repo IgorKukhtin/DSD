@@ -314,6 +314,14 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
         end>
       isShowModal = False
     end

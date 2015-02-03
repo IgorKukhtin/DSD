@@ -192,6 +192,7 @@ BEGIN
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
+           , ObjectString_FromAddress.ValueData         AS PartnerAddress_From
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
            , OH_JuridicalDetails_From.OKPO              AS OKPO_From
@@ -255,6 +256,10 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_FromAddress
+                                   ON ObjectString_FromAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_From.Id)
+                                  AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
+
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -404,7 +409,7 @@ BEGIN
 
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner_abs
-           , CASE WHEN Movement.DescId <> zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.AmountPartner              AS AmountPartner
+           , CASE WHEN Movement.DescId <> zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * tmpMI.AmountPartner              AS AmountPartner
            , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.Price / tmpMI.CountForPrice AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
@@ -470,7 +475,7 @@ BEGIN
                   INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                              AND MIFloat_Price.ValueData <> 0
+                                              -- AND MIFloat_Price.ValueData <> 0
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()

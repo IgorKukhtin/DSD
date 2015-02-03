@@ -86,6 +86,8 @@ type
     bbAddBonus: TdxBarButton;
     BranchFromName: TcxGridDBColumn;
     BranchToName: TcxGridDBColumn;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocol: TdxBarButton;
   private
   public
   end;

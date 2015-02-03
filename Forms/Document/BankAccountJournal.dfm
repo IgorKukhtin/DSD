@@ -8,20 +8,20 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1028
-    Height = 318
+    Height = 320
     TabOrder = 3
     ExplicitWidth = 1028
-    ExplicitHeight = 318
-    ClientRectBottom = 314
-    ClientRectRight = 1024
+    ExplicitHeight = 320
+    ClientRectBottom = 320
+    ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1022
-      ExplicitHeight = 312
+      ExplicitWidth = 1028
+      ExplicitHeight = 320
       inherited cxGrid: TcxGrid
-        Width = 1022
-        Height = 312
-        ExplicitWidth = 1022
-        ExplicitHeight = 312
+        Width = 1028
+        Height = 320
+        ExplicitWidth = 1028
+        ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -495,7 +495,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -564,6 +564,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True

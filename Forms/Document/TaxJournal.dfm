@@ -2,8 +2,8 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1118
-  ExplicitHeight = 569
+  ExplicitWidth = 1126
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -345,10 +345,16 @@ inherited TaxJournalForm: TTaxJournalForm
           object colChecked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
             DataBinding.FieldName = 'Checked'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 47
+          end
+          object colIsMedoc: TcxGridDBColumn
+            Caption = #1052#1077#1076#1086#1082
+            DataBinding.FieldName = 'IsMedoc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           object colDocument: TcxGridDBColumn
             Caption = #1055#1086#1076#1087#1080#1089#1072#1085
@@ -370,13 +376,6 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 30
-          end
-          object colIsMedoc: TcxGridDBColumn
-            Caption = #1052#1077#1076#1086#1082
-            DataBinding.FieldName = 'IsMedoc'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
           end
         end
       end
@@ -428,7 +427,19 @@ inherited TaxJournalForm: TTaxJournalForm
       ItemsDataSet = PrintItemsCDS
       AskFilePath = False
     end
-    object actChecked: TdsdExecStoredProc [3]
+    object actMedocFalse: TdsdExecStoredProc [2]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMedoc_False
+      StoredProcList = <
+        item
+          StoredProc = spMedoc_False
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1077#1076#1086#1082' - '#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1077#1076#1086#1082' - '#1053#1077#1090'"'
+      ImageIndex = 72
+    end
+    object actChecked: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChecked
@@ -440,7 +451,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actElectron: TdsdExecStoredProc [4]
+    object actElectron: TdsdExecStoredProc [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spElectron
@@ -452,7 +463,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
     end
-    object actDocument: TdsdExecStoredProc [5]
+    object actDocument: TdsdExecStoredProc [6]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spDocument
@@ -490,7 +501,7 @@ inherited TaxJournalForm: TTaxJournalForm
           DataType = ftDateTime
         end>
     end
-    object actInsertMaskMulti: TMultiAction [8]
+    object actInsertMaskMulti: TMultiAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -526,7 +537,7 @@ inherited TaxJournalForm: TTaxJournalForm
           DataType = ftDateTime
         end>
     end
-    object actMovementCheck: TdsdOpenForm [10]
+    object actMovementCheck: TdsdOpenForm [11]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -974,6 +985,14 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMedocFalse'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbDocument'
         end
         item
@@ -1063,6 +1082,10 @@ inherited TaxJournalForm: TTaxJournalForm
     end
     object bbSaveDeclarForMedoc: TdxBarButton
       Action = mactMedocDECLAR
+      Category = 0
+    end
+    object bbMedocFalse: TdxBarButton
+      Action = actMedocFalse
       Category = 0
     end
   end
@@ -1430,5 +1453,28 @@ inherited TaxJournalForm: TTaxJournalForm
     PackSize = 1
     Left = 504
     Top = 160
+  end
+  object spMedoc_False: TdsdStoredProc
+    StoredProcName = 'gpUpdate_IsMedoc_False'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'onisMedoc'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'isMedoc'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 307
   end
 end

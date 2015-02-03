@@ -344,7 +344,7 @@ BEGIN
             INNER JOIN MovementItemFloat AS MIFloat_Price
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                        AND MIFloat_Price.ValueData <> 0
+                                        -- AND MIFloat_Price.ValueData <> 0
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -540,7 +540,7 @@ BEGIN
                 INNER JOIN MovementItemFloat AS MIFloat_Price
                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                            AND MIFloat_Price.ValueData <> 0
+                                            -- AND MIFloat_Price.ValueData <> 0
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -565,7 +565,7 @@ BEGIN
             JOIN MovementItemFloat AS MIFloat_Price
                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                  AND MIFloat_Price.ValueData <> 0
+                                  -- AND MIFloat_Price.ValueData <> 0
        GROUP BY MovementItem.ObjectId
               , MIFloat_Price.ValueData
 

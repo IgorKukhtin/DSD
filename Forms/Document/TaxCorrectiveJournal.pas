@@ -82,6 +82,9 @@ type
     colIsMedoc: TcxGridDBColumn;
     actUpdateIsMedoc: TdsdExecStoredProc;
     DocumentValue: TcxGridDBColumn;
+    spMedoc_False: TdsdStoredProc;
+    actMedocFalse: TdsdExecStoredProc;
+    bbMedocFalse: TdxBarButton;
   private
     { Private declarations }
   public
