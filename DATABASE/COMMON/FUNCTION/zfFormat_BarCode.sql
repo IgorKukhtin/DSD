@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION zfFormat_BarCode(
     IN inBarCodePref TVarChar,
     IN inId          Integer
 )
-RETURNS BIGINT AS
+RETURNS TVarChar AS
 $BODY$
   DECLARE vbValue BIGINT;
 BEGIN
@@ -24,7 +24,7 @@ BEGIN
                      WHEN 8 THEN '0'
                      ELSE ''
                 END
-             || inId :: TVarChar) :: BIGINT;
+             || inId :: TVarChar) :: TVarChar;
      
      RETURN (vbValue);
 

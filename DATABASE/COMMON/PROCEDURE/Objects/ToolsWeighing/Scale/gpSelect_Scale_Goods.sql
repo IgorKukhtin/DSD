@@ -36,10 +36,10 @@ BEGIN
    THEN
     -- Результат
     RETURN QUERY
-       WITH tmpMI_Order AS (SELECT MovementItem.ObjectId                         AS GoodsId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                 , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData) AS Amount
-                                 , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+       WITH tmpMI_Order AS (SELECT MovementItem.ObjectId                                                AS GoodsId
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId
+                                 , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData)      AS Amount
+                                 , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                             FROM MovementItem
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -148,8 +148,9 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-       ORDER BY ObjectString_Goods_GoodsGroupFull.ValueData
-              , Object_Goods.ValueData
+       ORDER BY Object_Goods.ValueData
+              , Object_GoodsKind.ValueData
+              -- , ObjectString_Goods_GoodsGroupFull.ValueData
       ;
    ELSE
     -- Результат
@@ -204,8 +205,8 @@ BEGIN
             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inOperDate - (inDayPrior_PriceReturn :: TVarChar || ' DAY') :: INTERVAL)
                    AS lfObjectHistory_PriceListItem_Return ON lfObjectHistory_PriceListItem_Return.GoodsId = tmpGoods.GoodsId
 
-       ORDER BY ObjectString_Goods_GoodsGroupFull.ValueData
-              , tmpGoods.GoodsName
+       ORDER BY tmpGoods.GoodsName
+              -- , ObjectString_Goods_GoodsGroupFull.ValueData
       ;
    END IF;
 

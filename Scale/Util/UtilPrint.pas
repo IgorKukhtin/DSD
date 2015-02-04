@@ -17,7 +17,7 @@ type
     spGetReporNameBill: TdsdStoredProc;
     spSelectTax_Us: TdsdStoredProc;
     spSelectTax_Client: TdsdStoredProc;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrint_Sale: TdsdStoredProc;
     spSelectPrintInvoice: TdsdStoredProc;
     spSelectPrintTTN: TdsdStoredProc;
     spSelectPrintPack22: TdsdStoredProc;
@@ -42,28 +42,39 @@ type
     actPrint_Pack22: TdsdPrintAction;
     actPrint_Pack21: TdsdPrintAction;
     actPrint_TTN: TdsdPrintAction;
+    actPrint_ReturnIn: TdsdPrintAction;
+    spSelectPrint_ReturnIn: TdsdStoredProc;
+    spSelectPrint_SendOnPrice: TdsdStoredProc;
+    actPrint_SendOnPrice: TdsdPrintAction;
   private
-    { Private declarations }
-  public
   end;
 
-  procedure PrintSale(Id: Integer);
+  procedure Print_Sale (MovementId: Integer);
+  procedure Print_ReturnIn (MovementId: Integer);
+  procedure Print_SendOnPrice (MovementId: Integer);
 
 var
   UtilPrintForm: TUtilPrintForm;
 
 implementation
-
 {$R *.dfm}
-
-procedure PrintSale(Id: Integer);
-var
-  l_Id :Integer;
+//------------------------------------------------------------------------------------------------
+procedure Print_Sale (MovementId: Integer);
 begin
-// showMessage(IntToStr(Id));
-  UtilPrintForm.FormParams.ParamByName('Id').Value := Id;
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.mactPrint_Sale.Execute;
 end;
-
-
+//------------------------------------------------------------------------------------------------
+procedure Print_ReturnIn (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_ReturnIn.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_SendOnPrice (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_SendOnPrice.Execute;
+end;
+//------------------------------------------------------------------------------------------------
 end.

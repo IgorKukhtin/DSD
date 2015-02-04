@@ -103,7 +103,7 @@ type
     fStartWrite:Boolean;
     fEnterGoodsCode:Boolean;
     fEnterGoodsName:Boolean;
-    fEnterGoodsKind:Boolean;
+    fEnterGoodsKindCode:Boolean;
 
     GoodsCode_FilterValue:String;
     GoodsName_FilterValue:String;
@@ -129,7 +129,7 @@ function TGuideGoodsForm.Execute(execParamsMovement:TParams): boolean;
 begin
      fEnterGoodsCode:=false;
      fEnterGoodsName:=false;
-     fEnterGoodsKind:=false;
+     fEnterGoodsKindCode:=false;
 
      fStartWrite:=true;
 
@@ -145,14 +145,14 @@ begin
 
   if ParamsMI.ParamByName('GoodsId').AsInteger<>0
   then begin
-            CDS.Filter:='GoodsId = '+ParamsMI.ParamByName('GoodsId').AsString
-                       +'and GoodsKindId = '+IntToStr(ParamsMI.ParamByName('GoodsKindId').AsInteger)
-                        ;
+            CDS.Filter:='GoodsId = '+ParamsMI.ParamByName('GoodsId').AsString;
+            if execParamsMovement.ParamByName('OrderExternalId').asInteger<>0
+            then CDS.Filter:= CDS.Filter +' and GoodsKindId = '+IntToStr(ParamsMI.ParamByName('GoodsKindId').AsInteger);
+
             CDS.Filtered:=true;
 
             EditGoodsCode.Text:=ParamsMI.ParamByName('GoodsCode').AsString;
             EditGoodsName.Text:='';
-            EditGoodsKindCode.Text:='';
             EditTareWeightEnter.Text:='';
 
             EditWeightValue.Text:='0';
@@ -167,11 +167,14 @@ begin
             InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
             InitializePriceList(ParamsMovement);
 
-            if (CDS.RecordCount=1)
+            EditGoodsKindCode.Text:=ParamsMI.ParamByName('GoodsKindCode').AsString;
+            rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,ParamsMI.ParamByName('GoodsKindCode').AsInteger);
+
+            {if (CDS.RecordCount=1)
             then begin
                       EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
                       ActiveControl:=EditTareCount;
-            end;
+            end;}
 
             if (CDS.RecordCount<>1) then ActiveControl:=EditGoodsCode
             else if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
@@ -194,6 +197,7 @@ begin
             InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
             InitializePriceList(ParamsMovement);
 
+            CDS.Filter:='';
             CDS.Filtered:=false;
             ActiveControl:=EditGoodsCode;
   end;
@@ -289,7 +293,7 @@ procedure TGuideGoodsForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean)
 var
    GoodsKindCode:Integer;
 begin
-     if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
+     if (ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)and(trim(EditGoodsKindCode.Text)<>'')
      then try GoodsKindCode:=StrToInt(EditGoodsKindCode.Text) except GoodsKindCode:=0;end
      else GoodsKindCode:=0;
      //
@@ -300,7 +304,7 @@ begin
         and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
        then Accept:=true else Accept:=false
      else
-         if (fEnterGoodsKind)and(trim(GoodsCode_FilterValue)<>'')
+         if (fEnterGoodsKindCode)and(trim(GoodsCode_FilterValue)<>'')
          then
              if  (GoodsCode_FilterValue=DataSet.FieldByName('GoodsCode').AsString)
               and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
@@ -313,7 +317,7 @@ begin
         and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
        then Accept:=true else Accept:=false
      else
-         if (fEnterGoodsKind)and(trim(GoodsName_FilterValue)<>'')
+         if (fEnterGoodsKindCode)and(trim(GoodsName_FilterValue)<>'')
          then
              if  (pos(AnsiUpperCase(GoodsName_FilterValue),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
               and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
@@ -390,7 +394,10 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeEnter(Sender: TObject);
-begin TEdit(Sender).SelectAll;end;
+begin TEdit(Sender).SelectAll;
+      EditGoodsName.Text:='';
+      CDS.Filtered:=false;
+end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeExit(Sender: TObject);
 var Code_begin:Integer;
@@ -407,7 +414,13 @@ begin
      if (CDS.Filtered=false)and(Length(trim(EditGoodsCode.Text))>0)
      then begin fEnterGoodsCode:=true;CDS.Filtered:=true;end;
 
-     if CDS.RecordCount=0 then ActiveControl:=EditGoodsCode
+     if CDS.RecordCount=0
+     then if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
+          then begin fEnterGoodsCode:=false;
+                     GoodsCode_FilterValue:=EditGoodsCode.Text;
+                     GoodsName_FilterValue:='';
+               end
+          else ActiveControl:=EditGoodsCode
      else begin fEnterGoodsCode:=false;
                 GoodsCode_FilterValue:=EditGoodsCode.Text;
                 GoodsName_FilterValue:='';
@@ -446,6 +459,7 @@ procedure TGuideGoodsForm.EditGoodsNameEnter(Sender: TObject);
 var Code_begin:String;
 begin
   TEdit(Sender).SelectAll;
+  EditGoodsCode.Text:='';
   CDS.Filtered:=false;
 end;
 {------------------------------------------------------------------------------}
@@ -465,7 +479,13 @@ begin
      if (CDS.Filtered=false)and(Length(trim(EditGoodsName.Text))>0)
      then begin fEnterGoodsName:=true;CDS.Filtered:=true;end;
 
-     if CDS.RecordCount=0 then ActiveControl:=EditGoodsName
+     if CDS.RecordCount=0
+     then if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
+          then begin fEnterGoodsName:=false;
+                     GoodsCode_FilterValue:='';
+                     GoodsName_FilterValue:=EditGoodsName.Text;
+               end
+          else ActiveControl:=EditGoodsName
      else begin fEnterGoodsName:=false;
                 GoodsCode_FilterValue:='';
                 GoodsName_FilterValue:=EditGoodsName.Text;
@@ -512,23 +532,40 @@ end;
 procedure TGuideGoodsForm.EditGoodsKindCodeChange(Sender: TObject);
 var Code_begin:Integer;
 begin
-     try Code_begin:=StrToInt(EditGoodsKindCode.Text) except Code_begin:=-1;end;
+     if (fStartWrite=true) then exit;
+
+     if trim(EditGoodsKindCode.Text)<>''
+     then try Code_begin:=StrToInt(EditGoodsKindCode.Text) except Code_begin:=-1;end else Code_begin:=-1;
+
      if (Code_begin<=0)
      then rgGoodsKind.ItemIndex:=-1
      else rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,Code_begin);
+
+    if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
+    then begin CDS.Filtered:=false;CDS.Filtered:=true;end;
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeExit(Sender: TObject);
 begin
-      if (fStartWrite=true)or(ActiveControl=EditGoodsCode) then exit;
-
-      if (rgGoodsKind.ItemIndex=-1)then begin ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');ActiveControl:=EditGoodsKindCode;end
+      if (fStartWrite=true)or(ActiveControl=EditGoodsCode)or(ActiveControl=EditGoodsName)
+      or(ActiveControl=DBGrid)or(ActiveControl=rgGoodsKind)or(ActiveControl.Name='') then exit;
+//Focused
+      if (rgGoodsKind.ItemIndex=-1)
+      then begin ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');
+                 ActiveControl:=EditGoodsKindCode;
+           end
       else
-        if CDS.RecordCount<>1 then
-        begin
-             ShowMessage('Ошибка.Не выбран <Код товара>.');
-             ActiveControl:=EditGoodsCode;
-        end
+        if CDS.RecordCount<>1
+        then if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
+             then begin
+                       ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');
+                       ActiveControl:=EditGoodsKindCode;
+                  end
+             else begin
+                       ShowMessage('Ошибка.Не выбран <Код товара>.');
+                       ActiveControl:=EditGoodsCode;
+                  end
         else if ParamsMI.ParamByName('RealWeight').AsFloat<=0.0001
              then
                   if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
@@ -551,6 +588,8 @@ begin
           EditGoodsKindCode.Text:=IntToStr(GoodsKind_Array[findIndex].Code);
           TEdit(Sender).SelectAll;
      end;
+
+     fEnterGoodsKindCode:=ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.rgGoodsKindClick(Sender: TObject);
@@ -559,14 +598,6 @@ begin
     findIndex:=GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex);
     EditGoodsKindCode.Text:=IntToStr(GoodsKind_Array[findIndex].Code);
     ActiveControl:=EditGoodsKindCode;
-
-    if rgGoodsKind.ItemIndex>=0
-    then fEnterGoodsKind:=ParamsMovement.ParamByName('OrderExternalId').AsInteger=0
-    else fEnterGoodsKind:=false;
-
-    if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
-    then begin CDS.Filtered:=false;CDS.Filtered:=true;end;
-
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareCountEnter(Sender: TObject);
@@ -590,7 +621,7 @@ begin
            if (ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0)and(CDS.RecordCount=1)
            then begin
                      EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
-                     ActiveControl:=EditTareCount;
+                     //ActiveControl:=EditTareCount;
            end;
            exit;
       end;
@@ -791,11 +822,20 @@ procedure TGuideGoodsForm.DBGridDblClick(Sender: TObject);
 begin
      EditGoodsCode.Text:=CDS.FieldByName('GoodsCode').AsString;
      fEnterGoodsCode:=true;
-     EditGoodsCodeChange(EditGoodsCode);
+
+     if ParamsMovement.ParamByName('OrderExternalId').asInteger=0
+     then EditGoodsCodeChange(EditGoodsCode)
+     else begin
+               fEnterGoodsKindCode:=true;
+               EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
+               EditGoodsKindCodeChange(EditGoodsCode);
+          end;
      //
      if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
      then ActiveControl:=EditWeightValue
-     else ActiveControl:=EditGoodsKindCode;
+     else if ParamsMovement.ParamByName('OrderExternalId').asInteger=0
+          then ActiveControl:=EditGoodsKindCode
+          else ActiveControl:=EditTareCount;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.DBGridDrawColumnCell(Sender: TObject;const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);

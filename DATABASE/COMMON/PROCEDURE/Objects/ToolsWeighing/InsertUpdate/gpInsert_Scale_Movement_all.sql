@@ -13,7 +13,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE MovementId_begin Integer;
+   DECLARE vbMovementId_begin Integer;
    DECLARE vbMovementDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -34,7 +34,7 @@ BEGIN
      IF vbMovementDescId = zc_Movement_Sale()
      THEN
           -- поиск существующего документа <Продажа покупателю> по Заявке
-          MovementId_begin:= (SELECT Movement.Id
+          vbMovementId_begin:= (SELECT Movement.Id
                               FROM MovementLinkMovement
                                    INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                                    ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
@@ -46,10 +46,10 @@ BEGIN
                               WHERE MovementLinkMovement.MovementId = inMovementId
                                 AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order());
 
-          IF COALESCE (MovementId_begin, 0) = 0
+          IF COALESCE (vbMovementId_begin, 0) = 0
           THEN
               -- сохранили Документ
-              MovementId_begin:= (SELECT lpInsertUpdate_Movement_Sale_Value(
+              vbMovementId_begin:= (SELECT lpInsertUpdate_Movement_Sale_Value(
                                                     ioId                    := 0
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_sale_seq') AS TVarChar)
                                                   , inInvNumberPartner      := ''
@@ -78,17 +78,132 @@ BEGIN
                                  );
           ELSE
               -- Распроводим Документ !!!существующий!!!
-              PERFORM lpUnComplete_Movement (inMovementId := MovementId_begin
+              PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_begin
                                            , inUserId     := vbUserId);
 
           END IF;
 
           -- строчная часть
+          PERFORM lpInsertUpdate_MovementItem_Sale_Value (ioId                  := tmp.MovementItemId_find
+                                                        , inMovementId          := vbMovementId_begin
+                                                        , inGoodsId             := tmp.GoodsId
+                                                        , inAmount              := tmp.Amount
+                                                        , inAmountPartner       := tmp.AmountPartner
+                                                        , inAmountChangePercent := tmp.AmountChangePercent
+                                                        , inChangePercentAmount := tmp.ChangePercentAmount
+                                                        , inPrice               := tmp.Price
+                                                        , ioCountForPrice       := tmp.CountForPrice
+                                                        , inHeadCount           := 0
+                                                        , inBoxCount            := tmp.BoxCount
+                                                        , inPartionGoods        := ''
+                                                        , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inAssetId             := NULL
+                                                        , inBoxId               := NULL
+                                                        , inUserId              := vbUserId
+                                                         )
+          FROM (SELECT MAX (tmp.MovementItemId)      AS MovementItemId_find
+                     , tmp.GoodsId
+                     , tmp.GoodsKindId
+                     , SUM (tmp.Amount)              AS Amount
+                     , SUM (tmp.AmountChangePercent) AS AmountChangePercent
+                     , SUM (tmp.AmountPartner)       AS AmountPartner
+                     , tmp.ChangePercentAmount
+                     , tmp.Price
+                     , tmp.CountForPrice
+                     , SUM (tmp.BoxCount)  AS BoxCount
+                FROM (SELECT 0                                                   AS MovementItemId
+                           , MovementItem.ObjectId                               AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                           , MovementItem.Amount                                 AS Amount
+                           , MovementItem.Amount                                 AS AmountChangePercent
+                           , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner
+                           , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
+                           , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                           , COALESCE (MIFloat_CountForPrice.ValueData, 0)       AS CountForPrice
+                           , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
+                           , MovementItem.Amount                                 AS Amount_mi
+                      FROM MovementItem
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                           LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
+                                                       ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                           LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                                                       ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
+                                                            ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                     UNION ALL
+                      SELECT MovementItem.Id                                     AS MovementItemId
+                           , MovementItem.ObjectId                               AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                           , MovementItem.Amount                                 AS Amount
+                           , COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS AmountChangePercent
+                           , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner
+                           , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
+                           , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                           , COALESCE (MIFloat_CountForPrice.ValueData, 0)       AS CountForPrice
+                           , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
+                           , 0                                                   AS Amount_mi
+                      FROM MovementItem
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                                       ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                           LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
+                                                       ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                           LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                                                       ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
+                                                            ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+
+                      WHERE MovementItem.MovementId = vbMovementId_begin
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                     ) AS tmp
+                GROUP BY tmp.GoodsId
+                       , tmp.GoodsKindId
+                       , tmp.ChangePercentAmount
+                       , tmp.Price
+                       , tmp.CountForPrice
+                HAVING SUM (tmp.Amount_mi) <> 0
+               ) AS tmp;
 
           -- создаются временные таблицы - для формирование данных для проводок
           PERFORM lpComplete_Movement_Sale_CreateTemp();
           -- Проводим Документ
-          PERFORM lpComplete_Movement_Sale (inMovementId     := MovementId_begin
+          PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId_begin
                                           , inUserId         := vbUserId
                                           , inIsLastComplete := NULL);
 
@@ -98,7 +213,7 @@ BEGIN
 
 
      -- финиш - сохранили <Документ>
-     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, MovementId_begin, Movement.AccessKeyId)
+     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, vbMovementId_begin, Movement.AccessKeyId)
      FROM Movement
      WHERE Id =inMovementId ;
 
@@ -110,7 +225,7 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       SELECT MovementId_begin;
+       SELECT vbMovementId_begin AS MovementId_begin;
 
 
 END;

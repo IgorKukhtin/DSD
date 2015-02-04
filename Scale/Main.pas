@@ -126,7 +126,6 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
-    procedure ButtonRefreshZakazClick(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CDSAfterOpen(DataSet: TDataSet);
@@ -172,6 +171,14 @@ begin
      if DMMainScaleForm.gpInsert_Movement_all(ParamsMovement) then
      begin
           //Print
+          if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_Sale
+          then Print_Sale(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
+          else if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_ReturnIn
+               then Print_ReturnIn(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
+               else if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_SendOnPrice
+                    then Print_SendOnPrice(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
+          else ShowMessage ('Ошибка.Печать не определена.');
+
           //Initialize or Empty
           DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement);
           gpInitialize_MovementDesc;
@@ -254,11 +261,6 @@ procedure TMainForm.ButtonRefreshClick(Sender: TObject);
 begin
     RefreshDataSet;
     WriteParamsMovement;
-end;
-//------------------------------------------------------------------------------------------------
-procedure TMainForm.ButtonRefreshZakazClick(Sender: TObject);
-begin
-    PrintSale(StrToInt(EnterGoodsCodeScanerEdit.Text));
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.CDSAfterOpen(DataSet: TDataSet);
@@ -364,7 +366,7 @@ begin
   with ParamsMovement do begin
 
     if ParamByName('MovementId').AsInteger=0
-    then PanelMovement.Caption:='Документ не сохранен.'
+    then PanelMovement.Caption:='Новый <Документ>.'
     else PanelMovement.Caption:='Документ № <'+ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamByName('OperDate_Movement').AsDateTime)+'>';
 
     PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
