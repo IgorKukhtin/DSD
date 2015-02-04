@@ -7,22 +7,24 @@ inherited OrderExternalForm: TOrderExternalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1020
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1020
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1020
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1014
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 518
-        ExplicitWidth = 1020
-        ExplicitHeight = 518
+        Width = 1014
+        Height = 514
+        ExplicitWidth = 1014
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -301,7 +303,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 168
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 168
     end
     object cxLabel5: TcxLabel
@@ -634,6 +636,30 @@ inherited OrderExternalForm: TOrderExternalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actSPSavePrintState: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSavePrintState
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintState
+        end>
+      Caption = 'actSPSavePrintState'
+    end
+    object mactPrint_Order: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPSavePrintState
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -690,7 +716,7 @@ inherited OrderExternalForm: TOrderExternalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -763,6 +789,9 @@ inherited OrderExternalForm: TOrderExternalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited bbPrint: TdxBarButton
+      Action = mactPrint_Order
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -1764,5 +1793,21 @@ inherited OrderExternalForm: TOrderExternalForm
       end>
     Left = 811
     Top = 84
+  end
+  object spSavePrintState: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_OrderExternal_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 432
   end
 end

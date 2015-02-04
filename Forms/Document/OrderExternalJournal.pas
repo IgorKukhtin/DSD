@@ -58,6 +58,10 @@ type
     InfoMoneyDestinationName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     PriceListName: TcxGridDBColumn;
+    isPrinted: TcxGridDBColumn;
+    spSavePrintState: TdsdStoredProc;
+    actSPSavePrintState: TdsdExecStoredProc;
+    mactPrint_Order: TMultiAction;
   private
     { Private declarations }
   public

@@ -8,20 +8,23 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 478
+    Height = 476
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1020
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1014
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 478
-        ExplicitWidth = 1020
-        ExplicitHeight = 478
+        Width = 1014
+        Height = 470
+        ExplicitWidth = 1014
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -379,6 +382,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object isPrinted: TcxGridDBColumn
+            Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085
+            DataBinding.FieldName = 'isPrinted'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
         end
       end
     end
@@ -446,6 +456,40 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actSPSavePrintState: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSavePrintState
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintState
+        end>
+      Caption = 'actSPSavePrintState'
+    end
+    object mactPrint_Order: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actSPSavePrintState
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -492,7 +536,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -564,7 +608,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end>
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Action = mactPrint_Order
       Category = 0
     end
   end
@@ -703,5 +747,21 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Params = <>
     Left = 628
     Top = 294
+  end
+  object spSavePrintState: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_OrderExternal_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 432
   end
 end

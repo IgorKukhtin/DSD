@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , PriceWithVAT Boolean, isPrinted Boolean,VATPercent TFloat, ChangePercent TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
              , isEDI Boolean
@@ -75,6 +75,8 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+           , COALESCE (MovementBoolean_Print.ValueData, False) AS isPrinted
+
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
@@ -159,6 +161,11 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Print
+                                      ON MovementBoolean_Print.MovementId =  Movement.Id
+                                     AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -185,7 +192,7 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                           ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             ;
 

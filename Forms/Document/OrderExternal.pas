@@ -80,6 +80,9 @@ type
     ContractTagGuides: TdsdGuides;
     AmountEDI: TcxGridDBColumn;
     AmountRemains: TcxGridDBColumn;
+    spSavePrintState: TdsdStoredProc;
+    actSPSavePrintState: TdsdExecStoredProc;
+    mactPrint_Order: TMultiAction;
   private
     { Private declarations }
   public

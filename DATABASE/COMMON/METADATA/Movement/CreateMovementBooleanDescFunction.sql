@@ -37,9 +37,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Peresort() RETURNS integer AS $BOD
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Peresort', 'пересорт'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Peresort');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Print() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Print'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Print', 'Распечатан (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Print');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.02.15                                                       * add zc_MovementBoolean_Print
  26.12.14                                        * add zc_MovementBoolean_Peresort
  10.08.14                                        * add zc_MovementBoolean_HistoryCost
  24.07.14         				 * add zc_MovementBoolean_Electron
@@ -48,4 +54,3 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
  11.01.14                                        * add
  07.07.13         * НОВАЯ СХЕМА
 */
-
