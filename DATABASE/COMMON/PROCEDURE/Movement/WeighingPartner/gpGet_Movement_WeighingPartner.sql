@@ -9,13 +9,14 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingPartner(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
-             , InvNumberOrder TVarChar, PartionGoods TVarChar
+             , MovementId_Order Integer, InvNumberOrder TVarChar
+             , PartionGoods TVarChar
              , WeighingNumber TFloat, InvNumberTransport TFloat
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar
              , UserId Integer, UserName TVarChar
               )
 AS
@@ -44,11 +45,26 @@ BEGIN
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
-             , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
+             , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
+             , CASE WHEN MovementLinkMovement_Order.MovementChildId IS NOT NULL
+                         THEN CASE WHEN Movement_Order.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                        THEN ''
+                                   ELSE '???'
+                              END
+                           || CASE WHEN TRIM (COALESCE (MovementString_InvNumberPartner_Order.ValueData, '')) <> ''
+                                        THEN MovementString_InvNumberPartner_Order.ValueData
+                                   ELSE '***' || Movement_Order.InvNumber
+                              END
+                    ELSE MovementString_InvNumberOrder.ValueData
+               END :: TVarChar AS InvNumberOrder
              , MovementString_PartionGoods.ValueData      AS PartionGoods
 
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
              , MovementFloat_InvNumberTransport.ValueData AS InvNumberTransport
+
+             , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+             , MovementFloat_VATPercent.ValueData             AS VATPercent
+             , MovementFloat_ChangePercent.ValueData          AS ChangePercent
 
              , Object_From.Id                     AS FromId
              , Object_From.ValueData              AS FromName
@@ -61,8 +77,6 @@ BEGIN
              , View_Contract_InvNumber.InvNumber  AS ContractName
              , View_Contract_InvNumber.ContractTagName
 
-             , Object_RouteSorting.Id             AS RouteSortingId
-             , Object_RouteSorting.ValueData      AS RouteSortingName
              , Object_User.Id                     AS UserId
              , Object_User.ValueData              AS UserName
 
@@ -72,25 +86,36 @@ BEGIN
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
-                                   ON MovementDate_StartWeighing.MovementId =  Movement.Id
+                                   ON MovementDate_StartWeighing.MovementId = Movement.Id
                                   AND MovementDate_StartWeighing.DescId = zc_MovementDate_StartWeighing()
             LEFT JOIN MovementDate AS MovementDate_EndWeighing
-                                   ON MovementDate_EndWeighing.MovementId =  Movement.Id
+                                   ON MovementDate_EndWeighing.MovementId = Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
                                   
             LEFT JOIN MovementFloat AS MovementFloat_InvNumberTransport
-                                    ON MovementFloat_InvNumberTransport.MovementId =  Movement.Id
+                                    ON MovementFloat_InvNumberTransport.MovementId = Movement.Id
                                    AND MovementFloat_InvNumberTransport.DescId = zc_MovementFloat_InvNumberTransport()
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
-                                    ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
+                                    ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                     ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberOrder.MovementId = Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
             LEFT JOIN MovementString AS MovementString_PartionGoods
-                                     ON MovementString_PartionGoods.MovementId =  Movement.Id
+                                     ON MovementString_PartionGoods.MovementId = Movement.Id
                                     AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -112,15 +137,18 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                         ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
-                                        AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
-            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                          ON MovementLinkObject_User.MovementId = Movement.Id
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Order
+                                     ON MovementString_InvNumberPartner_Order.MovementId =  Movement_Order.Id
+                                    AND MovementString_InvNumberPartner_Order.DescId = zc_MovementString_InvNumberPartner()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_WeighingPartner();

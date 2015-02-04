@@ -1,85 +1,116 @@
 -- Function: gpInsert_Scale_Movement_all()
 
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
-    IN inId                  Integer   , -- Ключ объекта <Документ>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
-    IN inMovementDescId      Integer   , -- Вид документа
-    IN inMovementDescNumber  Integer   , -- Вид документа
-    IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
-    IN inContractId          Integer   , -- Договора
-    IN inPaidKindId          Integer   , -- Форма оплаты
-    IN inPriceListId         Integer   , -- 
-    IN inMovementId_Order    Integer   , -- ключ Документа заявка
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS TABLE (Id        Integer
-             , InvNumber TVarChar
-             , OperDate  TDateTime
-             , TotalSumm TFloat
+RETURNS TABLE (MovementId_begin    Integer
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbTotalSumm TFloat;
+
+   DECLARE MovementId_begin Integer;
+   DECLARE vbMovementDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- сохранили
-     inId:= gpInsertUpdate_Movement_WeighingPartner (ioId                  := inId
-                                                   , inOperDate            := inOperDate
-                                                   , inInvNumberOrder      := CASE WHEN inMovementId_Order <> 0 THEN (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Order) ELSE '' END
-                                                   , inMovementDescId      := inMovementDescId
-                                                   , inMovementDescNumber  := inMovementDescNumber
-                                                   , inWeighingNumber      := CASE WHEN inMovementDescId <> zc_Movement_Sale()
-                                                                                        THEN 0
-                                                                                   WHEN inId <> 0
-                                                                                        THEN (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inId AND MovementFloat.DescId = zc_MovementFloat_WeighingNumber())
-                                                                                   ELSE 1 + COALESCE ((SELECT MAX (COALESCE (MovementFloat_WeighingNumber.ValueData, 0))
-                                                                                                       FROM Movement
-                                                                                                            INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                                                                                          ON MovementLinkObject_From.MovementId = Movement.Id
-                                                                                                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                                                                                         AND MovementLinkObject_From.ObjectId = inFromId
-                                                                                                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                                                                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                                                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                                                                                         AND MovementLinkObject_To.ObjectId = inToId
-                                                                                                            INNER JOIN MovementFloat AS MovementFloat_WeighingNumber
-                                                                                                                                     ON MovementFloat_WeighingNumber.MovementId = Movement.Id
-                                                                                                                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
-                                                                                                       WHERE Movement.DescId = zc_Movement_WeighingPartner() AND Movement.OperDate = inOperDate
-                                                                                                      ), 0)
-                                                                              END :: Integer
-                                                   , inFromId              := inFromId
-                                                   , inToId                := inToId
-                                                   , inContractId          := inContractId
-                                                   , inPriceListId         := inPriceListId
-                                                   , inPaidKindId          := inPaidKindId
-                                                   , inMovementId_Order    := inMovementId_Order
-                                                   , inPartionGoods        := '' :: TVarChar
-                                                   , inChangePercent       := inChangePercent
-                                                   , inSession             := inSession
-                                                    );
+
+     -- проверка
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет данных для документа.';
+     END IF;
+
+     -- определили <Тип документа>
+     vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+
+
+     IF vbMovementDescId = zc_Movement_Sale()
+     THEN
+          -- поиск существующего документа <Продажа покупателю> по Заявке
+          MovementId_begin:= (SELECT Movement.Id
+                              FROM MovementLinkMovement
+                                   INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                   ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                   INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
+                                                      AND Movement.DescId = zc_Movement_Sale()
+                                                      AND Movement.OperDate = inOperDate
+                                                      AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                              WHERE MovementLinkMovement.MovementId = inMovementId
+                                AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order());
+
+          IF COALESCE (MovementId_begin, 0) = 0
+          THEN
+              -- сохранили Документ
+              MovementId_begin:= (SELECT lpInsertUpdate_Movement_Sale_Value(
+                                                    ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_sale_seq') AS TVarChar)
+                                                  , inInvNumberPartner      := ''
+                                                  , inInvNumberOrder        := InvNumberOrder
+                                                  , inOperDate              := inOperDate
+                                                  , inOperDatePartner       := (inOperDate + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime
+                                                  , inChecked               := NULL
+                                                  , inChangePercent         := ChangePercent
+                                                  , inFromId                := FromId
+                                                  , inToId                  := ToId
+                                                  , inPaidKindId            := PaidKindId
+                                                  , inContractId            := ContractId
+                                                  , inRouteSortingId        := NULL
+                                                  , inCurrencyDocumentId    := NULL
+                                                  , inCurrencyPartnerId     := NULL
+                                                  , inMovementId_Order      := MovementId_Order
+                                                  , ioPriceListId           := NULL
+                                                  , ioCurrencyPartnerValue  := NULL
+                                                  , ioParPartnerValue       := NULL
+                                                  , inUserId                := vbUserId
+                                                   )
+                                             FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession) AS tmp
+                                                  LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
+                                                                        ON ObjectFloat_Partner_DocumentDayCount.ObjectId = tmp.ToId
+                                                                       AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+                                 );
+          ELSE
+              -- Распроводим Документ !!!существующий!!!
+              PERFORM lpUnComplete_Movement (inMovementId := MovementId_begin
+                                           , inUserId     := vbUserId);
+
+          END IF;
+
+          -- строчная часть
+
+          -- создаются временные таблицы - для формирование данных для проводок
+          PERFORM lpComplete_Movement_Sale_CreateTemp();
+          -- Проводим Документ
+          PERFORM lpComplete_Movement_Sale (inMovementId     := MovementId_begin
+                                          , inUserId         := vbUserId
+                                          , inIsLastComplete := NULL);
+
+     ELSE
+         RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
+     END IF;
+
+
+     -- финиш - сохранили <Документ>
+     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, MovementId_begin, Movement.AccessKeyId)
+     FROM Movement
+     WHERE Id =inMovementId ;
+
+     -- финиш - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_WeighingPartner()
+                                , inUserId     := vbUserId
+                                 );
 
      -- Результат
      RETURN QUERY
-       SELECT Movement.Id
-            , Movement.InvNumber
-            , Movement.OperDate
-            , MovementFloat_TotalSumm.ValueData AS TotalSumm
-       FROM Movement
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-       WHERE Movement.Id = inId;
+       SELECT MovementId_begin;
 
 
 END;
@@ -89,7 +120,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 27.01.15                                        * all
+ 03.02.15                                        *
 */
 
 -- тест

@@ -164,7 +164,7 @@ function TMainForm.Save_Movement_all:Boolean;
 begin
      Result:=false;
      //
-     OperDateEdit.Text:=gpInitialize_OperDate(ParamsMovement);
+     OperDateEdit.Text:=DateToStr(gpInitialize_OperDate(ParamsMovement));
      //
      if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
      then exit;
@@ -172,15 +172,21 @@ begin
      if DMMainScaleForm.gpInsert_Movement_all(ParamsMovement) then
      begin
           //Print
-          //Empty
-          EmptyValuesParams(ParamsMovement);
+          //Initialize or Empty
+          DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement);
+          gpInitialize_MovementDesc;
+          //
+          RefreshDataSet;
+          WriteParamsMovement;
      end;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.GetParams_MovementDesc(BarCode: String):Boolean;
 begin
-     if ParamsMovement.ParamByName('MovementDescId').AsInteger=0
-     then ParamsMovement.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber')
+     if ParamsMovement.ParamByName('MovementId').AsInteger=0
+     then if ParamsMovement.ParamByName('MovementDescId').AsInteger=0
+          then ParamsMovement.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber')
+          else
      else if (DMMainScaleForm.gpUpdate_Scale_Movement_check(ParamsMovement)=false)
           then begin
                ShowMessage ('Ошибка.Документ взвешивания № <'+ParamsMovement.ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamsMovement.ParamByName('OperDate_Movement').AsDateTime)+'> не закрыт.'+#10+#13+'Изменение параметров не возможно.');
@@ -503,7 +509,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
-     if Key = VK_F5 then Save_Movement;
+     if Key = VK_F5 then Save_Movement_all;
      if Key = VK_F2 then GetParams_MovementDesc('');
      if Key = VK_SPACE then GetParams_Goods('');
      //

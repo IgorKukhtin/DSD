@@ -21,6 +21,8 @@ type
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
 
+    function gpGet_Scale_Movement(var execParamsMovement:TParams): Boolean;
+
     function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
     function gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
     function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
@@ -34,6 +36,7 @@ type
   function gpInitialize_Const: Boolean;
   function gpInitialize_Ini: Boolean;
   function gpInitialize_ParamsMovement: Boolean;
+  function gpInitialize_MovementDesc: Boolean;
 
 var
   DMMainScaleForm: TDMMainScaleForm;
@@ -55,18 +58,27 @@ begin
     //
     gpInitialize_OperDate(ParamsMovement);
     //
-    with DMMainScaleForm.spSelect do
+    Result:=DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement);
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Movement(var execParamsMovement:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do
     begin
        StoredProcName:='gpGet_Scale_Movement';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
 
        //try
          Execute;
 
-       with ParamsMovement do
+       with execParamsMovement do
        begin
+         ParamsMovement.ParamByName('MovementId_begin').AsInteger:= 0;
+
          ParamsMovement.ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
          ParamsMovement.ParamByName('InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
          ParamsMovement.ParamByName('OperDate_Movement').asDateTime:= DataSet.FieldByName('OperDate').asDateTime;
@@ -103,7 +115,6 @@ begin
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
          ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
 
-
          ParamByName('TotalSumm').asFloat:= DataSet.FieldByName('TotalSumm').asFloat;
        end;
 
@@ -116,6 +127,26 @@ begin
     end;
 
     Result:=true;
+end;
+{------------------------------------------------------------------------}
+function gpInitialize_MovementDesc: Boolean;
+begin
+   with DialogMovementDescForm do
+   begin
+        if ParamsMovement.ParamByName('MovementDescNumber').asInteger<>0 then
+        begin
+             CDS.Filter:='(Number='+IntToStr(ParamsMovement.ParamByName('MovementDescNumber').asInteger)
+                        +')'
+                          ;
+             CDS.Filtered:=true;
+             if CDS.RecordCount<>1
+             then ShowMessage('Ошибка.Код операции не определен.')
+             else begin ParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
+                        ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
+                  end;
+          end
+          else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Нажмите на клавиатуре клавишу <F2>.';
+   end;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
@@ -137,7 +168,7 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpInsert_Movement_all: Boolean;
+function TDMMainScaleForm.gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
     with spSelect do begin
@@ -148,7 +179,7 @@ begin
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
        //try
          Execute;
-         execParamsMovement.ParamByName('MovementId_save').AsInteger:=DataSet.FieldByName('MovementId_save').asInteger;
+         execParamsMovement.ParamByName('MovementId_begin').AsInteger:=DataSet.FieldByName('MovementId_begin').asInteger;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');

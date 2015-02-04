@@ -598,14 +598,17 @@ object ContractForm: TContractForm
   end
   object cxGridContractCondition: TcxGrid
     Left = 0
-    Top = 329
-    Width = 768
-    Height = 185
+    Top = 334
+    Width = 763
+    Height = 180
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 329
+    ExplicitWidth = 768
+    ExplicitHeight = 185
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -760,19 +763,21 @@ object ContractForm: TContractForm
     Top = 30
     Action = actRefresh
     Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1087#1086' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086
-    TabOrder = 8
+    TabOrder = 7
     Width = 278
   end
-  object cxGrid1: TcxGrid
+  object cxGridPartner: TcxGrid
     Left = 768
-    Top = 329
+    Top = 334
     Width = 418
-    Height = 185
+    Height = 180
     Align = alRight
     TabOrder = 11
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 329
+    ExplicitHeight = 185
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource1
@@ -819,6 +824,23 @@ object ContractForm: TContractForm
       GridView = cxGridDBTableView1
     end
   end
+  object cxTopSplitter: TcxSplitter
+    Left = 0
+    Top = 329
+    Width = 1186
+    Height = 5
+    AlignSplitter = salTop
+    Control = cxGrid
+  end
+  object cxRightSplitter: TcxSplitter
+    Left = 763
+    Top = 334
+    Width = 5
+    Height = 180
+    AlignSplitter = salRight
+    Control = cxGridPartner
+    ExplicitLeft = 762
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 56
@@ -859,8 +881,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

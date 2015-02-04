@@ -12,7 +12,7 @@ uses
   cxCheckBox, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
 
 type
   TContractForm = class(TParentForm)
@@ -133,7 +133,7 @@ type
     clContractTagGroupName: TcxGridDBColumn;
     JuridicalDocumentChoiceForm: TOpenChoiceForm;
     clJuridicalDocumentName: TcxGridDBColumn;
-    cxGrid1: TcxGrid;
+    cxGridPartner: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     clPartnerName: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
@@ -149,6 +149,8 @@ type
     dsdUpdateDataSet1: TdsdUpdateDataSet;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    cxTopSplitter: TcxSplitter;
+    cxRightSplitter: TcxSplitter;
   private
     { Private declarations }
   public

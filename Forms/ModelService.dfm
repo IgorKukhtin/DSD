@@ -118,6 +118,8 @@ object ModelServiceForm: TModelServiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 467
+    ExplicitTop = 20
     object cxGridDBTableViewModelServiceItemMaster: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemMasterDS
@@ -326,8 +328,8 @@ object ModelServiceForm: TModelServiceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -483,6 +485,7 @@ object ModelServiceForm: TModelServiceForm
     Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelectMaster
       StoredProcList = <
         item
@@ -502,6 +505,7 @@ object ModelServiceForm: TModelServiceForm
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -516,6 +520,7 @@ object ModelServiceForm: TModelServiceForm
     end
     object dsdSetErasedMaster: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedMaster
       StoredProcList = <
         item
@@ -530,6 +535,7 @@ object ModelServiceForm: TModelServiceForm
     end
     object dsdSetErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedChild
       StoredProcList = <
         item
@@ -544,6 +550,7 @@ object ModelServiceForm: TModelServiceForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -559,6 +566,7 @@ object ModelServiceForm: TModelServiceForm
     end
     object dsdSetUnErasedMaster: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedMaster
       StoredProcList = <
         item
@@ -574,6 +582,7 @@ object ModelServiceForm: TModelServiceForm
     end
     object dsdSetUnErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedChild
       StoredProcList = <
         item
@@ -589,15 +598,18 @@ object ModelServiceForm: TModelServiceForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -609,6 +621,7 @@ object ModelServiceForm: TModelServiceForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -617,13 +630,17 @@ object ModelServiceForm: TModelServiceForm
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TModelServiceEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -632,9 +649,11 @@ object ModelServiceForm: TModelServiceForm
       ActionType = acUpdate
       DataSource = MasterDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdateModelServiceItemMaster: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateObjectModelServiceItemMaster
       StoredProcList = <
         item
@@ -645,16 +664,21 @@ object ModelServiceForm: TModelServiceForm
     end
     object UnitFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'UnitFromChoiceForm'
       FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
@@ -663,6 +687,7 @@ object ModelServiceForm: TModelServiceForm
     end
     object actUpdateModelServiceItemChild: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateObjectModelServiceItemChild
       StoredProcList = <
         item
@@ -673,6 +698,7 @@ object ModelServiceForm: TModelServiceForm
     end
     object actUpdateModelService: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <
         item
         end>
@@ -681,16 +707,21 @@ object ModelServiceForm: TModelServiceForm
     end
     object ModelServiceKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ModelServiceKindChoiceForm'
       FormName = 'TModelServiceKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ModelServiceKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ModelServiceKindName'
           DataType = ftString
@@ -699,25 +730,34 @@ object ModelServiceForm: TModelServiceForm
     end
     object actInsertMaster: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1075#1083#1072#1074#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
       ImageIndex = 0
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = True
       DataSource = ModelServiceItemMasterDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object UnitFromChoiceFormMaster: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'UnitFromChoiceFormMaster'
       FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'FromId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'FromName'
           DataType = ftString
@@ -726,16 +766,21 @@ object ModelServiceForm: TModelServiceForm
     end
     object UnitFromChoiceFormChild: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'UnitFromChoiceFormMasterTo'
       FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'Toid'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'ToName'
           DataType = ftString
@@ -744,16 +789,21 @@ object ModelServiceForm: TModelServiceForm
     end
     object SelectKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'SelectKindChoiceForm'
       FormName = 'TSelectKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'SelectKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'SelectKindName'
           DataType = ftString
@@ -762,23 +812,30 @@ object ModelServiceForm: TModelServiceForm
     end
     object InsertModelService: TInsertRecord
       Category = 'DSDLib'
+      MoveParams = <>
       View = cxGridDBTableView
       Action = ModelServiceChoiceForm
+      Params = <>
       Caption = 'InsertModelService'
       ImageIndex = 0
     end
     object ModelServiceChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ModelServiceChoiceForm'
       FormName = 'TModelServiceEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -787,16 +844,21 @@ object ModelServiceForm: TModelServiceForm
     end
     object GoodsFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'GoodsFromChoiceForm'
       FormName = 'TGoodsTree_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = ModelServiceItemChildCDS
           ComponentItem = 'FromId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ModelServiceItemChildCDS
           ComponentItem = 'FromName'
           DataType = ftString
@@ -805,16 +867,21 @@ object ModelServiceForm: TModelServiceForm
     end
     object GoodsToChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'GoodsToChoiceForm'
       FormName = 'TGoodsTree_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ModelServiceItemChildCDS
           ComponentItem = 'ToId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ModelServiceItemChildCDS
           ComponentItem = 'ToName'
           DataType = ftString
@@ -823,16 +890,21 @@ object ModelServiceForm: TModelServiceForm
     end
     object MovementDescChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'MovementDescChoiceForm'
       FormName = 'TMovementDescForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'MovementDescId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'MovementDescName'
           DataType = ftString
@@ -848,6 +920,7 @@ object ModelServiceForm: TModelServiceForm
         DataSet = MasterCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 48
     Top = 216
   end
@@ -874,6 +947,10 @@ object ModelServiceForm: TModelServiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 168
     Top = 216
   end
@@ -884,10 +961,12 @@ object ModelServiceForm: TModelServiceForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 288
     Top = 208
   end
@@ -914,6 +993,7 @@ object ModelServiceForm: TModelServiceForm
         DataSet = ModelServiceItemMasterCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 610
     Top = 125
   end
@@ -924,12 +1004,14 @@ object ModelServiceForm: TModelServiceForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementDescId'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'MovementDescId'
         DataType = ftFloat
@@ -937,6 +1019,7 @@ object ModelServiceForm: TModelServiceForm
       end
       item
         Name = 'inRatio'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'Ratio'
         DataType = ftFloat
@@ -944,6 +1027,7 @@ object ModelServiceForm: TModelServiceForm
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -951,28 +1035,33 @@ object ModelServiceForm: TModelServiceForm
       end
       item
         Name = 'inModelServiceId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inFromId'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'FromId'
         ParamType = ptInput
       end
       item
         Name = 'inToId'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'ToId'
         ParamType = ptInput
       end
       item
         Name = 'inSelectKindId'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'SelectKindId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 600
     Top = 208
   end
@@ -999,6 +1088,7 @@ object ModelServiceForm: TModelServiceForm
         DataSet = ModelServiceItemChildCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 498
     Top = 477
   end
@@ -1009,12 +1099,14 @@ object ModelServiceForm: TModelServiceForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ModelServiceItemChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = ModelServiceItemChildCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -1022,22 +1114,26 @@ object ModelServiceForm: TModelServiceForm
       end
       item
         Name = 'inFromId'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'FromId'
         ParamType = ptInput
       end
       item
         Name = 'inToId'
+        Value = Null
         Component = ModelServiceItemChildCDS
         ComponentItem = 'ToId'
         ParamType = ptInput
       end
       item
         Name = 'inModelServiceItemMasterId'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 320
     Top = 488
   end
@@ -1048,10 +1144,12 @@ object ModelServiceForm: TModelServiceForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 528
     Top = 288
   end
@@ -1074,6 +1172,10 @@ object ModelServiceForm: TModelServiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 888
     Top = 256
   end
@@ -1096,6 +1198,10 @@ object ModelServiceForm: TModelServiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 816
     Top = 472
   end
@@ -1106,10 +1212,12 @@ object ModelServiceForm: TModelServiceForm
     Params = <
       item
         Name = 'ioChildId'
+        Value = Null
         Component = ModelServiceItemChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 400
     Top = 552
   end
