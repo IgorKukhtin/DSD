@@ -172,7 +172,9 @@ begin
      ParamAdd(Params,'WeightTare',ftFloat);          // Вес 1-ой тары
      ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва
      ParamAdd(Params,'Price',ftFloat);          //
+     ParamAdd(Params,'Price_Return',ftFloat);          //
      ParamAdd(Params,'CountForPrice',ftFloat);  //
+     ParamAdd(Params,'CountForPrice_Return',ftFloat);  //
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_Value_byName(ArrayList:TArrayList;Name:String):String;

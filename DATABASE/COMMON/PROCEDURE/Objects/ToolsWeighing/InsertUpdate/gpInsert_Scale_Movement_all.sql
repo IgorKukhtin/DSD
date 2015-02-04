@@ -15,6 +15,8 @@ $BODY$
 
    DECLARE vbMovementId_begin Integer;
    DECLARE vbMovementDescId Integer;
+
+   DECLARE vbTmpId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
@@ -45,13 +47,17 @@ BEGIN
                                                       AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                               WHERE MovementLinkMovement.MovementId = inMovementId
                                 AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order());
+     END IF;
 
-          IF COALESCE (vbMovementId_begin, 0) = 0
-          THEN
-              -- сохранили Документ
-              vbMovementId_begin:= (SELECT lpInsertUpdate_Movement_Sale_Value(
-                                                    ioId                    := 0
-                                                  , inInvNumber             := CAST (NEXTVAL ('movement_sale_seq') AS TVarChar)
+
+    -- сохранили <Документ>
+    IF COALESCE (vbMovementId_begin, 0) = 0
+    THEN
+        vbMovementId_begin:= (SELECT CASE WHEN vbMovementDescId = zc_Movement_Sale()
+                                                    -- <Продажа покупателю>
+                                               THEN lpInsertUpdate_Movement_Sale_Value
+                                                   (ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_Sale_seq') AS TVarChar)
                                                   , inInvNumberPartner      := ''
                                                   , inInvNumberOrder        := InvNumberOrder
                                                   , inOperDate              := inOperDate
@@ -71,20 +77,53 @@ BEGIN
                                                   , ioParPartnerValue       := NULL
                                                   , inUserId                := vbUserId
                                                    )
-                                             FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession) AS tmp
-                                                  LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
-                                                                        ON ObjectFloat_Partner_DocumentDayCount.ObjectId = tmp.ToId
-                                                                       AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+                                          WHEN vbMovementDescId = zc_Movement_ReturnIn()
+                                                    -- <Возврат от покупателя>
+                                               THEN lpInsertUpdate_Movement_ReturnIn
+                                                   (ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_ReturnIn_seq') AS TVarChar)
+                                                  , inInvNumberPartner      := ''
+                                                  , inInvNumberMark         := ''
+                                                  , inOperDate              := inOperDate
+                                                  , inOperDatePartner       := inOperDate
+                                                  , inChecked               := NULL
+                                                  , inPriceWithVAT          := PriceWithVAT
+                                                  , inVATPercent            := VATPercent
+                                                  , inChangePercent         := ChangePercent
+                                                  , inFromId                := FromId
+                                                  , inToId                  := ToId
+                                                  , inPaidKindId            := PaidKindId
+                                                  , inContractId            := ContractId
+                                                  , inCurrencyDocumentId    := NULL
+                                                  , inCurrencyPartnerId     := NULL
+                                                  , inCurrencyValue         := NULL
+                                                  , inUserId                := vbUserId
+                                                   )
+                                           END AS MovementId_begin
+                                    FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession) AS tmp
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
+                                                               ON ObjectFloat_Partner_DocumentDayCount.ObjectId = tmp.ToId
+                                                              AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
                                  );
-          ELSE
-              -- Распроводим Документ !!!существующий!!!
-              PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_begin
-                                           , inUserId     := vbUserId);
+    ELSE
+        -- Распроводим Документ !!!существующий!!!
+        PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_begin
+                                     , inUserId     := vbUserId);
+    END IF;
 
-          END IF;
+    -- Проверка
+    IF COALESCE (vbMovementId_begin, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
+    END IF;
 
-          -- строчная часть
-          PERFORM lpInsertUpdate_MovementItem_Sale_Value (ioId                  := tmp.MovementItemId_find
+
+    -- сохранили <строчная часть>
+     SELECT MAX (tmpId) INTO vbTmpId
+     FROM (SELECT CASE WHEN vbMovementDescId = zc_Movement_Sale()
+                                 -- <Продажа покупателю>
+                            THEN lpInsertUpdate_MovementItem_Sale_Value
+                                                         (ioId                  := tmp.MovementItemId_find
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
@@ -101,6 +140,23 @@ BEGIN
                                                         , inBoxId               := NULL
                                                         , inUserId              := vbUserId
                                                          )
+                       WHEN vbMovementDescId = zc_Movement_ReturnIn()
+                                 -- <Возврат от покупателя>
+                            THEN lpInsertUpdate_MovementItem_ReturnIn_Value
+                                                         (ioId                  := 0
+                                                        , inMovementId          := vbMovementId_begin
+                                                        , inGoodsId             := tmp.GoodsId
+                                                        , inAmount              := tmp.Amount
+                                                        , inAmountPartner       := tmp.Amount
+                                                        , inPrice               := tmp.Price
+                                                        , ioCountForPrice       := tmp.CountForPrice
+                                                        , inHeadCount           := 0
+                                                        , inPartionGoods        := ''
+                                                        , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inAssetId             := NULL
+                                                        , inUserId              := vbUserId
+                                                         )
+                  END AS tmpId
           FROM (SELECT MAX (tmp.MovementItemId)      AS MovementItemId_find
                      , tmp.GoodsId
                      , tmp.GoodsKindId
@@ -191,6 +247,7 @@ BEGIN
                       WHERE MovementItem.MovementId = vbMovementId_begin
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
+                        AND vbMovementDescId = zc_Movement_Sale()
                      ) AS tmp
                 GROUP BY tmp.GoodsId
                        , tmp.GoodsKindId
@@ -198,26 +255,38 @@ BEGIN
                        , tmp.Price
                        , tmp.CountForPrice
                 HAVING SUM (tmp.Amount_mi) <> 0
-               ) AS tmp;
+               ) AS tmp
+          ) AS tmp;
 
-          -- создаются временные таблицы - для формирование данных для проводок
-          PERFORM lpComplete_Movement_Sale_CreateTemp();
-          -- Проводим Документ
-          PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId_begin
-                                          , inUserId         := vbUserId
-                                          , inIsLastComplete := NULL);
 
+     -- !!!Проводки!!!
+     IF vbMovementDescId = zc_Movement_Sale()
+     THEN
+         -- создаются временные таблицы - для формирование данных для проводок - <Продажа покупателю>
+         PERFORM lpComplete_Movement_Sale_CreateTemp();
+         -- Проводим Документ - <Продажа покупателю>
+         PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId_begin
+                                         , inUserId         := vbUserId
+                                         , inIsLastComplete := NULL);
      ELSE
-         RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
+         IF vbMovementDescId = zc_Movement_ReturnIn()
+         THEN
+             -- создаются временные таблицы - для формирование данных для проводок - <Возврат от покупателя>
+             PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
+             -- Проводим Документ - <Возврат от покупателя>
+             PERFORM lpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_begin
+                                                 , inUserId         := vbUserId
+                                                 , inIsLastComplete := NULL);
+         END IF;
      END IF;
 
 
-     -- финиш - сохранили <Документ>
+     -- финиш - сохранили <Документ> - <Взвешивание (контрагент)>
      PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, vbMovementId_begin, Movement.AccessKeyId)
      FROM Movement
-     WHERE Id =inMovementId ;
+     WHERE Id = inMovementId ;
 
-     -- финиш - Обязательно меняем статус документа + сохранили протокол
+     -- финиш - Обязательно меняем статус документа + сохранили протокол - <Взвешивание (контрагент)>
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_WeighingPartner()
                                 , inUserId     := vbUserId

@@ -344,7 +344,9 @@ begin
         ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id;
 
         ParamByName('Price').AsFloat:=CDS.FieldByName('Price').AsFloat;
+        ParamByName('Price_Return').AsFloat:=CDS.FieldByName('Price_Return').AsFloat;
         ParamByName('CountForPrice').AsFloat:= CDS.FieldByName('CountForPrice').AsFloat;
+        ParamByName('CountForPrice_Return').AsFloat:= CDS.FieldByName('CountForPrice_Return').AsFloat;
 
         // Количество тары
         try ParamByName('CountTare').AsFloat:=StrToFloat(EditTareCount.Text);

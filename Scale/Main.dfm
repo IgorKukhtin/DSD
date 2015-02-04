@@ -265,7 +265,7 @@ object MainForm: TMainForm
         OnClick = ButtonExitClick
       end
       object ButtonRefresh: TSpeedButton
-        Left = 444
+        Left = 370
         Top = 3
         Width = 31
         Height = 29
@@ -284,8 +284,8 @@ object MainForm: TMainForm
         OnClick = ButtonRefreshClick
       end
       object ButtonRefreshZakaz: TSpeedButton
-        Left = 407
-        Top = 3
+        Left = 599
+        Top = 6
         Width = 31
         Height = 29
         Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
@@ -300,6 +300,7 @@ object MainForm: TMainForm
           8888888777778888888888888888888888888888888888888888}
         ParentShowHint = False
         ShowHint = True
+        Visible = False
       end
       object ButtonChangeNumberTare: TSpeedButton
         Left = 50
@@ -318,6 +319,7 @@ object MainForm: TMainForm
           F708888888888880FF0888888888888800808888888888888808}
         ParentShowHint = False
         ShowHint = True
+        Visible = False
       end
       object ButtonChangeNumberLevel: TSpeedButton
         Left = 82
@@ -336,24 +338,7 @@ object MainForm: TMainForm
           9088888888888819990888888888888199888888888888881888}
         ParentShowHint = False
         ShowHint = True
-      end
-      object ButtonExportToMail: TSpeedButton
-        Left = 268
-        Top = 3
-        Width = 31
-        Height = 29
-        Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' DBF '#1058#1072#1074#1088#1080#1103
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          888888888888888888888888888888888888873333333333338887BB3B33B3B3
-          B38887B3B3B13B3B3388873B3B9913B3B38887B3B399973B3388873B397B9973
-          B38887B397BBB997338887FFFFFFFF91BB8888FBBBBB88891888888FFFF88888
-          9188888888888888898888888888888888988888888888888888}
-        ParentShowHint = False
-        ShowHint = True
+        Visible = False
       end
       object ButtonChangeMember: TSpeedButton
         Left = 114
@@ -372,10 +357,11 @@ object MainForm: TMainForm
           9188888999998889818888889998889888888888898888888888}
         ParentShowHint = False
         ShowHint = True
+        Visible = False
       end
       object ButtonExportToEDI: TSpeedButton
-        Left = 327
-        Top = 5
+        Left = 271
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' EDI'

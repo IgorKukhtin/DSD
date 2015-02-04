@@ -13,7 +13,7 @@ type
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
     spGetReporNameTax: TdsdStoredProc;
-    spGetReportName: TdsdStoredProc;
+    spGetReportName_Sale: TdsdStoredProc;
     spGetReporNameBill: TdsdStoredProc;
     spSelectTax_Us: TdsdStoredProc;
     spSelectTax_Client: TdsdStoredProc;
@@ -31,9 +31,9 @@ type
     mactPrint_Tax_Client: TMultiAction;
     actPrintTax_Us: TdsdPrintAction;
     actPrintTax_Client: TdsdPrintAction;
-    actPrint: TdsdPrintAction;
+    actPrint_Sale: TdsdPrintAction;
     actPrint_Bill: TdsdPrintAction;
-    actSPPrintSaleProcName: TdsdExecStoredProc;
+    actPrintReportName_Sale: TdsdExecStoredProc;
     actSPPrintSaleTaxProcName: TdsdExecStoredProc;
     actSPPrintSaleBillProcName: TdsdExecStoredProc;
     actPrint_Spec: TdsdPrintAction;
@@ -46,6 +46,9 @@ type
     spSelectPrint_ReturnIn: TdsdStoredProc;
     spSelectPrint_SendOnPrice: TdsdStoredProc;
     actPrint_SendOnPrice: TdsdPrintAction;
+    spGetReportName_ReturnIn: TdsdStoredProc;
+    mactPrint_ReturnIn: TMultiAction;
+    actPrintReportName_ReturnIn: TdsdExecStoredProc;
   private
   end;
 
@@ -68,7 +71,7 @@ end;
 procedure Print_ReturnIn (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  UtilPrintForm.actPrint_ReturnIn.Execute;
+  UtilPrintForm.mactPrint_ReturnIn.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_SendOnPrice (MovementId: Integer);

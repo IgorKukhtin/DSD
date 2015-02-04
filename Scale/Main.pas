@@ -24,7 +24,6 @@ type
     ButtonRefreshZakaz: TSpeedButton;
     ButtonChangeNumberTare: TSpeedButton;
     ButtonChangeNumberLevel: TSpeedButton;
-    ButtonExportToMail: TSpeedButton;
     ButtonChangeMember: TSpeedButton;
     ButtonExportToEDI: TSpeedButton;
     infoPanelTotalSumm: TPanel;
