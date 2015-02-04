@@ -128,7 +128,6 @@ type
     cxLabel18: TcxLabel;
     edPartionGoods: TcxTextEdit;
     ContractGuides: TdsdGuides;
-    edContractTag: TcxTextEdit;
     edWeighingNumber: TcxCurrencyEdit;
     colBoxCount: TcxGridDBColumn;
     colBoxNumber: TcxGridDBColumn;
@@ -142,6 +141,13 @@ type
     colHeadCount_mi: TcxGridDBColumn;
     colBoxCount_mi: TcxGridDBColumn;
     colAmountChangePercent: TcxGridDBColumn;
+    edContractTag: TcxButtonEdit;
+    ContractTagGuides: TdsdGuides;
+    edPriceWithVAT: TcxCheckBox;
+    cxLabel19: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    edVATPercent: TcxCurrencyEdit;
   private
   public
   end;
