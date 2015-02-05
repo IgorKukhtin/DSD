@@ -651,10 +651,10 @@ inherited OrderExternalForm: TOrderExternalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actSPSavePrintState
+          Action = actPrint
         end
         item
-          Action = actPrint
+          Action = actSPSavePrintState
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -856,6 +856,12 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'isPrinted'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 280
     Top = 552
@@ -1800,11 +1806,25 @@ inherited OrderExternalForm: TOrderExternalForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inNewPrinted'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioPrinted'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     PackSize = 1
     Left = 344

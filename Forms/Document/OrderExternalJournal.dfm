@@ -1,30 +1,30 @@
 inherited OrderExternalJournalForm: TOrderExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1080' '#1089#1090#1086#1088#1086#1085#1085#1080#1077'>'
-  ClientHeight = 535
-  ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 569
+  ClientHeight = 661
+  ClientWidth = 1064
+  ExplicitWidth = 1072
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
-    Height = 476
+    Width = 1064
+    Height = 602
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1020
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1016
+    ExplicitWidth = 1064
+    ExplicitHeight = 602
+    ClientRectBottom = 598
+    ClientRectRight = 1060
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
-      ExplicitWidth = 1014
-      ExplicitHeight = 470
+      ExplicitWidth = 1058
+      ExplicitHeight = 596
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 470
-        ExplicitWidth = 1014
-        ExplicitHeight = 470
+        Width = 1058
+        Height = 596
+        ExplicitWidth = 1058
+        ExplicitHeight = 596
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -394,8 +394,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
-    ExplicitWidth = 1020
+    Width = 1064
+    ExplicitWidth = 1064
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -481,10 +481,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end>
       ActionList = <
         item
-          Action = actSPSavePrintState
+          Action = actPrint
         end
         item
-          Action = actPrint
+          Action = actSPSavePrintState
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -656,6 +656,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'ioPrinted'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 80
     Top = 384
@@ -669,6 +677,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'ioPrinted'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 208
     Top = 376
@@ -703,6 +719,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'isPrinted'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 400
     Top = 200
@@ -754,14 +776,30 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inNewPrinted'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioPrinted'
+        Value = 'er'
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     PackSize = 1
-    Left = 344
-    Top = 432
+    Left = 712
+    Top = 352
   end
 end
