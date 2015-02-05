@@ -229,7 +229,7 @@ BEGIN
 
            , Object_RouteSorting.ValueData 		        AS RouteSortingName
 
-           , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
+           , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() AND Object_From.Id = 8459 THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
 
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To

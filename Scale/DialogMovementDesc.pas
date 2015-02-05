@@ -413,20 +413,8 @@ begin
   end;
   //
   Create_ParamsMovement(ParamsMovement_local);
-  //
   //global Initialize
-  if ParamsMovement.ParamByName('MovementDescNumber').asInteger<>0 then
-  begin
-       CDS.Filter:='(Number='+IntToStr(ParamsMovement.ParamByName('MovementDescNumber').asInteger)
-                  +')'
-                    ;
-       CDS.Filtered:=true;
-       if CDS.RecordCount<>1
-       then ShowMessage('Ошибка.Код операции не определен.')
-       else begin ParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
-                  ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
-            end;
-    end;
+  gpInitialize_MovementDesc;
   //
   bbOk.Visible := false;
 end;

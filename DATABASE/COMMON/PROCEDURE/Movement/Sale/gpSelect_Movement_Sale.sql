@@ -69,7 +69,7 @@ BEGIN
            , Movement.OperDate                              AS OperDate
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
-           , MovementBoolean_Checked.ValueData              AS Checked
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
 
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
@@ -123,8 +123,8 @@ BEGIN
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
 
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isEDI
-           , COALESCE(MovementBoolean_Electron.ValueData, FALSE)          AS isElectron
-           , COALESCE(MovementBoolean_Medoc.ValueData, FALSE)             AS isMedoc
+           , COALESCE (MovementBoolean_Electron.ValueData, FALSE)         AS isElectron
+           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)            AS isMedoc
 
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()

@@ -25,7 +25,6 @@ object GuideGoodsForm: TGuideGoodsForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 876
     object DBGrid: TDBGrid
       Left = 0
       Top = 33
@@ -54,11 +53,6 @@ object GuideGoodsForm: TGuideGoodsForm
           FieldName = 'GoodsCode'
           Title.Alignment = taCenter
           Title.Caption = #1050#1086#1076
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
           Width = 70
           Visible = True
         end
@@ -67,11 +61,6 @@ object GuideGoodsForm: TGuideGoodsForm
           FieldName = 'GoodsName'
           Title.Alignment = taCenter
           Title.Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
           Width = 300
           Visible = True
         end
@@ -79,12 +68,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Expanded = False
           FieldName = 'GoodsKindName'
           Title.Caption = #1042#1080#1076
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
-          Width = -1
           Visible = False
         end
         item
@@ -92,11 +75,6 @@ object GuideGoodsForm: TGuideGoodsForm
           FieldName = 'MeasureName'
           Title.Alignment = taCenter
           Title.Caption = #1045#1076'.'#1080#1079#1084'.'
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
           Width = 45
           Visible = True
         end
@@ -105,11 +83,6 @@ object GuideGoodsForm: TGuideGoodsForm
           FieldName = 'Price'
           Title.Alignment = taCenter
           Title.Caption = #1062#1077#1085#1072
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
           Width = 55
           Visible = True
         end
@@ -118,11 +91,6 @@ object GuideGoodsForm: TGuideGoodsForm
           FieldName = 'Price_Return'
           Title.Alignment = taCenter
           Title.Caption = #1062#1077#1085#1072'('#1074#1086#1079#1074#1088')'
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
           Width = 70
           Visible = True
         end
@@ -130,36 +98,18 @@ object GuideGoodsForm: TGuideGoodsForm
           Expanded = False
           FieldName = 'Amount_Order'
           Title.Caption = #1047#1072#1103#1074#1082#1072
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
-          Width = -1
           Visible = False
         end
         item
           Expanded = False
           FieldName = 'Amount_Weighing'
           Title.Caption = #1054#1090#1075#1088#1091#1079#1082#1072
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
-          Width = -1
           Visible = False
         end
         item
           Expanded = False
           FieldName = 'Amount_diff'
           Title.Caption = #1056#1072#1079#1085#1080#1094#1072
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
-          Width = -1
           Visible = False
         end
         item
@@ -167,11 +117,6 @@ object GuideGoodsForm: TGuideGoodsForm
           FieldName = 'GoodsGroupNameFull'
           Title.Alignment = taCenter
           Title.Caption = #1043#1088#1091#1087#1087#1072
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -11
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = []
           Width = 300
           Visible = True
         end>
@@ -184,7 +129,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 876
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -252,7 +196,6 @@ object GuideGoodsForm: TGuideGoodsForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 876
     object infoPanelTare: TPanel
       Left = 387
       Top = 0
@@ -261,7 +204,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitLeft = 396
       object rgTareWeight: TRadioGroup
         Left = 0
         Top = 82
@@ -403,7 +345,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitLeft = 626
       object rgPriceList: TRadioGroup
         Left = 0
         Top = 41
@@ -547,7 +488,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 261
       object rgGoodsKind: TRadioGroup
         Left = 0
         Top = 41
@@ -566,7 +506,6 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 1
         OnClick = rgGoodsKindClick
-        ExplicitWidth = 261
       end
       object gbGoodsKindCode: TGroupBox
         Left = 0
@@ -576,7 +515,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
         TabOrder = 0
-        ExplicitWidth = 261
         object EditGoodsKindCode: TEdit
           Left = 5
           Top = 17
@@ -601,7 +539,6 @@ object GuideGoodsForm: TGuideGoodsForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitWidth = 876
   end
   object DataSource: TDataSource
     DataSet = CDS

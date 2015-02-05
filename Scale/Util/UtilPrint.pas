@@ -13,11 +13,11 @@ type
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
     spGetReporNameTax: TdsdStoredProc;
-    spGetReportName: TdsdStoredProc;
+    spGetReportName_Sale: TdsdStoredProc;
     spGetReporNameBill: TdsdStoredProc;
     spSelectTax_Us: TdsdStoredProc;
     spSelectTax_Client: TdsdStoredProc;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrint_Sale: TdsdStoredProc;
     spSelectPrintInvoice: TdsdStoredProc;
     spSelectPrintTTN: TdsdStoredProc;
     spSelectPrintPack22: TdsdStoredProc;
@@ -31,9 +31,9 @@ type
     mactPrint_Tax_Client: TMultiAction;
     actPrintTax_Us: TdsdPrintAction;
     actPrintTax_Client: TdsdPrintAction;
-    actPrint: TdsdPrintAction;
+    actPrint_Sale: TdsdPrintAction;
     actPrint_Bill: TdsdPrintAction;
-    actSPPrintSaleProcName: TdsdExecStoredProc;
+    actPrintReportName_Sale: TdsdExecStoredProc;
     actSPPrintSaleTaxProcName: TdsdExecStoredProc;
     actSPPrintSaleBillProcName: TdsdExecStoredProc;
     actPrint_Spec: TdsdPrintAction;
@@ -42,28 +42,42 @@ type
     actPrint_Pack22: TdsdPrintAction;
     actPrint_Pack21: TdsdPrintAction;
     actPrint_TTN: TdsdPrintAction;
+    actPrint_ReturnIn: TdsdPrintAction;
+    spSelectPrint_ReturnIn: TdsdStoredProc;
+    spSelectPrint_SendOnPrice: TdsdStoredProc;
+    actPrint_SendOnPrice: TdsdPrintAction;
+    spGetReportName_ReturnIn: TdsdStoredProc;
+    mactPrint_ReturnIn: TMultiAction;
+    actPrintReportName_ReturnIn: TdsdExecStoredProc;
   private
-    { Private declarations }
-  public
   end;
 
-  procedure PrintSale(Id: Integer);
+  procedure Print_Sale (MovementId: Integer);
+  procedure Print_ReturnIn (MovementId: Integer);
+  procedure Print_SendOnPrice (MovementId: Integer);
 
 var
   UtilPrintForm: TUtilPrintForm;
 
 implementation
-
 {$R *.dfm}
-
-procedure PrintSale(Id: Integer);
-var
-  l_Id :Integer;
+//------------------------------------------------------------------------------------------------
+procedure Print_Sale (MovementId: Integer);
 begin
-// showMessage(IntToStr(Id));
-  UtilPrintForm.FormParams.ParamByName('Id').Value := Id;
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.mactPrint_Sale.Execute;
 end;
-
-
+//------------------------------------------------------------------------------------------------
+procedure Print_ReturnIn (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.mactPrint_ReturnIn.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_SendOnPrice (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_SendOnPrice.Execute;
+end;
+//------------------------------------------------------------------------------------------------
 end.
