@@ -1,5 +1,5 @@
-inherited ContractPartnerForm: TContractPartnerForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084'>'
+inherited ContractGoodsForm: TContractGoodsForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093'>'
   ClientHeight = 374
   ClientWidth = 773
   AddOnFormData.ChoiceAction = dsdChoiceGuides
@@ -45,11 +45,25 @@ inherited ContractPartnerForm: TContractPartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
-          object clPartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'PartnerName'
+          object clGoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Width = 123
+          end
+          object clGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
+          end
+          object clPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 47
           end
           object clInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
@@ -489,12 +503,12 @@ inherited ContractPartnerForm: TContractPartnerForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TInsertUpdateChoiceAction
-      FormName = 'TContractPartnerEditForm'
-      FormNameParam.Value = 'TContractPartnerEditForm'
+      FormName = 'TContractGoodsEditForm'
+      FormNameParam.Value = 'TContractGoodsEditForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TContractPartnerEditForm'
-      FormNameParam.Value = 'TContractPartnerEditForm'
+      FormName = 'TContractGoodsEditForm'
+      FormNameParam.Value = 'TContractGoodsEditForm'
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
@@ -518,16 +532,16 @@ inherited ContractPartnerForm: TContractPartnerForm
           DataType = ftString
         end
         item
-          Name = 'PartnerId'
+          Name = 'GoodsId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartnerId'
+          ComponentItem = 'GoodsId'
         end
         item
-          Name = 'PartnerName'
+          Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartnerName'
+          ComponentItem = 'GoodsName'
           DataType = ftString
         end>
     end
@@ -542,7 +556,7 @@ inherited ContractPartnerForm: TContractPartnerForm
     Top = 128
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ContractPartner_All'
+    StoredProcName = 'gpSelect_Object_ContractGoods_All'
     Top = 64
   end
   inherited BarManager: TdxBarManager
@@ -608,5 +622,9 @@ inherited ContractPartnerForm: TContractPartnerForm
       item
         Action = actUpdate
       end>
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 128
+    Top = 256
   end
 end
