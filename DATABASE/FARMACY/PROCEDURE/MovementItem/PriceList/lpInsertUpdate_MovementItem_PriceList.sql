@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PriceList(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPartionGoodsDate    TDateTime , -- Партия товара
+    IN inRemains             TFloat    , -- остаток
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -23,6 +24,8 @@ BEGIN
 
      -- сохранили связь с <Товаром из прайса>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
+
+     inRemains
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);

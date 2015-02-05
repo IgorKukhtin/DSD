@@ -28,12 +28,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
- 12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
- 17.08.14                                        * add MovementDescId
- 05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
- 25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
- 30.01.14                                        * 
+ 04.03.15                        * 
+
 */
 
 -- тест

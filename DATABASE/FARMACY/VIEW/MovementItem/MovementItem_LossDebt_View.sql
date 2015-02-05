@@ -10,6 +10,7 @@ CREATE OR REPLACE VIEW MovementItem_LossDebt_View AS
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+            , MovementItem.Amount
 
            , CASE WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
