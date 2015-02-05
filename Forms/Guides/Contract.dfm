@@ -600,15 +600,15 @@ object ContractForm: TContractForm
   end
   object cxGridContractCondition: TcxGrid
     Left = 0
-    Top = 334
-    Width = 723
-    Height = 184
+    Top = 337
+    Width = 611
+    Height = 181
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 641
+    ExplicitWidth = 609
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -767,28 +767,25 @@ object ContractForm: TContractForm
     Width = 278
   end
   object Panel: TPanel
-    Left = 727
-    Top = 334
-    Width = 482
-    Height = 184
+    Left = 615
+    Top = 337
+    Width = 594
+    Height = 181
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = 713
-    ExplicitHeight = 180
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
       Width = 241
-      Height = 184
+      Height = 181
       Align = alLeft
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 1
-      ExplicitTop = 1
-      ExplicitHeight = 180
+      ExplicitTop = 6
+      ExplicitHeight = 175
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -838,8 +835,8 @@ object ContractForm: TContractForm
     object cxGridGoods: TcxGrid
       Left = 246
       Top = 0
-      Width = 236
-      Height = 184
+      Width = 348
+      Height = 181
       Align = alClient
       TabOrder = 1
       LookAndFeel.Kind = lfStandard
@@ -847,6 +844,8 @@ object ContractForm: TContractForm
       LookAndFeel.SkinName = ''
       ExplicitLeft = 247
       ExplicitTop = 1
+      ExplicitWidth = 236
+      ExplicitHeight = 184
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -917,7 +916,7 @@ object ContractForm: TContractForm
       Left = 241
       Top = 0
       Width = 5
-      Height = 184
+      Height = 181
       Control = cxGridPartner
       ExplicitLeft = 482
       ExplicitHeight = 180
@@ -927,20 +926,19 @@ object ContractForm: TContractForm
     Left = 0
     Top = 329
     Width = 1209
-    Height = 5
+    Height = 8
     AlignSplitter = salTop
     Control = cxGrid
-    ExplicitWidth = 1194
   end
   object cxRightSplitter: TcxSplitter
-    Left = 723
-    Top = 334
+    Left = 611
+    Top = 337
     Width = 4
-    Height = 184
+    Height = 181
     AlignSplitter = salRight
     Control = Panel
-    ExplicitLeft = 708
-    ExplicitHeight = 180
+    ExplicitTop = 335
+    ExplicitHeight = 184
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -2178,13 +2176,13 @@ object ContractForm: TContractForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 789
+    Left = 685
     Top = 349
   end
   object DataSourcePartner: TDataSource
     DataSet = CDSContractPartner
-    Left = 838
-    Top = 341
+    Left = 766
+    Top = 349
   end
   object spSelectContractPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractPartner'
@@ -2195,8 +2193,8 @@ object ContractForm: TContractForm
       end>
     Params = <>
     PackSize = 1
-    Left = 882
-    Top = 373
+    Left = 769
+    Top = 421
   end
   object spInsertUpdateContractPartner: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractPartner'
@@ -2232,8 +2230,8 @@ object ContractForm: TContractForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 872
-    Top = 416
+    Left = 784
+    Top = 384
   end
   object dsdDBViewAddOnPartner: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2260,8 +2258,8 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 744
-    Top = 384
+    Left = 704
+    Top = 392
   end
   object CDSContractGoods: TClientDataSet
     Aggregates = <>
