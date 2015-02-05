@@ -52,6 +52,7 @@ BEGIN
                         )
       THEN
            inUserId := (SELECT MAX (Object_Process_User_View.UserId) FROM Object_Process_User_View JOIN Object_RoleAccessKey_View ON Object_RoleAccessKey_View.UserId = Object_Process_User_View.UserId WHERE Object_Process_User_View.ProcessId = inProcessId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr());
+           IF inUserId IS NULL THEN inUserId:= (SELECT MAX (Object_Process_User_View.UserId) FROM Object_Process_User_View JOIN Object_RoleAccessKey_View ON Object_RoleAccessKey_View.UserId = Object_Process_User_View.UserId WHERE Object_Process_User_View.ProcessId = inProcessId); END IF;
       ELSE
       -- Service
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()

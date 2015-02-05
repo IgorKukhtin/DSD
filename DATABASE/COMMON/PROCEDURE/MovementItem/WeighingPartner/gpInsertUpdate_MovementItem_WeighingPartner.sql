@@ -29,9 +29,11 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingPartner());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingPartner());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- проверка - св€занные документы »змен€ть нельз€
      -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
@@ -43,6 +45,9 @@ BEGIN
      IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
      -- сохранили свойство <ѕарти€ товара>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
+
+     -- сохранили свойство <ƒата/врем€ создани€>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
 
      -- сохранили свойство < оличество у контрагента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
