@@ -18,13 +18,13 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideNikolaev()
                     THEN 257165 -- покупатели Николаев (Херсон)
 
-               -- WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_()
-               --      THEN 257166 -- покупатели Одесса
-
+               WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideOdessa()
+                    THEN 257166 -- покупатели Одесса
+                    
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideCherkassi()
                     THEN 257167 -- покупатели Черкассы (Кировоград)
 
-               -- WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_()
+               -- WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_Guide()
                --      THEN 257168 -- покупатели Крым
 
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideKrRog()

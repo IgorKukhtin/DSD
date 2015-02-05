@@ -118,6 +118,7 @@ BEGIN
                                    , inName:= 'Транспорт Черкассы (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportCherkassi');
                                    
+
  -- Донецк, ограничения в справочниках - Транспорт
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportDoneck()
                                    , inDescId:= zc_Object_Process()
@@ -137,6 +138,7 @@ BEGIN
                                    , inName:= 'Транспорт Одесса (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportOdessa');
 
+                                   
  -- по Филиалу ограничиваются Документы для Кассы
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashAll()
                                    , inDescId:= zc_Object_Process()

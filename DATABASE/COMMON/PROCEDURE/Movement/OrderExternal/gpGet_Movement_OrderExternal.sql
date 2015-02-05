@@ -22,12 +22,16 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer;
+
+   DECLARE vbObjectId_Branch_Constraint Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderExternal());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
+     vbObjectId_Branch_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -65,7 +69,11 @@ BEGIN
 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-               LEFT JOIN Object AS Object_To ON Object_To.Id = 301309 -- ф. Запорожье
+               LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 11 -- филиал Запорожье
+                                                                         THEN 301309 -- Склад ГП ф.Запорожье
+                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 4 -- 
+                                                                         THEN 346093 -- Склад ГП ф.Одесса
+                                                               END
          ;
 
      ELSE

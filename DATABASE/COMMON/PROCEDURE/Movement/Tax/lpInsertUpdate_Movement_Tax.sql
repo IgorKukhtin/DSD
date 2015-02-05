@@ -92,10 +92,13 @@ BEGIN
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
+
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentOdessa()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
+
                   END;
      -- проверка
      IF COALESCE (vbBranchId, 0) = 0

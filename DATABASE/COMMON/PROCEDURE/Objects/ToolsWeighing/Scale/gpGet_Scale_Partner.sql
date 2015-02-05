@@ -63,7 +63,7 @@ BEGIN
             , Object_Contract_View.ContractTagName           AS ContractTagName
 
             , Object_ContractCondition_PercentView.ChangePercent :: TFloat AS ChangePercent
-            , CASE WHEN Object_Partner.PartnerCode = 1 THEN 1.5 WHEN Object_Partner.PartnerCode = 3 THEN 0 ELSE 1 END :: TFloat AS ChangePercentAmount
+            , CASE WHEN Object_Partner.PartnerCode = 1 THEN 1 WHEN Object_Partner.PartnerCode = 3 THEN 1 ELSE 1 END :: TFloat AS ChangePercentAmount
 
        FROM Object_Partner
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_Partner.PriceListId
