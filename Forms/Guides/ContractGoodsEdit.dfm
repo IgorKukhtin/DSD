@@ -291,7 +291,7 @@
     FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TGoods_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

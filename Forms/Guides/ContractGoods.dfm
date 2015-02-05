@@ -2,6 +2,8 @@ inherited ContractGoodsForm: TContractGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093'>'
   ClientHeight = 374
   ClientWidth = 773
+  AddOnFormData.isAlwaysRefresh = True
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 781
   ExplicitHeight = 408
@@ -622,6 +624,8 @@ inherited ContractGoodsForm: TContractGoodsForm
       item
         Action = actUpdate
       end>
+    Left = 480
+    Top = 224
   end
   inherited PopupMenu: TPopupMenu
     Left = 128
