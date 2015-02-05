@@ -620,7 +620,9 @@ uses
   SysScalesLib_TLB in '..\..\Scale\Util\SysScalesLib_TLB.pas',
   dsdDataSetDataLink in '..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
   dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas',
-  Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm};
+  Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm},
+  ContractGoodsEdit in '..\..\Forms\Guides\ContractGoodsEdit.pas' {ContractGoodsEditForm: TParentForm},
+  ContractGoods in '..\..\Forms\Guides\ContractGoods.pas' {ContractGoodsForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,18 +1,23 @@
 -- Function: gpSetErased_Movement_OrderExternal (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSetErased_Movement_OrderExternal (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSetErased_Movement_OrderExternal (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetErased_Movement_OrderExternal(
     IN inMovementId        Integer               , -- ключ Документа
+ INOUT ioPrinted           Boolean               ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS VOID
+RETURNS Boolean
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_OrderExternal());
+
+     PERFORM gpInsertUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := False , ioPrinted := False ,  inSession := inSession);
+     ioPrinted := False;
 
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');

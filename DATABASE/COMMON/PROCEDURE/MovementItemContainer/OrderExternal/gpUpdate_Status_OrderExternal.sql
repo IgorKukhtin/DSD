@@ -12,11 +12,11 @@ $BODY$
 BEGIN
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
-            PERFORM gpUnComplete_Movement_OrderExternal (inMovementId, inSession);
+            PERFORM gpUnComplete_Movement_OrderExternal (inMovementId, False, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
             PERFORM gpComplete_Movement_OrderExternal (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
-            PERFORM gpSetErased_Movement_OrderExternal (inMovementId, inSession);
+            PERFORM gpSetErased_Movement_OrderExternal (inMovementId, False, inSession);
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;
