@@ -1,6 +1,6 @@
-﻿-- Function: gpUpdateMovement_Checked()
+﻿-- Function: gpUpdateObject_Partner_EdiOrdspr 
 
-DROP FUNCTION IF EXISTS gpUpdateObject_Partner_EdiOrdspr(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateObject_Partner_EdiOrdspr (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateObject_Partner_EdiOrdspr (
     IN ioId                  Integer   , -- Ключ объекта <Документ>
