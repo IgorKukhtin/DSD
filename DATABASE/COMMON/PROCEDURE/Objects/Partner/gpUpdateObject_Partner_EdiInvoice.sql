@@ -1,4 +1,4 @@
--- Function: gpUpdateMovement_Checked()
+-- Function: gpUpdateObject_Partner_EdiInvoice()
 
 DROP FUNCTION IF EXISTS gpUpdateObject_Partner_EdiInvoice(Integer, Boolean, TVarChar);
 

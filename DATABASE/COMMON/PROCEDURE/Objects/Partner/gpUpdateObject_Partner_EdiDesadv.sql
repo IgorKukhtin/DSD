@@ -1,4 +1,4 @@
--- Function: gpUpdateMovement_Checked()
+-- Function: gpUpdateObject_Partner_EdiDesadv()
 
 DROP FUNCTION IF EXISTS gpUpdateObject_Partner_EdiDesadv(Integer, Boolean, TVarChar);
 
