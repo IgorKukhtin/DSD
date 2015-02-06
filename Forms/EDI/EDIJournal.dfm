@@ -3,8 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 424
   ClientWidth = 1119
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1135
-  ExplicitHeight = 459
+  ExplicitWidth = 1127
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,6 +23,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Width = 1119
         Height = 209
         Align = alTop
+        ExplicitTop = -3
         ExplicitWidth = 1119
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -828,6 +829,9 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Action = actInvoice
+        end
+        item
+          Action = actUpdateEdiInvoiceTrue
         end>
       InfoAfterExecute = #1057#1095#1077#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
       Caption = #1057#1095#1077#1090
@@ -842,6 +846,9 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Action = actOrdSpr
+        end
+        item
+          Action = actUpdateEdiOrdsprTrue
         end>
       InfoAfterExecute = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' EDI'
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
@@ -866,6 +873,9 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Action = actDesadv
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
         end>
       InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' EDI'
       Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
@@ -1130,6 +1140,26 @@ inherited EDIJournalForm: TEDIJournalForm
       HeaderDataSet = PrintHeaderCDS
       Directory = '/outbox'
     end
+    object actUpdateEdiDesadvTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spUpdateEdiDesadv
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiDesadv
+        end>
+      Caption = 'actUpdateEdiDesadvTrue'
+    end
+    object actUpdateEdiInvoiceTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spUpdateEdiInvoice
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiInvoice
+        end>
+      Caption = 'actUpdateEdiInvoiceTrue'
+    end
     object mactSendComdoc: TMultiAction
       Category = 'EDI COMDOC DataSet'
       MoveParams = <>
@@ -1298,6 +1328,16 @@ inherited EDIJournalForm: TEDIJournalForm
           ParamType = ptInput
         end>
       isShowModal = False
+    end
+    object actUpdateEdiOrdsprTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spUpdateEdiOrdspr
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiOrdspr
+        end>
+      Caption = 'actUpdateEdiOrdsprTrue'
     end
   end
   inherited MasterDS: TDataSource
@@ -2152,5 +2192,71 @@ inherited EDIJournalForm: TEDIJournalForm
     PackSize = 1
     Left = 536
     Top = 160
+  end
+  object spUpdateEdiOrdspr: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'EDI - '#1057#1095#1077#1090
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 136
+  end
+  object spUpdateEdiInvoice: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 136
+  end
+  object spUpdateEdiDesadv: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'EDI - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 136
   end
 end

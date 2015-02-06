@@ -111,6 +111,9 @@ type
     actPrint_TTN: TdsdPrintAction;
     spSelectPrintTTN: TdsdStoredProc;
     bbTTN: TdxBarButton;
+    clEdiOrdspr: TcxGridDBColumn;
+    clEdiInvoice: TcxGridDBColumn;
+    clEdiDesadv: TcxGridDBColumn;
   private
     { Private declarations }
   public
