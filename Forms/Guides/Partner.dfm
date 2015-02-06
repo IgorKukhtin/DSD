@@ -1044,7 +1044,7 @@ object PartnerForm: TPartnerForm
     Top = 112
   end
   object spUpdateEdiOrdspr: TdsdStoredProc
-    StoredProcName = 'gpUpdateObject_Partner_EdiOrdspr'
+    StoredProcName = 'gpUpdateObject_Partner_Edi'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1062,13 +1062,19 @@ object PartnerForm: TPartnerForm
         ComponentItem = 'EdiOrdspr'
         DataType = ftBoolean
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'EDI - '#1057#1095#1077#1090
+        DataType = ftString
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 744
     Top = 152
   end
   object spUpdateEdiInvoice: TdsdStoredProc
-    StoredProcName = 'gpUpdateObject_Partner_EdiInvoice'
+    StoredProcName = 'gpUpdateObject_Partner_Edi'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1086,13 +1092,19 @@ object PartnerForm: TPartnerForm
         ComponentItem = 'EdiInvoice'
         DataType = ftBoolean
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+        DataType = ftString
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 744
     Top = 208
   end
   object spUpdateEdiDesadv: TdsdStoredProc
-    StoredProcName = 'gpUpdateObject_Partner_EdiDesadv'
+    StoredProcName = 'gpUpdateObject_Partner_Edi'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1110,6 +1122,12 @@ object PartnerForm: TPartnerForm
         ComponentItem = 'EdiDesadv'
         DataType = ftBoolean
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'EDI - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+        DataType = ftString
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 744

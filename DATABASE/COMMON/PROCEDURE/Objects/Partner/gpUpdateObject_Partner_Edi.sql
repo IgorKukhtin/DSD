@@ -1,10 +1,12 @@
--- Function: gpUpdateObject_Partner_EdiDesadv()
+-- Function: gpUpdateObject_Partner_EdiOrdspr 
 
-DROP FUNCTION IF EXISTS gpUpdateObject_Partner_EdiDesadv(Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdateObject_Partner_EdiDesadv (
+DROP FUNCTION IF EXISTS gpUpdateObject_Partner_Edi (Integer, Boolean, TVarChar, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpUpdateObject_Partner_Edi (
     IN ioId                  Integer   , -- Ключ объекта <Документ>
  INOUT inValue               Boolean   , -- Проверен
+    IN inDesc                TVarChar  , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Boolean 
@@ -18,8 +20,11 @@ BEGIN
 
      -- определили признак
      inValue:= NOT inValue;
+     
      -- сохранили свойство
-     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiDesadv(), ioId, inValue);
+     PERFORM lpInsertUpdate_ObjectBoolean (tmpDesc.Id, ioId, inValue)
+           FROM ObjectBooleanDesc AS tmpDesc
+           WHERE ItemName = inDesc;
    
   -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (ioId, vbUserId, FALSE);
@@ -36,4 +41,4 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpUpdateObject_Partner_EdiDesadv (ioId:= 275079, inChecked:= 'False', inSession:= '2')
+-- SELECT * FROM gpUpdateObject_Partner_Edi (ioId:=  83674 , inValue:= false , inDesc := 'Счет', inSession:= '5')
