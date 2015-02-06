@@ -2,12 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal_Print (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal_Print (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderExternal_Print (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal_Print(
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderExternal_Print(
     IN inId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inNewPrinted          Boolean   , --
- INOUT ioPrinted             Boolean   , --
-    IN inSession             TVarChar   -- сессия пользователя
+   OUT outPrinted            Boolean   , --
+    IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Boolean
 AS
@@ -19,8 +20,9 @@ BEGIN
      -- определили признак
 --     inChecked:= NOT inChecked;
 --     IF COALESCE(ioPrinted, True) THEN ioPrinted := True; ELSE ioPrinted:= False; END IF;
-     ioPrinted := inNewPrinted;
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Print(), inId, ioPrinted);
+     outPrinted := inNewPrinted;
+
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Print(), inId, inNewPrinted);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
@@ -32,6 +34,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.02.15                                                       *
  05.02.15                                                       *
  04.02.15                                                       *
 */

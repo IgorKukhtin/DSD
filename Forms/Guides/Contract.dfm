@@ -25,8 +25,6 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 25
-    ExplicitWidth = 1194
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -608,7 +606,6 @@ object ContractForm: TContractForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 609
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -784,8 +781,6 @@ object ContractForm: TContractForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitTop = 6
-      ExplicitHeight = 175
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -842,10 +837,6 @@ object ContractForm: TContractForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 247
-      ExplicitTop = 1
-      ExplicitWidth = 236
-      ExplicitHeight = 184
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -918,8 +909,6 @@ object ContractForm: TContractForm
       Width = 5
       Height = 181
       Control = cxGridPartner
-      ExplicitLeft = 482
-      ExplicitHeight = 180
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -937,8 +926,6 @@ object ContractForm: TContractForm
     Height = 181
     AlignSplitter = salRight
     Control = Panel
-    ExplicitTop = 335
-    ExplicitHeight = 184
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -980,8 +967,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1030,6 +1017,7 @@ object ContractForm: TContractForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
@@ -1054,7 +1042,6 @@ object ContractForm: TContractForm
           ItemName = 'bb'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end

@@ -4,9 +4,10 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_OrderExternal (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_OrderExternal(
     IN inMovementId        Integer              , -- ключ Документа
+   OUT outPrinted          Boolean              ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS VOID
+RETURNS Boolean
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -25,6 +26,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderExternal());
 
+     outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := False,  inSession := inSession);
 
      -- таблица - элементы документа
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
@@ -110,7 +112,7 @@ BEGIN
 
             , _tmp.Price
             , _tmp.CountForPrice
-        FROM 
+        FROM
              (SELECT
                     tmpMI.MovementItemId
                   , tmpMI.GoodsId

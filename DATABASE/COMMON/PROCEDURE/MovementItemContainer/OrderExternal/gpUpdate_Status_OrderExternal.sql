@@ -5,18 +5,20 @@ DROP FUNCTION IF EXISTS gpUpdate_Status_OrderExternal (Integer, Integer, TVarCha
 CREATE OR REPLACE FUNCTION gpUpdate_Status_OrderExternal(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
+   OUT outPrinted            Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS Boolean AS
 $BODY$
 BEGIN
+     outPrinted := False;
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
-            PERFORM gpUnComplete_Movement_OrderExternal (inMovementId, False, inSession);
+            PERFORM gpUnComplete_Movement_OrderExternal (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
             PERFORM gpComplete_Movement_OrderExternal (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
-            PERFORM gpSetErased_Movement_OrderExternal (inMovementId, False, inSession);
+            PERFORM gpSetErased_Movement_OrderExternal (inMovementId, inSession);
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;

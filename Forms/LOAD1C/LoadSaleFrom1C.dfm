@@ -626,6 +626,14 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inVidDoc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VidDoc'
+        DataType = ftString
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 320
@@ -690,8 +698,8 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   object ChildCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'InvNumber;OperDate;BranchName;ClientCode'
-    MasterFields = 'InvNumber;OperDate;BranchName;ClientCode'
+    IndexFieldNames = 'InvNumber;OperDate;BranchName;ClientCode;VidDoc'
+    MasterFields = 'InvNumber;OperDate;BranchName;ClientCode;VidDoc'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
