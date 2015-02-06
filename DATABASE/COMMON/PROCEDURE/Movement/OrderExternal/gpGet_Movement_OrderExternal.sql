@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat, isPrinted Boolean
               )
 AS
 $BODY$
@@ -65,13 +65,14 @@ BEGIN
              , CAST (False AS Boolean)                          AS PriceWithVAT
              , CAST (20 AS TFloat)                              AS VATPercent
              , CAST (0 AS TFloat)                               AS ChangePercent
+             , CAST (False AS Boolean)                          AS isPrinted
 
 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 11 -- филиал Запорожье
                                                                          THEN 301309 -- Склад ГП ф.Запорожье
-                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 4 -- 
+                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 4 --
                                                                          THEN 346093 -- Склад ГП ф.Одесса
                                                                END
          ;
@@ -108,6 +109,7 @@ BEGIN
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, False)  AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
+           , COALESCE (MovementBoolean_Print.ValueData, False) AS isPrinted
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -184,6 +186,11 @@ BEGIN
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
+           LEFT JOIN MovementBoolean AS MovementBoolean_Print
+                                     ON MovementBoolean_Print.MovementId =  Movement.Id
+                                    AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
+
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal();
 
@@ -198,6 +205,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.02.15                                                        *
  26.08.14                                                        *
  18.08.14                                                        *
  06.06.14                                                        *

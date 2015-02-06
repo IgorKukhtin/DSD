@@ -83,6 +83,7 @@ type
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
+    cbPrinted: TcxCheckBox;
   private
     { Private declarations }
   public
