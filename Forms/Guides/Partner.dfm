@@ -257,6 +257,30 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object clEdiOrdspr: TcxGridDBColumn
+        Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+        DataBinding.FieldName = 'EdiOrdspr'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
+      object clEdiInvoice: TcxGridDBColumn
+        Caption = 'EDI - '#1057#1095#1077#1090
+        DataBinding.FieldName = 'EdiInvoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
+      object clEdiDesadv: TcxGridDBColumn
+        Caption = 'EDI - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'EdiDesadv'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -372,6 +396,22 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateEdiOrdspr'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateEdiInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateEdiDesadv'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -472,6 +512,18 @@ object PartnerForm: TPartnerForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbUpdateEdiOrdspr: TdxBarButton
+      Action = actUpdateEdiOrdspr
+      Category = 0
+    end
+    object bbUpdateEdiInvoice: TdxBarButton
+      Action = actUpdateEdiInvoice
+      Category = 0
+    end
+    object bbUpdateEdiDesadv: TdxBarButton
+      Action = actUpdateEdiDesadv
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -565,6 +617,42 @@ object PartnerForm: TPartnerForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actUpdateEdiDesadv: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateEdiDesadv
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiDesadv
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "EDI - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "EDI - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077'"'
+      ImageIndex = 72
+    end
+    object actUpdateEdiInvoice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateEdiInvoice
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiInvoice
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "EDI - '#1057#1095#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "EDI - '#1057#1095#1077#1090'"'
+      ImageIndex = 52
+    end
+    object actUpdateEdiOrdspr: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateEdiOrdspr
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiOrdspr
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077'"'
+      ImageIndex = 58
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -954,5 +1042,77 @@ object PartnerForm: TPartnerForm
       end>
     Left = 384
     Top = 112
+  end
+  object spUpdateEdiOrdspr: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Partner_EdiOrdspr'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EdiOrdspr'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 152
+  end
+  object spUpdateEdiInvoice: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Partner_EdiInvoice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EdiInvoice'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 208
+  end
+  object spUpdateEdiDesadv: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Partner_EdiDesadv'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EdiDesadv'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 264
   end
 end
