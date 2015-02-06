@@ -11,6 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
+               EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean,
+
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, GLNCode_Juridical TVarChar,
                RetailName TVarChar,
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
@@ -67,6 +69,11 @@ BEGIN
        
          , Partner_PrepareDayCount.ValueData  AS PrepareDayCount
          , Partner_DocumentDayCount.ValueData AS DocumentDayCount
+
+         , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS EdiOrdspr
+         , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS EdiInvoice
+         , COALESCE (ObjectBoolean_EdiDesadv.ValueData, CAST (False AS Boolean))     AS EdiDesadv
+
 
          , Object_Juridical.Id             AS JuridicalId
          , Object_Juridical.ObjectCode     AS JuridicalCode
@@ -146,6 +153,18 @@ BEGIN
          LEFT JOIN ObjectFloat AS Partner_DocumentDayCount 
                                ON Partner_DocumentDayCount.ObjectId = Object_Partner.Id
                               AND Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()                                                              
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
+                                 ON ObjectBoolean_EdiOrdspr.ObjectId = Object_Partner.Id 
+                                AND ObjectBoolean_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiInvoice
+                                 ON ObjectBoolean_EdiInvoice.ObjectId = Object_Partner.Id 
+                                AND ObjectBoolean_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+   
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiDesadv
+                                 ON ObjectBoolean_EdiDesadv.ObjectId = Object_Partner.Id 
+                                AND ObjectBoolean_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
 
          LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                               ON ObjectDate_StartPromo.ObjectId = Object_Partner.Id
@@ -241,6 +260,7 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.02.15         * add redmine 
  20.11.14         * add redmine 
  10.11.14         * add redmine
  19.10.14                                        * add GLNCode_Juridical

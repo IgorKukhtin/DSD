@@ -89,6 +89,18 @@ type
     RetailName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
+    clEdiOrdspr: TcxGridDBColumn;
+    clEdiInvoice: TcxGridDBColumn;
+    clEdiDesadv: TcxGridDBColumn;
+    spUpdateEdiOrdspr: TdsdStoredProc;
+    spUpdateEdiInvoice: TdsdStoredProc;
+    spUpdateEdiDesadv: TdsdStoredProc;
+    actUpdateEdiOrdspr: TdsdExecStoredProc;
+    actUpdateEdiInvoice: TdsdExecStoredProc;
+    actUpdateEdiDesadv: TdsdExecStoredProc;
+    bbUpdateEdiOrdspr: TdxBarButton;
+    bbUpdateEdiInvoice: TdxBarButton;
+    bbUpdateEdiDesadv: TdxBarButton;
   private
     { Private declarations }
   public

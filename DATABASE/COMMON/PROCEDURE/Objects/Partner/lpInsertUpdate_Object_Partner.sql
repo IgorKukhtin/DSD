@@ -8,6 +8,10 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        TFloat, TFloat,
                                                        Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
                                                        TDateTime, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, 
+                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);                                                       
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -15,6 +19,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inGLNCode             TVarChar  ,    -- Код GLN
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
+
+    IN inEdiOrdspr           Boolean   ,    -- EDI - Подтверждение
+    IN inEdiInvoice          Boolean   ,    -- EDI - Счет
+    IN inEdiDesadv           Boolean   ,    -- EDI - уведомление
+
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
@@ -90,15 +99,23 @@ BEGIN
       -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, inEndPromo);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiOrdspr(), ioId, inEdiOrdspr);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiInvoice(), ioId, inEdiInvoice);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiDesadv(), ioId, inEdiDesadv);
+
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.02.15         * add inEdiOrdspr, inEdiInvoice, inEdiDesadv
  22.11.14                                        * all
  10.11.14         * add redmine
  25.08.14                                        * set lp

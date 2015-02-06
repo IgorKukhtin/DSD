@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Object_Partner()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (integer, integer, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, integer, tfloat, tfloat, integer, integer, integer, integer, integer, integer, integer, integer, integer, integer, tdatetime, tdatetime, tvarchar, tvarchar, tvarchar, integer, tvarchar, tvarchar, tvarchar, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (integer, integer, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, integer, tfloat, tfloat, Boolean, Boolean, Boolean, integer, integer, integer, integer, integer, integer, integer, integer, integer, integer, tdatetime, tdatetime, tvarchar, tvarchar, tvarchar, integer, tvarchar, tvarchar, tvarchar, integer, tvarchar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -15,6 +17,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inStreetId            Integer   ,    -- Улица/проспект  
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
+    
+    IN inEdiOrdspr           Boolean   ,    -- EDI - Подтверждение
+    IN inEdiInvoice          Boolean   ,    -- EDI - Счет
+    IN inEdiDesadv           Boolean   ,    -- EDI - уведомление
+
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
@@ -64,6 +71,9 @@ BEGIN
                                         , inGLNCode         := inGLNCode
                                         , inPrepareDayCount := inPrepareDayCount
                                         , inDocumentDayCount:= inDocumentDayCount
+                                        , inEdiOrdspr       := inEdiOrdspr
+                                        , inEdiInvoice      := inEdiInvoice
+                                        , inEdiDesadv       := inEdiDesadv
                                         , inJuridicalId     := inJuridicalId
                                         , inRouteId         := inRouteId
                                         , inRouteSortingId  := inRouteSortingId
@@ -111,6 +121,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.02.15         * add inEdiOrdspr, inEdiInvoice, inEdiDesadv
+
  22.11.14                                        * all
  20.11.14         * add redmine              
  10.11.14         * add redmine

@@ -88,6 +88,8 @@ type
     colOperDate_parent: TcxGridDBColumn;
     colWeighingNumber: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
   public
   end;
