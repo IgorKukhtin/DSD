@@ -1,25 +1,25 @@
 inherited PriceListForm: TPriceListForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
-  ClientWidth = 810
-  ExplicitWidth = 818
+  ClientWidth = 753
+  ExplicitWidth = 761
   ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 810
+    Width = 753
     Height = 585
     ExplicitTop = 83
     ExplicitWidth = 810
     ExplicitHeight = 585
     ClientRectBottom = 585
-    ClientRectRight = 810
+    ClientRectRight = 753
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 810
       ExplicitHeight = 561
       inherited cxGrid: TcxGrid
-        Width = 810
+        Width = 753
         Height = 561
         ExplicitWidth = 810
         ExplicitHeight = 561
@@ -100,7 +100,7 @@ inherited PriceListForm: TPriceListForm
             Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1088#1072#1081#1089#1077
             DataBinding.FieldName = 'GoodsJuridicalName'
             HeaderAlignmentVert = vaCenter
-            Width = 231
+            Width = 125
           end
           object colAmount: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -109,7 +109,7 @@ inherited PriceListForm: TPriceListForm
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 102
+            Width = 77
           end
           object colPartionGoodsDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
@@ -118,14 +118,21 @@ inherited PriceListForm: TPriceListForm
             Properties.DateButtons = [btnClear, btnNow, btnToday]
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 160
+            Width = 171
+          end
+          object colRemains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
           end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 810
+    Width = 753
     Height = 57
     TabOrder = 3
     ExplicitWidth = 810

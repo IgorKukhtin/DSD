@@ -2,6 +2,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1222
+  ExplicitLeft = -440
   ExplicitWidth = 1230
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -170,6 +171,12 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 43
+          end
+          object colComment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentVert = vaCenter
+            Width = 87
           end
         end
       end
@@ -887,6 +894,14 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'inPartnerGoodsCode'

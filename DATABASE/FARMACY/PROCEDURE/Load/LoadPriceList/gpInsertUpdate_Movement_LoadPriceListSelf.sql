@@ -2,9 +2,13 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceListSelf 
           (Integer, Integer, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceListSelf 
+          (Integer, Integer, TFloat, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceListSelf(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inGoodsCode           Integer   , 
+    IN inRemains             TFloat    ,  
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -35,8 +39,8 @@ BEGIN
    WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode::TVarChar;
 
    IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
-      INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName)
-             SELECT vbLoadPriceListId, 0, '', inGoodsCode, Object_Goods_Main_View.GoodsName, Object_Goods_Main_View.NDS, Object_Goods_Main_View.Id, 0.01, NULL, NULL, NULL
+      INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName, Remains)
+             SELECT vbLoadPriceListId, 0, '', inGoodsCode, Object_Goods_Main_View.GoodsName, Object_Goods_Main_View.NDS, Object_Goods_Main_View.Id, 0.01, NULL, NULL, NULL, inRemains
               FROM Object_Goods_Main_View WHERE Object_Goods_Main_View.GoodsCode = inGoodsCode;
    END IF;
 
@@ -47,5 +51,6 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.02.15                        *   
  30.01.15                        *   
 */

@@ -976,8 +976,10 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Action = actInvoice
+        end
+        item
+          Action = actUpdateEdiInvoiceTrue
         end>
-      InfoAfterExecute = #1057#1095#1077#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
       Caption = #1057#1095#1077#1090
       Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1095#1077#1090#1072
     end
@@ -990,8 +992,10 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Action = actOrdSpr
+        end
+        item
+          Action = actUpdateEdiOrdsprTrue
         end>
-      InfoAfterExecute = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' EDI'
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
     end
@@ -1004,10 +1008,42 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Action = actDesadv
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
         end>
-      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' EDI'
       Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+    end
+    object actUpdateEdiDesadvTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spUpdateEdiDesadv
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiDesadv
+        end>
+      Caption = 'actUpdateEdiDesadvTrue'
+    end
+    object actUpdateEdiInvoiceTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spUpdateEdiInvoice
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiInvoice
+        end>
+      Caption = 'actUpdateEdiInvoiceTrue'
+    end
+    object actUpdateEdiOrdsprTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spUpdateEdiOrdspr
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiOrdspr
+        end>
+      Caption = 'actUpdateEdiOrdsprTrue'
     end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
@@ -1094,5 +1130,89 @@ object UtilPrintForm: TUtilPrintForm
     ConnectionParams.Password.DataType = ftString
     Left = 312
     Top = 264
+  end
+  object spUpdateEdiDesadv: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioValue'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiDesadv'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 320
+  end
+  object spUpdateEdiInvoice: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioValue'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiInvoice'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 384
+    Top = 296
+  end
+  object spUpdateEdiOrdspr: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioValue'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiOrdspr'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 320
   end
 end

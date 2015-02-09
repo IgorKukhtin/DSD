@@ -263,7 +263,10 @@ uses
   LossDebt in '..\..\FormsFarmacy\Document\LossDebt.pas' {LossDebtForm: TParentForm},
   LossDebtJournal in '..\..\FormsFarmacy\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
-  Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm: TParentForm};
+  Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm: TParentForm},
+  ReturnOut in '..\..\FormsFarmacy\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
+  ReturnOutJournal in '..\..\FormsFarmacy\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
+  ReturnOutTest in '..\SOURCE\Movement\All\Farmacy\ReturnOutTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

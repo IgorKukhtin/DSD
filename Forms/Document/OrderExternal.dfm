@@ -2,29 +2,28 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103'>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 702
+  ExplicitLeft = -55
+  ExplicitWidth = 1036
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1020
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1020
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1016
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1014
-      ExplicitHeight = 514
+      ExplicitWidth = 1020
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 514
-        ExplicitWidth = 1014
-        ExplicitHeight = 514
+        Width = 1020
+        Height = 518
+        ExplicitWidth = 1020
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -303,7 +302,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 168
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 168
     end
     object cxLabel5: TcxLabel
@@ -543,7 +542,6 @@ inherited OrderExternalForm: TOrderExternalForm
       Left = 894
       Top = 66
       Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
-      Enabled = False
       Properties.ReadOnly = True
       TabOrder = 35
       Width = 128
@@ -725,7 +723,7 @@ inherited OrderExternalForm: TOrderExternalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

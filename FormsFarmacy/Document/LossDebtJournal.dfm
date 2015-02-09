@@ -120,11 +120,16 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
     Left = 312
     Top = 128
   end
+  inherited spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_LossDebt'
+  end
   inherited spMovementUnComplete: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement_LossDebt'
     Left = 336
     Top = 72
   end
   inherited spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_LossDebt'
     Left = 240
     Top = 88
   end

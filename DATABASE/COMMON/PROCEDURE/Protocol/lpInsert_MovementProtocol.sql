@@ -13,7 +13,7 @@ BEGIN
   FROM
    (SELECT D.FieldXML
     FROM
-   (SELECT '<Field FieldName = "InvNumber" FieldValue = "' || Movement.InvNumber || '"/>'
+   (SELECT '<Field FieldName = "InvNumber" FieldValue = "' || zfStrToXmlStr(Movement.InvNumber) || '"/>'
         || '<Field FieldName = "OperDate" FieldValue = "' || Movement.OperDate || '"/>'
         || '<Field FieldName = "Status" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>'
            AS FieldXML 
@@ -23,21 +23,21 @@ BEGIN
          LEFT JOIN Object ON Object.Id = Movement.StatusId
     WHERE Movement.Id = inMovementId    
    UNION
-    SELECT '<Field FieldName = "' || MovementFloatDesc.ItemName || '" FieldValue = "' || COALESCE (MovementFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 2 AS GroupId
          , MovementFloat.DescId
     FROM MovementFloat
          INNER JOIN MovementFloatDesc ON MovementFloatDesc.Id = MovementFloat.DescId
     WHERE MovementFloat.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || MovementDateDesc.ItemName || '" FieldValue = "' || COALESCE (MovementDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementDateDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 3 AS GroupId
          , MovementDate.DescId
     FROM MovementDate
          INNER JOIN MovementDateDesc ON MovementDateDesc.Id = MovementDate.DescId
     WHERE MovementDate.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || MovementLinkObjectDesc.ItemName || '" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementLinkObjectDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML 
          , 4 AS GroupId
          , MovementLinkObject.DescId
     FROM MovementLinkObject
@@ -45,28 +45,21 @@ BEGIN
          LEFT JOIN Object ON Object.Id = MovementLinkObject.ObjectId 
     WHERE MovementLinkObject.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || MovementStringDesc.ItemName || '" FieldValue = "' || COALESCE (MovementString.ValueData, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementStringDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (MovementString.ValueData, 'NULL')) || '"/>' AS FieldXML 
          , 5 AS GroupId
          , MovementString.DescId
     FROM MovementString
          INNER JOIN MovementStringDesc ON MovementStringDesc.Id = MovementString.DescId
     WHERE MovementString.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || MovementBooleanDesc.ItemName || '" FieldValue = "' || COALESCE (MovementBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementBooleanDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 6 AS GroupId
          , MovementBoolean.DescId
     FROM MovementBoolean
          INNER JOIN MovementBooleanDesc ON MovementBooleanDesc.Id = MovementBoolean.DescId
     WHERE MovementBoolean.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || MovementLinkObjectDesc.ItemName || '" FieldValue = "' || COALESCE (MovementLinkObject.ObjectId :: TVarChar, 'NULL') || '"/>' AS FieldXML 
-         , 7 AS GroupId
-         , MovementLinkObject.DescId
-    FROM MovementLinkObject
-         INNER JOIN MovementLinkObjectDesc ON MovementLinkObjectDesc.Id = MovementLinkObject.DescId
-    WHERE MovementLinkObject.MovementId = inMovementId
-   UNION
-    SELECT '<Field FieldName = "' || MovementLinkMovementDesc.ItemName || '" FieldValue = "' || COALESCE (MovementLinkMovement.MovementChildId :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementLinkMovementDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementLinkMovement.MovementChildId :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 8 AS GroupId
          , MovementLinkMovement.DescId
     FROM MovementLinkMovement
@@ -88,6 +81,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 09.02.15                         * add zfStrToXmlStr
  09.10.14                                        * add MovementLinkMovement
  07.06.14                                        * add MovementLinkObject
  10.05.14                                        * add ORDER BY

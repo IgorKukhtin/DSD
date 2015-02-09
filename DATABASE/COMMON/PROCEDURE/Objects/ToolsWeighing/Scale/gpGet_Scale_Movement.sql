@@ -26,6 +26,9 @@ RETURNS TABLE (MovementId       Integer
              , PartnerName_calc TVarChar
              , ChangePercent    TFloat
              , ChangePercentAmount TFloat
+             , isEdiOrdspr      Boolean
+             , isEdiInvoice     Boolean
+             , isEdiDesadv      Boolean
 
              , MovementId_Order Integer
              , InvNumber_Order  TVarChar
@@ -73,6 +76,10 @@ BEGIN
             , Object_Partner.ValueData                       AS PartnerName_calc
             , MovementFloat_ChangePercent.ValueData          AS ChangePercent
             , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate, -1 * Object_Partner.Id, inSession) AS tmp WHERE tmp.ContractId = View_Contract_InvNumber.ContractId) AS ChangePercentAmount
+
+            , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
+            , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
+            , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
             , Movement.MovementId_Order AS MovementId_Order
             , Movement_Order.InvNumber  AS InvNumber_Order
@@ -142,6 +149,16 @@ BEGIN
             LEFT JOIN Object AS Object_To ON Object_To.Id = Movement.ToId
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Movement.PartnerId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Movement.PriceListId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
+                                    ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  Movement.PartnerId
+                                   AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice
+                                    ON ObjectBoolean_Partner_EdiInvoice.ObjectId =  Movement.PartnerId
+                                   AND ObjectBoolean_Partner_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv
+                                    ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  Movement.PartnerId
+                                   AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id

@@ -20,7 +20,7 @@ BEGIN
    (SELECT D.FieldXML
     FROM
    (SELECT '<Field FieldName = "ObjectId" FieldValue = "' || MovementItem.ObjectId || '"/>'
-        || '<Field FieldName = "ValueData" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>'
+        || '<Field FieldName = "ValueData" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>'
         || '<Field FieldName = "Amount" FieldValue = "' || MovementItem.Amount || '"/>'
         || '<Field FieldName = "isErased" FieldValue = "' || MovementItem.isErased || '"/>'
            AS FieldXML
@@ -30,7 +30,7 @@ BEGIN
          LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
     WHERE MovementItem.Id = inMovementItemId
    UNION
-    SELECT '<Field FieldName = "' || MovementItemFloatDesc.ItemName || '" FieldValue = "' || COALESCE (MovementItemFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementItemFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 2 AS GroupId
          , MovementItemFloat.DescId
     FROM MovementItemFloat
@@ -38,7 +38,7 @@ BEGIN
     WHERE MovementItemFloat.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
    UNION
-    SELECT '<Field FieldName = "' || MovementItemDateDesc.ItemName || '" FieldValue = "' || COALESCE (MovementItemDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemDateDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementItemDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 3 AS GroupId
          , MovementItemDate.DescId
     FROM MovementItemDate
@@ -46,7 +46,7 @@ BEGIN
     WHERE MovementItemDate.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
    UNION
-    SELECT '<Field FieldName = "' || MovementItemLinkObjectDesc.ItemName || '" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>' AS FieldXML
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemLinkObjectDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML
          , 4 AS GroupId
          , MovementItemLinkObject.DescId
     FROM MovementItemLinkObject
@@ -55,7 +55,7 @@ BEGIN
     WHERE MovementItemLinkObject.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
    UNION
-    SELECT '<Field FieldName = "' || MovementItemStringDesc.ItemName || '" FieldValue = "' || COALESCE (MovementItemString.ValueData, 'NULL') || '"/>' AS FieldXML
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemStringDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (MovementItemString.ValueData, 'NULL')) || '"/>' AS FieldXML
          , 5 AS GroupId
          , MovementItemString.DescId
     FROM MovementItemString
@@ -63,7 +63,7 @@ BEGIN
     WHERE MovementItemString.MovementItemId = inMovementItemId
       AND inIsErased IS NULL
    UNION
-    SELECT '<Field FieldName = "' || MovementItemBooleanDesc.ItemName || '" FieldValue = "' || COALESCE (MovementItemBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementItemBooleanDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementItemBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 6 AS GroupId
          , MovementItemBoolean.DescId
     FROM MovementItemBoolean
@@ -86,6 +86,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.02.15                         * add zfStrToXmlStr
  09.10.14                                        * add MovementItem.isErased
  10.05.14                                        * add ORDER BY
  07.05.14                                        *
