@@ -290,8 +290,38 @@ BEGIN
 
 -- 70000; "Кредиторы"
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountGroup_70000(), inDescId:= zc_Object_AccountGroup(), inCode:= 70000, inName:= 'Кредиторы' , inEnumName:= 'zc_Enum_AccountGroup_70000');
-CREATE OR REPLACE FUNCTION zc_Enum_AccountGroup_70000() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountGroup_70000' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- 100000; "Собственный капитал"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountGroup_100000(), inDescId:= zc_Object_AccountGroup(), inCode:= 100000, inName:= 'Собственный капитал' , inEnumName:= 'zc_Enum_AccountGroup_100000');
+
+-- !!!
+-- !!! Баланс: 2-уровень Управленческих Счетов
+-- !!!
+
+-- 20000; "Запасы"; 20100; "Склад"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_20100(), inDescId:= zc_Object_AccountDirection(), inCode:= 20100, inName:= 'Склад' , inEnumName:= 'zc_Enum_AccountDirection_20100');
+-- 20000; "Запасы"; 20200; "Аптека"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_20200(), inDescId:= zc_Object_AccountDirection(), inCode:= 20200, inName:= 'Аптека' , inEnumName:= 'zc_Enum_AccountDirection_20200');
+
+-- 70000; "Кредиторы"; 70100; "Поставщики"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_70100(), inDescId:= zc_Object_AccountDirection(), inCode:= 70100, inName:= 'Поставщики' , inEnumName:= 'zc_Enum_AccountDirection_70100');
+-- 100000; "Собственный капитал"; 100300; "Прибыль текущего периода"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_100300(), inDescId:= zc_Object_AccountDirection(), inCode:= 100300, inName:= 'Прибыль текущего периода' , inEnumName:= 'zc_Enum_AccountDirection_100300');
+
+-- !!!
+-- !!! УП: 2-уровень Управленческие назначения
+-- !!!
+
+-- 10000; "Основное сырье"; 10200; "Медикаменты"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InfoMoneyDestination_10200(), inDescId:= zc_Object_InfoMoneyDestination(), inCode:= 10200, inName:= 'Медикаменты' , inEnumName:= 'zc_Enum_InfoMoneyDestination_10200');
+-- 80000; "Собственный капиталл"; 80400; "Прибыль текущего периода"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InfoMoneyDestination_80400(), inDescId:= zc_Object_InfoMoneyDestination(), inCode:= 80400, inName:= 'Прибыль текущего периода' , inEnumName:= 'zc_Enum_InfoMoneyDestination_80400');
+
+-- !!!
+-- !!! Баланс: Управленческие Счета (1+2+3 уровень)
+-- !!!
+-- 100301; "прибыль текущего периода";
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Account_100301(), inDescId:= zc_Object_Account(), inCode:= 100301, inName:= 'Прибыль текущего периода' , inEnumName:= 'zc_Enum_Account_100301');
 
 END $$;
 

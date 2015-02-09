@@ -46,7 +46,8 @@ BEGIN
       END IF;
 
      -- Перенос элементов прайса
-     PERFORM gpInsertUpdate_MovementItem_PriceList(
+     PERFORM 
+         lpInsertUpdate_MovementItem_PriceList(
         MovementItem.Id , -- Ключ объекта <Элемент документа>
           vbPriceListId , -- Ключ объекта <Документ>
                 GoodsId , -- Товары
@@ -56,7 +57,8 @@ BEGIN
                  ELSE Price * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100 
            END:: TFloat  , -- Цена
           ExpirationDate , -- Партия товара
-              inSession )
+                 Remains , -- остаток
+                vbUserId)
        FROM LoadPriceListItem 
                JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
           LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind

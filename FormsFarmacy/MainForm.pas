@@ -123,6 +123,7 @@ type
     N33: TMenuItem;
     N34: TMenuItem;
     actLossDebt: TdsdOpenForm;
+    N35: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

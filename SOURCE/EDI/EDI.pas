@@ -957,9 +957,10 @@ begin
   DESADV.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   DESADV.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
     ('DELIVERYPLACEGLNCode').asString;
-  DESADV.HEAD.SENDER := DESADV.HEAD.SUPPLIER;
-  DESADV.HEAD.RECIPIENT := DESADV.HEAD.BUYER;
-
+  DESADV.HEAD.SENDER := HeaderDataSet.FieldByName
+    ('SenderGLNCode').asString;
+  DESADV.HEAD.RECIPIENT := HeaderDataSet.FieldByName
+    ('RecipientGLNCode').asString;
   DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
 
   with ItemsDataSet do
@@ -1121,8 +1122,8 @@ begin
   INVOICE.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   INVOICE.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
     ('DELIVERYPLACEGLNCode').asString;
-  INVOICE.HEAD.SENDER := INVOICE.HEAD.SUPPLIER;
-  INVOICE.HEAD.RECIPIENT := INVOICE.HEAD.BUYER;
+  INVOICE.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
+  INVOICE.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
 
   with ItemsDataSet do
   begin
@@ -1518,8 +1519,8 @@ begin
   ORDRSP.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   ORDRSP.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
     ('DELIVERYPLACEGLNCode').asString;
-  ORDRSP.HEAD.SENDER := ORDRSP.HEAD.SUPPLIER;
-  ORDRSP.HEAD.RECIPIENT := ORDRSP.HEAD.BUYER;
+  ORDRSP.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
+  ORDRSP.HEAD.RECIPIENT := HeaderDataSet.FieldByName('RecipientGLNCode').asString;
 
   with ItemsDataSet do
   begin

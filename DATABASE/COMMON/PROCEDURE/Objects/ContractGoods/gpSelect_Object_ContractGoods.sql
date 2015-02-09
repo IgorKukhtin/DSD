@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractGoods(
 RETURNS TABLE (Id Integer, Code INTEGER
              , Price TFloat
              , ContractId Integer, InvNumber TVarChar
-             , GoodsId Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , isErased boolean
      
@@ -34,6 +34,7 @@ BEGIN
            , Object_Contract_View.InvNumber   AS InvNumber
 
            , Object_Goods.Id                  AS GoodsId
+           , Object_Goods.ObjectCode          AS GoodsCode
            , Object_Goods.ValueData           AS GoodsName
            , Object_GoodsKind.Id              AS GoodsKindId
            , Object_GoodsKind.ValueData       AS GoodsKindName

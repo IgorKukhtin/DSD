@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceList(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
-             , PartionGoodsDate TDateTime, GoodsJuridicalName TVarChar
+             , PartionGoodsDate TDateTime, Remains TFloat, GoodsJuridicalName TVarChar
              , isErased Boolean
               )
 AS
@@ -32,6 +32,7 @@ BEGIN
            , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
+           , 0.00::TFloat               AS Remains
            , ''::TVarChar               AS GoodsJuridicalName
            , FALSE                      AS isErased
 
@@ -59,6 +60,7 @@ BEGIN
            , Object_Goods.ValueData             AS GoodsName
            , MovementItem.Amount                AS Amount
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
+           , MIFloat_Remains.ValueData          AS Remains
            , Object_JuridicalGoods.ValueData    AS GoodsJuridicalName
            , MovementItem.isErased              AS isErased
 
@@ -71,6 +73,10 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                        ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                        ON MIFloat_Remains.MovementItemId =  MovementItem.Id
+                                       AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
@@ -90,6 +96,7 @@ BEGIN
            , Object_Goods.ValueData             AS GoodsName
            , MovementItem.Amount                AS Amount
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
+           , MIFloat_Remains.ValueData          AS Remains
            , Object_JuridicalGoods.ValueData    AS GoodsJuridicalName
            , MovementItem.isErased              AS isErased
 
@@ -107,6 +114,10 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                        ON MIFloat_Remains.MovementItemId =  MovementItem.Id
+                                       AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
 
             LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
 

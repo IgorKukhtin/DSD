@@ -167,9 +167,29 @@ type
     clPrice: TcxGridDBColumn;
     InsertRecordGoods: TInsertRecord;
     GoodsChoiceForm: TOpenChoiceForm;
-    bb: TdxBarButton;
+    bbRecordGoods: TdxBarButton;
     GoodsKindChoiceForm: TOpenChoiceForm;
     actUpdateDSGoods: TdsdUpdateDataSet;
+    clPartnerCode: TcxGridDBColumn;
+    clGoodsCode: TcxGridDBColumn;
+    spErasedUnErasedPartner: TdsdStoredProc;
+    spErasedUnErasedGoods: TdsdStoredProc;
+    dsdSetErasedPartner: TdsdUpdateErased;
+    dsdSetErasedGoods: TdsdUpdateErased;
+    bbSetErasedPartner: TdxBarButton;
+    bbSetErasedGoods: TdxBarButton;
+    clPisErased: TcxGridDBColumn;
+    clGisErased: TcxGridDBColumn;
+    dsdSetUnErasedPartner: TdsdUpdateErased;
+    dsdSetUnErasedGoods: TdsdUpdateErased;
+    bbSetUnErasedPartner: TdxBarButton;
+    bbSetUnErasedGoods: TdxBarButton;
+    ProtocolOpenFormCondition: TdsdOpenForm;
+    ProtocolOpenFormPartner: TdsdOpenForm;
+    ProtocolOpenFormGoods: TdsdOpenForm;
+    bbProtocolOpenFormCondition: TdxBarButton;
+    bbProtocolOpenFormPartner: TdxBarButton;
+    bbProtocolOpenFormGoods: TdxBarButton;
   private
     { Private declarations }
   public

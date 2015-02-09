@@ -20,7 +20,7 @@ BEGIN
      FROM
           (SELECT D.FieldXML
            FROM 
-          (SELECT '<Field FieldName = "Name" FieldValue = "' || Object.ValueData || '"/>'
+          (SELECT '<Field FieldName = "Name" FieldValue = "' || zfStrToXmlStr(Object.ValueData) || '"/>'
                || '<Field FieldName = "Code" FieldValue = "' || Object.ObjectCode || '"/>'
                || '<Field FieldName = "AccessKeyId" FieldValue = "' || CASE WHEN Object.AccessKeyId IS NULL THEN 'NULL' ELSE Object.AccessKeyId :: TVarChar END || '"/>'
                || '<Field FieldName = "isErased" FieldValue = "' || Object.isErased || '"/>' AS FieldXML
@@ -29,7 +29,7 @@ BEGIN
            FROM Object
            WHERE Object.Id = inObjectId 
           UNION
-           SELECT '<Field FieldName = "' || ObjectFloatDesc.ItemName || '" FieldValue = "' || COALESCE (ObjectFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
                 , 2 AS GroupId
                 , ObjectFloat.DescId
            FROM ObjectFloat
@@ -37,7 +37,7 @@ BEGIN
            WHERE ObjectFloat.ObjectId = inObjectId
              AND inIsErased IS NULL
           UNION
-           SELECT '<Field FieldName = "' || ObjectDateDesc.ItemName || '" FieldValue = "' || COALESCE (ObjectDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectDateDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
                 , 3 AS GroupId
                 , ObjectDate.DescId
            FROM ObjectDate
@@ -45,7 +45,7 @@ BEGIN
            WHERE ObjectDate.ObjectId = inObjectId
              AND inIsErased IS NULL
           UNION
-           SELECT '<Field FieldName = "' || ObjectLinkDesc.ItemName || '" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectLinkDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML 
                 , 4 AS GroupId
                 , ObjectLink.DescId
            FROM ObjectLink
@@ -54,7 +54,7 @@ BEGIN
            WHERE ObjectLink.ObjectId = inObjectId
              AND inIsErased IS NULL
           UNION
-           SELECT '<Field FieldName = "' || ObjectStringDesc.ItemName || '" FieldValue = "' || COALESCE (ObjectString.ValueData, 'NULL') || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectStringDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (ObjectString.ValueData, 'NULL')) || '"/>' AS FieldXML 
                 , 5 AS GroupId
                 , ObjectString.DescId
            FROM ObjectString
@@ -62,7 +62,7 @@ BEGIN
            WHERE ObjectString.ObjectId = inObjectId
              AND inIsErased IS NULL
           UNION
-           SELECT '<Field FieldName = "' || ObjectBooleanDesc.ItemName || '" FieldValue = "' || COALESCE (ObjectBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectBooleanDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
                 , 6 AS GroupId
                 , ObjectBoolean.DescId
            FROM ObjectBoolean
@@ -104,6 +104,7 @@ ALTER FUNCTION lpInsert_ObjectProtocol (Integer, Integer, Boolean, Boolean) OWNE
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 09.02.15                         * add zfStrToXmlStr
  14.05.14                                        * add ObjectBoolean
  24.02.14                                        *
 */

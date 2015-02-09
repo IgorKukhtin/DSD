@@ -84,6 +84,8 @@ type
     cxLabel3: TcxLabel;
     edOrderKind: TcxButtonEdit;
     GuidesOrderKind: TdsdGuides;
+    colRemains: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

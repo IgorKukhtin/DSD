@@ -1,0 +1,3 @@
+DROP VIEW IF EXISTS Movement_Income_View CASCADE;
+DROP VIEW IF EXISTS Object_Goods_View CASCADE;
+-- DROP VIEW IF EXISTS Object_Unit_View CASCADE;
