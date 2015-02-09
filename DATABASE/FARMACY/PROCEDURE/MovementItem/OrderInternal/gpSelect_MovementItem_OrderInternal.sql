@@ -41,6 +41,7 @@ BEGIN
            , tmpMI.Price
            , tmpMI.MinimumLot
            , tmpMI.PartionGoodsDate
+           , tmpMI.Comment
            , tmpMI.PartnerGoodsCode 
            , tmpMI.PartnerGoodsName
            , tmpMI.JuridicalName 
@@ -71,6 +72,7 @@ BEGIN
                             , Object_Goods.GoodsCodeInt          AS GoodsCode
                             , Object_Goods.GoodsName             AS GoodsName
                             , Object_Goods.MinimumLot            AS Multiplicity
+                            , MIString_Comment.ValueData         AS Comment
                             , COALESCE(PriceList.MakerName, MinPrice.MakerName) AS MakerName
                             , MIBoolean_Calculated.ValueData     AS isCalculated
                             , ObjectFloat_Goods_MinimumLot.valuedata AS MinimumLot
@@ -102,6 +104,10 @@ BEGIN
                        LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated 
                                                      ON MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
                                                     AND MIBoolean_Calculated.MovementItemId = MovementItem.id  
+
+                       LEFT JOIN MovementItemString AS MIString_Comment 
+                                                    ON MIString_Comment.DescId = zc_MIString_Comment()
+                                                   AND MIString_Comment.MovementItemId = MovementItem.id  
 
                        LEFT JOIN _tmpMI AS PriceList ON COALESCE(PriceList.ContractId, 0) = COALESCE(MILinkObject_Contract.ObjectId, 0)
                                                     AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
@@ -135,11 +141,15 @@ BEGIN
                      ELSE 0
                 END AS PartionGoodsDateColor      
               , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
+              , MIFloat_Remains.ValueData          AS Remains
 
         FROM _tmpMI
          LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
                                ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId 
-                              AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot();
+                              AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+            LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                        ON MIFloat_Remains.MovementItemId = _tmpMI.PriceListMovementItemId
+                                       AND MIFloat_Remains.DescId = zc_MIFloat_Remains();
 
    RETURN NEXT Cursor2;
 
@@ -152,6 +162,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.02.15                         * 
  12.11.14                         * add MinimumLot
  05.11.14                         * add MakerName
  22.10.14                         *

@@ -40,6 +40,7 @@ type
     mactGoodsLinkDelete: TMultiAction;
     DataSetPost: TDataSetPost;
     colBarCode: TcxGridDBColumn;
+    colRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -44,6 +44,7 @@ type
     N2: TMenuItem;
     cxLabel3: TcxLabel;
     edOrderKind: TcxButtonEdit;
+    colComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

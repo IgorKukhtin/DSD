@@ -22,7 +22,7 @@ BEGIN
      vbUserId := inSession;
 
      PERFORM lpInsertUpdate_MovementItem_PriceList(ioId, inMovementId, inGoodsMainId, 
-                 inGoodsId, inAmount, inPartionGoodsDate, vbUserId);
+                 inGoodsId, inAmount, inPartionGoodsDate, NULL, vbUserId);
 
 END;
 $BODY$

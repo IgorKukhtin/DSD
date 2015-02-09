@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_PriceList()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList(Integer, Integer, Integer, Integer, TFloat, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList(Integer, Integer, Integer, Integer, TFloat, TDateTime, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PriceList(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -25,7 +26,10 @@ BEGIN
      -- сохранили связь с <Товаром из прайса>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
 
-     inRemains
+     -- сохранили свойство <Количество>
+     IF NOT (inRemains IS NULL) THEN
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), ioId, inRemains);
+     END IF:
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
@@ -38,6 +42,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.05.15                         *
  19.09.14                         *
 */
 

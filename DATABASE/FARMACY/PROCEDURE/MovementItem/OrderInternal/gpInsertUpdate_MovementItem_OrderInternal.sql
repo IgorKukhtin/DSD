@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    ,
+    IN inComment             TVarChar  ,
     IN inPartnerGoodsCode    TVarChar  ,
     IN inPartnerGoodsName    TVarChar  ,
     IN inJuridicalName       TVarChar  ,
@@ -56,6 +58,9 @@ BEGIN
   
      inPrice := COALESCE(inPrice, 0);
      vbId := lpInsertUpdate_MovementItem_OrderInternal(inId, inMovementId, inGoodsId, inAmount, inPrice, vbUserId);
+
+          -- сохранили свойство <Примечание>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbId, inComment);
      
      SELECT MinimumLot INTO vbMinimumLot
        FROM Object_Goods_View WHERE Id = inGoodsId;
@@ -88,6 +93,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.02.15                         *
  23.10.14                         *
  03.07.14                                                       *
 */

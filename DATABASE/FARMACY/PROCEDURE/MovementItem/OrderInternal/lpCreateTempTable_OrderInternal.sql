@@ -23,7 +23,9 @@ BEGIN
                 AND  MovementLinkObject.MovementId = inMovementId 
                 AND  MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
-     CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
+     CREATE TEMP TABLE _tmpMI (Id integer
+             , MovementItemId Integer
+             , PriceListMovementItemId Integer
              , Price TFloat
              , PartionGoodsDate TDateTime
              , GoodsId Integer
@@ -54,6 +56,7 @@ BEGIN
 
        SELECT row_number() OVER ()
             , ddd.Id AS MovementItemId 
+            , ddd.PriceListMovementItemId
             , ddd.Price  
             , ddd.PartionGoodsDate
             , ddd.GoodsId
@@ -79,6 +82,7 @@ BEGIN
 
      (SELECT MovementItemOrder.Id
           , PriceList.amount AS Price
+          , PriceList.Id AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
           , min(PriceList.amount) OVER (PARTITION BY MovementItemOrder.Id) AS MinPrice
           , (PriceList.amount * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat AS FinalPrice

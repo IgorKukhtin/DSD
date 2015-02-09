@@ -298,6 +298,11 @@ BEGIN
 -- !!! Баланс: 2-уровень Управленческих Счетов
 -- !!!
 
+-- 20000; "Запасы"; 20100; "Склад"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_20100(), inDescId:= zc_Object_AccountDirection(), inCode:= 20100, inName:= 'Склад' , inEnumName:= 'zc_Enum_AccountDirection_20100');
+-- 20000; "Запасы"; 20200; "Аптека"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_20200(), inDescId:= zc_Object_AccountDirection(), inCode:= 20200, inName:= 'Аптека' , inEnumName:= 'zc_Enum_AccountDirection_20200');
+
 -- 70000; "Кредиторы"; 70100; "Поставщики"
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_70100(), inDescId:= zc_Object_AccountDirection(), inCode:= 70100, inName:= 'Поставщики' , inEnumName:= 'zc_Enum_AccountDirection_70100');
 -- 100000; "Собственный капитал"; 100300; "Прибыль текущего периода"

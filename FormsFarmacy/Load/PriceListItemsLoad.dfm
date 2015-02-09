@@ -3,7 +3,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   ClientHeight = 410
   ClientWidth = 908
   AddOnFormData.Params = FormParams
-  ExplicitTop = -38
+  ExplicitLeft = -126
   ExplicitWidth = 916
   ExplicitHeight = 437
   PixelsPerInch = 96
@@ -13,20 +13,21 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     Width = 908
     Height = 335
     ExplicitTop = 75
-    ExplicitWidth = 763
+    ExplicitWidth = 908
     ExplicitHeight = 335
     ClientRectBottom = 335
     ClientRectRight = 908
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 763
+      ExplicitWidth = 908
       ExplicitHeight = 335
       inherited cxGrid: TcxGrid
         Width = 908
         Height = 335
-        ExplicitWidth = 763
+        ExplicitWidth = 908
         ExplicitHeight = 335
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.ColumnAutoWidth = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -110,6 +111,12 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             Options.Editing = False
             Width = 75
           end
+          object colRemains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains'
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end
@@ -122,7 +129,6 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 763
     object cxLabel2: TcxLabel
       Left = 1
       Top = 4
@@ -177,17 +183,20 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
           ParamType = ptInput
@@ -210,18 +219,21 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       MoveParams = <
         item
           FromParam.Value = '0'
+          ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'GoodsId'
         end
         item
           FromParam.Value = Null
           FromParam.DataType = ftString
+          ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'Code'
         end
         item
           FromParam.Value = Null
           FromParam.DataType = ftString
+          ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'Name'
         end>
@@ -375,12 +387,14 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     Params = <
       item
         Name = 'inPriceListItemId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput

@@ -39,6 +39,7 @@ type
     cxLabel3: TcxLabel;
     edContract: TcxButtonEdit;
     GuidesContract: TdsdGuides;
+    colRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public
