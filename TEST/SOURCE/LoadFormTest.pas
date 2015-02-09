@@ -444,6 +444,11 @@ procedure TLoadFormTest.LoadGoodsQualityFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQualityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsQualityForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQualityMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsQualityMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQualityMovementJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsQualityMovementJournalForm');
 end;
 
 
@@ -983,6 +988,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TQualityForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TQualityEditForm');
+
+
+
 end;
 
 procedure TLoadFormTest.LoadReportFormTest;
