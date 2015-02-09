@@ -25,6 +25,7 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 28
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -803,9 +804,18 @@ object ContractForm: TContractForm
         object colCode: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'Code'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 57
+        end
+        object clPartnerCode: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+          DataBinding.FieldName = 'PartnerCode'
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 84
         end
         object clPartnerName: TcxGridDBColumn
           Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -821,6 +831,13 @@ object ContractForm: TContractForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 258
+        end
+        object clPisErased: TcxGridDBColumn
+          Caption = #1059#1076#1072#1083#1077#1085
+          DataBinding.FieldName = 'isErased'
+          Visible = False
+          Options.Editing = False
+          Width = 20
         end
       end
       object cxGridLevePartner: TcxGridLevel
@@ -859,9 +876,18 @@ object ContractForm: TContractForm
         object cxGridDBColumn1: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'Code'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 57
+        end
+        object clGoodsCode: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+          DataBinding.FieldName = 'GoodsCode'
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 60
         end
         object clGoodsName: TcxGridDBColumn
           Caption = #1058#1086#1074#1072#1088
@@ -897,6 +923,13 @@ object ContractForm: TContractForm
           DataBinding.FieldName = 'Price'
           HeaderAlignmentVert = vaCenter
           Width = 43
+        end
+        object clGisErased: TcxGridDBColumn
+          Caption = #1059#1076#1072#1083#1077#1085
+          DataBinding.FieldName = 'isErased'
+          Visible = False
+          Options.Editing = False
+          Width = 20
         end
       end
       object cxGridLevelGoods: TcxGridLevel
@@ -967,8 +1000,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1017,6 +1050,10 @@ object ContractForm: TContractForm
           ItemName = 'bbSetUnErased'
         end
         item
+          Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
@@ -1024,6 +1061,10 @@ object ContractForm: TContractForm
         item
           Visible = True
           ItemName = 'bbInsertRecCCK'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormCondition'
         end
         item
           Visible = True
@@ -1035,11 +1076,35 @@ object ContractForm: TContractForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErasedPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormPartner'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbRecordGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormGoods'
         end
         item
           Visible = True
@@ -1084,10 +1149,6 @@ object ContractForm: TContractForm
         item
           Visible = True
           ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocol'
         end
         item
           Visible = True
@@ -1188,8 +1249,36 @@ object ContractForm: TContractForm
       Action = ProtocolOpenForm
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbRecordGoods: TdxBarButton
       Action = InsertRecordGoods
+      Category = 0
+    end
+    object bbSetErasedPartner: TdxBarButton
+      Action = dsdSetErasedPartner
+      Category = 0
+    end
+    object bbSetErasedGoods: TdxBarButton
+      Action = dsdSetErasedGoods
+      Category = 0
+    end
+    object bbSetUnErasedPartner: TdxBarButton
+      Action = dsdSetUnErasedPartner
+      Category = 0
+    end
+    object bbSetUnErasedGoods: TdxBarButton
+      Action = dsdSetUnErasedGoods
+      Category = 0
+    end
+    object bbProtocolOpenFormCondition: TdxBarButton
+      Action = ProtocolOpenFormCondition
+      Category = 0
+    end
+    object bbProtocolOpenFormPartner: TdxBarButton
+      Action = ProtocolOpenFormPartner
+      Category = 0
+    end
+    object bbProtocolOpenFormGoods: TdxBarButton
+      Action = ProtocolOpenFormGoods
       Category = 0
     end
   end
@@ -1291,6 +1380,87 @@ object ContractForm: TContractForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object ProtocolOpenFormGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1090#1086#1074#1072#1088'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1090#1086#1074#1072#1088'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CDSContractGoods
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CDSContractGoods
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenFormPartner: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CDSContractPartner
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CDSContractCondition
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenFormCondition: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1073#1086#1085#1091#1089'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1073#1086#1085#1091#1089'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CDSContractCondition
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CDSContractCondition
+          ComponentItem = 'BonusKindName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1386,6 +1556,35 @@ object ContractForm: TContractForm
           DataType = ftString
         end>
       isShowModal = True
+    end
+    object dsdSetErasedGoods: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedGoods
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedGoods
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DataSourceGoods
+    end
+    object dsdSetErasedPartner: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedPartner
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedPartner
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = DataSourcePartner
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1515,6 +1714,36 @@ object ContractForm: TContractForm
           ComponentItem = 'JuridicalCode'
         end>
       isShowModal = True
+    end
+    object dsdSetUnErasedGoods: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedGoods
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedGoods
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSourceGoods
+    end
+    object dsdSetUnErasedPartner: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedPartner
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedPartner
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSourcePartner
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -2180,8 +2409,8 @@ object ContractForm: TContractForm
       end>
     Params = <>
     PackSize = 1
-    Left = 769
-    Top = 421
+    Left = 729
+    Top = 397
   end
   object spInsertUpdateContractPartner: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractPartner'
@@ -2217,8 +2446,8 @@ object ContractForm: TContractForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 784
-    Top = 384
+    Left = 688
+    Top = 392
   end
   object dsdDBViewAddOnPartner: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2245,7 +2474,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 704
+    Left = 648
     Top = 392
   end
   object CDSContractGoods: TClientDataSet
@@ -2354,5 +2583,37 @@ object ContractForm: TContractForm
     PackSize = 1
     Left = 1112
     Top = 416
+  end
+  object spErasedUnErasedPartner: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = CDSContractPartner
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 800
+    Top = 392
+  end
+  object spErasedUnErasedGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = CDSContractGoods
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 912
+    Top = 384
   end
 end
