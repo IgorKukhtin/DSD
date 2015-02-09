@@ -484,6 +484,8 @@ type
     miContractGoods: TMenuItem;
     actCashOperationOdessa: TdsdOpenForm;
     miCashOdessa: TMenuItem;
+    actQuality: TdsdOpenForm;
+    N39: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

@@ -95,6 +95,7 @@ type
     procedure LoadPersonalFormTest;
     procedure LoadPersonalServiceFormTest;
     procedure LoadPersonalServiceListFormTest;
+    procedure LoadQualityFormTest;
     procedure LoadReportFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
@@ -974,6 +975,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceList_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceList_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadQualityFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TQualityForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TQualityEditForm');
 end;
 
 procedure TLoadFormTest.LoadReportFormTest;
