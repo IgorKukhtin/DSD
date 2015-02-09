@@ -158,6 +158,12 @@ type
     mactInvoice: TMultiAction;
     mactOrdSpr: TMultiAction;
     mactDesadv: TMultiAction;
+    spUpdateEdiOrdspr: TdsdStoredProc;
+    actUpdateEdiOrdsprTrue: TdsdExecStoredProc;
+    spUpdateEdiInvoice: TdsdStoredProc;
+    spUpdateEdiDesadv: TdsdStoredProc;
+    actUpdateEdiInvoiceTrue: TdsdExecStoredProc;
+    actUpdateEdiDesadvTrue: TdsdExecStoredProc;
   private
     { Private declarations }
   public

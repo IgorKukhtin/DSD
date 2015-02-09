@@ -250,8 +250,8 @@ object UtilPrintForm: TUtilPrintForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 591
-    Top = 144
+    Left = 583
+    Top = 72
   end
   object spSelectPrintPack21: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Pack_Print21'
@@ -270,8 +270,8 @@ object UtilPrintForm: TUtilPrintForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 591
-    Top = 192
+    Left = 583
+    Top = 120
   end
   object spSelectPrintPack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'
@@ -290,8 +290,8 @@ object UtilPrintForm: TUtilPrintForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 591
-    Top = 248
+    Left = 583
+    Top = 176
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -393,16 +393,7 @@ object UtilPrintForm: TUtilPrintForm
     end
     object mactPrint_ReturnIn: TMultiAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
+      MoveParams = <>
       ActionList = <
         item
           Action = actPrintReportName_ReturnIn
@@ -417,16 +408,7 @@ object UtilPrintForm: TUtilPrintForm
     end
     object actPrint_ReturnIn: TdsdPrintAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
+      MoveParams = <>
       StoredProc = spSelectPrint_ReturnIn
       StoredProcList = <
         item
@@ -879,6 +861,16 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actInvoice: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediInvoice
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
     object actPrint_TTN: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -955,6 +947,68 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actOrdSpr: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediOrdrsp
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actDesadv: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediDesadv
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactInvoice: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrint_Sale
+        end
+        item
+          Action = actInvoice
+        end>
+      InfoAfterExecute = #1057#1095#1077#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
+      Caption = #1057#1095#1077#1090
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1095#1077#1090#1072
+    end
+    object mactOrdSpr: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrint_Sale
+        end
+        item
+          Action = actOrdSpr
+        end>
+      InfoAfterExecute = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' EDI'
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+    end
+    object mactDesadv: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrint_Sale
+        end
+        item
+          Action = actDesadv
+        end>
+      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' EDI'
+      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+    end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -999,7 +1053,7 @@ object UtilPrintForm: TUtilPrintForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 295
+    Left = 159
     Top = 392
   end
   object spGetReportName_ReturnIn: TdsdStoredProc
@@ -1024,5 +1078,21 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 72
     Top = 304
+  end
+  object EDI: TEDI
+    ConnectionParams.Host.Value = Null
+    ConnectionParams.Host.Component = FormParams
+    ConnectionParams.Host.ComponentItem = 'Host'
+    ConnectionParams.Host.DataType = ftString
+    ConnectionParams.User.Value = Null
+    ConnectionParams.User.Component = FormParams
+    ConnectionParams.User.ComponentItem = 'UserName'
+    ConnectionParams.User.DataType = ftString
+    ConnectionParams.Password.Value = Null
+    ConnectionParams.Password.Component = FormParams
+    ConnectionParams.Password.ComponentItem = 'Password'
+    ConnectionParams.Password.DataType = ftString
+    Left = 312
+    Top = 264
   end
 end

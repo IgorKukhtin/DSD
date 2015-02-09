@@ -510,7 +510,7 @@ BEGIN
                 , ContainerLO_JuridicalBasis.ObjectId     AS JuridicalBasisId
                 , ContainerLinkObject_Business.ObjectId   AS BusinessId
                 , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
-                , MILinkObject_Branch.ObjectId            AS BranchId
+                , COALESCE (MILinkObject_Branch.ObjectId, MovementLinkObject_Branch.ObjectId) AS BranchId
 
 
                 , ContainerLinkObject_Currency.ObjectId AS CurrencyId
@@ -564,6 +564,9 @@ BEGIN
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                   ON MILinkObject_Branch.MovementItemId = tmpMIContainer_Summ.MovementItemId -- MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
                                                  AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                              ON MovementLinkObject_Branch.MovementId = tmpMIContainer_Summ.MovementId
+                                             AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
 
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Currency
                                                ON ContainerLinkObject_Currency.ContainerId = tmpMIContainer_Summ.ContainerId

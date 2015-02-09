@@ -11124,6 +11124,8 @@ begin
            +'  and Id_Postgres >0'
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit(), zc_bkSaleToClient())'
            +'  and Bill.MoneyKindId=zc_mkNal()'
+           +'  and UnitFrom.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
+           +'  and UnitTo.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
            +'  and ((isUnitFrom.UnitId is not null and UnitTo.pgUnitId is not null)'
            +'    or (isUnitTo.UnitId is not null and UnitFrom.pgUnitId is not null))'
            +'  and not ((isUnitFrom.UnitId is not null or (UnitFrom.PersonalId_Postgres is not null and Bill.ToId not in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())) or UnitFrom.ParentId in (4137, 8217))' // МО ЛИЦА-ВСЕ + АВТОМОБИЛИ
@@ -11263,6 +11265,8 @@ begin
 // +' and Bill.Id_Postgres=22081'
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit(), zc_bkSaleToClient())'
            +'  and Bill.MoneyKindId=zc_mkNal()'
+           +'  and UnitFrom.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
+           +'  and UnitTo.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
            +'  and ((isUnitFrom.UnitId is not null and UnitTo.pgUnitId is not null)'
            +'    or (isUnitTo.UnitId is not null and UnitFrom.pgUnitId is not null))'
            +'  and not ((isUnitFrom.UnitId is not null or (UnitFrom.PersonalId_Postgres is not null and Bill.ToId not in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())) or UnitFrom.ParentId in (4137, 8217))' // МО ЛИЦА-ВСЕ + АВТОМОБИЛИ
@@ -11416,6 +11420,8 @@ begin
 // +' and Bill.Id_Postgres=367617'
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit(), zc_bkSaleToClient())'
            +'  and Bill.MoneyKindId=zc_mkNal()'
+           +'  and UnitFrom.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
+           +'  and UnitTo.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
            +'  and ((isUnitFrom.UnitId is not null and UnitTo.pgUnitId is not null)'
            +'    or (isUnitTo.UnitId is not null and UnitFrom.pgUnitId is not null))'
            +'  and not ((isUnitFrom.UnitId is not null or (UnitFrom.PersonalId_Postgres is not null and Bill.ToId not in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())) or UnitFrom.ParentId in (4137, 8217))' // МО ЛИЦА-ВСЕ + АВТОМОБИЛИ
@@ -11584,7 +11590,16 @@ begin
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                   if not myExecToStoredProc then ;//exit;
              end;
-             if (cbComplete.Checked)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger) then
+                  // проверка что он проведется
+                  fOpenSqToQuery (' select COALESCE (MLO_To.ObjectId, 0) AS ToId'
+                                 +' from Movement'
+                                 +'      LEFT JOIN MovementLinkObject AS MLO_To'
+                                 +'                                   ON MLO_To.MovementId = Movement.Id'
+                                 +'                                  AND MLO_To.DescId = zc_MovementLinkObject_To()'
+                                 +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
+                                 +'   AND Movement.DescId = zc_Movement_Sale()'
+                                 );
+             if (cbComplete.Checked)and(toSqlQuery.FieldByName('ToId').AsInteger>0)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger) then
              begin
                   toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                   toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
@@ -11980,7 +11995,7 @@ begin
            +'        and Bill.Id_Postgres > 0'
            +'        and isUnitFrom.UnitId is null'
            +'        and (isnull (UnitFrom.PersonalId_Postgres, 0) = 0 OR Bill.ToId in (zc_UnitId_StoreSale(), zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil()))'
-           +'        and isnull (UnitFrom.pgUnitId, 0) = 0'
+           +'        and (isnull (UnitFrom.pgUnitId, 0) = 0 or UnitFrom.pgUnitId IN (3, 1625))' // !!!ф. Одесса OR ф. Никополь!!!
            +'        and OKPO <> '+FormatToVarCharServer_notNULL(''));
            if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'')
            then Add(' and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
@@ -12438,7 +12453,7 @@ begin
            +'        and isUnitFrom.UnitId is not null'
            +'        and isUnitTo.UnitId is null'
            +'        and (isnull (UnitTo.PersonalId_Postgres, 0) = 0 OR Bill.FromId = zc_UnitId_StoreSale())'
-           +'        and isnull (UnitTo.pgUnitId, 0) = 0'
+           +'        and (isnull (UnitTo.pgUnitId, 0) = 0 or UnitTo.pgUnitId IN (3, 1625))' // !!!ф. Одесса OR ф. Никополь!!!
            +'        and OKPO <> '+FormatToVarCharServer_notNULL('')
            +'     ) as Bill');
 
@@ -14896,7 +14911,12 @@ begin
         Add('     , Bill.Nds as VATPercent');
         Add('     , case when Bill.isByMinusDiscountTax=zc_rvYes() then -Bill.DiscountTax else Bill.DiscountTax end as ChangePercent');
 
-        Add('     , isnull (_pgPartner.PartnerId_pg, UnitFrom.Id3_Postgres) as FromId_Postgres');
+        Add('     , case when UnitFrom.pgUnitId = 3' // ф. Одесса
+          + '                 then 298605' // ОГОРЕНКО новый дистрибьютор
+          + '            when UnitFrom.pgUnitId = 1625' // ф. Никополь
+          + '                 then 256624' // Мержиєвський О.В. ФОП дистрибьютор
+          + '            else isnull (_pgPartner.PartnerId_pg, UnitFrom.Id3_Postgres)'
+          + '       end as FromId_Postgres');
         Add('     , pgUnitTo.Id_Postgres as ToId_Postgres');
         Add('     , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres');
         Add('     , CodeIM');
@@ -14934,7 +14954,7 @@ begin
            +'        and Bill.MoneyKindId = zc_mkNal()'
            +'        and isUnitFrom.UnitId is null'
            +'        and (isnull (UnitFrom.PersonalId_Postgres, 0) = 0 OR Bill.ToId in (zc_UnitId_StoreSale(), zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil()))'
-           +'        and isnull (UnitFrom.pgUnitId, 0) = 0'
+           +'        and (isnull (UnitFrom.pgUnitId, 0) = 0 or UnitFrom.pgUnitId IN (3, 1625))' // !!!ф. Одесса OR ф. Никополь!!!
            +'        and OKPO <> '+FormatToVarCharServer_notNULL(''));
            if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'')
            then Add(' and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
@@ -15089,7 +15109,7 @@ begin
            +'        and Bill.Id_Postgres>0'
            +'        and isUnitFrom.UnitId is null'
            +'        and (isnull (UnitFrom.PersonalId_Postgres, 0) = 0 OR Bill.ToId in (zc_UnitId_StoreSale(), zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil()))'
-           +'        and isnull (UnitFrom.pgUnitId, 0) = 0'
+           +'        and (isnull (UnitFrom.pgUnitId, 0) = 0 or UnitFrom.pgUnitId IN (3, 1625))' // !!!ф. Одесса OR ф. Никополь!!!
            +'        and OKPO <> '+FormatToVarCharServer_notNULL(''));
            if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'')
            then Add(' and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));

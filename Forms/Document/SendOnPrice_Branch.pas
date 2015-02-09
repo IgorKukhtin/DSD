@@ -56,6 +56,8 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     cxLabel5: TcxLabel;
     edInvNumberOrder: TcxButtonEdit;
+    actPrintOut: TdsdPrintAction;
+    bbPrintOut: TdxBarButton;
   private
     { Private declarations }
   public

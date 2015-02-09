@@ -1,18 +1,23 @@
 -- Function: gpUnComplete_Movement_OrderExternal (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpUnComplete_Movement_OrderExternal (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUnComplete_Movement_OrderExternal (Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUnComplete_Movement_OrderExternal(
     IN inMovementId        Integer               , -- ключ Документа
+   OUT outPrinted          Boolean               ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+
 )
-RETURNS VOID
+RETURNS Boolean
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_OrderExternal());
+     outPrinted := gpUpdate_Movement_OrderExternal_Print(inId := inMovementId , inNewPrinted := False,  inSession := inSession);
 
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');

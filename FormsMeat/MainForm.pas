@@ -39,15 +39,6 @@ type
     actCurrency: TdsdOpenForm;
     actReport_Balance: TdsdOpenForm;
     actPriceList: TdsdOpenForm;
-    actInfoMoneyGroup: TdsdOpenForm;
-    actInfoMoneyDestination: TdsdOpenForm;
-    actInfoMoney: TdsdOpenForm;
-    actAccountGroup: TdsdOpenForm;
-    actAccountDirection: TdsdOpenForm;
-    actProfitLossGroup: TdsdOpenForm;
-    actProfitLossDirection: TdsdOpenForm;
-    actAccount: TdsdOpenForm;
-    actProfitLoss: TdsdOpenForm;
     actTradeMark: TdsdOpenForm;
     actAsset: TdsdOpenForm;
     actRoute: TdsdOpenForm;
@@ -489,6 +480,10 @@ type
     miContractPartner: TMenuItem;
     actRoleUnion: TdsdOpenForm;
     miRoleUnion: TMenuItem;
+    actContractGoods: TdsdOpenForm;
+    miContractGoods: TMenuItem;
+    actCashOperationOdessa: TdsdOpenForm;
+    miCashOdessa: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

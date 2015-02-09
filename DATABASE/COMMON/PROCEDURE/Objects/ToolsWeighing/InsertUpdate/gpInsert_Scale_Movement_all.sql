@@ -99,6 +99,23 @@ BEGIN
                                                   , inCurrencyValue         := NULL
                                                   , inUserId                := vbUserId
                                                    )
+                                          WHEN vbMovementDescId = zc_Movement_SendOnPrice()
+                                                    -- <Перемещение по цене>
+                                               THEN lpInsertUpdate_Movement_SendOnPrice_Value
+                                                   (ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_SendOnPrice_seq') AS TVarChar)
+                                                  , inOperDate              := inOperDate
+                                                  , inOperDatePartner       := inOperDate
+                                                  , inPriceWithVAT          := PriceWithVAT
+                                                  , inVATPercent            := VATPercent
+                                                  , inChangePercent         := ChangePercent
+                                                  , inFromId                := FromId
+                                                  , inToId                  := ToId
+                                                  , inRouteSortingId        := NULL
+                                                  , ioPriceListId           := NULL
+                                                  , inProcessId             := zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
+                                                  , inUserId                := vbUserId
+                                                   )
                                            END AS MovementId_begin
                                     FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession) AS tmp
                                          LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
@@ -115,6 +132,12 @@ BEGIN
     IF COALESCE (vbMovementId_begin, 0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
+    END IF;
+
+
+    -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
+    IF vbMovementDescId = zc_Movement_Sale()
+    THEN PERFORM lpUpdate_Movement_Sale_Edi_byOrder (vbMovementId_begin, (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = vbMovementId_begin AND DescId = zc_MovementLinkMovement_Order() AND MovementChildId <> 0), vbUserId);
     END IF;
 
 
@@ -154,6 +177,22 @@ BEGIN
                                                         , inPartionGoods        := ''
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := NULL
+                                                        , inUserId              := vbUserId
+                                                         )
+                       WHEN vbMovementDescId = zc_Movement_SendOnPrice()
+                                 -- <Перемещение по цене>
+                            THEN lpInsertUpdate_MovementItem_SendOnPrice_Value
+                                                         (ioId                  := 0
+                                                        , inMovementId          := vbMovementId_begin
+                                                        , inGoodsId             := tmp.GoodsId
+                                                        , inAmount              := tmp.Amount
+                                                        , inAmountChangePercent := tmp.Amount
+                                                        , inAmountPartner       := tmp.Amount
+                                                        , inChangePercentAmount := 0
+                                                        , inPrice               := tmp.Price
+                                                        , ioCountForPrice       := tmp.CountForPrice
+                                                        , inPartionGoods        := ''
+                                                        , inGoodsKindId         := tmp.GoodsKindId
                                                         , inUserId              := vbUserId
                                                          )
                   END AS tmpId
@@ -277,6 +316,15 @@ BEGIN
              PERFORM lpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_begin
                                                  , inUserId         := vbUserId
                                                  , inIsLastComplete := NULL);
+         ELSE
+             IF vbMovementDescId = zc_Movement_SendOnPrice()
+             THEN
+                 -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
+                 PERFORM lpComplete_Movement_SendOnPrice_CreateTemp();
+                 -- Проводим Документ - <Перемещение по цене>
+                 PERFORM lpComplete_Movement_SendOnPrice (inMovementId     := vbMovementId_begin
+                                                        , inUserId         := vbUserId);
+             END IF;
          END IF;
      END IF;
 

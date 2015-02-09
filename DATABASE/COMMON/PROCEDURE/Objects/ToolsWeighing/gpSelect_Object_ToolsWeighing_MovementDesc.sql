@@ -150,7 +150,7 @@ BEGIN
             , '' :: TVarChar                      AS PriceListName
             , 0                                   AS GoodsKindWeighingGroupId
             , 0                                   AS ColorGridValue
-            , MovementDesc.ItemName               AS MovementDescName
+            , CASE WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() THEN 'Приход с Центрального склада' ELSE MovementDesc.ItemName END :: TVarChar AS MovementDescName
             , '' :: TVarChar                      AS MovementDescName_master
             , tmp.OrderById                       AS OrderById
        FROM (SELECT _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById FROM _tmpToolsWeighing WHERE _tmpToolsWeighing.MovementDescId <> 0 GROUP BY _tmpToolsWeighing.MovementDescId, _tmpToolsWeighing.OrderById) AS tmp

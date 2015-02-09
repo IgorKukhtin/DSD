@@ -1,14 +1,16 @@
 -- Function: gpLoadSaleFrom1C()
 
 DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpLoadSaleFrom1C(
     IN inStartDate           TDateTime  , -- Ќачальна€ дата переноса
     IN inEndDate             TDateTime  , --  онечна€ дата переноса
     IN inOperDate            TDateTime  ,
     IN inInvNumber           TVarChar   ,
-    IN inClientCode          Integer   ,
+    IN inClientCode          Integer    ,
     IN inBranchId            Integer    , -- ‘илиал
+    IN inVidDoc              TVarChar   ,
     IN inSession             TVarChar    -- сесси€ пользовател€
 )                              
 RETURNS Void AS
@@ -143,6 +145,7 @@ BEGIN
             
           WHERE Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
             AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+            AND Sale1C.VIDDOC = inVidDoc
             AND COALESCE (ObjectLink_Partner1CLink_Partner.ChildObjectId, 0) <> zc_Enum_InfoMoney_40801() -- ¬нутренний оборот
                  GROUP BY Sale1C.InvNumber
                         , Sale1C.OperDate
@@ -259,7 +262,8 @@ BEGIN
                  AND Sale1C.OperDate = vbOperDate
                  AND Sale1C.UnitId = vbUnitId_1C
                  AND Sale1C.ClientCode = inClientCode
-                 AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2'));
+                 AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2'))
+                 AND Sale1C.VIDDOC = inVidDoc;
           -- начало цикла по курсору
           LOOP
                -- данные дл€ Ёлемента документа
@@ -405,6 +409,7 @@ BEGIN
 
           WHERE  Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
             AND ((Sale1C.VIDDOC = '4') OR (Sale1C.VIDDOC = '3')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+            AND Sale1C.VIDDOC = inVidDoc
             AND COALESCE (ObjectLink_Partner1CLink_Partner.ChildObjectId, 0) <> zc_Enum_InfoMoney_40801() -- ¬нутренний оборот
 
                  GROUP BY Sale1C.InvNumber
@@ -484,7 +489,8 @@ BEGIN
                  AND Sale1C.OperDate = vbOperDate
                  AND Sale1C.UnitId = vbUnitId_1C
                  AND Sale1C.ClientCode = inClientCode
-                 AND ((Sale1C.VIDDOC = '3') OR (Sale1C.VIDDOC = '4'));
+                 AND ((Sale1C.VIDDOC = '3') OR (Sale1C.VIDDOC = '4'))
+                 AND Sale1C.VIDDOC = inVidDoc;
 
           -- начало цикла по курсору
           LOOP

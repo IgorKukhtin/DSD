@@ -8,7 +8,7 @@ uses
   cxButtonEdit, cxCurrencyEdit, cxLabel, Vcl.Controls, cxTextEdit, dsdDB,
   dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore, dsdAddOn,
   Vcl.StdCtrls, cxButtons, dxSkinsCore, dxSkinsDefaultPainters, Vcl.ComCtrls,
-  dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
+  dxCore, cxDateUtils, cxDropDownEdit, cxCalendar, cxCheckBox;
 
 type
   TPartnerEditForm = class(TAncestorEditDialogForm)
@@ -87,6 +87,9 @@ type
     StreetKindGuides: TdsdGuides;
     cxLabel28: TcxLabel;
     edPostalCode: TcxTextEdit;
+    cbEdiOrdspr: TcxCheckBox;
+    cbEdiDesadv: TcxCheckBox;
+    cbEdiInvoice: TcxCheckBox;
 
   private
     { Private declarations }

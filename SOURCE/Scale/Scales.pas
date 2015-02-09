@@ -113,7 +113,11 @@ const
 var
   IniFile: TIniFile;
 begin
-  if not Assigned(Scale_DB) and not Assigned(Scale_BI) then begin
+  // !!!блокируется, т.к. в документе вес не нужен!!!
+  Scale_BI := nil;
+  Scale_DB := nil;
+  if (1=0) AND (not Assigned(Scale_DB)) and (not Assigned(Scale_BI)) then
+  begin
      IniFile := TIniFile.Create( ExtractFilePath(ParamStr(0)) + IniFileName);
      try
        FComPort := IniFile.ReadString(Section, 'ComPort', 'COM1');

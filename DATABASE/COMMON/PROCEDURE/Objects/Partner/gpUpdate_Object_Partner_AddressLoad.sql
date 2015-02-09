@@ -108,9 +108,49 @@ BEGIN
    IF COALESCE (inId, 0) = 0
    THEN
       -- проверка
-      IF NOT EXISTS (SELECT Id FROM Object WHERE Id = zc_Enum_PaidKind_SecondForm() AND ValueData = inPaidKindName)
+      IF 1=1 OR NOT EXISTS (SELECT Id FROM Object WHERE Id = zc_Enum_PaidKind_SecondForm() AND ValueData = inPaidKindName)
       THEN
-         RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Ключ>.', inPartnerName;
+          IF inPartnerName <> '' OR inOKPO <> ''
+          THEN
+              RAISE EXCEPTION 'Ошибка.Для контрагента <%> c ОКПО <%> не определено значение <Ключ>.', inPartnerName, inOKPO;
+          ELSE RAISE EXCEPTION '<%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%> <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%> <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%> <%> '
+                             , COALESCE (inId, 0)
+                             , COALESCE (inPartnerName, '')
+                             , COALESCE (inJuridicalNameNew, '')
+                             , COALESCE (inOKPO, '')
+                             , COALESCE (inPaidKindName, '')
+                             , COALESCE (inRetailName, '')
+                             , COALESCE (inRegionName, '')
+                             , COALESCE (inProvinceName, '')
+                             , COALESCE (inCityName, '')
+                             , COALESCE (inCityKindName, '')
+                             , COALESCE (inProvinceCityName, '')
+                             , COALESCE (inPostalCode, '')
+                             , COALESCE (inStreetName, '')
+                             , COALESCE (inStreetKindName, '')
+                             , COALESCE (inHouseNumber, '')
+                             , COALESCE (inCaseNumber, '')
+                             , COALESCE (inRoomNumber, '')
+                             , COALESCE (inShortName, '')
+
+                             , COALESCE (inOrderName, '')
+                             , COALESCE (inOrderPhone, '')
+                             , COALESCE (inOrderMail, '')
+
+                             , COALESCE (inDocName, '')
+                             , COALESCE (inDocPhone, '')
+                             , COALESCE (inDocMail, '')
+
+                             , COALESCE (inActName, '')
+                             , COALESCE (inActPhone, '')
+                             , COALESCE (inActMail, '')
+    
+                             , COALESCE (inPersonal, '')
+                             , COALESCE (inPersonalTrade, '')
+                             , COALESCE (inArea, '')
+                             , COALESCE (inPartnerTag, '')
+                              ;
+          END IF;
       END IF;
       -- проверка
       IF COALESCE (TRIM (inStreetName), '') = ''
@@ -139,7 +179,7 @@ BEGIN
    END IF;
 
    -- проверка
-   IF 1=0 AND COALESCE (TRIM (inStreetName), '') = '' THEN
+   IF 1=1 AND COALESCE (TRIM (inStreetName), '') = '' THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Название (улица, проспект)>.', inPartnerName;
    END IF;
 

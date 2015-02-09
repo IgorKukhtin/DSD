@@ -543,6 +543,30 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object clEdiOrdspr: TcxGridDBColumn
+            Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+            DataBinding.FieldName = 'EdiOrdspr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clEdiInvoice: TcxGridDBColumn
+            Caption = 'EDI - '#1057#1095#1077#1090
+            DataBinding.FieldName = 'EdiInvoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clEdiDesadv: TcxGridDBColumn
+            Caption = 'EDI - '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'EdiDesadv'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
     end

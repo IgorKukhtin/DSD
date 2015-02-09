@@ -486,7 +486,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 894
-      Top = 63
+      Top = 47
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 28
@@ -538,6 +538,15 @@ inherited OrderExternalForm: TOrderExternalForm
       Left = 744
       Top = 5
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+    end
+    object cbPrinted: TcxCheckBox
+      Left = 894
+      Top = 66
+      Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
+      Enabled = False
+      Properties.ReadOnly = True
+      TabOrder = 35
+      Width = 128
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -651,10 +660,10 @@ inherited OrderExternalForm: TOrderExternalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actSPSavePrintState
+          Action = actPrint
         end
         item
-          Action = actPrint
+          Action = actSPSavePrintState
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -856,6 +865,12 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'isPrinted'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 280
     Top = 552
@@ -866,6 +881,27 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_OrderExternal'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = Null
+        Component = cbPrinted
+        DataType = ftBoolean
+      end>
     Left = 128
     Top = 56
   end
@@ -1058,6 +1094,12 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
+      end
+      item
+        Name = 'isPrinted'
+        Value = Null
+        Component = cbPrinted
+        DataType = ftBoolean
       end>
     Left = 216
     Top = 248
@@ -1795,16 +1837,30 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 84
   end
   object spSavePrintState: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_OrderExternal_Print'
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_Print'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inNewPrinted'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = True
+        Component = cbPrinted
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 344

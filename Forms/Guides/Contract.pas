@@ -12,7 +12,7 @@ uses
   cxCheckBox, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, Vcl.ExtCtrls;
 
 type
   TContractForm = class(TParentForm)
@@ -72,7 +72,7 @@ type
     clsfcisErased: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     ContractConditionDS: TDataSource;
-    ContractConditionCDS: TClientDataSet;
+    CDSContractCondition: TClientDataSet;
     spInsertUpdateContractCondition: TdsdStoredProc;
     spSelectContractCondition: TdsdStoredProc;
     ContractConditionKindChoiceForm: TOpenChoiceForm;
@@ -134,15 +134,15 @@ type
     JuridicalDocumentChoiceForm: TOpenChoiceForm;
     clJuridicalDocumentName: TcxGridDBColumn;
     cxGridPartner: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBTableViewPartner: TcxGridDBTableView;
     clPartnerName: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    ClientDataSet1: TClientDataSet;
-    DataSource1: TDataSource;
+    cxGridLevePartner: TcxGridLevel;
+    CDSContractPartner: TClientDataSet;
+    DataSourcePartner: TDataSource;
     spSelectContractPartner: TdsdStoredProc;
     spInsertUpdateContractPartner: TdsdStoredProc;
     PartnerChoiceForm: TOpenChoiceForm;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    dsdDBViewAddOnPartner: TdsdDBViewAddOn;
     InsertRecordCP: TInsertRecord;
     bbRecordCP: TdxBarButton;
     colCode: TcxGridDBColumn;
@@ -151,6 +151,25 @@ type
     bbProtocol: TdxBarButton;
     cxTopSplitter: TcxSplitter;
     cxRightSplitter: TcxSplitter;
+    Panel: TPanel;
+    cxGridGoods: TcxGrid;
+    cxGridDBTableViewGoods: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    clGoodsName: TcxGridDBColumn;
+    cxGridLevelGoods: TcxGridLevel;
+    cxLeftSplitter: TcxSplitter;
+    CDSContractGoods: TClientDataSet;
+    DataSourceGoods: TDataSource;
+    dsdDBViewAddOnGoods: TdsdDBViewAddOn;
+    spSelectContractGoods: TdsdStoredProc;
+    spInsertUpdateContractGoods: TdsdStoredProc;
+    clGoodsKindName: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
+    InsertRecordGoods: TInsertRecord;
+    GoodsChoiceForm: TOpenChoiceForm;
+    bb: TdxBarButton;
+    GoodsKindChoiceForm: TOpenChoiceForm;
+    actUpdateDSGoods: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

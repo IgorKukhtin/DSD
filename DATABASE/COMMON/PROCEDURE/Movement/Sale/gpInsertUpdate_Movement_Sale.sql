@@ -74,13 +74,8 @@ BEGIN
                                        ) AS tmp;
 
 
-
-    -- если есть
-    IF EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId_Order AND DescId = zc_MovementLinkMovement_Order() AND MovementChildId <> 0)
-    THEN
-        -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
-        PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), ioId, (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId_Order AND DescId = zc_MovementLinkMovement_Order()));
-    END IF;
+    -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
+    PERFORM lpUpdate_Movement_Sale_Edi_byOrder (ioId, inMovementId_Order, vbUserId);
 
 
     -- в этом случае надо восстановить/удалить Налоговую

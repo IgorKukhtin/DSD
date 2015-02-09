@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dsdAction, Vcl.ActnList, dsdDB, Data.DB,
-  Datasnap.DBClient;
+  Datasnap.DBClient,EDI;
 
 type
   TUtilPrintForm = class(TForm)
@@ -49,12 +49,23 @@ type
     spGetReportName_ReturnIn: TdsdStoredProc;
     mactPrint_ReturnIn: TMultiAction;
     actPrintReportName_ReturnIn: TdsdExecStoredProc;
+    EDI: TEDI;
+    actInvoice: TEDIAction;
+    actOrdSpr: TEDIAction;
+    actDesadv: TEDIAction;
+    mactInvoice: TMultiAction;
+    mactOrdSpr: TMultiAction;
+    mactDesadv: TMultiAction;
   private
   end;
 
   procedure Print_Sale (MovementId: Integer);
   procedure Print_ReturnIn (MovementId: Integer);
   procedure Print_SendOnPrice (MovementId: Integer);
+
+  procedure EDI_Invoice (MovementId: Integer);
+  procedure EDI_OrdSpr (MovementId: Integer);
+  procedure EDI_Desadv (MovementId: Integer);
 
 var
   UtilPrintForm: TUtilPrintForm;
@@ -78,6 +89,26 @@ procedure Print_SendOnPrice (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.actPrint_SendOnPrice.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
+procedure EDI_Invoice (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.mactInvoice.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure EDI_OrdSpr (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.mactOrdSpr.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure EDI_Desadv (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.mactDesadv.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 end.

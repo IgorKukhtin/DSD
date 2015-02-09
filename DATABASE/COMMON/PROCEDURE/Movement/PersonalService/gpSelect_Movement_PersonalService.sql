@@ -36,6 +36,9 @@ BEGIN
                               UNION
                                -- Админ и другие видят ВСЕХ
                                SELECT AccessKeyId_PersonalService AS AccessKeyId FROM tmpUserAll INNER JOIN Object_RoleAccessKeyGuide_View ON tmpUserAll.UserId > 0 GROUP BY AccessKeyId_PersonalService
+                              UNION
+                               -- "ЗП Админ" видят "ЗП карточки БН"
+                               SELECT zc_Enum_Process_AccessKey_PersonalServiceFirstForm() FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId WHERE AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin() GROUP BY AccessKeyId_PersonalService
                               )
 
        SELECT

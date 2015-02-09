@@ -169,14 +169,18 @@ begin
 
      if DMMainScaleForm.gpInsert_Movement_all(ParamsMovement) then
      begin
-          //Print
-          if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_Sale
-          then Print_Sale(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
-          else if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_ReturnIn
-               then Print_ReturnIn(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
-               else if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_SendOnPrice
-                    then Print_SendOnPrice(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
-          else ShowMessage ('Ошибка.Печать не определена.');
+          try
+             //Print
+             if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_Sale
+             then Print_Sale(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
+             else if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_ReturnIn
+                  then Print_ReturnIn(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
+                  else if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_SendOnPrice
+                       then Print_SendOnPrice(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
+             else ShowMessage ('Ошибка.Документ сохранен.Форма печати не найдена.');
+          except
+                ShowMessage ('Ошибка.Документ сохранен.Печать не сформирована.')
+          end;
 
           //Initialize or Empty
           DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement);

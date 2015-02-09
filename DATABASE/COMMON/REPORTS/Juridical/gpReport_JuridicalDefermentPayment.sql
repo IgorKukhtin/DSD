@@ -64,6 +64,19 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101())
+        , tmpListBranch_Constraint AS (SELECT ObjectLink_Contract_Personal.ObjectId AS ContractId
+                                       FROM ObjectLink AS ObjectLink_Unit_Branch
+                                            INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                  ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                            INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                  ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                                       WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                       GROUP BY ObjectLink_Contract_Personal.ObjectId
+                                      )
+
      SELECT a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
              , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
              , a.BranchId, a.BranchCode, a.BranchName
@@ -273,9 +286,13 @@ from (
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                 ON ObjectLink_Juridical_JuridicalGroup.ObjectId = RESULT_all.JuridicalId
                                AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+           LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.ContractId = RESULT_all.ContractId
          WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-           AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId AND vbIsBranch = FALSE))                 -- !!!пересорт!!
-           AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR COALESCE (inJuridicalGroupId, 0) = 0 OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE)) -- !!!пересорт!!
+           AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0
+                OR ((ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
+           AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR COALESCE (inJuridicalGroupId, 0) = 0
+                OR tmpListBranch_Constraint.ContractId > 0
+                OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE)) -- !!!пересорт!!
          GROUP BY RESULT_all.AccountId
                 , RESULT_all.ContractId
                 , RESULT_all.JuridicalId 

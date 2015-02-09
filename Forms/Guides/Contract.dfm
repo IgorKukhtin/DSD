@@ -2,8 +2,8 @@ object ContractForm: TContractForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientHeight = 514
-  ClientWidth = 1186
+  ClientHeight = 518
+  ClientWidth = 1209
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object ContractForm: TContractForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1186
+    Width = 1209
     Height = 303
     Align = alTop
     TabOrder = 0
@@ -598,17 +598,14 @@ object ContractForm: TContractForm
   end
   object cxGridContractCondition: TcxGrid
     Left = 0
-    Top = 334
-    Width = 763
-    Height = 180
+    Top = 337
+    Width = 611
+    Height = 181
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 329
-    ExplicitWidth = 768
-    ExplicitHeight = 185
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -766,80 +763,169 @@ object ContractForm: TContractForm
     TabOrder = 7
     Width = 278
   end
-  object cxGridPartner: TcxGrid
-    Left = 768
-    Top = 334
-    Width = 418
-    Height = 180
+  object Panel: TPanel
+    Left = 615
+    Top = 337
+    Width = 594
+    Height = 181
     Align = alRight
-    TabOrder = 11
-    LookAndFeel.Kind = lfStandard
-    LookAndFeel.NativeStyle = False
-    LookAndFeel.SkinName = ''
-    ExplicitTop = 329
-    ExplicitHeight = 185
-    object cxGridDBTableView1: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource1
-      DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Filter.Active = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsBehavior.IncSearch = True
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Inserting = False
-      OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
-      OptionsView.Indicator = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 57
+    BevelOuter = bvNone
+    TabOrder = 6
+    object cxGridPartner: TcxGrid
+      Left = 0
+      Top = 0
+      Width = 241
+      Height = 181
+      Align = alLeft
+      TabOrder = 0
+      LookAndFeel.Kind = lfStandard
+      LookAndFeel.NativeStyle = False
+      LookAndFeel.SkinName = ''
+      object cxGridDBTableViewPartner: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = DataSourcePartner
+        DataController.Filter.Options = [fcoCaseInsensitive]
+        DataController.Filter.Active = True
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        Images = dmMain.SortImageList
+        OptionsBehavior.IncSearch = True
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        OptionsView.HeaderHeight = 40
+        OptionsView.Indicator = True
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object colCode: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'Code'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 57
+        end
+        object clPartnerName: TcxGridDBColumn
+          Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+          DataBinding.FieldName = 'PartnerName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = PartnerChoiceForm
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 258
+        end
       end
-      object clPartnerName: TcxGridDBColumn
-        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-        DataBinding.FieldName = 'PartnerName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = PartnerChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 258
+      object cxGridLevePartner: TcxGridLevel
+        GridView = cxGridDBTableViewPartner
       end
     end
-    object cxGridLevel1: TcxGridLevel
-      GridView = cxGridDBTableView1
+    object cxGridGoods: TcxGrid
+      Left = 246
+      Top = 0
+      Width = 348
+      Height = 181
+      Align = alClient
+      TabOrder = 1
+      LookAndFeel.Kind = lfStandard
+      LookAndFeel.NativeStyle = False
+      LookAndFeel.SkinName = ''
+      object cxGridDBTableViewGoods: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = DataSourceGoods
+        DataController.Filter.Options = [fcoCaseInsensitive]
+        DataController.Filter.Active = True
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        Images = dmMain.SortImageList
+        OptionsBehavior.IncSearch = True
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        OptionsView.HeaderHeight = 40
+        OptionsView.Indicator = True
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object cxGridDBColumn1: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'Code'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 57
+        end
+        object clGoodsName: TcxGridDBColumn
+          Caption = #1058#1086#1074#1072#1088
+          DataBinding.FieldName = 'GoodsName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = GoodsChoiceForm
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 166
+        end
+        object clGoodsKindName: TcxGridDBColumn
+          Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+          DataBinding.FieldName = 'GoodsKindName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = GoodsKindChoiceForm
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentVert = vaCenter
+          Width = 60
+        end
+        object clPrice: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072
+          DataBinding.FieldName = 'Price'
+          HeaderAlignmentVert = vaCenter
+          Width = 43
+        end
+      end
+      object cxGridLevelGoods: TcxGridLevel
+        GridView = cxGridDBTableViewGoods
+      end
+    end
+    object cxLeftSplitter: TcxSplitter
+      Left = 241
+      Top = 0
+      Width = 5
+      Height = 181
+      Control = cxGridPartner
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 329
-    Width = 1186
-    Height = 5
+    Width = 1209
+    Height = 8
     AlignSplitter = salTop
     Control = cxGrid
   end
   object cxRightSplitter: TcxSplitter
-    Left = 763
-    Top = 334
-    Width = 5
-    Height = 180
+    Left = 611
+    Top = 337
+    Width = 4
+    Height = 181
     AlignSplitter = salRight
-    Control = cxGridPartner
-    ExplicitLeft = 762
+    Control = Panel
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -931,6 +1017,7 @@ object ContractForm: TContractForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
@@ -947,7 +1034,14 @@ object ContractForm: TContractForm
           ItemName = 'bbRecordCP'
         end
         item
-          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic1'
         end
@@ -1094,6 +1188,10 @@ object ContractForm: TContractForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = InsertRecordGoods
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1112,6 +1210,9 @@ object ContractForm: TContractForm
         end
         item
           StoredProc = spSelectContractPartner
+        end
+        item
+          StoredProc = spSelectContractGoods
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1142,10 +1243,20 @@ object ContractForm: TContractForm
         end>
       isShowModal = True
     end
+    object InsertRecordGoods: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableViewGoods
+      Action = GoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 0
+    end
     object InsertRecordCP: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
-      View = cxGridDBTableView1
+      View = cxGridDBTableViewPartner
       Action = PartnerChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
@@ -1344,13 +1455,13 @@ object ContractForm: TContractForm
         item
           Name = 'Key'
           Value = Null
-          Component = ContractConditionCDS
+          Component = CDSContractCondition
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ContractConditionCDS
+          Component = CDSContractCondition
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end>
@@ -1515,13 +1626,13 @@ object ContractForm: TContractForm
         item
           Name = 'Key'
           Value = Null
-          Component = ContractConditionCDS
+          Component = CDSContractCondition
           ComponentItem = 'ContractConditionKindId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ContractConditionCDS
+          Component = CDSContractCondition
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
         end>
@@ -1538,13 +1649,13 @@ object ContractForm: TContractForm
         item
           Name = 'Key'
           Value = Null
-          Component = ContractConditionCDS
+          Component = CDSContractCondition
           ComponentItem = 'BonusKindId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ContractConditionCDS
+          Component = CDSContractCondition
           ComponentItem = 'BonusKindName'
           DataType = ftString
         end>
@@ -1561,6 +1672,17 @@ object ContractForm: TContractForm
       Caption = 'actUpdateDataSetCCK'
       DataSource = ContractConditionDS
     end
+    object actUpdateDSGoods: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateContractGoods
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateContractGoods
+        end>
+      Caption = 'actUpdateDSGoods'
+      DataSource = DataSourceGoods
+    end
     object dsdUpdateDataSet1: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -1570,7 +1692,7 @@ object ContractForm: TContractForm
           StoredProc = spInsertUpdateContractPartner
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DataSource1
+      DataSource = DataSourcePartner
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1606,6 +1728,29 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
+    object GoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'GoodsChoiceForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = CDSContractGoods
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CDSContractGoods
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
     object PersonalTradeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1629,6 +1774,29 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
+    object GoodsKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'GoodsKindChoiceForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = 'TGoodsKindForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = CDSContractGoods
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CDSContractGoods
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1640,13 +1808,13 @@ object ContractForm: TContractForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet1
+          Component = CDSContractPartner
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet1
+          Component = CDSContractPartner
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
@@ -1801,11 +1969,11 @@ object ContractForm: TContractForm
     Top = 224
   end
   object ContractConditionDS: TDataSource
-    DataSet = ContractConditionCDS
+    DataSet = CDSContractCondition
     Left = 62
     Top = 397
   end
-  object ContractConditionCDS: TClientDataSet
+  object CDSContractCondition: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ContractId'
     MasterFields = 'Id'
@@ -1823,14 +1991,14 @@ object ContractForm: TContractForm
       item
         Name = 'ioId'
         Value = Null
-        Component = ContractConditionCDS
+        Component = CDSContractCondition
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inComment'
         Value = Null
-        Component = ContractConditionCDS
+        Component = CDSContractCondition
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
@@ -1838,7 +2006,7 @@ object ContractForm: TContractForm
       item
         Name = 'inValue'
         Value = Null
-        Component = ContractConditionCDS
+        Component = CDSContractCondition
         ComponentItem = 'Value'
         DataType = ftFloat
         ParamType = ptInput
@@ -1853,21 +2021,21 @@ object ContractForm: TContractForm
       item
         Name = 'inContractConditionKindId'
         Value = Null
-        Component = ContractConditionCDS
+        Component = CDSContractCondition
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
       end
       item
         Name = 'inBonusKindId'
         Value = Null
-        Component = ContractConditionCDS
+        Component = CDSContractCondition
         ComponentItem = 'BonusKindId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Value = Null
-        Component = ContractConditionCDS
+        Component = CDSContractCondition
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
       end>
@@ -1877,10 +2045,10 @@ object ContractForm: TContractForm
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractCondition'
-    DataSet = ContractConditionCDS
+    DataSet = CDSContractCondition
     DataSets = <
       item
-        DataSet = ContractConditionCDS
+        DataSet = CDSContractCondition
       end>
     Params = <>
     PackSize = 1
@@ -1988,32 +2156,32 @@ object ContractForm: TContractForm
     Left = 536
     Top = 160
   end
-  object ClientDataSet1: TClientDataSet
+  object CDSContractPartner: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ContractId'
     MasterFields = 'Id'
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 797
-    Top = 373
+    Left = 685
+    Top = 349
   end
-  object DataSource1: TDataSource
-    DataSet = ClientDataSet1
-    Left = 798
-    Top = 437
+  object DataSourcePartner: TDataSource
+    DataSet = CDSContractPartner
+    Left = 766
+    Top = 349
   end
   object spSelectContractPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractPartner'
-    DataSet = ClientDataSet1
+    DataSet = CDSContractPartner
     DataSets = <
       item
-        DataSet = ClientDataSet1
+        DataSet = CDSContractPartner
       end>
     Params = <>
     PackSize = 1
-    Left = 906
-    Top = 357
+    Left = 769
+    Top = 421
   end
   object spInsertUpdateContractPartner: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractPartner'
@@ -2023,14 +2191,14 @@ object ContractForm: TContractForm
       item
         Name = 'ioId'
         Value = Null
-        Component = ClientDataSet1
+        Component = CDSContractPartner
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
         Value = Null
-        Component = ClientDataSet1
+        Component = CDSContractPartner
         ComponentItem = 'Code'
         ParamType = ptInput
       end
@@ -2044,17 +2212,17 @@ object ContractForm: TContractForm
       item
         Name = 'inPartnerId'
         Value = Null
-        Component = ClientDataSet1
+        Component = CDSContractPartner
         ComponentItem = 'PartnerId'
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 896
-    Top = 432
+    Left = 784
+    Top = 384
   end
-  object dsdDBViewAddOn1: TdsdDBViewAddOn
+  object dsdDBViewAddOnPartner: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
+    View = cxGridDBTableViewPartner
     OnDblClickActionList = <
       item
         Action = actUpdate
@@ -2077,7 +2245,114 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 1000
-    Top = 376
+    Left = 704
+    Top = 392
+  end
+  object CDSContractGoods: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'ContractId'
+    MasterFields = 'Id'
+    MasterSource = DataSource
+    PacketRecords = 0
+    Params = <>
+    Left = 997
+    Top = 365
+  end
+  object DataSourceGoods: TDataSource
+    DataSet = CDSContractGoods
+    Left = 1070
+    Top = 357
+  end
+  object dsdDBViewAddOnGoods: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewGoods
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end
+      item
+        Action = dsdChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 1136
+    Top = 360
+  end
+  object spSelectContractGoods: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ContractGoods'
+    DataSet = CDSContractGoods
+    DataSets = <
+      item
+        DataSet = CDSContractGoods
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 1058
+    Top = 413
+  end
+  object spInsertUpdateContractGoods: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ContractGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = CDSContractGoods
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = CDSContractGoods
+        ComponentItem = 'Code'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = CDSContractGoods
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = CDSContractGoods
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = CDSContractGoods
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 1112
+    Top = 416
   end
 end
