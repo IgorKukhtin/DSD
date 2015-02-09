@@ -1,12 +1,12 @@
 -- Function: gpInsertUpdate_Object_Quality  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Quality (Integer,TVarChar,Integer,TVarChar,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Quality (Integer,Integer,TVarChar,TVarChar,Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Quality(
  INOUT ioId                Integer   ,    -- ключ объекта < Улица/проспект> 
-    IN inName              TVarChar  ,
     IN inCode              Integer   ,    -- Код объекта <>
+    IN inName              TVarChar  ,
     IN inComment           TVarChar    ,
     IN inJuridicalId       Integer   ,    -- 
     IN inSession           TVarChar       -- сессия пользователя

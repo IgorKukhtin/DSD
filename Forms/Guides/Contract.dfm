@@ -25,7 +25,6 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 28
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1050,17 +1049,25 @@ object ContractForm: TContractForm
           ItemName = 'bbSetUnErased'
         end
         item
-          Visible = True
-          ItemName = 'bbProtocol'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertRecCCK'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -1084,6 +1091,10 @@ object ContractForm: TContractForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenFormPartner'
         end
         item
@@ -1101,6 +1112,10 @@ object ContractForm: TContractForm
         item
           Visible = True
           ItemName = 'bbSetUnErasedGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -1279,6 +1294,7 @@ object ContractForm: TContractForm
     end
     object bbProtocolOpenFormGoods: TdxBarButton
       Action = ProtocolOpenFormGoods
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
       Category = 0
     end
   end
@@ -1383,8 +1399,8 @@ object ContractForm: TContractForm
     object ProtocolOpenFormGoods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1090#1086#1074#1072#1088'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1090#1086#1074#1072#1088'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -1410,8 +1426,8 @@ object ContractForm: TContractForm
     object ProtocolOpenFormPartner: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -1437,8 +1453,8 @@ object ContractForm: TContractForm
     object ProtocolOpenFormCondition: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1073#1086#1085#1091#1089'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1073#1086#1085#1091#1089'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -1464,8 +1480,8 @@ object ContractForm: TContractForm
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1044#1086#1075#1086#1074#1086#1088'>'
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -1583,6 +1599,7 @@ object ContractForm: TContractForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSourcePartner
     end
@@ -1723,9 +1740,10 @@ object ContractForm: TContractForm
         item
           StoredProc = spErasedUnErasedGoods
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSourceGoods
@@ -1738,9 +1756,10 @@ object ContractForm: TContractForm
         item
           StoredProc = spErasedUnErasedPartner
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSourcePartner
@@ -2585,7 +2604,7 @@ object ContractForm: TContractForm
     Top = 416
   end
   object spErasedUnErasedPartner: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_ContractPartner'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2601,7 +2620,7 @@ object ContractForm: TContractForm
     Top = 392
   end
   object spErasedUnErasedGoods: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_ContractGoods'
     DataSets = <>
     OutputType = otResult
     Params = <
