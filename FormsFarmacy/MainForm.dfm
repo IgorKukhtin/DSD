@@ -1,10 +1,10 @@
 inherited MainForm: TMainForm
   Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
-  ClientHeight = 166
-  ClientWidth = 672
+  ClientHeight = 171
+  ClientWidth = 666
   KeyPreview = True
-  ExplicitWidth = 680
-  ExplicitHeight = 212
+  ExplicitWidth = 674
+  ExplicitHeight = 217
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -509,6 +509,16 @@ inherited MainForm: TMainForm
     inherited actProfitLoss: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
     end
+    object actReturnOut: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      FormName = 'TReturnOutJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actReturnType: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -547,6 +557,7 @@ inherited MainForm: TMainForm
     Left = 200
   end
   inherited MainMenu: TMainMenu
+    Top = 64
     inherited miGuides: TMenuItem
       object miCommon: TMenuItem
         Action = actGoods
@@ -646,6 +657,9 @@ inherited MainForm: TMainForm
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       object N11: TMenuItem
         Action = actIncome
+      end
+      object N35: TMenuItem
+        Action = actReturnOut
       end
       object N33: TMenuItem
         Caption = '-'

@@ -47,8 +47,6 @@ type
     colPartnerGoodsCode: TcxGridDBColumn;
     colPartnerGoodsName: TcxGridDBColumn;
     ContractGuides: TdsdGuides;
-    cxLabel5: TcxLabel;
-    edContract: TcxButtonEdit;
     edPaymentDate: TcxDateEdit;
     cxLabel6: TcxLabel;
     colExpirationDate: TcxGridDBColumn;
@@ -61,6 +59,9 @@ type
     actRefreshGoodsCode: TdsdExecStoredProc;
     bbRefreshGoodsCode: TdxBarButton;
     spIncome_GoodsId: TdsdStoredProc;
+    cxLabel5: TcxLabel;
+    cxButtonEdit1: TcxButtonEdit;
+    GuidesIncome: TdsdGuides;
   private
     { Private declarations }
   public

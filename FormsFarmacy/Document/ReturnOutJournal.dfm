@@ -1,5 +1,5 @@
 inherited ReturnOutJournalForm: TReturnOutJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 469
   ClientWidth = 807
   ExplicitWidth = 815
@@ -246,10 +246,10 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TIncomeForm'
+      FormName = 'TReturnOutForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TIncomeForm'
+      FormName = 'TReturnOutForm'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -339,7 +339,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income'
+    StoredProcName = 'gpSelect_Movement_ReturnOut'
     Params = <
       item
         Name = 'instartdate'
@@ -524,7 +524,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Income'
+    StoredProcName = 'gpComplete_Movement_ReturnOut'
     Params = <
       item
         Name = 'inmovementid'
@@ -537,7 +537,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Income'
+    StoredProcName = 'gpUnComplete_Movement_ReturnOut'
     Params = <
       item
         Name = 'inmovementid'
@@ -550,7 +550,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Income'
+    StoredProcName = 'gpSetErased_Movement_ReturnOut'
     Params = <
       item
         Name = 'inmovementid'
@@ -582,13 +582,13 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ReportNameIncome'
+        Name = 'ReportNameReturnOut'
         Value = Null
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameIncomeTax'
+        Name = 'ReportNameReturnOutTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput

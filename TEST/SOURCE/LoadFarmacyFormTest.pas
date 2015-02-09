@@ -45,6 +45,7 @@ type
     procedure LoadReportFormTest;
     procedure LoadRetailFormTest;
     procedure LoadReturnTypeFormTest;
+    procedure LoadReturnOutFormTest;
     procedure LoadServiceFormTest;
     procedure LoadUnitFormTest;
     procedure LoadAdditionalGoodsFormTest;
@@ -244,6 +245,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
+end;
+
+procedure TLoadFormTest.LoadReturnOutFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
 end;
 
 procedure TLoadFormTest.LoadReturnTypeFormTest;

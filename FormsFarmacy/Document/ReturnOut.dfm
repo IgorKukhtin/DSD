@@ -1,5 +1,5 @@
 inherited ReturnOutForm: TReturnOutForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 526
   ClientWidth = 776
   ExplicitWidth = 784
@@ -222,19 +222,19 @@ inherited ReturnOutForm: TReturnOutForm
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
-      TabOrder = 8
+      TabOrder = 7
       ExplicitTop = 63
       ExplicitWidth = 206
       ExplicitHeight = 22
       Width = 206
     end
     object cxLabel3: TcxLabel
-      Left = 217
+      Left = 345
       Top = 5
       Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 217
+      Left = 345
       Top = 23
       Properties.Buttons = <
         item
@@ -245,7 +245,7 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 174
     end
     object edTo: TcxButtonEdit
-      Left = 399
+      Left = 527
       Top = 23
       Properties.Buttons = <
         item
@@ -256,7 +256,7 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 184
     end
     object cxLabel4: TcxLabel
-      Left = 399
+      Left = 527
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
@@ -264,7 +264,7 @@ inherited ReturnOutForm: TReturnOutForm
       Left = 217
       Top = 64
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 11
+      TabOrder = 10
       Width = 130
     end
     object cxLabel10: TcxLabel
@@ -280,31 +280,15 @@ inherited ReturnOutForm: TReturnOutForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 13
+      TabOrder = 12
       Width = 86
-    end
-    object cxLabel5: TcxLabel
-      Left = 590
-      Top = 5
-      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
-    end
-    object edContract: TcxButtonEdit
-      Left = 592
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 6
-      Width = 140
     end
     object edPaymentDate: TcxDateEdit
       Left = 448
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 15
+      TabOrder = 13
       Width = 100
     end
     object cxLabel6: TcxLabel
@@ -331,7 +315,7 @@ inherited ReturnOutForm: TReturnOutForm
       StyleDisabled.BorderColor = clBtnFace
       StyleDisabled.BorderStyle = ebsSingle
       StyleDisabled.TextColor = clBtnText
-      TabOrder = 17
+      TabOrder = 15
       Width = 94
     end
     object ceTotalSummPVAT: TcxCurrencyEdit
@@ -353,7 +337,7 @@ inherited ReturnOutForm: TReturnOutForm
       StyleDisabled.BorderColor = clBtnFace
       StyleDisabled.BorderStyle = ebsSingle
       StyleDisabled.TextColor = clBtnText
-      TabOrder = 18
+      TabOrder = 16
       Width = 94
     end
     object cxLabel7: TcxLabel
@@ -379,6 +363,22 @@ inherited ReturnOutForm: TReturnOutForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
+    end
+    object cxLabel5: TcxLabel
+      Left = 219
+      Top = 5
+      Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
+    end
+    object cxButtonEdit1: TcxButtonEdit
+      Left = 219
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 20
+      Width = 121
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -997,7 +997,6 @@ inherited ReturnOutForm: TReturnOutForm
         Control = edInvNumber
       end
       item
-        Control = edContract
       end
       item
         Control = edPaymentDate
@@ -1273,7 +1272,8 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 304
+    Left = 416
+    Top = 16
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1298,7 +1298,8 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 464
+    Left = 592
+    Top = 16
   end
   object NDSKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1329,7 +1330,6 @@ inherited ReturnOutForm: TReturnOutForm
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractForm'
@@ -1368,5 +1368,31 @@ inherited ReturnOutForm: TReturnOutForm
     PackSize = 1
     Left = 264
     Top = 296
+  end
+  object GuidesIncome: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edFrom
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesIncome
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesIncome
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 280
+    Top = 16
   end
 end

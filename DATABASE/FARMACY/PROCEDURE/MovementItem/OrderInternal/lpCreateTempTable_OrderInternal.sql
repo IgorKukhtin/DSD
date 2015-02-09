@@ -80,7 +80,7 @@ BEGIN
               END::TFloat AS SuperFinalPrice   
          FROM 
 
-     (SELECT MovementItemOrder.Id
+     (SELECT DISTINCT MovementItemOrder.Id
           , PriceList.amount AS Price
           , PriceList.Id AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
