@@ -643,6 +643,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
       end>
     Left = 80
     Top = 320
@@ -658,12 +665,11 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'ioPrinted'
+        Name = 'outPrinted'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
-        ParamType = ptInputOutput
       end>
     Left = 80
     Top = 384
@@ -679,12 +685,11 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'ioPrinted'
+        Name = 'outPrinted'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
-        ParamType = ptInputOutput
       end>
     Left = 208
     Top = 376
@@ -771,7 +776,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 294
   end
   object spSavePrintState: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_OrderExternal_Print'
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_Print'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -791,12 +796,11 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'ioPrinted'
+        Name = 'outPrinted'
         Value = 'er'
         Component = MasterCDS
         ComponentItem = 'isPrinted'
         DataType = ftBoolean
-        ParamType = ptInputOutput
       end>
     PackSize = 1
     Left = 712

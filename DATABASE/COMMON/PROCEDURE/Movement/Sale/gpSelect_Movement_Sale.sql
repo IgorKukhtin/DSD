@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isEDI Boolean
              , isElectron Boolean
              , isMedoc Boolean
+             , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , isError Boolean
               )
 AS
@@ -127,6 +128,10 @@ BEGIN
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)         AS isElectron
            , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)            AS isMedoc
 
+           , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
+           , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
+           , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    AS EdiDesadv
+
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
                                 OR (MovementDate_OperDatePartner.ValueData <> Movement_DocumentMaster.OperDate
@@ -168,6 +173,18 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiOrdspr
+                                      ON MovementBoolean_EdiOrdspr.MovementId =  Movement.Id
+                                     AND MovementBoolean_EdiOrdspr.DescId = zc_MovementBoolean_EdiOrdspr()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiInvoice
+                                      ON MovementBoolean_EdiInvoice.MovementId =  Movement.Id
+                                     AND MovementBoolean_EdiInvoice.DescId = zc_MovementBoolean_EdiInvoice()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
+                                      ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
+                                     AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
