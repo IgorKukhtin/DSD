@@ -100,6 +100,9 @@ begin
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
          ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
          ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
+         ParamByName('isEdiOrdspr').asBoolean:= DataSet.FieldByName('isEdiOrdspr').asBoolean;
+         ParamByName('isEdiInvoice').asBoolean:= DataSet.FieldByName('isEdiInvoice').asBoolean;
+         ParamByName('isEdiDesadv').asBoolean:= DataSet.FieldByName('isEdiDesadv').asBoolean;
 
          ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId_Order').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
@@ -425,6 +428,9 @@ begin
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName').asString;
          ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
          ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
+         ParamByName('isEdiOrdspr').asBoolean:= DataSet.FieldByName('isEdiOrdspr').asBoolean;
+         ParamByName('isEdiInvoice').asBoolean:= DataSet.FieldByName('isEdiInvoice').asBoolean;
+         ParamByName('isEdiDesadv').asBoolean:= DataSet.FieldByName('isEdiDesadv').asBoolean;
 
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
@@ -485,6 +491,9 @@ begin
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
          ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
          ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
+         ParamByName('isEdiOrdspr').asBoolean:= DataSet.FieldByName('isEdiOrdspr').asBoolean;
+         ParamByName('isEdiInvoice').asBoolean:= DataSet.FieldByName('isEdiInvoice').asBoolean;
+         ParamByName('isEdiDesadv').asBoolean:= DataSet.FieldByName('isEdiDesadv').asBoolean;
 
          ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;

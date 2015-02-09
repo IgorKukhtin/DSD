@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_View AS
                                     AND ObjectHistoryString_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
   WHERE ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
     AND ObjectHistory_JuridicalDetails.EndDate = zc_DateEnd()
-    -- AND ObjectHistory_JuridicalDetails.EndDate >= '01.01.2015'
+    -- AND ObjectHistory_JuridicalDetails.EndDate >= '01.01.2020'
  ;
 
 

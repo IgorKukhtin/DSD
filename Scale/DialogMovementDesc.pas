@@ -184,6 +184,9 @@ begin
                     ParamByName('calcPartnerName').asString:='';
                     ParamByName('ChangePercent').asFloat:= 0;
                     ParamByName('ChangePercentAmount').asFloat:= 0;
+                    ParamByName('isEdiOrdspr').asBoolean:= FALSE;
+                    ParamByName('isEdiInvoice').asBoolean:= FALSE;
+                    ParamByName('isEdiDesadv').asBoolean:= FALSE;
                     ParamByName('ContractId').AsInteger    := 0;
                     ParamByName('ContractCode').AsInteger    := 0;
                     ParamByName('ContractNumber').asString := '';
