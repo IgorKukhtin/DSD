@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_GoodsQuality()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsQuality (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsQuality (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsQuality(
  INOUT ioId	          Integer   ,    -- ключ объекта <> 
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsQuality(
     IN inValue8           TVarChar  ,    -- 
     IN inValue9           TVarChar  ,    -- 
     IN inValue10          TVarChar  ,    -- 
-    IN inGoodsId          Integer   ,    -- Форма оплаты 
+    IN inGoodsId          Integer   ,    -- товар
+    IN inQualityId        Integer   ,    -- Качественное удостоверение
     IN inSession          TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -74,18 +76,21 @@ $BODY$
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsQuality_Value10(), ioId, inValue10);   
    -- 
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsQuality_Goods(), ioId, inGoodsId);
+   -- 
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsQuality_Quality(), ioId, inQualityId);   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsQuality (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_GoodsQuality (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer, Integer,TVarChar) OWNER TO postgres;
   
  /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.02.15         * add inQualityId
  08.12.14         *                 
 
 */
