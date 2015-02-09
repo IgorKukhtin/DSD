@@ -622,7 +622,9 @@ uses
   dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm},
   ContractGoodsEdit in '..\..\Forms\Guides\ContractGoodsEdit.pas' {ContractGoodsEditForm: TParentForm},
-  ContractGoods in '..\..\Forms\Guides\ContractGoods.pas' {ContractGoodsForm: TParentForm};
+  ContractGoods in '..\..\Forms\Guides\ContractGoods.pas' {ContractGoodsForm: TParentForm},
+  Quality in '..\..\Forms\Guides\Quality.pas' {QualityForm: TParentForm},
+  QualityEdit in '..\..\Forms\Guides\QualityEdit.pas' {QualityEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPartner(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , ContractId Integer, InvNumber TVarChar
-             , PartnerId Integer, PartnerName TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , isErased boolean
         
              ) AS
@@ -31,6 +31,7 @@ BEGIN
            , Object_Contract_View.InvNumber     AS InvNumber
 
            , Object_Partner.Id         AS PartnerId
+           , Object_Partner.ObjectCode AS PartnerCode
            , Object_Partner.ValueData  AS PartnerName
        
            , Object_ContractPartner.isErased    AS isErased
