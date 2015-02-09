@@ -71,6 +71,8 @@ type
     cxLabel6: TcxLabel;
     RefreshDispatcher: TRefreshDispatcher;
     clGoodsGroupName: TcxGridDBColumn;
+    clQualityName: TcxGridDBColumn;
+    QualityChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -16,7 +16,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                Value7 TVarChar, Value8 TVarChar,
                Value9 TVarChar, Value10 TVarChar,
                GoodsId Integer, GoodsName TVarChar,
-               GoodsGroupName TVarChar)
+               GoodsGroupName TVarChar,
+               QualityId Integer, QualityName TVarChar
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -74,6 +76,9 @@ BEGIN
            , Object_Goods.GoodsName      AS GoodsName 
            , Object_Goods.GoodsGroupName AS GoodsGroupName 
                      
+           , Object_Quality.Id           AS QualityId
+           , Object_Quality.ValueData    AS QualityName 
+                                
        FROM Object AS Object_GoodsQuality
            LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_GoodsQuality.AccessKeyId
        
@@ -109,9 +114,14 @@ BEGIN
                               AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
                                                                        
            JOIN ObjectLink AS GoodsQuality_Goods
-                             ON GoodsQuality_Goods.ObjectId = Object_GoodsQuality.Id
-                               AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
-            JOIN tmpGoods AS Object_Goods ON Object_Goods.GoodsId = GoodsQuality_Goods.ChildObjectId      
+                           ON GoodsQuality_Goods.ObjectId = Object_GoodsQuality.Id
+                          AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
+           JOIN tmpGoods AS Object_Goods ON Object_Goods.GoodsId = GoodsQuality_Goods.ChildObjectId  
+           
+           LEFT JOIN ObjectLink AS GoodsQuality_Quality
+                                ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
+                               AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
+           LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId      
                    
    WHERE Object_GoodsQuality.DescId = zc_Object_GoodsQuality()
      AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
@@ -161,7 +171,10 @@ ELSE
            , Object_Goods.GoodsId        AS GoodsId
            , Object_Goods.GoodsName      AS GoodsName 
            , Object_Goods.GoodsGroupName AS GoodsGroupName 
-                     
+
+           , Object_Quality.Id           AS QualityId
+           , Object_Quality.ValueData    AS QualityName 
+
          FROM tmpGoods AS Object_Goods
 
            LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll-- AND tmpRoleAccessKey.AccessKeyId = Object_GoodsQuality.AccessKeyId
@@ -202,7 +215,12 @@ ELSE
            LEFT JOIN ObjectString AS ObjectString_Value10
                                ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id 
                               AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
-             
+                              
+           LEFT JOIN ObjectLink AS GoodsQuality_Quality
+                                ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
+                               AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
+           LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId   
+                       
    WHERE tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll
                     
      ;
@@ -219,6 +237,7 @@ ALTER FUNCTION gpSelect_Object_GoodsQuality (Integer, Boolean, TVarChar) OWNER T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.02.15         * add Object_Quality               
  08.12.14         *            
 
 */

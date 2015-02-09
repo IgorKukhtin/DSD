@@ -53,13 +53,13 @@ object GoodsQualityForm: TGoodsQualityForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 39
+        Width = 37
       end
       object clName: TcxGridDBColumn
         Caption = #8470' 17'
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 111
+        Width = 104
       end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -73,74 +73,95 @@ object GoodsQualityForm: TGoodsQualityForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 113
+        Width = 107
       end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsGroupName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = GoodsChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 105
+        Width = 99
+      end
+      object clQualityName: TcxGridDBColumn
+        Caption = #1050#1072#1095'.'#1091#1076#1086#1089#1090'.'
+        DataBinding.FieldName = 'QualityName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = QualityChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 103
       end
       object clValue1: TcxGridDBColumn
         Caption = #8470' 4'
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentVert = vaCenter
-        Width = 62
+        Width = 54
       end
       object clValue2: TcxGridDBColumn
         Caption = #8470'6'
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentVert = vaCenter
-        Width = 62
+        Width = 54
       end
       object clValue3: TcxGridDBColumn
         Caption = #8470' 7'
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentVert = vaCenter
-        Width = 61
+        Width = 52
       end
       object clValue4: TcxGridDBColumn
         Caption = #8470' 8'
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentVert = vaCenter
-        Width = 61
+        Width = 53
       end
       object clValue5: TcxGridDBColumn
         Caption = #8470' 10'
         DataBinding.FieldName = 'Value5'
         HeaderAlignmentVert = vaCenter
-        Width = 61
+        Width = 52
       end
       object clValue6: TcxGridDBColumn
         Caption = #8470' 11'
         DataBinding.FieldName = 'Value6'
         HeaderAlignmentVert = vaCenter
-        Width = 63
+        Width = 56
       end
       object clValue7: TcxGridDBColumn
         Caption = #8470' 12'
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentVert = vaCenter
-        Width = 63
+        Width = 54
       end
       object clValue8: TcxGridDBColumn
         Caption = #8470' 14'
         DataBinding.FieldName = 'Value8'
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 52
       end
       object clValue9: TcxGridDBColumn
         Caption = #8470' 15'
         DataBinding.FieldName = 'Value9'
         HeaderAlignmentVert = vaCenter
-        Width = 62
+        Width = 53
       end
       object clValue10: TcxGridDBColumn
         Caption = #8470' 16'
         DataBinding.FieldName = 'Value10'
         HeaderAlignmentVert = vaCenter
-        Width = 51
+        Width = 44
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -424,6 +445,29 @@ object GoodsQualityForm: TGoodsQualityForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object QualityChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'QualityForm'
+      FormName = 'TQualityForm'
+      FormNameParam.Value = 'TQualityForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'QualityId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'QualityName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsQuality'
@@ -598,8 +642,11 @@ object GoodsQualityForm: TGoodsQualityForm
         ParamType = ptInput
       end
       item
+        Name = 'inQualityId'
         Value = Null
-        ParamType = ptUnknown
+        Component = ClientDataSet
+        ComponentItem = 'QualityId'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 128
