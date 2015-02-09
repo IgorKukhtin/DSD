@@ -599,7 +599,7 @@ var findIndex:Integer;
 begin
     findIndex:=GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex);
     EditGoodsKindCode.Text:=IntToStr(GoodsKind_Array[findIndex].Code);
-    ActiveControl:=EditGoodsKindCode;
+    if ActiveControl <> DBGrid then ActiveControl:=EditGoodsKindCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareCountEnter(Sender: TObject);
@@ -830,7 +830,7 @@ begin
      else begin
                fEnterGoodsKindCode:=true;
                EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
-               EditGoodsKindCodeChange(EditGoodsCode);
+               EditGoodsKindCodeChange(EditGoodsKindCode);
           end;
      //
      if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh

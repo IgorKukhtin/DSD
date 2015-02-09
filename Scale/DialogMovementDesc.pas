@@ -46,6 +46,7 @@ type
     procedure EditPartnerCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure EdiBarCodeEnter(Sender: TObject);
+    procedure EditPartnerCodeEnter(Sender: TObject);
 
   private
     ChoiceNumber:Integer;
@@ -287,6 +288,11 @@ end;
 procedure TDialogMovementDescForm.EdiBarCodeChange(Sender: TObject);
 begin
     if (Length(trim(EdiBarCode.Text))>=13)and(not IsBarCodeMaster) then EdiBarCodeExit(Self);
+end;
+{------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.EditPartnerCodeEnter(Sender: TObject);
+begin
+  TEdit(Sender).SelectAll;
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodeExit(Sender: TObject);

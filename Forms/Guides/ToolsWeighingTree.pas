@@ -72,6 +72,7 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     ceGuidesName: TcxGridDBColumn;
     ToolsWeighingPlaceChoiceForm: TOpenChoiceForm;
+    Id: TcxGridDBColumn;
   private
     { Private declarations }
   public

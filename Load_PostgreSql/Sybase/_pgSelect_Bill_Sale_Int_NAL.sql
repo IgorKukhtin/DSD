@@ -86,7 +86,12 @@ begin
      , case when Bill.isByMinusDiscountTax=zc_rvYes() then -Bill.DiscountTax else Bill.DiscountTax end as ChangePercent
 
      , pgUnitFrom.Id_Postgres as FromId_Postgres
-     , isnull (_pgPartner.PartnerId_pg, UnitTo.Id3_Postgres) as ToId_Postgres
+     , case when UnitTo.pgUnitId = 3 -- ф. Одесса
+                 then 298605 --  ОГОРЕНКО новый дистрибьютор
+            when UnitTo.pgUnitId = 1625 --  ф. Никополь
+                 then 256624 --  Мержиєвський О.В. ФОП дистрибьютор
+            else isnull (_pgPartner.PartnerId_pg, UnitTo.Id3_Postgres)
+       end as ToId_Postgres
      , Bill.FromId
      , Bill.ToId as ClientId
 
@@ -142,7 +147,8 @@ from
               and isUnitFrom.UnitId is not null
               and isUnitTo.UnitId is null
               and (isnull (UnitTo.PersonalId_Postgres, 0) = 0 OR Bill.FromId = zc_UnitId_StoreSale())
-              and isnull (UnitTo.pgUnitId, 0) = 0
+              and (isnull (UnitTo.pgUnitId, 0) = 0 or UnitTo.pgUnitId IN (3, 1625)) -- !!!ф. Одесса OR ф. Никополь!!!
+
               and OKPO <> ''
            ) as Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
