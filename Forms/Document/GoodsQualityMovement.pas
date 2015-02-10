@@ -8,37 +8,44 @@ uses
   dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
   cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
-  dxSkinsCore, dxSkinsDefaultPainters, cxMemo;
+  dxSkinsCore, dxSkinsDefaultPainters, cxMemo, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TGoodsQualityMovementForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
     Код: TcxLabel;
     cxLabel4: TcxLabel;
-    cxLabel5: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    ceInfoMoney: TcxButtonEdit;
+    ceGoodsQualityForm: TcxButtonEdit;
     ceOperDate: TcxDateEdit;
-    ceAmountDebet: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    UnitGuides: TdsdGuides;
-    InfoMoneyGuides: TdsdGuides;
-    ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    cxLabel6: TcxLabel;
+    GoodsQualityFormGuides: TdsdGuides;
     GuidesFiller: TGuidesFiller;
-    ceAmountKredit: TcxCurrencyEdit;
-    cxLabel3: TcxLabel;
     cxLabel9: TcxLabel;
     ceOperDateCertificate: TcxDateEdit;
-    edInvNumberPartner: TcxTextEdit;
+    edCertificateNumber: TcxTextEdit;
     cxLabel11: TcxLabel;
     edInvNumber: TcxTextEdit;
-    cePartner: TcxButtonEdit;
-    cxLabel12: TcxLabel;
-    PartnerGuides: TdsdGuides;
     ceComment: TcxMemo;
     cxLabel2: TcxLabel;
+    cxLabel3: TcxLabel;
+    edCertificateSeries: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edCertificateSeriesNumber: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edExpertPrior: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edExpertLast: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edQualityNumber: TcxTextEdit;
   private
     { Private declarations }
   public
