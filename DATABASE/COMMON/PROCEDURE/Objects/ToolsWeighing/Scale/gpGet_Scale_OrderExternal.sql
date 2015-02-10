@@ -26,6 +26,9 @@ RETURNS TABLE (MovementId       Integer
              , PartnerName_calc TVarChar
              , ChangePercent    TFloat
              , ChangePercentAmount TFloat
+             , isEdiOrdspr      Boolean
+             , isEdiInvoice     Boolean
+             , isEdiDesadv      Boolean
 
              , OrderExternalName_master TVarChar
               )
@@ -68,6 +71,10 @@ BEGIN
             , MovementFloat_ChangePercent.ValueData AS ChangePercent
             , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate, -1 * Object_From.Id, inSession) AS tmp WHERE tmp.ContractId = View_Contract_InvNumber.ContractId) AS ChangePercentAmount
 
+            , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
+            , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
+            , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
+
             , ('№ <' || Movement.InvNumber || '>' || ' от <' || DATE (Movement.OperDate) :: TVarChar || '>') :: TVarChar AS OrderExternalName_master
 
        FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.MovementId AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
@@ -104,6 +111,16 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
+                                    ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  MovementLinkObject_From.ObjectId
+                                   AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice
+                                    ON ObjectBoolean_Partner_EdiInvoice.ObjectId =  MovementLinkObject_From.ObjectId
+                                   AND ObjectBoolean_Partner_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv
+                                    ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  MovementLinkObject_From.ObjectId
+                                   AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
       ;
 
 END;

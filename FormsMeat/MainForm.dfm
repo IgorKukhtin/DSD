@@ -8,6 +8,7 @@ inherited MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
+    Top = 48
     object actPersonalCash: TdsdOpenForm [0]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
@@ -1520,12 +1521,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actOrderInternal: TdsdOpenForm
+    object actGoodsQualityMovement: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
-      FormName = 'TOrderInternalJournalForm'
-      FormNameParam.Value = 'TOrderInternalJournalForm'
+      Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      FormName = 'TGoodsQualityMovementJournalForm'
+      FormNameParam.Value = 'TGoodsQualityMovementJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2487,6 +2488,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
+      FormName = 'TOrderInternalJournalForm'
+      FormNameParam.Value = 'TOrderInternalJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited cxLocalizer: TcxLocalizer
     Top = 32
@@ -2590,7 +2601,7 @@ inherited MainForm: TMainForm
         Action = actOrderExternal
       end
       object miOrderInternal: TMenuItem
-        Action = actOrderInternal
+        Action = actGoodsQualityMovement
       end
     end
     object miFinanceDocuments: TMenuItem [1]

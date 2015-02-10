@@ -575,7 +575,7 @@ inherited ContractEditForm: TContractEditForm
     Left = 222
     Top = 38
     Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
-    TabOrder = 53
+    TabOrder = 52
     Width = 108
   end
   object cxLabel22: TcxLabel [52]
@@ -586,7 +586,7 @@ inherited ContractEditForm: TContractEditForm
   object edGLNCode: TcxTextEdit [53]
     Left = 184
     Top = 423
-    TabOrder = 56
+    TabOrder = 55
     Width = 160
   end
   object cxLabel23: TcxLabel [54]
@@ -1699,8 +1699,8 @@ inherited ContractEditForm: TContractEditForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1940,7 +1940,7 @@ inherited ContractEditForm: TContractEditForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -2268,7 +2268,7 @@ inherited ContractEditForm: TContractEditForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

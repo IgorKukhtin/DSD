@@ -2,8 +2,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1113
-  ExplicitWidth = 1121
-  ExplicitHeight = 702
+  ExplicitWidth = 1129
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -170,6 +170,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 175
+      ExplicitHeight = 22
       Width = 175
     end
     object cxLabel3: TcxLabel
@@ -1231,7 +1232,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       item
         Name = 'ioId'
         Value = '0'
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inMovementId'
@@ -1287,42 +1288,23 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoiceForm'
+    FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesTo
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
       end>
     Left = 512
     Top = 8

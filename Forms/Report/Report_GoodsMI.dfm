@@ -843,7 +843,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

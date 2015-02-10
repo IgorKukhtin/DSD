@@ -921,10 +921,10 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   object PartnerGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
-    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

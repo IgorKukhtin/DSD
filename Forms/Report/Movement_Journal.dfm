@@ -52,6 +52,7 @@ inherited MovementJournalForm: TMovementJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -479,22 +480,26 @@ inherited MovementJournalForm: TMovementJournalForm
       MoveParams = <>
       Caption = 'actOpenForm'
       FormName = 'NULL'
+      FormNameParam.Value = ''
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'inOperDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
         end
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end>
@@ -810,16 +815,19 @@ inherited MovementJournalForm: TMovementJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'FormName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'FormName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 344
     Top = 128
   end
@@ -829,7 +837,7 @@ inherited MovementJournalForm: TMovementJournalForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

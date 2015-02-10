@@ -1533,8 +1533,8 @@
 				<Form>Partner1CLinkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ServiceJournal.pas">
-				<Form>ServiceJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\GoodsQualityMovementJournal.pas">
+				<Form>GoodsQualityMovementJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionUnionTechEdit.pas">
@@ -1770,8 +1770,8 @@
 				<Form>ProductionPeresortForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Service.pas">
-				<Form>ServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\GoodsQualityMovement.pas">
+				<Form>GoodsQualityMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
@@ -1864,6 +1864,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\QualityEdit.pas">
 				<Form>QualityEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ServiceJournal.pas">
+				<Form>ServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Service.pas">
+				<Form>ServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

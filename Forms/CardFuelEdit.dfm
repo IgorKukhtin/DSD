@@ -159,6 +159,7 @@
     Top = 96
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -170,9 +171,11 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -243,6 +246,7 @@
         Component = GoodsGuides
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 320
     Top = 40
   end
@@ -350,6 +354,7 @@
         Component = ceLimit
         DataType = ftFloat
       end>
+    PackSize = 1
     Left = 320
     Top = 160
   end
@@ -375,6 +380,8 @@
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -400,6 +407,8 @@
   object PersonalDriverGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalDriver
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -425,6 +434,8 @@
   object CarGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCar
+    FormNameParam.Value = 'TCarForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -450,6 +461,8 @@
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -475,8 +488,10 @@
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

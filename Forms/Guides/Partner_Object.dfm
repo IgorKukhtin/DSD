@@ -142,13 +142,13 @@ object Partner_ObjectForm: TPartner_ObjectForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 172
-    Top = 78
+    Left = 84
+    Top = 27
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
   end
   object edJuridical: TcxButtonEdit
-    Left = 279
-    Top = 76
+    Left = 207
+    Top = 26
     Properties.Buttons = <
       item
         Default = True
@@ -185,8 +185,8 @@ object Partner_ObjectForm: TPartner_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -424,7 +424,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -441,8 +441,8 @@ object Partner_ObjectForm: TPartner_ObjectForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 352
-    Top = 160
+    Left = 320
+    Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh

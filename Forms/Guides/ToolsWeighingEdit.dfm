@@ -167,6 +167,7 @@
     Top = 216
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -183,6 +184,7 @@
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -192,6 +194,7 @@
     end
     object FormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -268,6 +271,7 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 48
     Top = 248
   end
@@ -381,6 +385,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 16
     Top = 176
   end
@@ -469,7 +474,7 @@
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

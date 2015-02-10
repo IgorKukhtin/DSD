@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (integer, integer, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, integer, tfloat, tfloat, integer, integer, integer, integer, integer, integer, integer, integer, integer, integer, tdatetime, tdatetime, tvarchar, tvarchar, tvarchar, integer, tvarchar, tvarchar, tvarchar, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (integer, integer, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, integer, tfloat, tfloat, Boolean, Boolean, Boolean, integer, integer, integer, integer, integer, integer, integer, integer, integer, integer, tdatetime, tdatetime, tvarchar, tvarchar, tvarchar, integer, tvarchar, tvarchar, tvarchar, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (integer, integer, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, integer, tfloat, tfloat, Boolean, Boolean, Boolean, integer, integer, integer, integer, integer, integer, integer, integer, integer, integer, tdatetime, tdatetime, tvarchar, tvarchar, tvarchar, integer, tvarchar, tvarchar, tvarchar, integer, tvarchar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
@@ -11,6 +12,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
     IN inShortName           TVarChar  ,    -- краткое наименование
     IN inGLNCode             TVarChar  ,    -- Код GLN
+    IN inGLNCodeJuridical    TVarChar  ,    -- Код GLN - Покупатель
+    IN inGLNCodeRetail       TVarChar  ,    -- Код GLN - Получатель
+    IN inGLNCodeCorporate    TVarChar  ,    -- Код GLN - Поставщик
+        
     IN inHouseNumber         TVarChar  ,    -- Номер дома
     IN inCaseNumber          TVarChar  ,    -- Номер корпуса
     IN inRoomNumber          TVarChar  ,    -- Номер квартиры
@@ -69,6 +74,9 @@ BEGIN
    ioId := lpInsertUpdate_Object_Partner (ioId              := ioId
                                         , inCode            := vbCode
                                         , inGLNCode         := inGLNCode
+                                        , inGLNCodeJuridical:= inGLNCodeJuridical
+                                        , inGLNCodeRetail   := inGLNCodeRetail
+                                        , inGLNCodeCorporate:= inGLNCodeCorporate
                                         , inPrepareDayCount := inPrepareDayCount
                                         , inDocumentDayCount:= inDocumentDayCount
                                         , inEdiOrdspr       := inEdiOrdspr

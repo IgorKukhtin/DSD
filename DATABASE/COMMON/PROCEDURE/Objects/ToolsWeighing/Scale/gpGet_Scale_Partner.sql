@@ -18,6 +18,9 @@ RETURNS TABLE (PartnerId    Integer
 
              , ChangePercent TFloat
              , ChangePercentAmount TFloat
+             , isEdiOrdspr      Boolean
+             , isEdiInvoice     Boolean
+             , isEdiDesadv      Boolean
               )
 AS
 $BODY$
@@ -65,6 +68,10 @@ BEGIN
             , Object_ContractCondition_PercentView.ChangePercent :: TFloat AS ChangePercent
             , CASE WHEN Object_Partner.PartnerCode = 1 THEN 1 WHEN Object_Partner.PartnerCode = 3 THEN 1 ELSE 1 END :: TFloat AS ChangePercentAmount
 
+            , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
+            , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
+            , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
+
        FROM Object_Partner
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_Partner.PriceListId
 
@@ -77,6 +84,16 @@ BEGIN
             LEFT JOIN Object_ContractCondition_PercentView ON Object_ContractCondition_PercentView.ContractId = Object_Contract_View.ContractId
 
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
+                                    ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  Object_Partner.PartnerId
+                                   AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice
+                                    ON ObjectBoolean_Partner_EdiInvoice.ObjectId =  Object_Partner.PartnerId
+                                   AND ObjectBoolean_Partner_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv
+                                    ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  Object_Partner.PartnerId
+                                   AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
       ;
 
 END;

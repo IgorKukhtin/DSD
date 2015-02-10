@@ -134,6 +134,9 @@ begin
      ParamAdd(Params,'calcPartnerName',ftString);
      ParamAdd(Params,'ChangePercentAmount',ftFloat);
      ParamAdd(Params,'ChangePercent',ftFloat);
+     ParamAdd(Params,'isEdiOrdspr',ftBoolean);//Подтверждение
+     ParamAdd(Params,'isEdiInvoice',ftBoolean);//Счет
+     ParamAdd(Params,'isEdiDesadv',ftBoolean);//уведомление
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_BarCode',ftString);

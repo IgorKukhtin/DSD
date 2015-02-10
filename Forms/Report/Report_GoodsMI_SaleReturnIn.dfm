@@ -3,7 +3,6 @@
   ClientHeight = 387
   ClientWidth = 1462
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -480
   ExplicitWidth = 1478
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -1599,7 +1598,7 @@
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

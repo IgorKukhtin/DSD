@@ -363,6 +363,9 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                         , inGLNCode         := ''
                                         , inPrepareDayCount := 0
                                         , inDocumentDayCount:= 0
+                                        , inEdiOrdspr       := FALSE
+                                        , inEdiInvoice      := FALSE
+                                        , inEdiDesadv       := FALSE
                                         , inJuridicalId     := vbJuridicalId
                                         , inRouteId         := NULL
                                         , inRouteSortingId  := NULL

@@ -88,6 +88,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -400,7 +401,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

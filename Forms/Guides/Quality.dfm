@@ -135,9 +135,10 @@ inherited QualityForm: TQualityForm
           DataType = ftString
         end
         item
+          Name = 'Code'
           Value = Null
-          DataType = ftString
-          ParamType = ptUnknown
+          Component = MasterCDS
+          ComponentItem = 'Code'
         end>
     end
   end

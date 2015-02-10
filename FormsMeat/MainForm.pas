@@ -62,7 +62,7 @@ type
     actContract: TdsdOpenForm;
     actPriceListItem: TdsdOpenForm;
     actOrderExternal: TdsdOpenForm;
-    actOrderInternal: TdsdOpenForm;
+    actGoodsQualityMovement: TdsdOpenForm;
     actCashOperation: TdsdOpenForm;
     actReport_MotionGoods: TdsdOpenForm;
     actRole: TdsdOpenForm;
@@ -486,6 +486,7 @@ type
     miCashOdessa: TMenuItem;
     actQuality: TdsdOpenForm;
     N39: TMenuItem;
+    dsdOpenForm1: TdsdOpenForm;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
