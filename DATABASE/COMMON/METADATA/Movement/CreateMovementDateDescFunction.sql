@@ -51,9 +51,15 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_startweighing() RETURNS Integer AS $B
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_startweighing', 'Протокол начало взвешивания' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_startweighing');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_OperDateCertificate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDateCertificate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_OperDateCertificate', 'Ветеринарне свідоцтво дата' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDateCertificate');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.
+ 09.02.15         												*
  19.07.14                                        * del zc_MovementDate_SaleOperDate
  11.03.14         * add startweighing, EndWeighing
  09.02.14                                                           * add  zc_MovementDate_DateRegistered

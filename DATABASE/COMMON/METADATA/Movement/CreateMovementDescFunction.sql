@@ -159,9 +159,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_FounderService() RETURNS Integer AS $BODY
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_FounderService', 'Начисления учредителям' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_FounderService');
 
+CREATE OR REPLACE FUNCTION zc_Movement_GoodsQuality() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_GoodsQuality'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_GoodsQuality', 'Качественное удостоверение' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_GoodsQuality');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 09.02.15         												*    add zc_Movement_GoodsQuality
  03.09.14         * add zc_Movement_FounderService
  04.07.14                      	                 		        *  + zc_Movement_PriceList
  06.06.14                                                       *    change Zakaz to Order  zc_Movement_OrderInternal, zc_Movement_OrderExternal

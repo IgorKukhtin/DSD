@@ -834,6 +834,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsQuality_Goods() RETURNS Integer AS
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsQuality_Goods', 'Связь Параметры качественного удостоверения с Товаром', zc_Object_GoodsQuality(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsQuality_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsQuality_Quality() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsQuality_Quality'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_GoodsQuality_Quality', 'Связь Параметры качественного удостоверения с кач.удостоверением', zc_Object_GoodsQuality(), zc_Object_Quality() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsQuality_Quality');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractGoods_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractGoods_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -970,6 +974,7 @@ SELECT 'zc_ObjectLink_PriceList_Currency', 'Валюта', zc_Object_PriceList(), zc_O
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  09.02.15         * zc_ObjectLink_Quality_Juridical
+                    zc_ObjectLink_GoodsQuality_Quality
  16.01.15         * add zc_ObjectLink_ContractPartner_Contract
                         zc_ObjectLink_ContractPartner_Partner
  12.01.15         * add zc_ObjectLink_GoodsTag_GoodsGroupAnalyst

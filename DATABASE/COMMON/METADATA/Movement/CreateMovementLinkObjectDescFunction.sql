@@ -17,7 +17,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Branch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Branch', 'Филиал' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Branch');
-  
+
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Business() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Business'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Business', 'Бизнес' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Business');
@@ -133,7 +133,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PersonalServiceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalServiceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_PersonalServiceList', 'Ведомости начисления' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalServiceList');
-  
+
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Position() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Position'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Position', 'Должность' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Position');
@@ -174,18 +174,24 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_User() RETURNS Integer AS $BODY
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_User', 'Пользователь' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_User');
 
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Quality() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Quality'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Quality', 'Качественное удостоверение' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Quality');
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.02.15         												*
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
 
  13.11.14                                        * add zc_MovementLinkObject_Branch
- 12.09.14         * add zc_MovementLinkObject_PersonalServiceList() 
+ 12.09.14         * add zc_MovementLinkObject_PersonalServiceList()
  09.02.14                                                       * add zc_MovementLinkObject_ArticleLoss
  23.07.14         * add zc_MovementLinkObject_CurrencyDocument
                         zc_MovementLinkObject_CurrencyPartner

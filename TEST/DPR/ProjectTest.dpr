@@ -517,7 +517,7 @@ uses
   GoodsTag in '..\..\Forms\Guides\GoodsTag.pas' {GoodsTagForm: TParentForm},
   GoodsTagEdit in '..\..\Forms\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
   Partner1CLink in '..\..\Forms\LOAD1C\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
-  ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
+  GoodsQualityMovementJournal in '..\..\Forms\Document\GoodsQualityMovementJournal.pas' {GoodsQualityMovementJournalForm: TParentForm},
   ProductionUnionTechEdit in '..\..\Forms\Document\ProductionUnionTechEdit.pas' {ProductionUnionTechEditForm: TParentForm},
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
   IncomeTest in '..\SOURCE\Movement\All\Farmacy\IncomeTest.pas',
@@ -598,7 +598,7 @@ uses
   ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
   ProductionPeresortJournal in '..\..\Forms\Document\ProductionPeresortJournal.pas' {ProductionPeresortJournalForm: TParentForm},
   ProductionPeresort in '..\..\Forms\Document\ProductionPeresort.pas' {ProductionPeresortForm: TParentForm},
-  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
+  GoodsQualityMovement in '..\..\Forms\Document\GoodsQualityMovement.pas' {GoodsQualityMovementForm: TParentForm},
   ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
   Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm: TParentForm},
   RecipesMaster in '..\..\Forms\Guides\RecipesMaster.pas' {RecipesMasterForm: TParentForm},
@@ -624,7 +624,9 @@ uses
   ContractGoodsEdit in '..\..\Forms\Guides\ContractGoodsEdit.pas' {ContractGoodsEditForm: TParentForm},
   ContractGoods in '..\..\Forms\Guides\ContractGoods.pas' {ContractGoodsForm: TParentForm},
   Quality in '..\..\Forms\Guides\Quality.pas' {QualityForm: TParentForm},
-  QualityEdit in '..\..\Forms\Guides\QualityEdit.pas' {QualityEditForm: TParentForm};
+  QualityEdit in '..\..\Forms\Guides\QualityEdit.pas' {QualityEditForm: TParentForm},
+  ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
+  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

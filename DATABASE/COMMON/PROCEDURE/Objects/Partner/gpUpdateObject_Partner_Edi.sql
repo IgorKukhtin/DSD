@@ -3,10 +3,11 @@
 
 DROP FUNCTION IF EXISTS gpUpdateObject_Partner_Edi (Integer, Boolean, TVarChar, TVarChar);
 
+
 CREATE OR REPLACE FUNCTION gpUpdateObject_Partner_Edi (
-    IN ioId                  Integer   , -- Ключ объекта <Документ>
- INOUT inValue               Boolean   , -- Проверен
-    IN inDesc                TVarChar  , -- 
+    IN inId                  Integer   , -- Ключ объекта <Документ>
+ INOUT ioValue               Boolean   , -- Проверен
+    IN inDescCode            TVarChar  , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Boolean 
@@ -19,15 +20,15 @@ BEGIN
      vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
 
      -- определили признак
-     inValue:= NOT inValue;
+     ioValue:= NOT ioValue;
      
      -- сохранили свойство
-     PERFORM lpInsertUpdate_ObjectBoolean (tmpDesc.Id, ioId, inValue)
+     PERFORM lpInsertUpdate_ObjectBoolean (tmpDesc.Id, inId, ioValue)
            FROM ObjectBooleanDesc AS tmpDesc
-           WHERE ItemName = inDesc;
+           WHERE Code = inDescCode;
    
   -- сохранили протокол
-     PERFORM lpInsert_ObjectProtocol (ioId, vbUserId, FALSE);
+     PERFORM lpInsert_ObjectProtocol (inId, vbUserId, FALSE);
   
 END;
 $BODY$

@@ -70,13 +70,37 @@ CREATE OR REPLACE FUNCTION zc_MovementString_PartionGoods() RETURNS Integer AS $
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_PartionGoods', 'Партия товара' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_PartionGoods');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_CertificateNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_CertificateNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_CertificateNumber', 'Ветеринарне свідоцтво №' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_CertificateNumber');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_CertificateSeries() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_CertificateSeries'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_CertificateSeries', 'Ветеринарне свідоцтво Серія' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_CertificateSeries');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_CertificateSeriesNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_CertificateSeriesNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_CertificateSeriesNumber', 'Ветеринарне свідоцтво Серія №' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_CertificateSeriesNumber');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_ExpertPrior() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_ExpertPrior'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_ExpertPrior', 'Експертний висновок' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_ExpertPrior');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_ExpertLast() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_ExpertLast'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_ExpertLast', 'Експертний висновок (параметры)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_ExpertLast');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_QualityNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_QualityNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_QualityNumber', 'Декларація виробника №' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_QualityNumber');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 30.07.14                         * 
+ 30.07.14                         *
  19.07.14                                        * del zc_MovementString_SaleInvNumber
- 17.06.14         * add zc_MovementString_InvNumberPartner() 
-                      , zc_MovementString_InvNumberMark() 
+ 17.06.14         * add zc_MovementString_InvNumberPartner()
+                      , zc_MovementString_InvNumberMark()
  24.04.14                                                       * add zc_MovementString_InvNumberBranch
  23.04.14                                        * add zc_MovementString_InvNumberMark
  11.01.14                                        * add zc_MovementString_InvNumberOrder
