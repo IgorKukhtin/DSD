@@ -96,7 +96,13 @@ BEGIN
                                                  , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                  , inDescId_2          := zc_ContainerLinkObject_GoodsKind()
-                                                 , inObjectId_2        := CASE WHEN COALESCE (inBranchId, 0) IN (0, zc_Branch_Basis(), 301310) THEN inGoodsKindId ELSE 0 END -- !!!+ филиал Запорожье!!
+                                                 , inObjectId_2        := CASE WHEN COALESCE (inBranchId, 0) IN (0
+                                                                                                               , zc_Branch_Basis()
+                                                                                                               , 8374   -- !!!+ филиал Одесса!!!    select * from Object where ObjectCode=4 and DescId = zc_Object_Branch()
+                                                                                                               , 8376   -- !!!+ филиал Крым!!!      select * from Object where ObjectCode=6 and DescId = zc_Object_Branch()
+                                                                                                               , 18342  -- !!!+ филиал Никополь!!!  select * from Object where ObjectCode=10 and DescId = zc_Object_Branch()
+                                                                                                               , 301310 -- !!!+ филиал Запорожье!!! select * from Object where ObjectCode=11 and DescId = zc_Object_Branch()
+                                                                                                                ) THEN inGoodsKindId ELSE 0 END 
                                                  , inDescId_3          := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
                                                  , inObjectId_3        := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
                                                  , inDescId_4          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END

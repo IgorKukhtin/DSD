@@ -207,6 +207,18 @@ BEGIN
                                            , ioParPartnerValue      := NULL
                                            , inUserId := vbUserId
                                             ) AS tmp;
+          -- сохранили Property если продажа от Контрагента -> Контрагенту
+          IF EXISTS (SELECT Id FROM Object WHERE Id = vbUnitId AND DescId = zc_Object_Partner())
+          THEN
+              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindFrom(), Movement.Id, Object_Contract_View.PaidKindId)
+                    , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractFrom(), Movement.Id, Object_Contract_View.ContractId)
+              FROM ObjectLink AS ObjectLink_Partner_Juridical
+                   INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                  AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+              WHERE ObjectLink_Partner_Juridical.ObjectId = vbUnitId
+                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical();
+          END IF;
+
           ELSE
 
           IF vbMovementDescId = zc_Movement_Loss() AND vbMovementDescId_find = vbMovementDescId
@@ -351,8 +363,8 @@ BEGIN
      OPEN curMovement FOR 
                    SELECT Sale1C.InvNumber
                         , Sale1C.OperDate
-                        , zfGetUnitFromUnitId (Sale1C.UnitId) AS vbUnitId
-                        , Sale1C.UnitId AS vbUnitId
+                        , zfGetUnitFromUnitId (Sale1C.UnitId) AS UnitId
+                        , Sale1C.UnitId AS UnitId_1C
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
                         , tmpPartner1CLink.ContractId
                         , 0 AS MovementId -- MovementReturn.Id AS MovementId
@@ -459,6 +471,19 @@ BEGIN
 
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
+
+          -- сохранили Property если продажа от Контрагента -> Контрагенту
+          IF EXISTS (SELECT Id FROM Object WHERE Id = vbUnitId AND DescId = zc_Object_Partner())
+          THEN
+              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindTo(), Movement.Id, Object_Contract_View.PaidKindId)
+                    , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractTo(), Movement.Id, Object_Contract_View.ContractId)
+              FROM ObjectLink AS ObjectLink_Partner_Juridical
+                   INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                  AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+              WHERE ObjectLink_Partner_Juridical.ObjectId = vbUnitId
+                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical();
+          END IF;
+
 
           -- пометим записи на удаление ПОКА
           -- PERFORM gpSetErased_MovementItem (MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;

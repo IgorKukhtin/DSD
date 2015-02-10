@@ -30,6 +30,13 @@ select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Branch(), Id, (select Id fr
 from Object
 where Id = 256624 --  Мержиєвський О.В. ФОП дистрибьютор
 
+union
+select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Branch(), Id, (select Id from Object where ObjectCode=6 and DescId = zc_Object_Branch()))
+-- select *
+from Object
+where Id in (79447, 329598) -- Преміум Фудс ТОВ
+
+
 -- 2.1 - !!!!!!!!!!!!!!!!!!!! Change Sale FromId
 select lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), Movement.Id, ObjectLink_Partner_Juridical.ObjectId)
      , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindFrom(), Movement.Id, Object_Contract_View.PaidKindId)

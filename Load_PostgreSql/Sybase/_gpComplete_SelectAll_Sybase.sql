@@ -21,9 +21,12 @@ BEGIN
                 UNION SELECT 8421 AS UnitId, FALSE AS isMain  -- ф. Донецк
                 UNION SELECT 8425 AS UnitId, FALSE AS isMain  -- ф. Харьков
                 UNION SELECT 301309 AS UnitId, FALSE AS isMain  -- Склад ГП ф.Запорожье
+                -- UNION SELECT 309599 AS UnitId, FALSE AS isMain  -- Склад возвратов ф.Запорожье
                 UNION SELECT 18341 AS UnitId, FALSE AS isMain  -- ф. Никополь
                 UNION SELECT 8419 AS UnitId, FALSE AS isMain  -- ф. Крым
                 UNION SELECT 8423 AS UnitId, FALSE AS isMain  -- ф. Одесса
+                UNION SELECT 346093  AS UnitId, FALSE AS isMain  -- Склад ГП ф.Одесса
+                -- UNION SELECT 346094  AS UnitId, FALSE AS isMain  -- Склад возвратов ф.Одесса
 
                 UNION SELECT Id AS UnitId, TRUE AS isMain FROM Object WHERE DescId = zc_Object_Unit() AND ObjectCode IN (31053, 31055, 31056, 31057  -- +,+ 31053 - Участок Бойни +,+ 31055 Склад МИНУСОВКА +,+ 31056 Склад ОХЛАЖДЕНКА +,+ 31057 Склад реализации мясо
                                                                                                                        , 32031, 32032, 32033 --  +,- 32031 - Склад Возвратов +,- 32032 - Склад Брак +,- 32033 - Склад УТИЛЬ
@@ -47,7 +50,7 @@ BEGIN
        AND inIsBefoHistoryCost = FALSE
     UNION
      -- 2. From: Loss
-     /*SELECT Movement.Id AS MovementId
+     SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
@@ -61,7 +64,7 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_Loss())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
-    UNION*/
+    UNION
      -- 3. To: ReturnIn
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
@@ -92,7 +95,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE -- !!!!!!!
+       -- AND inIsBefoHistoryCost = FALSE -- !!!!!!!
     UNION
      -- 5. From: ReturnOut
      SELECT Movement.Id AS MovementId

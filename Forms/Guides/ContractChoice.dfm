@@ -3,8 +3,8 @@ inherited ContractChoiceForm: TContractChoiceForm
   ClientHeight = 496
   ClientWidth = 853
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 861
-  ExplicitHeight = 530
+  ExplicitWidth = 869
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -218,88 +218,104 @@ inherited ContractChoiceForm: TContractChoiceForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'Code'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyCode'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName_all'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
         end
         item
           Name = 'JuridicalBasisId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalBasisId'
         end
         item
           Name = 'JuridicalBasisName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalBasisName'
           DataType = ftString
         end
         item
           Name = 'ContractTagId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractTagId'
         end
         item
           Name = 'ContractTagName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractTagName'
           DataType = ftString
         end
         item
           Name = 'ChangePercent'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ChangePercent'
           DataType = ftFloat
@@ -470,7 +486,7 @@ inherited ContractChoiceForm: TContractChoiceForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

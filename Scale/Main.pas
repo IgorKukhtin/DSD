@@ -182,6 +182,11 @@ begin
                 ShowMessage ('Ошибка.Документ сохранен.Печать не сформирована.')
           end;
 
+          //EDI
+          if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then EDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then EDI_OrdSpr (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then EDI_Desadv (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+
           //Initialize or Empty
           DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement);
           gpInitialize_MovementDesc;

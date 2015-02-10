@@ -138,6 +138,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 104
     Top = 56
   end
@@ -187,6 +188,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 184
     Top = 16
   end
@@ -215,7 +217,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

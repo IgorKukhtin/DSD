@@ -104,6 +104,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -578,7 +579,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -595,7 +596,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 416
-    Top = 80
+    Left = 424
+    Top = 16
   end
 end

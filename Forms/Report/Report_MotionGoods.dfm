@@ -20,9 +20,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 82
+    Top = 80
     Width = 1329
-    Height = 588
+    Height = 590
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -621,6 +621,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       OptionsCustomize.DataRowSizing = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -1945,8 +1946,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1964,7 +1965,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

@@ -111,13 +111,13 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 172
-    Top = 78
+    Left = 164
+    Top = 38
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
   end
   object edJuridical: TcxButtonEdit
-    Left = 279
-    Top = 76
+    Left = 275
+    Top = 37
     Properties.Buttons = <
       item
         Default = True
@@ -354,6 +354,7 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -405,11 +406,13 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
@@ -426,11 +429,13 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListName'
           DataType = ftString
@@ -443,23 +448,27 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -504,6 +513,7 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 80
     Top = 216
   end
@@ -513,10 +523,12 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 424
     Top = 216
   end
@@ -558,18 +570,21 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inAddress'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Address'
         DataType = ftString
@@ -583,6 +598,7 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       end
       item
         Name = 'inPrepareDayCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PrepareDayCount'
         DataType = ftFloat
@@ -590,6 +606,7 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       end
       item
         Name = 'inDocumentDayCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentDayCount'
         DataType = ftFloat
@@ -597,42 +614,49 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
         Name = 'inRouteId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
       end
       item
         Name = 'inRouteSortingId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteSortingId'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalTakeId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PersonalTakeId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceListId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListPromoId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceListPromoId'
         ParamType = ptInput
       end
       item
         Name = 'inStartPromo'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartPromo'
         DataType = ftDateTime
@@ -640,11 +664,13 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       end
       item
         Name = 'inEndPromo'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'EndPromo'
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 88
     Top = 344
   end
@@ -654,7 +680,7 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -671,8 +697,8 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 352
-    Top = 160
+    Left = 392
+    Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh

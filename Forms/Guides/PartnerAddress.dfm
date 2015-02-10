@@ -589,7 +589,7 @@ object PartnerAddressForm: TPartnerAddressForm
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 7
+    TabOrder = 6
     Width = 85
   end
   object cxLabel5: TcxLabel
@@ -609,7 +609,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 305
   end
   object cbPeriod: TcxCheckBox
@@ -669,8 +669,8 @@ object PartnerAddressForm: TPartnerAddressForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1809,7 +1809,7 @@ object PartnerAddressForm: TPartnerAddressForm
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1826,8 +1826,8 @@ object PartnerAddressForm: TPartnerAddressForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 528
-    Top = 144
+    Left = 296
+    Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
