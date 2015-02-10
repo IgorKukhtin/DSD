@@ -90,6 +90,12 @@ type
     cbEdiOrdspr: TcxCheckBox;
     cbEdiDesadv: TcxCheckBox;
     cbEdiInvoice: TcxCheckBox;
+    cxLabel29: TcxLabel;
+    edGLNCodeJuridical: TcxTextEdit;
+    cxLabel30: TcxLabel;
+    edGLNCodeRetail: TcxTextEdit;
+    edGLNCodeCorporate: TcxTextEdit;
+    cxLabel31: TcxLabel;
 
   private
     { Private declarations }

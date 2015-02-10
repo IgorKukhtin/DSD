@@ -13,10 +13,21 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
                                                        TDateTime, TDateTime, Integer);                                                       
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, 
+                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);                                                       
+
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
     IN inGLNCode             TVarChar  ,    -- Код GLN
+    
+    IN inGLNCodeJuridical    TVarChar  ,    -- Код GLN - Покупатель
+    IN inGLNCodeRetail       TVarChar  ,    -- Код GLN - Получатель
+    IN inGLNCodeCorporate    TVarChar  ,    -- Код GLN - Поставщик
+    
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
 
@@ -65,6 +76,13 @@ BEGIN
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
 
+   -- сохранили свойство <Код GLN>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeJuridical(), ioId, inGLNCodeJuridical);
+   -- сохранили свойство <Код GLN>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeRetail(), ioId, inGLNCodeRetail);   
+   -- сохранили свойство <Код GLN>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeCorporate(), ioId, inGLNCodeCorporate);   
+      
    -- сохранили свойство <За сколько дней принимается заказ>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount);
    -- сохранили свойство <Через сколько дней оформляется документально>
@@ -110,7 +128,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
