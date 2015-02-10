@@ -1,26 +1,26 @@
 inherited EDIJournalForm: TEDIJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EXITE>'
   ClientHeight = 424
-  ClientWidth = 1119
+  ClientWidth = 1183
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1127
-  ExplicitHeight = 458
+  ExplicitWidth = 1199
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
-    Width = 1119
+    Width = 1183
     Height = 367
     ExplicitTop = 57
     ExplicitWidth = 1119
     ExplicitHeight = 367
     ClientRectBottom = 367
-    ClientRectRight = 1119
+    ClientRectRight = 1183
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1119
       ExplicitHeight = 367
       inherited cxGrid: TcxGrid
-        Width = 1119
+        Width = 1183
         Height = 209
         Align = alTop
         ExplicitWidth = 1119
@@ -381,27 +381,31 @@ inherited EDIJournalForm: TEDIJournalForm
       object Splitter: TcxSplitter
         Left = 0
         Top = 209
-        Width = 1119
-        Height = 3
+        Width = 1183
+        Height = 5
         AlignSplitter = salTop
         Control = cxGrid
       end
       object BottomPanel: TPanel
         Left = 0
-        Top = 212
-        Width = 1119
-        Height = 155
+        Top = 214
+        Width = 1183
+        Height = 153
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitTop = 212
+        ExplicitWidth = 1119
+        ExplicitHeight = 155
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
           Width = 953
-          Height = 155
+          Height = 153
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 0
+          ExplicitHeight = 155
           object cxChildGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ClientDS
@@ -630,13 +634,16 @@ inherited EDIJournalForm: TEDIJournalForm
           end
         end
         object cxProtocolGrid: TcxGrid
-          Left = 954
+          Left = 957
           Top = 0
-          Width = 165
-          Height = 155
+          Width = 226
+          Height = 153
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
+          ExplicitLeft = 954
+          ExplicitWidth = 165
+          ExplicitHeight = 155
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -694,9 +701,10 @@ inherited EDIJournalForm: TEDIJournalForm
         object cxVerticalSplitter: TcxSplitter
           Left = 953
           Top = 0
-          Width = 1
-          Height = 155
+          Width = 4
+          Height = 153
           Control = cxChildGrid
+          ExplicitHeight = 155
         end
       end
     end
@@ -704,14 +712,15 @@ inherited EDIJournalForm: TEDIJournalForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 1119
+    Width = 1183
     Height = 31
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 1119
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -720,7 +729,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -832,9 +841,9 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actUpdateEdiInvoiceTrue
         end>
-      InfoAfterExecute = #1057#1095#1077#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1057#1095#1077#1090
-      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1095#1077#1090#1072
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'> '#1074' EXITE'
     end
     object mactOrdSpr: TMultiAction [4]
       Category = 'EDI'
@@ -849,9 +858,9 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actUpdateEdiOrdsprTrue
         end>
-      InfoAfterExecute = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' EDI'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1074' EXITE'
     end
     object actDesadv: TEDIAction [5]
       Category = 'EDI'
@@ -876,9 +885,9 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actUpdateEdiDesadvTrue
         end>
-      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' EDI'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1077'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1086#1073' '#1086#1090#1075#1088#1091#1079#1082#1077'> '#1074' EXITE'
     end
     object actStoredProcTaxCorrectivePrint: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -900,10 +909,10 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1080#1079' EDI?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1082#1074#1080#1090#1072#1085#1094#1080#1103#1093' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1082#1074#1080#1090#1072#1085#1094#1080#1103#1084' '#1080#1079' EDI'
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1082#1074#1080#1090#1072#1085#1094#1080#1103#1084' '#1080#1079' EDI'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1074#1080#1090#1072#1085#1094#1080#1080' '#1080#1079' EXITE?'
+      InfoAfterExecute = #1050#1074#1080#1090#1072#1085#1094#1080#1080' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1074#1080#1090#1072#1085#1094#1080#1080' '#1080#1079' EXITE'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1082#1074#1080#1090#1072#1085#1094#1080#1080' '#1080#1079' EXITE'
     end
     object EDIActionComdocLoad: TEDIAction
       Category = 'EDI Load'
@@ -930,10 +939,10 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1093' ComDoc '#1080#1079' EDI?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' ComDoc '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' ComDoc '#1080#1079' EDI'
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' ComDoc '#1080#1079' EDI'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' EXITE?'
+      InfoAfterExecute = 'ComDoc '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' EXITE'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' ComDoc '#1080#1079' EXITE'
       ImageIndex = 30
     end
     object mactReturnComdoc: TMultiAction
@@ -952,8 +961,9 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actRefresh
         end>
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
-      Caption = 'ReturnCOMDOC'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1086#1079#1074#1088#1072#1090
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090'> '#1074' EXITE'
     end
     object maEDIOrdersLoad: TMultiAction
       Category = 'EDI Load'
@@ -965,10 +975,10 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1080#1079' EDI?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' EXITE?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1080#1079' EDI'
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1080#1079' EDI'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' EXITE'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' EXITE'
       ImageIndex = 27
     end
     object EDIActionOrdersLoad: TEDIAction
@@ -1071,8 +1081,9 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actRefresh
         end>
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
-      Caption = 'EDI '#1056#1072#1089#1093#1086#1076
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1093#1086#1076'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1056#1072#1089#1093#1086#1076
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1093#1086#1076'> '#1074' EXITE'
     end
     object mactDECLAR: TMultiAction
       Category = 'EDI'
@@ -1084,8 +1095,9 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = EDIDeclar
         end>
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
-      Caption = 'EDI '#1053#1072#1083#1086#1075#1086#1074#1072#1103
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1091#1102
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'> '#1074' EXITE'
     end
     object EDIDeclar: TEDIAction
       Category = 'EDI'
@@ -1426,6 +1438,10 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbDeclar'
         end
         item
@@ -1438,7 +1454,35 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOrderSp'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDecadv'
         end
         item
           Visible = True
@@ -1451,19 +1495,11 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOrderSp'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDecadv'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = '    '
+      Hint = '    '
     end
     object bbLoadComDoc: TdxBarButton
       Action = maEDIComDocLoad
@@ -1499,7 +1535,6 @@ inherited EDIJournalForm: TEDIJournalForm
     end
     object bbReturnCOMDOC: TdxBarButton
       Action = mactReturnComdoc
-      Caption = 'EDI '#1042#1086#1079#1074#1088#1072#1090
       Category = 0
     end
     object bbInvoice: TdxBarButton

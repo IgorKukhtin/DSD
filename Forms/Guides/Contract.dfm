@@ -598,14 +598,16 @@ object ContractForm: TContractForm
   end
   object cxGridContractCondition: TcxGrid
     Left = 0
-    Top = 337
+    Top = 334
     Width = 611
-    Height = 181
+    Height = 184
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 337
+    ExplicitHeight = 181
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -765,22 +767,25 @@ object ContractForm: TContractForm
   end
   object Panel: TPanel
     Left = 615
-    Top = 337
+    Top = 334
     Width = 594
-    Height = 181
+    Height = 184
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 6
+    ExplicitTop = 337
+    ExplicitHeight = 181
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
       Width = 241
-      Height = 181
+      Height = 184
       Align = alLeft
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 181
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -847,12 +852,13 @@ object ContractForm: TContractForm
       Left = 246
       Top = 0
       Width = 348
-      Height = 181
+      Height = 184
       Align = alClient
       TabOrder = 1
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 181
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -939,25 +945,28 @@ object ContractForm: TContractForm
       Left = 241
       Top = 0
       Width = 5
-      Height = 181
+      Height = 184
       Control = cxGridPartner
+      ExplicitHeight = 181
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 329
     Width = 1209
-    Height = 8
+    Height = 5
     AlignSplitter = salTop
     Control = cxGrid
   end
   object cxRightSplitter: TcxSplitter
     Left = 611
-    Top = 337
+    Top = 334
     Width = 4
-    Height = 181
+    Height = 184
     AlignSplitter = salRight
     Control = Panel
+    ExplicitTop = 337
+    ExplicitHeight = 181
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -999,8 +1008,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1049,13 +1058,16 @@ object ContractForm: TContractForm
           ItemName = 'bbSetUnErased'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
           ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -1072,6 +1084,10 @@ object ContractForm: TContractForm
         item
           Visible = True
           ItemName = 'bbProtocolOpenFormCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -1103,6 +1119,10 @@ object ContractForm: TContractForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbRecordGoods'
         end
         item
@@ -1120,6 +1140,10 @@ object ContractForm: TContractForm
         item
           Visible = True
           ItemName = 'bbProtocolOpenFormGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
