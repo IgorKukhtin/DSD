@@ -23,7 +23,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Width = 1119
         Height = 209
         Align = alTop
-        ExplicitTop = -3
         ExplicitWidth = 1119
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2199,15 +2198,15 @@ inherited EDIJournalForm: TEDIJournalForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
       end
       item
-        Name = 'inDesc'
-        Value = 'EDI - '#1057#1095#1077#1090
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiOrdspr'
         DataType = ftString
         ParamType = ptInput
       end>
@@ -2221,15 +2220,15 @@ inherited EDIJournalForm: TEDIJournalForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
       end
       item
-        Name = 'inDesc'
-        Value = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiInvoice'
         DataType = ftString
         ParamType = ptInput
       end>
@@ -2243,15 +2242,15 @@ inherited EDIJournalForm: TEDIJournalForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
       end
       item
-        Name = 'inDesc'
-        Value = 'EDI - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiDesadv'
         DataType = ftString
         ParamType = ptInput
       end>
