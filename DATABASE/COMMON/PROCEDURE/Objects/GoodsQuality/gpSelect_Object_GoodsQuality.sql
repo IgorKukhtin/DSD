@@ -15,9 +15,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                Value5 TVarChar, Value6 TVarChar, 
                Value7 TVarChar, Value8 TVarChar,
                Value9 TVarChar, Value10 TVarChar,
-               GoodsId Integer, GoodsName TVarChar,
+               GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                GoodsGroupName TVarChar,
-               QualityId Integer, QualityName TVarChar
+               QualityId Integer, QualityCode Integer, QualityName TVarChar
                )
 AS
 $BODY$
@@ -36,7 +36,8 @@ BEGIN
     RETURN QUERY 
 
      with tmpGoods AS(SELECT Object_Goods.Id           AS GoodsId
-                          , Object_Goods.ValueData      AS GoodsName
+                          , Object_Goods.ObjectCode    AS GoodsCode 
+                          , Object_Goods.ValueData     AS GoodsName
 
                           , Object_GoodsGroup.Id        AS GoodsGroupId
                           , Object_GoodsGroup.ValueData AS GoodsGroupName 
@@ -73,10 +74,12 @@ BEGIN
            , ObjectString_Value10.ValueData AS Value10
                                                       
            , Object_Goods.GoodsId        AS GoodsId
+           , Object_Goods.GoodsCode      AS GoodsCode
            , Object_Goods.GoodsName      AS GoodsName 
            , Object_Goods.GoodsGroupName AS GoodsGroupName 
                      
            , Object_Quality.Id           AS QualityId
+           , Object_Quality.ObjectCode   AS QualityCode
            , Object_Quality.ValueData    AS QualityName 
                                 
        FROM Object AS Object_GoodsQuality
@@ -131,6 +134,7 @@ ELSE
 
     RETURN QUERY
      with tmpGoods AS(SELECT Object_Goods.Id           AS GoodsId
+                          , Object_Goods.ObjectCode    AS GoodsCode 
                           , Object_Goods.ValueData      AS GoodsName
 
                           , Object_GoodsGroup.Id        AS GoodsGroupId
@@ -169,10 +173,12 @@ ELSE
            , COALESCE (ObjectString_Value10.ValueData, '')::TVarChar  AS Value10
                                                       
            , Object_Goods.GoodsId        AS GoodsId
+           , Object_Goods.GoodsCode      AS GoodsCode
            , Object_Goods.GoodsName      AS GoodsName 
            , Object_Goods.GoodsGroupName AS GoodsGroupName 
 
            , Object_Quality.Id           AS QualityId
+           , Object_Quality.ObjectCode   AS QualityCode
            , Object_Quality.ValueData    AS QualityName 
 
          FROM tmpGoods AS Object_Goods
@@ -243,5 +249,5 @@ ALTER FUNCTION gpSelect_Object_GoodsQuality (Integer, Boolean, TVarChar) OWNER T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsQuality (0,True,zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_GoodsQuality (0,True,zfCalc_UserAdmin())
 --  SELECT * FROM gpSelect_Object_GoodsQuality (0,False,zfCalc_UserAdmin())

@@ -73,6 +73,8 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clQualityName: TcxGridDBColumn;
     QualityChoiceForm: TOpenChoiceForm;
+    clGoodsCode: TcxGridDBColumn;
+    clQualityCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -35,14 +35,13 @@ $BODY$
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено значение <Товар>.';
      ELSE
-         vbGoodsId:= (SELECT Max(ChildObjectId) FROM ObjectLink where DescId = zc_ObjectLink_GoodsQuality_Goods() and ChildObjectId = inGoodsId);
-         IF COALESCE (vbGoodsId, 0) <> 0 
+         IF exists (SELECT ChildObjectId FROM ObjectLink where DescId = zc_ObjectLink_GoodsQuality_Goods() and ChildObjectId = inGoodsId AND coalesce (ObjectId,0) <> coalesce (ioId,0))
          THEN 
              RAISE EXCEPTION 'Ошибка. Значение <%> уже есть в справочнике.', lfGet_Object_ValueData (vbGoodsId);
          END IF;   
      END IF;   
 
-   -- Если код не установлен, определяем его каи последний+1
+   -- Если код не установлен, определяем его как последний+1
    inCode := lfGet_ObjectCode (inCode, zc_Object_GoodsQuality());
     
    -- проверка прав уникальности для свойства <Наименование >  

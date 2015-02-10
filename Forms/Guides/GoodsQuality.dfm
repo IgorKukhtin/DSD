@@ -51,6 +51,7 @@ object GoodsQualityForm: TGoodsQualityForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 37
@@ -59,7 +60,14 @@ object GoodsQualityForm: TGoodsQualityForm
         Caption = #8470' 17'
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 104
+        Width = 96
+      end
+      object clGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsCode'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -69,11 +77,12 @@ object GoodsQualityForm: TGoodsQualityForm
           item
             Action = GoodsChoiceForm
             Default = True
+            Enabled = False
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 107
+        Width = 99
       end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
@@ -87,7 +96,14 @@ object GoodsQualityForm: TGoodsQualityForm
           end>
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 99
+        Width = 91
+      end
+      object clQualityCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1082#1072#1095'.'#1091#1076#1086#1089#1090
+        DataBinding.FieldName = 'QualityCode'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 66
       end
       object clQualityName: TcxGridDBColumn
         Caption = #1050#1072#1095'.'#1091#1076#1086#1089#1090'.'
@@ -101,67 +117,67 @@ object GoodsQualityForm: TGoodsQualityForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 103
+        Width = 100
       end
       object clValue1: TcxGridDBColumn
         Caption = #8470' 4'
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentVert = vaCenter
-        Width = 54
+        Width = 48
       end
       object clValue2: TcxGridDBColumn
         Caption = #8470'6'
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentVert = vaCenter
-        Width = 54
+        Width = 49
       end
       object clValue3: TcxGridDBColumn
         Caption = #8470' 7'
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 46
       end
       object clValue4: TcxGridDBColumn
         Caption = #8470' 8'
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 46
       end
       object clValue5: TcxGridDBColumn
         Caption = #8470' 10'
         DataBinding.FieldName = 'Value5'
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 47
       end
       object clValue6: TcxGridDBColumn
         Caption = #8470' 11'
         DataBinding.FieldName = 'Value6'
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 51
       end
       object clValue7: TcxGridDBColumn
         Caption = #8470' 12'
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentVert = vaCenter
-        Width = 54
+        Width = 48
       end
       object clValue8: TcxGridDBColumn
         Caption = #8470' 14'
         DataBinding.FieldName = 'Value8'
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 46
       end
       object clValue9: TcxGridDBColumn
         Caption = #8470' 15'
         DataBinding.FieldName = 'Value9'
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 47
       end
       object clValue10: TcxGridDBColumn
         Caption = #8470' 16'
         DataBinding.FieldName = 'Value10'
         HeaderAlignmentVert = vaCenter
-        Width = 44
+        Width = 39
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -465,6 +481,12 @@ object GoodsQualityForm: TGoodsQualityForm
           Component = ClientDataSet
           ComponentItem = 'QualityName'
           DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'QualityCode'
         end>
       isShowModal = True
     end
