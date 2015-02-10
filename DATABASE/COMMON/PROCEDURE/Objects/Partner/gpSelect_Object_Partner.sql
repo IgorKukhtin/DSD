@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
                ShortName TVarChar, GLNCode TVarChar,
+               GLNCodeJuridical TVarChar, GLNCodeRetail TVarChar, GLNCodeCorporate TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
@@ -58,6 +59,10 @@ BEGIN
 
          , ObjectString_ShortName.ValueData   AS ShortName
          , ObjectString_GLNCode.ValueData     AS GLNCode
+
+         , Partner_GLNCodeJuridical.ValueData  AS GLNCodeJuridical
+         , Partner_GLNCodeRetail.ValueData     AS GLNCodeRetail
+         , Partner_GLNCodeCorporate.ValueData  AS GLNCodeCorporate        
         
          , ObjectString_Address.ValueData     AS Address
          , ObjectString_HouseNumber.ValueData AS HouseNumber
@@ -129,6 +134,16 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+
+         LEFT JOIN ObjectString AS Partner_GLNCodeJuridical 
+                                ON Partner_GLNCodeJuridical.ObjectId = Object_Partner.Id
+                               AND Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+         LEFT JOIN ObjectString AS Partner_GLNCodeRetail 
+                                ON Partner_GLNCodeRetail.ObjectId = Object_Partner.Id
+                               AND Partner_GLNCodeRetail.DescId = zc_ObjectString_Partner_GLNCodeRetail()
+         LEFT JOIN ObjectString AS Partner_GLNCodeCorporate 
+                                ON Partner_GLNCodeCorporate.ObjectId = Object_Partner.Id
+                               AND Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()                                                                  
 
          LEFT JOIN ObjectString AS ObjectString_HouseNumber
                                 ON ObjectString_HouseNumber.ObjectId = Object_Partner.Id

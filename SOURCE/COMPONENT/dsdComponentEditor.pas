@@ -41,7 +41,7 @@ type
 
 implementation
 
-uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
+uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxMemo, cxCurrencyEdit, cxCheckBox,
      cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults,
      cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI, ExternalSave, Medoc;
 
@@ -71,6 +71,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCurrencyEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxTextEdit)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxMemo)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDataSet)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDefaultKey)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDocument)), Proc);
@@ -171,6 +172,8 @@ begin
   Proc('ftFloat');
   Proc('ftInteger');
   Proc('ftString');
+  Proc('ftBlob');
+
 end;
 
 { TExcelGridProperty }

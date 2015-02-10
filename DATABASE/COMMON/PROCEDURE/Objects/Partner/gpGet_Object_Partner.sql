@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                GLNCode TVarChar,
+               GLNCodeJuridical TVarChar, GLNCodeRetail TVarChar, GLNCodeCorporate TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
@@ -50,7 +51,11 @@ BEGIN
            , CAST ('' as TVarChar)  AS Name
            
            , CAST ('' as TVarChar)  AS ShortName
-           , CAST ('' as TVarChar)  AS GLNCode          
+           , CAST ('' as TVarChar)  AS GLNCode
+               
+           , CAST ('' as TVarChar)  AS GLNCodeJuridical      
+           , CAST ('' as TVarChar)  AS GLNCodeRetail           
+           , CAST ('' as TVarChar)  AS GLNCodeCorporate           
 
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS HouseNumber
@@ -121,6 +126,10 @@ BEGIN
        
            , ObjectString_ShortName.ValueData AS ShortName
            , Partner_GLNCode.ValueData        AS GLNCode
+           
+           , Partner_GLNCodeJuridical.ValueData  AS GLNCodeJuridical
+           , Partner_GLNCodeRetail.ValueData     AS GLNCodeRetail
+           , Partner_GLNCodeCorporate.ValueData  AS GLNCodeCorporate
 
            , ObjectString_Address.ValueData     AS Address
            , ObjectString_HouseNumber.ValueData AS HouseNumber
@@ -184,7 +193,17 @@ BEGIN
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
                                  AND Partner_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
-          
+
+           LEFT JOIN ObjectString AS Partner_GLNCodeJuridical 
+                                  ON Partner_GLNCodeJuridical.ObjectId = Object_Partner.Id
+                                 AND Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+           LEFT JOIN ObjectString AS Partner_GLNCodeRetail 
+                                  ON Partner_GLNCodeRetail.ObjectId = Object_Partner.Id
+                                 AND Partner_GLNCodeRetail.DescId = zc_ObjectString_Partner_GLNCodeRetail()
+           LEFT JOIN ObjectString AS Partner_GLNCodeCorporate 
+                                  ON Partner_GLNCodeCorporate.ObjectId = Object_Partner.Id
+                                 AND Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()                                                                  
+
            LEFT JOIN ObjectString AS ObjectString_Address
                                   ON ObjectString_Address.ObjectId = Object_Partner.Id
                                  AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
@@ -318,6 +337,7 @@ ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.02.15         * add remine  05.02.15
  20.11.14         * add remine 
  11.11.14         * add ÔÓÎˇ ‡‰ÂÒ‡
  01.06.14         * add ShortName,
