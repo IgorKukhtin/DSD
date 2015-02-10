@@ -17,8 +17,10 @@ RETURNS TABLE (Id Integer
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
+             , IncomeMovementId Integer 
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar
-              )
+             , ReturnTypeId Integer
+             , ReturnTypeName TVarChar )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -46,8 +48,11 @@ BEGIN
              , CAST ('' AS TVarChar) 				AS ToName
              , 0                     			        AS NDSKindId
              , CAST ('' AS TVarChar) 				AS NDSKindName
+             , 0                                                AS IncomeMovementId
              , CURRENT_DATE::TDateTime                          AS IncomeOperDate
              , ''::TVarChar                                     AS IncomeInvNumber
+             , 0                     			        AS ReturnTypeId
+             , CAST ('' AS TVarChar) 				AS ReturnTypeName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -68,8 +73,11 @@ BEGIN
            , Movement_ReturnOut_View.ToName
            , Movement_ReturnOut_View.NDSKindId
            , Movement_ReturnOut_View.NDSKindName
+           , Movement_ReturnOut_View.MovementIncomeId
            , Movement_ReturnOut_View.IncomeOperDate
            , Movement_ReturnOut_View.IncomeInvNumber
+           , Movement_ReturnOut_View.ReturnTypeId
+           , Movement_ReturnOut_View.ReturnTypeName
 
        FROM Movement_ReturnOut_View       
       WHERE Movement_ReturnOut_View.Id = inMovementId;

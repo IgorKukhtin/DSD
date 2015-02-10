@@ -44,24 +44,24 @@ type
     edNDSKind: TcxButtonEdit;
     NDSKindGuides: TdsdGuides;
     colPrice: TcxGridDBColumn;
-    colPartnerGoodsCode: TcxGridDBColumn;
-    colPartnerGoodsName: TcxGridDBColumn;
     ContractGuides: TdsdGuides;
-    edPaymentDate: TcxDateEdit;
-    cxLabel6: TcxLabel;
-    colExpirationDate: TcxGridDBColumn;
     ceTotalSummMVAT: TcxCurrencyEdit;
     ceTotalSummPVAT: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     cxLabel8: TcxLabel;
-    colPartitionGoods: TcxGridDBColumn;
-    colMakerName: TcxGridDBColumn;
     actRefreshGoodsCode: TdsdExecStoredProc;
     bbRefreshGoodsCode: TdxBarButton;
     spIncome_GoodsId: TdsdStoredProc;
     cxLabel5: TcxLabel;
-    cxButtonEdit1: TcxButtonEdit;
+    edIncome: TcxButtonEdit;
     GuidesIncome: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edReturnType: TcxButtonEdit;
+    ReturnTypeGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    edOperDatePartner: TcxDateEdit;
   private
     { Private declarations }
   public

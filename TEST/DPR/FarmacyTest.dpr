@@ -266,7 +266,8 @@ uses
   Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm: TParentForm},
   ReturnOut in '..\..\FormsFarmacy\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   ReturnOutJournal in '..\..\FormsFarmacy\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
-  ReturnOutTest in '..\SOURCE\Movement\All\Farmacy\ReturnOutTest.pas';
+  ReturnOutTest in '..\SOURCE\Movement\All\Farmacy\ReturnOutTest.pas',
+  IncomeJournalChoice in '..\..\FormsFarmacy\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

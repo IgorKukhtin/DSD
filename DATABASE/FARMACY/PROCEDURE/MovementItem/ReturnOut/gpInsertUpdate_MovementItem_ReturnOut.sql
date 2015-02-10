@@ -1,0 +1,41 @@
+-- Function: gpInsertUpdate_MovementItem_Income()
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnOut(Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnOut(
+ INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId             Integer   , -- Товары
+    IN inAmount              TFloat    , -- Количество
+    IN inPrice               TFloat   , -- Цена
+    IN inParentId            Integer   , -- ссылка на родителя
+    IN inSession             TVarChar    -- сессия пользователя
+)
+RETURNS Integer AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
+     vbUserId := inSession;
+
+     ioId := lpInsertUpdate_MovementItem_ReturnOut(ioId, inMovementId, inGoodsId, inAmount, inPrice, inParentId, vbUserId);
+
+     -- пересчитали Итоговые суммы
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.02.15                        *
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_MovementItem_Income (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')

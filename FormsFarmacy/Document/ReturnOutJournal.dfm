@@ -2,6 +2,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 469
   ClientWidth = 807
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 815
   ExplicitHeight = 496
   PixelsPerInch = 96
@@ -150,30 +151,18 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Width = 88
           end
           object colFromName: TcxGridDBColumn
-            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 187
           end
           object colToName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 200
-          end
-          object colContractName: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
-            DataBinding.FieldName = 'ContractName'
-            HeaderAlignmentVert = vaCenter
-            Width = 136
-          end
-          object colPaymentDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaymentDate'
-            HeaderAlignmentVert = vaCenter
-            Width = 90
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -246,10 +235,79 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
+      Category = 'Edit'
+      ImageIndex = -1
       FormName = 'TReturnOutForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      Category = 'Edit'
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Category = 'Edit'
       FormName = 'TReturnOutForm'
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Category = 'Complete'
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Category = 'Complete'
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Category = 'Complete'
+    end
+    inherited actReCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actUnCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actSetErasedList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited spReCompete: TdsdExecStoredProc
+      Category = 'Complete'
+    end
+    inherited spCompete: TdsdExecStoredProc
+      Category = 'Complete'
+    end
+    inherited spUncomplete: TdsdExecStoredProc
+      Category = 'Complete'
+    end
+    inherited spErased: TdsdExecStoredProc
+      Category = 'Complete'
+    end
+    inherited actSimpleCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actSimpleUncompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actSimpleReCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited actSimpleErased: TMultiAction
+      Category = 'Complete'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -329,6 +387,47 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       MoveParams = <>
       ActionList = <>
       Caption = 'MultiAction2'
+    end
+    object mactInsert: TMultiAction
+      Category = 'Edit'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceIncomeMovement
+        end
+        item
+          Action = actReturnOutMovementInsert
+        end
+        item
+          Action = actInsert
+        end>
+      ImageIndex = 0
+    end
+    object actReturnOutMovementInsert: TdsdExecStoredProc
+      Category = 'Edit'
+      MoveParams = <>
+      StoredProc = spInsertMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertMovement
+        end>
+      Caption = 'actReturnOutMovementInsert'
+    end
+    object actChoiceIncomeMovement: TOpenChoiceForm
+      Category = 'Edit'
+      MoveParams = <>
+      Caption = 'actChoiceIncomeMovement'
+      FormName = 'TIncomeJournalChoiceForm'
+      FormNameParam.Value = 'TIncomeJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'IncomeMovementId'
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -463,6 +562,9 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           ItemName = 'bbGridToExcel'
         end>
     end
+    inherited bbInsert: TdxBarButton
+      Action = mactInsert
+    end
     object bbTax: TdxBarButton
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
       Category = 0
@@ -592,6 +694,11 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'IncomeMovementId'
+        Value = Null
+        ParamType = ptInput
       end>
     Left = 400
     Top = 200
@@ -665,5 +772,27 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     PackSize = 1
     Left = 440
     Top = 48
+  end
+  object spInsertMovement: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_ReturnOutFromIncome'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IncomeMovementId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 288
   end
 end

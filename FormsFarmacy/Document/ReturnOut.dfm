@@ -1,25 +1,25 @@
 inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 526
-  ClientWidth = 776
-  ExplicitWidth = 784
+  ClientWidth = 828
+  ExplicitWidth = 836
   ExplicitHeight = 553
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 776
+    Width = 828
     Height = 400
     ExplicitTop = 126
     ExplicitWidth = 776
     ExplicitHeight = 400
     ClientRectBottom = 400
-    ClientRectRight = 776
+    ClientRectRight = 828
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 776
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
-        Width = 776
+        Width = 828
         Height = 376
         ExplicitWidth = 776
         ExplicitHeight = 376
@@ -123,20 +123,6 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 222
           end
-          object colPartnerGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            DataBinding.FieldName = 'PartnerGoodsCode'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 82
-          end
-          object colPartnerGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            DataBinding.FieldName = 'PartnerGoodsName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 173
-          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -167,30 +153,12 @@ inherited ReturnOutForm: TReturnOutForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colExpirationDate: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
-            DataBinding.FieldName = 'ExpirationDate'
-            Options.Editing = False
-            Width = 70
-          end
-          object colPartitionGoods: TcxGridDBColumn
-            Caption = #1057#1077#1088#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colMakerName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'MakerName'
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 776
+    Width = 828
     Height = 100
     TabOrder = 3
     ExplicitWidth = 776
@@ -229,52 +197,56 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 206
     end
     object cxLabel3: TcxLabel
-      Left = 345
-      Top = 5
+      Left = 458
+      Top = 3
       Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 345
-      Top = 23
+      Left = 458
+      Top = 21
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 4
       Width = 174
     end
     object edTo: TcxButtonEdit
-      Left = 527
-      Top = 23
+      Left = 640
+      Top = 21
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 184
     end
     object cxLabel4: TcxLabel
-      Left = 527
-      Top = 5
+      Left = 640
+      Top = 3
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 217
-      Top = 64
+      Left = 325
+      Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 10
       Width = 130
     end
     object cxLabel10: TcxLabel
-      Left = 345
-      Top = 45
+      Left = 458
+      Top = 44
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 345
-      Top = 63
+      Left = 458
+      Top = 62
       Properties.Buttons = <
         item
           Default = True
@@ -283,22 +255,9 @@ inherited ReturnOutForm: TReturnOutForm
       TabOrder = 12
       Width = 86
     end
-    object edPaymentDate: TcxDateEdit
-      Left = 448
-      Top = 63
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 13
-      Width = 100
-    end
-    object cxLabel6: TcxLabel
-      Left = 448
-      Top = 45
-      Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-    end
     object ceTotalSummMVAT: TcxCurrencyEdit
-      Left = 638
-      Top = 50
+      Left = 730
+      Top = 43
       EditValue = 1111111.000000000000000000
       Enabled = False
       ParentFont = False
@@ -315,12 +274,12 @@ inherited ReturnOutForm: TReturnOutForm
       StyleDisabled.BorderColor = clBtnFace
       StyleDisabled.BorderStyle = ebsSingle
       StyleDisabled.TextColor = clBtnText
-      TabOrder = 15
+      TabOrder = 13
       Width = 94
     end
     object ceTotalSummPVAT: TcxCurrencyEdit
-      Left = 638
-      Top = 69
+      Left = 730
+      Top = 62
       EditValue = 1111111.000000000000000000
       Enabled = False
       ParentFont = False
@@ -337,12 +296,12 @@ inherited ReturnOutForm: TReturnOutForm
       StyleDisabled.BorderColor = clBtnFace
       StyleDisabled.BorderStyle = ebsSingle
       StyleDisabled.TextColor = clBtnText
-      TabOrder = 16
+      TabOrder = 14
       Width = 94
     end
     object cxLabel7: TcxLabel
-      Left = 550
-      Top = 51
+      Left = 642
+      Top = 44
       Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -353,8 +312,8 @@ inherited ReturnOutForm: TReturnOutForm
       Style.IsFontAssigned = True
     end
     object cxLabel8: TcxLabel
-      Left = 564
-      Top = 70
+      Left = 656
+      Top = 63
       Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -365,20 +324,63 @@ inherited ReturnOutForm: TReturnOutForm
       Style.IsFontAssigned = True
     end
     object cxLabel5: TcxLabel
-      Left = 219
-      Top = 5
+      Left = 220
+      Top = 46
       Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
     end
-    object cxButtonEdit1: TcxButtonEdit
-      Left = 219
-      Top = 23
+    object edIncome: TcxButtonEdit
+      Left = 220
+      Top = 64
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 109
+    end
+    object cxLabel6: TcxLabel
+      Left = 550
+      Top = 43
+      Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
+    end
+    object edReturnType: TcxButtonEdit
+      Left = 550
+      Top = 61
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 20
-      Width = 121
+      Width = 108
+    end
+    object cxLabel9: TcxLabel
+      Left = 221
+      Top = 4
+      Caption = #8470' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 221
+      Top = 22
+      Properties.ReadOnly = False
+      TabOrder = 22
+      Width = 105
+    end
+    object cxLabel11: TcxLabel
+      Left = 327
+      Top = 4
+      Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object edOperDatePartner: TcxDateEdit
+      Left = 327
+      Top = 22
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 24
+      Width = 100
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -541,7 +543,7 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 448
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Income'
+    StoredProcName = 'gpSelect_MovementItem_ReturnOut'
     Params = <
       item
         Name = 'inMovementId'
@@ -773,7 +775,7 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 56
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Income'
+    StoredProcName = 'gpGet_Movement_ReturnOut'
     Params = <
       item
         Name = 'inMovementId'
@@ -853,29 +855,46 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
       end
       item
-        Name = 'ContractId'
+        Name = 'IncomeInvNumber'
         Value = Null
-        Component = ContractGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'ContractName'
-        Value = Null
-        Component = ContractGuides
+        Component = GuidesIncome
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'PaymentDate'
+        Name = 'IncomeMovementId'
         Value = Null
-        Component = edPaymentDate
+        Component = GuidesIncome
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ReturnTypeId'
+        Value = Null
+        Component = ReturnTypeGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ReturnTypeName'
+        Value = Null
+        Component = ReturnTypeGuides
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'InvNumberPartner'
+        Value = Null
+        Component = edInvNumberPartner
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = Null
+        Component = edOperDatePartner
         DataType = ftDateTime
       end>
     Left = 216
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Income'
+    StoredProcName = 'gpInsertUpdate_Movement_ReturnOut'
     Params = <
       item
         Name = 'ioId'
@@ -895,6 +914,20 @@ inherited ReturnOutForm: TReturnOutForm
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = 0.000000000000000000
+        Component = edInvNumberPartner
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = ''
+        Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -927,27 +960,18 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
       end
       item
-        Name = 'inContractId'
+        Name = 'inParentId'
         Value = 0.000000000000000000
-        Component = ContractGuides
+        Component = GuidesIncome
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inPaymentDate'
+        Name = 'inReturnTypeId'
         Value = ''
-        Component = edPaymentDate
-        DataType = ftDateTime
+        Component = ReturnTypeGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -981,13 +1005,6 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 312
   end
   inherited GuidesFiller: TGuidesFiller
-    GuidesList = <
-      item
-        Guides = GuidesFrom
-      end
-      item
-        Guides = GuidesTo
-      end>
     Left = 160
     Top = 192
   end
@@ -999,7 +1016,6 @@ inherited ReturnOutForm: TReturnOutForm
       item
       end
       item
-        Control = edPaymentDate
       end
       item
         Control = edOperDate
@@ -1051,7 +1067,7 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 328
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Income'
+    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnOut'
     Params = <
       item
         Name = 'ioId'
@@ -1091,8 +1107,11 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
       end
       item
+        Name = 'inParentId'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'ParentId'
+        ParamType = ptInput
       end
       item
         Value = Null
@@ -1272,7 +1291,7 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 416
+    Left = 400
     Top = 16
   end
   object GuidesTo: TdsdGuides
@@ -1325,8 +1344,8 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 464
-    Top = 80
+    Left = 368
+    Top = 72
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1371,10 +1390,11 @@ inherited ReturnOutForm: TReturnOutForm
   end
   object GuidesIncome: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edFrom
-    FormNameParam.Value = 'TJuridicalForm'
+    LookupControl = edIncome
+    isShowModal = True
+    FormNameParam.Value = 'TIncomeJournalForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridicalForm'
+    FormName = 'TIncomeJournalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1394,5 +1414,32 @@ inherited ReturnOutForm: TReturnOutForm
       end>
     Left = 280
     Top = 16
+  end
+  object ReturnTypeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReturnType
+    FormNameParam.Value = 'TReturnTypeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TReturnTypeForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ReturnTypeGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ReturnTypeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 472
+    Top = 72
   end
 end
