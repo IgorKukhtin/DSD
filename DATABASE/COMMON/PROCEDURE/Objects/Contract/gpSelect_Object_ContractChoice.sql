@@ -31,6 +31,7 @@ $BODY$
 
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
+   DECLARE vbBranchId_Constraint Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_ContractChoice());
@@ -39,7 +40,8 @@ BEGIN
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
-   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+   vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbBranchId_Constraint, 0) > 0;
 
 
    -- ограничение
@@ -57,6 +59,21 @@ BEGIN
    IF inShowAll= TRUE AND inJuridicalId <> 0 THEN
    -- 1.1. Результат такой
    RETURN QUERY 
+   WITH tmpListBranch_Constraint AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                    )
    SELECT
          Object_Contract_View.ContractId AS Id
        , Object_Contract_View.ContractCode AS Code
@@ -96,6 +113,7 @@ BEGIN
         INNER JOIN Object_Contract_View ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
                                        AND Object_Contract_View.isErased = FALSE
                                        AND Object_Contract_View.JuridicalId = inJuridicalId
+        LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.JuridicalId = Object_Contract_View.JuridicalId
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -132,8 +150,9 @@ BEGIN
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-        OR vbIsConstraint = FALSE
-        OR inJuridicalId <> 0
+           OR tmpListBranch_Constraint.JuridicalId > 0
+           OR vbIsConstraint = FALSE
+           OR inJuridicalId <> 0
           )
    ;
 
@@ -141,6 +160,21 @@ BEGIN
    IF inShowAll= FALSE AND inJuridicalId <> 0 THEN
    -- 1.2. Результат другой
    RETURN QUERY 
+   WITH tmpListBranch_Constraint AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                    )
    SELECT
          Object_Contract_View.ContractId AS Id
        , Object_Contract_View.ContractCode AS Code
@@ -182,6 +216,7 @@ BEGIN
                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                        AND Object_Contract_View.isErased = FALSE
                                        AND Object_Contract_View.JuridicalId = inJuridicalId
+        LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.JuridicalId = Object_Contract_View.JuridicalId
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -219,8 +254,9 @@ BEGIN
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-        OR vbIsConstraint = FALSE
-        OR inJuridicalId <> 0
+           OR tmpListBranch_Constraint.JuridicalId > 0
+           OR vbIsConstraint = FALSE
+           OR inJuridicalId <> 0
           )
    ;
 
@@ -228,6 +264,21 @@ BEGIN
    IF inShowAll= TRUE THEN
    -- 2.1. Результат такой
    RETURN QUERY 
+   WITH tmpListBranch_Constraint AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                    )
    SELECT
          Object_Contract_View.ContractId AS Id
        , Object_Contract_View.ContractCode AS Code
@@ -267,6 +318,7 @@ BEGIN
         INNER JOIN Object_Contract_View ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
                                        AND Object_Contract_View.isErased = FALSE
                                        -- AND (Object_Contract_View.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+        LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.JuridicalId = Object_Contract_View.JuridicalId
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -303,12 +355,28 @@ BEGIN
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-        OR vbIsConstraint = FALSE)
+           OR tmpListBranch_Constraint.JuridicalId > 0
+           OR vbIsConstraint = FALSE)
    ;
 
    ELSE
    -- 2.2. Результат другой
    RETURN QUERY 
+   WITH tmpListBranch_Constraint AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                    )
    SELECT
          Object_Contract_View.ContractId AS Id
        , Object_Contract_View.ContractCode AS Code
@@ -350,6 +418,8 @@ BEGIN
                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                        AND Object_Contract_View.isErased = FALSE
                                        -- AND (Object_Contract_View.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+        LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.JuridicalId = Object_Contract_View.JuridicalId
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -387,8 +457,9 @@ BEGIN
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-        OR vbIsConstraint = FALSE
-        OR inJuridicalId <> 0
+           OR tmpListBranch_Constraint.JuridicalId > 0
+           OR vbIsConstraint = FALSE
+           OR inJuridicalId <> 0
           )
    ;
    END IF;

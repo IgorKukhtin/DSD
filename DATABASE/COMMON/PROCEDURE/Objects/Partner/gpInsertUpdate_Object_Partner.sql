@@ -4,7 +4,6 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (integer, integer, tvarcha
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (integer, integer, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, integer, tfloat, tfloat, Boolean, Boolean, Boolean, integer, integer, integer, integer, integer, integer, integer, integer, integer, integer, tdatetime, tdatetime, tvarchar, tvarchar, tvarchar, integer, tvarchar, tvarchar, tvarchar, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (integer, integer, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, integer, tfloat, tfloat, Boolean, Boolean, Boolean, integer, integer, integer, integer, integer, integer, integer, integer, integer, integer, tdatetime, tdatetime, tvarchar, tvarchar, tvarchar, integer, tvarchar, tvarchar, tvarchar, integer, tvarchar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
    OUT outPartnerName        TVarChar  ,    -- 

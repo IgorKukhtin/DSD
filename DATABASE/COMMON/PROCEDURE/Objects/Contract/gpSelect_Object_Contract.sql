@@ -57,7 +57,7 @@ $BODY$
    DECLARE vbIsConstraint Boolean;
    DECLARE vbIsCommerce Boolean;
    DECLARE vbObjectId_Constraint Integer;
-   DECLARE vbObjectId_Branch_Constraint Integer;
+   DECLARE vbBranchId_Constraint Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Contract());
@@ -65,8 +65,8 @@ BEGIN
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
-   vbObjectId_Branch_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
-   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbObjectId_Branch_Constraint, 0) > 0;
+   vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbBranchId_Constraint, 0) > 0;
    vbIsCommerce:= vbIsConstraint OR EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_GuideCommerce FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_GuideCommerce <> 0);
 
    -- Результат
@@ -82,7 +82,7 @@ BEGIN
                                           INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                 ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
                                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Branch_Constraint
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                      GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
                                     )

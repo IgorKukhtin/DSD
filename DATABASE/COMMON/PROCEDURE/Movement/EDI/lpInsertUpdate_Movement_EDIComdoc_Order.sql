@@ -38,7 +38,12 @@ BEGIN
           , Movement.OperDate                     AS OperDate
           , Movement.OperDate + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL AS OperDatePartner
           , ObjectString_Partner_GLNCode.ObjectId AS PartnerId
-          , ObjectString_Juridical_GLNCode.ObjectId    AS JuridicalId
+          , CASE WHEN MovementString_GLNCode.ValueData = ObjectString_Partner_GLNCodeJuridical
+                      THEN ObjectLink_Partner_Juridical.ChildObjectId -- здесь условие что GLN код юр.лица в документе и у св-ва д.б. одинаковый
+                 WHEN MovementString_GLNCode.ValueData = ObjectString_Juridical_GLNCode.ValueData
+                      THEN ObjectString_Juridical_GLNCode.ObjectId -- здесь условие что GLN код юр.лица в документе и у св-ва д.б. одинаковый
+                 ELSE ObjectString_Juridical_GLNCode.ObjectId -- так убрал ошибку
+            END JuridicalId
           , MovementLinkObject_Unit.ObjectId           AS UnitId
           , MovementLinkObject_Contract.ObjectId       AS ContractId
           , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
@@ -90,6 +95,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Partner_GLNCode
                                  ON ObjectString_Partner_GLNCode.ValueData = MovementString_GLNPlaceCode.ValueData
                                 AND ObjectString_Partner_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+          LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeJuridical
+                                 ON ObjectString_Partner_GLNCodeJuridical.ValueData = MovementString_GLNPlaceCode.ValueData
+                                AND ObjectString_Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+
           LEFT JOIN ObjectFloat AS ObjectFloat_Partner_PrepareDayCount
                                 ON ObjectFloat_Partner_PrepareDayCount.ObjectId = ObjectString_Partner_GLNCode.ObjectId
                                AND ObjectFloat_Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
@@ -106,11 +115,10 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectString_Partner_GLNCode.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-          -- здесь условие что GLN код юр.лица в документе и у св-ва д.б. одинаковый
           LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode
                                  ON ObjectString_Juridical_GLNCode.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                 AND ObjectString_Juridical_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-                                -- AND ObjectString_Juridical_GLNCode.ValueData = MovementString_GLNCode.ValueData
+
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
@@ -122,12 +130,12 @@ BEGIN
      -- Проверка
      IF COALESCE (vbPartnerId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> не найден контрагент с кодом GLN <%>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), (SELECT ValueData FROM MovementString WHERE MovementId = inMovementId AND DescId = zc_MovementString_GLNPlaceCode());
+         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> для значения GLN - место доставки (EDI) = <%> не определен <Контрагент>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), (SELECT ValueData FROM MovementString WHERE MovementId = inMovementId AND DescId = zc_MovementString_GLNPlaceCode());
      END IF;
      -- Проверка
      IF COALESCE (vbJuridicalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> у контрагента <%> не установлено юридическое лицо с кодом GLN <%>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), lfGet_Object_ValueData (vbPartnerId), (SELECT ValueData FROM MovementString WHERE MovementId = inMovementId AND DescId = zc_MovementString_GLNCode());
+         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> у контрагента <%> для значения GLN - покупатель (EDI) = <%>  не определено <Юридическое лицо>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), lfGet_Object_ValueData (vbPartnerId), (SELECT ValueData FROM MovementString WHERE MovementId = inMovementId AND DescId = zc_MovementString_GLNCode());
      END IF;
      -- Проверка
      IF COALESCE (vbContractId, 0) = 0

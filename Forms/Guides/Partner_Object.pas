@@ -63,6 +63,10 @@ type
     FormParams: TdsdFormParams;
     bbJuridicalLabel: TdxBarControlContainerItem;
     bbJuridicalGuides: TdxBarControlContainerItem;
+    clGLNCode: TcxGridDBColumn;
+    clGLNCodeJuridical: TcxGridDBColumn;
+    GLNCodeRetail: TcxGridDBColumn;
+    GLNCodeCorporate: TcxGridDBColumn;
   private
     { Private declarations }
   public
