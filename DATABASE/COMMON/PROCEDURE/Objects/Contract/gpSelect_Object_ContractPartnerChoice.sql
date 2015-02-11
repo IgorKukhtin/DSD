@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , StartDate TDateTime, EndDate TDateTime
              , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, GLNCode TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractStateKindCode Integer
              , ContractComment TVarChar
@@ -29,6 +29,7 @@ $BODY$
 
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
+   DECLARE vbBranchId_Constraint Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_ContractPartnerChoice());
@@ -37,7 +38,8 @@ BEGIN
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
-   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+   vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbBranchId_Constraint, 0) > 0;
 
 
    IF inShowAll= TRUE THEN
@@ -57,6 +59,7 @@ BEGIN
        , Object_Partner.Id             AS PartnerId
        , Object_Partner.ObjectCode     AS PartnerCode
        , Object_Partner.ValueData      AS PartnerName
+       , ObjectString_GLNCode.ValueData AS GLNCode
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
        , Object_Contract_View.ContractStateKindCode
@@ -81,6 +84,10 @@ BEGIN
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
+         LEFT JOIN ObjectString AS ObjectString_GLNCode 
+                                ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
+                               AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
                               ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
@@ -91,6 +98,16 @@ BEGIN
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
          LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
          
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+         LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Unit
+                              ON ObjectLink_PersonalTrade_Unit.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+                             AND ObjectLink_PersonalTrade_Unit.DescId = zc_ObjectLink_Personal_Unit()
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_PersonalTrade
+                              ON ObjectLink_Unit_Branch_PersonalTrade.ObjectId = ObjectLink_PersonalTrade_Unit.ChildObjectId
+                             AND ObjectLink_Unit_Branch_PersonalTrade.DescId = zc_ObjectLink_Unit_Branch()
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
                               ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
@@ -139,6 +156,7 @@ BEGIN
        OR Object_InfoMoney_View.InfoMoneyId = 8942 -- Кротон
          )
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+          OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
                                  , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239
@@ -170,6 +188,7 @@ BEGIN
        , Object_Partner.Id             AS PartnerId
        , Object_Partner.ObjectCode     AS PartnerCode
        , Object_Partner.ValueData      AS PartnerName
+       , ObjectString_GLNCode.ValueData AS GLNCode
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
        , Object_Contract_View.ContractStateKindCode
@@ -194,6 +213,10 @@ BEGIN
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
+         LEFT JOIN ObjectString AS ObjectString_GLNCode 
+                                ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
+                               AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
                               ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
@@ -204,6 +227,16 @@ BEGIN
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
          LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
          
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+         LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Unit
+                              ON ObjectLink_PersonalTrade_Unit.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+                             AND ObjectLink_PersonalTrade_Unit.DescId = zc_ObjectLink_Personal_Unit()
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_PersonalTrade
+                              ON ObjectLink_Unit_Branch_PersonalTrade.ObjectId = ObjectLink_PersonalTrade_Unit.ChildObjectId
+                             AND ObjectLink_Unit_Branch_PersonalTrade.DescId = zc_ObjectLink_Unit_Branch()
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
                               ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
@@ -253,6 +286,7 @@ BEGIN
          )
 
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+          OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
                                  , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239

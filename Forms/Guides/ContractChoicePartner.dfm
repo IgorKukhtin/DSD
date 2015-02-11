@@ -25,6 +25,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -253,6 +254,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Visible = False
             Options.Editing = False
             Width = 70
+          end
+          object clGLNCode: TcxGridDBColumn
+            Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
+            DataBinding.FieldName = 'GLNCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object colisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

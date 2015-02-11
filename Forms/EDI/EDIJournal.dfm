@@ -12,18 +12,18 @@ inherited EDIJournalForm: TEDIJournalForm
     Width = 1183
     Height = 367
     ExplicitTop = 57
-    ExplicitWidth = 1119
+    ExplicitWidth = 1183
     ExplicitHeight = 367
     ClientRectBottom = 367
     ClientRectRight = 1183
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1119
+      ExplicitWidth = 1183
       ExplicitHeight = 367
       inherited cxGrid: TcxGrid
         Width = 1183
         Height = 209
         Align = alTop
-        ExplicitWidth = 1119
+        ExplicitWidth = 1183
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -236,7 +236,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Width = 60
           end
           object clGLNCode: TcxGridDBColumn
-            Caption = 'GLN '#1102#1088'.'#1083'. (EDI)'
+            Caption = 'GLN - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' (EDI)'
             DataBinding.FieldName = 'GLNCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -245,7 +245,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Width = 60
           end
           object clGLNPlaceCode: TcxGridDBColumn
-            Caption = 'GLN '#1087#1086#1082'. (EDI)'
+            Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080' (EDI)'
             DataBinding.FieldName = 'GLNPlaceCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -254,7 +254,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Width = 60
           end
           object clPartnerNameFind: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1085#1072#1081#1076#1077#1085')'
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1085#1072#1081#1076#1077#1085')'
             DataBinding.FieldName = 'PartnerNameFind'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -394,9 +394,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitTop = 212
-        ExplicitWidth = 1119
-        ExplicitHeight = 155
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
@@ -405,7 +402,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 0
-          ExplicitHeight = 155
           object cxChildGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ClientDS
@@ -641,9 +637,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitLeft = 954
-          ExplicitWidth = 165
-          ExplicitHeight = 155
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -704,7 +697,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Width = 4
           Height = 153
           Control = cxChildGrid
-          ExplicitHeight = 155
         end
       end
     end
@@ -716,7 +708,6 @@ inherited EDIJournalForm: TEDIJournalForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1119
     object deStart: TcxDateEdit
       Left = 107
       Top = 5

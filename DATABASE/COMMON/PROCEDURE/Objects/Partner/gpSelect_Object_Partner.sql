@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
                EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean,
 
-               JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, GLNCode_Juridical TVarChar,
+               JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, /*GLNCode_Juridical TVarChar,*/
                RetailName TVarChar,
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
@@ -37,17 +37,20 @@ $BODY$
 
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
-   DECLARE vbObjectId_Branch_Constraint Integer;
+   DECLARE vbBranchId_Constraint Integer;
+   DECLARE vbGLNCodeCorporate TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Partner());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- определяется 
+   vbGLNCodeCorporate:= (SELECT ValueData FROM ObjectString WHERE ObjectId = zc_Juridical_Basis() AND DescId = zc_ObjectString_Juridical_GLNCode());
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
-   vbObjectId_Branch_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
-   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbObjectId_Branch_Constraint, 0) > 0;
+   vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbBranchId_Constraint, 0) > 0;
 
 
    -- Результат
@@ -60,9 +63,9 @@ BEGIN
          , ObjectString_ShortName.ValueData   AS ShortName
          , ObjectString_GLNCode.ValueData     AS GLNCode
 
-         , Partner_GLNCodeJuridical.ValueData  AS GLNCodeJuridical
-         , Partner_GLNCodeRetail.ValueData     AS GLNCodeRetail
-         , Partner_GLNCodeCorporate.ValueData  AS GLNCodeCorporate        
+         , CASE WHEN ObjectString_GLNCodeJuridical.ValueData <> '' THEN ObjectString_GLNCodeJuridical.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN ObjectString_Juridical_GLNCode.ValueData ELSE '' END :: TVarChar AS GLNCodeJuridical
+         , CASE WHEN ObjectString_GLNCodeRetail.ValueData <> '' THEN ObjectString_GLNCodeRetail.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN CASE WHEN ObjectString_Retail_GLNCode.ValueData <> '' THEN ObjectString_Retail_GLNCode.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END ELSE '' END :: TVarChar AS GLNCodeRetail
+         , CASE WHEN ObjectString_GLNCodeCorporate.ValueData <> '' THEN ObjectString_GLNCodeCorporate.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN vbGLNCodeCorporate ELSE '' END :: TVarChar AS GLNCodeCorporate
         
          , ObjectString_Address.ValueData     AS Address
          , ObjectString_HouseNumber.ValueData AS HouseNumber
@@ -84,7 +87,6 @@ BEGIN
          , Object_Juridical.ObjectCode     AS JuridicalCode
          , Object_Juridical.ValueData      AS JuridicalName
          , Object_JuridicalGroup.ValueData AS JuridicalGroupName
-         , ObjectString_GLNCode_Juridical.ValueData     AS GLNCode_Juridical
          
          , Object_Retail.ValueData         AS RetailName
 
@@ -135,15 +137,15 @@ BEGIN
                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
-         LEFT JOIN ObjectString AS Partner_GLNCodeJuridical 
-                                ON Partner_GLNCodeJuridical.ObjectId = Object_Partner.Id
-                               AND Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
-         LEFT JOIN ObjectString AS Partner_GLNCodeRetail 
-                                ON Partner_GLNCodeRetail.ObjectId = Object_Partner.Id
-                               AND Partner_GLNCodeRetail.DescId = zc_ObjectString_Partner_GLNCodeRetail()
-         LEFT JOIN ObjectString AS Partner_GLNCodeCorporate 
-                                ON Partner_GLNCodeCorporate.ObjectId = Object_Partner.Id
-                               AND Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()                                                                  
+         LEFT JOIN ObjectString AS ObjectString_GLNCodeJuridical
+                                ON ObjectString_GLNCodeJuridical.ObjectId = Object_Partner.Id
+                               AND ObjectString_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+         LEFT JOIN ObjectString AS ObjectString_GLNCodeRetail
+                                ON ObjectString_GLNCodeRetail.ObjectId = Object_Partner.Id
+                               AND ObjectString_GLNCodeRetail.DescId = zc_ObjectString_Partner_GLNCodeRetail()
+         LEFT JOIN ObjectString AS ObjectString_GLNCodeCorporate
+                                ON ObjectString_GLNCodeCorporate.ObjectId = Object_Partner.Id
+                               AND ObjectString_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()                                                                  
 
          LEFT JOIN ObjectString AS ObjectString_HouseNumber
                                 ON ObjectString_HouseNumber.ObjectId = Object_Partner.Id
@@ -198,15 +200,17 @@ BEGIN
                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
-         
-         LEFT JOIN ObjectString AS ObjectString_GLNCode_Juridical
-                                ON ObjectString_GLNCode_Juridical.ObjectId = Object_Juridical.Id 
-                               AND ObjectString_GLNCode_Juridical.DescId = zc_ObjectString_Juridical_GLNCode()
+         LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode
+                                ON ObjectString_Juridical_GLNCode.ObjectId = Object_Juridical.Id 
+                               AND ObjectString_Juridical_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                               ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+         LEFT JOIN ObjectString AS ObjectString_Retail_GLNCode
+                                ON ObjectString_Retail_GLNCode.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                               AND ObjectString_Retail_GLNCode.DescId = zc_ObjectString_Retail_GLNCode()
 
          LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
@@ -262,7 +266,7 @@ BEGIN
 
     WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-           OR Object_PersonalTrade.BranchId = vbObjectId_Branch_Constraint
+           OR Object_PersonalTrade.BranchId = vbBranchId_Constraint
            OR vbIsConstraint = FALSE)
    ;
 

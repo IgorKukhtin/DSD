@@ -77,7 +77,7 @@ type
     bbJuridicalLabel: TdxBarControlContainerItem;
     bbJuridicalGuides: TdxBarControlContainerItem;
     clGLNCode: TcxGridDBColumn;
-    clGLNCode_Juridical: TcxGridDBColumn;
+    clGLNCodeJuridical: TcxGridDBColumn;
     actChoiceRoute: TOpenChoiceForm;
     actChoiceRouteSorting: TOpenChoiceForm;
     actChoiceMemberTake: TOpenChoiceForm;
@@ -101,6 +101,8 @@ type
     bbUpdateEdiOrdspr: TdxBarButton;
     bbUpdateEdiInvoice: TdxBarButton;
     bbUpdateEdiDesadv: TdxBarButton;
+    GLNCodeRetail: TcxGridDBColumn;
+    GLNCodeCorporate: TcxGridDBColumn;
   private
     { Private declarations }
   public

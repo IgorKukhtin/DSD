@@ -9,8 +9,10 @@ $BODY$
    DECLARE vbCount Integer;
    DECLARE vbLock Boolean;
 BEGIN
-     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    vbLock := FALSE;
+    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+    LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+    /*vbLock := FALSE;
     WHILE NOT vbLock LOOP
         BEGIN
            LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
@@ -18,7 +20,7 @@ BEGIN
         EXCEPTION 
             WHEN OTHERS THEN
         END;
-    END LOOP;
+    END LOOP;*/
 
      -- изменить значение остатка
      UPDATE Container SET Amount = Container.Amount + _tmpMIContainer.Amount
