@@ -2498,6 +2498,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actOrderExternalUnit: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1075#1083#1072#1074#1085#1099#1081' '#1089#1082#1083#1072#1076
+      Hint = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1075#1083#1072#1074#1085#1099#1081' '#1089#1082#1083#1072#1076
+      FormName = 'TOrderExternalUnitJournalForm'
+      FormNameParam.Value = 'TOrderExternalUnitJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited cxLocalizer: TcxLocalizer
     Top = 32
@@ -2602,6 +2613,9 @@ inherited MainForm: TMainForm
       end
       object miOrderInternal: TMenuItem
         Action = actGoodsQualityMovement
+      end
+      object N40: TMenuItem
+        Action = actOrderExternalUnit
       end
     end
     object miFinanceDocuments: TMenuItem [1]

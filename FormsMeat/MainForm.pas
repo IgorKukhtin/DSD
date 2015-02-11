@@ -487,6 +487,8 @@ type
     actQuality: TdsdOpenForm;
     N39: TMenuItem;
     dsdOpenForm1: TdsdOpenForm;
+    actOrderExternalUnit: TdsdOpenForm;
+    N40: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

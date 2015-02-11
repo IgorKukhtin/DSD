@@ -1,4 +1,4 @@
-unit OrderExternalJournal;
+unit OrderExternalUnitJournal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TOrderExternalUnitJournalForm = class(TAncestorJournalForm)
+  TOrderExternalJournalForm = class(TAncestorJournalForm)
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -72,5 +72,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TOrderExternalUnitJournalForm);
+  RegisterClass(TOrderExternalJournalForm);
 end.

@@ -1239,7 +1239,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderExternalJournal.pas">
-				<Form>OrderExternalJournalForm</Form>
+				<Form>OrderExternalUnitJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderExternal.pas">
@@ -1872,6 +1872,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Service.pas">
 				<Form>ServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderExternalUnit.pas">
+				<Form>OrderExternalUnitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderExternalUnitJournal.pas">
+				<Form>OrderExternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
