@@ -173,6 +173,8 @@ type
     cbBranchSendOnPrice: TCheckBox;
     UnitCodeSendOnPriceEdit: TEdit;
     cbFillSoldTable: TCheckBox;
+    cbGoodsQuality: TCheckBox;
+    cbQuality: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -350,6 +352,8 @@ type
     procedure pLoadGuide_Partner1CLink_Fl;
     procedure pLoadGuide_Goods1CLink_Fl;
     procedure pLoadGuide_GoodsProperty_Detail;
+    procedure pLoadGuide_Quality;
+    procedure pLoadGuide_GoodsQuality;
 
     procedure pLoadGuide_1Find2InsertPartner1C_BranchNal;
     procedure pLoadGuide_Juridical1C_BranchNal;
@@ -4531,6 +4535,133 @@ begin
      end;
      //
      myDisabledCB(cbGoodsProperty_Detail);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_Quality;
+begin
+     if (not cbQuality.Checked)or(not cbQuality.Enabled) then exit;
+     //
+     myEnabledCB(cbQuality);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select KindPackage.Id as ObjectId');
+        Add('     , KindPackage.KindPackageCode as ObjectCode');
+        Add('     , KindPackage.KindPackageName as ObjectName');
+        Add('     , KindPackage.Id_Postgres as Id_Postgres');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , KindPackage.Erased as Erased');
+        Add('     , zc_KindPackage_PF() as zc_KindPackage_PF');
+        Add('from dba.KindPackage');
+        Add('where KindPackage.HasChildren = zc_hsLeaf()');
+        Add('  and (KindPackage.ParentId not in (23,30)'
+           +'     or KindPackage.Id in (24)'
+           +'      )');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_goodskind';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.KindPackage set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if FieldByName('ObjectId').AsInteger=FieldByName('zc_KindPackage_PF').AsInteger
+             then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_GoodsKind_WorkProgress() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbQuality);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_GoodsQuality;
+begin
+     if (not cbGoodsQuality.Checked)or(not cbGoodsQuality.Enabled) then exit;
+     //
+     myEnabledCB(cbGoodsQuality);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty_Kachestvo.GroupId as ObjectId');
+        Add('     , GoodsProperty_Kachestvo.GroupId as ObjectCode');
+        Add('     , tmp.byGroupName as ObjectName');
+        Add('     , max(isnull(Id_pg1,0)) as Id_Postgres');
+        Add('from dba.GoodsProperty_Kachestvo');
+        Add('     left join pSelect_GoodsProperty_Kachestvo() as tmp on tmp.GoodsPropertyId = GoodsProperty_Kachestvo.GoodsPropertyId and tmp.byGroupId = GoodsProperty_Kachestvo.GroupId');
+        Add('where GroupId<>0');
+        Add('group by GoodsProperty_Kachestvo.GroupId, tmp.byGroupName');
+        Add('order by GroupId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Quality';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+             begin
+                  toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+                  toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+
+                  if not myExecToStoredProc then ;//exit;
+                  //
+                  if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
+                  then fExecSqFromQuery('update dba.GoodsProperty_Kachestvo set Id_pg1='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where GroupId = '+FieldByName('GroupId').AsString);
+                  //
+             end;
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbGoodsQuality);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Business;
@@ -19940,6 +20071,9 @@ insert into dba.GoodsProperty_Postgres (Id, Name_PG)
 
 
 
+
+alter table dba.GoodsProperty_Kachestvo add Id_pg1 integer null;
+alter table dba.GoodsProperty_Kachestvo add Id_pg2 integer null;
 
 
 alter table dba.Goods add Id_Postgres integer null;
