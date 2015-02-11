@@ -267,7 +267,7 @@
         Name = 'inComment'
         Value = ''
         Component = ceComment
-        DataType = ftBlob
+        DataType = ftWideString
         ParamType = ptInput
       end
       item
@@ -379,7 +379,7 @@
         Name = 'Comment'
         Value = Null
         Component = ceComment
-        DataType = ftBlob
+        DataType = ftWideString
       end
       item
         Name = 'QualityId'

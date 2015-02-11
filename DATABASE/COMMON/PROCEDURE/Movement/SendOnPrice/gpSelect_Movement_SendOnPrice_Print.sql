@@ -1,9 +1,12 @@
 -- Function: gpSelect_Movement_SendOnPrice_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice_Print(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inReportType        Integer  , -- 0=out 1=in
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -41,6 +44,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
 
+     inReportType :=  COALESCE (inReportType, 0);
 
      -- параметры из документа
      SELECT Movement.DescId
@@ -253,21 +257,70 @@ BEGIN
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
-           , MovementFloat_TotalCount.ValueData         AS TotalCountOut
-           , MovementFloat_TotalCountPartner.ValueData  AS TotalCountIn
-           , vbTotalCountKgIn                           AS TotalCountKgIn
-           , vbTotalCountShIn                           AS TotalCountShIn
-           , vbOperSumm_MVATIn                          AS TotalSummMVATIn
-           , vbOperSumm_PVATIn                          AS TotalSummPVATIn
-           , vbOperSumm_PVATIn - vbOperSumm_MVATIn      AS SummVATIn
-           , vbOperSumm_PVATIn                          AS TotalSummIn
+--           , MovementFloat_TotalCount.ValueData         AS TotalCountOut
+--           , MovementFloat_TotalCountPartner.ValueData  AS TotalCountIn
+
+           , CASE inReportType WHEN 0
+             THEN MovementFloat_TotalCount.ValueData
+             ELSE MovementFloat_TotalCountPartner.ValueData
+             END                                        AS TotalCount
+
+
+--           , vbTotalCountKgIn                           AS TotalCountKgIn
+--           , vbTotalCountKgOut                          AS TotalCountKgOut
+
+           , CASE inReportType WHEN 0
+             THEN vbTotalCountKgOut
+             ELSE vbTotalCountKgIn
+             END                                        AS TotalCountKg
+
+--           , vbTotalCountShIn                           AS TotalCountShIn
+--           , vbTotalCountShOut                          AS TotalCountShOut
+
+           , CASE inReportType WHEN 0
+             THEN vbTotalCountShOut
+             ELSE vbTotalCountShIn
+             END                                        AS TotalCountSh
+
+--           , vbOperSumm_MVATIn                          AS TotalSummMVATIn
+--           , vbOperSumm_MVATOut                         AS TotalSummMVATOut
+           , CASE inReportType WHEN 0
+             THEN vbOperSumm_MVATOut
+             ELSE vbOperSumm_MVATIn
+             END                                        AS TotalSummMVAT
+
+
+--           , vbOperSumm_PVATIn                          AS TotalSummPVATIn
+--           , vbOperSumm_PVATOut                         AS TotalSummPVATOut
+           , CASE inReportType WHEN 0
+             THEN vbOperSumm_PVATOut
+             ELSE vbOperSumm_PVATIn
+             END                                        AS TotalSummPVAT
+
+
+--           , vbOperSumm_PVATIn - vbOperSumm_MVATIn      AS SummVATIn
+--           , vbOperSumm_PVATOut - vbOperSumm_MVATOut    AS SummVATOut
+
+           , CASE inReportType WHEN 0
+             THEN vbOperSumm_PVATOut - vbOperSumm_MVATOut
+             ELSE vbOperSumm_PVATIn  - vbOperSumm_MVATIn
+             END                                        AS SummVAT
+
+
+--           , vbOperSumm_PVATIn                          AS TotalSummIn
+--           , vbOperSumm_PVATOut                         AS TotalSummOut
+           , CASE inReportType WHEN 0
+             THEN vbOperSumm_PVATOut
+             ELSE vbOperSumm_PVATIn
+             END                                        AS TotalSumm
+
 -- Out
-           , vbTotalCountKgOut                          AS TotalCountKgOut
-           , vbTotalCountShOut                          AS TotalCountShOut
-           , vbOperSumm_MVATOut                         AS TotalSummMVATOut
-           , vbOperSumm_PVATOut                         AS TotalSummPVATOut
-           , vbOperSumm_PVATOut - vbOperSumm_MVATOut    AS SummVATOut
-           , vbOperSumm_PVATOut                         AS TotalSummOut
+
+
+
+
+
+
 
            , Object_From.ValueData             		    AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
@@ -619,8 +672,12 @@ BEGIN
                   WHEN zc_Measure_Sh() THEN 'PCE'
                   ELSE 'KGM'
              END::TVarChar                   AS DELIVEREDUNIT
-           , tmpMI.AmountOut                 AS AmountOut
-           , tmpMI.AmountIn                  AS AmountIn
+
+           , CASE inReportType
+                  WHEN 0 THEN tmpMI.AmountOut
+                  ELSE tmpMI.AmountIn
+             END                             AS Amount
+
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
@@ -632,6 +689,7 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
              -- сумма по ценам док-та
+/*
            , CASE WHEN tmpMI.CountForPrice <> 0
                        THEN CAST (tmpMI.AmountIn * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
                   ELSE CAST (tmpMI.AmountIn * tmpMI.Price AS NUMERIC (16, 2))
@@ -641,6 +699,21 @@ BEGIN
                        THEN CAST (tmpMI.AmountOut * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
                   ELSE CAST (tmpMI.AmountOut * tmpMI.Price AS NUMERIC (16, 2))
              END AS AmountSummOut
+*/
+           , CASE inReportType
+             WHEN 0
+             THEN
+                  CASE WHEN tmpMI.CountForPrice <> 0
+                       THEN CAST (tmpMI.AmountOut * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
+                  ELSE CAST (tmpMI.AmountOut * tmpMI.Price AS NUMERIC (16, 2))
+                  END
+             ELSE
+                  CASE WHEN tmpMI.CountForPrice <> 0
+                       THEN CAST (tmpMI.AmountIn * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
+                  ELSE CAST (tmpMI.AmountIn * tmpMI.Price AS NUMERIC (16, 2))
+                  END
+             END                             AS AmountSumm
+
 
 
              -- расчет цены без НДС, до 4 знаков
@@ -656,7 +729,7 @@ BEGIN
                   ELSE tmpMI.Price
              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceWVAT
-
+/*
              -- расчет суммы без НДС, до 2 знаков
            , CAST (tmpMI.AmountIn * CASE WHEN vbPriceWithVAT = TRUE
                                               THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100))
@@ -669,7 +742,26 @@ BEGIN
                                               ELSE tmpMI.Price
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 2)) AS AmountSummNoVATOut
+*/
+           , CASE inReportType
+             WHEN 0
+             THEN
+                   CAST (tmpMI.AmountIn * CASE WHEN vbPriceWithVAT = TRUE
+                                              THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100))
+                                              ELSE tmpMI.Price
+                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                   AS NUMERIC (16, 2))
 
+             ELSE
+                   CAST (tmpMI.AmountOut * CASE WHEN vbPriceWithVAT = TRUE
+                                              THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100))
+                                              ELSE tmpMI.Price
+                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                   AS NUMERIC (16, 2))
+
+             END                             AS AmountSummNoVAT
+
+/*
              -- расчет суммы с НДС, до 3 знаков
            , CAST (tmpMI.AmountIn * CASE WHEN vbPriceWithVAT <> TRUE
                                               THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
@@ -682,9 +774,41 @@ BEGIN
                                               ELSE tmpMI.Price
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 3)) AS AmountSummWVATOut
+*/
 
+
+           , CASE inReportType
+             WHEN 0
+             THEN
+                   CAST (tmpMI.AmountIn * CASE WHEN vbPriceWithVAT <> TRUE
+                                              THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
+                                              ELSE tmpMI.Price
+                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                   AS NUMERIC (16, 3))
+
+             ELSE
+                   CAST (tmpMI.AmountOut * CASE WHEN vbPriceWithVAT <> TRUE
+                                              THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
+                                              ELSE tmpMI.Price
+                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                   AS NUMERIC (16, 3))
+
+             END                             AS AmountSummWVAT
+
+/*
            , CAST ((tmpMI.AmountIn * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_WeightIn
            , CAST ((tmpMI.AmountOut * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_WeightOut
+*/
+           , CASE inReportType
+             WHEN 0
+             THEN
+                   CAST ((tmpMI.AmountIn * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)
+             ELSE
+                   CAST ((tmpMI.AmountOut * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)
+             END                             AS Amount_Weight
+
+
+
 --           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
@@ -756,13 +880,18 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_SendOnPrice_Print (Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.02.15                                                       *
  19.11.14                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendOnPrice_Print (inMovementId := 570596, inSession:= '5');
+/*
+BEGIN;
+ SELECT * FROM gpSelect_Movement_SendOnPrice_Print (inMovementId := 570596, inReportType := 0, inSession:= '5');
+COMMIT;
+*/
