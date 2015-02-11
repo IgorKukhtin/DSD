@@ -1,25 +1,25 @@
 inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076'>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitWidth = 1028
+  ClientWidth = 1280
+  ExplicitWidth = 1288
   ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1280
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1280
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1280
         Height = 518
         ExplicitWidth = 1020
         ExplicitHeight = 518
@@ -264,7 +264,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1280
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1020
@@ -396,12 +396,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 279
+      Left = 350
       Top = 45
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 279
+      Left = 350
       Top = 63
       Properties.Buttons = <
         item
@@ -411,7 +411,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 224
+      Width = 153
     end
     object cxLabel7: TcxLabel
       Left = 509
@@ -544,6 +544,20 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Properties.ReadOnly = True
       TabOrder = 35
       Width = 128
+    end
+    object edDayCount: TcxCurrencyEdit
+      Left = 279
+      Top = 63
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
+      TabOrder = 36
+      Width = 65
+    end
+    object cxLabel18: TcxLabel
+      Left = 279
+      Top = 45
+      Caption = #1044#1085'. '#1087#1088#1086#1075#1085#1086#1079
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1093,6 +1107,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftFloat
       end
       item
+        Name = 'DayCount'
+        Value = Null
+        Component = edDayCount
+        DataType = ftFloat
+      end
+      item
         Name = 'isPrinted'
         Value = Null
         Component = cbPrinted
@@ -1102,7 +1122,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_OrderExternal'
+    StoredProcName = 'gpInsertUpdate_Movement_OrderExternalUnit '
     Params = <
       item
         Name = 'ioId'
@@ -1161,6 +1181,13 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Name = 'inChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDayCount'
+        Value = Null
+        Component = edDayCount
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1709,7 +1736,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 392
+    Left = 432
     Top = 64
   end
   object GuidesPersonal: TdsdGuides

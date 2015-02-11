@@ -84,6 +84,8 @@ type
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
     cbPrinted: TcxCheckBox;
+    edDayCount: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
   private
     { Private declarations }
   public

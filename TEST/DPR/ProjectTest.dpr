@@ -423,7 +423,7 @@ uses
   PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm: TParentForm},
   Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
-  OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalUnitJournalForm: TParentForm},
+  OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
   OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   ProductionSeparate in '..\..\Forms\Document\ProductionSeparate.pas' {ProductionSeparateForm: TParentForm},
@@ -628,7 +628,7 @@ uses
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   OrderExternalUnit in '..\..\Forms\Document\OrderExternalUnit.pas' {OrderExternalUnitForm: TParentForm},
-  OrderExternalUnitJournal in '..\..\Forms\Document\OrderExternalUnitJournal.pas' {OrderExternalJournalForm: TParentForm};
+  OrderExternalUnitJournal in '..\..\Forms\Document\OrderExternalUnitJournal.pas' {OrderExternalUnitJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

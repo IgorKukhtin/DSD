@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TOrderExternalJournalForm = class(TAncestorJournalForm)
+  TOrderExternalUnitJournalForm = class(TAncestorJournalForm)
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -72,5 +72,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TOrderExternalJournalForm);
+  RegisterClass(TOrderExternalUnitJournalForm);
 end.

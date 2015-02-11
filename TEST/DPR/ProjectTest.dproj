@@ -1239,7 +1239,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderExternalJournal.pas">
-				<Form>OrderExternalUnitJournalForm</Form>
+				<Form>OrderExternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderExternal.pas">
@@ -1879,7 +1879,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderExternalUnitJournal.pas">
-				<Form>OrderExternalJournalForm</Form>
+				<Form>OrderExternalUnitJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
