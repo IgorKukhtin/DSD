@@ -7,22 +7,24 @@ inherited SendOnPriceForm: TSendOnPriceForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 878
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 878
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 878
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 874
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 878
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 872
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 878
-        Height = 518
-        ExplicitWidth = 878
-        ExplicitHeight = 518
+        Width = 872
+        Height = 514
+        ExplicitWidth = 872
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -238,7 +240,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 257
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 257
     end
     object cxLabel3: TcxLabel
@@ -359,10 +361,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
     object actPrintOut: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintOut
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintOut
         end>
       Caption = #1056#1072#1089#1093#1086#1076
       Hint = #1055#1077#1095#1072#1090#1100
@@ -383,9 +385,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'inReportType'
+          Value = '0'
         end>
-      ReportName = 'PrintMovement_SendOnPriceOut'
-      ReportNameParam.Value = 'PrintMovement_SendOnPriceOut'
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -412,8 +418,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_SendOnPriceIn'
-      ReportNameParam.Value = 'PrintMovement_SendOnPriceIn'
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -524,7 +530,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -674,6 +680,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'ReportTypeOut'
+        Value = '0'
+      end
+      item
+        Name = 'ReportTypeIn'
+        Value = '1'
       end>
     Left = 280
     Top = 552
@@ -1162,6 +1176,11 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inReportType'
+        Value = '1'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 319
@@ -1217,5 +1236,33 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptInput
       end>
     Left = 616
+  end
+  object spSelectPrintOut: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReportType'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 359
+    Top = 440
   end
 end

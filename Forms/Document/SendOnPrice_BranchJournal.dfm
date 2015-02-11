@@ -343,10 +343,10 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintOut
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintOut
         end>
       Caption = #1056#1072#1089#1093#1086#1076
       Hint = #1055#1077#1095#1072#1090#1100
@@ -368,8 +368,8 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_SendOnPriceOut'
-      ReportNameParam.Value = 'PrintMovement_SendOnPriceOut'
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -411,9 +411,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_SendOnPriceIn'
+      ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Name = #1055#1088#1080#1093#1086#1076
-      ReportNameParam.Value = 'PrintMovement_SendOnPriceIn'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -689,6 +689,11 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inReportType'
+        Value = '1'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 535
@@ -699,5 +704,33 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     Params = <>
     Left = 628
     Top = 294
+  end
+  object spSelectPrintOut: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReportType'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 359
+    Top = 440
   end
 end
