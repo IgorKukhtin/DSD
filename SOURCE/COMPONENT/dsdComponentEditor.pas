@@ -172,8 +172,7 @@ begin
   Proc('ftFloat');
   Proc('ftInteger');
   Proc('ftString');
-  Proc('ftBlob');
-
+  Proc('ftWideString');
 end;
 
 { TExcelGridProperty }

@@ -38,8 +38,10 @@ type
     spGetDataForSend: TdsdStoredProc;
     colTotalSummMVAT: TcxGridDBColumn;
     colNDSKindName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colPaymentDate: TcxGridDBColumn;
+    mactInsert: TMultiAction;
+    actReturnOutMovementInsert: TdsdExecStoredProc;
+    spInsertMovement: TdsdStoredProc;
+    actChoiceIncomeMovement: TOpenChoiceForm;
   private
     { Private declarations }
   public

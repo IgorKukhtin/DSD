@@ -626,7 +626,9 @@ uses
   Quality in '..\..\Forms\Guides\Quality.pas' {QualityForm: TParentForm},
   QualityEdit in '..\..\Forms\Guides\QualityEdit.pas' {QualityEditForm: TParentForm},
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
-  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm};
+  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
+  OrderExternalUnit in '..\..\Forms\Document\OrderExternalUnit.pas' {OrderExternalUnitForm: TParentForm},
+  OrderExternalUnitJournal in '..\..\Forms\Document\OrderExternalUnitJournal.pas' {OrderExternalUnitJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

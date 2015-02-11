@@ -779,6 +779,11 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\ReturnOutTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeJournalChoice.pas">
+				<Form>IncomeJournalChoiceForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

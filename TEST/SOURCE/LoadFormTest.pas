@@ -556,6 +556,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
+  // заявки на главный склад
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendDebtFormTest;
