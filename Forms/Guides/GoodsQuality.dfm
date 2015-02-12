@@ -2,8 +2,8 @@ object GoodsQualityForm: TGoodsQualityForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103'>'
-  ClientHeight = 367
-  ClientWidth = 990
+  ClientHeight = 344
+  ClientWidth = 1039
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,16 @@ object GoodsQualityForm: TGoodsQualityForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 990
-    Height = 341
+    Width = 1039
+    Height = 318
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -8
+    ExplicitWidth = 990
+    ExplicitHeight = 341
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -61,7 +64,7 @@ object GoodsQualityForm: TGoodsQualityForm
         DataBinding.FieldName = 'QualityCode'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 66
+        Width = 48
       end
       object clQualityName: TcxGridDBColumn
         Caption = #1050#1072#1095'.'#1091#1076#1086#1089#1090'.'
@@ -75,7 +78,7 @@ object GoodsQualityForm: TGoodsQualityForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 72
       end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
@@ -89,14 +92,14 @@ object GoodsQualityForm: TGoodsQualityForm
           end>
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 91
+        Width = 65
       end
       object clGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 40
       end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -111,67 +114,73 @@ object GoodsQualityForm: TGoodsQualityForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 99
+        Width = 72
       end
       object clValue1: TcxGridDBColumn
-        Caption = #8470' 4'
+        Caption = #1042#1080#1076' '#1086#1073#1086#1083#1086#1085#1082#1080', '#1082#1086#1083#1086#1085#1082#1072' 4'
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentVert = vaCenter
-        Width = 48
+        Width = 51
       end
       object clValue2: TcxGridDBColumn
-        Caption = #8470'6'
+        Caption = #1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103', '#1082#1086#1083#1086#1085#1082#1072' 6'
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentVert = vaCenter
         Width = 49
       end
       object clValue3: TcxGridDBColumn
-        Caption = #8470' 7'
+        Caption = #1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075'. '#1074' '#1075#1072#1079'.'#1089#1077#1088#1077#1076'.('#1092#1083#1072#1091#1087#1072#1082'), '#1082#1086#1083#1086#1085#1082#1072' 7'
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentVert = vaCenter
-        Width = 46
+        Width = 63
       end
       object clValue4: TcxGridDBColumn
-        Caption = #8470' 8'
+        Caption = #1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1074' '#1075#1072#1079'.'#1089#1077#1088#1077#1076#1086#1074#1080#1097', '#1082#1086#1083#1086#1085#1082#1072' 8'
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentVert = vaCenter
-        Width = 46
+        Width = 57
       end
       object clValue5: TcxGridDBColumn
-        Caption = #8470' 10'
+        Caption = #1042#1072#1082#1091#1091#1084#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1072' - '#1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1094#1110#1083#1080#1084' '#1074#1080#1088#1086#1073#1086#1084', '#1082#1086#1083#1086#1085#1082#1072' 10'
         DataBinding.FieldName = 'Value5'
         HeaderAlignmentVert = vaCenter
-        Width = 47
+        Width = 67
       end
       object clValue6: TcxGridDBColumn
-        Caption = #8470' 11'
+        Caption = 
+          #1042#1072#1082#1091#1091#1084#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1072' - '#1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1087#1086#1088#1094#1110#1081#1085#1072' '#1085#1072#1088#1110#1079#1082#1072', '#1082#1086#1083#1086#1085#1082#1072' ' +
+          '11'
         DataBinding.FieldName = 'Value6'
         HeaderAlignmentVert = vaCenter
-        Width = 51
+        Width = 71
       end
       object clValue7: TcxGridDBColumn
-        Caption = #8470' 12'
+        Caption = 
+          #1042#1072#1082#1091#1091#1084#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1072' - '#1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1089#1077#1088#1074#1077#1088#1091#1074#1072#1083#1100#1085#1072' '#1085#1072#1088#1110#1079#1082#1072', '#1082#1086#1083 +
+          #1086#1085#1082#1072' 12'
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentVert = vaCenter
-        Width = 48
+        Width = 87
       end
       object clValue8: TcxGridDBColumn
-        Caption = #8470' 14'
+        Caption = 
+          #1058#1077#1084#1087#1077#1088#1072#1090#1091#1088#1072' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1074' '#1074#1072#1082#1091#1091#1084#1110' '#1090#1072' '#1084#1086#1076#1080#1092#1110#1082#1086#1074#1072#1085#1086#1084#1091' '#1075#1072#1079#1086#1074#1086#1084#1091' '#1089#1077#1088#1077 +
+          #1076#1086#1074#1080#1097#1110', '#1082#1086#1083#1086#1085#1082#1072' 14'
         DataBinding.FieldName = 'Value8'
         HeaderAlignmentVert = vaCenter
-        Width = 46
+        Width = 90
       end
       object clValue9: TcxGridDBColumn
-        Caption = #8470' 15'
+        Caption = #1058#1077#1084#1087#1077#1088#1072#1090#1091#1088#1072' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1074' '#1075#1072#1079#1086#1074#1086#1084#1091' '#1089#1077#1088#1077#1076#1086#1074#1080#1097#1110', '#1082#1086#1083#1086#1085#1082#1072' 15'
         DataBinding.FieldName = 'Value9'
         HeaderAlignmentVert = vaCenter
-        Width = 47
+        Width = 75
       end
       object clValue10: TcxGridDBColumn
-        Caption = #8470' 16'
+        Caption = #1059#1084#1086#1074#1080' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103', '#1082#1086#1083#1086#1085#1082#1072' 16'
         DataBinding.FieldName = 'Value10'
         HeaderAlignmentVert = vaCenter
-        Width = 39
+        Width = 58
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -185,19 +194,19 @@ object GoodsQualityForm: TGoodsQualityForm
         Width = 58
       end
       object clName: TcxGridDBColumn
-        Caption = #8470' 17'
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1043#1054#1057#1058', '#1044#1057#1058#1059','#1058#1059', '#1082#1086#1083#1086#1085#1082#1072' 17'
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 96
+        Width = 58
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object ceInfoMoney: TcxButtonEdit
-    Left = 255
-    Top = 69
+  object ceQuality: TcxButtonEdit
+    Left = 522
+    Top = 157
     Properties.Buttons = <
       item
         Default = True
@@ -207,9 +216,9 @@ object GoodsQualityForm: TGoodsQualityForm
     Width = 154
   end
   object cxLabel6: TcxLabel
-    Left = 127
-    Top = 70
-    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+    Left = 355
+    Top = 158
+    Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077':'
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -240,8 +249,8 @@ object GoodsQualityForm: TGoodsQualityForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -353,7 +362,7 @@ object GoodsQualityForm: TGoodsQualityForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = ceInfoMoney
+      Control = ceQuality
     end
   end
   object ActionList: TActionList
@@ -506,7 +515,7 @@ object GoodsQualityForm: TGoodsQualityForm
       item
         Name = 'inInfoMoney'
         Value = Null
-        Component = dsdInfoMoneyGuides
+        Component = dsdQualityGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -678,40 +687,40 @@ object GoodsQualityForm: TGoodsQualityForm
     Left = 128
     Top = 296
   end
-  object dsdInfoMoneyGuides: TdsdGuides
+  object dsdQualityGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    LookupControl = ceQuality
+    FormNameParam.Value = 'TQualityForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TQualityForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = dsdInfoMoneyGuides
+        Component = dsdQualityGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = dsdInfoMoneyGuides
+        Component = dsdQualityGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 416
-    Top = 67
+    Left = 528
+    Top = 187
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = dsdInfoMoneyGuides
+        Component = dsdQualityGuides
       end
       item
         Component = actShowAll
       end>
-    Left = 752
-    Top = 112
+    Left = 736
+    Top = 160
   end
 end

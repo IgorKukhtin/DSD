@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_GoodsQuality (Integer, Boolean,TVarChar)
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsQuality(
-    IN inInfoMoney   Integer  , 
+    IN inQuality     Integer  , 
     IN inShowAll     Boolean  , 
     IN inSession     TVarChar        -- сессия пользователя
 )
@@ -43,10 +43,10 @@ BEGIN
                           , Object_GoodsGroup.ValueData AS GoodsGroupName 
                           
                      FROM Object AS Object_Goods
-                          JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                          /*JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                          ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                                         AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                        AND (ObjectLink_Goods_InfoMoney.ChildObjectId = inInfoMoney OR inInfoMoney = 0)
+                                        AND (ObjectLink_Goods_InfoMoney.ChildObjectId = inInfoMoney OR inInfoMoney = 0)*/
                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -121,10 +121,11 @@ BEGIN
                           AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
            JOIN tmpGoods AS Object_Goods ON Object_Goods.GoodsId = GoodsQuality_Goods.ChildObjectId  
            
-           LEFT JOIN ObjectLink AS GoodsQuality_Quality
+           INNER JOIN ObjectLink AS GoodsQuality_Quality
                                 ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
                                AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
-           LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId      
+                               AND (GoodsQuality_Quality.ChildObjectId = inQuality OR inQuality = 0)
+           INNER JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId      
                    
    WHERE Object_GoodsQuality.DescId = zc_Object_GoodsQuality()
      AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
@@ -141,10 +142,10 @@ ELSE
                           , Object_GoodsGroup.ValueData AS GoodsGroupName 
                           
                      FROM Object AS Object_Goods
-                          JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                         /* JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                          ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                                         AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                        AND (ObjectLink_Goods_InfoMoney.ChildObjectId = inInfoMoney OR inInfoMoney = 0)
+                                        AND (ObjectLink_Goods_InfoMoney.ChildObjectId = inInfoMoney OR inInfoMoney = 0)*/
                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -222,9 +223,10 @@ ELSE
                                ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id 
                               AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
                               
-           LEFT JOIN ObjectLink AS GoodsQuality_Quality
+           LEFT  JOIN ObjectLink AS GoodsQuality_Quality
                                 ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
                                AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
+                               AND (GoodsQuality_Quality.ChildObjectId = inQuality OR inQuality = 0 OR Coalesce (GoodsQuality_Quality.ChildObjectId,0)=0 )
            LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId   
                        
    WHERE tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll
@@ -243,6 +245,7 @@ ALTER FUNCTION gpSelect_Object_GoodsQuality (Integer, Boolean, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.02.15         * change inInfomoney на inQuality 
  09.02.15         * add Object_Quality               
  08.12.14         *            
 
