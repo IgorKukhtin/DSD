@@ -27,9 +27,6 @@ object GoodsQualityForm: TGoodsQualityForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -8
-    ExplicitWidth = 990
-    ExplicitHeight = 341
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -513,10 +510,9 @@ object GoodsQualityForm: TGoodsQualityForm
       end>
     Params = <
       item
-        Name = 'inInfoMoney'
+        Name = 'inQualityId'
         Value = Null
         Component = dsdQualityGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item

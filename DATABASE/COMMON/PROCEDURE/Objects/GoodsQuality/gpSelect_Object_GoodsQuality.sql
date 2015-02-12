@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_GoodsQuality (Integer, Boolean,TVarChar)
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsQuality(
-    IN inQuality     Integer  , 
+    IN inQualityId     Integer  , 
     IN inShowAll     Boolean  , 
     IN inSession     TVarChar        -- сессия пользователя
 )
@@ -124,7 +124,7 @@ BEGIN
            INNER JOIN ObjectLink AS GoodsQuality_Quality
                                 ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
                                AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
-                               AND (GoodsQuality_Quality.ChildObjectId = inQuality OR inQuality = 0)
+                               AND (GoodsQuality_Quality.ChildObjectId = inQualityId OR inQualityId = 0)
            INNER JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId      
                    
    WHERE Object_GoodsQuality.DescId = zc_Object_GoodsQuality()
@@ -226,7 +226,7 @@ ELSE
            LEFT  JOIN ObjectLink AS GoodsQuality_Quality
                                 ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
                                AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
-                               AND (GoodsQuality_Quality.ChildObjectId = inQuality OR inQuality = 0 OR Coalesce (GoodsQuality_Quality.ChildObjectId,0)=0 )
+                               AND (GoodsQuality_Quality.ChildObjectId = inQualityId OR inQualityId = 0 OR Coalesce (GoodsQuality_Quality.ChildObjectId,0)=0 )
            LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId   
                        
    WHERE tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll
@@ -245,7 +245,7 @@ ALTER FUNCTION gpSelect_Object_GoodsQuality (Integer, Boolean, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 12.02.15         * change inInfomoney на inQuality 
+ 12.02.15         * change inInfomoney на inQualityId
  09.02.15         * add Object_Quality               
  08.12.14         *            
 
