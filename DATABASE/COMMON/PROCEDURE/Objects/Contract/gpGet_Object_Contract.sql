@@ -36,6 +36,10 @@ RETURNS TABLE (Id Integer, Code Integer
              , isPersonal Boolean
              , isUnique Boolean
              
+             , PriceListId Integer, PriceListName TVarChar
+             , PriceListPromoId Integer, PriceListPromoName TVarChar
+             , StartPromo TDateTime, EndPromo TDateTime
+             
              , isErased Boolean
               )
 AS
@@ -107,6 +111,15 @@ BEGIN
            , CAST (false as Boolean)  AS isPersonal 
            , CAST (false as Boolean)  AS isUnique
 
+           , CAST (0 as Integer)    AS PriceListId 
+           , CAST ('' as TVarChar)  AS PriceListName 
+
+           , CAST (0 as Integer)    AS PriceListPromoId 
+           , CAST ('' as TVarChar)  AS PriceListPromoName 
+       
+           , CURRENT_DATE :: TDateTime AS StartPromo
+           , CURRENT_DATE :: TDateTime AS EndPromo
+
            , NULL :: Boolean  AS isErased
 
        FROM Object AS Object_PaidKind
@@ -176,6 +189,15 @@ BEGIN
 
            , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
            , COALESCE (ObjectBoolean_Unique.ValueData, False)  AS isUnique
+           
+           , Object_PriceList.Id         AS PriceListId 
+           , Object_PriceList.ValueData  AS PriceListName 
+
+           , Object_PriceListPromo.Id         AS PriceListPromoId 
+           , Object_PriceListPromo.ValueData  AS PriceListPromoName 
+       
+           , COALESCE (ObjectDate_StartPromo.ValueData,CAST (CURRENT_DATE as TDateTime)) AS StartPromo
+           , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo            
 
            , Object_Contract_View.isErased
 
@@ -265,7 +287,23 @@ BEGIN
                                  ON ObjectLink_Contract_JuridicalDocument.ObjectId = Object_Contract_View.ContractId 
                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
             LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_StartPromo
+                                 ON ObjectDate_StartPromo.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Contract_StartPromo()
+            LEFT JOIN ObjectDate AS ObjectDate_EndPromo
+                                 ON ObjectDate_EndPromo.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Contract_EndPromo()
                                 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                 ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
+                                 ON ObjectLink_Contract_PriceListPromo.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
+            LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Contract_PriceListPromo.ChildObjectId
+
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
@@ -285,6 +323,8 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.02.15         * add StartPromo, EndPromo,
+                        PriceList, PriceListPromo
  16.01.15         * add JuridicalDocument
  10.11.14         * add GLNCode
  07.11.14         * AreaContract

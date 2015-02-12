@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 
 
@@ -43,6 +44,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
 
     IN inisPersonal          Boolean  ,     -- Служебная записка
     IN inisUnique            Boolean  ,     -- Без группировки 
+
+    IN inPriceListId         Integer   ,    -- Прайс-лист
+    IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
+    IN inStartPromo          TDateTime ,    -- Дата начала акции
+    IN inEndPromo            TDateTime ,    -- Дата окончания акции
 
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -218,6 +224,17 @@ BEGIN
    -- сохранили связь с <Банк>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Bank(), ioId, inBankId);
    
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceList(), ioId, inPriceListId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceListPromo(), ioId, inPriceListPromoId);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_StartPromo(), ioId, inStartPromo);
+      -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_EndPromo(), ioId, inEndPromo);
+   
+   
      -- !!!обязательно!!! сформировали ключ
     PERFORM lpInsertFind_Object_ContractKey (inJuridicalId_basis:= inJuridicalBasisId
                                            , inJuridicalId      := inJuridicalId
@@ -238,6 +255,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.02.15         * add StartPromo, EndPromo,
+                        PriceList, PriceListPromo
  16.01.15         * add JuridicalDocument
  10.11.14         * add GLNCode               
  07.11.14         * замана Area  на AreaContract

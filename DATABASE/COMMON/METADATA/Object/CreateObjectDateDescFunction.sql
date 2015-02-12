@@ -85,8 +85,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_ServiceDate_Value() RETURNS Integer AS 
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ServiceDate(), 'zc_ObjectDate_ServiceDate_Value', 'Значение' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ServiceDate_Value');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Contract_StartPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Contract_StartPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Contract(), 'zc_ObjectDate_Contract_StartPromo', 'Дата начала акции' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Contract_StartPromo');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Contract_EndPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Contract_EndPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Contract(), 'zc_ObjectDate_Contract_EndPromo', 'Дата окончания акции' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Contract_EndPromo');
+
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.02.15         * add zc_ObjectDate_Contract_StartPromo
+                        zc_ObjectDate_Contract_EndPromo
  04.09.14                                                        *
  21.07.14                      	                 * add zc_ObjectDate_Contract_Document
  01.05.14                      	                 * add zc_ObjectDate_InvNumberTax_Value
