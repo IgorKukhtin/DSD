@@ -40,6 +40,7 @@ type
     colNDSKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
     colPaymentDate: TcxGridDBColumn;
+    colPaySumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

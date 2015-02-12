@@ -108,7 +108,7 @@ end;
 
 procedure TOLAPSalesForm.hpReportTerminate;
 begin
-  FMaxRecordCount := 1000000;
+  FMaxRecordCount := 100000000;
   if MasterCDS.RecordCount * MasterCDS.FieldCount > FMaxRecordCount then begin
      ShowMessage('Количество записей выбранных Вами: ' + IntToStr(MasterCDS.RecordCount * MasterCDS.FieldCount) +
                     #13' Измените условия');

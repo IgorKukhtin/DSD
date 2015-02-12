@@ -2,6 +2,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 469
   ClientWidth = 807
+  ExplicitLeft = -25
   ExplicitWidth = 815
   ExplicitHeight = 496
   PixelsPerInch = 96
@@ -169,12 +170,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 136
           end
-          object colPaymentDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaymentDate'
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
@@ -207,7 +202,20 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentVert = vaCenter
-            Width = 56
+            Width = 50
+          end
+          object colPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object colPaySumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+            DataBinding.FieldName = 'PaySumm'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end

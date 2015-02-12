@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ToId Integer, ToName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , ContractId Integer, ContractName TVarChar
-             , PaymentDate TDateTime
+             , PaymentDate TDateTime, PaySumm TFloat
               )
 
 AS
@@ -58,7 +58,8 @@ BEGIN
            , Movement_Income_View.NDSKindName
            , Movement_Income_View.ContractId
            , Movement_Income_View.ContractName
-           , Movement_Income_View.PaymentDate 
+           , Movement_Income_View.PaymentDate
+           , Movement_Income_View.PaySumm
        FROM Movement_Income_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
              WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate;
@@ -73,6 +74,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.02.15                        *
  23.12.14                        *
  15.07.14                                                        *
  10.07.14                                                        *

@@ -435,6 +435,7 @@ begin
         if DataSets[i].DataSet is TClientDataSet then begin
 //          TClientDataSet(DataSets[i].DataSet).XMLData := XMLResult[i];
            FStringStream := TStringStream.Create(XMLResult[i]);
+           XMLResult[i] := '';
            try
               TClientDataSet(DataSets[i].DataSet).LoadFromStream(FStringStream);
            finally
