@@ -19,9 +19,9 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 986
-    Height = 436
+    Height = 438
     Align = alClient
     TabOrder = 4
     object cxGridDBTableView: TcxGridDBTableView
@@ -52,12 +52,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
       object colCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 45
@@ -73,6 +75,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
@@ -87,55 +90,64 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object colMeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 30
+        Width = 45
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
       object ceAmount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090#1091#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
         DataBinding.FieldName = 'Amount'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object ceBarCode: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
         DataBinding.FieldName = 'BarCode'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object clArticle: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'Article'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object clBarCodeGLN: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' GLN'
         DataBinding.FieldName = 'BarCodeGLN'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object clArticleGLN: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
         DataBinding.FieldName = 'ArticleGLN'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object GroupName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
         DataBinding.FieldName = 'GroupName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
@@ -144,6 +156,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
@@ -181,8 +194,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -200,7 +213,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -231,17 +244,13 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExel'
         end
         item
           Visible = True
@@ -250,6 +259,18 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0

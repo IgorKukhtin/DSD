@@ -1,57 +1,49 @@
-п»ї-- Function: gpInsertUpdate_Object_GoodsProperty()
+-- Function: gpInsertUpdate_Object_GoodsProperty()
 
--- DROP FUNCTION gpInsertUpdate_Object_GoodsProperty();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsProperty(
- INOUT ioId                  Integer   ,   	-- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РљР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ СЃРІРѕР№СЃС‚РІ С‚РѕРІР°СЂРѕРІ> 
-    IN inCode                Integer   ,    -- РљРѕРґ РѕР±СЉРµРєС‚Р° <РљР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ СЃРІРѕР№СЃС‚РІ С‚РѕРІР°СЂРѕРІ> 
-    IN inName                TVarChar  ,    -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РљР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ СЃРІРѕР№СЃС‚РІ С‚РѕРІР°СЂРѕРІ> 
-    IN inSession             TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId                  Integer   ,   	-- ключ объекта <Классификатор свойств товаров> 
+    IN inCode                Integer   ,    -- Код объекта <Классификатор свойств товаров> 
+    IN inName                TVarChar  ,    -- Название объекта <Классификатор свойств товаров> 
+    IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
-   
+   DECLARE vbUserId Integer;
+
+   DECLARE vbCode Integer;  
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_GoodsProperty());
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsProperty());
-   UserId := inSession;
-
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Route();
-   ELSE
-       Code_max := inCode;
-   END IF; 
+   -- !!! Если код не установлен, определяем его каи последний+1
+   vbCode:= lfGet_ObjectCode (inCode, zc_Object_GoodsProperty());
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ РљР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°>
+   -- проверка прав уникальности для свойства <Наименование Классификатора>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsProperty(), inName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ РљР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsProperty(), Code_max);
+   -- проверка прав уникальности для свойства <Код Классификатора>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsProperty(), vbCode);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>  
+   -- сохранили <Объект>  
    ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsProperty(), inCode, inName);
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
     
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsProperty(Integer, Integer, TVarChar, TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TVarChar)  OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.02.15                                        *
  12.06.13          *
- 00.06.13          
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_GoodsProperty()

@@ -56,11 +56,40 @@ object GoodsQualityForm: TGoodsQualityForm
         Options.Editing = False
         Width = 37
       end
-      object clName: TcxGridDBColumn
-        Caption = #8470' 17'
-        DataBinding.FieldName = 'Name'
+      object clQualityCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1082#1072#1095'.'#1091#1076#1086#1089#1090
+        DataBinding.FieldName = 'QualityCode'
         HeaderAlignmentVert = vaCenter
-        Width = 96
+        Options.Editing = False
+        Width = 66
+      end
+      object clQualityName: TcxGridDBColumn
+        Caption = #1050#1072#1095'.'#1091#1076#1086#1089#1090'.'
+        DataBinding.FieldName = 'QualityName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = QualityChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object clGoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsGroupName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = GoodsChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 91
       end
       object clGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
@@ -83,41 +112,6 @@ object GoodsQualityForm: TGoodsQualityForm
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         Width = 99
-      end
-      object clGoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsGroupName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = GoodsChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 91
-      end
-      object clQualityCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1082#1072#1095'.'#1091#1076#1086#1089#1090
-        DataBinding.FieldName = 'QualityCode'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 66
-      end
-      object clQualityName: TcxGridDBColumn
-        Caption = #1050#1072#1095'.'#1091#1076#1086#1089#1090'.'
-        DataBinding.FieldName = 'QualityName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = QualityChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 100
       end
       object clValue1: TcxGridDBColumn
         Caption = #8470' 4'
@@ -190,14 +184,20 @@ object GoodsQualityForm: TGoodsQualityForm
         Options.Editing = False
         Width = 58
       end
+      object clName: TcxGridDBColumn
+        Caption = #8470' 17'
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
   object ceInfoMoney: TcxButtonEdit
-    Left = 407
-    Top = 130
+    Left = 255
+    Top = 69
     Properties.Buttons = <
       item
         Default = True
@@ -207,8 +207,8 @@ object GoodsQualityForm: TGoodsQualityForm
     Width = 154
   end
   object cxLabel6: TcxLabel
-    Left = 407
-    Top = 94
+    Left = 127
+    Top = 70
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
   end
   object DataSource: TDataSource
@@ -240,8 +240,8 @@ object GoodsQualityForm: TGoodsQualityForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -273,6 +273,10 @@ object GoodsQualityForm: TGoodsQualityForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbRefresh'
@@ -307,7 +311,7 @@ object GoodsQualityForm: TGoodsQualityForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -450,10 +454,10 @@ object GoodsQualityForm: TGoodsQualityForm
         item
           StoredProc = dsdStoredProc
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
+      ImageIndex = 62
+      Value = True
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
@@ -695,8 +699,8 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 464
-    Top = 115
+    Left = 416
+    Top = 67
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh

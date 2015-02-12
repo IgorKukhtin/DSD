@@ -21,8 +21,7 @@ $BODY$
    DECLARE vbUserId Integer;
  BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
-   vbUserId:= lpGetUserBySession (inSession);
+   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_GoodsPropertyValue());
 
    ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsPropertyValue(), 0, inName);
 
@@ -53,11 +52,11 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.02.15                                        *
  10.10.14                                                       *
  12.06.13          *
 */

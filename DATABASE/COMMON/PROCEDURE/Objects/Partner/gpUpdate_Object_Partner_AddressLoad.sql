@@ -308,26 +308,27 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
       END IF;
 
        -- 
-       PERFORM gpInsertUpdate_Object_Juridical (ioId               = Id
-                                              , inCode             = Code
-                                              , inName             = Name
-                                              , inGLNCode          = GLNCode
-                                              , inisCorporate      = isCorporate
-                                              , inJuridicalGroupId = JuridicalGroupId
-                                              , inGoodsPropertyId  = GoodsPropertyId
-                                              , inRetailId         = RetailId
-                                              , inRetailReportId   = RetailReportId
-                                              , inInfoMoneyId      = InfoMoneyId
-                                              , inPriceListId      = PriceListId
-                                              , inPriceListPromoId = PriceListPromoId
-                                              , inStartPromo       = StartPromo
-                                              , inEndPromo         = EndPromo
-                                              , inSession          = inSession
+       PERFORM gpInsertUpdate_Object_Juridical (ioId               := tmp.Id
+                                              , inCode             := tmp.Code
+                                              , inName             := tmp.Name
+                                              , inGLNCode          := tmp.GLNCode
+                                              , inisCorporate      := isCorporate
+                                              , inJuridicalGroupId := tmp.JuridicalGroupId
+                                              , inGoodsPropertyId  := tmp.GoodsPropertyId
+                                              , inRetailId         := tmp.RetailId
+                                              , inRetailReportId   := tmp.RetailReportId
+                                              , inInfoMoneyId      := tmp.InfoMoneyId
+                                              , inPriceListId      := tmp.PriceListId
+                                              , inPriceListPromoId := tmp.PriceListPromoId
+                                              , inStartPromo       := tmp.StartPromo
+                                              , inEndPromo         := tmp.EndPromo
+                                              , inSession          := inSession
                                                )
-       FROM gpGet_Object_Juridical (inId      = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
-                                  , inName    = ''
-                                  , inSession = inSession
-                                   ) AS tmp;
+       FROM gpGet_Object_Juridical (inId      := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
+                                  , inName    := ''
+                                  , inSession := inSession
+                                   ) AS tmp
+       WHERE tmp.Id <> 0;
    END IF;
 
 
