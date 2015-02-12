@@ -11,17 +11,17 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Width = 1280
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1280
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1280
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1280
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1280
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1280
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -267,7 +267,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Width = 1280
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1280
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -550,7 +550,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 36
       Width = 65
     end
@@ -690,7 +690,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Top = 512
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_OrderExternal'
+    StoredProcName = 'gpSelect_MovementItem_OrderExternalUnit'
     Params = <
       item
         Name = 'inMovementId'
