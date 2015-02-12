@@ -33,7 +33,7 @@ $doc = new DOMDocument('1.0','windows-1251');
 $doc->loadXML($_POST["XML"]);
 
 $Session = $doc->documentElement->getAttribute('Session');
-$AutoWidht = ($doc->documentElement->getAttribute('AutoWidht') == 'true');
+$AutoWidht = ($doc->documentElement->getAttribute('AutoWidth') == 'true');
 $StoredProcNode = $doc->documentElement->firstChild;
 $StoredProcName = $StoredProcNode->nodeName;
 $OutputType = $StoredProcNode->getAttribute('OutputType');

@@ -24,6 +24,7 @@ SELECT       Movement.Id                                AS Id
            , MovementLinkObject_Contract.ObjectId       AS ContractId
            , Object_Contract.ValueData                  AS ContractName
            , MovementDate_Payment.ValueData             AS PaymentDate
+           , Container.Amount                           AS PaySumm
 
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -76,6 +77,14 @@ SELECT       Movement.Id                                AS Id
                                       ON MovementDate_Payment.MovementId =  Movement.Id
                                      AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
 
+            -- Партия накладной
+            LEFT JOIN Object AS Object_Movement
+                             ON Object_Movement.ObjectCode = Movement.Id 
+                            AND Object_Movement.DescId = zc_Object_PartionMovement()
+
+            LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
+                               AND Container.ObjectId = Object_Movement.Id
+
            WHERE Movement.DescId = zc_Movement_Income();
 
 ALTER TABLE Movement_Income_View
@@ -85,6 +94,7 @@ ALTER TABLE Movement_Income_View
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.02.15                        * 
  04.02.15                        * 
  12.01.15                        * 
  12.09.14                        * 

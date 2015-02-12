@@ -148,6 +148,7 @@ object OLAPSalesForm: TOLAPSalesForm
         ParamType = ptInput
       end>
     PackSize = 1
+    AutoWidth = True
     Left = 80
     Top = 16
   end

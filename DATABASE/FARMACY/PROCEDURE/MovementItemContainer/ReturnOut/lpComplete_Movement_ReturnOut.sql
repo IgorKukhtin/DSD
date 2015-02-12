@@ -1,8 +1,8 @@
- -- Function: lpComplete_Movement_Income (Integer, Integer)
+ -- Function: lpComplete_Movement_ReturnOut (Integer, Integer)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_Income (Integer, Integer);
+DROP FUNCTION IF EXISTS lpComplete_Movement_ReturnOut (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_Income(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_ReturnOut(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )                              
@@ -27,22 +27,23 @@ BEGIN
    -- Проводки по суммам документа
    
    INSERT INTO _tmpItem(ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate)   
-   SELECT Movement_Income_View.FromId
-        , Movement_Income_View.TotalSumm
+   SELECT Movement_ReturnOut_View.ToId
+        , Movement_ReturnOut_View.TotalSumm
         , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000()
                                      , inAccountDirectionId     := zc_Enum_AccountDirection_70100()
                                      , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200()
                                      , inInfoMoneyId            := NULL
                                      , inUserId                 := inUserId)
-        , Movement_Income_View.JuridicalId
-        , Movement_Income_View.OperDate
-     FROM Movement_Income_View
-    WHERE Movement_Income_View.Id =  inMovementId;
+        , Movement_ReturnOut_View.JuridicalId
+        , Movement_ReturnOut_View.OperDate
+     FROM Movement_ReturnOut_View
+    WHERE Movement_ReturnOut_View.Id =  inMovementId;
     
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
+
          SELECT 
                 zc_Container_Summ()
-              , zc_Movement_Income()  
+              , zc_Movement_ReturnOut()  
               , inMovementId
               , lpInsertFind_Container(
                           inContainerDescId := zc_Container_Summ(), -- DescId Остатка
@@ -55,31 +56,32 @@ BEGIN
                           inDescId_1          := zc_ContainerLinkObject_Juridical(), -- DescId для 1-ой Аналитики
                           inObjectId_1        := _tmpItem.ObjectId) 
               , AccountId
-              , - OperSumm
+              , OperSumm
               , OperDate
            FROM _tmpItem;
                  
            SELECT SUM(OperSumm) INTO vbOperSumm_Partner
              FROM _tmpItem;
+
     -- Сумма платежа
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
          SELECT 
                 zc_Container_SummIncomeMovementPayment()
-              , zc_Movement_Income()  
+              , zc_Movement_ReturnOut()  
               , inMovementId
               , lpInsertFind_Container(
                           inContainerDescId := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
                           inParentId        := NULL               , -- Главный Container
-                          inObjectId := lpInsertFind_Object_PartionMovement(inMovementId), -- Объект (Счет или Товар или ...)
+                          inObjectId := lpInsertFind_Object_PartionMovement(Movement_ReturnOut_View.MovementIncomeId), -- Объект (Счет или Товар или ...)
                           inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
                           inBusinessId := NULL, -- Бизнесы
                           inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
                           inObjectCostId       := NULL) -- <элемент с/с> - необычная аналитика счета) 
               , null
-              , OperSumm
-              , OperDate
-           FROM _tmpItem;
-
+              , - OperSumm
+              , _tmpItem.OperDate
+           FROM _tmpItem, Movement_ReturnOut_View
+         WHERE Movement_ReturnOut_View.Id =  inMovementId;
                  
  /*    CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat
                                , MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, ContainerId_Diff Integer, ProfitLossId_Diff Integer
@@ -96,26 +98,26 @@ BEGIN
    DELETE FROM _tmpItem;
    INSERT INTO _tmpItem(MovementDescId, MovementItemId, ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate, UnitId)   
    SELECT
-          zc_Movement_Income()
-        , MovementItem_Income_View.Id
-        , MovementItem_Income_View.GoodsId
-        , MovementItem_Income_View.Amount
+          zc_Movement_ReturnOut()
+        , MovementItem_ReturnOut_View.Id
+        , MovementItem_ReturnOut_View.GoodsId
+        , MovementItem_ReturnOut_View.Amount
         , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
                                      , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
                                      , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
                                      , inInfoMoneyId            := NULL
                                      , inUserId                 := inUserId)
-        , Movement_Income_View.JuridicalId
-        , Movement_Income_View.OperDate
-        , Movement_Income_View.ToId
-     FROM MovementItem_Income_View, Movement_Income_View
-    WHERE MovementItem_Income_View.MovementId = Movement_Income_View.Id AND Movement_Income_View.Id =  inMovementId;
+        , Movement_ReturnOut_View.JuridicalId
+        , Movement_ReturnOut_View.OperDate
+        , Movement_ReturnOut_View.FromId
+     FROM MovementItem_ReturnOut_View, Movement_ReturnOut_View
+    WHERE MovementItem_ReturnOut_View.MovementId = Movement_ReturnOut_View.Id AND Movement_ReturnOut_View.Id =  inMovementId;
 
     -- А сюда товары
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
          SELECT 
                 zc_Container_Count()
-              , zc_Movement_Income()  
+              , zc_Movement_ReturnOut()  
               , inMovementId
               , _tmpItem.MovementItemId
               , lpInsertFind_Container(
@@ -129,7 +131,7 @@ BEGIN
                           inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
                           inObjectId_1        := _tmpItem.UnitId) 
               , AccountId
-              , OperSumm
+              , - OperSumm
               , OperDate
            FROM _tmpItem;
    
@@ -144,7 +146,7 @@ BEGIN
          SELECT 
                 0
               , zc_Container_Summ()
-              , zc_Movement_Income()  
+              , zc_Movement_ReturnOut()  
               , inMovementId
               , _tmpItem.MovementItemId
               , lpInsertFind_Container(
@@ -161,17 +163,17 @@ BEGIN
                           inObjectId_2        := _tmpItem.UnitId) 
               , nULL
               , _tmpItem.AccountId
-              ,  CASE WHEN Movement_Income_View.PriceWithVAT THEN MovementItem_Income_View.AmountSumm
-                      ELSE MovementItem_Income_View.AmountSumm * (1 + Movement_Income_View.NDS/100)
+              , - CASE WHEN Movement_ReturnOut_View.PriceWithVAT THEN MovementItem_ReturnOut_View.AmountSumm
+                      ELSE MovementItem_ReturnOut_View.AmountSumm * (1 + Movement_ReturnOut_View.NDS/100)
                  END::NUMERIC(16, 2)     
               , _tmpItem.OperDate
            FROM _tmpItem 
                 JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.MovementItemId = _tmpItem.MovementItemId
-                LEFT JOIN MovementItem_Income_View ON MovementItem_Income_View.Id = _tmpItem.MovementItemId
-                LEFT JOIN Movement_Income_View ON Movement_Income_View.Id = MovementItem_Income_View.MovementId;
+                LEFT JOIN MovementItem_ReturnOut_View ON MovementItem_ReturnOut_View.Id = _tmpItem.MovementItemId
+                LEFT JOIN Movement_ReturnOut_View ON Movement_ReturnOut_View.Id = MovementItem_ReturnOut_View.MovementId;
 
      
-     SELECT SUM(Amount) INTO vbOperSumm_Partner_byItem FROM _tmpMIContainer_insert WHERE AnalyzerId = 0;
+     SELECT -SUM(Amount) INTO vbOperSumm_Partner_byItem FROM _tmpMIContainer_insert WHERE AnalyzerId = 0;
  
      IF (vbOperSumm_Partner <> vbOperSumm_Partner_byItem) THEN
         UPDATE _tmpMIContainer_insert SET Amount = Amount - (vbOperSumm_Partner_byItem - vbOperSumm_Partner)
@@ -195,10 +197,9 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  11.02.14                        * 
- 05.02.14                        * 
 */
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM lpComplete_Movement_Income (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
+-- SELECT * FROM lpComplete_Movement_ReturnOut (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
