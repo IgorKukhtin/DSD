@@ -173,6 +173,8 @@ type
     cbBranchSendOnPrice: TCheckBox;
     UnitCodeSendOnPriceEdit: TEdit;
     cbFillSoldTable: TCheckBox;
+    cbGoodsQuality: TCheckBox;
+    cbQuality: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -350,6 +352,8 @@ type
     procedure pLoadGuide_Partner1CLink_Fl;
     procedure pLoadGuide_Goods1CLink_Fl;
     procedure pLoadGuide_GoodsProperty_Detail;
+    procedure pLoadGuide_Quality;
+    procedure pLoadGuide_GoodsQuality;
 
     procedure pLoadGuide_1Find2InsertPartner1C_BranchNal;
     procedure pLoadGuide_Juridical1C_BranchNal;
@@ -1436,6 +1440,9 @@ begin
      if not fStop then pLoadGuide_ProfitLoss;
 
      if not fStop then pLoadGuide_GoodsProperty_Detail;
+     //
+     if not fStop then pLoadGuide_Quality;
+     if not fStop then pLoadGuide_GoodsQuality;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -4531,6 +4538,161 @@ begin
      end;
      //
      myDisabledCB(cbGoodsProperty_Detail);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_Quality;
+begin
+     if (not cbQuality.Checked)or(not cbQuality.Enabled) then exit;
+     //
+     myEnabledCB(cbQuality);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty_Kachestvo.GroupId as ObjectId');
+        Add('     , GoodsProperty_Kachestvo.GroupId as ObjectCode');
+        Add('     , tmp.byGroupName as ObjectName');
+        Add('     , max(isnull(Id_pg1,0)) as Id_Postgres');
+        Add('from dba.GoodsProperty_Kachestvo');
+        Add('     left join pSelect_GoodsProperty_Kachestvo() as tmp on tmp.GoodsPropertyId = GoodsProperty_Kachestvo.GoodsPropertyId and tmp.byGroupId = GoodsProperty_Kachestvo.GroupId');
+        Add('where GroupId<>0');
+        Add('group by GoodsProperty_Kachestvo.GroupId, tmp.byGroupName');
+        Add('order by GoodsProperty_Kachestvo.GroupId, tmp.byGroupName');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Quality';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+             begin
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             //
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty_Kachestvo set Id_pg1='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where GroupId = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbQuality);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_GoodsQuality;
+begin
+     if (not cbGoodsQuality.Checked)or(not cbGoodsQuality.Enabled) then exit;
+     //
+     myEnabledCB(cbGoodsQuality);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty_Kachestvo.GoodsPropertyId as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , GoodsProperty.GoodsName as ObjectName');
+        Add('     , Id_pg1 as inQualityId');
+        Add('     , GoodsProperty.Id_Postgres as inGoodsId');
+        Add('     , Param11 as inGoodsQualityName');
+        Add('     , Param1 as inValue1');
+        Add('     , Param2 as inValue2');
+        Add('     , Param3 as inValue3');
+        Add('     , Param4 as inValue4');
+        Add('     , Param5 as inValue5');
+        Add('     , Param6 as inValue6');
+        Add('     , Param7 as inValue7');
+        Add('     , Param8 as inValue8');
+        Add('     , Param9 as inValue9');
+        Add('     , Param10 as inValue10');
+        Add('     , GoodsProperty_Kachestvo.Id_pg2 as Id_Postgres');
+        Add('from dba.GoodsProperty_Kachestvo');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = GoodsProperty_Kachestvo.GoodsPropertyId');
+        Add('where GoodsProperty_Kachestvo.GroupId<>0');
+        Add('order by GoodsProperty.GoodsName');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_GoodsQuality';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsQualityName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue1',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue2',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue3',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue4',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue5',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue6',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue7',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue8',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue9',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue10',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inQualityId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsQualityName').Value:=FieldByName('inGoodsQualityName').AsString;
+             toStoredProc.Params.ParamByName('inValue1').Value:=FieldByName('inValue1').AsString;
+             toStoredProc.Params.ParamByName('inValue2').Value:=FieldByName('inValue2').AsString;
+             toStoredProc.Params.ParamByName('inValue3').Value:=FieldByName('inValue3').AsString;
+             toStoredProc.Params.ParamByName('inValue4').Value:=FieldByName('inValue4').AsString;
+             toStoredProc.Params.ParamByName('inValue5').Value:=FieldByName('inValue5').AsString;
+             toStoredProc.Params.ParamByName('inValue6').Value:=FieldByName('inValue6').AsString;
+             toStoredProc.Params.ParamByName('inValue7').Value:=FieldByName('inValue7').AsString;
+             toStoredProc.Params.ParamByName('inValue8').Value:=FieldByName('inValue8').AsString;
+             toStoredProc.Params.ParamByName('inValue9').Value:=FieldByName('inValue9').AsString;
+             toStoredProc.Params.ParamByName('inValue10').Value:=FieldByName('inValue10').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inQualityId').Value:=FieldByName('inQualityId').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty_Kachestvo set Id_pg2='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where GoodsPropertyId = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbGoodsQuality);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Business;
@@ -19940,6 +20102,9 @@ insert into dba.GoodsProperty_Postgres (Id, Name_PG)
 
 
 
+
+alter table dba.GoodsProperty_Kachestvo add Id_pg1 integer null;
+alter table dba.GoodsProperty_Kachestvo add Id_pg2 integer null;
 
 
 alter table dba.Goods add Id_Postgres integer null;

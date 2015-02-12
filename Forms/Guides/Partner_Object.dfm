@@ -3,7 +3,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
   ClientHeight = 464
-  ClientWidth = 834
+  ClientWidth = 915
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 834
+    Width = 915
     Height = 438
     Align = alClient
     TabOrder = 1
@@ -44,7 +44,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
       object ceCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 35
@@ -52,6 +52,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
@@ -59,6 +60,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
       object ceAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
@@ -68,21 +70,23 @@ object Partner_ObjectForm: TPartner_ObjectForm
         DataBinding.FieldName = 'JuridicalGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 150
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 115
+        Width = 150
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 52
+        Width = 70
       end
       object clPriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
@@ -96,6 +100,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 84
       end
@@ -111,6 +116,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
@@ -118,13 +124,52 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 85
       end
       object clEndPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 88
+      end
+      object clGLNCode: TcxGridDBColumn
+        Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
+        DataBinding.FieldName = 'GLNCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object clGLNCodeJuridical: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'GLNCodeJuridical'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GLNCodeRetail: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'GLNCodeRetail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GLNCodeCorporate: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'GLNCodeCorporate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

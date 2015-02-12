@@ -210,17 +210,33 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clGLNCode_Juridical: TcxGridDBColumn
-        Caption = #1050#1086#1076' GLN ('#1102#1088'.'#1083'.)'
-        DataBinding.FieldName = 'GLNCode_Juridical'
+      object clGLNCode: TcxGridDBColumn
+        Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
+        DataBinding.FieldName = 'GLNCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
-      object clGLNCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' GLN'
-        DataBinding.FieldName = 'GLNCode'
+      object clGLNCodeJuridical: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'GLNCodeJuridical'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GLNCodeRetail: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'GLNCodeRetail'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GLNCodeCorporate: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'GLNCodeCorporate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -241,21 +257,6 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
-      end
-      object Id: TcxGridDBColumn
-        Caption = #1050#1083#1102#1095'-2'
-        DataBinding.FieldName = 'Id'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Enabled = False
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
       end
       object clEdiOrdspr: TcxGridDBColumn
         Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
@@ -290,6 +291,21 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
+      end
+      object Id: TcxGridDBColumn
+        Caption = #1050#1083#1102#1095'-2'
+        DataBinding.FieldName = 'Id'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Enabled = False
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel

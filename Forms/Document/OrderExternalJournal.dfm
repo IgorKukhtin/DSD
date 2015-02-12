@@ -8,23 +8,20 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1064
-    Height = 602
+    Height = 604
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1064
-    ExplicitHeight = 602
-    ClientRectBottom = 598
-    ClientRectRight = 1060
+    ExplicitHeight = 604
+    ClientRectBottom = 604
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1058
-      ExplicitHeight = 596
+      ExplicitWidth = 1064
+      ExplicitHeight = 604
       inherited cxGrid: TcxGrid
-        Width = 1058
-        Height = 596
-        ExplicitWidth = 1058
-        ExplicitHeight = 596
+        Width = 1064
+        Height = 604
+        ExplicitWidth = 1064
+        ExplicitHeight = 604
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -536,7 +533,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

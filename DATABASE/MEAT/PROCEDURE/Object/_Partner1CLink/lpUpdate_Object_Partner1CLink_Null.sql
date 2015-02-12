@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Partner1CLink (Integer, TVarChar)
+-- Function: lpUpdate_Object_Partner1CLink_Null (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS lpUpdate_Object_Partner1CLink_Null (Integer, Integer, Integer);
 

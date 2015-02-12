@@ -361,6 +361,9 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
    inId := lpInsertUpdate_Object_Partner (ioId              := inId
                                         , inCode            := 0
                                         , inGLNCode         := ''
+                                        , inGLNCodeJuridical:= ''
+                                        , inGLNCodeRetail   := ''
+                                        , inGLNCodeCorporate:= ''
                                         , inPrepareDayCount := 0
                                         , inDocumentDayCount:= 0
                                         , inEdiOrdspr       := FALSE

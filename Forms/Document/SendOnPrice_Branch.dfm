@@ -383,10 +383,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     object actPrintOut: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintOut
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintOut
         end>
       Caption = #1056#1072#1089#1093#1086#1076
       Hint = #1055#1077#1095#1072#1090#1100
@@ -408,8 +408,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_SendOnPriceOut'
-      ReportNameParam.Value = 'PrintMovement_SendOnPriceOut'
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -436,8 +436,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_SendOnPriceIn'
-      ReportNameParam.Value = 'PrintMovement_SendOnPriceIn'
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -1158,6 +1158,11 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inReportType'
+        Value = '1'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 319
@@ -1213,5 +1218,33 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         ParamType = ptInput
       end>
     Left = 616
+  end
+  object spSelectPrintOut: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReportType'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 359
+    Top = 440
   end
 end

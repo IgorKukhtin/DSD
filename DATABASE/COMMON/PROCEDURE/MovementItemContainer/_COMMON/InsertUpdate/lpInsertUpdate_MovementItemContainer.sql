@@ -25,8 +25,10 @@ AS
 $BODY$
   DECLARE vbLock Boolean;
 BEGIN
-     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    vbLock := FALSE;
+    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+    LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+    /*vbLock := FALSE;
     WHILE NOT vbLock LOOP
         BEGIN
            LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
@@ -34,7 +36,7 @@ BEGIN
         EXCEPTION 
             WHEN OTHERS THEN
         END;
-    END LOOP;
+    END LOOP;*/
 
      -- меняем параметр
      IF inParentId = 0 THEN inParentId:= NULL; END IF;

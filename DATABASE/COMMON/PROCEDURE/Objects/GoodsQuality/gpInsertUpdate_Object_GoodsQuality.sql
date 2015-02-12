@@ -41,6 +41,9 @@ $BODY$
          END IF;   
      END IF;   
 
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
+
    -- Если код не установлен, определяем его как последний+1
    inCode := lfGet_ObjectCode (inCode, zc_Object_GoodsQuality());
     

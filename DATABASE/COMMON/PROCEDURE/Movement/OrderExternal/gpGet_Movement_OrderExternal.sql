@@ -18,7 +18,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat, isPrinted Boolean
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , DayCount TFloat
+             , isPrinted Boolean
               )
 AS
 $BODY$
@@ -65,6 +67,7 @@ BEGIN
              , CAST (False AS Boolean)                          AS PriceWithVAT
              , CAST (20 AS TFloat)                              AS VATPercent
              , CAST (0 AS TFloat)                               AS ChangePercent
+             , CAST (20 AS TFloat)                              AS DayCount
              , CAST (False AS Boolean)                          AS isPrinted
 
 
@@ -109,6 +112,7 @@ BEGIN
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, False)  AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
+           , MovementFloat_DayCount.ValueData           AS DayCount
            , COALESCE (MovementBoolean_Print.ValueData, False) AS isPrinted
 
        FROM Movement
@@ -137,6 +141,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
+            LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                    ON MovementFloat_DayCount.MovementId =  Movement.Id
+                                   AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -205,6 +213,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 09.02.15         * add DayCount
  06.02.15                                                        *
  26.08.14                                                        *
  18.08.14                                                        *

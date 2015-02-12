@@ -1,10 +1,9 @@
 -- Function: gpComplete_Movement_GoodsQuality()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_GoodsQuality (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_GoodsQuality (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_GoodsQuality(
     IN inMovementId        Integer              , -- ключ Документа
-    IN inIsLastComplete    Boolean DEFAULT False, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
 RETURNS VOID
@@ -14,6 +13,13 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_GoodsQuality());
+
+     -- ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_GoodsQuality()
+                                , inUserId     := vbUserId
+                                 );
+
 
 
 END;
