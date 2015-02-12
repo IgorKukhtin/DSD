@@ -78,7 +78,6 @@ type
     edContractTag: TcxButtonEdit;
     cxLabel17: TcxLabel;
     ContractTagGuides: TdsdGuides;
-    AmountEDI: TcxGridDBColumn;
     AmountRemains: TcxGridDBColumn;
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
@@ -86,6 +85,8 @@ type
     cbPrinted: TcxCheckBox;
     edDayCount: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
+    AmountPartner: TcxGridDBColumn;
+    AmountForecast: TcxGridDBColumn;
   private
     { Private declarations }
   public
