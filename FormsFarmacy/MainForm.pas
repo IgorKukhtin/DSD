@@ -119,11 +119,14 @@ type
     N29: TMenuItem;
     N30: TMenuItem;
     N31: TMenuItem;
-    N32: TMenuItem;
     N33: TMenuItem;
     N34: TMenuItem;
     actLossDebt: TdsdOpenForm;
     N35: TMenuItem;
+    N36: TMenuItem;
+    N32: TMenuItem;
+    N37: TMenuItem;
+    N38: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

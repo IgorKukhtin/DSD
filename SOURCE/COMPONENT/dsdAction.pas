@@ -14,7 +14,8 @@ type
     FToParam: TdsdParam;
     FFromParam: TdsdParam;
   public
-    constructor Create(Collection: TCollection); override;
+   procedure Assign(Source: TPersistent); override;
+   constructor Create(Collection: TCollection); override;
   published
     property FromParam: TdsdParam read FFromParam write FFromParam;
     property ToParam: TdsdParam read FToParam write FToParam;
@@ -2200,6 +2201,11 @@ begin
 end;
 
 { TParamMoveItem }
+
+procedure TParamMoveItem.Assign(Source: TPersistent);
+begin
+
+end;
 
 constructor TParamMoveItem.Create(Collection: TCollection);
 begin

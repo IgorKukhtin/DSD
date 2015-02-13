@@ -267,7 +267,12 @@ uses
   ReturnOut in '..\..\FormsFarmacy\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   ReturnOutJournal in '..\..\FormsFarmacy\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
   ReturnOutTest in '..\SOURCE\Movement\All\Farmacy\ReturnOutTest.pas',
-  IncomeJournalChoice in '..\..\FormsFarmacy\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm};
+  IncomeJournalChoice in '..\..\FormsFarmacy\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
+  BankAccountJournal in '..\..\Forms\Document\BankAccountJournal.pas' {BankAccountJournalForm: TParentForm},
+  BankAccountMovement in '..\..\Forms\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
+  BankAccountJournalFarmacy in '..\..\FormsFarmacy\Document\BankAccountJournalFarmacy.pas' {BankAccountJournalFarmacyForm},
+  BankAccountMovementFarmacy in '..\..\FormsFarmacy\Document\BankAccountMovementFarmacy.pas' {BankAccountMovementFarmacyForm: TParentForm},
+  BankAccountMovementTest in '..\SOURCE\Movement\All\Farmacy\BankAccountMovementTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

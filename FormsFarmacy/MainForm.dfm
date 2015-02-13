@@ -529,6 +529,26 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actBankLoad: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080
+      FormName = 'TBankStatementJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBankAccountDocument: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+      FormName = 'TBankAccountJournalFarmacyForm'
+      FormNameParam.Value = 'TBankAccountJournalFarmacyForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited cxLocalizer: TcxLocalizer
     Top = 40
@@ -654,7 +674,7 @@ inherited MainForm: TMainForm
       end
     end
     object miDocuments: TMenuItem [2]
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       object N11: TMenuItem
         Action = actIncome
       end
@@ -676,14 +696,23 @@ inherited MainForm: TMainForm
       object N15: TMenuItem
         Action = actPriceList
       end
+    end
+    object N36: TMenuItem [3]
+      Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       object N32: TMenuItem
+        Action = actBankAccountDocument
+      end
+      object N37: TMenuItem
+        Action = actBankLoad
+      end
+      object N38: TMenuItem
         Caption = '-'
       end
       object N34: TMenuItem
         Action = actLossDebt
       end
     end
-    object miReports: TMenuItem [3]
+    object miReports: TMenuItem [4]
       Caption = #1054#1090#1095#1077#1090#1099
       object miBalance: TMenuItem
         Action = actBalance
