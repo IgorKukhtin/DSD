@@ -18,6 +18,7 @@ type
     procedure LoadAccountFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
+    procedure LoadBankAccountDocumentFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
@@ -110,6 +111,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankEditForm');
+end;
+
+procedure TLoadFormTest.LoadBankAccountDocumentFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalFarmacyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalFarmacyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementFarmacyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementFarmacyForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountFormTest;

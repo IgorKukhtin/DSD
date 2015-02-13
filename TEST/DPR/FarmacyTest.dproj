@@ -784,6 +784,23 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\BankAccountJournal.pas">
+				<Form>BankAccountJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\BankAccountMovement.pas">
+				<Form>BankAccountMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\BankAccountJournalFarmacy.pas">
+				<Form>BankAccountJournalFarmacyForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\BankAccountMovementFarmacy.pas">
+				<Form>BankAccountMovementFarmacyForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\BankAccountMovementTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
