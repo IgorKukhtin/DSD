@@ -87,7 +87,7 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                              ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
    WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue();
 

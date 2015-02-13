@@ -609,16 +609,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'inGLNCodeCorporate'
+        Name = 'inGLNCodeRetail'
         Value = Null
-        Component = edGLNCodeCorporate
+        Component = edGLNCodeRetail
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inGLNCodeRetail'
+        Name = 'inGLNCodeCorporate'
         Value = Null
-        Component = edGLNCodeRetail
+        Component = edGLNCodeCorporate
         DataType = ftString
         ParamType = ptInput
       end

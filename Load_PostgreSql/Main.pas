@@ -7728,16 +7728,15 @@ begin
                         +'  then zc_rvYes() else zc_rvNo() end as is4');
         Add('     , null as GroupName4');
         Add('     , trim(GoodsProperty_Detail.GoodsName_Client) as ObjectName4');
-        Add('     , case when is4=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.Code_byTavriya,15,2) else cast (null as TSumm) end as Amount4');
-        Add('     , case when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)=13 then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,1,13)'
-           +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 then SUBSTR(GoodsProperty_Detail.Code_byTavriya,1,13)'
-           +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)=4 then '+FormatToVarCharServer_notNULL('250')+' + GoodsProperty_Detail.GoodsCodeScaner_byMain+'+FormatToVarCharServer_notNULL('000000')
-           +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)=5 then '+FormatToVarCharServer_notNULL('25')+' + GoodsProperty_Detail.GoodsCodeScaner_byMain+'+FormatToVarCharServer_notNULL('000000')
+        Add('     , case when is4=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,15,2) else cast (null as TSumm) end as Amount4');
+        Add('     , case when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)>=13 then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,1,13)'
+//           +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 then SUBSTR(GoodsProperty_Detail.Code_byTavriya,1,13)'
+  //         +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)=4 then '+FormatToVarCharServer_notNULL('250')+' + GoodsProperty_Detail.GoodsCodeScaner_byMain+'+FormatToVarCharServer_notNULL('000000')
+    //       +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)=5 then '+FormatToVarCharServer_notNULL('25')+' + GoodsProperty_Detail.GoodsCodeScaner_byMain+'+FormatToVarCharServer_notNULL('000000')
            +'       end as BarCode4'); // GoodsCodeScaner_byMain + Code_byTavriya
-        Add('     , case when length (GoodsProperty_Detail.Code_byTavriya)>=13 and SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,3)='+FormatToVarCharServer_notNULL('000')+' then SUBSTR(GoodsProperty_Detail.Code_byTavriya,21,4)'
-           +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 and SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,2)='+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.Code_byTavriya,20,5)'
-           +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 and SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.Code_byTavriya,19,6)'
-           +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 then SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,7)'
+        Add('     , case when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)>=13 and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,18,3)='+FormatToVarCharServer_notNULL('000')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,21,4)'
+           +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)>=13 and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,18,2)='+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,20,5)'
+           +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)>=13 and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,18,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,19,6)'
            +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)<=7 then GoodsProperty_Detail.GoodsCodeScaner_byMain'
            +'       end as Article4');
         Add('     , null as BarCodeGLN4');
@@ -7934,7 +7933,28 @@ begin
         Add('     , KindPackage.Id_Postgres as GoodsKindId15');
         Add('     , GoodsProperty_Detail.Id15_Postgres as Id_Postgres15');
         //---------------------------***16***Таврия***Code_byTavriya
-        Add('     , zc_rvNo() as is16');
+        Add('     , case when trim (GoodsProperty_Detail.Code_byTavriya)<>'+FormatToVarCharServer_notNULL('')
+                        +' or isnull(GoodsProperty_Detail.Id16_Postgres,0) <> 0'
+                        +'  then zc_rvYes() else zc_rvNo() end as is16');
+        Add('     , null as GroupName16');
+        Add('     , null as ObjectName16');
+        Add('     , case when is16=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.Code_byTavriya,15,2) else cast (null as TSumm) end as Amount16');
+        Add('     , case when length (GoodsProperty_Detail.Code_byTavriya)>=13 then SUBSTR(GoodsProperty_Detail.Code_byTavriya,1,13)'
+           +'            when length (GoodsProperty_Detail.Code_byTavriya)=4 then '+FormatToVarCharServer_notNULL('250')+' + GoodsProperty_Detail.Code_byTavriya+'+FormatToVarCharServer_notNULL('000000')
+           +'            when length (GoodsProperty_Detail.Code_byTavriya)=5 then '+FormatToVarCharServer_notNULL('25')+' + GoodsProperty_Detail.Code_byTavriya+'+FormatToVarCharServer_notNULL('000000')
+           +'       end as BarCode16'); // GoodsCodeScaner_byMain + Code_byTavriya
+        Add('     , case when length (GoodsProperty_Detail.Code_byTavriya)>=13 and SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,3)='+FormatToVarCharServer_notNULL('000')+' then SUBSTR(GoodsProperty_Detail.Code_byTavriya,21,4)'
+           +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 and SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,2)='+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.Code_byTavriya,20,5)'
+           +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 and SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.Code_byTavriya,19,6)'
+           +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 then SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,7)'
+           +'            when length (GoodsProperty_Detail.Code_byTavriya)<=7 then GoodsProperty_Detail.Code_byTavriya'
+           +'       end as Article16');
+        Add('     , BarCode16 as BarCodeGLN16');
+        Add('     , Article16 as ArticleGLN16');
+        Add('     , PG16.Id_Postgres as GoodsPropertyId16');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId16');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId16');
+        Add('     , GoodsProperty_Detail.Id16_Postgres as Id_Postgres16');
         //---------------------------***17***Адвентис***GoodsCodeScaner_byAdventis
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byAdventis)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id17_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is17');
         Add('     , null as GroupName17');

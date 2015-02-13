@@ -25,10 +25,8 @@ BEGIN
 
      vbMovementId := NULL;
 
-     SELECT Id INTO vbMovementId 
-       FROM Movement WHERE DescId = zc_Movement_EDI() 
-        AND OperDate = inOrderOperDate 
-        AND InvNumber = inOrderInvNumber;
+     -- находим документ (по идее один товар - один GLN-код)
+     vbMovementId:= (SELECT Id FROM Movement WHERE DescId = zc_Movement_EDI() AND OperDate = inOrderOperDate AND InvNumber = inOrderInvNumber);
 
      -- определяется параметр
      vbDescCode:= (SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_OrderExternal());
@@ -53,7 +51,7 @@ BEGIN
      IF inGLNPlace <> '' THEN 
         PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNPlaceCode(), vbMovementId, inGLNPlace);
         -- Пытаемся установить связь с точкой доставки
-        vbPartnerId := COALESCE((SELECT MIN(ObjectId)
+        vbPartnerId := COALESCE((SELECT MIN (ObjectId)
                     FROM ObjectString WHERE DescId = zc_ObjectString_Partner_GLNCode() AND ValueData = inGLNPlace), 0);
         IF vbPartnerId <> 0 THEN
            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), vbMovementId, vbPartnerId);
