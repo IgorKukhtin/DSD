@@ -87,6 +87,19 @@ type
     cxLabel18: TcxLabel;
     AmountPartner: TcxGridDBColumn;
     AmountForecast: TcxGridDBColumn;
+    spUpdateAmountRemains: TdsdStoredProc;
+    spUpdateAmountPartner: TdsdStoredProc;
+    spUpdateAmountForecast: TdsdStoredProc;
+    actUpdateAmountRemains: TdsdExecStoredProc;
+    actUpdateAmountPartner: TdsdExecStoredProc;
+    actUpdateAmountForecast: TdsdExecStoredProc;
+    actUpdateAmountAll: TdsdExecStoredProc;
+    spUpdateAmountAll: TdsdStoredProc;
+    bbUpdateAmountRemains: TdxBarButton;
+    bbUpdateAmountPartner: TdxBarButton;
+    bbUpdateAmountForecast: TdxBarButton;
+    bbUpdateAmountAll: TdxBarButton;
+    MultiAmountRemain: TMultiAction;
   private
     { Private declarations }
   public
