@@ -58,8 +58,7 @@ uses
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   FormStorage in '..\..\SOURCE\FormStorage.pas',
   GoodsKindEdit in '..\..\Forms\Guides\GoodsKindEdit.pas' {GoodsKindEditForm},
-  GoodsPropertyEdit in '..\..\Forms\GoodsPropertyEdit.pas' {GoodsPropertyEditForm},
-  GoodsProperty in '..\..\Forms\GoodsProperty.pas' {GoodsPropertyForm},
+  GoodsPropertyEdit in '..\..\Forms\Guides\GoodsPropertyEdit.pas' {GoodsPropertyEditForm},
   CurrencyEdit in '..\..\Forms\Guides\CurrencyEdit.pas' {CurencyEditForm},
   GoodsGroupEdit in '..\..\Forms\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm},
   PriceListEdit in '..\..\Forms\Guides\PriceListEdit.pas' {PriceListEditForm},
@@ -628,7 +627,8 @@ uses
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   OrderExternalUnit in '..\..\Forms\Document\OrderExternalUnit.pas' {OrderExternalUnitForm: TParentForm},
-  OrderExternalUnitJournal in '..\..\Forms\Document\OrderExternalUnitJournal.pas' {OrderExternalUnitJournalForm: TParentForm};
+  OrderExternalUnitJournal in '..\..\Forms\Document\OrderExternalUnitJournal.pas' {OrderExternalUnitJournalForm: TParentForm},
+  GoodsProperty in '..\..\Forms\Guides\GoodsProperty.pas' {GoodsPropertyForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

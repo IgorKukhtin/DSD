@@ -2,7 +2,7 @@ object GoodsQualityForm: TGoodsQualityForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103'>'
-  ClientHeight = 344
+  ClientHeight = 347
   ClientWidth = 1039
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,12 +21,13 @@ object GoodsQualityForm: TGoodsQualityForm
     Left = 0
     Top = 26
     Width = 1039
-    Height = 318
+    Height = 321
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 318
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -704,8 +705,8 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 528
-    Top = 187
+    Left = 600
+    Top = 155
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -716,7 +717,7 @@ object GoodsQualityForm: TGoodsQualityForm
       item
         Component = actShowAll
       end>
-    Left = 736
-    Top = 160
+    Left = 832
+    Top = 168
   end
 end
