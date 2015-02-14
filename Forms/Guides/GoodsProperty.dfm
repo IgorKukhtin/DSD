@@ -262,6 +262,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -301,12 +302,14 @@ object GoodsPropertyForm: TGoodsPropertyForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -334,6 +337,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 136
     Top = 224
   end

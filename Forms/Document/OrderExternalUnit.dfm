@@ -2,7 +2,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076'>'
   ClientHeight = 668
   ClientWidth = 1280
-  ExplicitLeft = -216
   ExplicitWidth = 1288
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -22,8 +21,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       inherited cxGrid: TcxGrid
         Width = 1280
         Height = 518
-        ExplicitLeft = -144
-        ExplicitTop = -44
         ExplicitWidth = 1280
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -686,6 +683,68 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
     end
+    object MultiAmountRemain: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmountRemains
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
+      Hint = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
+      ImageIndex = 47
+    end
+    object actUpdateAmountRemains: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateAmountRemains
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAmountRemains
+        end>
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082
+      ImageIndex = 47
+    end
+    object actUpdateAmountPartner: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateAmountPartner
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAmountPartner
+        end>
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
+      ImageIndex = 48
+    end
+    object actUpdateAmountForecast: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateAmountForecast
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAmountForecast
+        end>
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
+      ImageIndex = 49
+    end
+    object actUpdateAmountAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateAmountAll
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAmountAll
+        end>
+      Caption = #1057#1076#1077#1083#1072#1090#1100' '#1088#1072#1089#1089#1095#1077#1090
+      Hint = #1057#1076#1077#1083#1072#1090#1100' '#1088#1072#1089#1089#1095#1077#1090
+      ImageIndex = 50
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -761,7 +820,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -781,11 +840,31 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateAmountRemains'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateAmountPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateAmountForecast'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateAmountAll'
         end
         item
           Visible = True
@@ -821,6 +900,22 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
+    end
+    object bbUpdateAmountRemains: TdxBarButton
+      Action = MultiAmountRemain
+      Category = 0
+    end
+    object bbUpdateAmountPartner: TdxBarButton
+      Action = actUpdateAmountPartner
+      Category = 0
+    end
+    object bbUpdateAmountForecast: TdxBarButton
+      Action = actUpdateAmountForecast
+      Category = 0
+    end
+    object bbUpdateAmountAll: TdxBarButton
+      Action = actUpdateAmountAll
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1895,5 +1990,83 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     PackSize = 1
     Left = 344
     Top = 432
+  end
+  object spUpdateAmountRemains: TdsdStoredProc
+    StoredProcName = 'gptUpdateMI_OrderExternal_AmountRemains'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 730
+    Top = 200
+  end
+  object spUpdateAmountPartner: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderExternalUnit_AmountPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 810
+    Top = 200
+  end
+  object spUpdateAmountForecast: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderExternalUnit_AmountForecast'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 930
+    Top = 200
+  end
+  object spUpdateAmountAll: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderExternalUnit_AmountAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 1010
+    Top = 200
   end
 end

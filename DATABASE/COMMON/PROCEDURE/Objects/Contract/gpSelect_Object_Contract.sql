@@ -48,6 +48,10 @@ RETURNS TABLE (Id Integer, Code Integer
 
              , DocumentCount TFloat, DateDocument TDateTime
 
+             , PriceListId Integer, PriceListName TVarChar
+             , PriceListPromoId Integer, PriceListPromoName TVarChar
+             , StartPromo TDateTime, EndPromo TDateTime
+             
              , isErased Boolean 
               )
 AS
@@ -177,6 +181,15 @@ BEGIN
        
        , ObjectFloat_DocumentCount.ValueData AS DocumentCount
        , ObjectDate_Document.ValueData AS DateDocument
+       
+       , Object_PriceList.Id         AS PriceListId 
+       , Object_PriceList.ValueData  AS PriceListName 
+
+       , Object_PriceListPromo.Id         AS PriceListPromoId 
+       , Object_PriceListPromo.ValueData  AS PriceListPromoName 
+       
+       , COALESCE (ObjectDate_StartPromo.ValueData,CAST (CURRENT_DATE as TDateTime)) AS StartPromo
+       , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo        
 
        , Object_Contract_View.isErased
        
@@ -295,6 +308,22 @@ BEGIN
                             AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
         LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
 
+        LEFT JOIN ObjectDate AS ObjectDate_StartPromo
+                             ON ObjectDate_StartPromo.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Contract_StartPromo()
+        LEFT JOIN ObjectDate AS ObjectDate_EndPromo
+                             ON ObjectDate_EndPromo.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Contract_EndPromo()
+                                
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                             ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
+                             ON ObjectLink_Contract_PriceListPromo.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
+        LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Contract_PriceListPromo.ChildObjectId
+
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
 
@@ -319,6 +348,8 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 12.02.15         * add StartPromo, EndPromo,
+                        PriceList, PriceListPromo
  15.01.15         * add JuridicalDocument
  10.11.14         * add GLNCode
  18.08.14                                        * add inParams...

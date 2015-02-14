@@ -8,10 +8,10 @@ $BODY$
   DECLARE Res TVarChar;
 BEGIN
   Res := replace(inStr, '&', '&amp;');
-  Res := replace(inStr, '''', '&apos;');
-  Res := replace(inStr, '"', '&quot;');
-  Res := replace(inStr, '<', '&lt;');
-  Res := replace(inStr, '>', '&gt;');
+  Res := replace(Res, '''', '&apos;');
+  Res := replace(Res, '"', '&quot;');
+  Res := replace(Res, '<', '&lt;');
+  Res := replace(Res, '>', '&gt;');
   RETURN Res;
 END;
 $BODY$

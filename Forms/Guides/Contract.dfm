@@ -591,6 +591,42 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 40
       end
+      object clPriceListName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+        DataBinding.FieldName = 'PriceListName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object clPriceListPromoName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
+        DataBinding.FieldName = 'PriceListPromoName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object clStartPromo: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+        DataBinding.FieldName = 'StartPromo'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 30
+      end
+      object clEndPromo: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+        DataBinding.FieldName = 'EndPromo'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 30
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -606,8 +642,6 @@ object ContractForm: TContractForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 337
-    ExplicitHeight = 181
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -773,8 +807,6 @@ object ContractForm: TContractForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitTop = 337
-    ExplicitHeight = 181
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
@@ -785,7 +817,6 @@ object ContractForm: TContractForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 181
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -858,7 +889,6 @@ object ContractForm: TContractForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 181
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -947,7 +977,6 @@ object ContractForm: TContractForm
       Width = 5
       Height = 184
       Control = cxGridPartner
-      ExplicitHeight = 181
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -965,8 +994,6 @@ object ContractForm: TContractForm
     Height = 184
     AlignSplitter = salRight
     Control = Panel
-    ExplicitTop = 337
-    ExplicitHeight = 181
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1008,8 +1035,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

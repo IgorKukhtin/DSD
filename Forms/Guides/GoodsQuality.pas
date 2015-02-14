@@ -66,8 +66,8 @@ type
     bbactShowAll: TdxBarButton;
     bb: TdxBarControlContainerItem;
     bb1: TdxBarControlContainerItem;
-    ceInfoMoney: TcxButtonEdit;
-    dsdInfoMoneyGuides: TdsdGuides;
+    ceQuality: TcxButtonEdit;
+    dsdQualityGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     RefreshDispatcher: TRefreshDispatcher;
     clGoodsGroupName: TcxGridDBColumn;

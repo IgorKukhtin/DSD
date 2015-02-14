@@ -190,6 +190,10 @@ type
     bbProtocolOpenFormCondition: TdxBarButton;
     bbProtocolOpenFormPartner: TdxBarButton;
     bbProtocolOpenFormGoods: TdxBarButton;
+    clPriceListName: TcxGridDBColumn;
+    clPriceListPromoName: TcxGridDBColumn;
+    clStartPromo: TcxGridDBColumn;
+    clEndPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -22,7 +22,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
-  dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit;
+  dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
+  dsdGuides, cxTextEdit, cxLabel;
 
 type
   TGoodsPropertyValueForm = class(TParentForm)
@@ -70,6 +71,14 @@ type
     clGoodsKindName: TcxGridDBColumn;
     GoodsPropertyChoiceForm: TOpenChoiceForm;
     GroupName: TcxGridDBColumn;
+    bbBarCCItem1: TdxBarControlContainerItem;
+    bbBarCCItem2: TdxBarControlContainerItem;
+    cxLabel6: TcxLabel;
+    ceGoodsProperty: TcxButtonEdit;
+    dsdGoodsPropertyGuides: TdsdGuides;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

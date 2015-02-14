@@ -66,6 +66,7 @@
     Top = 72
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -74,9 +75,11 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -86,6 +89,7 @@
     end
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -113,6 +117,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 240
     Top = 48
   end
@@ -149,6 +154,7 @@
         Value = 0.000000000000000000
         Component = ceCode
       end>
+    PackSize = 1
     Left = 192
     Top = 88
   end
