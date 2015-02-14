@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_Receipt(integer, TVarChar)
+-- Function: gpGet_Object_Receipt(integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_Receipt(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Receipt(
-    IN inId          Integer,       -- РЎРѕСЃС‚Р°РІР»СЏСЋС‰РёРµ СЂРµС†РµРїС‚СѓСЂ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Составляющие рецептур 
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
                Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Receipt());
   
    IF COALESCE (inId, 0) = 0
@@ -197,13 +197,13 @@ ALTER FUNCTION gpGet_Object_Receipt(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  19.07.13         * rename zc_ObjectDate_
  09.07.13         *              
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Object_Receipt (100, '2')
 --select * from gpGet_Object_Receipt(inId := 0 ,  inSession := '5');

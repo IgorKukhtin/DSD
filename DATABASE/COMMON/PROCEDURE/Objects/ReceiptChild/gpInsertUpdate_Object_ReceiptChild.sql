@@ -1,12 +1,12 @@
 -- Function: gpInsertUpdate_Object_ReceiptChild()
 
--- DROP FUNCTION gpInsertUpdate_Object_ReceiptChild();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
  INOUT ioId              Integer   , -- ключ объекта <Составляющие рецептур>
     IN inValue           TFloat    , -- Значение объекта 
-    IN inWeight          Boolean   , -- Входит в общий вес выхода 
-    IN inTaxExit         Boolean   , -- Зависит от % выхода
+    IN inIsWeight          Boolean   , -- Входит в общий вес выхода 
+    IN inIsTaxExit         Boolean   , -- Зависит от % выхода
     IN inStartDate       TDateTime , -- Начальная дата
     IN inEndDate         TDateTime , -- Конечная дата
     IN inComment         TVarChar  , -- Комментарий
@@ -19,11 +19,10 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptChild()());
-   vbUserId := inSession;
-   
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptChild());
+
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ReceiptChild(), 0, '');
    
@@ -37,13 +36,13 @@ BEGIN
    -- сохранили свойство <Значение>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptChild_Value(), ioId, inValue);
    -- сохранили свойство <Входит в общий вес выхода>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_Weight(), ioId, inWeight);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_Weight(), ioId, inIsWeight);
    -- сохранили свойство <Зависит от % выхода>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inTaxExit);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inIsTaxExit);
    -- сохранили свойство <Начальная дата>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_Start(), ioId, inStartDate);
+   -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_Start(), ioId, inStartDate);
    -- сохранили свойство <Конечная дата>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_End(), ioId, inEndDate);
+   -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_End(), ioId, inEndDate);
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ReceiptChild_Comment(), ioId, inComment);
    -- сохранили протокол
@@ -66,4 +65,3 @@ ALTER FUNCTION gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boo
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_ReceiptChild ()
-    

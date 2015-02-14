@@ -175,6 +175,8 @@ type
     cbFillSoldTable: TCheckBox;
     cbGoodsQuality: TCheckBox;
     cbQuality: TCheckBox;
+    cbReceiptChild: TCheckBox;
+    cbReceipt: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -352,6 +354,8 @@ type
     procedure pLoadGuide_Partner1CLink_Fl;
     procedure pLoadGuide_Goods1CLink_Fl;
     procedure pLoadGuide_GoodsProperty_Detail;
+    procedure pLoadGuide_Receipt;
+    procedure pLoadGuide_ReceiptChild;
     procedure pLoadGuide_Quality;
     procedure pLoadGuide_GoodsQuality;
 
@@ -1440,6 +1444,9 @@ begin
      if not fStop then pLoadGuide_ProfitLoss;
 
      if not fStop then pLoadGuide_GoodsProperty_Detail;
+     //
+     if not fStop then pLoadGuide_Receipt;
+     if not fStop then pLoadGuide_ReceiptChild;
      //
      if not fStop then pLoadGuide_Quality;
      if not fStop then pLoadGuide_GoodsQuality;
@@ -4538,6 +4545,215 @@ begin
      end;
      //
      myDisabledCB(cbGoodsProperty_Detail);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_Receipt;
+var ReceiptKindId_pg:Integer;
+begin
+     if (not cbReceipt.Checked)or(not cbReceipt.Enabled) then exit;
+     //
+     myEnabledCB(cbReceipt);
+     //
+     fOpenSqToQuery (' select Id as RetV from Object where ObjectCode = 1 and DescId = zc_Object_ReceiptKind()');
+     ReceiptKindId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Receipt_byHistory.ReceiptId as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , Receipt.ReceiptCode as inReceiptCode');
+        Add('     , Receipt_byHistory.ReceiptComment as inComment');
+
+        Add('     , Receipt_byHistory.OperCount as inValue');
+        Add('     , Receipt_byHistory.PrimeCostCount as inValueCost');
+        Add('     , Receipt_byHistory.TaxExit as inTaxExit');
+        Add('     , Receipt_byHistory.PartionValue as inPartionValue');
+        Add('     , Receipt_byHistory.PartionCount as inPartionCount');
+        Add('     , Receipt_byHistory.VesPackage as inWeightPackage');
+        Add('     , zc_DateStart() as inStartDate');
+        Add('     , zc_DateEnd() as inEndDate');
+        Add('     , isnull(Receipt_byHistory.isMain,zc_rvNo()) as inIsMain');
+        Add('     , zc_rvYes() as zc_rvYes');
+
+        Add('     , GoodsProperty.Id_Postgres as inGoodsId');
+        Add('     , KindPackage.Id_Postgres as inGoodsKindId');
+        Add('     , KindPackage_to.Id_Postgres as inGoodsKindCompleteId');
+        Add('     , GoodsProperty_prime.Id_Postgres as inReceiptCostId');
+        Add('     , '+IntToStr(ReceiptKindId_pg)+' as inReceiptKindId');
+
+        Add('     , Receipt_byHistory.Id_pg as Id_Postgres');
+        Add('from dba.Receipt_byHistory');
+        Add('     left outer join dba.Receipt on Receipt.Id = Receipt_byHistory.ReceiptId');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = Receipt_byHistory.GoodsPropertyId');
+        Add('     left outer join dba.GoodsProperty as GoodsProperty_prime on GoodsProperty_prime.Id = Receipt_byHistory.GoodsPropertyId_prime');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = Receipt_byHistory.KindPackageId');
+        Add('     left outer join dba.KindPackage as KindPackage_to on KindPackage_to.Id = Receipt_byHistory.toKindPackageId');
+        Add('order by Receipt.ReceiptCode');
+        //
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Receipt';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inReceiptCode',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inValueCost',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inTaxExit',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inWeightPackage',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStartDate',ftDateTime,ptInput, Date);
+        toStoredProc.Params.AddParam ('inEndDate',ftDateTime,ptInput, Date);
+        toStoredProc.Params.AddParam ('inIsMain',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindCompleteId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inReceiptCostId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inReceiptKindId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inReceiptCode').Value:=FieldByName('inReceiptCode').AsString;
+             toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('inComment').AsString;
+             toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('inValue').AsFloat;
+             toStoredProc.Params.ParamByName('inValueCost').Value:=FieldByName('inValueCost').AsFloat;
+             toStoredProc.Params.ParamByName('inTaxExit').Value:=FieldByName('inTaxExit').AsFloat;
+             toStoredProc.Params.ParamByName('inPartionValue').Value:=FieldByName('inPartionValue').AsFloat;
+             toStoredProc.Params.ParamByName('inPartionCount').Value:=FieldByName('inPartionCount').AsFloat;
+             toStoredProc.Params.ParamByName('inWeightPackage').Value:=FieldByName('inWeightPackage').AsFloat;
+             toStoredProc.Params.ParamByName('inStartDate').Value:='01.01.2000';
+             toStoredProc.Params.ParamByName('inEndDate').Value:='31.12.2020';
+             if FieldByName('zc_rvYes').AsInteger = FieldByName('inIsMain').AsInteger
+             then toStoredProc.Params.ParamByName('inIsMain').Value:=true
+             else toStoredProc.Params.ParamByName('inIsMain').Value:=false;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('inGoodsKindId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsKindCompleteId').Value:=FieldByName('inGoodsKindCompleteId').AsInteger;
+             toStoredProc.Params.ParamByName('inReceiptCostId').Value:=FieldByName('inReceiptCostId').AsInteger;
+             toStoredProc.Params.ParamByName('inReceiptKindId').Value:=FieldByName('inReceiptKindId').AsInteger;
+             //
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Receipt_byHistory set Id_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where ReceiptId = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbReceipt);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_ReceiptChild;
+begin
+     if (not cbReceiptChild.Checked)or(not cbReceiptChild.Enabled) then exit;
+     //
+     myEnabledCB(cbReceiptChild);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select ReceiptItem_byHistory.Id as ObjectId');
+        Add('     , ReceiptItem_byHistory.ReceiptItemComment as inComment');
+
+        Add('     , ReceiptItem_byHistory.OperCount as inValue');
+        Add('     , zc_DateStart() as inStartDate');
+        Add('     , zc_DateEnd() as inEndDate');
+
+        Add('     , case when ReceiptItem_byHistory.GoodsPropertyId=zc_GoodsPropertyId_Egg() and ReceiptItem_byHistory.KindPackageId in'+'(zc_KindPackage_MaterialBasis(),zc_KindPackage_PF(),zc_KindPackage_groupPF(),zc_KindPackage_Pererabotka(),zc_KindPackage_Composition_K_MaterialBasis())'
+           +'                 then zc_rvYes()'
+           +'            when ReceiptItem_byHistory.GoodsPropertyId<>zc_GoodsPropertyId_Ice() and ReceiptItem_byHistory.KindPackageId in'+'(zc_KindPackage_MaterialBasis(),zc_KindPackage_PF(),zc_KindPackage_groupPF(),zc_KindPackage_Pererabotka(),zc_KindPackage_Composition_K_MaterialBasis())'
+           +'                 then zc_rvYes()'
+           +'            else zc_rvNo()'
+           +'       end as inIsWeight');
+
+        Add('     , isnull(ReceiptItem_byHistory.isTaxExit,zc_rvNo()) as inIsTaxExit');
+        Add('     , zc_rvYes() as zc_rvYes');
+
+        Add('     , Receipt_byHistory.Id_pg as inReceiptId');
+        Add('     , GoodsProperty.Id_Postgres as inGoodsId');
+        Add('     , KindPackage.Id_Postgres as inGoodsKindId');
+
+        Add('     , ReceiptItem_byHistory.Id_pg as Id_Postgres');
+        Add('from dba.ReceiptItem_byHistory');
+        Add('     left outer join dba.Receipt_byHistory on Receipt_byHistory.ReceiptId = ReceiptItem_byHistory.ReceiptId');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = ReceiptItem_byHistory.GoodsPropertyId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = ReceiptItem_byHistory.KindPackageId');
+        Add('order by ReceiptItem_byHistory.ReceiptId desc');
+        //
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_ReceiptChild';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inIsWeight',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inIsTaxExit',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inStartDate',ftDateTime,ptInput, Date);
+        toStoredProc.Params.AddParam ('inEndDate',ftDateTime,ptInput, Date);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inReceiptId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('inValue').AsFloat;
+             if FieldByName('zc_rvYes').AsInteger = FieldByName('inIsWeight').AsInteger
+             then toStoredProc.Params.ParamByName('inIsWeight').Value:=true
+             else toStoredProc.Params.ParamByName('inIsWeight').Value:=false;
+             if FieldByName('zc_rvYes').AsInteger = FieldByName('inIsTaxExit').AsInteger
+             then toStoredProc.Params.ParamByName('inIsTaxExit').Value:=true
+             else toStoredProc.Params.ParamByName('inIsTaxExit').Value:=false;
+             toStoredProc.Params.ParamByName('inStartDate').Value:='01.01.2000';
+             toStoredProc.Params.ParamByName('inEndDate').Value:='31.12.2020';
+             toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('inComment').AsString;
+             toStoredProc.Params.ParamByName('inReceiptId').Value:=FieldByName('inReceiptId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('inGoodsKindId').AsInteger;
+             //
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.ReceiptItem_byHistory set Id_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbReceiptChild);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Quality;
@@ -20120,11 +20336,11 @@ insert into dba.GoodsProperty_Postgres (Id, Name_PG)
                                   // fIsClient_Obgora
 
 
-
-
-
 alter table dba.GoodsProperty_Kachestvo add Id_pg1 integer null;
 alter table dba.GoodsProperty_Kachestvo add Id_pg2 integer null;
+
+alter table dba.Receipt_byHistory add Id_pg integer null;
+alter table dba.ReceiptItem_byHistory add Id_pg integer null;
 
 
 alter table dba.Goods add Id_Postgres integer null;

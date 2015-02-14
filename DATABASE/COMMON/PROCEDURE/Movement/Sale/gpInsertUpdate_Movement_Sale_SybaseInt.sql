@@ -140,7 +140,7 @@ BEGIN
                                            , inInvNumberPartner := COALESCE ((SELECT ValueData FROM MovementString WHERE MovementId = ioId AND DescId = zc_MovementString_InvNumberPartner()), inInvNumberPartner)
                                            , inInvNumberOrder   := inInvNumberOrder
                                            , inOperDate         := inOperDate
-                                           , inOperDatePartner  := inOperDatePartner
+                                           , inOperDatePartner  := CASE WHEN ioId <> 0 THEN (SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()) ELSE inOperDatePartner END
                                            , inChecked          := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked()), inChecked)
                                            -- , inPriceWithVAT     := inPriceWithVAT
                                            -- , inVATPercent       := inVATPercent

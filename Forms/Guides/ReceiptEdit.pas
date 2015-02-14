@@ -47,7 +47,7 @@ type
     ceReceiptKind: TcxButtonEdit;
     ReceiptKindGuides: TdsdGuides;
     ceisReceipt_Main: TcxCheckBox;
-    ceComment: TcxTextEdit;
+    edComment: TcxTextEdit;
     ceValue: TcxCurrencyEdit;
     cxLabel10: TcxLabel;
     cxLabel11: TcxLabel;
@@ -73,7 +73,7 @@ type
     ceGoodsKindComplete: TcxButtonEdit;
     GoodsKindCompleteGuides: TdsdGuides;
     cxLabel4: TcxLabel;
-    ceReceiptCode: TcxTextEdit;
+    edReceiptCode: TcxTextEdit;
     cxLabel6: TcxLabel;
   private
     { Private declarations }

@@ -21,11 +21,11 @@ object ReceiptForm: TReceiptForm
     Left = 0
     Top = 26
     Width = 1152
-    Height = 297
+    Height = 292
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1186
+    ExplicitHeight = 297
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -217,8 +217,7 @@ object ReceiptForm: TReceiptForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 1186
-    object cxGridDBTableViewContractCondition: TcxGridDBTableView
+    object cxGridDBTableViewReceiptChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ReceiptChildDS
       DataController.Filter.Options = [fcoCaseInsensitive]
@@ -318,8 +317,17 @@ object ReceiptForm: TReceiptForm
       end
     end
     object cxGridLevel2: TcxGridLevel
-      GridView = cxGridDBTableViewContractCondition
+      GridView = cxGridDBTableViewReceiptChild
     end
+  end
+  object cxBottomSplitter: TcxSplitter
+    Left = 0
+    Top = 318
+    Width = 1152
+    Height = 5
+    AlignSplitter = salBottom
+    Control = cxGridContractCondition
+    ExplicitTop = 21
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -351,8 +359,8 @@ object ReceiptForm: TReceiptForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -698,7 +706,7 @@ object ReceiptForm: TReceiptForm
     object InsertRecordCCK: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
-      View = cxGridDBTableViewContractCondition
+      View = cxGridDBTableViewReceiptChild
       Action = Goods_ObjectChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099'>'
@@ -824,18 +832,18 @@ object ReceiptForm: TReceiptForm
         ParamType = ptInput
       end
       item
-        Name = 'inWeight'
+        Name = 'inIsWeight'
         Value = Null
         Component = ReceiptChildCDS
-        ComponentItem = 'Weight'
+        ComponentItem = 'isWeight'
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
-        Name = 'inTaxExit'
+        Name = 'inIsTaxExit'
         Value = Null
         Component = ReceiptChildCDS
-        ComponentItem = 'TaxExit'
+        ComponentItem = 'isTaxExit'
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -953,7 +961,7 @@ object ReceiptForm: TReceiptForm
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableViewContractCondition
+    View = cxGridDBTableViewReceiptChild
     OnDblClickActionList = <
       item
         Action = actUpdate

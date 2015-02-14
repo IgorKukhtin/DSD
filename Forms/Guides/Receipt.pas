@@ -12,7 +12,7 @@ uses
   cxCheckBox, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
 
 type
   TReceiptForm = class(TParentForm)
@@ -59,7 +59,7 @@ type
     clReceiptKindName: TcxGridDBColumn;
     clIsErased: TcxGridDBColumn;
     cxGridContractCondition: TcxGrid;
-    cxGridDBTableViewContractCondition: TcxGridDBTableView;
+    cxGridDBTableViewReceiptChild: TcxGridDBTableView;
     colGoodsKindName: TcxGridDBColumn;
     clValue: TcxGridDBColumn;
     clsfcisErased: TcxGridDBColumn;
@@ -91,6 +91,7 @@ type
     colStartDate: TcxGridDBColumn;
     colEndDate: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
+    cxBottomSplitter: TcxSplitter;
   private
     { Private declarations }
   public

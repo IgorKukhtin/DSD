@@ -14,6 +14,12 @@ $BODY$
   DECLARE vbAccessKeyId Integer;
 BEGIN
 
+  -- 0. Проверка
+  IF COALESCE (inMovementId, 0) = 0
+  THEN
+      RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
+  END IF;
+
   -- 1. Проверки на "распроведение" / "удаление"
   PERFORM lpCheck_Movement_Status (inMovementId, inUserId);
 

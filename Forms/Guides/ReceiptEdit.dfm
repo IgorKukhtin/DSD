@@ -19,6 +19,7 @@
   object edName: TcxTextEdit
     Left = 32
     Top = 57
+    Properties.ReadOnly = True
     TabOrder = 0
     Width = 303
   end
@@ -56,9 +57,9 @@
   object ceCode: TcxCurrencyEdit
     Left = 32
     Top = 19
-    Enabled = False
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 77
   end
@@ -108,7 +109,7 @@
     TabOrder = 11
     Width = 67
   end
-  object ceComment: TcxTextEdit
+  object edComment: TcxTextEdit
     Left = 32
     Top = 374
     TabOrder = 12
@@ -269,10 +270,9 @@
     Top = 357
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
-  object ceReceiptCode: TcxTextEdit
+  object edReceiptCode: TcxTextEdit
     Left = 115
     Top = 19
-    Enabled = False
     TabOrder = 35
     Width = 158
   end
@@ -324,22 +324,22 @@
         ParamType = ptInputOutput
       end
       item
-        Name = 'inName'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
+        Name = 'inReceiptCode'
+        Value = ''
+        Component = edReceiptCode
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inComment'
         Value = ''
-        Component = ceComment
+        Component = edComment
         DataType = ftString
         ParamType = ptInput
       end
@@ -400,7 +400,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'inMain'
+        Name = 'inIsMain'
         Value = Null
         Component = ceisReceipt_Main
         DataType = ftBoolean
@@ -481,13 +481,13 @@
       item
         Name = 'ReceiptCode'
         Value = Null
-        Component = ceReceiptCode
+        Component = edReceiptCode
         DataType = ftString
       end
       item
         Name = 'Comment'
         Value = ''
-        Component = ceComment
+        Component = edComment
         DataType = ftString
       end
       item

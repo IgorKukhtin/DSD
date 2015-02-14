@@ -210,8 +210,8 @@ BEGIN
           -- сохранили Property если продажа от Контрагента -> Контрагенту
           IF EXISTS (SELECT Id FROM Object WHERE Id = vbUnitId AND DescId = zc_Object_Partner())
           THEN
-              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindFrom(), Movement.Id, Object_Contract_View.PaidKindId)
-                    , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractFrom(), Movement.Id, Object_Contract_View.ContractId)
+              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindFrom(), vbMovementId, Object_Contract_View.PaidKindId)
+                    , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractFrom(), vbMovementId, Object_Contract_View.ContractId)
               FROM ObjectLink AS ObjectLink_Partner_Juridical
                    INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                                   AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
@@ -475,8 +475,8 @@ BEGIN
           -- сохранили Property если продажа от Контрагента -> Контрагенту
           IF EXISTS (SELECT Id FROM Object WHERE Id = vbUnitId AND DescId = zc_Object_Partner())
           THEN
-              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindTo(), Movement.Id, Object_Contract_View.PaidKindId)
-                    , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractTo(), Movement.Id, Object_Contract_View.ContractId)
+              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindTo(), vbMovementId, Object_Contract_View.PaidKindId)
+                    , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractTo(), vbMovementId, Object_Contract_View.ContractId)
               FROM ObjectLink AS ObjectLink_Partner_Juridical
                    INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                                   AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
