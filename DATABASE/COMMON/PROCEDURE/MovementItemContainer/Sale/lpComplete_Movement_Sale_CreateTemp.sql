@@ -11,7 +11,7 @@ BEGIN
      PERFORM lpComplete_Movement_All_CreateTemp();
 
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId Integer, AccountId Integer, ContainerId_Transit Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId_ProfitLoss_20200 Integer, ContainerId Integer, AccountId Integer, ContainerId_Transit Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat, isLossMaterials Boolean) ON COMMIT DROP;
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemPartnerFrom (MovementItemId Integer, ContainerId_Goods Integer, ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10400 Integer, OperSumm_Partner TFloat) ON COMMIT DROP;
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках

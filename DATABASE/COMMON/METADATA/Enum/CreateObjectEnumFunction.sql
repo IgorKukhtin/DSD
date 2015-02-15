@@ -32,6 +32,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_ReturnInSumm_40200() RETURNS integ
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_ReturnInSumm_10700() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_ReturnInSumm_10700' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_ReturnInSumm_10300() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_ReturnInSumm_10300' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_LossCount_20200() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_LossCount_20200' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_LossSumm_20200() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_LossSumm_20200' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- !!!
 -- !!! Типы оплат
 -- !!!
@@ -542,6 +545,18 @@ CREATE OR REPLACE FUNCTION zc_Enum_InfoMoneyDestination_80500() RETURNS Integer 
 -- !!!
 -- !!! УП: Управленческие статьи назначения (1+2+3 уровень)
 -- !!!
+-- 10105; Основное сырье + Мясное сырье + Прочее мясное сырье
+CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_10105() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_10105' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+-- 10201; Основное сырье + Прочее сырье + Специи
+CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_10201() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_10201' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 10202; Основное сырье + Прочее сырье + Оболочка
+CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_10202() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_10202' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 10203; Основное сырье + Прочее сырье + Упаковка
+CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_10203() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_10203' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 10204; Основное сырье + Прочее сырье + Прочее сырье
+CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_10204() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_10204' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- 20401; "ГСМ";
 CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_20401() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_20401' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 

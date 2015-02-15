@@ -133,9 +133,11 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInSumm_10800(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 211, inName:= 'Сумма с/с, возврат, от покупателя ', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInSumm_10800');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInSumm_40200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 212, inName:= 'Сумма с/с, возврат, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInSumm_40200');
 
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInSumm_10700(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 221, inName:= 'Сумма, возврат, от покупателя ', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInSumm_10700');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInSumm_10700(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 221, inName:= 'Сумма, возврат, от покупателя', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInSumm_10700');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInSumm_10300(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 222, inName:= 'Сумма, возврат, Скидка дополнительная', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInSumm_10300');
 
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossCount_20200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 301, inName:= 'Кол-во, списание при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossCount_20200');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossSumm_20200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 302, inName:= 'Сумма с/с, списание при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossSumm_20200');
 
      -- !!! формы оплаты
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm(),  inDescId:= zc_Object_PaidKind(), inCode:= 1, inName:= 'БН', inEnumName:= 'zc_Enum_PaidKind_FirstForm');
@@ -450,6 +452,13 @@ BEGIN
      -- !!!
      -- !!! УП: Управленческие статьи назначения (1+2+3 уровень)
      -- !!!
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10105, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_10105');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10201, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_10201');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10202, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_10202');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10203, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_10203');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10204, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_10204');
+
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20401, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20401');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20801, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20801');

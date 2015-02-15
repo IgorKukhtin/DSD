@@ -46,7 +46,7 @@ type
     cxLabel3: TcxLabel;
     ceReceiptKind: TcxButtonEdit;
     ReceiptKindGuides: TdsdGuides;
-    ceisReceipt_Main: TcxCheckBox;
+    cbIsMain: TcxCheckBox;
     edComment: TcxTextEdit;
     ceValue: TcxCurrencyEdit;
     cxLabel10: TcxLabel;

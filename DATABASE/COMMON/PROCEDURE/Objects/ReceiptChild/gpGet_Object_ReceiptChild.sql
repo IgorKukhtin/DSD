@@ -1,12 +1,12 @@
-п»ї-- Function: gpGet_Object_ReceiptChild(integer, TVarChar)
+-- Function: gpGet_Object_ReceiptChild(integer, TVarChar)
 
---DROP FUNCTION gpGet_Object_ReceiptChild(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_ReceiptChild (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ReceiptChild(
-    IN inId          Integer,       -- РЎРѕСЃС‚Р°РІР»СЏСЋС‰РёРµ СЂРµС†РµРїС‚СѓСЂ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Составляющие рецептур 
+    IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Value TFloat, Weight boolean, TaxExit boolean,
+RETURNS TABLE (Id Integer, Value TFloat, isWeightMain boolean, isTaxExit boolean,
                StartDate TDateTime, EndDate TDateTime, Comment TVarChar,
                ReceiptId Integer, ReceiptName TVarChar, 
                PGoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Value TFloat, Weight boolean, TaxExit boolean,
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_ReceiptChild());
   
    IF COALESCE (inId, 0) = 0
@@ -26,11 +26,11 @@ BEGIN
              CAST (0 as Integer)   AS Id
            , CAST ('' as TVarChar) AS Value  
          
-           , CAST (NULL AS Boolean) AS Weight
-           , CAST (NULL AS Boolean) AS TaxExit
-           , CAST ('' as TDateTime) AS StartDate
-           , CAST ('' as TDateTime) AS EndDate
-           , CAST ('' as TVarChar)  AS Comment
+           , CAST (FALSE AS Boolean) AS isWeightMain
+           , CAST (FALSE AS Boolean) AS isTaxExit
+           , CAST ('' as TDateTime)  AS StartDate
+           , CAST ('' as TDateTime)  AS EndDate
+           , CAST ('' as TVarChar)   AS Comment
  
            , CAST (0 as Integer)   AS ReceiptId
            , CAST ('' as TVarChar) AS ReceiptName
@@ -53,11 +53,11 @@ BEGIN
            Object_ReceiptChild.Id      AS Id
          , ObjectFloat_Value.ValueData AS Value  
          
-         , ObjectBoolean_Weight.ValueData   AS Weight
-         , ObjectBoolean_TaxExit.ValueData AS TaxExit
-         , ObjectDate_StartDate.ValueData  AS StartDate
-         , ObjectDate_EndDate.ValueData    AS EndDate
-         , ObjectString_Comment.ValueData  AS Comment
+         , ObjectBoolean_WeightMain.ValueData AS isWeightMain
+         , ObjectBoolean_TaxExit.ValueData    AS isTaxExit
+         , ObjectDate_StartDate.ValueData     AS StartDate
+         , ObjectDate_EndDate.ValueData       AS EndDate
+         , ObjectString_Comment.ValueData     AS Comment
  
          , Object_Receipt.Id         AS ReceiptId
          , Object_Receipt.ValueData  AS ReceiptName
@@ -72,7 +72,7 @@ BEGIN
 
          , Object_ReceiptChild.isErased AS isErased
          
-     FROM OBJECT AS Object_ReceiptChild
+     FROM Object AS Object_ReceiptChild
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
                                ON ObjectLink_ReceiptChild_Receipt.ObjectId = Object_ReceiptChild.Id
                               AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
@@ -96,9 +96,9 @@ BEGIN
                                ON ObjectDate_EndDate.ObjectId = Object_ReceiptChild.Id 
                               AND ObjectDate_EndDate.DescId = zc_ObjectDate_ReceiptChild_End()
             
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Weight
-                                  ON ObjectBoolean_Weight.ObjectId = Object_ReceiptChild.Id 
-                                 AND ObjectBoolean_Weight.DescId = zc_ObjectBoolean_ReceiptChild_Weight()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_WeightMain
+                                  ON ObjectBoolean_WeightMain.ObjectId = Object_ReceiptChild.Id 
+                                 AND ObjectBoolean_WeightMain.DescId = zc_ObjectBoolean_ReceiptChild_WeightMain()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
                                   ON ObjectBoolean_TaxExit.ObjectId = Object_ReceiptChild.Id 
                                  AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
@@ -115,19 +115,17 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_ReceiptChild(integer, TVarChar) OWNER TO postgres;
 
-
-
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_
  09.07.13         *              
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Object_ReceiptChild (100, '2')
