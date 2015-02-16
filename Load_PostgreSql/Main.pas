@@ -20111,6 +20111,8 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_WeighingPartner(SaveCount:Integer);
+var i:Integer;
+str, str2:String;
 begin
      if (not cbWeighingPartner.Checked)or(not cbWeighingPartner.Enabled) then exit;
      myEnabledCB(cbWeighingPartner);
@@ -20229,6 +20231,13 @@ begin
            +'                                           and ScaleHistory.Date_pg between PriceListItems_byHistory.StartDate and PriceListItems_byHistory.EndDate');
         Add('order by 2,3,1');
         Open;
+
+        str:='';
+        str2:='';
+        for i:=0 to 20 do str:= str + #10+ #13 + ' ' + Sql[i];
+        for i:=21 to Sql.Count-1 do str2:= str2 + #10+ #13 + ' ' + Sql[i];
+// showMessage(str);
+// showMessage(str2);
 
         cbWeighingPartner.Caption:='9.1.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Взвеш.покуп.';
         //
