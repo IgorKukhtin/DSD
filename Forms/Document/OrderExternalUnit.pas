@@ -88,7 +88,6 @@ type
     AmountPartner: TcxGridDBColumn;
     AmountForecast: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
-    spUpdateAmountForecast: TdsdStoredProc;
     actUpdateAmountRemains: TdsdExecStoredProc;
     actUpdateAmountPartner: TdsdExecStoredProc;
     actUpdateAmountForecast: TdsdExecStoredProc;
@@ -101,6 +100,8 @@ type
     MultiAmountPartner: TMultiAction;
     dsdRefreshMI: TdsdDataSetRefresh;
     actUpdateAmountAll: TMultiAction;
+    spUpdateAmountForecast: TdsdStoredProc;
+    MultiAmountForecast: TMultiAction;
   private
     { Private declarations }
   public

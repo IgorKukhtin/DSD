@@ -21,8 +21,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       inherited cxGrid: TcxGrid
         Width = 1280
         Height = 518
-        ExplicitLeft = 80
-        ExplicitTop = 56
         ExplicitWidth = 1280
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -769,6 +767,20 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
       ImageIndex = 49
     end
+    object MultiAmountForecast: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmountForecast
+        end
+        item
+          Action = dsdRefreshMI
+        end>
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
+      ImageIndex = 49
+    end
     object dsdRefreshMI: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -791,6 +803,9 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end
         item
           Action = actUpdateAmountPartner
+        end
+        item
+          Action = actUpdateAmountForecast
         end
         item
           Action = dsdRefreshMI
@@ -964,7 +979,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Category = 0
     end
     object bbUpdateAmountForecast: TdxBarButton
-      Action = actUpdateAmountForecast
+      Action = MultiAmountForecast
       Category = 0
     end
     object bbUpdateAmountAll: TdxBarButton
@@ -2075,22 +2090,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Left = 730
     Top = 200
   end
-  object spUpdateAmountForecast: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_OrderExternalUnit_AmountForecast'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-      end>
-    PackSize = 1
-    Left = 930
-    Top = 200
-  end
   object spUpdateAmountPartner: TdsdStoredProc
     StoredProcName = 'gptUpdateMI_OrderExternal_AmountPartner'
     DataSets = <>
@@ -2118,7 +2117,44 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 802
+    Left = 816
+    Top = 208
+  end
+  object spUpdateAmountForecast: TdsdStoredProc
+    StoredProcName = 'gptUpdateMI_OrderExternal_AmountForecast'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDayCount'
+        Value = Null
+        Component = edDayCount
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 888
     Top = 200
   end
 end
