@@ -9,7 +9,6 @@ CREATE OR REPLACE FUNCTION gptUpdateMI_OrderExternal_AmountRemains(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- 
-   -- IN inPriceListId         Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS--RECORD AS
@@ -85,8 +84,8 @@ BEGIN
                                                    , inMovementId         := inMovementId
                                                    , inGoodsId            := tmpAll.GoodsId
                                                    , inGoodsKindId        := Coalesce(tmpAll.GoodsKindId,0)::Integer
-                                                   , inAmount             := Coalesce(tmpAll.Amount,0)::TFloat
-                                                   , inAmountRemains      := Coalesce(tmpAll.Amount_Start,0)::TFloat
+                                                   , inAmount_Param       := Coalesce(tmpAll.Amount_Start,0)::TFloat
+                                                   , inDescId_Param       := zc_MIFloat_AmountRemains()
                                                    , inUserId             := vbUserId
                                                     ) 
                       FROM tmpAll;

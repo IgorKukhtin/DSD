@@ -21,6 +21,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       inherited cxGrid: TcxGrid
         Width = 1280
         Height = 518
+        ExplicitLeft = 80
+        ExplicitTop = 56
         ExplicitWidth = 1280
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -53,6 +55,16 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecast
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -87,6 +99,16 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecast
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -691,7 +713,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           Action = actUpdateAmountRemains
         end
         item
-          Action = actRefresh
+          Action = dsdRefreshMI
         end>
       Caption = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
       Hint = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
@@ -721,6 +743,20 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
       ImageIndex = 48
     end
+    object MultiAmountPartner: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmountPartner
+        end
+        item
+          Action = dsdRefreshMI
+        end>
+      Caption = #1056#1072#1089#1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072
+      Hint = #1056#1072#1089#1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 48
+    end
     object actUpdateAmountForecast: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -733,16 +769,34 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
       ImageIndex = 49
     end
-    object actUpdateAmountAll: TdsdExecStoredProc
+    object dsdRefreshMI: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spUpdateAmountAll
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = spUpdateAmountAll
+          StoredProc = spSelect
         end>
-      Caption = #1057#1076#1077#1083#1072#1090#1100' '#1088#1072#1089#1089#1095#1077#1090
-      Hint = #1057#1076#1077#1083#1072#1090#1100' '#1088#1072#1089#1089#1095#1077#1090
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actUpdateAmountAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmountRemains
+        end
+        item
+          Action = actUpdateAmountPartner
+        end
+        item
+          Action = dsdRefreshMI
+        end>
+      Caption = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
+      Hint = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
       ImageIndex = 50
     end
   end
@@ -906,7 +960,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Category = 0
     end
     object bbUpdateAmountPartner: TdxBarButton
-      Action = actUpdateAmountPartner
+      Action = MultiAmountPartner
       Category = 0
     end
     object bbUpdateAmountForecast: TdxBarButton
@@ -2021,22 +2075,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Left = 730
     Top = 200
   end
-  object spUpdateAmountPartner: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_OrderExternalUnit_AmountPartner'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-      end>
-    PackSize = 1
-    Left = 810
-    Top = 200
-  end
   object spUpdateAmountForecast: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_OrderExternalUnit_AmountForecast'
     DataSets = <>
@@ -2053,20 +2091,34 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Left = 930
     Top = 200
   end
-  object spUpdateAmountAll: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_OrderExternalUnit_AmountAll'
+  object spUpdateAmountPartner: TdsdStoredProc
+    StoredProcName = 'gptUpdateMI_OrderExternal_AmountPartner'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     PackSize = 1
-    Left = 1010
+    Left = 802
     Top = 200
   end
 end
