@@ -13,17 +13,17 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     Height = 281
     ExplicitTop = 57
     ExplicitWidth = 802
-    ExplicitHeight = 251
+    ExplicitHeight = 281
     ClientRectBottom = 281
     ClientRectRight = 802
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 802
-      ExplicitHeight = 251
+      ExplicitHeight = 281
       inherited cxGrid: TcxGrid
         Width = 802
         Height = 281
         ExplicitWidth = 802
-        ExplicitHeight = 251
+        ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -191,13 +191,28 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromId'
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
           DataType = ftString
         end>
     end

@@ -61,6 +61,7 @@ BEGIN
                  
            SELECT SUM(OperSumm) INTO vbOperSumm_Partner
              FROM _tmpItem;
+
     -- Сумма платежа
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
          SELECT 

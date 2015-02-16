@@ -288,6 +288,9 @@ BEGIN
 -- 20000; "Запасы"
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountGroup_20000(), inDescId:= zc_Object_AccountGroup(), inCode:= 20000, inName:= 'Запасы' , inEnumName:= 'zc_Enum_AccountGroup_20000');
 
+-- 40000; "Денежные средства"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountGroup_40000(), inDescId:= zc_Object_AccountGroup(), inCode:= 40000, inName:= 'Денежные средства' , inEnumName:= 'zc_Enum_AccountGroup_40000');
+
 -- 70000; "Кредиторы"
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountGroup_70000(), inDescId:= zc_Object_AccountGroup(), inCode:= 70000, inName:= 'Кредиторы' , inEnumName:= 'zc_Enum_AccountGroup_70000');
 
@@ -303,10 +306,24 @@ BEGIN
 -- 20000; "Запасы"; 20200; "Аптека"
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_20200(), inDescId:= zc_Object_AccountDirection(), inCode:= 20200, inName:= 'Аптека' , inEnumName:= 'zc_Enum_AccountDirection_20200');
 
+-- 40000; "Денежные средства"; 40100; "касса"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_40100(), inDescId:= zc_Object_AccountDirection(), inCode:= 40100, inName:= 'Касса' , inEnumName:= 'zc_Enum_AccountDirection_40100');
+-- 40000; "Денежные средства"; 40300; "рассчетный счет"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_40300(), inDescId:= zc_Object_AccountDirection(), inCode:= 40300, inName:= 'Рассчетный счет' , inEnumName:= 'zc_Enum_AccountDirection_40300');
+
 -- 70000; "Кредиторы"; 70100; "Поставщики"
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_70100(), inDescId:= zc_Object_AccountDirection(), inCode:= 70100, inName:= 'Поставщики' , inEnumName:= 'zc_Enum_AccountDirection_70100');
 -- 100000; "Собственный капитал"; 100300; "Прибыль текущего периода"
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_100300(), inDescId:= zc_Object_AccountDirection(), inCode:= 100300, inName:= 'Прибыль текущего периода' , inEnumName:= 'zc_Enum_AccountDirection_100300');
+
+-- !!!
+-- !!! Баланс: Управленческие Счета (1+2+3 уровень)
+-- !!!
+
+-- 40101; "Касса";
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Account_40101(), inDescId:= zc_Object_Account(), inCode:= 40101, inName:= 'Касса' , inEnumName:= 'zc_Enum_Account_40101');
+-- 40301; "Расчетный счет";
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Account_40301(), inDescId:= zc_Object_Account(), inCode:= 40301, inName:= 'Расчетный счет' , inEnumName:= 'zc_Enum_Account_40301');
 
 -- !!!
 -- !!! УП: 2-уровень Управленческие назначения

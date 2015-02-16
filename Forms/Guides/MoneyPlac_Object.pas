@@ -1,4 +1,4 @@
-unit MoneyPlace_Object;
+unit MoneyPlac_Object;
 
 interface
 

@@ -14,21 +14,10 @@ uses
   cxImageComboBox, Vcl.Menus;
 
 type
-  TMoneyPlaceCash_ObjectForm = class(TAncestorEnumForm)
-    clItemName: TcxGridDBColumn;
+  TMoneyPlace_ObjectForm = class(TAncestorEnumForm)
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    clContractNumber: TcxGridDBColumn;
-    clStartDate: TcxGridDBColumn;
     clIsErased: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clContractStateKindName: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
-    clContractKindName: TcxGridDBColumn;
-    clInfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -40,6 +29,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMoneyPlaceCash_ObjectForm);
+  RegisterClass(TMoneyPlace_ObjectForm);
 
 end.
