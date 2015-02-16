@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount
+  (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -13,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inBankAccountId        Integer   , -- Расчетный счет 	
     IN inComment              TVarChar  , -- Комментарий 
     IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса  	
+    IN inIncomeMovementId     Integer   , -- Приходная накладная  	
     IN inContractId           Integer   , -- Договора
     IN inInfoMoneyId          Integer   , -- Статьи назначения 
     -- IN inUnitId               Integer   , -- Подразделение
@@ -90,6 +93,7 @@ BEGIN
                                                , inBankAccountId        := inBankAccountId
                                                , inComment              := inComment
                                                , inMoneyPlaceId         := inMoneyPlaceId
+                                               , inIncomeMovementId     := inIncomeMovementId
                                                , inContractId           := inContractId
                                                , inInfoMoneyId          := inInfoMoneyId
                                                , inUnitId               := NULL
@@ -121,6 +125,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.02.15                         * 
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId
