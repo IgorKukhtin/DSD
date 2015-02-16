@@ -254,7 +254,7 @@ uses
   BankStatement in '..\..\Forms\Document\BankStatement.pas' {BankStatementForm: TParentForm},
   ContractChoicePartnerOrder in '..\..\Forms\Guides\ContractChoicePartnerOrder.pas' {ContractChoicePartnerOrderForm: TParentForm},
   ContractConditionByContract in '..\..\Forms\Guides\ContractConditionByContract.pas' {ContractConditionByContractForm: TParentForm},
-  MoneyPlaceCash_Object in '..\..\Forms\Guides\MoneyPlaceCash_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
+  MoneyPlac_Object in '..\..\Forms\Guides\MoneyPlac_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
   ProfitLossService in '..\..\Forms\Document\ProfitLossService.pas' {ProfitLossServiceForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
   WorkTimeKind in '..\..\Forms\Kind\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Receipt(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
                Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
                StartDate TDateTime, EndDate TDateTime,
-               Main boolean,
+               isMain boolean,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,                
                GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar,
                GoodsKindCompleteId Integer, GoodsKindCompleteCode Integer, GoodsKindCompleteName TVarChar,
@@ -44,7 +44,7 @@ BEGIN
            , CAST (NULL as TDateTime) AS StartDate
            , CAST (NULL as TDateTime) AS EndDate
         
-           , CAST (False AS Boolean) AS Main
+           , CAST (False AS Boolean) AS isMain
          
            , CAST (0 as Integer)   AS GoodsId
            , CAST (0 as Integer)   AS GoodsCode
@@ -91,7 +91,7 @@ BEGIN
          , ObjectDate_StartDate.ValueData AS StartDate
          , ObjectDate_EndDate.ValueData   AS EndDate
         
-         , ObjectBoolean_Main.ValueData AS Main
+         , ObjectBoolean_Main.ValueData AS isMain
          
          , Object_Goods.Id          AS GoodsId
          , Object_Goods.ObjectCode  AS GoodsCode
@@ -190,18 +190,15 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Receipt(integer, TVarChar) OWNER TO postgres;
-
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_
  09.07.13         *              
-
 */
 
 -- тест

@@ -98,9 +98,11 @@ BEGIN
    -- сохранили свойство < онечна€ дата>
    -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_End(), ioId, inEndDate);
  
+   -- !!!пересчитали итоговые кол-ва по рецепту!!!
+   PERFORM lpUpdate_Object_Receipt_Total (ioId, vbUserId);
+
    -- сохранили свойство <ѕризнак главный>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Receipt_Main(), ioId, inIsMain);
-
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

@@ -7,14 +7,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
                Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
+               TotalWeightMain TFloat, TotalWeight TFloat,
                StartDate TDateTime, EndDate TDateTime,
-               Main boolean,
+               isMain Boolean,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar,
                GoodsKindCompleteId Integer, GoodsKindCompleteCode Integer, GoodsKindCompleteName TVarChar,
                ReceiptCostId Integer, ReceiptCostCode Integer, ReceiptCostName TVarChar,
                ReceiptKindId Integer, ReceiptKindCode Integer, ReceiptKindName TVarChar,
-               isErased boolean) AS
+               MeasureName TVarChar,
+               isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -36,11 +38,13 @@ BEGIN
          , ObjectFloat_PartionValue.ValueData  AS PartionValue
          , ObjectFloat_PartionCount.ValueData  AS PartionCount
          , ObjectFloat_WeightPackage.ValueData AS WeightPackage
+         , ObjectFloat_TotalWeightMain.ValueData AS TotalWeightMain
+         , ObjectFloat_TotalWeight.ValueData     AS TotalWeight
 
          , ObjectDate_StartDate.ValueData AS StartDate
          , ObjectDate_EndDate.ValueData   AS EndDate
 
-         , ObjectBoolean_Main.ValueData AS Main
+         , ObjectBoolean_Main.ValueData AS isMain
 
          , Object_Goods.Id          AS GoodsId
          , Object_Goods.ObjectCode  AS GoodsCode
@@ -62,6 +66,8 @@ BEGIN
          , Object_ReceiptKind.ObjectCode  AS ReceiptKindCode
          , Object_ReceiptKind.ValueData   AS ReceiptKindName
 
+         , Object_Measure.ValueData     AS MeasureName
+
          , Object_Receipt.isErased AS isErased
 
      FROM OBJECT AS Object_Receipt
@@ -69,6 +75,11 @@ BEGIN
                                ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
                               AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Receipt_Goods.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
                               ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
@@ -133,18 +144,24 @@ BEGIN
                                 ON ObjectFloat_WeightPackage.ObjectId = Object_Receipt.Id
                                AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_Receipt_WeightPackage()
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_TotalWeightMain
+                                ON ObjectFloat_TotalWeightMain.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TotalWeightMain.DescId = zc_ObjectFloat_Receipt_TotalWeightMain()
+          LEFT JOIN ObjectFloat AS ObjectFloat_TotalWeight
+                                ON ObjectFloat_TotalWeight.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TotalWeight.DescId = zc_ObjectFloat_Receipt_TotalWeight()
+
      WHERE Object_Receipt.DescId = zc_Object_Receipt();
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Receipt (TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_
  10.07.13         *
 */

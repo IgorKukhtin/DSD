@@ -39,6 +39,7 @@ type
     procedure LoadMemberFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
+    procedure LoadObjectUnionFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadProfitLossFormTest;
     procedure LoadProfitLossGroupFormTest;
@@ -399,6 +400,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalLiteForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
+end;
+
+procedure TLoadFormTest.LoadObjectUnionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;

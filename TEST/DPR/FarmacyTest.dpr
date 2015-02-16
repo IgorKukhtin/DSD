@@ -235,7 +235,6 @@ uses
   InfoMoneyGroupTest in '..\SOURCE\Objects\All\InfoMoneyGroupTest.pas',
   InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas',
   InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
-  InfoMoney_Object in '..\..\Forms\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   InfoMoneyDestination in '..\..\Forms\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm},
   InfoMoneyDestination_Object in '..\..\Forms\Guides\InfoMoneyDestination_Object.pas' {InfoMoneyDestination_ObjectForm: TParentForm},
   InfoMoneyDestinationEdit in '..\..\Forms\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm: TParentForm},
@@ -272,7 +271,9 @@ uses
   BankAccountMovement in '..\..\Forms\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
   BankAccountJournalFarmacy in '..\..\FormsFarmacy\Document\BankAccountJournalFarmacy.pas' {BankAccountJournalFarmacyForm},
   BankAccountMovementFarmacy in '..\..\FormsFarmacy\Document\BankAccountMovementFarmacy.pas' {BankAccountMovementFarmacyForm: TParentForm},
-  BankAccountMovementTest in '..\SOURCE\Movement\All\Farmacy\BankAccountMovementTest.pas';
+  BankAccountMovementTest in '..\SOURCE\Movement\All\Farmacy\BankAccountMovementTest.pas',
+  InfoMoney_Object in '..\..\Forms\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
+  MoneyPlace_Object in '..\..\FormsFarmacy\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

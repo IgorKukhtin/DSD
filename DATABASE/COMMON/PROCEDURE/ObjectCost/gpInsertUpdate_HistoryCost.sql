@@ -178,7 +178,9 @@ BEGIN
        ;
 
      -- Ошибка !!! Recycled !!!
-     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (250904, 244751);
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (250904, 244751
+                                                           , 140871, 132557, 278535, 204974
+                                                            );
 
      -- расходы для Master
      INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount)
@@ -277,7 +279,7 @@ BEGIN
         WHERE HistoryCostContainerLink.MasterContainerId_Count IS NULL
         GROUP BY _tmpChild.MasterContainerId_Count, _tmpChild.ContainerId_Count, _tmpChild.MasterContainerId, _tmpChild.ContainerId;
 */
-
+/*
      -- добавляются связи которых нет (т.к. нулевые проводки не формируются) !!!по прошлому периоду если он > 01.06.2014!!!
      WITH tmpList_oldPeriod AS
        (SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId_Summ
@@ -347,8 +349,7 @@ BEGIN
                , HistoryCostContainerLink.MasterContainerId_Count
                , HistoryCostContainerLink.ChildContainerId_Count
        ;
-
-
+*/
 
      -- проверка1
      IF EXISTS (SELECT _tmpMaster.ContainerId FROM _tmpMaster GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1)
@@ -616,5 +617,5 @@ LANGUAGE PLPGSQL VOLATILE;
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inItearationCount:= 500, inInsert:= 12345, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2014', inEndDate:= '31.08.2014', inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
