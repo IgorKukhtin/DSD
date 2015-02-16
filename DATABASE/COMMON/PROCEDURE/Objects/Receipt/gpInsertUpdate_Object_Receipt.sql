@@ -1,14 +1,11 @@
 -- Function: gpInsertUpdate_Object_Receipt()
 
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Receipt (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Receipt (Integer, TVarChar, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
  INOUT ioId                  Integer   , -- ключ объекта <Составляющие рецептур>
-    IN inName                TVarChar  , -- Наименование
-    IN inCode                Integer   , -- Код рецептуры 
+    IN inCode                Integer   , -- Код
+    IN inReceiptCode         TVarChar  , -- Код рецептуры
     IN inComment             TVarChar  , -- Комментарий
     IN inValue               TFloat    , -- Значение (Количество)
     IN inValueCost           TFloat    , -- Значение затрат(Количество)
@@ -18,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
     IN inWeightPackage       TFloat    , -- Вес упаковки
     IN inStartDate           TDateTime , -- Начальная дата
     IN inEndDate             TDateTime , -- Конечная дата
-    IN inMain                Boolean   , -- Признак главный
+    IN inIsMain                Boolean   , -- Признак главный
     IN inGoodsId             Integer   , -- ссылка на Товары
     IN inGoodsKindId         Integer   , -- ссылка на Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров (готовая продукция)
@@ -29,29 +26,42 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbGoodsCode TVarChar;
+
+   DECLARE vbName TVarChar;
+   DECLARE vbCode_calc Integer;   
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Receipt()());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Receipt());
    
-   -- проверка уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Receipt(), inName);
 
-   IF COALESCE(inGoodsId, 0) >0
+   -- проверка <Товар>
+   IF COALESCE (inGoodsId, 0) = 0
    THEN
-       vbGoodsCode := (SELECT ObjectCode FROM Object WHERE descId = zc_Object_Goods() and id = inGoodsId);
+       RAISE EXCEPTION 'Ошибка.Значение <Товар> должно быть установлено.';
    END IF;
-   IF COALESCE(vbGoodsCode, '0') <> '0'
-   THEN
-       vbGoodsCode :=''||vbGoodsCode||'-'||inComment||'' ;
-   ELSE 
-       RAISE EXCEPTION 'Ошибка.У параметра <Товар> не установлен код.';
-   END IF;
+
+
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
+   -- Если код не установлен, определяем его как последний+1
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Receipt()); 
+
+
+   -- расчет названия
+   vbName:= TRIM (TRIM ((SELECT ValueData FROM Object WHERE DescId = zc_Object_Goods() AND Id = inGoodsId))
+         || ' ' || COALESCE ((SELECT ValueData FROM Object WHERE DescId = zc_Object_GoodsKind() AND Id = inGoodsKindId AND inGoodsKindId <> zc_GoodsKind_WorkProgress()), ''))
+         || '-' || TRIM (inComment)
+         || '-' || TRIM (inReceiptCode);
+
+   -- проверка прав уникальности для свойства <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Receipt(), vbCode_calc);
+   -- проверка уникальности для свойства <Наименование>
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Receipt(), vbName);
+   -- проверка уникальности для свойства <Код рецептуры>
+   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Receipt_Code(), inReceiptCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Receipt(), inCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Receipt(), vbCode_calc, vbName);
    
    -- сохранили связь с <Товаром>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Receipt_Goods(), ioId, inGoodsId);   
@@ -64,12 +74,11 @@ BEGIN
    -- сохранили связь с <Виды рецептур>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Receipt_ReceiptKind(), ioId, inReceiptKindId);
 
-   
-
    -- сохранили свойство <Код рецептуры>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Receipt_Code(), ioId, vbGoodsCode);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Receipt_Code(), ioId, inReceiptCode);
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Receipt_Comment(), ioId, inComment);
+
 
    -- сохранили свойство <Значение (Количество)>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_Value(), ioId, inValue);
@@ -85,33 +94,32 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_WeightPackage(), ioId, inWeightPackage);
 
    -- сохранили свойство <Начальная дата>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_Start(), ioId, inStartDate);
+   -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_Start(), ioId, inStartDate);
    -- сохранили свойство <Конечная дата>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_End(), ioId, inEndDate);
+   -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_End(), ioId, inEndDate);
  
-    -- сохранили свойство <Признак главный>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Receipt_Main(), ioId, inMain);
+   -- !!!пересчитали итоговые кол-ва по рецепту!!!
+   PERFORM lpUpdate_Object_Receipt_Total (ioId, vbUserId);
 
+   -- сохранили свойство <Признак главный>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Receipt_Main(), ioId, inIsMain);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Receipt (Integer, TVarChar, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_Receipt (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.02.15                                        * all
  24.12.14         *
  19.07.13         * rename zc_ObjectDate_               
  10.07.13         * 
-
 */
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_Receipt ()
-    

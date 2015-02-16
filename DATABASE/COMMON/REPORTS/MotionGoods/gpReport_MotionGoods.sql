@@ -1,4 +1,4 @@
-п»ї-- Function: gpReport_MotionGoods()
+-- Function: gpReport_MotionGoods()
 
 DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
@@ -6,12 +6,12 @@ CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inAccountGroupId     Integer,    --
-    IN inUnitGroupId        Integer,    -- РіСЂСѓРїРїР° РїРѕРґСЂР°Р·РґРµР»РµРЅРёР№ РЅР° СЃР°РјРѕРј РґРµР»Рµ СЌС‚Рѕ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
+    IN inUnitGroupId        Integer,    -- группа подразделений на самом деле это подразделение
     IN inLocationId         Integer,    --
-    IN inGoodsGroupId       Integer,    -- РіСЂСѓРїРїР° С‚РѕРІР°СЂР°
-    IN inGoodsId            Integer,    -- С‚РѕРІР°СЂ
+    IN inGoodsGroupId       Integer,    -- группа товара
+    IN inGoodsId            Integer,    -- товар
     IN inIsInfoMoney        Boolean,    --
-    IN inSession            TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , AccountId Integer, AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
@@ -118,18 +118,18 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-    -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+    -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
 
-   -- !!!РјРµРЅСЏСЋС‚СЃСЏ РїР°СЂР°РјРµС‚СЂС‹ РґР»СЏ С„РёР»РёР°Р»Р°!!!
+   -- !!!меняются параметры для филиала!!!
    IF 0 < (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0)
    THEN
-       inAccountGroupId:= zc_Enum_AccountGroup_20000(); -- Р—Р°РїР°СЃС‹
+       inAccountGroupId:= zc_Enum_AccountGroup_20000(); -- Запасы
        inIsInfoMoney:= FALSE;
    END IF;
 
-    -- С‚Р°Р±Р»РёС†Р° -
+    -- таблица -
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpContainer_Count (ContainerId Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, Amount TFloat) ON COMMIT DROP;
@@ -225,7 +225,7 @@ BEGIN
     ANALYZE _tmpContainer_Count;
 
          -- !!!!!!!!!!!!!!!!!!!!!!!
-         -- !!!СЃС‚Р°СЂС‚!!! Р•РЎР›Р <= 300
+         -- !!!старт!!! ЕСЛИ <= 300
          -- !!!!!!!!!!!!!!!!!!!!!!!
       RETURN QUERY
     WITH tmpMIContainer_Count AS (SELECT tmpContainer_Count.ContainerId
@@ -261,12 +261,14 @@ BEGIN
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossCount_20200() -- Кол-во, списание при реализации/перемещении по цене
                                                     AND MIContainer.isActive = TRUE
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_SendOnPriceIn
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossCount_20200() -- Кол-во, списание при реализации/перемещении по цене
                                                     AND MIContainer.isActive = FALSE
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
@@ -274,21 +276,21 @@ BEGIN
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- РљРѕР»-РІРѕ, СЂРµР°Р»РёР·Р°С†РёСЏ, Сѓ РїРѕРєСѓРїР°С‚РµР»СЏ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
                                                     AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Sale
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10500() -- РљРѕР»-РІРѕ, СЂРµР°Р»РёР·Р°С†РёСЏ, РЎРєРёРґРєР° Р·Р° РІРµСЃ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10500() -- Кол-во, реализация, Скидка за вес
                                                     AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Sale_10500
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200() -- РљРѕР»-РІРѕ, СЂРµР°Р»РёР·Р°С†РёСЏ, Р Р°Р·РЅРёС†Р° РІ РІРµСЃРµ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200() -- Кол-во, реализация, Разница в весе
                                                     AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN MIContainer.Amount
                                                    ELSE 0
@@ -296,21 +298,21 @@ BEGIN
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- РљРѕР»-РІРѕ, СЂРµР°Р»РёР·Р°С†РёСЏ, Сѓ РїРѕРєСѓРїР°С‚РµР»СЏ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
                                                     AND MIContainer.ContainerId_Analyzer <> 0
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_SaleReal
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10500() -- РљРѕР»-РІРѕ, СЂРµР°Р»РёР·Р°С†РёСЏ, РЎРєРёРґРєР° Р·Р° РІРµСЃ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10500() -- Кол-во, реализация, Скидка за вес
                                                     AND MIContainer.ContainerId_Analyzer <> 0
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_SaleReal_10500
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200() -- РљРѕР»-РІРѕ, СЂРµР°Р»РёР·Р°С†РёСЏ, Р Р°Р·РЅРёС†Р° РІ РІРµСЃРµ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200() -- Кол-во, реализация, Разница в весе
                                                     AND MIContainer.ContainerId_Analyzer <> 0
                                                         THEN MIContainer.Amount
                                                    ELSE 0
@@ -319,14 +321,14 @@ BEGIN
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() -- РљРѕР»-РІРѕ, РІРѕР·РІСЂР°С‚, РѕС‚ РїРѕРєСѓРїР°С‚РµР»СЏ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() -- Кол-во, возврат, от покупателя
                                                     AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_ReturnIn
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() -- РљРѕР»-РІРѕ, РІРѕР·РІСЂР°С‚, Р Р°Р·РЅРёС†Р° РІ РІРµСЃРµ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() -- Кол-во, возврат, Разница в весе
                                                     AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN MIContainer.Amount
                                                    ELSE 0
@@ -334,14 +336,14 @@ BEGIN
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() -- РљРѕР»-РІРѕ, РІРѕР·РІСЂР°С‚, РѕС‚ РїРѕРєСѓРїР°С‚РµР»СЏ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() -- Кол-во, возврат, от покупателя
                                                     AND MIContainer.ContainerId_Analyzer <> 0
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_ReturnInReal
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() -- РљРѕР»-РІРѕ, РІРѕР·РІСЂР°С‚, Р Р°Р·РЅРёС†Р° РІ РІРµСЃРµ
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() -- Кол-во, возврат, Разница в весе
                                                     AND MIContainer.ContainerId_Analyzer <> 0
                                                         THEN MIContainer.Amount
                                                    ELSE 0
@@ -349,7 +351,9 @@ BEGIN
 
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    AND MIContainer.MovementDescId = zc_Movement_Loss()
+                                                    AND (MIContainer.MovementDescId = zc_Movement_Loss()
+                                                         OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_LossCount_20200() -- Кол-во, списание при реализации/перемещении по цене
+                                                        )
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Loss
@@ -447,11 +451,13 @@ BEGIN
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MovementBoolean_HistoryCost.ValueData = TRUE
                                                    AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  --
+                                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN MIContainer.Amount
                                                   WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MIContainer.isActive = TRUE
                                                    AND tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_60000()  --
+                                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_SendOnPriceIn
@@ -459,18 +465,20 @@ BEGIN
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE
                                                    AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  --
+                                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN -1 * MIContainer.Amount
                                                   WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MIContainer.isActive = FALSE
                                                    AND tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_60000()  --
+                                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_SendOnPriceOut
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- РЎСѓРјРјР° СЃ/СЃ, СЂРµР°Р»РёР·Р°С†РёСЏ, Сѓ РїРѕРєСѓРїР°С‚РµР»СЏ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- Сумма с/с, реализация, у покупателя
                                                    AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                    -- AND tmpContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000()  --
                                                        THEN -1 * MIContainer.Amount
@@ -478,14 +486,14 @@ BEGIN
                                              END) AS Amount_Sale
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500() -- РЎСѓРјРјР° СЃ/СЃ, СЂРµР°Р»РёР·Р°С†РёСЏ, РЎРєРёРґРєР° Р·Р° РІРµСЃ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500() -- Сумма с/с, реализация, Скидка за вес
                                                    AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Sale_10500
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() -- РЎСѓРјРјР° СЃ/СЃ, СЂРµР°Р»РёР·Р°С†РёСЏ, Р Р°Р·РЅРёС†Р° РІ РІРµСЃРµ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() -- Сумма с/с, реализация, Разница в весе
                                                    AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                        THEN MIContainer.Amount
                                                   ELSE 0
@@ -493,21 +501,21 @@ BEGIN
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- РЎСѓРјРјР° СЃ/СЃ, СЂРµР°Р»РёР·Р°С†РёСЏ, Сѓ РїРѕРєСѓРїР°С‚РµР»СЏ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- Сумма с/с, реализация, у покупателя
                                                    AND MIContainer.ContainerId_Analyzer <> 0
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_SaleReal
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500() -- РЎСѓРјРјР° СЃ/СЃ, СЂРµР°Р»РёР·Р°С†РёСЏ, РЎРєРёРґРєР° Р·Р° РІРµСЃ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500() -- Сумма с/с, реализация, Скидка за вес
                                                    AND MIContainer.ContainerId_Analyzer <> 0
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_SaleReal_10500
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() -- РЎСѓРјРјР° СЃ/СЃ, СЂРµР°Р»РёР·Р°С†РёСЏ, Р Р°Р·РЅРёС†Р° РІ РІРµСЃРµ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() -- Сумма с/с, реализация, Разница в весе
                                                    AND MIContainer.ContainerId_Analyzer <> 0
                                                        THEN MIContainer.Amount
                                                   ELSE 0
@@ -516,14 +524,14 @@ BEGIN
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() -- РЎСѓРјРјР° СЃ/СЃ, РІРѕР·РІСЂР°С‚, РѕС‚ РїРѕРєСѓРїР°С‚РµР»СЏ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() -- Сумма с/с, возврат, от покупателя
                                                    AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_ReturnIn
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() -- РЎСѓРјРјР° СЃ/СЃ, РІРѕР·РІСЂР°С‚, Р Р°Р·РЅРёС†Р° РІ РІРµСЃРµ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() -- Сумма с/с, возврат, Разница в весе
                                                    AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                        THEN MIContainer.Amount
                                                   ELSE 0
@@ -531,14 +539,14 @@ BEGIN
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() -- РЎСѓРјРјР° СЃ/СЃ, РІРѕР·РІСЂР°С‚, РѕС‚ РїРѕРєСѓРїР°С‚РµР»СЏ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() -- Сумма с/с, возврат, от покупателя
                                                    AND MIContainer.ContainerId_Analyzer <> 0
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_ReturnInReal
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() -- РЎСѓРјРјР° СЃ/СЃ, РІРѕР·РІСЂР°С‚, Р Р°Р·РЅРёС†Р° РІ РІРµСЃРµ
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() -- Сумма с/с, возврат, Разница в весе
                                                    AND MIContainer.ContainerId_Analyzer <> 0
                                                        THEN MIContainer.Amount
                                                   ELSE 0
@@ -546,14 +554,16 @@ BEGIN
 
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   AND MIContainer.MovementDescId = zc_Movement_Loss()
+                                                   AND (MIContainer.MovementDescId = zc_Movement_Loss()
+                                                        OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
+                                                       )
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Loss
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Inventory()
-                                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AccountGroup_60000() -- РџСЂРёР±С‹Р»СЊ Р±СѓРґСѓС‰РёС… РїРµСЂРёРѕРґРѕРІ
+                                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Inventory
@@ -1058,7 +1068,7 @@ BEGIN
       ;
 
          -- !!!!!!!!!!!!!!!!!!!!!!!
-         -- !!!С„РёРЅРёС€!!! Р•РЎР›Р <= 300
+         -- !!!финиш!!! ЕСЛИ <= 300
          -- !!!!!!!!!!!!!!!!!!!!!!!
 
 END;
@@ -1068,8 +1078,9 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.02.15                                        * add zc_Enum_AnalyzerId_Loss...
  01.02.15                                                       *
  14.11.14                                                       * add LineNum
  23.10.14                                        * add inAccountGroupId and inIsInfoMoney
@@ -1079,6 +1090,6 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
  31.08.13         *
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inIsInfoMoney:= FALSE, inSession:= '2')
 -- SELECT * from gpReport_MotionGoods (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 ,  inIsInfoMoney:= TRUE, inSession := '5');

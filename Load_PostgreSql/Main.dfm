@@ -251,7 +251,7 @@ object MainForm: TMainForm
     object cbBranch: TCheckBox
       Tag = 10
       Left = 15
-      Top = 271
+      Top = 266
       Width = 225
       Height = 17
       Caption = '4.2. '#1060#1080#1083#1080#1072#1083#1099
@@ -263,7 +263,7 @@ object MainForm: TMainForm
     object cbUnitGroup: TCheckBox
       Tag = 10
       Left = 15
-      Top = 291
+      Top = 281
       Width = 210
       Height = 17
       Caption = '4.3. '#1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' !!! '#1053#1045#1058' !!!'
@@ -273,7 +273,7 @@ object MainForm: TMainForm
     object cbUnit: TCheckBox
       Tag = 10
       Left = 15
-      Top = 311
+      Top = 296
       Width = 225
       Height = 17
       Caption = '4.4. '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '
@@ -283,7 +283,7 @@ object MainForm: TMainForm
     object cbPriceList: TCheckBox
       Tag = 10
       Left = 15
-      Top = 364
+      Top = 354
       Width = 146
       Height = 17
       Caption = '5.1. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
@@ -292,7 +292,7 @@ object MainForm: TMainForm
     object cbPriceListItems: TCheckBox
       Tag = 10
       Left = 15
-      Top = 384
+      Top = 373
       Width = 138
       Height = 17
       Caption = '5.2. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' - '#1094#1077#1085#1099
@@ -301,7 +301,7 @@ object MainForm: TMainForm
     object cbGoodsProperty: TCheckBox
       Tag = 10
       Left = 15
-      Top = 411
+      Top = 398
       Width = 289
       Height = 17
       Caption = '6.1. '#1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1099' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
@@ -311,7 +311,7 @@ object MainForm: TMainForm
     object cbGoodsPropertyValue: TCheckBox
       Tag = 10
       Left = 15
-      Top = 431
+      Top = 416
       Width = 289
       Height = 17
       Caption = '6.2. '#1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
@@ -320,7 +320,7 @@ object MainForm: TMainForm
     object cbInfoMoneyGroup: TCheckBox
       Tag = 10
       Left = 15
-      Top = 508
+      Top = 518
       Width = 289
       Height = 17
       Caption = '7.1. '#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1072#1085#1072#1083#1080#1090#1080#1082
@@ -330,7 +330,7 @@ object MainForm: TMainForm
     object cbInfoMoneyDestination: TCheckBox
       Tag = 10
       Left = 15
-      Top = 523
+      Top = 533
       Width = 289
       Height = 17
       Caption = '7.2. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
@@ -340,7 +340,7 @@ object MainForm: TMainForm
     object cbInfoMoney: TCheckBox
       Tag = 10
       Left = 15
-      Top = 538
+      Top = 548
       Width = 289
       Height = 17
       Caption = '7.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
@@ -350,7 +350,7 @@ object MainForm: TMainForm
     object cbAccountGroup: TCheckBox
       Tag = 10
       Left = 15
-      Top = 559
+      Top = 565
       Width = 289
       Height = 17
       Caption = '8.1. '#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1089#1095#1077#1090#1086#1074
@@ -360,7 +360,7 @@ object MainForm: TMainForm
     object cbAccountDirection: TCheckBox
       Tag = 10
       Left = 15
-      Top = 574
+      Top = 580
       Width = 289
       Height = 17
       Caption = '8.2. '#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
@@ -370,7 +370,7 @@ object MainForm: TMainForm
     object cbAccount: TCheckBox
       Tag = 10
       Left = 15
-      Top = 589
+      Top = 595
       Width = 289
       Height = 17
       Caption = '8.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1095#1077#1090#1072
@@ -410,7 +410,7 @@ object MainForm: TMainForm
     object cbMember_andPersonal_andRoute: TCheckBox
       Tag = 10
       Left = 15
-      Top = 329
+      Top = 312
       Width = 145
       Height = 26
       Caption = '4.5. '#1060#1080#1079' '#1083'. + '#1052#1072#1088#1096#1088#1091#1090#1099' + '#1040#1074#1090#1086' : Update'
@@ -471,7 +471,7 @@ object MainForm: TMainForm
     object cbRoute: TCheckBox
       Tag = 10
       Left = 151
-      Top = 271
+      Top = 266
       Width = 115
       Height = 17
       Caption = '4.7. '#1052#1072#1088#1096#1088#1091#1090#1099
@@ -481,7 +481,7 @@ object MainForm: TMainForm
     object cbCardFuel: TCheckBox
       Tag = 10
       Left = 151
-      Top = 311
+      Top = 296
       Width = 139
       Height = 17
       Caption = '4.8. '#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099
@@ -507,7 +507,7 @@ object MainForm: TMainForm
     object cbModelService: TCheckBox
       Tag = 10
       Left = 163
-      Top = 331
+      Top = 312
       Width = 153
       Height = 17
       Caption = '4.9. '#1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '
@@ -523,7 +523,7 @@ object MainForm: TMainForm
     object cbStaffList: TCheckBox
       Tag = 10
       Left = 163
-      Top = 351
+      Top = 327
       Width = 158
       Height = 17
       Caption = '4.10. '#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
@@ -539,7 +539,7 @@ object MainForm: TMainForm
     object cbMember_andPersonal_SheetWorkTime: TCheckBox
       Tag = 10
       Left = 163
-      Top = 371
+      Top = 342
       Width = 160
       Height = 17
       Caption = '4.11. '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1080#1079' '#1090#1072#1073#1077#1083#1103
@@ -591,8 +591,8 @@ object MainForm: TMainForm
     end
     object cbGoodsProperty_Detail: TCheckBox
       Tag = 10
-      Left = 163
-      Top = 390
+      Left = 162
+      Top = 373
       Width = 156
       Height = 17
       Caption = '4.12. GoodsProperty_Detail'
@@ -620,20 +620,38 @@ object MainForm: TMainForm
     object cbGoodsQuality: TCheckBox
       Tag = 10
       Left = 15
-      Top = 482
+      Top = 496
       Width = 289
       Height = 17
-      Caption = '10.2. '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074'.'
+      Caption = '11.2. '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074'.'
       TabOrder = 45
     end
     object cbQuality: TCheckBox
       Tag = 10
       Left = 15
-      Top = 465
+      Top = 479
       Width = 289
       Height = 17
-      Caption = '10.1. '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074'.'
+      Caption = '11.1. '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074'.'
       TabOrder = 46
+    end
+    object cbReceiptChild: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 456
+      Width = 289
+      Height = 17
+      Caption = '10.2. '#1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088
+      TabOrder = 47
+    end
+    object cbReceipt: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 439
+      Width = 289
+      Height = 17
+      Caption = '10.1. '#1056#1077#1094#1077#1087#1090#1091#1088#1099
+      TabOrder = 48
     end
   end
   object DocumentPanel: TPanel

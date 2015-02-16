@@ -126,11 +126,8 @@
 			<DCCReference Include="..\..\Forms\Guides\GoodsKindEdit.pas">
 				<Form>GoodsKindEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsPropertyEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\GoodsPropertyEdit.pas">
 				<Form>GoodsPropertyEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsProperty.pas">
-				<Form>GoodsPropertyForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\CurrencyEdit.pas">
 				<Form>CurencyEditForm</Form>
@@ -1880,6 +1877,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderExternalUnitJournal.pas">
 				<Form>OrderExternalUnitJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsProperty.pas">
+				<Form>GoodsPropertyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement(
     IN inDescId            Integer  , -- 
     IN inUserId            Integer    -- Пользователь
 )                              
-  RETURNS void
+  RETURNS VOID
 AS
 $BODY$
   DECLARE vbOperDate TDateTime;
@@ -21,6 +21,11 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Существуют проводки.Проведение невозможно.';
   END IF;*/
 
+  -- 0. Проверка
+  IF COALESCE (inMovementId, 0) = 0
+  THEN
+      RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
+  END IF;
 
   -- Обязательно меняем статус документа
   UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = inDescId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())

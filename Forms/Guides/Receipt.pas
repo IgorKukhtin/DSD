@@ -12,13 +12,13 @@ uses
   cxCheckBox, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, cxCurrencyEdit;
 
 type
   TReceiptForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colValue: TcxGridDBColumn;
+    clValue: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -46,7 +46,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clStartDate: TcxGridDBColumn;
     clEndDate: TcxGridDBColumn;
-    clMain: TcxGridDBColumn;
+    clIsMain: TcxGridDBColumn;
     clPartionCount: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clPartionValue: TcxGridDBColumn;
@@ -59,10 +59,10 @@ type
     clReceiptKindName: TcxGridDBColumn;
     clIsErased: TcxGridDBColumn;
     cxGridContractCondition: TcxGrid;
-    cxGridDBTableViewContractCondition: TcxGridDBTableView;
-    colGoodsKindName: TcxGridDBColumn;
-    clValue: TcxGridDBColumn;
-    clsfcisErased: TcxGridDBColumn;
+    cxGridDBTableViewReceiptChild: TcxGridDBTableView;
+    clGoodsKindNameclChild: TcxGridDBColumn;
+    clValueChild: TcxGridDBColumn;
+    clIsErasedChild: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     ReceiptChildDS: TDataSource;
     ReceiptChildCDS: TClientDataSet;
@@ -76,9 +76,9 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     clReceiptCode: TcxGridDBColumn;
     ChildViewAddOn: TdsdDBViewAddOn;
-    colGoodsName: TcxGridDBColumn;
+    clGoodsNameChild: TcxGridDBColumn;
     Goods_ObjectChoiceForm: TOpenChoiceForm;
-    colComment: TcxGridDBColumn;
+    clCommentChild: TcxGridDBColumn;
     clValueCost: TcxGridDBColumn;
     clTaxExit: TcxGridDBColumn;
     bbStartDate: TdxBarControlContainerItem;
@@ -88,9 +88,17 @@ type
     bbIsPeriod: TdxBarControlContainerItem;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    colStartDate: TcxGridDBColumn;
-    colEndDate: TcxGridDBColumn;
+    clStartDateChild: TcxGridDBColumn;
+    clEndDateChild: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
+    cxBottomSplitter: TcxSplitter;
+    clTotalWeightMain: TcxGridDBColumn;
+    clTotalWeight: TcxGridDBColumn;
+    clGoodsCodeChild: TcxGridDBColumn;
+    clWeightPackage: TcxGridDBColumn;
+    clMeasureNameChild: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
+    clGroupNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

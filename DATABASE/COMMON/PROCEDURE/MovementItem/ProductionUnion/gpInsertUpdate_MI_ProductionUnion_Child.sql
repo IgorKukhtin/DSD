@@ -1,5 +1,3 @@
-
-
 -- Function: gpInsertUpdate_MI_ProductionUnion_Child()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TFloat, TDateTime, TVarChar,TVarChar, Integer, TVarChar);

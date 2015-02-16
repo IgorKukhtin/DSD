@@ -19,13 +19,14 @@
   object edName: TcxTextEdit
     Left = 32
     Top = 57
+    Properties.ReadOnly = True
     TabOrder = 0
     Width = 303
   end
   object cxLabel1: TcxLabel
     Left = 32
     Top = 42
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
   end
   object cxButton1: TcxButton
     Left = 58
@@ -56,21 +57,21 @@
   object ceCode: TcxCurrencyEdit
     Left = 32
     Top = 19
-    Enabled = False
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 77
   end
   object cxLabel5: TcxLabel
     Left = 32
     Top = 198
-    Caption = #1058#1086#1074#1072#1088
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   end
   object cxLabel7: TcxLabel
     Left = 32
     Top = 281
-    Caption = #1047#1072#1090#1088#1072#1090#1099' '#1074' '#1088#1077#1094#1077#1087#1090#1091#1088#1072#1093
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1079#1072#1090#1088#1072#1090
   end
   object ceReceiptCost: TcxButtonEdit
     Left = 32
@@ -87,7 +88,7 @@
   object cxLabel3: TcxLabel
     Left = 32
     Top = 320
-    Caption = #1058#1080#1087#1099' '#1088#1077#1094#1077#1087#1090#1091#1088
+    Caption = #1058#1080#1087' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
   end
   object ceReceiptKind: TcxButtonEdit
     Left = 32
@@ -101,14 +102,14 @@
     TabOrder = 10
     Width = 303
   end
-  object ceisReceipt_Main: TcxCheckBox
+  object cbIsMain: TcxCheckBox
     Left = 278
     Top = 19
     Caption = #1043#1083#1072#1074#1085#1099#1081
     TabOrder = 11
     Width = 67
   end
-  object ceComment: TcxTextEdit
+  object edComment: TcxTextEdit
     Left = 32
     Top = 374
     TabOrder = 12
@@ -131,7 +132,7 @@
   object cxLabel11: TcxLabel
     Left = 140
     Top = 80
-    Caption = #1050#1086#1083'. '#1079#1072#1090#1088#1072#1090
+    Caption = #1050#1086#1083'-'#1074#1086' ('#1079#1072#1090#1088#1072#1090#1099')'
   end
   object ceValueCost: TcxCurrencyEdit
     Left = 141
@@ -139,7 +140,7 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 16
-    Width = 90
+    Width = 92
   end
   object cePartionValue: TcxCurrencyEdit
     Left = 32
@@ -152,7 +153,7 @@
   object cxLabel12: TcxLabel
     Left = 195
     Top = 120
-    Caption = #1052#1080#1085' '#1082#1086#1083'. '#1087#1072#1088#1090#1080#1081' (0.5 '#1080#1083#1080' 1)'
+    Caption = #1050#1086#1083'-'#1074#1086' '#1082#1091#1090#1077#1088#1086#1074' (0.5 '#1080#1083#1080' 1)'
   end
   object cePartionCount: TcxCurrencyEdit
     Left = 195
@@ -178,12 +179,12 @@
   object cxLabel14: TcxLabel
     Left = 32
     Top = 120
-    Caption = #1050#1086#1083'. '#1074' '#1087#1072#1088#1090#1080#1080'('#1074' '#1082#1091#1090#1077#1088#1077')'
+    Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1091#1090#1077#1088#1077
   end
   object cxLabel15: TcxLabel
     Left = 32
     Top = 159
-    Caption = #1042#1077#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
+    Caption = #1042#1077#1089' '#1091#1087#1072#1082'. ('#1087#1086#1083#1080#1072#1084#1080#1076')'
   end
   object ceWeightPackage: TcxCurrencyEdit
     Left = 32
@@ -191,35 +192,35 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 24
-    Width = 80
+    Width = 111
   end
   object cxLabel16: TcxLabel
-    Left = 118
+    Left = 158
     Top = 159
     Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072
   end
   object cxLabel17: TcxLabel
-    Left = 232
+    Left = 252
     Top = 159
     Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072
   end
   object edStartDate: TcxDateEdit
-    Left = 118
+    Left = 158
     Top = 175
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 27
-    Width = 103
+    Width = 87
   end
   object edEndDate: TcxDateEdit
-    Left = 232
+    Left = 252
     Top = 175
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 28
-    Width = 103
+    Width = 83
   end
   object ceGoods: TcxButtonEdit
     Left = 32
@@ -251,7 +252,7 @@
   object cxLabel18: TcxLabel
     Left = 190
     Top = 241
-    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1075#1086#1090#1086#1074#1072#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1103')'
+    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1075'.'#1087'.)'
   end
   object ceGoodsKindComplete: TcxButtonEdit
     Left = 190
@@ -269,17 +270,16 @@
     Top = 357
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
-  object ceReceiptCode: TcxTextEdit
+  object edReceiptCode: TcxTextEdit
     Left = 115
     Top = 19
-    Enabled = False
     TabOrder = 35
     Width = 158
   end
   object cxLabel6: TcxLabel
     Left = 115
     Top = 5
-    Caption = #1050#1086#1076#1088#1077#1094#1077#1087#1090#1091#1088#1099
+    Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
   end
   object ActionList: TActionList
     Left = 65528
@@ -324,22 +324,22 @@
         ParamType = ptInputOutput
       end
       item
-        Name = 'inName'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
+        Name = 'inReceiptCode'
+        Value = ''
+        Component = edReceiptCode
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inComment'
         Value = ''
-        Component = ceComment
+        Component = edComment
         DataType = ftString
         ParamType = ptInput
       end
@@ -400,9 +400,9 @@
         ParamType = ptInput
       end
       item
-        Name = 'inMain'
+        Name = 'inIsMain'
         Value = Null
-        Component = ceisReceipt_Main
+        Component = cbIsMain
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -453,7 +453,7 @@
         ParamType = ptInputOutput
       end>
     Left = 336
-    Top = 89
+    Top = 73
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Receipt'
@@ -481,13 +481,13 @@
       item
         Name = 'ReceiptCode'
         Value = Null
-        Component = ceReceiptCode
+        Component = edReceiptCode
         DataType = ftString
       end
       item
         Name = 'Comment'
         Value = ''
-        Component = ceComment
+        Component = edComment
         DataType = ftString
       end
       item
@@ -539,9 +539,9 @@
         DataType = ftDateTime
       end
       item
-        Name = 'Main'
+        Name = 'IsMain'
         Value = ''
-        Component = ceisReceipt_Main
+        Component = cbIsMain
         DataType = ftBoolean
       end
       item

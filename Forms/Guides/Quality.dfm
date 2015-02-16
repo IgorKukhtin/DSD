@@ -22,6 +22,7 @@ inherited QualityForm: TQualityForm
       inherited cxGrid: TcxGrid
         Width = 773
         Height = 348
+        PopupMenu = nil
         ExplicitWidth = 773
         ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -30,6 +31,7 @@ inherited QualityForm: TQualityForm
           OnKeyPress = nil
           OnCustomDrawCell = nil
           DataController.Filter.OnChanged = nil
+          OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -98,7 +100,13 @@ inherited QualityForm: TQualityForm
       end
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 219
+    Top = 240
+  end
   inherited ActionList: TActionList
+    Left = 79
+    Top = 223
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TQualityEditForm'
       FormNameParam.Value = 'TQualityEditForm'
@@ -215,6 +223,9 @@ inherited QualityForm: TQualityForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
       item
         Action = actUpdate
       end>

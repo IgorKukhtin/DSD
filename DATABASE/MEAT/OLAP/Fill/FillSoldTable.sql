@@ -12,6 +12,7 @@ RETURNS VOId
 AS
 $BODY$
 BEGIN
+  inStartDate:='01.06.2014';
   --
   DELETE FROM SoldTable WHERE OperDate BETWEEN inStartDate AND inEndDate;
 
@@ -428,6 +429,17 @@ ALTER FUNCTION FillSoldTable (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
  26.11.14                         *  
  25.11.14                                        * add Sale_SummCost Return_SummCost 
  19.11.14                         * add 
+*/
+/*
+SELECT object_p.ValueData, object_g.ValueData, object_gk.ValueData, sum (Sale_Summ)
+, DATE_TRUNC ('month', OperDate)
+FROM SoldTable
+left join object as object_p on object_p.Id = PartnerId
+left join object as object_g on object_g.Id = GoodsId
+left join object as object_gk on object_gk.Id = GoodsKindId
+where OperDate BETWEEN '01.06.2014' and  '31.12.2014'
+group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
+, DATE_TRUNC ('month', OperDate)
 */
 -- тест
 -- SELECT * FROM SoldTable
