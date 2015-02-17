@@ -1314,6 +1314,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_PriceList
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_To
                                          ) AS ContainerId_ProfitLoss_10700
                   -- для учета себестоимости возвратов
                 , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -1325,6 +1327,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_To
                                          ) AS ContainerId_ProfitLoss_10800
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BusinessId_To
@@ -1381,6 +1385,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_CountChange
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_To
                                          ) AS ContainerId_ProfitLoss_40208
                   -- для учета себестоимости возвратов : с/с2
                 , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -1392,6 +1398,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_To
                                          ) AS ContainerId_ProfitLoss_10800
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BusinessId_To
@@ -1616,6 +1624,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_To
                                          ) AS ContainerId_ProfitLoss_10700
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BusinessId_To
@@ -1948,13 +1958,16 @@ BEGIN
      ;
 
 
+     -- убрал, т.к. св-во пишется теперь в ОПиУ
+     DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
+     DELETE FROM MovementLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementId = inMovementId;
      -- !!!6.0.1. формируются свойства в элементах документа из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_To)
+     /*PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_To)
      FROM (SELECT _tmpItem.MovementItemId
            FROM _tmpItem
           ) AS tmp;
      -- !!!6.0.2. формируются свойство связь с <филиал> в документе из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_To);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_To);*/
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки

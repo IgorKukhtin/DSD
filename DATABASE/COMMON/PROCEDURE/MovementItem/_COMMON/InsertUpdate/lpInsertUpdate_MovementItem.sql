@@ -29,6 +29,13 @@ BEGIN
      END IF;
 
 
+     -- 0. Проверка
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
+     END IF;
+
+
      -- определяем <Статус>
      SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
      -- проверка - проведенные/удаленные документы Изменять нельзя

@@ -268,8 +268,12 @@ BEGIN
 
                -- Филиал Баланс: не используется
              , 0 AS BranchId_Balance
-               -- Филиал ОПиУ: не используется
-             , 0 AS BranchId_ProfitLoss
+               -- Филиал ОПиУ: если юр лицо относится к филиалу (захардкодил для Крыма)
+             , CASE WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
+                     AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
+                         THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                    ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0)
+               END AS BranchId_ProfitLoss
 
                -- Месяц начислений: не используется
              , 0 AS ServiceDateId
@@ -280,7 +284,12 @@ BEGIN
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
-       ;
+             LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                           ON CLO_InfoMoney.ContainerId = _tmpItem.ContainerId
+                                          AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = CLO_InfoMoney.ObjectId
+             -- !!!не ошибка, это действительно св-во юр.лица!!!
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = _tmpItem.ObjectId AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch();
 
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки

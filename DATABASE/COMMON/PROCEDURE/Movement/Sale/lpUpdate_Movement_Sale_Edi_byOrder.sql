@@ -20,10 +20,10 @@ BEGIN
     IF vbMovementId_EDI <> 0 
        OR EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inId AND DescId = zc_MovementLinkMovement_Sale() AND MovementChildId <> 0)
     THEN
-        IF vbMovementId_EDI <>
+        IF vbMovementId_EDI <> 0
         THEN
             -- !!!поменяли у документа EDI признак!!!
-            PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId_EDI, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale());
+            PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId_EDI, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()));
         END IF;
 
         -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)

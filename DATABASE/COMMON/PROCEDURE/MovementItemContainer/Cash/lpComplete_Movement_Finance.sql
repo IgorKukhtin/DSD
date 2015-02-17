@@ -365,6 +365,8 @@ BEGIN
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                                                             , inObjectId_1        := _tmpItem.ObjectId
+                                                                            , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                                                            , inObjectId_2        := _tmpItem.BranchId_ProfitLoss
                                                                              )
                                             WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                  -- _tmpItem.ObjectDescId = zc_Object_Founder() -- Учредители
@@ -574,6 +576,8 @@ BEGIN
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                                                             , inObjectId_1        := _tmpItem.ProfitLossId_Diff
+                                                                            , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                                                            , inObjectId_2        := _tmpItem.BranchId_ProfitLoss
                                                                              )
                                             ELSE 0
                                        END
@@ -683,14 +687,16 @@ BEGIN
           ) AS _tmpItem
     ;
 
-
+     -- убрал, т.к. св-во пишется теперь в ОПиУ
+     DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
+     /* убрал, т.к. св-во пишется теперь в ОПиУ
      -- !!!5.1. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, tmp.BranchId_ProfitLoss)
      FROM (SELECT _tmpItem.MovementItemId, _tmpItem.BranchId_ProfitLoss
            FROM _tmpItem
            WHERE _tmpItem.AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
              AND _tmpItem.MovementDescId <> zc_Movement_LossDebt()
-          ) AS tmp;
+          ) AS tmp;*/
 
 
      -- 6. ФИНИШ - Обязательно сохраняем Проводки
@@ -704,6 +710,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.02.15                                        * del zc_MILinkObject_Branch, т.к. св-во пишется теперь в ОПиУ
  07.09.14                                        * add zc_ContainerLinkObject_Branch to PartnerId
  05.09.14                                        * add zc_ContainerLinkObject_Branch to Физ.лица (подотчетные лица)
  03.09.14                                        * add zc_Object_Founder

@@ -548,6 +548,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := zc_Enum_ProfitLoss_70203() -- Дополнительная прибыль + Прочее + Возврат поставщикам
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := 0
                                          ) AS ContainerId_ProfitLoss_70203
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
            FROM (SELECT  _tmpItem.InfoMoneyDestinationId
@@ -781,6 +783,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := zc_Enum_ProfitLoss_70203() -- Дополнительная прибыль + Прочее + Возврат поставщикам
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := 0
                                          ) AS ContainerId_ProfitLoss_70203
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
            FROM (SELECT  _tmpItem.InfoMoneyDestinationId
@@ -963,14 +967,15 @@ BEGIN
      ;
 
      -- !!!Обнулил!!!
-     vbBranchId_From:= 0;
+     -- vbBranchId_From:= 0;
      -- !!!!!!!!!!!!!
-
+     -- убрал, т.к. св-во пишется теперь в ОПиУ
+     DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
      -- !!!6.0. формируются свойства в элементах документа из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_From)
+     /*PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_From)
      FROM (SELECT _tmpItem.MovementItemId
            FROM _tmpItem
-          ) AS tmp;
+          ) AS tmp;*/
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();

@@ -34,7 +34,7 @@ union
 select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Branch(), Id, (select Id from Object where ObjectCode=6 and DescId = zc_Object_Branch()))
 -- select *
 from Object
-where Id in (79447, 329598) -- Преміум Фудс ТОВ
+where Id in (79447, 329598, 78274) -- Преміум Фудс ТОВ
 
 
 -- 2.1 - !!!!!!!!!!!!!!!!!!!! Change Sale FromId
