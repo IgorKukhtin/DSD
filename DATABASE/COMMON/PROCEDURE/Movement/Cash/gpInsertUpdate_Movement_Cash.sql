@@ -27,15 +27,23 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
 
-     -- 1. Распроводим Документ
+     -- 1. если  update
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Cash())
      THEN
+         -- проверка
+         IF EXISTS (SELECT Id FROM Movement WHERE Id = ioId AND ParentId <> 0)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ № <%> может корректироваться только через <Касса выплата зп>.', inInvNumber;
+         END IF;
+
+         -- 1. Распроводим Документ
          PERFORM lpUnComplete_Movement (inMovementId := ioId
                                       , inUserId     := vbUserId);
      END IF;
 
      -- сохранили
      ioId := lpInsertUpdate_Movement_Cash (ioId          := ioId
+                                         , inParentId    := NULL
                                          , inInvNumber   := inInvNumber
                                          , inOperDate    := inOperDate
                                          , inServiceDate := inServiceDate

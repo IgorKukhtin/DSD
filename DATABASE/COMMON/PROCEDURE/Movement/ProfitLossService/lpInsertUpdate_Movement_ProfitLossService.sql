@@ -41,16 +41,18 @@ BEGIN
      END IF;
 
 
+     -- Распроводим Документ
+     IF ioId <> 0 THEN
+        PERFORM lpUnComplete_Movement (inMovementId := ioId
+                                     , inUserId     := inUserId);
+     END IF;
+
      -- расчет
      IF inAmountIn <> 0 THEN
         vbAmount := inAmountIn;
      ELSE
         vbAmount := -1 * inAmountOut;
      END IF;
-
-     -- 1. Распроводим Документ
-     PERFORM lpUnComplete_Movement (inMovementId := ioId
-                                  , inUserId     := inUserId);
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

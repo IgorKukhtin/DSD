@@ -1,48 +1,41 @@
--- Function: lpUpdate_MovementItem_OrderExternal()
+п»ї-- Function: lpUpdate_MovementItem_OrderExternal()
 
---DROP FUNCTION IF EXISTS lpUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, Integer, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, Integer, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_OrderExternal(
-    IN inId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inAmount              TFloat    , -- 
-    IN inAmountRemains       TFloat    , -- 
-    IN inUserId              Integer     -- пользователь
+    IN inId                  Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р­Р»РµРјРµРЅС‚ РґРѕРєСѓРјРµРЅС‚Р°>
+    IN inMovementId          Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚>
+    IN inGoodsId             Integer   , -- РўРѕРІР°СЂС‹
+    IN inGoodsKindId         Integer   , -- Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ
+    IN inAmount_Param        TFloat    , -- 
+    IN inDescId_Param        Integer  ,
+    IN inUserId              Integer     -- РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
 )
 RETURNS VOID AS--RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
    --DECLARE vbinId Integer;   
 BEGIN
-     -- определяется признак Создание/Корректировка
+     -- РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РїСЂРёР·РЅР°Рє РЎРѕР·РґР°РЅРёРµ/РљРѕСЂСЂРµРєС‚РёСЂРѕРІРєР°
      vbIsInsert:= COALESCE (inId, 0) = 0;
 
-     -- сохранили <Элемент документа>
-     inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), inId, inGoodsKindId);
-
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), inId, inAmountRemains);
-
-
-     IF vbIsInsert = True                    -- если новая строка
+     IF COALESCE (inId, 0) = 0 
      THEN
-         -- сохранили свойство <Цена за количество>
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), inId, 1);
+       -- СЃРѕС…СЂР°РЅРёР»Рё <Р­Р»РµРјРµРЅС‚ РґРѕРєСѓРјРµРЅС‚Р°>
+       inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, 0, NULL);
+
+       -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), inId, inGoodsKindId);
+  
+       -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <Р¦РµРЅР° Р·Р° РєРѕР»РёС‡РµСЃС‚РІРѕ>
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), inId, 1);
+
      END IF;
 
-     IF inGoodsId <> 0
-     THEN
-         -- создали объект <Связи Товары и Виды товаров>
-         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
-     END IF;
-    
-        -- сохранили протокол
+     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ
+     PERFORM lpInsertUpdate_MovementItemFloat (inDescId_Param, inId, inAmount_Param);
+
+     -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
      PERFORM lpInsert_MovementItemProtocol (inId, inUserId, vbIsInsert);
 
 END;
@@ -50,10 +43,14 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
  13.02.15         *
 */
 
--- тест
--- SELECT * FROM lpUpdate_MovementItem_OrderExternal (inId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- С‚РµСЃС‚
+-- SELECT * FROM lpUpdate_MovementItem_OrderExternal (inId:= 10696633, inMovementId:= 869524, inGoodsId:= 7402,  inGoodsKindId := 8328 , inAmount:= 45::TFloat, inAmountParam:= 777::TFloat, inDescCode:= 'zc_MIFloat_AmountRemains'::TVarChar, inSession:= lpCheckRight ('5', zc_Enum_Process_InsertUpdate_MI_OrderExternal()))
+
+--select * from gpInsertUpdate_MovementItem_OrderExternal(ioId := 10696633 , inMovementId := 869524 , inGoodsId := 7402 , inAmount := 45 , inAmountSecond := 0 , inGoodsKindId := 8328 , inPrice := 68.75 , ioCountForPrice := 1 ,  inSession := '5');
+
+-- select lpCheckRight ('5', zc_Enum_Process_InsertUpdate_MI_OrderExternal());

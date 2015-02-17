@@ -1,9 +1,11 @@
 -- Function: lpInsertUpdate_Movement_Cash()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
+    IN inParentId            Integer   , -- Ключ объекта
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inServiceDate         TDateTime , -- Дата начисления
@@ -30,12 +32,16 @@ BEGIN
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
      -- проверка
-     IF (COALESCE (inAmountIn, 0) = 0) AND (COALESCE (inAmountOut, 0) = 0) THEN
+     IF (COALESCE (inAmountIn, 0) = 0) AND (COALESCE (inAmountOut, 0) = 0) AND COALESCE (inParentId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Введите сумму.';
      END IF;
      -- проверка
      IF (COALESCE (inAmountIn, 0) <> 0) AND (COALESCE (inAmountOut, 0) <> 0) THEN
         RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма: <Приход> или <Расход>.';
+     END IF;
+     -- проверка + !!!временно для Админа откл!!!
+     IF COALESCE (inInfoMoneyId, 0) = 0 AND (inUserId <> 5) THEN
+        RAISE EXCEPTION 'Ошибка.Должно быть выбрано значение <УП статья назначения>.';
      END IF;
      -- проверка
      IF EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300()) -- Расчеты с участниками
@@ -106,7 +112,7 @@ BEGIN
                      END;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, inParentId, vbAccessKeyId);
 
 
      -- поиск <Элемент документа>

@@ -41,6 +41,9 @@ $BODY$
    DECLARE vbMasterKeyValue BigInt;
    DECLARE vbChildKeyValue BigInt;
 BEGIN
+     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+     LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+
      --
      inContainerDescId   := COALESCE (inContainerDescId, 0);
      inObjectId          := COALESCE (inObjectId, 0);
