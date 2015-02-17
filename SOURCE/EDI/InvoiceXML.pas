@@ -305,7 +305,7 @@ type
 { Global Functions }
 
 function GetINVOICE(Doc: IXMLDocument): IXMLINVOICEType;
-function LoadINVOICE(const FileName: string): IXMLINVOICEType;
+function LoadINVOICE(XMLString: string): IXMLINVOICEType;
 function NewINVOICE: IXMLINVOICEType;
 
 const
@@ -320,9 +320,12 @@ begin
   Result := Doc.GetDocBinding('INVOICE', TXMLINVOICEType, TargetNamespace) as IXMLINVOICEType;
 end;
 
-function LoadINVOICE(const FileName: string): IXMLINVOICEType;
+function LoadINVOICE(XMLString: string): IXMLINVOICEType;
 begin
-  Result := LoadXMLDocument(FileName).GetDocBinding('INVOICE', TXMLINVOICEType, TargetNamespace) as IXMLINVOICEType;
+  with NewXMLDocument do begin
+    LoadFromXML(XMLString);
+    Result := GetDocBinding('INVOICE', TXMLINVOICEType, TargetNamespace) as IXMLINVOICEType;
+  end;
 end;
 
 function NewINVOICE: IXMLINVOICEType;

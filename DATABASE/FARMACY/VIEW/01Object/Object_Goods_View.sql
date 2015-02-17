@@ -19,6 +19,7 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
            , ObjectString_Goods_Maker.ValueData               AS MakerName
            , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
+           , COALESCE(ObjectBoolean_Goods_Close.ValueData, false)   AS isClose
 
        FROM ObjectLink AS ObjectLink_Goods_Object
 
@@ -52,6 +53,10 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
                                ON ObjectString_Goods_Maker.ObjectId = ObjectLink_Goods_Object.ObjectId 
                               AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
+                                ON ObjectBoolean_Goods_Close.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                               AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()   
+
         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
                                ON ObjectFloat_Goods_MinimumLot.ObjectId = ObjectLink_Goods_Object.ObjectId 
                               AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()   
@@ -66,6 +71,7 @@ ALTER TABLE Object_Goods_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.02.15                         *
  21.10.14                         *
  23.07.14                         *
 */

@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DescName TVarChar
              , isCheck Boolean
              , isElectron Boolean
+             , isError Boolean
               )
 AS
 $BODY$
@@ -106,6 +107,7 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isCheck
            , COALESCE(MovementBoolean_Electron.ValueData, false) AS isElectron
+           , COALESCE(MovementBoolean_Electron.ValueData, false) AS isError
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -113,6 +115,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
                                       ON MovementBoolean_Electron.MovementId =  Movement.Id
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Error
+                                      ON MovementBoolean_Error.MovementId =  Movement.Id
+                                     AND MovementBoolean_Error.DescId = zc_MovementBoolean_Error()
 
             LEFT JOIN MovementString AS MovementString_Desc
                                      ON MovementString_Desc.MovementId =  Movement.Id
@@ -255,6 +261,7 @@ ALTER FUNCTION gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.02.15                         * 
  19.10.14                                        * add Contract... AND Unit...
  09.10.14                                        * rem --***
  20.07.14                                        * ALL

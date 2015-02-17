@@ -7,7 +7,7 @@ uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 type
 
   TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave,
-    ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice);
+    ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice, ediError);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -33,6 +33,7 @@ type
     FInsertEDIEvents: TdsdStoredProc;
     FUpdateDeclarAmount: TdsdStoredProc;
     FInsertEDIFile: TdsdStoredProc;
+    FUpdateEDIErrorState: TdsdStoredProc;
     FUpdateDeclarFileName: TdsdStoredProc;
     ComSigner: OleVariant;
     FSendToFTP: boolean;
@@ -67,6 +68,7 @@ type
       StartDate, EndDate: TDateTime);
     procedure ReturnSave(MovementDataSet: TDataSet;
       spFileInfo, spFileBlob: TdsdStoredProc; Directory: string);
+    procedure ErrorLoad(Directory: string);
   published
     property ConnectionParams: TConnectionParams read FConnectionParams
       write FConnectionParams;
@@ -252,6 +254,16 @@ begin
   FUpdateDeclarFileName.Params.AddParam('inFileName', ftString, ptInput, '');
   FUpdateDeclarFileName.StoredProcName := 'gpUpdate_DeclarFileName';
   FUpdateDeclarFileName.OutputType := otResult;
+
+  FUpdateEDIErrorState := TdsdStoredProc.Create(nil);
+  FUpdateEDIErrorState.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FUpdateEDIErrorState.Params.AddParam('inDocType', ftString, ptInput, '');
+  FUpdateEDIErrorState.Params.AddParam('inOperDate', ftDateTime, ptInput, Date);
+  FUpdateEDIErrorState.Params.AddParam('inInvNumber', ftString, ptInput, '');
+  FUpdateEDIErrorState.Params.AddParam('inIsError', ftBoolean, ptInput, false);
+  FUpdateEDIErrorState.Params.AddParam('IsFind', ftBoolean, ptOutput, false);
+  FUpdateEDIErrorState.StoredProcName := 'gpUpdate_Movement_EDIErrorState';
+  FUpdateEDIErrorState.OutputType := otResult;
 
 end;
 
@@ -1034,6 +1046,84 @@ begin
   FreeAndNil(FInsertEDIFile);
   FreeAndNil(FUpdateDeclarFileName);
   inherited;
+end;
+
+procedure TEDI.ErrorLoad(Directory: string);
+var
+    List: TStringList;
+    Stream: TStringStream;
+    i: integer;
+    DESADV: IXMLDESADVType;
+    Invoice: IXMLINVOICEType;
+begin
+  FTPSetConnection;
+  // загружаем файлы с FTP
+  FIdFTP.Connect;
+  if FIdFTP.Connected then
+  begin
+    FIdFTP.ChangeDir(Directory);
+    List := TStringList.Create;
+    Stream := TStringStream.Create;
+    try
+      FIdFTP.List(List, '', false);
+      with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
+        try
+          Start;
+          for i := 0 to List.Count - 1 do
+          begin
+            // если первые буквы файла desadv, а последние .xml. Desadv
+            if (lowercase(copy(List[i], 1, 6)) = 'desadv') and
+              (copy(List[i], Length(List[i]) - 3, 4) = '.xml') then
+            begin
+              Stream.Clear;
+              FIdFTP.Get(List[i], Stream);
+              DESADV := LoadDESADV(Stream.DataString);
+
+              FUpdateEDIErrorState.ParamByName('inMovementId').Value := 0;
+              FUpdateEDIErrorState.ParamByName('inDocType').Value := 'desadv';
+              FUpdateEDIErrorState.ParamByName('inOperDate').Value := VarToDateTime(DESADV.ORDERDATE);
+              FUpdateEDIErrorState.ParamByName('inInvNumber').Value := DESADV.ORDERNUMBER;
+              FUpdateEDIErrorState.ParamByName('inIsError').Value := true;
+
+              FUpdateEDIErrorState.Execute;
+              if FUpdateEDIErrorState.ParamByName('IsFind').Value then
+              begin
+                FIdFTP.ChangeDir(Directory);
+          //      FIdFTP.Delete(List[i]);
+              end;
+            end;
+            // если первые буквы файла desadv, а последние .xml. Desadv
+            if (lowercase(copy(List[i], 1, 7)) = 'invoice') and
+              (copy(List[i], Length(List[i]) - 3, 4) = '.xml') then
+            begin
+              Stream.Clear;
+              FIdFTP.Get(List[i], Stream);
+              Invoice := LoadINVOICE(Stream.DataString);
+
+              FUpdateEDIErrorState.ParamByName('inMovementId').Value := 0;
+              FUpdateEDIErrorState.ParamByName('inDocType').Value := 'invoice';
+              FUpdateEDIErrorState.ParamByName('inOperDate').Value := VarToDateTime(DESADV.ORDERDATE);
+              FUpdateEDIErrorState.ParamByName('inInvNumber').Value := DESADV.ORDERNUMBER;
+              FUpdateEDIErrorState.ParamByName('inIsError').Value := true;
+
+              FUpdateEDIErrorState.Execute;
+              if FUpdateEDIErrorState.ParamByName('IsFind').Value then
+              begin
+                FIdFTP.ChangeDir(Directory);
+          //      FIdFTP.Delete(List[i]);
+              end;
+            end;
+            IncProgress;
+          end;
+        finally
+          Finish;
+        end;
+    finally
+      FIdFTP.Quit;
+      List.Free;
+      Stream.Free;
+    end;
+  end;
 end;
 
 procedure TEDI.FTPSetConnection;
@@ -1822,6 +1912,8 @@ begin
       EDI.ORDRSPSave(HeaderDataSet, ListDataSet);
     ediInvoice:
       EDI.INVOICESave(HeaderDataSet, ListDataSet);
+    ediError:
+      EDI.ErrorLoad(Directory);
   end;
   Result := true;
 end;

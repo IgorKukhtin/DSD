@@ -3,7 +3,6 @@ inherited GoodsForm: TGoodsForm
   ClientHeight = 423
   ClientWidth = 852
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitTop = -67
   ExplicitWidth = 860
   ExplicitHeight = 450
   PixelsPerInch = 96
@@ -77,7 +76,13 @@ inherited GoodsForm: TGoodsForm
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = '0; ; ;'
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 77
+          end
+          object clIsClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'IsClose'
+            HeaderAlignmentVert = vaCenter
+            Width = 52
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -318,6 +323,13 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'MinimumLot'
         DataType = ftFloat
+      end
+      item
+        Name = 'isClose'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isClose'
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 240
