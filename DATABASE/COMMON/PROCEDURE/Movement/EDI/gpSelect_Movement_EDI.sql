@@ -107,7 +107,7 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isCheck
            , COALESCE(MovementBoolean_Electron.ValueData, false) AS isElectron
-           , COALESCE(MovementBoolean_Electron.ValueData, false) AS isError
+           , COALESCE(MovementBoolean_Error.ValueData, false) AS isError
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

@@ -1087,10 +1087,13 @@ begin
 
               FUpdateEDIErrorState.Execute;
               if FUpdateEDIErrorState.ParamByName('IsFind').Value then
-              begin
-                FIdFTP.ChangeDir(Directory);
-          //      FIdFTP.Delete(List[i]);
-              end;
+                try
+                  FIdFTP.ChangeDir('/archive');
+                  FIdFTP.Put(Stream, 'error_' + List[i]);
+                finally
+                  FIdFTP.ChangeDir(Directory);
+                  FIdFTP.Delete(List[i]);
+                end;
             end;
             // если первые буквы файла desadv, а последние .xml. Desadv
             if (lowercase(copy(List[i], 1, 7)) = 'invoice') and
@@ -1108,10 +1111,13 @@ begin
 
               FUpdateEDIErrorState.Execute;
               if FUpdateEDIErrorState.ParamByName('IsFind').Value then
-              begin
-                FIdFTP.ChangeDir(Directory);
-          //      FIdFTP.Delete(List[i]);
-              end;
+                try
+                  FIdFTP.ChangeDir('/archive');
+                  FIdFTP.Put(Stream, 'error_' + List[i]);
+                finally
+                  FIdFTP.ChangeDir(Directory);
+                  FIdFTP.Delete(List[i]);
+                end;
             end;
             IncProgress;
           end;
