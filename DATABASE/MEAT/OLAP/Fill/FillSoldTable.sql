@@ -175,8 +175,8 @@ BEGIN
            , (tmpResult.Sale_Summ_10300 - tmpResult.Return_Summ_10300)         AS SaleReturn_Summ_10300
            , (tmpResult.Sale_SummCost - tmpResult.Return_SummCost)             AS SaleReturn_SummCost
            , (tmpResult.Sale_SummCost_40200 + tmpResult.Return_SummCost_40200) AS SaleReturn_SummCost_40200 -- !!!здесь сумма!!!
-           , (tmpResult.Sale_Amount_Weight - tmpResult.Return_Amount_Weight)   AS SaleReturn_Amount_Weight
-           , (tmpResult.Sale_Amount_Sh - tmpResult.Return_Amount_Sh)           AS SaleReturn_Amount_Sh
+           , (tmpResult.Sale_AmountPartner_Weight - tmpResult.Return_AmountPartner_Weight)   AS SaleReturn_Amount_Weight
+           , (tmpResult.Sale_AmountPartner_Sh - tmpResult.Return_AmountPartner_Sh)           AS SaleReturn_Amount_Sh
       
            , 0, 0, 0
            , 0, 0, 0
