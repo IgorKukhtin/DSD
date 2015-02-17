@@ -83,23 +83,41 @@ BEGIN
 
    -- Ищем по общему коду 
    IF (COALESCE(vbGoodsId, 0) = 0) AND (inCommonCode > 0) THEN
-      SELECT GoodsMainId INTO vbGoodsId
-        FROM Object_LinkGoods_View 
-       WHERE ObjectId = zc_Enum_GlobalConst_Marion() AND GoodsCodeInt = inCommonCode;
+      SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId INTO vbGoodsId
+        FROM Object_Goods_View 
+        JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                        ON Object_Goods_View.Id = ObjectLink_LinkGoods_Goods.ChildObjectId
+                       AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+        JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                        ON ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                       AND ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId                         
+       WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion() AND GoodsCodeInt = inCommonCode;
    END IF;
    
    -- Ищем по штрих-коду 
    IF (COALESCE(vbGoodsId, 0) = 0) AND (inBarCode <> '') THEN
-      SELECT GoodsMainId INTO vbGoodsId
-        FROM Object_LinkGoods_View 
-       WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsName = inBarCode;
+      SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId INTO vbGoodsId
+        FROM Object_Goods_View 
+        JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                        ON Object_Goods_View.Id = ObjectLink_LinkGoods_Goods.ChildObjectId
+                       AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+        JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                        ON ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                       AND ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId                         
+       WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsName = inBarCode;
    END IF;
 
    -- Ищем по коду и inJuridicalId
    IF (COALESCE(vbGoodsId, 0) = 0) THEN
-      SELECT GoodsMainId INTO vbGoodsId
-        FROM Object_LinkGoods_View 
-       WHERE ObjectId = inJuridicalId AND GoodsCode = inGoodsCode;
+      SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId INTO vbGoodsId
+        FROM Object_Goods_View 
+        JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                        ON Object_Goods_View.Id = ObjectLink_LinkGoods_Goods.ChildObjectId
+                       AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+        JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                        ON ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                       AND ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId                         
+       WHERE Object_Goods_View.ObjectId = inJuridicalId AND GoodsCode = inGoodsCode;
    END IF;
 
    IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
@@ -119,6 +137,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.02.15                        *   убрал вьюхи из поиска. 
  11.11.14                        *   
  28.10.14                        *   
  22.10.14                        *   Поменял очередность поиска

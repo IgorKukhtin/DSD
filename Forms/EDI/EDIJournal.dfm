@@ -3,8 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 424
   ClientWidth = 1183
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1199
-  ExplicitHeight = 459
+  ExplicitWidth = 1191
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -77,6 +77,12 @@ inherited EDIJournalForm: TEDIJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clError: TcxGridDBColumn
+            Caption = #1054#1096
+            DataBinding.FieldName = 'IsError'
+            HeaderAlignmentVert = vaCenter
+            Width = 25
+          end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082'. (EDI)'
             DataBinding.FieldName = 'OperDate'
@@ -836,7 +842,35 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1057#1095#1077#1090
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'> '#1074' EXITE'
     end
-    object mactOrdSpr: TMultiAction [4]
+    object mactErrorEDI: TMultiAction [4]
+      Category = 'EDI Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = EDIError
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1096#1080#1073#1082#1072#1084' '#1080#1079' EXITE?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1096#1080#1073#1082#1072#1084' '#1091#1089#1087#1077#1096#1085#1086' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1096#1080#1073#1082#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1096#1080#1073#1082#1080
+    end
+    object EDIError: TEDIAction [5]
+      Category = 'EDI Load'
+      MoveParams = <>
+      StartDateParam.Value = 42005d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      EndDateParam.Value = 42005d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+      EDI = EDI
+      EDIDocType = ediError
+      Directory = '/error'
+    end
+    object mactOrdSpr: TMultiAction [6]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -853,7 +887,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1074' EXITE'
     end
-    object actDesadv: TEDIAction [5]
+    object actDesadv: TEDIAction [7]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -863,7 +897,7 @@ inherited EDIJournalForm: TEDIJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object mactDesadv: TMultiAction [6]
+    object mactDesadv: TMultiAction [8]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -1399,6 +1433,10 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbEDIError'
+        end
+        item
+          Visible = True
           ItemName = 'bbReceipt'
         end
         item
@@ -1538,6 +1576,10 @@ inherited EDIJournalForm: TEDIJournalForm
     end
     object bbDecadv: TdxBarButton
       Action = mactDesadv
+      Category = 0
+    end
+    object bbEDIError: TdxBarButton
+      Action = mactErrorEDI
       Category = 0
     end
   end

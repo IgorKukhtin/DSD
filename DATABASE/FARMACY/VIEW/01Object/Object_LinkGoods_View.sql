@@ -20,9 +20,9 @@ CREATE OR REPLACE VIEW Object_LinkGoods_View AS
          , false                                         AS isErased
          
      FROM ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-          JOIN Object AS Object_MainGoods ON Object_MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+          LEFT JOIN Object AS Object_MainGoods ON Object_MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
  
-          JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                           ON ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId
                          AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
           JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = ObjectLink_LinkGoods_Goods.ChildObjectId
