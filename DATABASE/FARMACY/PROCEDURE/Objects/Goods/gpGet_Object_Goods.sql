@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
                MinimumLot TFloat, ReferCode TFloat, ReferPrice TFloat, 
-               isErased boolean
+               isClose boolean, isErased boolean
                ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -42,6 +42,7 @@ BEGIN
            , 0::TFloat     AS MinimumLot
            , 0::TFloat     AS ReferCode
            , 0::TFloat     AS ReferPrice
+           , false         AS isClose
 
            , CAST (NULL AS Boolean) AS isErased
 
@@ -72,6 +73,8 @@ BEGIN
           , ObjectFloat_Goods_ReferCode.ValueData  AS ReferCode
           , ObjectFloat_Goods_ReferPrice.ValueData AS ReferPrice
 
+          , Object_Goods_View.isClose        AS isClose
+
           , Object_Goods_View.isErased       AS isErased
           
      FROM Object_Goods_View
@@ -95,6 +98,7 @@ ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.02.15                        *  
  13.11.14                        *  Дефолты
  30.10.14                        *
  24.06.14         *

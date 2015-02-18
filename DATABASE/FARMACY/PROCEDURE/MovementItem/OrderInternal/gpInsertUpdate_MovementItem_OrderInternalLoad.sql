@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbMovementId Integer;
    DECLARE vbMovementItemId Integer;
+   DECLARE vbIsClose boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -38,9 +39,13 @@ BEGIN
      END IF;                                                                               
 
    SELECT 
-         Object_Goods_View.Id INTO vbGoodsId
+         Object_Goods_View.Id, Object_Goods_View.isClose INTO vbGoodsId, vbIsClose
     FROM Object_Goods_View 
    WHERE Object_Goods_View.ObjectId = vbObjectId AND Object_Goods_View.GoodsCode = inGoodsCode;
+
+   IF vbIsClose THEN
+      RETURN;
+   END IF;
 
    SELECT 
          MovementItem.Id INTO vbMovementItemId
@@ -62,6 +67,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.02.15                        *  
  20.11.14                        * проверка на StatusId 
  12.09.14                        *
 */

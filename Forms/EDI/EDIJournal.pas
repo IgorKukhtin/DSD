@@ -164,6 +164,10 @@ type
     spUpdateEdiDesadv: TdsdStoredProc;
     actUpdateEdiInvoiceTrue: TdsdExecStoredProc;
     actUpdateEdiDesadvTrue: TdsdExecStoredProc;
+    clError: TcxGridDBColumn;
+    EDIError: TEDIAction;
+    mactErrorEDI: TMultiAction;
+    bbEDIError: TdxBarButton;
   private
     { Private declarations }
   public

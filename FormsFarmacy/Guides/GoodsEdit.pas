@@ -7,7 +7,7 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   cxPropertiesStore, dsdAddOn, dsdGuides, dsdDB, dsdAction, System.Classes,
   Vcl.ActnList, cxMaskEdit, cxButtonEdit, cxCurrencyEdit, Vcl.StdCtrls,
-  cxButtons, cxLabel, Vcl.Controls, cxTextEdit;
+  cxButtons, cxLabel, Vcl.Controls, cxTextEdit, cxCheckBox;
 
 type
   TGoodsEditForm = class(TAncestorEditDialogForm)
@@ -30,6 +30,7 @@ type
     ceReferPrice: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     ceReferCode: TcxCurrencyEdit;
+    cbIsClose: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -32,6 +32,7 @@ type
     clMinimumLot: TcxGridDBColumn;
     UpdateDataSet: TdsdUpdateDataSet;
     spUpdate_Goods_MinimumLot: TdsdStoredProc;
+    clIsClose: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -68,7 +68,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 81
+    Width = 92
   end
   object cxLabel6: TcxLabel [10]
     Left = 227
@@ -101,30 +101,37 @@
     Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100':'
   end
   object cxLabel5: TcxLabel [14]
-    Left = 169
+    Left = 128
     Top = 210
     Caption = #1062#1077#1085#1072' '#1057#1055':'
   end
   object ceReferPrice: TcxCurrencyEdit [15]
-    Left = 170
+    Left = 128
     Top = 233
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 7
-    Width = 109
+    Width = 92
   end
   object cxLabel7: TcxLabel [16]
-    Left = 53
+    Left = 9
     Top = 210
     Caption = #1050#1086#1076' '#1057#1055':'
   end
   object ceReferCode: TcxCurrencyEdit [17]
-    Left = 54
+    Left = 10
     Top = 233
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 6
     Width = 109
+  end
+  object cbIsClose: TcxCheckBox [18]
+    Left = 227
+    Top = 232
+    Caption = #1047#1072#1082#1088#1099#1090
+    TabOrder = 18
+    Width = 96
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -206,6 +213,13 @@
         Component = ceReferPrice
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsClose'
+        Value = Null
+        Component = cbIsClose
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 280
     Top = 8
@@ -285,6 +299,11 @@
         Name = 'ReferPrice'
         Value = Null
         Component = ceReferPrice
+      end
+      item
+        Name = 'isClose'
+        Value = Null
+        Component = cbIsClose
       end>
     Left = 304
     Top = 216

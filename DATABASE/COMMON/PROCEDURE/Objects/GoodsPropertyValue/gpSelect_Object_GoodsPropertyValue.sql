@@ -17,14 +17,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsPropertyValue());
 
-IF inShowAll THEN
+   IF inShowAll = FALSE
+   THEN
+
    RETURN QUERY
-
-
    SELECT
          Object_GoodsPropertyValue.Id         AS Id
        , Object_GoodsPropertyValue.ObjectCode AS Code
@@ -51,6 +50,11 @@ IF inShowAll THEN
        , Object_GoodsPropertyValue.isErased   AS isErased
 
    FROM Object AS Object_GoodsPropertyValue
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = Object_GoodsPropertyValue.Id
+                            AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+        LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId
+
         LEFT JOIN ObjectFloat AS ObjectFloat_Amount
                                ON ObjectFloat_Amount.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
@@ -75,11 +79,6 @@ IF inShowAll THEN
                                ON ObjectString_GroupName.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_GroupName.DescId = zc_ObjectString_GoodsPropertyValue_GroupName()
 
-        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = Object_GoodsPropertyValue.Id
-                            AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-                            AND (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId OR inGoodsPropertyId = 0)
-        INNER JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = Object_GoodsPropertyValue.Id
@@ -96,25 +95,28 @@ IF inShowAll THEN
                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-   WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue();
+   WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
+     AND (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId OR inGoodsPropertyId = 0);
 
-ELSE 
+   ELSE 
 
-    RETURN QUERY
-
- with tmpGoods AS (SELECT Object_Goods.Id             AS GoodsId
-                          , Object_Goods.ObjectCode     AS GoodsCode 
-                          , Object_Goods.ValueData      AS GoodsName
-                          , Object_Measure.ValueData    AS MeasureName
-                     FROM Object AS Object_Goods
-                          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-                     WHERE Object_Goods.DescId = zc_Object_Goods()
-                       AND Object_Goods.isErased = FALSE
-                    )
+   RETURN QUERY
+ WITH tmpGoods AS (SELECT Object_Goods.Id             AS GoodsId
+                        , Object_Goods.ObjectCode     AS GoodsCode 
+                        , Object_Goods.ValueData      AS GoodsName
+                        , Object_Measure.ValueData    AS MeasureName
+                   FROM Object_InfoMoney_View
+                        INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                        INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                             AND Object_Goods.isErased = FALSE
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                             ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                   WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
+                  )
 
    SELECT
          tmpObjectLink.GoodsPropertyValueId         AS Id
@@ -202,10 +204,8 @@ ELSE
                       AND (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId)  
                    ) AS tmpObjectLink ON tmpObjectLink.GoodsId = tmpGoods.GoodsId 
          
-   LEFT JOIN Object AS Object_GoodsProperty
-                                       ON Object_GoodsProperty.Id = COALESCE (tmpObjectLink.GoodsPropertyId, inGoodsPropertyId)
-   
-            ;
+        LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = COALESCE (tmpObjectLink.GoodsPropertyId, inGoodsPropertyId)
+       ;
      END IF;         
     
 END;$BODY$
@@ -224,4 +224,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsPropertyValue('2')
+-- SELECT * FROM gpSelect_Object_GoodsPropertyValue (351299 , TRUE, '2')

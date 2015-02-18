@@ -230,7 +230,7 @@ type
 { Global Functions }
 
 function GetDESADV(Doc: IXMLDocument): IXMLDESADVType;
-function LoadDESADV(const FileName: string): IXMLDESADVType;
+function LoadDESADV(XMLString: string): IXMLDESADVType;
 function NewDESADV: IXMLDESADVType;
 
 const
@@ -245,9 +245,12 @@ begin
   Result := Doc.GetDocBinding('DESADV', TXMLDESADVType, TargetNamespace) as IXMLDESADVType;
 end;
 
-function LoadDESADV(const FileName: string): IXMLDESADVType;
+function LoadDESADV(XMLString: string): IXMLDESADVType;
 begin
-  Result := LoadXMLDocument(FileName).GetDocBinding('DESADV', TXMLDESADVType, TargetNamespace) as IXMLDESADVType;
+  with NewXMLDocument do begin
+    LoadFromXML(XMLString);
+    Result := GetDocBinding('DESADV', TXMLDESADVType, TargetNamespace) as IXMLDESADVType;
+  end;
 end;
 
 function NewDESADV: IXMLDESADVType;

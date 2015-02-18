@@ -510,7 +510,7 @@ BEGIN
                 , ContainerLO_JuridicalBasis.ObjectId     AS JuridicalBasisId
                 , ContainerLinkObject_Business.ObjectId   AS BusinessId
                 , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
-                , COALESCE (MILinkObject_Branch.ObjectId, MovementLinkObject_Branch.ObjectId) AS BranchId
+                , COALESCE (ContainerLO_Branch.ObjectId,  COALESCE (MILinkObject_Branch.ObjectId, MovementLinkObject_Branch.ObjectId)) AS BranchId
 
 
                 , ContainerLinkObject_Currency.ObjectId AS CurrencyId
@@ -551,6 +551,9 @@ BEGIN
                                                ON ContainerLinkObject_BankAccount.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
 
+                 LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
+                                               ON ContainerLO_Branch.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                  LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis
                                                ON ContainerLO_JuridicalBasis.ContainerId = tmpMIContainer_Summ.ContainerId
                                               AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()

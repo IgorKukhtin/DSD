@@ -832,6 +832,8 @@ BEGIN
                                                                                                , inInfoMoneyId            := NULL
                                                                                                , inUserId                 := inUserId
                                                                                                 )
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_To
                                          ) AS ContainerId_ProfitLoss
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
            FROM (SELECT  zc_Enum_ProfitLossGroup_20000()     AS ProfitLossGroupId     -- Общепроизводственные расходы
@@ -860,6 +862,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := zc_Enum_ProfitLoss_40208() -- Содержание филиалов 40208; "Разница в весе"
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_To
                                          ) AS ContainerId_ProfitLoss
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
            FROM (SELECT  _tmpItem.InfoMoneyDestinationId
@@ -890,6 +894,8 @@ BEGIN
                                                                           THEN zc_Enum_ProfitLoss_10502() -- Скидка за вес 10502; "Ирна"
                                                                      ELSE zc_Enum_ProfitLoss_10501()      -- Скидка за вес 10501; "Продукция"
                                                                 END
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_To
                                          ) AS ContainerId_ProfitLoss
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
            FROM (SELECT  _tmpItem.InfoMoneyDestinationId
