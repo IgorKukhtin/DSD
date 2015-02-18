@@ -324,6 +324,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object colInvNumberBranch: TcxGridDBColumn
+            Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
+            DataBinding.FieldName = 'InvNumberBranch'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colDateRegistered: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
             DataBinding.FieldName = 'DateRegistered'
@@ -353,14 +361,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
-          end
-          object colInvNumberBranch: TcxGridDBColumn
-            Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
-            DataBinding.FieldName = 'InvNumberBranch'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
           end
           object colIsEDI: TcxGridDBColumn
             Caption = 'EXITE'

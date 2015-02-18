@@ -93,7 +93,7 @@ BEGIN
                            )*/
   , tmpProfitLoss AS (SELECT tmpMIReport.ContainerId_inf
                            , tmpMIReport.UnitId_ProfitLoss
-                           , COALESCE (ContainerLinkObject_Branch.ObjectId, tmpMIReport.BranchId_ProfitLoss)
+                           , COALESCE (ContainerLinkObject_Branch.ObjectId, tmpMIReport.BranchId_ProfitLoss) AS BranchId_ProfitLoss
                            , tmpMIReport.RouteId_inf
                            , SUM (tmpMIReport.Amount) AS Amount
                            , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
@@ -116,6 +116,7 @@ BEGIN
                              , tmpMIReport.UnitId_ProfitLoss
                              , COALESCE (ContainerLinkObject_Branch.ObjectId, tmpMIReport.BranchId_ProfitLoss)
                              , tmpMIReport.RouteId_inf
+                             , ContainerLinkObject_ProfitLoss.ObjectId
                              , ContainerLinkObject_Business.ObjectId
                              , ContainerLinkObject_JuridicalBasis.ObjectId
                      )

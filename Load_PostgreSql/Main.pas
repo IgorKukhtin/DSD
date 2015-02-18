@@ -177,6 +177,7 @@ type
     cbQuality: TCheckBox;
     cbReceiptChild: TCheckBox;
     cbReceipt: TCheckBox;
+    cbContractConditionDocument: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -10623,6 +10624,9 @@ begin
         Add('     , Bill.BillDate as OperDate');
         Add('     , UnitFrom.UnitCode as UnitCodeFrom');
         Add('     , UnitFrom.UnitName as UnitNameFrom');
+        Add('     , Unit_Dolg.UnitName as UnitName_Dolg');
+        Add('     , isnull(ClientSumm_dolg.DayCount_Real,0)as DayCount_Real');
+        Add('     , isnull(ClientSumm_dolg.DayCount_Bank,0)as DayCount_Bank');
         Add('     , OperDate as OperDatePartner');
         Add('     , null as InvNumberPartner');
 
@@ -10668,6 +10672,8 @@ begin
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id=Bill.ToId');
         Add('     left outer join dba._pgUnit on _pgUnit.Id=UnitTo.pgUnitId');
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
+        Add('     left outer join dba.Unit as Unit_Dolg on Unit_Dolg.Id=isnull(zf_ChangeIntToNull(UnitFrom.DolgByUnitID),UnitFrom.Id)');
+        Add('     left outer join dba.ClientSumm as ClientSumm_dolg on ClientSumm_dolg.ClientId=Unit_Dolg.Id');
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
@@ -10830,10 +10836,72 @@ begin
              toStoredProc.Params.ParamByName('inContractId').Value:=ContractId_pg;
              toStoredProc.Params.ParamByName('inPersonalPackerId').Value:=PersonalPackerId_pg;
 
-             if not myExecToStoredProc then ;//exit;
+             // !!!вызова может не быть!!!
+             //if cbContractConditionDocument.Checked then
+             begin
+                  if not myExecToStoredProc then ;//exit;
+                  //
+                  if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+                  then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             end;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //условие по договору
+             {if (ContractId_pg<>0)
+                and ((FieldByName('DayCount_Real').AsFloat<>0)or(FieldByName('DayCount_Bank').AsFloat<>0))
+             then begin
+                       fOpenSqToQuery (' select MAX (CASE WHEN ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_DelayDayCalendar() THEN COALESCE (ObjectLink_ContractCondition_ContractConditionKind.ObjectId, 0) ELSE 0 END) AS Id_DayCalendar'
+                                      +'      , MAX (CASE WHEN ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_DelayDayBank()   THEN COALESCE (ObjectLink_ContractCondition_ContractConditionKind.ObjectId, 0) ELSE 0 END) AS Id_DelayDayBank'
+                                      +'      , zc_Enum_ContractConditionKind_DelayDayCalendar() AS zc_Enum_ContractConditionKind_DelayDayCalendar'
+                                      +'      , zc_Enum_ContractConditionKind_DelayDayBank()     AS zc_Enum_ContractConditionKind_DelayDayBank'
+                                      +'      , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId'
+                                      +' from (SELECT zc_Enum_ContractConditionKind_DelayDayCalendar() AS Id UNION ALL SELECT zc_Enum_ContractConditionKind_DelayDayBank() AS Id) AS tmpContractConditionKind'
+                                      +'      inner join Object AS Object_Contract on Object_Contract.Id =' + IntToStr(ContractId_pg)
+                                      +'      left join ObjectLink AS ObjectLink_ContractCondition_Contract'
+                                      +'                           ON ObjectLink_ContractCondition_Contract.ChildObjectId=Object_Contract.Id'
+                                      +'                          AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()'
+                                      +'      left join ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind'
+                                      +'                           ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId'
+                                      +'                          AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = tmpContractConditionKind.Id'
+                                      +'                          AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()'
+                                      +'      left join ObjectLink AS ObjectLink_Contract_PaidKind'
+                                      +'                           ON ObjectLink_Contract_PaidKind.ObjectId = ObjectLink_ContractCondition_Contract.ChildObjectId'
+                                      +'                          AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()'
+                                      +' group by ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId'
+                                      );
+                       if //(toSqlQuery.FieldByName('Id_DayCalendar').AsInteger = zc_Enum_PaidKind_FirstForm)
+                           //and
+                            ((toSqlQuery.FieldByName('Id_DayCalendar').AsInteger<>0)
+                                 or(toSqlQuery.FieldByName('Id_DelayDayBank').AsInteger<>0))
+                       then // !!!ничего не делаем для если есть инфа!!!
+                       else
+                           if (FieldByName('DayCount_Real').AsFloat<>0)
+                           then
+                                 // добавление zc_Enum_ContractConditionKind_DelayDayCalendar
+                                 fExecSqToQuery_two ('select * from gpInsertUpdate_Object_ContractCondition('+IntToStr(toSqlQuery.FieldByName('Id_DayCalendar').AsInteger)
+                                                    +'                                           , (select ValueData from Object where Id = '+IntToStr(toSqlQuery.FieldByName('Id_DayCalendar').AsInteger)+' and DescId = zc_Object_ContractCondition())'
+                                                    +'                                           , '+FloatToStr(FieldByName('DayCount_Real').AsFloat)
+                                                    +'                                           , coalesce((select ChildObjectId from ObjectLink where ObjectId = '+IntToStr(toSqlQuery.FieldByName('Id_DayCalendar').AsInteger)+' and DescId = zc_ObjectLink_ContractCondition_Contract()),'+IntToStr(ContractId_pg)+')'
+                                                    +'                                           , '+toSqlQuery.FieldByName('zc_Enum_ContractConditionKind_DelayDayCalendar').AsString
+                                                    +'                                           , (select ChildObjectId from ObjectLink where ObjectId = '+IntToStr(toSqlQuery.FieldByName('Id_DayCalendar').AsInteger)+' and DescId = zc_ObjectLink_ContractCondition_BonusKind())'
+                                                    +'                                           , (select ChildObjectId from ObjectLink where ObjectId = '+IntToStr(toSqlQuery.FieldByName('Id_DayCalendar').AsInteger)+' and DescId = zc_ObjectLink_ContractCondition_InfoMoney())'
+                                                    +'                                           , zfCalc_UserAdmin()'
+                                                    +'                                           )'
+                                                    )
+                           else
+                           if (FieldByName('DayCount_Bank').AsFloat<>0)
+                           then
+                                 // добавление zc_Enum_ContractConditionKind_DelayDayBank
+                                 fExecSqToQuery_two ('select * from gpInsertUpdate_Object_ContractCondition('+IntToStr(toSqlQuery.FieldByName('Id_DelayDayBank').AsInteger)
+                                                    +'                                           , (select ValueData from Object where Id = '+IntToStr(toSqlQuery.FieldByName('Id_DelayDayBank').AsInteger)+' and DescId = zc_Object_ContractCondition())'
+                                                    +'                                           , '+FloatToStr(FieldByName('DayCount_Bank').AsFloat)
+                                                    +'                                           , coalesce((select ChildObjectId from ObjectLink where ObjectId = '+IntToStr(toSqlQuery.FieldByName('Id_DelayDayBank').AsInteger)+' and DescId = zc_ObjectLink_ContractCondition_Contract()),'+IntToStr(ContractId_pg)+')'
+                                                    +'                                           , '+toSqlQuery.FieldByName('zc_Enum_ContractConditionKind_DelayDayBank').AsString
+                                                    +'                                           , (select ChildObjectId from ObjectLink where ObjectId = '+IntToStr(toSqlQuery.FieldByName('Id_DelayDayBank').AsInteger)+' and DescId = zc_ObjectLink_ContractCondition_BonusKind())'
+                                                    +'                                           , (select ChildObjectId from ObjectLink where ObjectId = '+IntToStr(toSqlQuery.FieldByName('Id_DelayDayBank').AsInteger)+' and DescId = zc_ObjectLink_ContractCondition_InfoMoney())'
+                                                    +'                                           , zfCalc_UserAdmin()'
+                                                    +'                                           )'
+                                                    );
+                  end;}
              //
              Next;
              Application.ProcessMessages;

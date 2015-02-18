@@ -492,7 +492,7 @@ BEGIN
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
                                         , inDescId_2          := zc_ContainerLinkObject_Branch()
-                                        , inObjectId_2        := vbBranchId_From
+                                        , inObjectId_2        := vbBranchId_To
                                          ) AS ContainerId_ProfitLoss_10300
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BusinessId_To
