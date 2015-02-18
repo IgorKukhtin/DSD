@@ -1058,8 +1058,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeByPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeByPartnerForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentIncomeForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxForm');

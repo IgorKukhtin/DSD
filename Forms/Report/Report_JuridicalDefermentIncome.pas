@@ -1,4 +1,4 @@
-unit Report_JuridicalDefermentPayment;
+unit Report_JuridicalDefermentIncome;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter, frxClass, frxDBSet, cxImageComboBox;
 
 type
-  TReport_JuridicalDefermentPaymentForm = class(TAncestorReportForm)
+  TReport_JuridicalDefermentIncomeForm = class(TAncestorReportForm)
     clJuridicalName: TcxGridDBColumn;
     colContractNumber: TcxGridDBColumn;
     colKreditRemains: TcxGridDBColumn;
@@ -89,7 +89,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_JuridicalDefermentPaymentForm);
+  RegisterClass(TReport_JuridicalDefermentIncomeForm);
 
 
 end.

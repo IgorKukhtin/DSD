@@ -489,6 +489,8 @@ type
     dsdOpenForm1: TdsdOpenForm;
     actOrderExternalUnit: TdsdOpenForm;
     N40: TMenuItem;
+    miReport_JuridicalDefermentIncome: TMenuItem;
+    actReport_JuridicalDefermentIncome: TdsdOpenForm;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

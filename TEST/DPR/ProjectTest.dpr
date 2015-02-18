@@ -322,7 +322,7 @@ uses
   Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
   Log in '..\..\SOURCE\Log.pas',
   Report_GoodsMI_TransferDebt in '..\..\Forms\Report\Report_GoodsMI_TransferDebt.pas' {Report_GoodsMI_TransferDebtForm: TParentForm},
-  Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
+  Report_JuridicalDefermentIncome in '..\..\Forms\Report\Report_JuridicalDefermentIncome.pas' {Report_JuridicalDefermentIncomeForm: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
   Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
   OrderExternalJournalChoice in '..\..\Forms\Document\OrderExternalJournalChoice.pas' {OrderExternalJournalChoiceForm: TParentForm},
@@ -628,7 +628,8 @@ uses
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   OrderExternalUnit in '..\..\Forms\Document\OrderExternalUnit.pas' {OrderExternalUnitForm: TParentForm},
   OrderExternalUnitJournal in '..\..\Forms\Document\OrderExternalUnitJournal.pas' {OrderExternalUnitJournalForm: TParentForm},
-  GoodsProperty in '..\..\Forms\Guides\GoodsProperty.pas' {GoodsPropertyForm: TParentForm};
+  GoodsProperty in '..\..\Forms\Guides\GoodsProperty.pas' {GoodsPropertyForm: TParentForm},
+  Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {Report_JuridicalDefermentPaymentForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
