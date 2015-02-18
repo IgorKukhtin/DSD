@@ -18,12 +18,12 @@ inherited MainForm: TMainForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'CashId'
+          Name = 'CashId_top'
           Value = '14462'
         end
         item
-          Name = 'CashName'
-          Value = #1053#1072#1083
+          Name = 'CashName_top'
+          Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088
           DataType = ftString
         end
         item

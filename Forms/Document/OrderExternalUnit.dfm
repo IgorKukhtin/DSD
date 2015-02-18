@@ -2117,7 +2117,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 816
+    Left = 872
     Top = 208
   end
   object spUpdateAmountForecast: TdsdStoredProc
@@ -2154,7 +2154,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 888
-    Top = 200
+    Left = 960
+    Top = 208
   end
 end

@@ -567,6 +567,6 @@ inherited CashJournalUserForm: TCashJournalUserForm
         DataType = ftString
       end>
     Left = 552
-    Top = 5
+    Top = 13
   end
 end

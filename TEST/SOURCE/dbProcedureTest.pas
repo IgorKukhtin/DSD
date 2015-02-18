@@ -87,6 +87,9 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\lpInsertUpdate_MovementItem_PriceCorrective.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpMovementItem_PriceCorrective_SetErased.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpMovementItem_PriceCorrective_SetUnErased.sql', ZQuery);
+
+  ScriptDirectory := ProcedurePath + 'MovementItem\Cash\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;
