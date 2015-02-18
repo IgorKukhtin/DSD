@@ -904,8 +904,8 @@
 				<Form>Report_GoodsMI_TransferDebtForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentPayment.pas">
-				<Form>TReport_JuridicalDefermentPayment</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentIncome.pas">
+				<Form>Report_JuridicalDefermentIncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
@@ -1881,6 +1881,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsProperty.pas">
 				<Form>GoodsPropertyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentPayment.pas">
+				<Form>Report_JuridicalDefermentPaymentForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

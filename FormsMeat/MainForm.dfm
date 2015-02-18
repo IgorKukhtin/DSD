@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitWidth = 1102
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -762,9 +762,9 @@ inherited MainForm: TMainForm
     object actReport_JuridicalDefermentPayment: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1044#1086#1083#1075#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
-      FormName = 'TReport_JuridicalDefermentPayment'
-      FormNameParam.Value = 'TReport_JuridicalDefermentPayment'
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
+      FormName = 'TReport_JuridicalDefermentPaymentForm'
+      FormNameParam.Value = 'TReport_JuridicalDefermentPaymentForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -1784,6 +1784,16 @@ inherited MainForm: TMainForm
       Hint = #1043#1086#1088#1086#1076#1072
       FormName = 'TCityForm'
       FormNameParam.Value = 'TCityForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_JuridicalDefermentIncome: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1055#1086'c'#1090#1072#1074#1097#1080#1082#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
+      FormName = 'TReport_JuridicalDefermentIncomeForm'
+      FormNameParam.Value = 'TReport_JuridicalDefermentIncomeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2980,6 +2990,9 @@ inherited MainForm: TMainForm
       end
       object miReport_JuridicalDefermentPayment: TMenuItem
         Action = actReport_JuridicalDefermentPayment
+      end
+      object miReport_JuridicalDefermentIncome: TMenuItem
+        Action = actReport_JuridicalDefermentIncome
       end
       object miReport_JuridicalCollation: TMenuItem
         Action = actReport_JuridicalCollation

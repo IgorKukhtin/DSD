@@ -1,5 +1,5 @@
-inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymentForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081'>'
+inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081'>'
   ClientHeight = 394
   ClientWidth = 1115
   AddOnFormData.Params = FormParams
@@ -154,6 +154,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           object clRetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
             DataBinding.FieldName = 'RetailName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
@@ -399,7 +400,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Width = 75
           end
           object colSaleSumm: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072
+            Caption = #1055#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -1155,7 +1156,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         item
           StoredProc = spReport_JuridicalSaleDocument
         end>
-      Caption = #1055#1088#1086#1076#1072#1078#1072
+      Caption = #1055#1088#1080#1093#1086#1076#1099
       Hint = #1055#1088#1086#1076#1072#1078#1072
       ImageIndex = 3
       DataSets = <
@@ -1261,7 +1262,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     Top = 155
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_JuridicalDefermentPayment'
+    StoredProcName = 'gpReport_JuridicalDefermentIncome'
     Params = <
       item
         Name = 'inOperDate'
