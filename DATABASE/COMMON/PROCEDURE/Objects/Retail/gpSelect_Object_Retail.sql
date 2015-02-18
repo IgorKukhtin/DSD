@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Retail(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GLNCode TVarChar 
+             , GoodsPropertyId Integer, GoodsPropertyName TVarChar             
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -15,16 +16,24 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-     Object.Id         AS Id 
-   , Object.ObjectCode AS Code
-   , Object.ValueData  AS NAME
+     Object_Retail.Id         AS Id 
+   , Object_Retail.ObjectCode AS Code
+   , Object_Retail.ValueData  AS NAME
    , GLNCode.ValueData AS GLNCode
-   , Object.isErased   AS isErased
-   FROM Object
+   , Object_GoodsProperty.Id         AS GoodsPropertyId
+   , Object_GoodsProperty.ValueData  AS GoodsPropertyName           
+   , Object_Retail.isErased   AS isErased
+   FROM Object AS Object_Retail
         LEFT JOIN ObjectString AS GLNCode
-                               ON GLNCode.ObjectId = Object.Id 
+                               ON GLNCode.ObjectId = Object_Retail.Id 
                               AND GLNCode.DescId = zc_ObjectString_Retail_GLNCode()
-   WHERE Object.DescId = zc_Object_Retail();
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
+                             ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
+                            AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
+        LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Retail_GoodsProperty.ChildObjectId
+                              
+   WHERE Object_Retail.DescId = zc_Object_Retail();
   
 END;$BODY$
 
@@ -37,6 +46,7 @@ ALTER FUNCTION gpSelect_Object_Retail(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.02.15         * add GoodsProperty 
  10.11.14         * add GLNCode
  23.05.14         *
 

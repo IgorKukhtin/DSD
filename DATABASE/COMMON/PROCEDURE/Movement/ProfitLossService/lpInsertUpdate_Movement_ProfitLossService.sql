@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_ProfitLossService()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, tdatetime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, tdatetime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -10,6 +11,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
     IN inAmountOut                TFloat    , -- Сумма операции
     IN inComment                  TVarChar  , -- Комментарий
     IN inContractId               Integer   , -- Договор
+    IN inContractMasterId         Integer   , -- Договор(условия)
+    IN inContractChildId          Integer   , -- Договор(база)
     IN inInfoMoneyId              Integer   , -- Статьи назначения
     IN inJuridicalId              Integer   , -- Юр. лицо
     IN inPaidKindId               Integer   , -- Виды форм оплаты
@@ -75,6 +78,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
+     -- сохранили связь с <Договора условия >
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractMaster(), vbMovementItemId, inContractMasterId);
+     -- сохранили связь с <Договора база>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractChild(), vbMovementItemId, inContractChildId);
+
      -- сохранили связь с <Подразделением>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
      -- сохранили связь с <Типы условий договоров>
@@ -104,6 +112,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.02.15         * add ContractMaster, ContractChild
  10.05.14                                        * add lpInsert_MovementItemProtocol
  08.05.14                                        * set lp
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___

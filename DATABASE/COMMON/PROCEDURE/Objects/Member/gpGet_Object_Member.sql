@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Member(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
             , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
+            , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
             , isOfficial Boolean) AS
 $BODY$
 BEGIN
@@ -26,7 +27,9 @@ BEGIN
            , CAST ('' as TVarChar)  AS INN
            , CAST ('' as TVarChar)  AS DriverCertificate
            , CAST ('' as TVarChar)  AS Comment
-           
+           , CAST (0 as Integer)    AS InfoMoneyId
+           , CAST (0 as Integer)    AS InfoMoneyCode
+           , CAST ('' as TVarChar)  AS InfoMoneyName          
            , FALSE AS isOfficial;
    ELSE
        RETURN QUERY 
@@ -38,6 +41,10 @@ BEGIN
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Comment.ValueData           AS Comment
+         
+         , Object_InfoMoney_View.InfoMoneyId
+         , Object_InfoMoney_View.InfoMoneyCode
+         , Object_InfoMoney_View.InfoMoneyName
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
 
@@ -54,6 +61,11 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment ON ObjectString_Comment.ObjectId = Object_Member.Id 
                 AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
 
+          LEFT JOIN ObjectLink AS ObjectLink_Member_InfoMoney
+                               ON ObjectLink_Member_InfoMoney.ObjectId = Object_Member.Id
+                              AND ObjectLink_Member_InfoMoney.DescId = zc_ObjectLink_Member_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Member_InfoMoney.ChildObjectId
+    
      WHERE Object_Member.Id = inId;
      
    END IF;
@@ -68,6 +80,7 @@ ALTER FUNCTION gpGet_Object_Member (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.02.15         * add InfoMoney
  12.09.14                                        * add isOfficial
  01.10.13         * add DriverCertificate, Comment             
  01.07.13         *

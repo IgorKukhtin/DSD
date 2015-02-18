@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
-             , isOfficial Boolean, isErased boolean) AS
+             , isOfficial Boolean
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , isErased boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsAllUnit Boolean;
@@ -37,6 +39,11 @@ BEGIN
          , ObjectString_Comment.ValueData           AS Comment
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
+ 
+         , Object_InfoMoney_View.InfoMoneyId
+         , Object_InfoMoney_View.InfoMoneyCode
+         , Object_InfoMoney_View.InfoMoneyName
+         
          , Object_Member.isErased                   AS isErased
 
      FROM Object AS Object_Member
@@ -74,6 +81,11 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_Member.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
+         LEFT JOIN ObjectLink AS ObjectLink_Member_InfoMoney
+                              ON ObjectLink_Member_InfoMoney.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_InfoMoney.DescId = zc_ObjectLink_Member_InfoMoney()
+         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Member_InfoMoney.ChildObjectId
+                                
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE
             OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE)
@@ -96,6 +108,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.02.15         * add InfoMoney
  24.09.13                                        * add vbIsAllUnit
  12.09.14                                        * add isOfficial
  12.09.13                                        * add inIsShowAll

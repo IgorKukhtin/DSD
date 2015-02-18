@@ -864,6 +864,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Quality_Juridical() RETURNS Integer AS 
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Quality_Juridical', 'Связь качественного удостоверения с юр.лицом', zc_Object_Quality(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Quality_Juridical');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_InfoMoney'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Member_InfoMoney', 'Связь физ.лиц со Статьи назначения', zc_Object_Member(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_InfoMoney');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_GoodsProperty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_GoodsProperty'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Retail_GoodsProperty', 'Связь торг.сеть с Классификаторы свойств товаров', zc_Object_Retail(), zc_Object_GoodsProperty() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_GoodsProperty');
+
 
 --!!! АПТЕКА
 

@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
+             , ContractMasterId Integer, ContractMasterInvNumber TVarChar
+             , ContractChildId Integer, ContractChildInvNumber TVarChar
              , UnitName TVarChar
              , PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
@@ -66,6 +68,10 @@ BEGIN
            , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber              AS ContractInvNumber
            , View_Contract_InvNumber.ContractTagName
+           , View_ContractMaster_InvNumber.ContractId     AS ContractMasterId
+           , View_ContractMaster_InvNumber.InvNumber      AS ContractMasterInvNumber
+           , View_ContractChild_InvNumber.ContractId      AS ContractChildId
+           , View_ContractChild_InvNumber.InvNumber       AS ContractChildInvNumber
            , Object_Unit.ValueData                          AS UnitName
            , Object_PaidKind.ValueData                      AS PaidKindName
            , Object_ContractConditionKind.Id                AS ContractConditionKindId
@@ -107,6 +113,18 @@ BEGIN
                                         AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractMaster
+                                             ON MILinkObject_ContractMaster.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ContractMaster.DescId = zc_MILinkObject_ContractMaster()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractMaster_InvNumber 
+                                                     ON View_ContractMaster_InvNumber.ContractId = MILinkObject_ContractMaster.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
+                                             ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractChild_InvNumber 
+                                                     ON View_ContractChild_InvNumber.ContractId = MILinkObject_ContractChild.ObjectId
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -141,6 +159,7 @@ ALTER FUNCTION gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Boolea
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 18.02.15         * add ContractMaster, ContractChild
  06.03.14                                        * add Object_RoleAccessKey_View
  19.02.14         * add BonusKind
  18.02.14                                                         *
