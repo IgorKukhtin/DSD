@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalCash (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash_Personal (Integer, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash_Personal(
     IN inMovementId        Integer   , -- ключ Документа
     IN inOperDate          TDateTime , -- 
+    IN inCashId            Integer   , -- касса
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -45,12 +47,14 @@ BEGIN
 
            , DATE_TRUNC ('Month', inOperDate - INTERVAL '1 MONTH') :: TDateTime AS ServiceDate
            , '' :: TVarChar         AS Comment
-           , 0                      AS CashId
-           , '' :: TVarChar         AS CashName
+           , COALESCE (Object_Cash.Id, 0)                      AS CashId
+           , COALESCE (Object_Cash.ValueData, '') :: TVarChar  AS CashName
            , '' :: TVarChar         AS PersonalServiceListName
    
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+           LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inCashId 
+                                                                        -- IN (SELECT MIN (Object.Id) FROM Object WHERE Object.AccessKeyId IN (SELECT MIN (lpGetAccessKey) FROM lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Cash())))
             
       ;
      ELSE

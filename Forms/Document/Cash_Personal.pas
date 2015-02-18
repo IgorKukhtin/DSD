@@ -55,6 +55,14 @@ type
     cxLabel5: TcxLabel;
     ceCash: TcxButtonEdit;
     CashGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceMember: TcxButtonEdit;
+    MemberGuides: TdsdGuides;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    cxGridDBTableViewColumn2: TcxGridDBColumn;
+    spUpdateAmountParam: TdsdStoredProc;
+    actUpdateAmountParam: TdsdExecStoredProc;
+    bbUpdateAmountParam: TdxBarButton;
   private
     { Private declarations }
   public
