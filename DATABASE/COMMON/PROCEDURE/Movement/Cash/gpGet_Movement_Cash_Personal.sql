@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , CashId Integer, CashName TVarChar
              , PersonalServiceListName TVarChar
-           
+             , MemberId Integer, MemberName TVarChar
              )
 AS
 $BODY$
@@ -50,7 +50,8 @@ BEGIN
            , COALESCE (Object_Cash.Id, 0)                      AS CashId
            , COALESCE (Object_Cash.ValueData, '') :: TVarChar  AS CashName
            , '' :: TVarChar         AS PersonalServiceListName
-   
+           , 0                                                 AS MemberId
+           , CAST ('' as TVarChar)                             AS MemberName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inCashId 
@@ -78,7 +79,10 @@ BEGIN
            , Object_Cash.Id                    AS CashId
            , Object_Cash.ValueData             AS CashName
            , Object_PersonalServiceList.ValueData AS PersonalServiceListName
-         
+
+           , Object_Member.Id                  AS MemberId
+           , Object_Member.ValueData           AS MemberName
+                    
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -101,7 +105,12 @@ BEGIN
                                          ON MovementLinkObject_PersonalServiceList.MovementId = MovementPersonalService.Id
                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
-        
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
+                                             ON MILinkObject_Member.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MILinkObject_Member.ObjectId
+      
        WHERE Movement.Id =  inMovementId;
 
    END IF;  
@@ -114,6 +123,7 @@ ALTER FUNCTION gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 18.02.15         add Member
  16.09.14         * 
 
 */

@@ -45,12 +45,12 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummAdd
+              Column = colAmountCash
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountCash
+              Column = colSummCash
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -73,12 +73,12 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummAdd
+              Column = colAmountCash
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountCash
+              Column = colSummCash
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -165,9 +165,17 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 60
           end
-          object colAmountCash: TcxGridDBColumn [8]
+          object colAmountService: TcxGridDBColumn [8]
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1090#1086#1075#1086')'
+            DataBinding.FieldName = 'SummPersonalService'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object colSummCash: TcxGridDBColumn [9]
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
-            DataBinding.FieldName = 'AmountCash'
+            DataBinding.FieldName = 'SummCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -176,8 +184,9 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 75
           end
-          object colSummAdd: TcxGridDBColumn [9]
+          object colAmountCash: TcxGridDBColumn [10]
             Caption = #1056#1072#1089#1095#1077#1090#1099' '#1076#1088#1091#1075#1080#1077
+            DataBinding.FieldName = 'AmountCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -186,8 +195,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object colAmount: TcxGridDBColumn [10]
-            Caption = #1056#1072#1089#1095#1077#1090#1099' '#1090#1077#1082#1091#1097#1080#1077
+          object colAmount: TcxGridDBColumn [11]
+            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1090#1077#1082#1091#1097#1072#1103
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -196,7 +205,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object clInfoMoneyName: TcxGridDBColumn [11]
+          object clInfoMoneyName: TcxGridDBColumn [12]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -205,16 +214,12 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
-            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1090#1086#1075#1086')'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 73
-          end
-          object cxGridDBTableViewColumn2: TcxGridDBColumn
+          object colSummRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077
+            DataBinding.FieldName = 'SummRemains'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 72
           end
           object colComment: TcxGridDBColumn
@@ -232,6 +237,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Width = 1104
     Height = 89
     TabOrder = 3
+    ExplicitTop = 5
     ExplicitWidth = 1104
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
@@ -776,13 +782,17 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftString
       end
       item
+        Name = 'MemberId'
         Value = ''
-        ParamType = ptUnknown
+        Component = MemberGuides
+        ComponentItem = 'Key'
       end
       item
+        Name = 'MemberName'
         Value = ''
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -849,6 +859,9 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       end
       item
         Value = Null
+      end
+      item
+        Value = Null
       end>
     Left = 224
     Top = 264
@@ -906,9 +919,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ParamType = ptInput
       end
       item
+        Name = 'inMemberId'
         Value = 'False'
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = MemberGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Value = ''
@@ -1058,6 +1073,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ParamType = ptInput
       end
       item
+        Name = 'ioSummRemains'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummRemains'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
@@ -1085,11 +1108,6 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = MasterCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
       end
       item
         Value = Null

@@ -40,7 +40,7 @@ type
     cxLabel6: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel12: TcxLabel;
-    colSummAdd: TcxGridDBColumn;
+    colAmountCash: TcxGridDBColumn;
     cePersonalServiceList: TcxButtonEdit;
     PersonalServiceListGuides: TdsdGuides;
     cxLabel3: TcxLabel;
@@ -48,7 +48,7 @@ type
     colPersonalCode: TcxGridDBColumn;
     colIsMain: TcxGridDBColumn;
     colIsOfficial: TcxGridDBColumn;
-    colAmountCash: TcxGridDBColumn;
+    colSummCash: TcxGridDBColumn;
     edDocumentPersonalService: TcxButtonEdit;
     DocumentPersonalServiceGuides: TdsdGuides;
     cxLabel4: TcxLabel;
@@ -58,8 +58,8 @@ type
     cxLabel9: TcxLabel;
     ceMember: TcxButtonEdit;
     MemberGuides: TdsdGuides;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
+    colAmountService: TcxGridDBColumn;
+    colSummRemains: TcxGridDBColumn;
     spUpdateAmountParam: TdsdStoredProc;
     actUpdateAmountParam: TdsdExecStoredProc;
     bbUpdateAmountParam: TdxBarButton;
