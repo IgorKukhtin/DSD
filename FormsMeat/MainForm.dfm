@@ -1503,7 +1503,7 @@ inherited MainForm: TMainForm
     object actOrderExternal: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
       FormName = 'TOrderExternalJournalForm'
       FormNameParam.Value = 'TOrderExternalJournalForm'
       FormNameParam.DataType = ftString
@@ -2511,7 +2511,7 @@ inherited MainForm: TMainForm
     object actOrderExternalUnit: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1075#1083#1072#1074#1085#1099#1081' '#1089#1082#1083#1072#1076
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')'
       Hint = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1075#1083#1072#1074#1085#1099#1081' '#1089#1082#1083#1072#1076
       FormName = 'TOrderExternalUnitJournalForm'
       FormNameParam.Value = 'TOrderExternalUnitJournalForm'
@@ -2621,11 +2621,11 @@ inherited MainForm: TMainForm
       object miOrderExternal: TMenuItem
         Action = actOrderExternal
       end
-      object miOrderInternal: TMenuItem
-        Action = actGoodsQualityMovement
-      end
       object N40: TMenuItem
         Action = actOrderExternalUnit
+      end
+      object miOrderInternal: TMenuItem
+        Action = actGoodsQualityMovement
       end
     end
     object miFinanceDocuments: TMenuItem [1]

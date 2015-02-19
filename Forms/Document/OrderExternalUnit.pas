@@ -102,6 +102,7 @@ type
     actUpdateAmountAll: TMultiAction;
     spUpdateAmountForecast: TdsdStoredProc;
     MultiAmountForecast: TMultiAction;
+    AmountCalc: TcxGridDBColumn;
   private
     { Private declarations }
   public

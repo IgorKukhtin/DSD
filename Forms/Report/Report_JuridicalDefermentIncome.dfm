@@ -493,7 +493,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
     ExplicitWidth = 1115
     inherited deStart: TcxDateEdit
       Left = 59
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 59
     end
@@ -1157,7 +1157,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
           StoredProc = spReport_JuridicalSaleDocument
         end>
       Caption = #1055#1088#1080#1093#1086#1076#1099
-      Hint = #1055#1088#1086#1076#1072#1078#1072
+      Hint = #1055#1088#1080#1093#1086#1076#1099
       ImageIndex = 3
       DataSets = <
         item
