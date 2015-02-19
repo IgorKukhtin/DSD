@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternalUnit(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternalUnit(
    OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
    OUT outVATPercent         TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inDayCount            TFloat    , -- Количество дней прогноз
+   OUT outDayCount           TFloat    , -- Количество дней прогноз
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты
@@ -41,7 +41,8 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
 
-
+     -- 0.
+     outDayCount:= 1 + EXTRACT (DAY FROM (inOperDateEnd - inOperDateStart));
      -- 1. эти параметры всегда из Контрагента
      outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
 
@@ -88,8 +89,6 @@ BEGIN
                                                  , inUserId              := vbUserId
                                                   );
 
-     -- сохранили свойство <Количество дней прогноз>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DayCount(), ioId, inDayCount);       
      -- сохранили свойство <Дата проноз с>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);
      -- сохранили свойство <Дата проноз по>

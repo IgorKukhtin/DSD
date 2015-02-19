@@ -92,7 +92,9 @@ BEGIN
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
            
-           , MovementFloat_DayCount.ValueData       AS DayCount
+           , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime
+                                   - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime)
+                          )) :: TFloat AS DayCount
            
            , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
 
@@ -205,10 +207,6 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN MovementFloat AS MovementFloat_DayCount
-                                    ON MovementFloat_DayCount.MovementId =  Movement.Id
-                                   AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
-                                   
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()

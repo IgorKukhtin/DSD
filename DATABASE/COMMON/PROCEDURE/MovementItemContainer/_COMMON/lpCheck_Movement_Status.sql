@@ -245,6 +245,31 @@ BEGIN
      END IF;
      -- END 2.2. проверка для корректировок
 
+  ELSE
+     -- !!!для Админа!!!
+     -- определяется данные корректировки
+     SELECT Movement_Document.StatusId
+          , MS_InvNumberPartner.ValueData AS vbInvNumber
+          , Movement_Document.OperDate
+          , MovementDesc.ItemName
+            INTO vbStatusId_Tax, vbInvNumber, vbOperDate, vbDescName
+     FROM MovementLinkMovement AS MovementLinkMovement_Child
+          INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementChildId
+                             AND Movement.StatusId = zc_Enum_Status_Erased()
+          INNER JOIN Movement AS Movement_Document ON Movement_Document.Id = MovementLinkMovement_Child.MovementId
+                                                  AND Movement_Document.StatusId = zc_Enum_Status_Complete()
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Document.DescId
+          LEFT JOIN MovementString AS MS_InvNumberPartner
+                                   ON MS_InvNumberPartner.MovementId = Movement_Document.Id
+                                  AND MS_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+     WHERE MovementLinkMovement_Child.MovementChildId = inMovementId
+       AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child();
+     -- проверка - если входит в сводную, то она должна быть распроведена
+     IF vbStatusId_Tax = zc_Enum_Status_Complete()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменения невозможны.Найден документ <%> № <%> от <%> в статусе <%>.', vbDescName, vbInvNumber, DATE (vbOperDate), lfGet_Object_ValueData (vbStatusId_Tax);
+     END IF;
+
   END IF;
 
 

@@ -1,25 +1,26 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitWidth = 1036
+  ClientWidth = 1228
+  ExplicitLeft = -263
+  ExplicitWidth = 1244
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1228
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1228
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1228
         Height = 518
         ExplicitWidth = 1020
         ExplicitHeight = 518
@@ -264,7 +265,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1228
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1020
@@ -326,7 +327,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 9
-      Width = 146
+      Width = 130
     end
     object cxLabel10: TcxLabel
       Left = 180
@@ -396,12 +397,12 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 279
+      Left = 509
       Top = 45
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 279
+      Left = 509
       Top = 63
       Properties.Buttons = <
         item
@@ -411,15 +412,15 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 224
+      Width = 146
     end
     object cxLabel7: TcxLabel
-      Left = 509
+      Left = 279
       Top = 45
       Caption = #1052#1072#1088#1096#1088#1091#1090
     end
     object edRoute: TcxButtonEdit
-      Left = 509
+      Left = 279
       Top = 63
       Properties.Buttons = <
         item
@@ -429,7 +430,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 21
-      Width = 146
+      Width = 224
     end
     object cxLabel16: TcxLabel
       Left = 1083
@@ -446,7 +447,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 23
-      Width = 146
+      Width = 130
     end
     object cxLabel11: TcxLabel
       Left = 898
@@ -1247,34 +1248,22 @@ inherited OrderExternalForm: TOrderExternalForm
         Control = edInvNumber
       end
       item
-        Control = edContract
-      end
-      item
-        Control = edFrom
+        Control = edInvNumberOrder
       end
       item
         Control = edOperDate
       end
       item
-        Control = edInvNumber
-      end
-      item
-        Control = edInvNumberOrder
+        Control = edOperDatePartner
       end
       item
         Control = edOperDateMark
       end
       item
-        Control = edOperDatePartner
+        Control = edFrom
       end
       item
-        Control = edPaidKind
-      end
-      item
-        Control = edPersonal
-      end
-      item
-        Control = edPriceList
+        Control = edTo
       end
       item
         Control = edRoute
@@ -1283,15 +1272,28 @@ inherited OrderExternalForm: TOrderExternalForm
         Control = edRouteSorting
       end
       item
-        Control = edTo
+        Control = edContract
       end
       item
-        Control = edVATPercent
+        Control = edPaidKind
+      end
+      item
+        Control = edPriceList
       end
       item
         Control = edPriceWithVAT
       end
       item
+        Control = edVATPercent
+      end
+      item
+        Control = edChangePercent
+      end
+      item
+        Control = edPersonal
+      end
+      item
+        Control = cbPrinted
       end>
     Left = 232
     Top = 193

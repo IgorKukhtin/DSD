@@ -67,6 +67,11 @@ BEGIN
   END IF;
   END IF;
   END IF;
+
+  ELSE 
+      -- !!!для Админа!!!
+      -- 1. Проверки на "распроведение" / "удаление"
+      PERFORM lpCheck_Movement_Status (inMovementId, inUserId);
   END IF;
 
 
