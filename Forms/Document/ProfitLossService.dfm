@@ -1,27 +1,27 @@
 ﻿inherited ProfitLossServiceForm: TProfitLossServiceForm
   ActiveControl = ceAmountDebet
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' < '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')>'
-  ClientHeight = 302
-  ClientWidth = 605
+  ClientHeight = 347
+  ClientWidth = 614
   AddOnFormData.isSingle = False
-  ExplicitWidth = 611
-  ExplicitHeight = 327
+  ExplicitWidth = 620
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 183
-    Top = 262
+    Left = 184
+    Top = 309
     Height = 26
-    ExplicitLeft = 183
-    ExplicitTop = 262
+    ExplicitLeft = 184
+    ExplicitTop = 309
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 327
-    Top = 262
+    Left = 328
+    Top = 309
     Height = 26
-    ExplicitLeft = 327
-    ExplicitTop = 262
+    ExplicitLeft = 328
+    ExplicitTop = 309
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -44,13 +44,13 @@
     Width = 129
   end
   object cxLabel2: TcxLabel [5]
-    Left = 9
-    Top = 201
+    Left = 8
+    Top = 207
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object cxLabel4: TcxLabel [6]
-    Left = 301
-    Top = 109
+    Left = 296
+    Top = 114
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel5: TcxLabel [7]
@@ -60,7 +60,7 @@
   end
   object cePaidKind: TcxButtonEdit [8]
     Left = 9
-    Top = 224
+    Top = 228
     Properties.Buttons = <
       item
         Default = True
@@ -71,8 +71,8 @@
     Width = 97
   end
   object ceUnit: TcxButtonEdit [9]
-    Left = 296
-    Top = 128
+    Left = 295
+    Top = 132
     Properties.Buttons = <
       item
         Default = True
@@ -80,7 +80,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 303
+    Width = 304
   end
   object ceInfoMoney: TcxButtonEdit [10]
     Left = 295
@@ -103,7 +103,7 @@
     Width = 129
   end
   object ceAmountDebet: TcxCurrencyEdit [12]
-    Left = 293
+    Left = 295
     Top = 34
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -116,8 +116,8 @@
     Caption = #1044#1077#1073#1077#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1086#1082#1072#1079#1072#1083#1080')'
   end
   object ceJuridical: TcxButtonEdit [14]
-    Left = 296
-    Top = 174
+    Left = 295
+    Top = 178
     Properties.Buttons = <
       item
         Default = True
@@ -125,15 +125,15 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 301
+    Width = 304
   end
   object cxLabel6: TcxLabel [15]
     Left = 296
-    Top = 151
+    Top = 156
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceContract: TcxButtonEdit [16]
-    Left = 9
+    Left = 8
     Top = 84
     Properties.Buttons = <
       item
@@ -149,15 +149,15 @@
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object cxLabel10: TcxLabel [18]
-    Left = 138
-    Top = 205
+    Left = 11
+    Top = 257
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [19]
-    Left = 136
-    Top = 224
+    Left = 8
+    Top = 280
     TabOrder = 11
-    Width = 463
+    Width = 591
   end
   object ceAmountKredit: TcxCurrencyEdit [20]
     Left = 447
@@ -173,13 +173,13 @@
     Caption = #1050#1088#1077#1076#1080#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1087#1086#1083#1091#1095#1080#1083#1080')'
   end
   object cxLabel9: TcxLabel [22]
-    Left = 9
-    Top = 155
+    Left = 10
+    Top = 156
     Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object ceContractConditionKind: TcxButtonEdit [23]
-    Left = 9
-    Top = 174
+    Left = 8
+    Top = 178
     Enabled = False
     Properties.Buttons = <
       item
@@ -188,16 +188,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 23
-    Width = 273
+    Width = 272
   end
   object cxLabel11: TcxLabel [24]
-    Left = 8
-    Top = 111
+    Left = 9
+    Top = 114
     Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
   end
   object ceBonusKind: TcxButtonEdit [25]
-    Left = 8
-    Top = 128
+    Left = 9
+    Top = 129
     Properties.Buttons = <
       item
         Default = True
@@ -207,17 +207,49 @@
     TabOrder = 25
     Width = 272
   end
+  object cxLabel12: TcxLabel [26]
+    Left = 125
+    Top = 207
+    Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1091#1089#1083#1086#1074#1080#1103')'
+  end
+  object cxLabel13: TcxLabel [27]
+    Left = 370
+    Top = 207
+    Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1073#1072#1079#1072')'
+  end
+  object ceContractMaster: TcxButtonEdit [28]
+    Left = 125
+    Top = 228
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 28
+    Width = 230
+  end
+  object ceContractChild: TcxButtonEdit [29]
+    Left = 369
+    Top = 228
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 29
+    Width = 230
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
     Top = 26
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 24
-    Top = 250
+    Left = 25
+    Top = 297
   end
   inherited ActionList: TActionList
-    Left = 111
-    Top = 249
+    Left = 112
+    Top = 296
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -237,8 +269,8 @@
         Value = '0'
         ParamType = ptInput
       end>
-    Left = 208
-    Top = 178
+    Left = 209
+    Top = 182
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService'
@@ -293,6 +325,20 @@
         ParamType = ptInput
       end
       item
+        Name = 'inContractMasterId'
+        Value = Null
+        Component = ContractMasterGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractChildId'
+        Value = Null
+        Component = ContractChildGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
@@ -340,8 +386,8 @@
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 472
-    Top = 160
+    Left = 473
+    Top = 164
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ProfitLossService'
@@ -486,6 +532,32 @@
         DataType = ftString
       end
       item
+        Name = 'ContractMasterId'
+        Value = Null
+        Component = ContractMasterGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractMasterInvNumber'
+        Value = Null
+        Component = ContractMasterGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractChildId'
+        Value = Null
+        Component = ContractChildGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractChildInvNumber'
+        Value = Null
+        Component = ContractChildGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'ContractConditionKindId'
         Value = ''
         Component = ContractConditionKindGuides
@@ -511,8 +583,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 536
-    Top = 160
+    Left = 537
+    Top = 164
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -535,8 +607,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 57
-    Top = 215
+    Left = 58
+    Top = 219
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -559,8 +631,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 400
-    Top = 103
+    Left = 401
+    Top = 107
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -607,8 +679,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 416
-    Top = 165
+    Left = 417
+    Top = 169
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -629,8 +701,8 @@
         Guides = InfoMoneyGuides
       end>
     ActionItemList = <>
-    Left = 344
-    Top = 200
+    Left = 209
+    Top = 252
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -741,8 +813,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 160
-    Top = 122
+    Left = 161
+    Top = 126
   end
   object ContractConditionKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -765,7 +837,145 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 96
-    Top = 162
+    Left = 97
+    Top = 166
+  end
+  object ContractMasterGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceContractMaster
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractMasterGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractMasterGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
+      end>
+    Left = 271
+    Top = 220
+  end
+  object ContractChildGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceContractChild
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractChildGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractChildGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
+      end>
+    Left = 503
+    Top = 220
   end
 end

@@ -31,6 +31,8 @@ type
     bbReCompleteAll: TdxBarButton;
     clBonusKindName: TcxGridDBColumn;
     clisLoad: TcxGridDBColumn;
+    clContractMasterInvNumber: TcxGridDBColumn;
+    clContractChildInvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

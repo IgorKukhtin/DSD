@@ -44,6 +44,12 @@ type
     cxLabel11: TcxLabel;
     ceBonusKind: TcxButtonEdit;
     ContractConditionKindGuides: TdsdGuides;
+    cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    ceContractMaster: TcxButtonEdit;
+    ContractMasterGuides: TdsdGuides;
+    ceContractChild: TcxButtonEdit;
+    ContractChildGuides: TdsdGuides;
   private
     { Private declarations }
   public
