@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
              , isOfficial Boolean
-             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -43,6 +43,7 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyId
          , Object_InfoMoney_View.InfoMoneyCode
          , Object_InfoMoney_View.InfoMoneyName
+         , Object_InfoMoney_View.InfoMoneyName_all
          
          , Object_Member.isErased                   AS isErased
 

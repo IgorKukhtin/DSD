@@ -30,8 +30,8 @@ BEGIN
    ELSE
        RETURN QUERY 
        SELECT 
-             ObObject_Retailject.Id         AS Id
-           , OObject_Retailbject.ObjectCode AS Code
+             Object_Retail.Id         AS Id
+           , Object_Retail.ObjectCode AS Code
            , Object_Retail.ValueData  AS NAME
            , GLNCode.ValueData AS GLNCode
            , Object_GoodsProperty.Id         AS GoodsPropertyId

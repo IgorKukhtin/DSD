@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Member(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
             , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
-            , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
+            , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
             , isOfficial Boolean) AS
 $BODY$
 BEGIN
@@ -29,7 +29,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS Comment
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST (0 as Integer)    AS InfoMoneyCode
-           , CAST ('' as TVarChar)  AS InfoMoneyName          
+           , CAST ('' as TVarChar)  AS InfoMoneyName   
+           , Object_InfoMoney_View.InfoMoneyName_all       
            , FALSE AS isOfficial;
    ELSE
        RETURN QUERY 
@@ -45,6 +46,7 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyId
          , Object_InfoMoney_View.InfoMoneyCode
          , Object_InfoMoney_View.InfoMoneyName
+         , Object_InfoMoney_View.InfoMoneyName_all 
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
 

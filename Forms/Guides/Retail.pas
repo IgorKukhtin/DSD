@@ -45,6 +45,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actInsert: TdsdInsertUpdateAction;
     colGLNCode: TcxGridDBColumn;
+    clGoodsPropertyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

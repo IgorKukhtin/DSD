@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inEndDate             TDateTime ,
     IN inSessiON             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ContractId_master Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
+RETURNS TABLE (ContractId_master Integer, ContractId_child Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
              , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
              , InfoMoneyId_master Integer, InfoMoneyId_find Integer
              , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
@@ -228,6 +228,7 @@ BEGIN
 
 
       SELECT  tmpAll.ContractId_master
+            , tmpAll.ContractId_child
             , tmpAll.ContractId_find
             , tmpAll.InvNumber_master
             , tmpAll.InvNumber_child
