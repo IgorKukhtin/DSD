@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_ProfitLossService()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, tdatetime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, tdatetime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -10,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
     IN inAmountOut                TFloat    , -- Сумма операции
     IN inComment                  TVarChar  , -- Комментарий
     IN inContractId               Integer   , -- Договор
+    IN inContractMasterId         Integer   , -- Договор(условия)
+    IN inContractChildId          Integer   , -- Договор(база)
     IN inInfoMoneyId              Integer   , -- Статьи назначения
     IN inJuridicalId              Integer   , -- Юр. лицо
     IN inPaidKindId               Integer   , -- Виды форм оплаты
@@ -30,21 +33,23 @@ BEGIN
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_ProfitLossService (ioId              := ioId
-                                                      , inInvNumber       := inInvNumber
-                                                      , inOperDate        := inOperDate
-                                                      , inAmountIn        := inAmountIn
-                                                      , inAmountOut       := inAmountOut
-                                                      , inComment         := inComment
-                                                      , inContractId      := inContractId
-                                                      , inInfoMoneyId     := inInfoMoneyId
-                                                      , inJuridicalId     := inJuridicalId
-                                                      , inPaidKindId      := inPaidKindId
-                                                      , inUnitId          := inUnitId
+     ioId := lpInsertUpdate_Movement_ProfitLossService (ioId                := ioId
+                                                      , inInvNumber         := inInvNumber
+                                                      , inOperDate          := inOperDate
+                                                      , inAmountIn          := inAmountIn
+                                                      , inAmountOut         := inAmountOut
+                                                      , inComment           := inComment
+                                                      , inContractId        := inContractId
+                                                      , inContractMasterId  := inContractMasterId
+                                                      , inContractChildId   := inContractChildId
+                                                      , inInfoMoneyId       := inInfoMoneyId
+                                                      , inJuridicalId       := inJuridicalId
+                                                      , inPaidKindId        := inPaidKindId
+                                                      , inUnitId            := inUnitId
                                                       , inContractConditionKindId := inContractConditionKindId
-                                                      , inBonusKindId     := inBonusKindId
-                                                      , inIsLoad          := inIsLoad
-                                                      , inUserId          := vbUserId
+                                                      , inBonusKindId       := inBonusKindId
+                                                      , inIsLoad            := inIsLoad
+                                                      , inUserId            := vbUserId
                                                        );
 
 END;
@@ -54,6 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.02.15         * add ContractMaster, ContractChild
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId

@@ -3,7 +3,7 @@
   ClientHeight = 351
   ClientWidth = 287
   ExplicitWidth = 293
-  ExplicitHeight = 376
+  ExplicitHeight = 383
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -37,13 +37,13 @@
       ImageIndex = 0
       object edMeasureName: TcxTextEdit
         Left = 7
-        Top = 77
+        Top = 66
         TabOrder = 1
         Width = 273
       end
       object cxLabel1: TcxLabel
         Left = 7
-        Top = 54
+        Top = 50
         Caption = #1060#1048#1054
       end
       object Код: TcxLabel
@@ -53,7 +53,7 @@
       end
       object ceCode: TcxCurrencyEdit
         Left = 7
-        Top = 27
+        Top = 22
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
         TabOrder = 0
@@ -61,44 +61,61 @@
       end
       object ceINN: TcxTextEdit
         Left = 7
-        Top = 153
+        Top = 129
         TabOrder = 3
         Width = 273
       end
       object cxLabel2: TcxLabel
         Left = 7
-        Top = 134
+        Top = 112
         Caption = #1048#1053#1053
       end
       object cxLabel3: TcxLabel
         Left = 7
-        Top = 182
+        Top = 155
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       end
       object cxLabel4: TcxLabel
         Left = 7
-        Top = 230
+        Top = 239
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object ceDriverCertificate: TcxTextEdit
         Left = 7
-        Top = 205
+        Top = 171
         TabOrder = 4
         Width = 273
       end
       object ceComment: TcxTextEdit
         Left = 7
-        Top = 253
+        Top = 257
         TabOrder = 5
         Width = 273
       end
       object cbOfficial: TcxCheckBox
         Left = 7
-        Top = 108
+        Top = 92
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         TabOrder = 2
         Width = 141
+      end
+      object cxLabel7: TcxLabel
+        Left = 3
+        Top = 198
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      end
+      object ceInfoMoney: TcxButtonEdit
+        Left = 7
+        Top = 214
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 12
+        Width = 273
       end
     end
     object tsContact: TcxTabSheet
@@ -129,8 +146,18 @@
       end
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 107
+    Top = 272
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Left = 40
+    Top = 272
+  end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
+    Left = 239
+    Top = 271
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -151,7 +178,8 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 24
+    Left = 168
+    Top = 264
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Member'
@@ -203,6 +231,13 @@
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 224
     Top = 48
@@ -251,6 +286,19 @@
         Value = ''
         Component = ceComment
         DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Top = 136
   end
@@ -281,7 +329,7 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 144
+    Left = 120
     Top = 48
   end
   object spGetMemberContact: TdsdStoredProc
@@ -311,5 +359,32 @@
     PackSize = 1
     Left = 136
     Top = 136
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 144
+    Top = 224
   end
 end

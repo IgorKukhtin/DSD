@@ -237,7 +237,6 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Width = 1104
     Height = 89
     TabOrder = 3
-    ExplicitTop = 5
     ExplicitWidth = 1104
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
@@ -1344,10 +1343,17 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Top = 61
   end
   object spUpdateAmountParam: TdsdStoredProc
-    StoredProcName = 'gptUpdateMI_Cash_AmountParam'
+    StoredProcName = 'gptUpdateMI_Cash_Personal_AmountParam'
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
       item
         Name = 'inMovementId'
         Value = Null
@@ -1356,17 +1362,27 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ParamType = ptInput
       end
       item
-        Name = 'inOperDate'
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
+        Name = 'inPersonalId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
       end
       item
-        Name = 'inFromId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        Name = 'ioAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioSummRemains'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummRemains'
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     PackSize = 1
     Left = 746

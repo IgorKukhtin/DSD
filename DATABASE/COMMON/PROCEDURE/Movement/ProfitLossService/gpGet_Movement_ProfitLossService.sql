@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalId Integer, JuridicalName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractInvNumber TVarChar
+             , ContractMasterId Integer, ContractMasterInvNumber TVarChar
+             , ContractChildId Integer, ContractChildInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
@@ -49,6 +51,10 @@ BEGIN
            , CAST ('' as TVarChar)            AS InfoMoneyName
            , 0                                AS ContractId
            , ''::TVarChar                     AS ContractInvNumber
+           , 0                                AS ContractMasterId
+           , ''::TVarChar                     AS ContractMasterInvNumber
+           , 0                                AS ContractChildId
+           , ''::TVarChar                     AS ContractChildInvNumber                      
            , 0                                AS UnitId
            , CAST ('' as TVarChar)            AS UnitName
            , 0                                AS PaidKindId
@@ -97,6 +103,10 @@ BEGIN
            , View_InfoMoney.InfoMoneyName_all       AS InfoMoneyName
            , View_Contract_InvNumber.ContractId     AS ContractId
            , View_Contract_InvNumber.InvNumber      AS ContractInvNumber
+           , View_ContractMaster_InvNumber.ContractId     AS ContractMasterId
+           , View_ContractMaster_InvNumber.InvNumber      AS ContractMasterInvNumber
+           , View_ContractChild_InvNumber.ContractId      AS ContractChildId
+           , View_ContractChild_InvNumber.InvNumber       AS ContractChildInvNumber                      
            , Object_Unit.Id                         AS UnitId
            , Object_Unit.ValueData                  AS UnitName
            , Object_PaidKind.Id                     AS PaidKindId
@@ -136,6 +146,17 @@ BEGIN
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber 
                                                      ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
             --LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractMaster
+                                             ON MILinkObject_ContractMaster.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ContractMaster.DescId = zc_MILinkObject_ContractMaster()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractMaster_InvNumber 
+                                                     ON View_ContractMaster_InvNumber.ContractId = MILinkObject_ContractMaster.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
+                                             ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractChild_InvNumber 
+                                                     ON View_ContractChild_InvNumber.ContractId = MILinkObject_ContractChild.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -175,6 +196,7 @@ ALTER FUNCTION gpGet_Movement_ProfitLossService (Integer, Integer, TDateTime, TV
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    Ã‡Ì¸ÍÓ ƒ.¿
+ 18.02.15         * add ContractMaster, ContractChild
  23.06.14                        * 
  19.02.14         * add BonusKind
  18.02.14                                                         *

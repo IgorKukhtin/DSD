@@ -67,6 +67,9 @@ type
     bbUpdateIsOfficial: TdxBarButton;
     spUpdateIsOfficial: TdsdStoredProc;
     actUpdateIsOfficial: TdsdExecStoredProc;
+    clInfoMoneyName_all: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    actChoiceInfoMoneyForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

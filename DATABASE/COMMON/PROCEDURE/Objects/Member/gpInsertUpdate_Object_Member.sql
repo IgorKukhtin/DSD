@@ -1,15 +1,17 @@
 -- Function: gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
- INOUT ioId	             Integer   ,    -- ключ объекта <Физические лица> 
+ INOUT ioId	                 Integer   ,    -- ключ объекта <Физические лица> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <
     IN inIsOfficial          Boolean   ,    -- Оформлен официально
     IN inINN                 TVarChar  ,    -- Код ИНН
     IN inDriverCertificate   TVarChar  ,    -- Водительское удостоверение 
     IN inComment             TVarChar  ,    -- Примечание 
+    IN inInfoMoneyId         Integer   ,    --
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -48,6 +50,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_DriverCertificate(), ioId, inDriverCertificate);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
+   
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_InfoMoney(), ioId, inInfoMoneyId);
 
    -- синхронизируем <Физические лица> и <Сотрудники>
    UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc
@@ -58,12 +63,13 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.02.15         * add inInfoMoneyId
  12.09.14                                        * add inIsOfficial
  13.12.13                                        * del inAccessKeyId
  08.12.13                                        * add inAccessKeyId

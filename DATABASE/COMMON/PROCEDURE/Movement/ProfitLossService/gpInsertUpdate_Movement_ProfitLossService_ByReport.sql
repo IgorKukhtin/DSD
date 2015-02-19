@@ -34,21 +34,23 @@ BEGIN
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
      -- 
-     PERFORM lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
-                                                      , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
-                                                      , inOperDate        := inEndDate
-                                                      , inAmountIn        := 0  :: tfloat
-                                                      , inAmountOut       := Sum_Bonus
-                                                      , inComment         := '' :: TVarChar
-                                                      , inContractId      := ContractId_find
-                                                      , inInfoMoneyId     := InfoMoneyId_find
-                                                      , inJuridicalId     := JuridicalId
-                                                      , inPaidKindId      := zc_Enum_PaidKind_FirstForm()
-                                                      , inUnitId          := 0 :: Integer
+     PERFORM lpInsertUpdate_Movement_ProfitLossService (ioId                := 0
+                                                      , inInvNumber         := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
+                                                      , inOperDate          := inEndDate
+                                                      , inAmountIn          := 0  :: tfloat
+                                                      , inAmountOut         := Sum_Bonus
+                                                      , inComment           := '' :: TVarChar
+                                                      , inContractId        := ContractId_find
+                                                      , inContractMasterId  := ContractId_master
+                                                      , inContractChildId   := ContractId_Child
+                                                      , inInfoMoneyId       := InfoMoneyId_find
+                                                      , inJuridicalId       := JuridicalId
+                                                      , inPaidKindId        := zc_Enum_PaidKind_FirstForm()
+                                                      , inUnitId            := 0 :: Integer
                                                       , inContractConditionKindId   := ConditionKindId
-                                                      , inBonusKindId     := BonusKindId
-                                                      , inisLoad          := TRUE
-                                                      , inUserId          := vbUserId
+                                                      , inBonusKindId       := BonusKindId
+                                                      , inisLoad            := TRUE
+                                                      , inUserId            := vbUserId
                                                        )
      FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inSession:= inSession) AS tmp
      WHERE Sum_Bonus <> 0

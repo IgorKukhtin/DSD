@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Retail(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GLNCode TVarChar 
+             , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -23,20 +24,30 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Retail()) AS Code
            , CAST ('' as TVarChar)  AS NAME
            , CAST ('' as TVarChar)  AS GLNCode
+           , CAST (0 as Integer)    AS GoodsPropertyId 
+           , CAST ('' as TVarChar)  AS GoodsPropertyName           
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
        SELECT 
-             Object.Id         AS Id
-           , Object.ObjectCode AS Code
-           , Object.ValueData  AS NAME
+             Object_Retail.Id         AS Id
+           , Object_Retail.ObjectCode AS Code
+           , Object_Retail.ValueData  AS NAME
            , GLNCode.ValueData AS GLNCode
-           , Object.isErased   AS isErased
-       FROM Object
+           , Object_GoodsProperty.Id         AS GoodsPropertyId
+           , Object_GoodsProperty.ValueData  AS GoodsPropertyName           
+           , Object_Retail.isErased   AS isErased
+       FROM OBJECT AS Object_Retail
         LEFT JOIN ObjectString AS GLNCode
-                               ON GLNCode.ObjectId = Object.Id 
+                               ON GLNCode.ObjectId = Object_Retail.Id 
                               AND GLNCode.DescId = zc_ObjectString_Retail_GLNCode()
-       WHERE Object.Id = inId;
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
+                             ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
+                            AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
+        LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Retail_GoodsProperty.ChildObjectId
+                              
+       WHERE Object_Retail.Id = inId;
    END IF; 
   
 END;
@@ -49,6 +60,7 @@ ALTER FUNCTION gpGet_Object_Retail(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.02.15         * add GoodsProperty               
  10.11.14         * add GLNCode
  23.05.14         *
 

@@ -1,7 +1,7 @@
 -- Function: gpGet_Movement_Cash_Personal()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_PersonalCash (Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_PersonalCash (Integer, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash_Personal (Integer, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash_Personal(
@@ -118,7 +118,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
