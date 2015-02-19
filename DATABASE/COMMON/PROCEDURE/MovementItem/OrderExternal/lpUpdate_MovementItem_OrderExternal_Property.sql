@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, Integer, TFloat, Integer, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_MovementItem_OrderExternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MovementItem_OrderExternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_OrderExternal_Property(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,8 @@ CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_OrderExternal_Property(
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAmount_Param        TFloat    , -- 
     IN inDescId_Param        Integer  ,
+    IN inAmount_ParamOrder   TFloat    , -- 
+    IN inDescId_ParamOrder   Integer  ,
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
     IN inUserId              Integer     -- пользователь
@@ -39,6 +42,11 @@ BEGIN
 
      -- сохранили свойство
      PERFORM lpInsertUpdate_MovementItemFloat (inDescId_Param, inId, inAmount_Param);
+     -- сохранили свойство
+     IF inDescId_ParamOrder <> 0
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamOrder, inId, inAmount_ParamOrder);
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inId, inUserId, vbIsInsert);

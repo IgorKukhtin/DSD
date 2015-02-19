@@ -1,8 +1,9 @@
--- Function: gptUpdateMI_OrderExternal_AmountRemains()
+-- Function: gpUpdateMI_OrderExternal_AmountRemains()
 
 DROP FUNCTION IF EXISTS gptUpdateMI_OrderExternal_AmountRemains (Integer, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMI_OrderExternal_AmountRemains (Integer, TDateTime, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gptUpdateMI_OrderExternal_AmountRemains(
+CREATE OR REPLACE FUNCTION gpUpdateMI_OrderExternal_AmountRemains(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- 
@@ -89,6 +90,8 @@ BEGIN
                                                            , inGoodsKindId        := tmpAll.GoodsKindId
                                                            , inAmount_Param       := tmpAll.Amount_End
                                                            , inDescId_Param       := zc_MIFloat_AmountRemains()
+                                                           , inAmount_ParamOrder  := NULL
+                                                           , inDescId_ParamOrder  := NULL
                                                            , inPrice              := COALESCE (lfObjectHistory_PriceListItem.ValuePrice, 0)
                                                            , inCountForPrice      := 1
                                                            , inUserId             := vbUserId
@@ -109,4 +112,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gptUpdateMI_OrderExternal_AmountRemains (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpUpdateMI_OrderExternal_AmountRemains (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')

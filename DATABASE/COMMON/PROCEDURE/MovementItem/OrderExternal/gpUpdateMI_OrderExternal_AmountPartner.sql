@@ -1,8 +1,9 @@
--- Function: gptUpdateMI_OrderExternal_AmountPartner()
+-- Function: gpUpdateMI_OrderExternal_AmountPartner()
 
 DROP FUNCTION IF EXISTS gptUpdateMI_OrderExternal_AmountPartner (Integer, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMI_OrderExternal_AmountPartner (Integer, TDateTime, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gptUpdateMI_OrderExternal_AmountPartner(
+CREATE OR REPLACE FUNCTION gpUpdateMI_OrderExternal_AmountPartner(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- 
@@ -23,7 +24,7 @@ BEGIN
     -- таблица -
    CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat) ON COMMIT DROP;
    --
-   INSERT INTO tmpAll ( MovementItemId, GoodsId, GoodsKindId, AmountPartner)
+   INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner)
                                  SELECT tmp.MovementItemId
                                        , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
                                        , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
@@ -67,7 +68,7 @@ BEGIN
                                 ) AS tmp  ON tmp.GoodsId = tmpOrder.GoodsId
                                          AND tmp.GoodsKindId = tmpOrder.GoodsKindId
                      ;
-                                       
+
        -- сохранили
        PERFORM lpUpdate_MovementItem_OrderExternal_Property (inId                 := tmpAll.MovementItemId
                                                            , inMovementId         := inMovementId
@@ -75,6 +76,8 @@ BEGIN
                                                            , inGoodsKindId        := tmpAll.GoodsKindId
                                                            , inAmount_Param       := tmpAll.AmountPartner
                                                            , inDescId_Param       := zc_MIFloat_AmountPartner()
+                                                           , inAmount_ParamOrder  := NULL
+                                                           , inDescId_ParamOrder  := NULL
                                                            , inPrice              := COALESCE (lfObjectHistory_PriceListItem.ValuePrice, 0)
                                                            , inCountForPrice      := 1
                                                            , inUserId             := vbUserId
@@ -95,4 +98,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gptUpdateMI_OrderExternal_AmountPartner (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpUpdateMI_OrderExternal_AmountPartner (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
