@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderExternal(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, OperDateMark TDateTime
+             , OperDateStart TDateTime, OperDateEnd TDateTime
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -34,7 +35,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      vbObjectId_Branch_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
-
+ 
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY
@@ -46,11 +47,13 @@ BEGIN
              , Object_Status.Name                               AS StatusName
              , inOperDate                                       AS OperDatePartner
              , inOperDate                                       AS OperDateMark
+             , inOperDate - (INTERVAL '8 DAY')::TDateTime       AS OperDateStart
+             , inOperDate - (INTERVAL '1 DAY')::TDateTime       AS OperDateEnd             
              , CAST ('' AS TVarChar)                            AS InvNumberPartner
              , 0                     				            AS FromId
              , CAST ('' AS TVarChar) 				            AS FromName
-             , Object_To.Id             	                            AS ToId
-             , Object_To.ValueData                                          AS ToName
+             , Object_To.Id             	                    AS ToId
+             , Object_To.ValueData                              AS ToName
              , 0                     				            AS PersonalId
              , CAST ('' AS TVarChar) 				            AS PersonalName
              , 0                     				            AS RouteId
@@ -91,6 +94,8 @@ BEGIN
            , Object_Status.ValueData                    AS StatusName
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , MovementDate_OperDateMark.ValueData        AS OperDateMark
+           , COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '8 DAY'))::TDateTime      AS OperDateStart
+           , COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY'))::TDateTime        AS OperDateEnd           
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
@@ -125,6 +130,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
                                    ON MovementDate_OperDateMark.MovementId =  Movement.Id
                                   AND MovementDate_OperDateMark.DescId = zc_MovementDate_OperDateMark()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                   ON MovementDate_OperDateStart.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+            LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                   ON MovementDate_OperDateEnd.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id

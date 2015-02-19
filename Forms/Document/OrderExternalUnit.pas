@@ -103,6 +103,10 @@ type
     spUpdateAmountForecast: TdsdStoredProc;
     MultiAmountForecast: TMultiAction;
     AmountCalc: TcxGridDBColumn;
+    cxLabel19: TcxLabel;
+    cxLabel20: TcxLabel;
+    ceOperDateStart: TcxDateEdit;
+    ceOperDateEnd: TcxDateEdit;
   private
     { Private declarations }
   public

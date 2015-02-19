@@ -2,8 +2,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
   ClientWidth = 1280
-  ExplicitWidth = 1296
-  ExplicitHeight = 703
+  ExplicitWidth = 1288
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -449,12 +449,13 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 350
+      Left = 1235
       Top = 45
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+      Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 350
+      Left = 1235
       Top = 63
       Properties.Buttons = <
         item
@@ -464,6 +465,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       Properties.ReadOnly = True
       TabOrder = 19
+      Visible = False
       Width = 153
     end
     object cxLabel7: TcxLabel
@@ -603,14 +605,40 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      Properties.ReadOnly = False
+      Properties.ReadOnly = True
       TabOrder = 36
-      Width = 65
+      Width = 39
     end
     object cxLabel18: TcxLabel
       Left = 279
       Top = 45
-      Caption = #1044#1085'. '#1087#1088#1086#1075#1085#1086#1079
+      Caption = #1044#1085#1080
+    end
+    object cxLabel19: TcxLabel
+      Left = 321
+      Top = 45
+      Caption = #1055#1088#1086#1075#1085#1086#1079' '#1089
+    end
+    object cxLabel20: TcxLabel
+      Left = 414
+      Top = 45
+      Caption = #1055#1088#1086#1075#1085#1086#1079' '#1076#1086
+    end
+    object ceOperDateStart: TcxDateEdit
+      Left = 321
+      Top = 63
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 40
+      Width = 89
+    end
+    object ceOperDateEnd: TcxDateEdit
+      Left = 414
+      Top = 63
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 41
+      Width = 89
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1329,6 +1357,18 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Value = Null
         Component = cbPrinted
         DataType = ftBoolean
+      end
+      item
+        Name = 'OperDateStart'
+        Value = Null
+        Component = ceOperDateStart
+        DataType = ftDateTime
+      end
+      item
+        Name = 'OperDateEnd'
+        Value = Null
+        Component = ceOperDateEnd
+        DataType = ftDateTime
       end>
     Left = 216
     Top = 248
@@ -1374,6 +1414,20 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Name = 'inOperDateMark'
         Value = 0d
         Component = edOperDateMark
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDateStart'
+        Value = Null
+        Component = ceOperDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDateEnd'
+        Value = Null
+        Component = ceOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -1783,8 +1837,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 560
-    Top = 80
+    Left = 576
+    Top = 56
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -1948,8 +2002,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 432
-    Top = 64
+    Left = 1256
+    Top = 56
   end
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'

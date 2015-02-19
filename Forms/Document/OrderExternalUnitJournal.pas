@@ -62,6 +62,8 @@ type
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
+    clOperDateStart: TcxGridDBColumn;
+    clOperDateEnd: TcxGridDBColumn;
   private
     { Private declarations }
   public
