@@ -1,9 +1,9 @@
 inherited OrderExternalUnitForm: TOrderExternalUnitForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
   ClientWidth = 1280
-  ExplicitWidth = 1288
-  ExplicitHeight = 702
+  ExplicitWidth = 1296
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -63,6 +63,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountForecast
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -107,6 +112,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountForecast
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCalc
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -159,40 +169,60 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Width = 55
           end
           object AmountRemains: TcxGridDBColumn [4]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090'. '#1088#1072#1089#1095#1077#1090
+            Caption = #1054#1089#1090'. '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 70
           end
           object AmountPartner: TcxGridDBColumn [5]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095#1077#1090
+            Caption = #1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 70
           end
           object AmountForecast: TcxGridDBColumn [6]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'AmountForecast'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 70
           end
-          object Amount: TcxGridDBColumn [7]
-            Caption = #1050#1086#1083'-'#1074#1086
+          object AmountCalc: TcxGridDBColumn [7]
+            Caption = #1047#1072#1082#1072#1079' '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'AmountCalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 70
           end
-          object AmountSecond: TcxGridDBColumn [8]
+          object AmountSecond: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -200,9 +230,9 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 70
           end
-          object Price: TcxGridDBColumn [9]
+          object Price: TcxGridDBColumn [10]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -212,7 +242,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object CountForPrice: TcxGridDBColumn [10]
+          object CountForPrice: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -223,7 +253,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountSumm: TcxGridDBColumn [11]
+          object AmountSumm: TcxGridDBColumn [12]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -234,7 +264,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 100
           end
-          object AmountSumm_Partner: TcxGridDBColumn [12]
+          object AmountSumm_Partner: TcxGridDBColumn [13]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSumm_Partner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -246,7 +276,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 100
           end
-          object InfoMoneyCode: TcxGridDBColumn [13]
+          object InfoMoneyCode: TcxGridDBColumn [14]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -255,7 +285,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [14]
+          object InfoMoneyGroupName: TcxGridDBColumn [15]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -264,7 +294,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [15]
+          object InfoMoneyDestinationName: TcxGridDBColumn [16]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -273,7 +303,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [16]
+          object InfoMoneyName: TcxGridDBColumn [17]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -713,8 +743,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         item
           Action = dsdRefreshMI
         end>
-      Caption = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
-      Hint = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>'
       ImageIndex = 47
     end
     object actUpdateAmountRemains: TdsdExecStoredProc
@@ -751,8 +783,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         item
           Action = dsdRefreshMI
         end>
-      Caption = #1056#1072#1089#1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072
-      Hint = #1056#1072#1089#1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       ImageIndex = 48
     end
     object actUpdateAmountForecast: TdsdExecStoredProc
@@ -777,8 +811,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         item
           Action = dsdRefreshMI
         end>
-      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
-      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
       ImageIndex = 49
     end
     object dsdRefreshMI: TdsdDataSetRefresh
@@ -810,8 +846,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         item
           Action = dsdRefreshMI
         end>
-      Caption = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
-      Hint = #1056#1072#1089#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077'?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 50
     end
   end
@@ -921,6 +959,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateAmountAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateAmountRemains'
         end
         item
@@ -930,10 +976,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         item
           Visible = True
           ItemName = 'bbUpdateAmountForecast'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateAmountAll'
         end
         item
           Visible = True
@@ -2080,7 +2122,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end
       item
-        Name = 'inFromId'
+        Name = 'inUnitId'
         Value = Null
         Component = GuidesFrom
         ComponentItem = 'Key'
@@ -2110,7 +2152,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end
       item
-        Name = 'inFromId'
+        Name = 'inUnitId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
@@ -2121,7 +2163,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Top = 208
   end
   object spUpdateAmountForecast: TdsdStoredProc
-    StoredProcName = 'gptUpdateMI_OrderExternal_AmountForecast'
+    StoredProcName = 'gpUpdateMI_OrderExternal_AmountForecast'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2133,24 +2175,24 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end
       item
-        Name = 'inOperDate'
+        Name = 'inStartDate'
         Value = 0d
+        Component = edOperDateMark
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inFromId'
+        Name = 'inUnitId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDayCount'
-        Value = Null
-        Component = edDayCount
-        DataType = ftFloat
         ParamType = ptInput
       end>
     PackSize = 1

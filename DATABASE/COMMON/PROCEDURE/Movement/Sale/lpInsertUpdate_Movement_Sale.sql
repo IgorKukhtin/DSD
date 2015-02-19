@@ -67,7 +67,7 @@ BEGIN
 
 
      -- Прайс-лист
-     IF COALESCE (ioPriceListId, 0) = 0
+     IF COALESCE (ioPriceListId, 0) = 0 -- OR COALESCE (ioId, 0) = 0
      THEN
          -- !!!расчет!!! эти параметры всегда из Прайс-листа !!!на дату inOperDatePartner!!!
          SELECT PriceListId, PriceListName, PriceWithVAT, VATPercent

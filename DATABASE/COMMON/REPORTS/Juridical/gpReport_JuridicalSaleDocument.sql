@@ -16,11 +16,13 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSaleDocument(
 RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar, TotalSumm TFloat, FromName TVarChar, ToName TVarChar, ContractNumber TVarChar, ContractTagName TVarChar, PaidKindName TVarChar)
 AS
 $BODY$
+   DECLARE vbIsSale Boolean;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
+     -- 
+     vbIsSale:= EXISTS (SELECT AccountId FROM Object_Account_View WHERE AccountId = inAccountId AND AccountGroupId = zc_Enum_AccountGroup_30000()); -- Дебиторы
 
      -- !!!Отчет строим не по договору а по "ключу"!!!
      CREATE TEMP TABLE _tmpContract (ContractId Integer) ON COMMIT DROP; 
@@ -43,24 +45,25 @@ BEGIN
             , View_Contract_InvNumber.InvNumber AS ContractNumber
             , View_Contract_InvNumber.ContractTagName
             , Object_PaidKind.ValueData  AS PaidKindName
-         FROM (SELECT zc_Movement_Sale() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind
+         FROM (SELECT zc_Movement_Sale() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner, zc_MovementLinkObject_From() AS DescId_Unit WHERE vbIsSale = TRUE
               UNION ALL
-               SELECT zc_Movement_TransferDebtOut() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKindTo() AS DescId_PaidKind
+               SELECT zc_Movement_TransferDebtOut() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKindTo() AS DescId_PaidKind, zc_MovementLinkObject_To() AS DescId_Partner, zc_MovementLinkObject_From() AS DescId_Unit WHERE vbIsSale = TRUE
+              UNION ALL
+               SELECT zc_Movement_Income() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind, zc_MovementLinkObject_From() AS DescId_Partner, zc_MovementLinkObject_To() AS DescId_Unit WHERE vbIsSale = FALSE
               ) AS tmpDesc
               INNER JOIN Movement ON Movement.DescId = tmpDesc.DescId
                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                  AND Movement.OperDate >= inStartDate 
                                  AND Movement.OperDate < inEndDate
 
-              INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                            ON MovementLinkObject_To.MovementId = Movement.Id
-                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-              LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                           ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                          AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-              LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_To.ObjectId)
+              INNER JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                            ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                           AND MovementLinkObject_Partner.DescId = tmpDesc.DescId_Partner
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_TransferDebtOut
+                                           ON MovementLinkObject_Partner_TransferDebtOut.MovementId = Movement.Id
+                                          AND MovementLinkObject_Partner_TransferDebtOut.DescId = zc_MovementLinkObject_Partner()
               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                   ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                   ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_Partner.ObjectId
                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
               LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
@@ -81,8 +84,10 @@ BEGIN
 
               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-              LEFT JOIN Object AS Object_From  ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                           AND MovementLinkObject_From.DescId = tmpDesc.DescId_Unit
+
+              LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN vbIsSale = TRUE THEN COALESCE (MovementLinkObject_Partner_TransferDebtOut.ObjectId, MovementLinkObject_Partner.ObjectId) ELSE MovementLinkObject_From.ObjectId END
+              LEFT JOIN Object AS Object_From  ON Object_From.Id = CASE WHEN vbIsSale = TRUE THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_Partner.ObjectId END
 
               LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                       ON MovementFloat_TotalSumm.MovementId =  Movement.Id
@@ -91,7 +96,7 @@ BEGIN
         WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
           AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
           AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
-          AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId) = inJuridicalId 
+          AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId 
     ORDER BY OperDate;
     
           

@@ -1,26 +1,30 @@
+-- Function: gptUpdateMI_OrderExternal_AmountForecast()
 
-DROP FUNCTION IF EXISTS gptUpdateMI_OrderExternal_AmountForecast (Integer,TDateTime, Integer, TFloat, TVarChar);
-
+DROP FUNCTION IF EXISTS gptUpdateMI_OrderExternal_AmountForecast (Integer, TDateTime, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gptUpdateMI_OrderExternal_AmountForecast (Integer, TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gptUpdateMI_OrderExternal_AmountForecast(
- 
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inFromId              Integer   , -- 
-    IN inDayCount            TFloat    , --
+    IN inStartDate           TDateTime , -- Дата документа
+    IN inEndDate             TDateTime , -- Дата документа
+    IN inUnitId              Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS--RECORD AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbPriceListId Integer;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
 
-     vbStartDate := inOperDate - (INTERVAL '7 DAY');
-     vbEndDate := vbStartDate + (inDayCount ||' DAY')  :: INTERVAL;
+     -- 
+     vbPriceListId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PriceList());
+
 
 RAISE EXCEPTION 'Ошибка.Параметр <Юридическое лицо> не установлен.';
     -- таблица -

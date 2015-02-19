@@ -492,7 +492,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     ExplicitWidth = 1115
     inherited deStart: TcxDateEdit
       Left = 59
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 59
     end

@@ -19,16 +19,18 @@ BEGIN
    IF  vbDescId = zc_Movement_Tax()
    THEN
        vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Tax_IsMedoc());
-   END IF;
-   
+   ELSE
    IF  vbDescId = zc_Movement_TaxCorrective()
    THEN
        vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_TaxCorrective_IsMedoc());
+   ELSE
+       RAISE EXCEPTION 'Ошибка.Нет настроек для прав';
+   END IF;
    END IF;
 
-   PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Medoc(), inMovementId, false);
+   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Medoc(), inMovementId, FALSE);
    
-   onisMedoc := False;
+   onIsMedoc := False;
 
 END;
 $BODY$
