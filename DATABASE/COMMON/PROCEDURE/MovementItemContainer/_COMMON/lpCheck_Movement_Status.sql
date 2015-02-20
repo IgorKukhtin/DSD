@@ -73,7 +73,7 @@ BEGIN
      FROM MovementLinkMovement AS MovementLinkMovement_Child
           INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementChildId
                              AND Movement.StatusId = zc_Enum_Status_Complete()
-          INNER JOIN Movement AS Movement_Document ON Movement_Document.Id = MovementLinkMovement_Master.MovementId
+          INNER JOIN Movement AS Movement_Document ON Movement_Document.Id = MovementLinkMovement_Child.MovementId
                                                   AND Movement_Document.StatusId = zc_Enum_Status_Complete()
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Document.DescId
           LEFT JOIN MovementString AS MS_InvNumberPartner

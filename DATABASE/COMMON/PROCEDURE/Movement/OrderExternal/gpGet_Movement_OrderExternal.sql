@@ -13,6 +13,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , FromId_OrderUnit Integer, FromName_OrderUnit TVarChar
+             , ToId_OrderUnit Integer, ToName_OrderUnit TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
@@ -54,6 +56,10 @@ BEGIN
              , CAST ('' AS TVarChar) 				AS FromName
              , Object_To.Id             	                AS ToId
              , Object_To.ValueData                              AS ToName
+             , Object_To.Id            				AS FromId_OrderUnit
+             , Object_To.ValueData 				AS FromName_OrderUnit
+             , Object_StoreMain.Id             	                AS ToId_OrderUnit
+             , Object_StoreMain.ValueData                       AS ToName_OrderUnit
              , 0                     				            AS PersonalId
              , CAST ('' AS TVarChar) 				            AS PersonalName
              , 0                     				            AS RouteId
@@ -81,6 +87,7 @@ BEGIN
                                                                     WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 4 --
                                                                          THEN 346093 -- Склад ГП ф.Одесса
                                                                END
+               LEFT JOIN Object AS Object_StoreMain ON Object_StoreMain.Id = 8459 -- Склад Реализации
          ;
 
      ELSE
@@ -101,6 +108,10 @@ BEGIN
            , Object_From.ValueData                      AS FromName
            , Object_To.Id                      	        AS ToId
            , Object_To.ValueData               	        AS ToName
+           , Object_From.Id                             AS FromId_OrderUnit
+           , Object_From.ValueData                      AS FromName_OrderUnit
+           , Object_To.Id                      	        AS ToId_OrderUnit
+           , Object_To.ValueData               	        AS ToName_OrderUnit
            , Object_Personal.Id                         AS PersonalId
            , Object_Personal.ValueData                  AS PersonalName
            , Object_Route.Id                            AS RouteId

@@ -113,7 +113,7 @@ BEGIN
           IF inPartnerName <> '' OR inOKPO <> ''
           THEN
               RAISE EXCEPTION 'Ошибка.Для контрагента <%> c ОКПО <%> не определено значение <Ключ>.', inPartnerName, inOKPO;
-          ELSE RAISE EXCEPTION '<%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%> <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%> <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%> <%> '
+          ELSE RAISE EXCEPTION 'Ошибка.Пустая строка.<%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%> <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%> <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%>  <%> <%> '
                              , COALESCE (inId, 0)
                              , COALESCE (inPartnerName, '')
                              , COALESCE (inJuridicalNameNew, '')
