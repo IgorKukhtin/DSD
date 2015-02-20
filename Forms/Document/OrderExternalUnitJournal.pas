@@ -64,6 +64,7 @@ type
     mactPrint_Order: TMultiAction;
     clOperDateStart: TcxGridDBColumn;
     clOperDateEnd: TcxGridDBColumn;
+    DayCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

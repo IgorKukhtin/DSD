@@ -2,8 +2,8 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 661
   ClientWidth = 1064
-  ExplicitWidth = 1072
-  ExplicitHeight = 695
+  ExplicitWidth = 1080
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -134,6 +134,7 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
           object colInvNumberPartner: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -146,6 +147,7 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
           object colOperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
             DataBinding.FieldName = 'OperDatePartner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -156,6 +158,30 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clOperDateStart: TcxGridDBColumn
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1089
+            DataBinding.FieldName = 'OperDateStart'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clOperDateEnd: TcxGridDBColumn
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086
+            DataBinding.FieldName = 'OperDateEnd'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object DayCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1076#1085'. '#1087#1088#1086#1075#1085#1086#1079
+            DataBinding.FieldName = 'DayCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colFromName: TcxGridDBColumn
@@ -395,22 +421,6 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object clOperDateStart: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1075#1085#1086#1079' ('#1085#1072#1095'.)'
-            DataBinding.FieldName = 'OperDateStart'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object clOperDateEnd: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1075#1085#1086#1079' ('#1082#1086#1085#1077#1095#1085'.)'
-            DataBinding.FieldName = 'OperDateEnd'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
         end
       end

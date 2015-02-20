@@ -18,14 +18,14 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbPriceListId Integer;
-   DECLARE vbStartDate TDateTime;
-   DECLARE vbEndDate TDateTime;
+   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
 
      -- 
      vbPriceListId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PriceList());
+     vbOperDate:= (SELECT ValueData FROM MovementDate WHERE MovementId = inMovementId AND DescId = zc_MovementDate_OperDatePartner());
 
 
     -- таблица -
@@ -128,7 +128,7 @@ BEGIN
                                                            , inUserId             := vbUserId
                                                             ) 
        FROM tmpAll
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= inOperDate)
+            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpAll.GoodsId
       ;
 

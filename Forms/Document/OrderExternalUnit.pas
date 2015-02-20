@@ -105,8 +105,10 @@ type
     AmountCalc: TcxGridDBColumn;
     cxLabel19: TcxLabel;
     cxLabel20: TcxLabel;
-    ceOperDateStart: TcxDateEdit;
-    ceOperDateEnd: TcxDateEdit;
+    edOperDateStart: TcxDateEdit;
+    edOperDateEnd: TcxDateEdit;
+    AmountForecastOrder: TcxGridDBColumn;
+    AmountCalcOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

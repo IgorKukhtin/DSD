@@ -19,6 +19,22 @@ union select '4658' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as T
 union select '189170' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '189172' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 
+union select '199409' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
+union select '199409' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
+union select '199409' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+union select '199407' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
+union select '199407' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
+union select '199407' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+
+union select '198727' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
+union select '198727' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
+union select '198727' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+
+union select '197841' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
+union select '197841' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
+union select '197841' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+
+
 -- !!!!!!
 union select '111' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
 union select '222' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА

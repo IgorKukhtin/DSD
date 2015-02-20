@@ -2,8 +2,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
   ClientWidth = 1280
-  ExplicitWidth = 1288
-  ExplicitHeight = 702
+  ExplicitWidth = 1296
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -48,10 +48,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountRemains
             end
             item
@@ -68,6 +64,16 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountCalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCalcOrder
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -93,14 +99,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Kind = skSum
-              Column = Price
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountRemains
             end
             item
@@ -117,13 +115,23 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountCalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForecastOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCalcOrder
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsView.GroupSummaryLayout = gslStandard
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -190,8 +198,19 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 70
           end
-          object AmountForecast: TcxGridDBColumn [6]
-            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1088#1072#1089#1095#1077#1090
+          object AmountForecastOrder: TcxGridDBColumn [6]
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'AmountForecastOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountForecast: TcxGridDBColumn [7]
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'. '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'AmountForecast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -201,8 +220,19 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 70
           end
-          object AmountCalc: TcxGridDBColumn [7]
-            Caption = #1047#1072#1082#1072#1079' '#1088#1072#1089#1095#1077#1090
+          object AmountCalcOrder: TcxGridDBColumn [8]
+            Caption = #1047#1072#1082#1072#1079' '#1087#1086' '#1079#1072#1103#1074'. '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'AmountCalcOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountCalc: TcxGridDBColumn [9]
+            Caption = #1047#1072#1082#1072#1079' '#1087#1086' '#1087#1088#1086#1076'. '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'AmountCalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -212,7 +242,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 70
           end
-          object Amount: TcxGridDBColumn [8]
+          object Amount: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -222,7 +252,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountSecond: TcxGridDBColumn [9]
+          object AmountSecond: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -232,7 +262,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Price: TcxGridDBColumn [10]
+          object Price: TcxGridDBColumn [12]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -242,7 +272,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object CountForPrice: TcxGridDBColumn [11]
+          object CountForPrice: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -253,7 +283,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountSumm: TcxGridDBColumn [12]
+          object AmountSumm: TcxGridDBColumn [14]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -264,7 +294,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 100
           end
-          object AmountSumm_Partner: TcxGridDBColumn [13]
+          object AmountSumm_Partner: TcxGridDBColumn [15]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSumm_Partner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -276,7 +306,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 100
           end
-          object InfoMoneyCode: TcxGridDBColumn [14]
+          object InfoMoneyCode: TcxGridDBColumn [16]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -285,7 +315,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [15]
+          object InfoMoneyGroupName: TcxGridDBColumn [17]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -294,7 +324,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [16]
+          object InfoMoneyDestinationName: TcxGridDBColumn [18]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -303,7 +333,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [17]
+          object InfoMoneyName: TcxGridDBColumn [19]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -622,9 +652,9 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     object cxLabel20: TcxLabel
       Left = 414
       Top = 45
-      Caption = #1055#1088#1086#1075#1085#1086#1079' '#1076#1086
+      Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086
     end
-    object ceOperDateStart: TcxDateEdit
+    object edOperDateStart: TcxDateEdit
       Left = 321
       Top = 63
       Properties.SaveTime = False
@@ -632,7 +662,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       TabOrder = 40
       Width = 89
     end
-    object ceOperDateEnd: TcxDateEdit
+    object edOperDateEnd: TcxDateEdit
       Left = 414
       Top = 63
       Properties.SaveTime = False
@@ -1218,26 +1248,26 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
       end
       item
-        Name = 'FromId'
+        Name = 'FromId_OrderUnit'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
       end
       item
-        Name = 'FromName'
+        Name = 'FromName_OrderUnit'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'ToId'
+        Name = 'ToId_OrderUnit'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
       end
       item
-        Name = 'ToName'
+        Name = 'ToName_OrderUnit'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'TextValue'
@@ -1361,13 +1391,13 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       item
         Name = 'OperDateStart'
         Value = Null
-        Component = ceOperDateStart
+        Component = edOperDateStart
         DataType = ftDateTime
       end
       item
         Name = 'OperDateEnd'
         Value = Null
-        Component = ceOperDateEnd
+        Component = edOperDateEnd
         DataType = ftDateTime
       end>
     Left = 216
@@ -1420,14 +1450,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       item
         Name = 'inOperDateStart'
         Value = Null
-        Component = ceOperDateStart
+        Component = edOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inOperDateEnd'
         Value = Null
-        Component = ceOperDateEnd
+        Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -1451,11 +1481,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end
       item
-        Name = 'inDayCount'
+        Name = 'outDayCount'
         Value = Null
         Component = edDayCount
         DataType = ftFloat
-        ParamType = ptInput
       end
       item
         Name = 'inFromId'
@@ -1540,34 +1569,28 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Control = edInvNumber
       end
       item
-        Control = edContract
-      end
-      item
-        Control = edFrom
+        Control = edInvNumberOrder
       end
       item
         Control = edOperDate
       end
       item
-        Control = edInvNumber
-      end
-      item
-        Control = edInvNumberOrder
+        Control = edOperDatePartner
       end
       item
         Control = edOperDateMark
       end
       item
-        Control = edOperDatePartner
+        Control = edFrom
       end
       item
-        Control = edPaidKind
+        Control = edTo
       end
       item
-        Control = edPersonal
+        Control = edOperDateStart
       end
       item
-        Control = edPriceList
+        Control = edOperDateEnd
       end
       item
         Control = edRoute
@@ -1576,15 +1599,25 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Control = edRouteSorting
       end
       item
-        Control = edTo
+        Control = edContract
       end
       item
-        Control = edVATPercent
+        Control = edPaidKind
+      end
+      item
+        Control = edPriceList
       end
       item
         Control = edPriceWithVAT
       end
       item
+        Control = edVATPercent
+      end
+      item
+        Control = edChangePercent
+      end
+      item
+        Control = edPersonal
       end>
     Left = 232
     Top = 193
@@ -2157,7 +2190,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Top = 432
   end
   object spUpdateAmountRemains: TdsdStoredProc
-    StoredProcName = 'gptUpdateMI_OrderExternal_AmountRemains'
+    StoredProcName = 'gpUpdateMI_OrderExternal_AmountRemains'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2187,7 +2220,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Top = 200
   end
   object spUpdateAmountPartner: TdsdStoredProc
-    StoredProcName = 'gptUpdateMI_OrderExternal_AmountPartner'
+    StoredProcName = 'gpUpdateMI_OrderExternal_AmountPartner'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2231,14 +2264,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       item
         Name = 'inStartDate'
         Value = 0d
-        Component = edOperDateMark
+        Component = edOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
         Value = Null
-        Component = edOperDate
+        Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
