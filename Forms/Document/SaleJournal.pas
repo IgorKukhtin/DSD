@@ -114,6 +114,9 @@ type
     clEdiOrdspr: TcxGridDBColumn;
     clEdiInvoice: TcxGridDBColumn;
     clEdiDesadv: TcxGridDBColumn;
+    actPrint_Quality: TdsdPrintAction;
+    spSelectPrintQuality: TdsdStoredProc;
+    bbPrint_Quality: TdxBarButton;
   private
     { Private declarations }
   public

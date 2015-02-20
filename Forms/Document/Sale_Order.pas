@@ -152,6 +152,9 @@ type
     bbPrint_TTN: TdxBarButton;
     ScaleAction: TScaleAction;
     bbScale: TdxBarButton;
+    spSelectPrintQuality: TdsdStoredProc;
+    actPrint_Quality: TdsdPrintAction;
+    bbPrint_Quality: TdxBarButton;
   private
     { Private declarations }
   public
