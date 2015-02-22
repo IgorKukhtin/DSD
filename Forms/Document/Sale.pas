@@ -161,6 +161,9 @@ type
     spSelectPrintTTN: TdsdStoredProc;
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
+    spSelectPrintQuality: TdsdStoredProc;
+    actPrint_Quality: TdsdPrintAction;
+    bbPrint_Quality: TdxBarButton;
   private
     { Private declarations }
   public

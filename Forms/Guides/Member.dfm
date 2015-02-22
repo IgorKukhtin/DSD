@@ -3,7 +3,7 @@ object MemberForm: TMemberForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 520
-  ClientWidth = 665
+  ClientWidth = 777
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object MemberForm: TMemberForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 665
+    Width = 777
     Height = 494
     Align = alClient
     TabOrder = 0
@@ -53,26 +53,26 @@ object MemberForm: TMemberForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 40
+        Width = 55
       end
       object clName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
+        Width = 134
       end
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 95
       end
       object clDriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 108
       end
       object clIsOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
@@ -80,13 +80,34 @@ object MemberForm: TMemberForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 83
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
         Width = 100
+      end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080
+        DataBinding.FieldName = 'InfoMoneyCode'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 52
+      end
+      object clInfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceInfoMoneyForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 134
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -130,8 +151,8 @@ object MemberForm: TMemberForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -318,6 +339,7 @@ object MemberForm: TMemberForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -327,6 +349,36 @@ object MemberForm: TMemberForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actChoiceInfoMoneyForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'InfoMoneyChoiceForm'
+      FormName = 'TInfoMoney_ObjectForm'
+      FormNameParam.Value = 'TInfoMoney_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyCode'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -365,18 +417,21 @@ object MemberForm: TMemberForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
         end>
@@ -452,6 +507,7 @@ object MemberForm: TMemberForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 48
     Top = 216
   end
@@ -466,10 +522,12 @@ object MemberForm: TMemberForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 288
     Top = 208
   end
@@ -508,18 +566,21 @@ object MemberForm: TMemberForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Name'
         DataType = ftString
@@ -527,6 +588,7 @@ object MemberForm: TMemberForm
       end
       item
         Name = 'inIsOfficial'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'isOfficial'
         DataType = ftBoolean
@@ -534,6 +596,7 @@ object MemberForm: TMemberForm
       end
       item
         Name = 'inINN'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'INN'
         DataType = ftString
@@ -541,6 +604,7 @@ object MemberForm: TMemberForm
       end
       item
         Name = 'inDriverCertificate'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'DriverCertificate'
         DataType = ftString
@@ -548,11 +612,20 @@ object MemberForm: TMemberForm
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 560
     Top = 152
   end
@@ -563,17 +636,20 @@ object MemberForm: TMemberForm
     Params = <
       item
         Name = 'ioId '
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'ioIsOfficial'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'IsOfficial'
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>
+    PackSize = 1
     Left = 232
     Top = 379
   end

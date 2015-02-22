@@ -23,7 +23,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Width = 986
     Height = 438
     Align = alClient
-    TabOrder = 4
+    TabOrder = 3
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -110,7 +110,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Width = 100
       end
       object ceAmount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090#1091#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
+        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074' '#1091#1087#1072#1082'.'
         DataBinding.FieldName = 'Amount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -196,6 +196,12 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = dsdGoodsPropertyGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -210,8 +216,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -550,10 +556,10 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         item
           StoredProc = dsdStoredProc
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
-      ImageIndex = 62
-      Value = True
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074

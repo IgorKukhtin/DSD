@@ -9,9 +9,12 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderExternal(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, OperDateMark TDateTime
+             , OperDateStart TDateTime, OperDateEnd TDateTime
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , FromId_OrderUnit Integer, FromName_OrderUnit TVarChar
+             , ToId_OrderUnit Integer, ToName_OrderUnit TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
@@ -34,7 +37,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      vbObjectId_Branch_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
-
+ 
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY
@@ -46,11 +49,17 @@ BEGIN
              , Object_Status.Name                               AS StatusName
              , inOperDate                                       AS OperDatePartner
              , inOperDate                                       AS OperDateMark
+             , (inOperDate - INTERVAL '7 DAY') ::TDateTime      AS OperDateStart
+             , (inOperDate - INTERVAL '1 DAY') ::TDateTime      AS OperDateEnd             
              , CAST ('' AS TVarChar)                            AS InvNumberPartner
-             , 0                     				            AS FromId
-             , CAST ('' AS TVarChar) 				            AS FromName
-             , Object_To.Id             	                            AS ToId
-             , Object_To.ValueData                                          AS ToName
+             , 0                     				AS FromId
+             , CAST ('' AS TVarChar) 				AS FromName
+             , Object_To.Id             	                AS ToId
+             , Object_To.ValueData                              AS ToName
+             , Object_To.Id            				AS FromId_OrderUnit
+             , Object_To.ValueData 				AS FromName_OrderUnit
+             , Object_StoreMain.Id             	                AS ToId_OrderUnit
+             , Object_StoreMain.ValueData                       AS ToName_OrderUnit
              , 0                     				            AS PersonalId
              , CAST ('' AS TVarChar) 				            AS PersonalName
              , 0                     				            AS RouteId
@@ -64,11 +73,11 @@ BEGIN
              , CAST ('' AS TVarChar) 				            AS ContractTagName
              , CAST (0  AS INTEGER)                             AS PriceListId
              , CAST ('' AS TVarChar) 			                AS PriceListName
-             , CAST (False AS Boolean)                          AS PriceWithVAT
+             , CAST (FALSE AS Boolean)                          AS PriceWithVAT
              , CAST (20 AS TFloat)                              AS VATPercent
              , CAST (0 AS TFloat)                               AS ChangePercent
-             , CAST (20 AS TFloat)                              AS DayCount
-             , CAST (False AS Boolean)                          AS isPrinted
+             , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '7 DAY')))) :: TFloat AS DayCount
+             , CAST (FALSE AS Boolean)                          AS isPrinted
 
 
 
@@ -78,6 +87,7 @@ BEGIN
                                                                     WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 4 --
                                                                          THEN 346093 -- Склад ГП ф.Одесса
                                                                END
+               LEFT JOIN Object AS Object_StoreMain ON Object_StoreMain.Id = 8459 -- Склад Реализации
          ;
 
      ELSE
@@ -91,11 +101,17 @@ BEGIN
            , Object_Status.ValueData                    AS StatusName
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , MovementDate_OperDateMark.ValueData        AS OperDateMark
+           , COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime      AS OperDateStart
+           , COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime        AS OperDateEnd           
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
            , Object_To.Id                      	        AS ToId
            , Object_To.ValueData               	        AS ToName
+           , Object_From.Id                             AS FromId_OrderUnit
+           , Object_From.ValueData                      AS FromName_OrderUnit
+           , Object_To.Id                      	        AS ToId_OrderUnit
+           , Object_To.ValueData               	        AS ToName_OrderUnit
            , Object_Personal.Id                         AS PersonalId
            , Object_Personal.ValueData                  AS PersonalName
            , Object_Route.Id                            AS RouteId
@@ -109,11 +125,13 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName    AS ContractTagName
            , Object_PriceList.id                        AS PriceListId
            , Object_PriceList.ValueData                 AS PriceListName
-           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, False)  AS PriceWithVAT
+           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)  AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
-           , MovementFloat_DayCount.ValueData           AS DayCount
-           , COALESCE (MovementBoolean_Print.ValueData, False) AS isPrinted
+           , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime
+                                   - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime)
+                          )) :: TFloat AS DayCount
+           , COALESCE (MovementBoolean_Print.ValueData, FALSE) AS isPrinted
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -125,6 +143,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
                                    ON MovementDate_OperDateMark.MovementId =  Movement.Id
                                   AND MovementDate_OperDateMark.DescId = zc_MovementDate_OperDateMark()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                   ON MovementDate_OperDateStart.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+            LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                   ON MovementDate_OperDateEnd.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -141,10 +166,6 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-            LEFT JOIN MovementFloat AS MovementFloat_DayCount
-                                    ON MovementFloat_DayCount.MovementId =  Movement.Id
-                                   AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -221,4 +242,4 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderExternal (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_OrderExternal (inMovementId:= 1, inOperDate:= CURRENT_TIMESTAMP, inSession:= '9818')

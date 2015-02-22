@@ -4,6 +4,7 @@ result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber_my Integer, In
      , FromId_Postgres Integer, ToId_Postgres Integer, FromId Integer, ClientId Integer
      , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, OKPO TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId_pg Integer, RouteSortingId_pg Integer, PersonalId_Postgres Integer
      , PriceListId_pg Integer
+     , UnitNameTo TVarCharMedium,UnitName_Dolg TVarCharMedium,DayCount_Real TSumm,DayCount_Bank TSumm
      , isOnlyUpdateInt smallint, isTare smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   //
@@ -201,6 +202,12 @@ from
         , _tmpList.RouteSortingId_pg as RouteSortingId_pg
         , isnull(_tmpList2.PersonalId_Postgres, _tmpList.PersonalId_Postgres) as PersonalId_Postgres
         , PriceList_byHistory.Id_Postgres as PriceListId_pg
+
+        , UnitTo.UnitName as UnitNameTo
+        , Unit_Dolg.UnitName as UnitName_Dolg
+        , isnull(ClientSumm_dolg.DayCount_Real,0)as DayCount_Real
+        , isnull(ClientSumm_dolg.DayCount_Bank,0)as DayCount_Bank
+
         , zc_rvNo()  as isOnlyUpdateInt
         , _tmpList.isTare
         , zc_rvYes() as zc_rvYes
@@ -208,8 +215,15 @@ from
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
         left outer join _tmpPrice_Scale on _tmpPrice_Scale.BillId = _tmpList.ObjectId
         left outer join dba.PriceList_byHistory on PriceList_byHistory.Id = _tmpPrice_Scale.PriceListId
+        left outer join dba.Unit as UnitTo on UnitTo.Id=_tmpList.ClientId
+        left outer join dba.Unit as Unit_Dolg on Unit_Dolg.Id=isnull(zf_ChangeIntToNull(UnitTo.DolgByUnitID),UnitTo.Id)
+        left outer join dba.ClientSumm as ClientSumm_dolg on ClientSumm_dolg.ClientId=Unit_Dolg.Id
    group by ObjectId, BillId, InvNumber_my, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId, MoneyKindId, PaidKindId_Postgres
           , CodeIM, OKPO, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, _tmpList.isTare, PriceListId_pg, Id_Postgres
+          , UnitTo.UnitName 
+          , Unit_Dolg.UnitName 
+          , isnull(ClientSumm_dolg.DayCount_Real,0)
+          , isnull(ClientSumm_dolg.DayCount_Bank,0)
    order by 3, 4, CodeIM, 1
    ;
 

@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitWidth = 1102
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -18,12 +18,12 @@ inherited MainForm: TMainForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'CashId'
+          Name = 'CashId_top'
           Value = '14462'
         end
         item
-          Name = 'CashName'
-          Value = #1053#1072#1083
+          Name = 'CashName_top'
+          Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088
           DataType = ftString
         end
         item
@@ -762,9 +762,9 @@ inherited MainForm: TMainForm
     object actReport_JuridicalDefermentPayment: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1044#1086#1083#1075#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
-      FormName = 'TReport_JuridicalDefermentPayment'
-      FormNameParam.Value = 'TReport_JuridicalDefermentPayment'
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
+      FormName = 'TReport_JuridicalDefermentPaymentForm'
+      FormNameParam.Value = 'TReport_JuridicalDefermentPaymentForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -1503,7 +1503,7 @@ inherited MainForm: TMainForm
     object actOrderExternal: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
       FormName = 'TOrderExternalJournalForm'
       FormNameParam.Value = 'TOrderExternalJournalForm'
       FormNameParam.DataType = ftString
@@ -1784,6 +1784,16 @@ inherited MainForm: TMainForm
       Hint = #1043#1086#1088#1086#1076#1072
       FormName = 'TCityForm'
       FormNameParam.Value = 'TCityForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_JuridicalDefermentIncome: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1055#1086'c'#1090#1072#1074#1097#1080#1082#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
+      FormName = 'TReport_JuridicalDefermentIncomeForm'
+      FormNameParam.Value = 'TReport_JuridicalDefermentIncomeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2501,7 +2511,7 @@ inherited MainForm: TMainForm
     object actOrderExternalUnit: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1075#1083#1072#1074#1085#1099#1081' '#1089#1082#1083#1072#1076
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')'
       Hint = #1047#1072#1103#1074#1082#1080' '#1085#1072' '#1075#1083#1072#1074#1085#1099#1081' '#1089#1082#1083#1072#1076
       FormName = 'TOrderExternalUnitJournalForm'
       FormNameParam.Value = 'TOrderExternalUnitJournalForm'
@@ -2611,11 +2621,11 @@ inherited MainForm: TMainForm
       object miOrderExternal: TMenuItem
         Action = actOrderExternal
       end
-      object miOrderInternal: TMenuItem
-        Action = actGoodsQualityMovement
-      end
       object N40: TMenuItem
         Action = actOrderExternalUnit
+      end
+      object miOrderInternal: TMenuItem
+        Action = actGoodsQualityMovement
       end
     end
     object miFinanceDocuments: TMenuItem [1]
@@ -2980,6 +2990,9 @@ inherited MainForm: TMainForm
       end
       object miReport_JuridicalDefermentPayment: TMenuItem
         Action = actReport_JuridicalDefermentPayment
+      end
+      object miReport_JuridicalDefermentIncome: TMenuItem
+        Action = actReport_JuridicalDefermentIncome
       end
       object miReport_JuridicalCollation: TMenuItem
         Action = actReport_JuridicalCollation

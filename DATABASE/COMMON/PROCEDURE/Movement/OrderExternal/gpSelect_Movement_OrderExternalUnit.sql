@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternalUnit(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, OperDateMark TDateTime
+             , OperDateStart TDateTime, OperDateEnd TDateTime
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -52,6 +53,8 @@ BEGIN
            , Object_Status.ValueData                        AS StatusName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
+           , MovementDate_OperDateStart.ValueData           AS OperDateStart
+           , MovementDate_OperDateEnd.ValueData             AS OperDateEnd
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
            , Object_From.Id                                 AS FromId
            , Object_From.ValueData                          AS FromName
@@ -89,7 +92,9 @@ BEGIN
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
            
-           , MovementFloat_DayCount.ValueData       AS DayCount
+           , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime
+                                   - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime)
+                          )) :: TFloat AS DayCount
            
            , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
 
@@ -110,6 +115,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
                                    ON MovementDate_OperDateMark.MovementId =  Movement.Id
                                   AND MovementDate_OperDateMark.DescId = zc_MovementDate_OperDateMark()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                   ON MovementDate_OperDateStart.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+            LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                   ON MovementDate_OperDateEnd.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -195,10 +207,6 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN MovementFloat AS MovementFloat_DayCount
-                                    ON MovementFloat_DayCount.MovementId =  Movement.Id
-                                   AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
-                                   
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
@@ -212,6 +220,7 @@ ALTER FUNCTION gpSelect_Movement_OrderExternalUnit (TDateTime, TDateTime, Boolea
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.02.15         * add OperDateStart, OperDateEnd
  20.10.14                                        * add isEDI
  26.08.14                                                        *
  18.08.14                                                        *

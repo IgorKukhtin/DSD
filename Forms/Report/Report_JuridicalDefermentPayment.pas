@@ -16,7 +16,7 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter, frxClass, frxDBSet, cxImageComboBox;
 
 type
-  TReport_JuridicalDefermentPayment = class(TAncestorReportForm)
+  TReport_JuridicalDefermentPaymentForm = class(TAncestorReportForm)
     clJuridicalName: TcxGridDBColumn;
     colContractNumber: TcxGridDBColumn;
     colKreditRemains: TcxGridDBColumn;
@@ -89,7 +89,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_JuridicalDefermentPayment);
+  RegisterClass(TReport_JuridicalDefermentPaymentForm);
 
 
 end.

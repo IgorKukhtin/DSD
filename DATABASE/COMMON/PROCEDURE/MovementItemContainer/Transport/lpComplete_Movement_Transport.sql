@@ -360,10 +360,13 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_Transport_byProfitLoss.ProfitLossId
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := _tmpItem_Transport_byProfitLoss.BranchId_ProfitLoss -- !!!подставляем Филиал для Прибыль!!!
                                          ) AS ContainerId_ProfitLoss
                 , _tmpItem_Transport_byProfitLoss.ProfitLossDirectionId
                 , _tmpItem_Transport_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_Transport_byProfitLoss.BusinessId_Route
+                , _tmpItem_Transport_byProfitLoss.BranchId_ProfitLoss
 
            FROM (SELECT lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem_Transport_group.ProfitLossGroupId
                                                       , inProfitLossDirectionId  := _tmpItem_Transport_group.ProfitLossDirectionId
@@ -374,22 +377,26 @@ BEGIN
                       , _tmpItem_Transport_group.ProfitLossDirectionId
                       , _tmpItem_Transport_group.InfoMoneyDestinationId
                       , _tmpItem_Transport_group.BusinessId_Route
+                      , _tmpItem_Transport_group.BranchId_ProfitLoss
 
                  FROM (SELECT _tmpItem_Transport.ProfitLossGroupId
                             , _tmpItem_Transport.ProfitLossDirectionId
                             , _tmpItem_Transport.InfoMoneyDestinationId
                             , _tmpItem_Transport.BusinessId_Route
+                            , _tmpItem_Transport.BranchId_ProfitLoss
                        FROM _tmpItem_TransportSumm_Transport
                             JOIN _tmpItem_Transport ON _tmpItem_Transport.MovementItemId = _tmpItem_TransportSumm_Transport.MovementItemId
                        GROUP BY _tmpItem_Transport.ProfitLossGroupId
                               , _tmpItem_Transport.ProfitLossDirectionId
                               , _tmpItem_Transport.InfoMoneyDestinationId
                               , _tmpItem_Transport.BusinessId_Route
+                              , _tmpItem_Transport.BranchId_ProfitLoss
                       ) AS _tmpItem_Transport_group
                 ) AS _tmpItem_Transport_byProfitLoss
           ) AS _tmpItem_Transport_byContainer ON _tmpItem_Transport_byContainer.ProfitLossDirectionId  = _tmpItem_Transport.ProfitLossDirectionId
                                              AND _tmpItem_Transport_byContainer.InfoMoneyDestinationId = _tmpItem_Transport.InfoMoneyDestinationId
                                              AND _tmpItem_Transport_byContainer.BusinessId_Route       = _tmpItem_Transport.BusinessId_Route
+                                             AND _tmpItem_Transport_byContainer.BranchId_ProfitLoss    = _tmpItem_Transport.BranchId_ProfitLoss
      WHERE _tmpItem_TransportSumm_Transport.MovementItemId = _tmpItem_Transport.MovementItemId;
 
      -- 2.2. формируются Проводки - Прибыль

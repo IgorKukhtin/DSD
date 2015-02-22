@@ -263,17 +263,20 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_ProfitLoss = _tmpItem_byContainer.ContainerId
      FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                         , inParentId          := NULL
-                                        , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
+                                        , inObjectId          := zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
                                         , inJuridicalId_basis := vbJuridicalId_Basis
                                         , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_Route -- !!!подставляем Бизнес для Прибыль!!!
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := _tmpItem_byProfitLoss.BranchId_ProfitLoss -- !!!подставляем Филиал для Прибыль!!!
                                          ) AS ContainerId
                 , _tmpItem_byProfitLoss.ProfitLossDirectionId
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BusinessId_Route
+                , _tmpItem_byProfitLoss.BranchId_ProfitLoss
            FROM (SELECT lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem_group.ProfitLossGroupId
                                                       , inProfitLossDirectionId  := _tmpItem_group.ProfitLossDirectionId
                                                       , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
@@ -283,22 +286,26 @@ BEGIN
                       , _tmpItem_group.ProfitLossDirectionId
                       , _tmpItem_group.InfoMoneyDestinationId
                       , _tmpItem_group.BusinessId_Route
+                      , _tmpItem_group.BranchId_ProfitLoss
                  FROM (SELECT _tmpItem.ProfitLossGroupId
                             , _tmpItem.ProfitLossDirectionId
                             , _tmpItem.InfoMoneyDestinationId
                             , _tmpItem.BusinessId_Route
+                            , _tmpItem.BranchId_ProfitLoss
                        FROM _tmpItem
                        WHERE _tmpItem.AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
                        GROUP BY _tmpItem.ProfitLossGroupId
                               , _tmpItem.ProfitLossDirectionId
                               , _tmpItem.InfoMoneyDestinationId
                               , _tmpItem.BusinessId_Route
+                              , _tmpItem.BranchId_ProfitLoss
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byContainer
       WHERE _tmpItem.ProfitLossDirectionId  = _tmpItem_byContainer.ProfitLossDirectionId
         AND _tmpItem.InfoMoneyDestinationId = _tmpItem_byContainer.InfoMoneyDestinationId
-        AND _tmpItem.BusinessId_Route       = _tmpItem_byContainer.BusinessId_Route;
+        AND _tmpItem.BusinessId_Route       = _tmpItem_byContainer.BusinessId_Route
+        AND _tmpItem.BranchId_ProfitLoss    = _tmpItem_byContainer.BranchId_ProfitLoss;
 
      -- 1.3. формируются Проводки суммового учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)

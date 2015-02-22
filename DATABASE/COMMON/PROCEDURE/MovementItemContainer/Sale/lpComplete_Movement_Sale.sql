@@ -1433,6 +1433,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_PriceList
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_From
                                          ) AS ContainerId_ProfitLoss_10100
                   -- для учета себестоимости реализации 
                 , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -1444,6 +1446,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_From
                                          ) AS ContainerId_ProfitLoss_10400
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BusinessId_From
@@ -1504,6 +1508,8 @@ BEGIN
                                                   , inObjectCostId      := NULL
                                                   , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                                   , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_CountChange
+                                                  , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                                  , inObjectId_2        := vbBranchId_From
                                                    )
                   END AS ContainerId_ProfitLoss_40208
                   -- для учета скидки в весе : с/с1 - с/с2
@@ -1518,6 +1524,8 @@ BEGIN
                                                   , inObjectCostId      := NULL
                                                   , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                                   , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_ChangePercent
+                                                  , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                                  , inObjectId_2        := vbBranchId_From
                                                    )
                   END AS ContainerId_ProfitLoss_10500
                   -- для учета себестоимости реализации : с/с3
@@ -1532,6 +1540,8 @@ BEGIN
                                                   , inObjectCostId      := NULL
                                                   , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                                   , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
+                                                  , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                                  , inObjectId_2        := vbBranchId_From
                                                    )
                   END AS ContainerId_ProfitLoss_10400
                   -- для учета себестоимости списания
@@ -1546,6 +1556,8 @@ BEGIN
                                                   , inObjectCostId      := NULL
                                                   , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                                   , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Loss
+                                                  , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                                  , inObjectId_2        := vbBranchId_From
                                                    )
                   END AS ContainerId_ProfitLoss_20200
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
@@ -1920,6 +1932,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_PriceList
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_From
                                          ) AS ContainerId_ProfitLoss_10100
                   -- для Скидка по акциям
                 , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -1931,6 +1945,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_From
                                          ) AS ContainerId_ProfitLoss_10200
                   -- для Скидка дополнительная
                 , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -1942,6 +1958,8 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_ChangePercent
+                                        , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_2        := vbBranchId_From
                                          ) AS ContainerId_ProfitLoss_10300
                   -- для Курсовая разница
                 , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
@@ -1953,7 +1971,9 @@ BEGIN
                                                        , inObjectCostDescId  := NULL
                                                        , inObjectCostId      := NULL
                                                        , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
-                                                       , inObjectId_1        := zc_Enum_ProfitLoss_80103()
+                                                       , inObjectId_1        := zc_Enum_ProfitLoss_80103() -- Расходы с прибыли + Финансовая деятельность + Курсовая разница
+                                                       , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                                       , inObjectId_2        := vbBranchId_From
                                                         )
                        ELSE 0
                   END AS ContainerId_ProfitLoss_80103
@@ -2601,13 +2621,16 @@ BEGIN
      ;
 
 
+     -- убрал, т.к. св-во пишется теперь в ОПиУ
+     DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
+     DELETE FROM MovementLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementId = inMovementId;
      -- !!!6.0.1. формируются свойства в элементах документа из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_From)
+     /*PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_From)
      FROM (SELECT _tmpItem.MovementItemId
            FROM _tmpItem
           ) AS tmp;
      -- !!!6.0.2. формируются свойство связь с <филиал> в документе из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_From);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_From);*/
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки

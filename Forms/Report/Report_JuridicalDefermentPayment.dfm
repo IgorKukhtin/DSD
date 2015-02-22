@@ -1,5 +1,5 @@
-inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
-  Caption = #1054#1090#1095#1077#1090' <'#1044#1086#1083#1075#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081'>'
+inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymentForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081'>'
   ClientHeight = 394
   ClientWidth = 1115
   AddOnFormData.Params = FormParams
@@ -492,7 +492,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     ExplicitWidth = 1115
     inherited deStart: TcxDateEdit
       Left = 59
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 59
     end

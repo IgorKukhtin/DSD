@@ -4,11 +4,13 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, T
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalCash (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash_Personal(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
+    IN inCashId        Integer , --
     IN inIsErased      Boolean   ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -18,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ServiceDate TDateTime
              , Comment TVarChar
              , CashId Integer, CashName TVarChar
-
+             , MemberId Integer, MemberName TVarChar
 )
 AS
 $BODY$
@@ -43,12 +45,16 @@ BEGIN
            , Object_Cash.Id                    AS CashId
            , Object_Cash.ValueData             AS CashName
 
+           , Object_Member.Id                  AS MemberId
+           , Object_Member.ValueData           AS MemberName
+
        FROM Movement
            -- INNER JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-            
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND MovementItem.ObjectId = inCashId
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
@@ -58,6 +64,11 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+        
+    LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
+                                             ON MILinkObject_Member.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MILinkObject_Member.ObjectId
 
        WHERE Movement.DescId = zc_Movement_Cash()
          AND Movement.ParentId is NOT NULL 
@@ -74,6 +85,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.01.15         * add member
+ 17.01.15         * add inCashId
  16.09.14         *
 
 */

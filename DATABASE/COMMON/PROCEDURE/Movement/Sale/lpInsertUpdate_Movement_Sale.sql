@@ -67,7 +67,7 @@ BEGIN
 
 
      -- Прайс-лист
-     IF COALESCE (ioPriceListId, 0) = 0
+     IF COALESCE (ioPriceListId, 0) = 0 -- OR COALESCE (ioId, 0) = 0
      THEN
          -- !!!расчет!!! эти параметры всегда из Прайс-листа !!!на дату inOperDatePartner!!!
          SELECT PriceListId, PriceListName, PriceWithVAT, VATPercent
@@ -90,7 +90,7 @@ BEGIN
 
 
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
+     vbAccessKeyId:= CASE WHEN COALESCE (ioId, 0) = 0 AND inFromId = 346093 /*Склад ГП ф.Одесса*/ THEN zc_Enum_Process_AccessKey_DocumentOdessa() ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner()) END;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

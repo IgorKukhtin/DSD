@@ -214,12 +214,28 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             Options.Editing = False
             Width = 65
           end
+          object clContractMasterInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1091#1089#1083#1086#1074#1080#1103')'
+            DataBinding.FieldName = 'ContractMasterInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object clContractChildInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'ContractChildInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 41
+            Width = 89
           end
           object clItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -234,7 +250,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             DataBinding.FieldName = 'isLoad'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 41
+            Width = 50
           end
         end
       end

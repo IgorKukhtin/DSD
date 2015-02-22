@@ -10,6 +10,9 @@ DROP FUNCTION IF EXISTS
 DROP FUNCTION IF EXISTS 
    gpInsertUpdate_Movement_Cash_Personal (integer, tvarchar, tdatetime, Integer, TVarChar, TDateTime, tvarchar);
 
+DROP FUNCTION IF EXISTS 
+   gpInsertUpdate_Movement_Cash_Personal (integer, tvarchar, tdatetime, Integer, TVarChar, TDateTime, Integer, tvarchar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Personal(
  INOUT ioMovementId          Integer   , -- 
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -18,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Personal(
     IN inCashId              Integer   , -- Касса
     IN inComment             TVarChar  , -- Комментерий
     IN inServiceDate         TDateTime , -- Дата начисления
+    IN inMemberId            Integer   , -- Физ лицо (через кого)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -48,11 +52,11 @@ BEGIN
                                                          , inComment     := inComment
                                                          , inCashId      := inCashId
                                                          , inMoneyPlaceId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inParentId AND DescId = zc_MovementLinkObject_PersonalServiceList())
-                                                         , inPositionId  := NULL
-                                                         , inContractId  := NULL
+                                                         , inPositionId  := 0::Integer
+                                                         , inContractId  := 0::Integer
                                                          , inInfoMoneyId := (SELECT MovementItemLinkObject.ObjectId FROM MovementItem INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id AND MovementItemLinkObject.DescId = zc_MILinkObject_InfoMoney() WHERE MovementItem.MovementId = inParentId AND MovementItem.isErased = FALSE AND MovementItem.DescId = zc_MI_Master() GROUP BY MovementItemLinkObject.ObjectId)
-                                                         , inMemberId    := NULL
-                                                         , inUnitId      := NULL
+                                                         , inMemberId    := inMemberId
+                                                         , inUnitId      := 0::Integer
                                                          , inUserId      := vbUserId
                                                           )
                       FROM (SELECT ioMovementId AS MovementId) AS tmp

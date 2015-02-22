@@ -22,40 +22,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_GoodsQuality());
    vbUserId:= lpGetUserBySession (inSession);
-   -- определяется - может ли пользовать видеть весь справочник
-   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
 
- IF inShowAll THEN
+ IF inShowAll = FALSE
+ THEN
    
     RETURN QUERY 
-
-     with tmpGoods AS(SELECT Object_Goods.Id           AS GoodsId
-                          , Object_Goods.ObjectCode    AS GoodsCode 
-                          , Object_Goods.ValueData     AS GoodsName
-
-                          , Object_GoodsGroup.Id        AS GoodsGroupId
-                          , Object_GoodsGroup.ValueData AS GoodsGroupName 
-                          
-                     FROM Object AS Object_Goods
-                          /*JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                         ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
-                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                        AND (ObjectLink_Goods_InfoMoney.ChildObjectId = inInfoMoney OR inInfoMoney = 0)*/
-                          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-                          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId    
-                             
-                     WHERE Object_Goods.DescId = zc_Object_Goods()
-                       AND Object_Goods.isErased = FALSE
-                    )
-                    
        SELECT 
              Object_GoodsQuality.Id          AS Id
            , Object_GoodsQuality.ObjectCode  AS Code
@@ -73,17 +49,20 @@ BEGIN
            , ObjectString_Value9.ValueData AS Value9           
            , ObjectString_Value10.ValueData AS Value10
                                                       
-           , Object_Goods.GoodsId        AS GoodsId
-           , Object_Goods.GoodsCode      AS GoodsCode
-           , Object_Goods.GoodsName      AS GoodsName 
-           , Object_Goods.GoodsGroupName AS GoodsGroupName 
+           , Object_Goods.Id              AS GoodsId
+           , Object_Goods.ObjectCode      AS GoodsCode
+           , Object_Goods.ValueData       AS GoodsName 
+           , Object_GoodsGroup.ValueData  AS GoodsGroupName 
                      
            , Object_Quality.Id           AS QualityId
            , Object_Quality.ObjectCode   AS QualityCode
            , Object_Quality.ValueData    AS QualityName 
                                 
        FROM Object AS Object_GoodsQuality
-           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_GoodsQuality.AccessKeyId
+           LEFT JOIN ObjectLink AS GoodsQuality_Quality
+                                ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
+                               AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
+           LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId      
        
            LEFT JOIN ObjectString AS ObjectString_Value1
                                ON ObjectString_Value1.ObjectId = Object_GoodsQuality.Id 
@@ -116,46 +95,39 @@ BEGIN
                                ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id 
                               AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
                                                                        
-           JOIN ObjectLink AS GoodsQuality_Goods
-                           ON GoodsQuality_Goods.ObjectId = Object_GoodsQuality.Id
-                          AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
-           JOIN tmpGoods AS Object_Goods ON Object_Goods.GoodsId = GoodsQuality_Goods.ChildObjectId  
-           
-           INNER JOIN ObjectLink AS GoodsQuality_Quality
-                                ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
-                               AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
-                               AND (GoodsQuality_Quality.ChildObjectId = inQualityId OR inQualityId = 0)
-           INNER JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId      
-                   
-   WHERE Object_GoodsQuality.DescId = zc_Object_GoodsQuality()
-     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+           LEFT JOIN ObjectLink AS GoodsQuality_Goods
+                                ON GoodsQuality_Goods.ObjectId = Object_GoodsQuality.Id
+                               AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
+           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsQuality_Goods.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId    
 
-;
-ELSE 
+       WHERE Object_GoodsQuality.DescId = zc_Object_GoodsQuality()
+         AND (GoodsQuality_Quality.ChildObjectId = inQualityId OR inQualityId = 0);
+
+   ELSE 
 
     RETURN QUERY
-     with tmpGoods AS(SELECT Object_Goods.Id           AS GoodsId
+    WITH tmpGoods AS(SELECT Object_Goods.Id            AS GoodsId
                           , Object_Goods.ObjectCode    AS GoodsCode 
-                          , Object_Goods.ValueData      AS GoodsName
+                          , Object_Goods.ValueData     AS GoodsName
 
                           , Object_GoodsGroup.Id        AS GoodsGroupId
                           , Object_GoodsGroup.ValueData AS GoodsGroupName 
-                          
-                     FROM Object AS Object_Goods
-                         /* JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                         ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
-                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                        AND (ObjectLink_Goods_InfoMoney.ChildObjectId = inInfoMoney OR inInfoMoney = 0)*/
+                     FROM Object_InfoMoney_View
+                          INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                                           AND Object_Goods.isErased = FALSE
                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId    
-                             
-                     WHERE Object_Goods.DescId = zc_Object_Goods()
-                       AND Object_Goods.isErased = FALSE
+                     WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
                     )
-
-
          SELECT 
              COALESCE (Object_GoodsQuality.Id, 0)::Integer           AS Id
            , COALESCE (Object_GoodsQuality.ObjectCode, 0)::Integer   AS Code
@@ -184,10 +156,8 @@ ELSE
 
          FROM tmpGoods AS Object_Goods
 
-           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll-- AND tmpRoleAccessKey.AccessKeyId = Object_GoodsQuality.AccessKeyId
-
            LEFT JOIN ObjectLink AS GoodsQuality_Goods
-                                ON GoodsQuality_Goods.ChildObjectId = Object_Goods.GoodsId       --GoodsQuality_Goods.ObjectId = Object_GoodsQuality.Id
+                                ON GoodsQuality_Goods.ChildObjectId = Object_Goods.GoodsId
                                AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
            LEFT JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id = GoodsQuality_Goods.ObjectId 
                                                   AND Object_GoodsQuality.DescId = zc_Object_GoodsQuality()
@@ -226,11 +196,9 @@ ELSE
            LEFT  JOIN ObjectLink AS GoodsQuality_Quality
                                 ON GoodsQuality_Quality.ObjectId = Object_GoodsQuality.Id
                                AND GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
-                               AND (GoodsQuality_Quality.ChildObjectId = inQualityId OR inQualityId = 0 OR Coalesce (GoodsQuality_Quality.ChildObjectId,0)=0 )
-           LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId   
+           LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = COALESCE (GoodsQuality_Quality.ChildObjectId, inQualityId)
                        
-   WHERE tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll
-                    
+      WHERE (GoodsQuality_Quality.ChildObjectId = inQualityId OR inQualityId = 0 OR GoodsQuality_Goods.ObjectId IS NULL)
      ;
      END IF;
 

@@ -160,7 +160,7 @@ BEGIN
              , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
 
                -- Филиал Баланс: всегда из кассы (нужен для НАЛ долгов или долгов подотчета)
-             , COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
+             , COALESCE (ObjectLink_MoneyPlace_Branch.ChildObjectId, COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis())) AS BranchId_Balance
                -- Филиал ОПиУ: всегда по подразделению
              , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss
 
@@ -192,6 +192,9 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                               ON MILinkObject_Position.MovementItemId = _tmpItem.MovementItemId
                                              AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+
+             LEFT JOIN ObjectLink AS ObjectLink_MoneyPlace_Branch ON ObjectLink_MoneyPlace_Branch.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                                 AND ObjectLink_MoneyPlace_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
              LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId

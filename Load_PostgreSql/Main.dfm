@@ -223,7 +223,7 @@ object MainForm: TMainForm
     object cbJuridicalBranchNal: TCheckBox
       Tag = 10
       Left = 15
-      Top = 206
+      Top = 224
       Width = 225
       Height = 17
       Caption = '3.2.2. '#1070#1088'.'#1083#1080#1094#1072' '#1060#1080#1083#1080#1072#1083'-'#1053#1072#1083
@@ -232,7 +232,7 @@ object MainForm: TMainForm
     object cbPartnerBranchNal: TCheckBox
       Tag = 10
       Left = 15
-      Top = 224
+      Top = 240
       Width = 194
       Height = 17
       Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1060#1080#1083#1072#1083'-'#1053#1072#1083
@@ -241,7 +241,7 @@ object MainForm: TMainForm
     object cbBusiness: TCheckBox
       Tag = 10
       Left = 15
-      Top = 251
+      Top = 259
       Width = 225
       Height = 17
       Caption = '4.1. '#1041#1080#1079#1085#1077#1089#1099
@@ -251,7 +251,7 @@ object MainForm: TMainForm
     object cbBranch: TCheckBox
       Tag = 10
       Left = 15
-      Top = 266
+      Top = 274
       Width = 225
       Height = 17
       Caption = '4.2. '#1060#1080#1083#1080#1072#1083#1099
@@ -263,7 +263,7 @@ object MainForm: TMainForm
     object cbUnitGroup: TCheckBox
       Tag = 10
       Left = 15
-      Top = 281
+      Top = 289
       Width = 210
       Height = 17
       Caption = '4.3. '#1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' !!! '#1053#1045#1058' !!!'
@@ -273,7 +273,7 @@ object MainForm: TMainForm
     object cbUnit: TCheckBox
       Tag = 10
       Left = 15
-      Top = 296
+      Top = 304
       Width = 225
       Height = 17
       Caption = '4.4. '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '
@@ -410,7 +410,7 @@ object MainForm: TMainForm
     object cbMember_andPersonal_andRoute: TCheckBox
       Tag = 10
       Left = 15
-      Top = 312
+      Top = 320
       Width = 145
       Height = 26
       Caption = '4.5. '#1060#1080#1079' '#1083'. + '#1052#1072#1088#1096#1088#1091#1090#1099' + '#1040#1074#1090#1086' : Update'
@@ -461,7 +461,7 @@ object MainForm: TMainForm
     object cbCar: TCheckBox
       Tag = 10
       Left = 151
-      Top = 251
+      Top = 259
       Width = 115
       Height = 17
       Caption = '4.6. '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
@@ -471,7 +471,7 @@ object MainForm: TMainForm
     object cbRoute: TCheckBox
       Tag = 10
       Left = 151
-      Top = 266
+      Top = 274
       Width = 115
       Height = 17
       Caption = '4.7. '#1052#1072#1088#1096#1088#1091#1090#1099
@@ -481,7 +481,7 @@ object MainForm: TMainForm
     object cbCardFuel: TCheckBox
       Tag = 10
       Left = 151
-      Top = 296
+      Top = 304
       Width = 139
       Height = 17
       Caption = '4.8. '#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099
@@ -507,7 +507,7 @@ object MainForm: TMainForm
     object cbModelService: TCheckBox
       Tag = 10
       Left = 163
-      Top = 312
+      Top = 320
       Width = 153
       Height = 17
       Caption = '4.9. '#1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '
@@ -523,7 +523,7 @@ object MainForm: TMainForm
     object cbStaffList: TCheckBox
       Tag = 10
       Left = 163
-      Top = 327
+      Top = 335
       Width = 158
       Height = 17
       Caption = '4.10. '#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
@@ -539,7 +539,7 @@ object MainForm: TMainForm
     object cbMember_andPersonal_SheetWorkTime: TCheckBox
       Tag = 10
       Left = 163
-      Top = 342
+      Top = 350
       Width = 160
       Height = 17
       Caption = '4.11. '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1080#1079' '#1090#1072#1073#1077#1083#1103
@@ -555,7 +555,7 @@ object MainForm: TMainForm
     object cbData1CLink: TCheckBox
       Tag = 10
       Left = 196
-      Top = 224
+      Top = 240
       Width = 172
       Height = 17
       Caption = '3.5. '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' 1'#1057' '#1092#1080#1083#1080#1072#1083#1099
@@ -601,7 +601,7 @@ object MainForm: TMainForm
     object cb1Find2InsertPartner1C_BranchNal: TCheckBox
       Tag = 10
       Left = 15
-      Top = 188
+      Top = 209
       Width = 290
       Height = 17
       Caption = '3.2.1. 1Find+2Insert : Partner1C_BranchNal'
@@ -610,7 +610,7 @@ object MainForm: TMainForm
     object cbJuridicalGroup: TCheckBox
       Tag = 10
       Left = 196
-      Top = 206
+      Top = 224
       Width = 225
       Height = 17
       Caption = '3.1. '#1043#1088#1091#1087#1087#1099' '#1102#1088'. '#1083#1080#1094
@@ -652,6 +652,20 @@ object MainForm: TMainForm
       Height = 17
       Caption = '10.1. '#1056#1077#1094#1077#1087#1090#1091#1088#1099
       TabOrder = 48
+    end
+    object cbContractConditionDocument: TCheckBox
+      Left = 15
+      Top = 187
+      Width = 266
+      Height = 17
+      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' - '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1053#1040#1051
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 49
     end
   end
   object DocumentPanel: TPanel
@@ -1078,7 +1092,7 @@ object MainForm: TMainForm
     end
     object cbErr: TCheckBox
       Left = 175
-      Top = 445
+      Top = 475
       Width = 63
       Height = 17
       Caption = 'Error'
@@ -1094,7 +1108,7 @@ object MainForm: TMainForm
     end
     object cbTotalTaxCorr: TCheckBox
       Left = 175
-      Top = 461
+      Top = 487
       Width = 63
       Height = 17
       Caption = 'TaxCorr'
@@ -1110,7 +1124,7 @@ object MainForm: TMainForm
     end
     object cblTaxPF: TCheckBox
       Left = 175
-      Top = 476
+      Top = 501
       Width = 63
       Height = 17
       Caption = 'PF'
@@ -1246,7 +1260,7 @@ object MainForm: TMainForm
       Tag = 20
       Left = 3
       Top = 436
-      Width = 235
+      Width = 166
       Height = 17
       Caption = '8. '#1050#1072#1089#1089#1072' Int - '#1053#1040#1051
       Font.Charset = DEFAULT_CHARSET

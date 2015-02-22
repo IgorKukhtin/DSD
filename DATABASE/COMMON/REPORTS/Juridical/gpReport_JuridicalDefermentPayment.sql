@@ -63,7 +63,9 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     WITH tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101())
+     WITH tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101()
+                   UNION SELECT AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_30000() -- Дебиторы
+                        )
         , tmpListBranch_Constraint AS (SELECT ObjectLink_Contract_Personal.ObjectId AS ContractId
                                        FROM ObjectLink AS ObjectLink_Unit_Branch
                                             INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
@@ -122,8 +124,8 @@ from (
    , View_Contract.StartDate
    , View_Contract.EndDate
 
-   , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
-   , (CASE WHEN RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains END)::TFloat AS KreditRemains
+   , (CASE WHEN 1 * RESULT.Remains > 0 THEN 1 * RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
+   , (CASE WHEN 1 * RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains END)::TFloat AS KreditRemains
    , RESULT.SaleSumm :: TFloat AS SaleSumm
 
    , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0
@@ -182,8 +184,8 @@ from (
                                   ELSE ''
                              END
       )::TVarChar AS Condition -- Object_ContractConditionKind.ValueData
-   , RESULT.ContractDate::TDateTime AS StartContractDate
-   , (-RESULT.Remains)::TFloat AS Remains
+   , RESULT.ContractDate :: TDateTime AS StartContractDate
+   , (-1 * RESULT.Remains) :: TFloat AS Remains
 
       , Object_InfoMoney_View.InfoMoneyGroupName
       , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -195,7 +197,7 @@ from (
   FROM (SELECT RESULT_all.AccountId
              , RESULT_all.ContractId
              , RESULT_all.JuridicalId 
-             , SUM (RESULT_all.Remains)   AS Remains
+             , 1 * SUM (RESULT_all.Remains)   AS Remains
              , SUM (RESULT_all.SaleSumm)  AS SaleSumm
              , SUM (RESULT_all.SaleSumm1) AS SaleSumm1
              , SUM (RESULT_all.SaleSumm2) AS SaleSumm2
@@ -227,7 +229,7 @@ from (
              , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) AS ContractDate
          FROM ContainerLinkObject AS CLO_Juridical
               INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
-              LEFT JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
+              INNER JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
               LEFT JOIN ContainerLinkObject AS CLO_Contract
                                             ON CLO_Contract.ContainerId = Container.Id
                                            AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()

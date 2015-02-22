@@ -7,9 +7,8 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
-      select '214002' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '212775' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '212773' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+      select '209119' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+union select '211336' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 
 union select '201775' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '199470' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
@@ -19,6 +18,22 @@ union select '199435' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as
 union select '4658' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '189170' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '189172' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+
+union select '199409' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
+union select '199409' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
+union select '199409' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+union select '199407' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
+union select '199407' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
+union select '199407' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+
+union select '198727' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
+union select '198727' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
+union select '198727' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+
+union select '197841' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
+union select '197841' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
+union select '197841' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+
 
 -- !!!!!!
 union select '111' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации

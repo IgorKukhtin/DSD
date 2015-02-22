@@ -189,10 +189,10 @@ BEGIN
              , tmpReport_All.AccountId_inf
              , ContainerLO_ProfitLoss_inf.ObjectId AS ProfitLossId_inf
              , ContainerLO_Business_inf.ObjectId AS BusinessId_inf
+             , COALESCE (ContainerLO_Branch_inf.ObjectId, tmpReport_All.BranchId_inf) AS BranchId_inf
 
              , tmpReport_All.ObjectId_inf
              , tmpReport_All.MoneyPlaceId_inf
-             , tmpReport_All.BranchId_inf
              , tmpReport_All.UnitId_inf
              , tmpReport_All.RouteId_inf
 
@@ -396,6 +396,9 @@ BEGIN
             LEFT JOIN ContainerLinkObject AS ContainerLO_Business_inf ON ContainerLO_Business_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                      AND ContainerLO_Business_inf.DescId = zc_ContainerLinkObject_Business()
                                                                      AND ContainerLO_Business_inf.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_Branch_inf ON ContainerLO_Branch_inf.ContainerId = tmpReport_All.ContainerId_inf
+                                                                   AND ContainerLO_Branch_inf.DescId = zc_ContainerLinkObject_Branch()
+                                                                   AND ContainerLO_Branch_inf.ObjectId > 0
 
             LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical_inf ON ContainerLO_Juridical_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                       AND ContainerLO_Juridical_inf.DescId = zc_ContainerLinkObject_Juridical()
@@ -440,6 +443,7 @@ BEGIN
                , tmpReport_All.AccountId_inf
                , ContainerLO_ProfitLoss_inf.ObjectId
                , ContainerLO_Business_inf.ObjectId
+               , ContainerLO_Branch_inf.ObjectId
 
                , tmpReport_All.ObjectId_inf
                , tmpReport_All.MoneyPlaceId_inf

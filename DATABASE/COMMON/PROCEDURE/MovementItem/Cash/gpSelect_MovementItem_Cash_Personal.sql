@@ -17,7 +17,9 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
              , InfoMoneyId Integer, InfoMoneyName  TVarChar
-             , Amount TFloat, AmountCash TFloat
+             , Amount TFloat, SummCash TFloat, SummPersonalService TFloat
+             , SummRemains TFloat
+             , AmountCash TFloat      --должен быть расчет
              , Comment TVarChar
              , isErased Boolean
               )
@@ -42,7 +44,7 @@ BEGIN
        WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE)
           , tmpMI AS (SELECT MovementItem.Id                          AS MovementItemId
                            , MovementItem.Amount                      AS Amount
-                           , 0  ::float                                      AS AmountCash
+                           , 0  ::float                               AS SummCash
                            , MovementItem.ObjectId                    AS PersonalId
                            , MILinkObject_Unit.ObjectId               AS UnitId
                            , MILinkObject_Position.ObjectId           AS PositionId
@@ -67,9 +69,10 @@ BEGIN
                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                      )
           --, tmpUserAll AS (SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()/*, 293449*/) AND UserId = vbUserId/* AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В.
-          , tmpMIPS AS (SELECT 0  ::integer                                    AS MovementItemId
+          , tmpMIPS AS (SELECT 0  ::integer                                  AS MovementItemId
                            , 0  ::float                                      As Amount
-                           , (COALESCE (MovementItem.Amount, 0) - COALESCE (MIFloat_SummCard.ValueData)) :: TFloat AS AmountCash
+                           , (COALESCE (MovementItem.Amount, 0) - COALESCE (MIFloat_SummCard.ValueData)) :: TFloat AS SummCash
+                           , COALESCE (MovementItem.Amount, 0) :: TFloat     AS AmountService
                            , MovementItem.ObjectId                    AS PersonalId
                            , MILinkObject_Unit.ObjectId               AS UnitId
                            , MILinkObject_Position.ObjectId           AS PositionId
@@ -97,7 +100,7 @@ BEGIN
                                                       AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
                            )
 
-          , tmpAll AS ( SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMIPS.AmountCash, COALESCE (tmpMI.PersonalId,tmpMIPS.PersonalId) as PersonalId, COALESCE (tmpMI.UnitId,tmpMIPS.UnitId) as UnitId
+          , tmpAll AS ( SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMIPS.SummCash, tmpMIPS.AmountService, COALESCE (tmpMI.PersonalId,tmpMIPS.PersonalId) as PersonalId, COALESCE (tmpMI.UnitId,tmpMIPS.UnitId) as UnitId
                                   , COALESCE (tmpMI.PositionId,tmpMIPS.PositionId) as PositionId
                                   , COALESCE (tmpMI.InfoMoneyId,tmpMIPS.InfoMoneyId) as InfoMoneyId
                                   , COALESCE (tmpMI.MemberId,tmpMIPS.MemberId) as MemberId
@@ -122,9 +125,11 @@ BEGIN
             , View_InfoMoney.InfoMoneyId              AS InfoMoneyId
             , View_InfoMoney.InfoMoneyName_all        AS InfoMoneyName
 
-            , tmpAll.Amount     :: TFloat     AS Amount
-            , tmpAll.AmountCash :: TFloat     AS AmountCash                    
-           
+            , tmpAll.Amount   :: TFloat     AS Amount
+            , tmpAll.SummCash :: TFloat       AS SummCash
+            , tmpAll.AmountService:: TFloat   AS SummPersonalService
+            , (COALESCE (tmpAll.SummCash,0) - COALESCE (tmpAll.Amount,0))::TFloat   AS SummRemains    --еще нужно отнять AmountCash
+            ,  0  ::Tfloat    AS AmountCash
             , MIString_Comment.ValueData      AS Comment
             , tmpAll.isErased
          
@@ -167,3 +172,5 @@ $BODY$
 
 
 --SELECT * FROM Object_RoleAccessKeyGuide_View 
+
+--select * from gpSelect_MovementItem_Cash_Personal(inMovementId := 1015917 , inParentId := 1001612 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');

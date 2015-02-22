@@ -87,6 +87,9 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\lpInsertUpdate_MovementItem_PriceCorrective.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpMovementItem_PriceCorrective_SetErased.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpMovementItem_PriceCorrective_SetUnErased.sql', ZQuery);
+
+  ScriptDirectory := ProcedurePath + 'MovementItem\Cash\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;
@@ -257,9 +260,11 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\ProfitLoss\gpSelect_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\ProfitLoss\gpGet_Object_ProfitLoss.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\Member\gpInsertUpdate_Object_Member.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Member\gpSelect_Object_Member.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Member\gpGet_Object_Member.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Member\gpInsertUpdate_Object_Member.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Member\gpSelect_Object_Member.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Member\gpGet_Object_Member.sql', ZQuery);
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Member\';
+  ProcedureLoad;
 
   ExecFile(ProcedurePath + 'OBJECTS\Position\gpInsertUpdate_Object_Position.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Position\gpSelect_Object_Position.sql', ZQuery);
@@ -319,6 +324,8 @@ begin
   ScriptDirectory := ProcedurePath + 'OBJECTS\Storage\';
   ProcedureLoad;
   ScriptDirectory := ProcedurePath + 'OBJECTS\AreaContract\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Retail\';
   ProcedureLoad;
   ScriptDirectory := ProcedurePath + 'OBJECTS\RetailReport\';
   ProcedureLoad;

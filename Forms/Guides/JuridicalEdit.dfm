@@ -3,7 +3,7 @@
   ClientHeight = 524
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 549
+  ExplicitHeight = 556
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -87,7 +87,7 @@
     Width = 273
   end
   object ceGoodsProperty: TcxButtonEdit [12]
-    Left = 5
+    Left = 7
     Top = 206
     Properties.Buttons = <
       item
@@ -662,7 +662,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 28
+    TabOrder = 27
     Width = 273
   end
   object cxLabel20: TcxLabel [26]
@@ -992,8 +992,8 @@
         Value = Null
         DataType = ftString
       end>
-    Left = 8
-    Top = 224
+    Left = 40
+    Top = 240
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Juridical'
@@ -1329,8 +1329,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

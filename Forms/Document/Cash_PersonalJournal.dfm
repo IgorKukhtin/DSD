@@ -2,7 +2,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072' '#1074#1099#1087#1083#1072#1090#1072' '#1079#1087'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 998
+  ExplicitWidth = 990
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,6 +14,8 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
       ExplicitWidth = 982
       inherited cxGrid: TcxGrid
         Width = 982
+        ExplicitLeft = 200
+        ExplicitTop = 3
         ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -41,6 +43,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -154,10 +157,17 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
           DataType = ftDateTime
         end
         item
-          Name = 'inCashId_top'
+          Name = 'CashId_top'
           Value = ''
           Component = CashGuides
           ComponentItem = 'Key'
+        end
+        item
+          Name = 'CashName_top'
+          Value = Null
+          Component = CashGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -211,6 +221,13 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCashId'
+        Value = Null
+        Component = CashGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -286,7 +303,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
         Value = ''
         Component = CashGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'CashName_top'
@@ -294,7 +311,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
         Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end>
   end
   object CashGuides: TdsdGuides

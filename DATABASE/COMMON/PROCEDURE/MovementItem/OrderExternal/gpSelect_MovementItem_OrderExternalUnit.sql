@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternalUnit(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountSecond TFloat
-             , AmountRemains TFloat, AmountPartner TFloat, AmountForecast TFloat
+             , AmountRemains TFloat, AmountPartner TFloat, AmountForecast TFloat, AmountForecastOrder TFloat, AmountCalc TFloat, AmountCalcOrder TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat
              , isErased Boolean
@@ -51,6 +51,9 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountRemains
            , CAST (NULL AS TFloat)      AS AmountPartner 
            , CAST (NULL AS TFloat)      AS AmountForecast
+           , CAST (NULL AS TFloat)      AS AmountForecastOrder
+           , CAST (NULL AS TFloat)      AS AmountCalc
+           , CAST (NULL AS TFloat)      AS AmountCalcOrder
            
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -114,6 +117,9 @@ BEGIN
            , MIFloat_AmountRemains.ValueData        AS AmountRemains
            , MIFloat_AmountPartner.ValueData        AS AmountPartner
            , MIFloat_AmountForecast.ValueData       AS AmountForecast
+           , MIFloat_AmountForecastOrder.ValueData  AS AmountForecastOrder
+           , (-1 * (COALESCE (MIFloat_AmountRemains.ValueData, 0) - COALESCE (MIFloat_AmountPartner.ValueData, 0) - COALESCE (MIFloat_AmountForecast.ValueData, 0))) :: TFloat AS AmountCalc
+           , (-1 * (COALESCE (MIFloat_AmountRemains.ValueData, 0) - COALESCE (MIFloat_AmountPartner.ValueData, 0) - COALESCE (MIFloat_AmountForecastOrder.ValueData, 0))) :: TFloat AS AmountCalcOrder
 
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
@@ -159,6 +165,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
                                         ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrder
+                                        ON MIFloat_AmountForecastOrder.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountForecastOrder.DescId = zc_MIFloat_AmountForecastOrder()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -181,7 +190,10 @@ BEGIN
            , MIFloat_AmountRemains.ValueData        AS AmountRemains
            , MIFloat_AmountPartner.ValueData        AS AmountPartner
            , MIFloat_AmountForecast.ValueData       AS AmountForecast
-        
+           , MIFloat_AmountForecastOrder.ValueData  AS AmountForecastOrder
+           , (-1 * (COALESCE (MIFloat_AmountRemains.ValueData, 0) - COALESCE (MIFloat_AmountPartner.ValueData, 0) - COALESCE (MIFloat_AmountForecast.ValueData, 0))) :: TFloat AS AmountCalc
+           , (-1 * (COALESCE (MIFloat_AmountRemains.ValueData, 0) - COALESCE (MIFloat_AmountPartner.ValueData, 0) - COALESCE (MIFloat_AmountForecastOrder.ValueData, 0))) :: TFloat AS AmountCalcOrder
+
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName  
@@ -226,13 +238,15 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
                                         ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrder
+                                        ON MIFloat_AmountForecastOrder.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountForecastOrder.DescId = zc_MIFloat_AmountForecastOrder()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-
-            ;
+           ;
 
      END IF;
 
