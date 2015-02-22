@@ -6,10 +6,12 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
      VCL.Graphics, cxGraphics, cxStyles, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
-     VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData;
+     VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData, Windows, Winapi.Messages;
+
+const
+  WM_SETFLAG = WM_USER + 2;
 
 type
-
   // 1. Обработка признака isErased
   TCustomDBControlAddOn = class(TComponent)
   private
@@ -382,12 +384,16 @@ type
 
   TRefreshDispatcher = class(TComponent)
   private
+    { field to store the window handle }
+    FHWnd: HWND;
+    FNotRefresh: boolean;
     FRefreshAction: TdsdDataSetRefresh;
     FComponentList: TCollection;
     FShowDialogAction: TExecuteDialog;
     FIdParam: TdsdParam;
     FCheckIdParam: boolean;
     procedure SetShowDialogAction(const Value: TExecuteDialog);
+    procedure WndMethod(var Msg: TMessage);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -452,7 +458,7 @@ type
 
 implementation
 
-uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
+uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
      cxFilter, cxClasses, cxLookAndFeelPainters,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
@@ -1478,10 +1484,13 @@ begin
   ComponentList := TOwnedCollection.Create(Self, TComponentListItem);
   FIdParam := TdsdParam.Create(nil);
   CheckIdParam := false;
+  FNotRefresh := false;
+  FHWnd := AllocateHWnd(WndMethod);
 end;
 
 destructor TRefreshDispatcher.Destroy;
 begin
+  DeallocateHWnd(FHWnd);
   FreeAndNil(FComponentList);
   FreeAndNil(FIdParam);
   inherited;
@@ -1508,6 +1517,8 @@ end;
 
 procedure TRefreshDispatcher.OnComponentChange(Sender: TObject);
 begin
+  if FNotRefresh then
+     exit;
   if CheckIdParam then
      if (IdParam.asString = '') or (IdParam.asString = '0') or (IdParam.Value=NULL) then
         exit;
@@ -1518,7 +1529,9 @@ begin
         if TParentForm(Self.Owner).Visible then
            FRefreshAction.Execute
         else
-           TParentForm(Self.Owner).NeedRefreshOnExecute := true
+           TParentForm(Self.Owner).NeedRefreshOnExecute := true;
+  FNotRefresh := true;
+  PostMessage(FHWnd, WM_SETFLAG, 0, 0);
 end;
 
 procedure TRefreshDispatcher.SetShowDialogAction(const Value: TExecuteDialog);
@@ -1530,6 +1543,28 @@ begin
         FShowDialogAction.RefreshDispatcher := nil;
      FShowDialogAction := Value;
   end;
+end;
+
+procedure TRefreshDispatcher.WndMethod(var Msg: TMessage);
+var
+  Handled: Boolean;
+begin
+  // Assume we handle message
+  Handled := True;
+  case Msg.Msg of
+    WM_SETFLAG: FNotRefresh := false;
+    else
+      // We didn't handle message
+      Handled := False;
+  end;
+  if Handled then
+    // We handled message - record in message result
+    Msg.Result := 0
+  else
+    // We didn't handle message
+    // pass to DefWindowProc and record result
+    Msg.Result := DefWindowProc(fHWnd, Msg.Msg,
+      Msg.WParam, Msg.LParam);
 end;
 
 { TComponentListItem }
