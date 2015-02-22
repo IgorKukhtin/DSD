@@ -2,29 +2,28 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 668
   ClientWidth = 1082
+  ExplicitTop = -95
   ExplicitWidth = 1090
-  ExplicitHeight = 702
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1082
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1082
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1078
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1082
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1076
-      ExplicitHeight = 514
+      ExplicitWidth = 1082
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1076
-        Height = 514
-        ExplicitWidth = 1076
-        ExplicitHeight = 514
+        Width = 1082
+        Height = 518
+        ExplicitWidth = 1082
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -323,7 +322,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -1317,7 +1316,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2613,6 +2612,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     Top = 384
   end
   object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
