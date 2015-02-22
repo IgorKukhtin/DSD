@@ -22,10 +22,15 @@ BEGIN
    IsFind := false;
 
    IF COALESCE(inMovementId, 0) = 0 THEN
-      SELECT Movement.Id INTO inMovementId 
+      SELECT MAX(Movement.Id) INTO inMovementId 
         FROM Movement 
+                              INNER JOIN MovementString AS MovementString_MovementDesc
+                                                        ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                       AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                             --                          AND MovementString_MovementDesc.ValueData = 'zc_Movement_Sale'
        WHERE Movement.DescId = zc_Movement_EDI()
-         AND Movement.OperDate = inOperDate AND Movement.InvNumber = inInvNumber;
+         AND Movement.OperDate BETWEEN (inOperDate - (INTERVAL '7 DAY')) AND (inOperDate + (INTERVAL '7 DAY'))
+         AND Movement.InvNumber = inInvNumber;
    END IF;
 
    IF COALESCE(inMovementId, 0) <> 0 THEN

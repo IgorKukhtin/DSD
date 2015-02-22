@@ -549,6 +549,26 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_JuridicalSold: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+      FormName = 'TReport_JuridicalSoldForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_JuridicalCollation: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+      FormName = 'TReport_JuridicalCollationForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited cxLocalizer: TcxLocalizer
     Top = 40
@@ -723,6 +743,15 @@ inherited MainForm: TMainForm
       object miSearchGoods: TMenuItem
         Action = actSearchGoods
       end
+      object N39: TMenuItem
+        Caption = '-'
+      end
+      object N40: TMenuItem
+        Action = actReport_JuridicalSold
+      end
+      object N41: TMenuItem
+        Action = actReport_JuridicalCollation
+      end
     end
     inherited miService: TMenuItem
       object miGoodsCommon: TMenuItem [0]
@@ -749,37 +778,34 @@ inherited MainForm: TMainForm
       object miJuridicalSettings: TMenuItem [8]
         Action = actJuridicalSettings
       end
-      object miJuridicalSettingsPriceList: TMenuItem [9]
-        Action = actJuridicalSettingsPriceList
-      end
-      object N6: TMenuItem [10]
+      object N6: TMenuItem [9]
         Caption = '-'
       end
-      object miMeasure: TMenuItem [11]
+      object miMeasure: TMenuItem [10]
         Action = actMeasure
       end
-      object miNDSKind: TMenuItem [12]
+      object miNDSKind: TMenuItem [11]
         Action = actNDSKind
       end
-      object miRetail: TMenuItem [13]
+      object miRetail: TMenuItem [12]
         Action = actRetail
       end
-      object miOrderKind: TMenuItem [14]
+      object miOrderKind: TMenuItem [13]
         Action = actOrderKind
       end
-      object N9: TMenuItem [15]
+      object N9: TMenuItem [14]
         Caption = '-'
       end
-      object miImportType: TMenuItem [16]
+      object miImportType: TMenuItem [15]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [17]
+      object miImportSettings: TMenuItem [16]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [18]
+      object miImportExportLink: TMenuItem [17]
         Action = actImportExportLink
       end
-      object N8: TMenuItem [19]
+      object N8: TMenuItem [18]
         Caption = '-'
       end
       object N10: TMenuItem

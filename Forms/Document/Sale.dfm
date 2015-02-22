@@ -4,7 +4,7 @@ inherited SaleForm: TSaleForm
   ClientWidth = 1063
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1071
-  ExplicitHeight = 702
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,17 +12,17 @@ inherited SaleForm: TSaleForm
     Width = 1063
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1063
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1063
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1063
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1063
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1063
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -297,7 +297,7 @@ inherited SaleForm: TSaleForm
     Width = 1063
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1063
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2656,6 +2656,10 @@ inherited SaleForm: TSaleForm
     Top = 400
   end
   object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
     RefreshAction = actRefreshPrice
     ComponentList = <
       item

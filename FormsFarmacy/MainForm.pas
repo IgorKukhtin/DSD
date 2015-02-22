@@ -84,7 +84,6 @@ type
     miSaveData: TMenuItem;
     miPriceGroupSettings: TMenuItem;
     miJuridicalSettings: TMenuItem;
-    miJuridicalSettingsPriceList: TMenuItem;
     N8: TMenuItem;
     miMeasure: TMenuItem;
     miNDSKind: TMenuItem;
@@ -127,6 +126,9 @@ type
     N32: TMenuItem;
     N37: TMenuItem;
     N38: TMenuItem;
+    N39: TMenuItem;
+    N40: TMenuItem;
+    N41: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

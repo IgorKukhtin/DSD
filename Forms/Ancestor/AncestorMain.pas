@@ -123,7 +123,10 @@ begin
       // Обязательно так, потому как иначе он может зациклиться.
     end;
   end;
-  TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
+  if E is EStorageException then
+     TMessagesForm.Create(nil).Execute(TextMessage, E.Message)
+  else
+     TMessagesForm.Create(nil).Execute(TextMessage, E.Message  + #10#13 + E.StackTrace);
 end;
 
 procedure TAncestorMainForm.FormCreate(Sender: TObject);

@@ -44,7 +44,7 @@ BEGIN
 
 
        WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar)),
-            JuridicalSettingsPriceList AS (SELECT * FROM lpSelect_Object_JuridicalSettingsPriceListRetail (inObjectId)),
+            JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId)),
          MovementItemOrder AS (SELECT MovementItem.*, Object_LinkGoods_View.GoodsMainId, PriceList_GoodsLink.GoodsId  FROM MovementItem    
                                     JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid -- Связь товара сети с общим
                                LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
@@ -116,15 +116,13 @@ BEGIN
                               ON MIDate_PartionGoods.MovementItemId =  PriceList.Id
                              AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
-   LEFT JOIN JuridicalSettingsPriceList 
-                    ON JuridicalSettingsPriceList.JuridicalId = LastPriceList_View.JuridicalId 
-                   AND JuridicalSettingsPriceList.MainJuridicalId = vbMainJuridicalId 
-                   AND JuridicalSettingsPriceList.ContractId = LastPriceList_View.ContractId 
+   LEFT JOIN JuridicalSettings 
+                    ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId 
+                   AND JuridicalSettings.MainJuridicalId = vbMainJuridicalId 
+                   AND JuridicalSettings.ContractId = LastPriceList_View.ContractId 
 
               
    LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
-
-   LEFT JOIN lpSelect_Object_JuridicalSettingsRetail(inObjectId) AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId  
    
    JOIN OBJECT AS Juridical ON Juridical.Id = LastPriceList_View.JuridicalId
 
@@ -140,7 +138,7 @@ BEGIN
    LEFT JOIN OBJECT AS Goods-- Элемент документа заявка
      ON Goods.Id = MovementItemOrder.ObjectId
          
-   WHERE  COALESCE(JuridicalSettingsPriceList.isPriceClose, FALSE) <> TRUE 
+   WHERE  COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE 
      ) AS ddd
    
    LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice;
@@ -154,6 +152,7 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.02.15                         *  JuridicalSettings с бонусом и закрытием прайсов
  21.01.15                         *  учитываем наше юрлицо в закрытии прайсов
  05.12.14                         *  чуть оптимизировал
  06.11.14                         *  add PartionGoodsDate

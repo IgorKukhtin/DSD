@@ -6,8 +6,8 @@ uses dsdAction, DB, dsdDb, Classes, ExternalLoad;
 
 type
 
-  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank,
-                     cbOTPBank, cbPireusBank, cbPireusBankDBF, cbMarfinBank);
+  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank,
+    cbPireusBank, cbPireusBankDBF, cbMarfinBank, cbUrkExim);
 
   TClientBankLoad = class(TFileExternalLoad)
   private
@@ -27,8 +27,9 @@ type
   protected
     procedure First; override;
   public
-    constructor Create(StartDate, EndDate: TDateTime; DataSetType: TDataSetType = dtDBF); overload; virtual;
-    procedure Next;     override;
+    constructor Create(StartDate, EndDate: TDateTime;
+      DataSetType: TDataSetType = dtDBF); overload; virtual;
+    procedure Next; override;
     property DocNumber: string read GetDocNumber;
     property OperDate: TDateTime read GetOperDate;
     property OperSumm: real read GetOperSumm;
@@ -49,25 +50,28 @@ type
     FClientBankType: TClientBankType;
     FEndDate: TdsdParam;
     FStartDate: TdsdParam;
-    function GetClientBankLoad(AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
+    function GetClientBankLoad(AClientBankType: TClientBankType;
+      StartDate, EndDate: TDateTime): TClientBankLoad;
     function StartDate: TDateTime;
     function EndDate: TDateTime;
   protected
     function GetStoredProc: TdsdStoredProc; override;
     function GetExternalLoad: TExternalLoad; override;
-    procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AStoredProc: TdsdStoredProc); override;
+    procedure ProcessingOneRow(AExternalLoad: TExternalLoad;
+      AStoredProc: TdsdStoredProc); override;
   public
     constructor Create(Owner: TComponent); override;
     destructor Destroy; override;
   published
     // Для какого банка осуществляется загрузка
-    property ClientBankType: TClientBankType read FClientBankType write FClientBankType;
+    property ClientBankType: TClientBankType read FClientBankType
+      write FClientBankType;
     // Период дат
     property StartDateParam: TdsdParam read FStartDate write FStartDate;
     property EndDateParam: TdsdParam read FEndDate write FEndDate;
   end;
 
-  procedure Register;
+procedure Register;
 
 implementation
 
@@ -186,6 +190,23 @@ type
     function GetCurrencyName: string; override;
   end;
 
+  TUkrEximBankLoad = class(TClientBankLoad)
+    function GetOperSumm: real; override;
+    function GetDocNumber: string; override;
+    function GetOperDate: TDateTime; override;
+
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
+    function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
+  end;
+
 constructor TClientBankLoadAction.Create(Owner: TComponent);
 begin
   inherited;
@@ -205,17 +226,25 @@ begin
   result := EndDateParam.Value;
 end;
 
-function TClientBankLoadAction.GetClientBankLoad(
-  AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
+function TClientBankLoadAction.GetClientBankLoad(AClientBankType
+  : TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
 begin
   result := nil;
   case AClientBankType of
-    cbPrivatBank: result := TPrivatBankLoad.Create(StartDate, EndDate);
-    cbForum, cbPireusBankDBF: result := TForumBankLoad.Create(StartDate, EndDate);
-    cbVostok: result := TVostokBankLoad.Create(StartDate, EndDate);
-    cbFidoBank, cbMarfinBank: result := TFidoBankLoad.Create(StartDate, EndDate);
-    cbOTPBank: result := TOTPBankLoad.Create(StartDate, EndDate);
-    cbPireusBank: result := TPireusBankLoad.Create(StartDate, EndDate);
+    cbPrivatBank:
+      result := TPrivatBankLoad.Create(StartDate, EndDate);
+    cbForum, cbPireusBankDBF:
+      result := TForumBankLoad.Create(StartDate, EndDate);
+    cbVostok:
+      result := TVostokBankLoad.Create(StartDate, EndDate);
+    cbFidoBank, cbMarfinBank:
+      result := TFidoBankLoad.Create(StartDate, EndDate);
+    cbOTPBank:
+      result := TOTPBankLoad.Create(StartDate, EndDate);
+    cbPireusBank:
+      result := TPireusBankLoad.Create(StartDate, EndDate);
+    cbUrkExim:
+      result := TUkrEximBankLoad.Create(StartDate, EndDate);
   end;
 end;
 
@@ -229,7 +258,8 @@ begin
   result := TdsdStoredProc.Create(nil);
   result.OutputType := otResult;
   result.StoredProcName := 'gpInsertUpdate_Movement_BankStatementItemLoad';
-  with result do begin
+  with result do
+  begin
     Params.AddParam('inDocNumber', ftString, ptInput, null);
     Params.AddParam('inOperDate', ftDateTime, ptInput, null);
     Params.AddParam('inBankAccountMain', ftString, ptInput, null);
@@ -246,10 +276,11 @@ begin
   end;
 end;
 
-procedure TClientBankLoadAction.ProcessingOneRow(
-  AExternalLoad: TExternalLoad; AStoredProc: TdsdStoredProc);
+procedure TClientBankLoadAction.ProcessingOneRow(AExternalLoad: TExternalLoad;
+  AStoredProc: TdsdStoredProc);
 begin
-  with AStoredProc, TClientBankLoad(AExternalLoad) do begin
+  with AStoredProc, TClientBankLoad(AExternalLoad) do
+  begin
     ParamByName('inDocNumber').Value := DocNumber;
     ParamByName('inOperDate').Value := OperDate;
     ParamByName('inBankAccountMain').Value := BankAccountMain;
@@ -274,7 +305,8 @@ end;
 
 { TClientBankLoad }
 
-constructor TClientBankLoad.Create(StartDate, EndDate: TDateTime; DataSetType: TDataSetType = dtDBF);
+constructor TClientBankLoad.Create(StartDate, EndDate: TDateTime;
+  DataSetType: TDataSetType = dtDBF);
 begin
   inherited Create(DataSetType);
   FStartDate := StartDate;
@@ -286,9 +318,10 @@ procedure TClientBankLoad.First;
 begin
   inherited;
   // Установить на первую запись подходящей даты
-  while not FDataSet.EOF do begin
+  while not FDataSet.EOF do
+  begin
     if (FStartDate <= OperDate) and (OperDate <= FEndDate) then
-             break;
+      break;
     FDataSet.Next;
   end;
 end;
@@ -311,45 +344,45 @@ end;
 function TPrivatBankLoad.GetBankAccountMain: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
-     result := FDataSet.FieldByName('ACCOUNT_A').AsString
+    result := FDataSet.FieldByName('ACCOUNT_A').AsString
   else
-     result := FDataSet.FieldByName('ACCOUNT_B').AsString;
+    result := FDataSet.FieldByName('ACCOUNT_B').AsString;
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankAccount: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-     result := FDataSet.FieldByName('ACCOUNT_A').AsString
+    result := FDataSet.FieldByName('ACCOUNT_A').AsString
   else
-     result := FDataSet.FieldByName('ACCOUNT_B').AsString;
+    result := FDataSet.FieldByName('ACCOUNT_B').AsString;
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankMFOMain: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
-     result := FDataSet.FieldByName('MFO_A').AsString
+    result := FDataSet.FieldByName('MFO_A').AsString
   else
-     result := FDataSet.FieldByName('MFO_B').AsString;
+    result := FDataSet.FieldByName('MFO_B').AsString;
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankName: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
-     result := FDataSet.FieldByName('BANK_A').AsString
+    result := FDataSet.FieldByName('BANK_A').AsString
   else
-     result := FDataSet.FieldByName('BANK_B').AsString;
+    result := FDataSet.FieldByName('BANK_B').AsString;
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankMFO: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-     result := FDataSet.FieldByName('MFO_A').AsString
+    result := FDataSet.FieldByName('MFO_A').AsString
   else
-     result := FDataSet.FieldByName('MFO_B').AsString;
+    result := FDataSet.FieldByName('MFO_B').AsString;
   result := trim(result);
 end;
 
@@ -379,18 +412,18 @@ end;
 function TPrivatBankLoad.GetJuridicalName: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-     result := FDataSet.FieldByName('NAME_A').AsString
+    result := FDataSet.FieldByName('NAME_A').AsString
   else
-     result := FDataSet.FieldByName('NAME_B').AsString;
+    result := FDataSet.FieldByName('NAME_B').AsString;
   result := trim(result);
 end;
 
 function TPrivatBankLoad.GetOKPO: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-     result := trim(FDataSet.FieldByName('OKPO1_A').AsString)
+    result := trim(FDataSet.FieldByName('OKPO1_A').AsString)
   else
-     result := trim(FDataSet.FieldByName('OKPO2_B').AsString);
+    result := trim(FDataSet.FieldByName('OKPO2_B').AsString);
   result := trim(result);
 end;
 
@@ -402,9 +435,9 @@ end;
 function TPrivatBankLoad.GetOperSumm: real;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-     result := FDataSet.FieldByName('SUM_DOC').AsFloat
+    result := FDataSet.FieldByName('SUM_DOC').AsFloat
   else
-     result := - FDataSet.FieldByName('SUM_DOC').AsFloat;
+    result := -FDataSet.FieldByName('SUM_DOC').AsFloat;
 end;
 
 { TForumBankLoad }
@@ -412,36 +445,36 @@ end;
 function TForumBankLoad.GetBankAccountMain: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
-     result := FDataSet.FieldByName('RR_DB').AsString
+    result := FDataSet.FieldByName('RR_DB').AsString
   else
-     result := FDataSet.FieldByName('RR_K').AsString;
+    result := FDataSet.FieldByName('RR_K').AsString;
   result := trim(result);
 end;
 
 function TForumBankLoad.GetBankAccount: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := FDataSet.FieldByName('RR_DB').AsString
+    result := FDataSet.FieldByName('RR_DB').AsString
   else
-     result := FDataSet.FieldByName('RR_K').AsString;
+    result := FDataSet.FieldByName('RR_K').AsString;
   result := trim(result);
 end;
 
 function TForumBankLoad.GetBankMFOMain: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
-     result := FDataSet.FieldByName('MFO_DB').AsString
+    result := FDataSet.FieldByName('MFO_DB').AsString
   else
-     result := FDataSet.FieldByName('MFO_CR').AsString;
+    result := FDataSet.FieldByName('MFO_CR').AsString;
   result := trim(result);
 end;
 
 function TForumBankLoad.GetBankMFO: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := FDataSet.FieldByName('MFO_DB').AsString
+    result := FDataSet.FieldByName('MFO_DB').AsString
   else
-     result := FDataSet.FieldByName('MFO_CR').AsString;
+    result := FDataSet.FieldByName('MFO_CR').AsString;
   result := trim(result);
 end;
 
@@ -471,9 +504,9 @@ end;
 function TForumBankLoad.GetJuridicalName: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
-     result := FDataSet.FieldByName('NAIM_K').AsString
+    result := FDataSet.FieldByName('NAIM_K').AsString
   else
-     result := FDataSet.FieldByName('NAIM_D').AsString;
+    result := FDataSet.FieldByName('NAIM_D').AsString;
   result := trim(result);
 end;
 
@@ -485,23 +518,23 @@ end;
 function TForumBankLoad.GetOKPO: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := trim(FDataSet.FieldByName('OKPO_DB').AsString)
+    result := trim(FDataSet.FieldByName('OKPO_DB').AsString)
   else
-     result := trim(FDataSet.FieldByName('OKPO_CR').AsString);
+    result := trim(FDataSet.FieldByName('OKPO_CR').AsString);
   result := trim(result);
 end;
 
 function TForumBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DAT_ARC').AsDateTime //'DAT_PR
+  result := FDataSet.FieldByName('DAT_ARC').AsDateTime // 'DAT_PR
 end;
 
 function TForumBankLoad.GetOperSumm: real;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := FDataSet.FieldByName('SUM').AsFloat
+    result := FDataSet.FieldByName('SUM').AsFloat
   else
-     result := - FDataSet.FieldByName('SUM').AsFloat
+    result := -FDataSet.FieldByName('SUM').AsFloat
 end;
 
 { TVostokBankLoad }
@@ -578,9 +611,9 @@ end;
 function TVostokBankLoad.GetOperSumm: real;
 begin
   if FDataSet.FieldByName('FL_DK').AsInteger = 0 then
-     result := FDataSet.FieldByName('SUM').AsFloat
+    result := FDataSet.FieldByName('SUM').AsFloat
   else
-     result := - FDataSet.FieldByName('SUM').AsFloat
+    result := -FDataSet.FieldByName('SUM').AsFloat
 end;
 
 { TFidoBankLoad }
@@ -657,10 +690,10 @@ end;
 
 function TFidoBankLoad.GetOperSumm: real;
 begin
-  if FDataSet.FieldByName('DK').asInteger = 2 then
-     result := FDataSet.FieldByName('S').AsFloat
+  if FDataSet.FieldByName('DK').AsInteger = 2 then
+    result := FDataSet.FieldByName('S').AsFloat
   else
-     result := - FDataSet.FieldByName('S').AsFloat
+    result := -FDataSet.FieldByName('S').AsFloat
 end;
 
 { TOTPBankLoad }
@@ -668,36 +701,36 @@ end;
 function TOTPBankLoad.GetBankAccountMain: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
-     result := FDataSet.FieldByName('RR_DB').AsString
+    result := FDataSet.FieldByName('RR_DB').AsString
   else
-     result := FDataSet.FieldByName('RR_K').AsString;
+    result := FDataSet.FieldByName('RR_K').AsString;
   result := trim(result);
 end;
 
 function TOTPBankLoad.GetBankAccount: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := FDataSet.FieldByName('RR_DB').AsString
+    result := FDataSet.FieldByName('RR_DB').AsString
   else
-     result := FDataSet.FieldByName('RR_K').AsString;
+    result := FDataSet.FieldByName('RR_K').AsString;
   result := trim(result);
 end;
 
 function TOTPBankLoad.GetBankMFOMain: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
-     result := FDataSet.FieldByName('MFO_DB').AsString
+    result := FDataSet.FieldByName('MFO_DB').AsString
   else
-     result := FDataSet.FieldByName('MFO_CR').AsString;
+    result := FDataSet.FieldByName('MFO_CR').AsString;
   result := trim(result);
 end;
 
 function TOTPBankLoad.GetBankMFO: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := FDataSet.FieldByName('MFO_DB').AsString
+    result := FDataSet.FieldByName('MFO_DB').AsString
   else
-     result := FDataSet.FieldByName('MFO_CR').AsString;
+    result := FDataSet.FieldByName('MFO_CR').AsString;
   result := trim(result);
 end;
 
@@ -727,9 +760,9 @@ end;
 function TOTPBankLoad.GetJuridicalName: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
-     result := FDataSet.FieldByName('NAIM_K').AsString
+    result := FDataSet.FieldByName('NAIM_K').AsString
   else
-     result := FDataSet.FieldByName('NAIM_D').AsString;
+    result := FDataSet.FieldByName('NAIM_D').AsString;
   result := trim(result);
 end;
 
@@ -741,9 +774,9 @@ end;
 function TOTPBankLoad.GetOKPO: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := trim(FDataSet.FieldByName('OKPO_DB').AsString)
+    result := trim(FDataSet.FieldByName('OKPO_DB').AsString)
   else
-     result := trim(FDataSet.FieldByName('OKPO_CR').AsString);
+    result := trim(FDataSet.FieldByName('OKPO_CR').AsString);
   result := trim(result);
 end;
 
@@ -755,9 +788,9 @@ end;
 function TOTPBankLoad.GetOperSumm: real;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := FDataSet.FieldByName('SUM').AsFloat
+    result := FDataSet.FieldByName('SUM').AsFloat
   else
-     result := - FDataSet.FieldByName('SUM').AsFloat
+    result := -FDataSet.FieldByName('SUM').AsFloat
 end;
 
 { TPireusBankLoad }
@@ -829,9 +862,99 @@ end;
 function TPireusBankLoad.GetOperSumm: real;
 begin
   if FDataSet.FieldByName('Операция').AsString = 'Дебет' then
-     result := - FDataSet.FieldByName('Сумма').AsFloat
+    result := -FDataSet.FieldByName('Сумма').AsFloat
   else
-     result := FDataSet.FieldByName('Сумма').AsFloat
+    result := FDataSet.FieldByName('Сумма').AsFloat
+end;
+
+{ TUkrEximBankLoad }
+
+function TUkrEximBankLoad.GetBankAccount: string;
+begin
+  if FDataSet.FieldByName('FLAG_DK').AsInteger = 1 then
+    result := FDataSet.FieldByName('S_ACOUNT').AsString
+  else
+    result := FDataSet.FieldByName('R_ACOUNT').AsString;
+end;
+
+function TUkrEximBankLoad.GetBankAccountMain: string;
+begin
+  if FDataSet.FieldByName('FLAG_DK').AsInteger = 0 then
+    result := FDataSet.FieldByName('S_ACOUNT').AsString
+  else
+    result := FDataSet.FieldByName('R_ACOUNT').AsString;
+end;
+
+function TUkrEximBankLoad.GetBankMFO: string;
+begin
+  if FDataSet.FieldByName('FLAG_DK').AsInteger = 1 then
+    result := FDataSet.FieldByName('S_MFO').AsString
+  else
+    result := FDataSet.FieldByName('R_MFO').AsString;
+end;
+
+function TUkrEximBankLoad.GetBankMFOMain: string;
+begin
+  if FDataSet.FieldByName('FLAG_DK').AsInteger = 0 then
+    result := FDataSet.FieldByName('S_MFO').AsString
+  else
+    result := FDataSet.FieldByName('R_MFO').AsString;
+end;
+
+function TUkrEximBankLoad.GetBankName: string;
+begin
+  if FDataSet.FieldByName('FLAG_DK').AsInteger = 1 then
+    result := FDataSet.FieldByName('S_BANK').AsString
+  else
+    result := FDataSet.FieldByName('R_BANK').AsString;
+end;
+
+function TUkrEximBankLoad.GetComment: string;
+begin
+  result := FDataSet.FieldByName('DIRECT').AsString
+end;
+
+function TUkrEximBankLoad.GetCurrencyCode: string;
+begin
+  result := FDataSet.FieldByName('CURRENCY').AsString
+end;
+
+function TUkrEximBankLoad.GetCurrencyName: string;
+begin
+  result := ''
+end;
+
+function TUkrEximBankLoad.GetDocNumber: string;
+begin
+  result := FDataSet.FieldByName('D_NUMBER').AsString
+end;
+
+function TUkrEximBankLoad.GetJuridicalName: string;
+begin
+  if FDataSet.FieldByName('FLAG_DK').AsInteger = 1 then
+    result := FDataSet.FieldByName('S_NAME').AsString
+  else
+    result := FDataSet.FieldByName('R_NAME').AsString;
+end;
+
+function TUkrEximBankLoad.GetOKPO: string;
+begin
+  if FDataSet.FieldByName('FLAG_DK').AsInteger = 1 then
+    result := trim(FDataSet.FieldByName('S_OKPO').AsString)
+  else
+    result := trim(FDataSet.FieldByName('R_OKPO').AsString);
+end;
+
+function TUkrEximBankLoad.GetOperDate: TDateTime;
+begin
+  result := FDataSet.FieldByName('D_DATE').AsDateTime
+end;
+
+function TUkrEximBankLoad.GetOperSumm: real;
+begin
+  result := FDataSet.FieldByName('SUMMA').AsFloat;
+  if FDataSet.FieldByName('FLAG_DK').AsInteger = 0 then
+     result := - result;
 end;
 
 end.

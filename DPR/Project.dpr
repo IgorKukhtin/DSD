@@ -71,7 +71,9 @@ uses
   Scales in '..\SOURCE\Scale\Scales.pas',
   SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas';
+  dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
+  StackTrace in '..\SOURCE\StackTrace.pas',
+  JclDebug in '..\SOURCE\JclDebug.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

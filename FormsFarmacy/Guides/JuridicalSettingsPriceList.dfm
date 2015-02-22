@@ -1,20 +1,20 @@
 inherited JuridicalSettingsPriceListForm: TJuridicalSettingsPriceListForm
   Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
-  ClientWidth = 584
-  ExplicitWidth = 592
+  ClientWidth = 679
+  ExplicitWidth = 687
   ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 584
-    ExplicitWidth = 415
-    ClientRectRight = 584
+    Width = 679
+    ExplicitWidth = 584
+    ClientRectRight = 679
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 415
+      ExplicitWidth = 584
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 584
-        ExplicitWidth = 415
+        Width = 679
+        ExplicitWidth = 584
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil

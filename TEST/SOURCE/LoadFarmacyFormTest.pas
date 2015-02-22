@@ -19,6 +19,7 @@ type
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountDocumentFormTest;
+    procedure LoadBankStatementFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
@@ -112,6 +113,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankEditForm');
+end;
+
+procedure TLoadFormTest.LoadBankStatementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankStatementJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankStatementForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountDocumentFormTest;
@@ -247,6 +256,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;
@@ -499,8 +512,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsPriceListForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsPriceListForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');

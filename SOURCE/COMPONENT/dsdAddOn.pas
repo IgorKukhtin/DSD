@@ -385,6 +385,8 @@ type
     FRefreshAction: TdsdDataSetRefresh;
     FComponentList: TCollection;
     FShowDialogAction: TExecuteDialog;
+    FIdParam: TdsdParam;
+    FCheckIdParam: boolean;
     procedure SetShowDialogAction(const Value: TExecuteDialog);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -393,6 +395,8 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property CheckIdParam: boolean read FCheckIdParam write FCheckIdParam default false;
+    property IdParam: TdsdParam read FIdParam write FIdParam;
     property RefreshAction: TdsdDataSetRefresh read FRefreshAction write FRefreshAction;
     property ShowDialogAction: TExecuteDialog read FShowDialogAction write SetShowDialogAction;
     property ComponentList: TCollection read FComponentList write FComponentList;
@@ -1472,11 +1476,14 @@ constructor TRefreshDispatcher.Create(AOwner: TComponent);
 begin
   inherited;
   ComponentList := TOwnedCollection.Create(Self, TComponentListItem);
+  FIdParam := TdsdParam.Create(nil);
+  CheckIdParam := false;
 end;
 
 destructor TRefreshDispatcher.Destroy;
 begin
-  ComponentList.Free;
+  FreeAndNil(FComponentList);
+  FreeAndNil(FIdParam);
   inherited;
 end;
 
@@ -1501,6 +1508,10 @@ end;
 
 procedure TRefreshDispatcher.OnComponentChange(Sender: TObject);
 begin
+  if CheckIdParam then
+     if (IdParam.asString = '') or (IdParam.asString = '0') or (IdParam.Value=NULL) then
+        exit;
+
   if Assigned(FRefreshAction) then
   // перечитываем запросы только если форма загружена
      if Assigned(Self.Owner) and (Self.Owner is TParentForm) then

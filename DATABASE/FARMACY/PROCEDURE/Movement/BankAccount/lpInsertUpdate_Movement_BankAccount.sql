@@ -1,134 +1,96 @@
 -- Function: lpComplete_Movement_BankAccount (Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_BankAccount (Integer, Integer);
+DROP FUNCTION IF EXISTS lpinsertupdate_movement_bankaccount(integer, tvarchar, tdatetime, tfloat, tfloat, tfloat, integer, tvarchar, integer, integer, integer, integer, integer, integer, tfloat, tfloat, tfloat, tfloat, integer, integer, integer);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_BankAccount(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inUserId            Integer    -- Пользователь
-)                              
-RETURNS void
---  RETURNS TABLE (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, ContainerId Integer, AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer, ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, JuridicalId_Basis Integer, UnitId Integer, ContractId Integer, PaidKindId Integer, IsActive Boolean)
-AS
+CREATE OR REPLACE FUNCTION lpinsertupdate_movement_bankaccount(INOUT ioid integer, IN ininvnumber tvarchar, IN inoperdate tdatetime, IN inamount tfloat, IN inamountsumm tfloat, IN inamountcurrency tfloat, IN inbankaccountid integer, IN incomment tvarchar, IN inmoneyplaceid integer, IN inincomemovementid integer, IN incontractid integer, IN ininfomoneyid integer, IN inunitid integer, IN incurrencyid integer, IN incurrencyvalue tfloat, IN inparvalue tfloat, IN incurrencypartnervalue tfloat, IN inparpartnervalue tfloat, IN inparentid integer, IN inbankaccountpartnerid integer, IN inuserid integer)
+  RETURNS integer AS
 $BODY$
+   DECLARE vbMovementItemId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
 
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Finance_CreateTemp();
+     -- проверка (для юр.лица только)
+--     IF COALESCE (inContractId, 0) = 0 AND EXISTS (SELECT Id FROM Object WHERE Id = inMoneyPlaceId AND DescId = zc_Object_Juridical())
+  --   THEN
+    --    RAISE EXCEPTION 'Ошибка.Не выбрано значение <№ договора>.';
+   --  END IF;
 
-     -- !!!обязательно!!! очистили таблицу проводок
-     DELETE FROM _tmpMIContainer_insert;
-  --   DELETE FROM _tmpMIReport_insert;
-     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     DELETE FROM _tmpItem;
+     -- проверка
+     IF COALESCE (inCurrencyId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Не выбрано значение <Валюта>.';
+     END IF;
+
+     -- проверка
+     IF inAmountSumm < 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Неверное значение <Cумма грн, обмен>.';
+     END IF;
+     -- проверка
+     IF /*inCurrencyId = zc_Enum_Currency_Basis() AND */ inAmount > 0 AND inInfoMoneyId IN (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000())  -- Покупка/продажа валюты
+        AND COALESCE (inAmountSumm, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для <%> не введено значение <Cумма грн, обмен>.', lfGet_Object_ValueData (inInfoMoneyId);
+     END IF;
+     -- проверка
+     IF NOT (/*inCurrencyId = zc_Enum_Currency_Basis() AND */inAmount > 0 AND inInfoMoneyId IN (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000()))  -- Покупка/продажа валюты
+        AND inAmountSumm > 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для <%> в валюту <%> значение <Cумма грн, обмен> должно быть равно нулю.', lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inCurrencyId);
+     END IF;
 
 
-   -- Проводки по суммам документа
-   
-   INSERT INTO _tmpItem(ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate)   
-   SELECT Movement_BankAccount_View.MoneyPlaceId
-        , - Movement_BankAccount_View.Amount
-        , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000()
-                                     , inAccountDirectionId     := zc_Enum_AccountDirection_70100()
-                                     , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200()
-                                     , inInfoMoneyId            := NULL
-                                     , inUserId                 := inUserId)
-        , Movement_BankAccount_View.JuridicalId_Basis
-        , Movement_BankAccount_View.OperDate
-     FROM Movement_BankAccount_View
-    WHERE Movement_BankAccount_View.Id =  inMovementId;
+
+     -- сохранили <Документ>
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, inParentId);
+
+     -- определяем <Элемент документа>
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
+
+     -- сохранили <Элемент документа>
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inBankAccountId, ioId, inAmount, NULL);
+
+     -- сохранили связь с <Объект>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
+    
+     -- Cумма грн, обмен
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmountSumm);
+     -- Сумма в валюте
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), ioId, inAmountCurrency);
+     -- Курс для перевода в валюту баланса
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, inCurrencyValue);
+     -- Номинал для перевода в валюту баланса
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, inParValue);
+     -- Курс для расчета суммы операции
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, inCurrencyPartnerValue);
+     -- Номинал для расчета суммы операции
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, inParPartnerValue);
+
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
+
+     -- сохранили связь с <Управленческие статьи>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
+     -- сохранили связь с <Договора>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
+     -- сохранили связь с <Подразделением>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
+     -- сохранили связь с <Валютой>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
+     -- 
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), vbMovementItemId, inBankAccountPartnerId);
+     -- ссылка на документ прихода
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), ioId, inIncomeMovementId);
      
-    INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
-                zc_Container_Summ()
-              , zc_Movement_Income()  
-              , inMovementId
-              , lpInsertFind_Container(
-                          inContainerDescId := zc_Container_Summ(), -- DescId Остатка
-                          inParentId        := NULL               , -- Главный Container
-                          inObjectId := _tmpItem.AccountId, -- Объект (Счет или Товар или ...)
-                          inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
-                          inBusinessId := NULL, -- Бизнесы
-                          inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL, -- <элемент с/с> - необычная аналитика счета 
-                          inDescId_1          := zc_ContainerLinkObject_Juridical(), -- DescId для 1-ой Аналитики
-                          inObjectId_1        := _tmpItem.ObjectId) 
-              , AccountId
-              , OperSumm
-              , OperDate
-           FROM _tmpItem;
-                
-   DELETE FROM _tmpItem;              
-   INSERT INTO _tmpItem(ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate)   
-   SELECT Movement_BankAccount_View.BankAccountId
-        , Movement_BankAccount_View.Amount
-        , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_40000()
-                                     , inAccountDirectionId     := zc_Enum_AccountDirection_40300()
-                                     , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200()
-                                     , inInfoMoneyId            := NULL
-                                     , inUserId                 := inUserId)
-        , Movement_BankAccount_View.JuridicalId_Basis
-        , Movement_BankAccount_View.OperDate
-     FROM Movement_BankAccount_View
-    WHERE Movement_BankAccount_View.Id =  inMovementId;
-     
-    INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
-                zc_Container_Summ()
-              , zc_Movement_Income()  
-              , inMovementId
-              , lpInsertFind_Container(
-                          inContainerDescId := zc_Container_Summ(), -- DescId Остатка
-                          inParentId        := NULL               , -- Главный Container
-                          inObjectId := _tmpItem.AccountId, -- Объект (Счет или Товар или ...)
-                          inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
-                          inBusinessId := NULL, -- Бизнесы
-                          inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL, -- <элемент с/с> - необычная аналитика счета 
-                          inDescId_1          := zc_ContainerLinkObject_BankAccount(), -- DescId для 1-ой Аналитики
-                          inObjectId_1        := _tmpItem.ObjectId) 
-              , AccountId
-              , OperSumm
-              , OperDate
-           FROM _tmpItem;
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 
-    -- Сумма платежа
-    INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
-                zc_Container_SummIncomeMovementPayment()
-              , zc_Movement_Income()  
-              , inMovementId
-              , lpInsertFind_Container(
-                          inContainerDescId := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
-                          inParentId        := NULL               , -- Главный Container
-                          inObjectId := lpInsertFind_Object_PartionMovement(Movement_BankAccount_View.IncomeId), -- Объект (Счет или Товар или ...)
-                          inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
-                          inBusinessId := NULL, -- Бизнесы
-                          inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL) -- <элемент с/с> - необычная аналитика счета) 
-              , null
-              ,  OperSumm
-              , _tmpItem.OperDate
-           FROM _tmpItem, Movement_BankAccount_View
-         WHERE Movement_BankAccount_View.Id =  inMovementId;
-
-     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
-
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_BankAccount()
-                                , inUserId     := inUserId
-                                 );
-
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE;
-
-/*-------------------------------------------------------------------------------
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.02.15                         * 
-*/
-
--- тест
--- SELECT * FROM lpUnComplete_Movement (inMovementId:= 3581, inUserId:= zfCalc_UserAdmin() :: Integer)
--- SELECT * FROM gpComplete_Movement_BankAccount (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION lpinsertupdate_movement_bankaccount(integer, tvarchar, tdatetime, tfloat, tfloat, tfloat, integer, tvarchar, integer, integer, integer, integer, integer, integer, tfloat, tfloat, tfloat, tfloat, integer, integer, integer)
+  OWNER TO postgres;
