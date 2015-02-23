@@ -58,6 +58,8 @@ type
     clPriceWithVAT: TcxGridDBColumn;
     clVATPercent: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

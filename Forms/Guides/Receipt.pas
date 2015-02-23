@@ -99,6 +99,8 @@ type
     clMeasureNameChild: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     clGroupNumber: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
