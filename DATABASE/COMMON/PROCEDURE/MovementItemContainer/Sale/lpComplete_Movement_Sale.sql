@@ -2629,16 +2629,16 @@ BEGIN
      ;
 
 
-     -- убрал, т.к. св-во пишется теперь в ОПиУ
+     /*-- убрал, т.к. св-во пишется теперь в ОПиУ
      DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
-     DELETE FROM MovementLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementId = inMovementId;
+     DELETE FROM MovementLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementId = inMovementId;*/
      -- !!!6.0.1. формируются свойства в элементах документа из данных для проводок!!!
-     /*PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_From)
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_From)
      FROM (SELECT _tmpItem.MovementItemId
            FROM _tmpItem
           ) AS tmp;
      -- !!!6.0.2. формируются свойство связь с <филиал> в документе из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_From);*/
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_From);
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
