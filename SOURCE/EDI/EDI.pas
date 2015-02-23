@@ -931,6 +931,10 @@ begin
         ExtractFileName(XMLFileName);
       FUpdateDeclarFileName.Execute;
 
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+      FUpdateEDIErrorState.Execute;
+
       // Записать данные в протокол
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
@@ -1013,6 +1017,10 @@ begin
       + DESADV.NUMBER + '.xml', '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+      FUpdateEDIErrorState.Execute;
+
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
@@ -1266,6 +1274,9 @@ begin
       '_' + INVOICE.NUMBER + '.xml', '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+      FUpdateEDIErrorState.Execute;
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
@@ -1663,6 +1674,9 @@ begin
       + ORDRSP.NUMBER + '.xml', '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+      FUpdateEDIErrorState.Execute;
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=

@@ -2,8 +2,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1020
+  ExplicitTop = -312
   ExplicitWidth = 1028
-  ExplicitHeight = 702
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -301,7 +302,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -1177,6 +1177,41 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint_Quality: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintQuality
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintQuality
+        end>
+      Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1081' '#1083#1080#1089#1090
+      Hint = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1081' '#1083#1080#1089#1090
+      ImageIndex = 16
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Quality'
+      ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1356,6 +1391,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Quality'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1421,6 +1460,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object bbPrint_TTN: TdxBarButton
       Action = actPrint_TTN
+      Category = 0
+    end
+    object bbPrint_Quality: TdxBarButton
+      Action = actPrint_Quality
       Category = 0
     end
   end
@@ -2390,6 +2433,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Top = 384
   end
   object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -3121,5 +3168,28 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     PackSize = 1
     Left = 687
     Top = 376
+  end
+  object spSelectPrintQuality: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_GoodsQuality_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 623
+    Top = 512
   end
 end

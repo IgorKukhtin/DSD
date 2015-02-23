@@ -451,8 +451,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalSettingsTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettingsPriceList.pas">
-				<Form>JuridicalSettingsPriceListForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettings.pas">
+				<Form>JuridicalSettingsForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -493,10 +493,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\ContactPersonTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettings.pas">
-				<Form>JuridicalSettingsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerCode.pas">
 				<Form>PartnerCodeForm</Form>
 				<FormType>dfm</FormType>
@@ -803,6 +799,24 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\MoneyPlace_Object.pas">
 				<Form>MoneyPlace_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\BankStatement.pas">
+				<Form>BankStatementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\BankStatementJournal.pas">
+				<Form>BankStatementJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\BankStatementTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\BankStatementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalCollation.pas">
+				<Form>Report_JuridicalCollationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalSold.pas">
+				<Form>Report_JuridicalSoldForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

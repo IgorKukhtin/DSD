@@ -8,6 +8,7 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
            , Object_BankAccount.ValueData                       AS Name
            , BankAccount_Juridical.ChildObjectId                AS JuridicalId
            , Juridical.ValueData                                AS JuridicalName
+           , ObjectBoolean_isCorporate.ValueData                AS isCorporate
            , ObjectLink_BankAccount_Bank.ChildObjectId          AS BankId
            , Object_Bank_View.BankName                          AS BankName
            , Object_Bank_View.MFO                               AS MFO
@@ -40,6 +41,9 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
          ON BankAccount_Juridical.ObjectId = Object_BankAccount.Id
         AND BankAccount_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
   LEFT JOIN Object AS Juridical ON Juridical.Id = BankAccount_Juridical.ChildObjectId
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate 
+                                ON ObjectBoolean_isCorporate.ObjectId = BankAccount_Juridical.ChildObjectId
+                               AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
   LEFT JOIN ObjectLink AS BankAccount_Currency
          ON BankAccount_Currency.ObjectId = Object_BankAccount.Id
         AND BankAccount_Currency.DescId = zc_ObjectLink_BankAccount_Currency()

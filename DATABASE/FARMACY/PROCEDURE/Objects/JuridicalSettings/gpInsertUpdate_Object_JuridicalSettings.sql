@@ -1,10 +1,13 @@
 -- Function: gpInsertUpdate_Object_Unit()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Установки для ценовых групп>
     IN inJuridicalId             Integer   ,    -- Юр. лицо
+    IN inMainJuridicalId         Integer   ,    -- Юр. лицо
+    IN inContractId              Integer   ,    -- Договор
+    IN inisPriceClose            Boolean   ,    -- Закрыт прайс
     IN inBonus                   TFloat    ,    -- % бонусирования
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -27,23 +30,33 @@ BEGIN
    -- сохранили связь с <Юр. лицом>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalSettings_Juridical(), ioId, inJuridicalId);
 
+   -- сохранили связь с <Юр. лицом>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalSettings_MainJuridical(), ioId, inMainJuridicalId);
+
+   -- сохранили связь с <Договор>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalSettings_Contract(), ioId, inContractId);
+
+   -- % бонусирования
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_JuridicalSettings_isPriceClose(), ioId, inisPriceClose);
+
    -- % бонусирования
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_JuridicalSettings_Bonus(), ioId, inBonus);
-
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_JuridicalSettings(Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_JuridicalSettings_PriceList(Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 24.09.13                          *
+ 17.02.15                          *
+ 21.01.15                          *
+ 13.10.14                          *
 
 */
 

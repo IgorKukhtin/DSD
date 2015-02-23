@@ -155,7 +155,7 @@ uses
   PriceGroupSettingsTest in '..\SOURCE\Objects\All\Farmacy\PriceGroupSettingsTest.pas',
   PriceGroupSettingsUnit in '..\..\FormsFarmacy\Guides\PriceGroupSettingsUnit.pas' {PriceGroupSettingsForm: TParentForm},
   JuridicalSettingsTest in '..\SOURCE\Objects\All\JuridicalSettingsTest.pas',
-  JuridicalSettingsPriceList in '..\..\FormsFarmacy\Guides\JuridicalSettingsPriceList.pas' {JuridicalSettingsPriceListForm: TParentForm},
+  JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm},
   CommonProtocolProcedureTest in '..\SOURCE\Protocol\CommonProtocolProcedureTest.pas',
   ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
   Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm},
@@ -170,7 +170,6 @@ uses
   OrderKind in '..\..\Forms\Kind\OrderKind.pas' {OrderKindForm: TParentForm},
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonTest in '..\SOURCE\Objects\All\ContactPersonTest.pas',
-  JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm},
   PartnerCode in '..\..\FormsFarmacy\Guides\PartnerCode.pas' {PartnerCodeForm: TParentForm},
   GoodsLite in '..\..\FormsFarmacy\Guides\GoodsLite.pas' {GoodsLiteForm: TParentForm},
   ReportOrderGoods in '..\..\FormsFarmacy\Report\ReportOrderGoods.pas' {ReportOrderGoodsForm: TParentForm},
@@ -273,7 +272,13 @@ uses
   BankAccountMovementFarmacy in '..\..\FormsFarmacy\Document\BankAccountMovementFarmacy.pas' {BankAccountMovementFarmacyForm: TParentForm},
   BankAccountMovementTest in '..\SOURCE\Movement\All\Farmacy\BankAccountMovementTest.pas',
   InfoMoney_Object in '..\..\Forms\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
-  MoneyPlace_Object in '..\..\FormsFarmacy\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm};
+  MoneyPlace_Object in '..\..\FormsFarmacy\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
+  BankStatement in '..\..\FormsFarmacy\Document\BankStatement.pas' {BankStatementForm: TParentForm},
+  BankStatementJournal in '..\..\FormsFarmacy\Document\BankStatementJournal.pas' {BankStatementJournalForm: TParentForm},
+  BankStatementTest in '..\SOURCE\Movement\All\BankStatementTest.pas',
+  BankStatementItemTest in '..\SOURCE\Movement\All\BankStatementItemTest.pas',
+  Report_JuridicalCollation in '..\..\FormsFarmacy\Report\Report_JuridicalCollation.pas' {Report_JuridicalCollationForm: TParentForm},
+  Report_JuridicalSold in '..\..\FormsFarmacy\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

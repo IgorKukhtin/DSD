@@ -2,8 +2,9 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 668
   ClientWidth = 1082
+  ExplicitTop = -95
   ExplicitWidth = 1090
-  ExplicitHeight = 702
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +12,17 @@ inherited Sale_OrderForm: TSale_OrderForm
     Width = 1082
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1082
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1082
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1082
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1082
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1082
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -287,7 +288,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Width = 1082
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1082
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1224,6 +1225,41 @@ inherited Sale_OrderForm: TSale_OrderForm
       Weight.Component = MasterCDS
       Weight.ComponentItem = 'Amount'
     end
+    object actPrint_Quality: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintQuality
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintQuality
+        end>
+      Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1081' '#1083#1080#1089#1090
+      Hint = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1081' '#1083#1080#1089#1090
+      ImageIndex = 16
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Quality'
+      ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1415,6 +1451,10 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Quality'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1506,6 +1546,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbScale: TdxBarButton
       Action = ScaleAction
+      Category = 0
+    end
+    object bbPrint_Quality: TdxBarButton
+      Action = actPrint_Quality
       Category = 0
     end
   end
@@ -2568,6 +2612,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     Top = 384
   end
   object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -3311,5 +3359,28 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 647
     Top = 384
+  end
+  object spSelectPrintQuality: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_GoodsQuality_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 623
+    Top = 512
   end
 end

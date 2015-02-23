@@ -5,9 +5,17 @@ DROP VIEW IF EXISTS Object_Contract_View;
 CREATE OR REPLACE VIEW Object_Contract_View AS 
        SELECT 
              Object_Contract.Id           AS Id
+           , Object_Contract.Id           AS ContractId
            , Object_Contract.ObjectCode   AS Code
+           , Object_Contract.ObjectCode   AS ContractCode
            , Object_Contract.ValueData    AS Name
-         
+           , ''::TVarChar                 AS InvNumber
+           , ''::TVarChar                 AS ContractTagGroupName
+           , ''::TVarChar                 AS ContractTagName
+           , 0::Integer                   AS ContractStateKindCode
+           , NULL::TDateTime              AS startdate
+           , NULL::TDateTime              AS enddate
+
            , Object_JuridicalBasis.Id         AS JuridicalBasisId
            , Object_JuridicalBasis.ValueData  AS JuridicalBasisName 
                      
@@ -18,7 +26,9 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
            , ObjectString_Comment.ValueData AS Comment
            
            , Object_Contract.isErased           AS isErased
-           
+           , 0 AS InfoMoneyId
+           , 0 AS Contractstatekindid           
+
        FROM Object AS Object_Contract
            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                 ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_Contract.Id

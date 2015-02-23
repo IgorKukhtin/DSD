@@ -28,7 +28,6 @@ BEGIN
            AND Movement.ParentId = inMovementId;
      END IF;
 
-
      -- Выбираем все данные и сразу вызываем процедуры
      PERFORM lpInsertUpdate_Movement_BankAccount(ioId                   := COALESCE (Movement_BankAccount.Id, 0)
                                                , inInvNumber            := Movement.InvNumber
@@ -39,6 +38,7 @@ BEGIN
                                                , inBankAccountId        := MovementLinkObject_BankAccount.ObjectId
                                                , inComment              := MovementString_Comment.ValueData
                                                , inMoneyPlaceId         := MovementLinkObject_Juridical.ObjectId
+                                               , inincomemovementid     := NULL
                                                , inContractId           := MovementLinkObject_Contract.ObjectId
                                                , inInfoMoneyId          := MovementLinkObject_InfoMoney.ObjectId
                                                , inUnitId               := MovementLinkObject_Unit.ObjectId

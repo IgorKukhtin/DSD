@@ -47,9 +47,10 @@ BEGIN
        FROM LoadPriceListItem 
 
             JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-            LEFT JOIN (SELECT * FROM lpSelect_Object_JuridicalSettingsPriceListRetail (vbObjectId)) AS JuridicalSettingsPriceList
-                    ON JuridicalSettingsPriceList.JuridicalId = LoadPriceList.JuridicalId 
-                   AND JuridicalSettingsPriceList.ContractId = LoadPriceList.ContractId 
+            LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId, isPriceClose
+                         FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId)) AS JuridicalSettings
+                    ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId 
+                   AND JuridicalSettings.ContractId = LoadPriceList.ContractId 
 
             LEFT JOIN Object_Goods_Main_View AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId

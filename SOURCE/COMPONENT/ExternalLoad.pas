@@ -295,7 +295,7 @@ begin
     OkpoTo := ElementList[2];
     ElementList := SplitString(StringList[1], #9);
     InvNumber := ElementList[0];
-    OperDate := VarToDateTime(ElementList[1]);
+    OperDate := VarToDateTime(trim(ElementList[1]));
     InvTaxNumber := ElementList[2];
     if ElementList[13] = '' then
        PaymentDate := OperDate
@@ -317,6 +317,7 @@ begin
         with FDataSet do begin
           ElementList := SplitString(StringList[i], #9);
           Price := gfStrToFloat(ElementList[20]) / gfStrToFloat(ElementList[15]);
+          ElementList[13] := trim(ElementList[13]);
           if (ElementList[13] = '') or (ElementList[13] = '.  .') then
              ExpirationDate := OperDate
           else

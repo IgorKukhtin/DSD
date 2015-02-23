@@ -10,14 +10,17 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxCheckBox;
 
 type
   TJuridicalSettingsForm = class(TAncestorEnumForm)
     colJuridicalName: TcxGridDBColumn;
-    colBonus: TcxGridDBColumn;
+    colContract: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     UpdateDataSet: TdsdUpdateDataSet;
+    colisPriceClose: TcxGridDBColumn;
+    colMainJuridical: TcxGridDBColumn;
+    colBonus: TcxGridDBColumn;
   private
     { Private declarations }
   public

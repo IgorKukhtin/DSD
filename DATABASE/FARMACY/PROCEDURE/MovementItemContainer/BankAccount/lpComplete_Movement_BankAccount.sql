@@ -12,8 +12,6 @@ AS
 $BODY$
 BEGIN
 
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Finance_CreateTemp();
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;

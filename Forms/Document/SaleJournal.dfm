@@ -8,20 +8,23 @@ inherited SaleJournalForm: TSaleJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 584
+    Height = 582
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 584
-    ClientRectBottom = 584
-    ClientRectRight = 1020
+    ExplicitHeight = 582
+    ClientRectBottom = 578
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 584
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1014
+      ExplicitHeight = 576
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 584
-        ExplicitWidth = 1020
-        ExplicitHeight = 584
+        Width = 1014
+        Height = 576
+        ExplicitWidth = 1014
+        ExplicitHeight = 576
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -1209,6 +1212,51 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint_Quality: TdsdPrintAction [40]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrintQuality
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintQuality
+        end>
+      Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1081' '#1083#1080#1089#1090
+      Hint = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1081' '#1083#1080#1089#1090
+      ImageIndex = 16
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Quality'
+      ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1257,7 +1305,7 @@ inherited SaleJournalForm: TSaleJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1393,6 +1441,10 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Quality'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1462,6 +1514,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbTTN: TdxBarButton
       Action = actPrint_TTN
+      Category = 0
+    end
+    object bbPrint_Quality: TdxBarButton
+      Action = actPrint_Quality
       Category = 0
     end
   end
@@ -1966,5 +2022,28 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 423
     Top = 520
+  end
+  object spSelectPrintQuality: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_GoodsQuality_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 623
+    Top = 512
   end
 end

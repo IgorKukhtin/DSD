@@ -13,6 +13,9 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount());
 
+     -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
+     PERFORM lpComplete_Movement_Finance_CreateTemp();
+
      -- проводим ƒокумент
      PERFORM lpComplete_Movement_BankAccount (inMovementId := inMovementId
                                             , inUserId     := vbUserId);
