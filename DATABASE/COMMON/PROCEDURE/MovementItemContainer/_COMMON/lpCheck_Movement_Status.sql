@@ -80,7 +80,9 @@ BEGIN
                                    ON MS_InvNumberPartner.MovementId = Movement_Document.Id
                                   AND MS_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
      WHERE MovementLinkMovement_Child.MovementChildId = inMovementId
-       AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child();
+       AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+       AND MovementLinkMovement_Child.MovementId <> inMovementId -- !!!убрать после исправления ошибки когда сама в себя!!!!
+    ; 
      -- проверка - если входит в сводную, то она должна быть распроведена
      IF vbStatusId_Tax = zc_Enum_Status_Complete()
      THEN

@@ -132,7 +132,6 @@ type
     cxLabel20: TcxLabel;
     cxLabel21: TcxLabel;
     edContractTag: TcxButtonEdit;
-    cxButtonEdit2: TcxButtonEdit;
     ceBankAccount: TcxButtonEdit;
     BankAccountGuides: TdsdGuides;
     ContractTagGuides: TdsdGuides;

@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_ProfitLossService()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, tdatetime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, tdatetime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
     IN inOperDate                 TDateTime , -- Дата документа
     IN inAmountIn                 TFloat    , -- Сумма операции
     IN inAmountOut                TFloat    , -- Сумма операции
+    IN inBonusValue               TFloat    , -- % бонуса
     IN inComment                  TVarChar  , -- Комментарий
     IN inContractId               Integer   , -- Договор
     IN inContractMasterId         Integer   , -- Договор(условия)
@@ -38,6 +40,7 @@ BEGIN
                                                       , inOperDate          := inOperDate
                                                       , inAmountIn          := inAmountIn
                                                       , inAmountOut         := inAmountOut
+                                                      , inBonusValue        := inBonusValue
                                                       , inComment           := inComment
                                                       , inContractId        := inContractId
                                                       , inContractMasterId  := inContractMasterId

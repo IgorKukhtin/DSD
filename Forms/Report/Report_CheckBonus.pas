@@ -37,6 +37,8 @@ type
     dxBarButton1: TdxBarButton;
     actDocBonus: TdsdExecStoredProc;
     spInsertUpdate: TdsdStoredProc;
+    clSum_CheckBonusFact: TcxGridDBColumn;
+    clSum_SaleFact: TcxGridDBColumn;
   private
     { Private declarations }
   public

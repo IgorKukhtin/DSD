@@ -25,6 +25,12 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+     --
+     IF inShowAll = TRUE
+     THEN
+         inShowAll:= inMovementId <> 0 AND NOT EXISTS (SELECT MovementId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Order() AND MovementChildId <> 0);
+     END IF;
+
 
      IF inShowAll THEN
 
@@ -388,12 +394,12 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
                                              ON MILinkObject_Box.MovementItemId = tmpMI.MovementItemId
                                             AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
-            LEFT JOIN Object AS Object_Box ON Object_Box.Id = MILinkObject_Box.ObjectId
+            LEFT JOIN Object AS Object_Box ON Object_Box.Id = NULL -- MILinkObject_Box.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = tmpMI.MovementItemId
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = NULL -- MILinkObject_Asset.ObjectId
             ;
 
      END IF;

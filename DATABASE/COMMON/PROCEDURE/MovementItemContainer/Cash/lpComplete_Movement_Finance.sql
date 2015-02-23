@@ -596,7 +596,7 @@ BEGIN
             , _tmpItem.AccountId                  AS AccountId
             , _tmpItem.AnalyzerId                 AS AnalyzerId
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
-            , 0                                   AS WhereObjectId_Analyzer
+            , _tmpItem.UnitId                     AS WhereObjectId_Analyzer
             , _tmpItem.ContainerId                AS ContainerId_Analyzer
             , 0 AS ParentId
             , _tmpItem.OperSumm
@@ -610,7 +610,7 @@ BEGIN
             , zc_Enum_Account_100301()            AS AccountId -- прибыль текущего периода
             , 0                                   AS AnalyzerId
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
-            , 0                                   AS WhereObjectId_Analyzer
+            , _tmpItem.UnitId                     AS WhereObjectId_Analyzer
             , _tmpItem.ContainerId_Diff           AS ContainerId_Analyzer
             , 0 AS ParentId
             , _tmpItem.OperSumm_Diff

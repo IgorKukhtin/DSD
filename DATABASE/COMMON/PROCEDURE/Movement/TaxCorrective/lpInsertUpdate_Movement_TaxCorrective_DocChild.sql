@@ -31,6 +31,7 @@ BEGIN
      -- проверка - номер договора должен быть одинаковый
      IF COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_Contract()), 0)
         <> COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovement_ChildId AND DescId = zc_MovementLinkObject_Contract()), 0)
+        AND inMovement_ChildId <> 0
      THEN
          RAISE EXCEPTION 'Ошибка.№ договора в корректировке не соответсвует № договора в налоговой.';
      END IF;

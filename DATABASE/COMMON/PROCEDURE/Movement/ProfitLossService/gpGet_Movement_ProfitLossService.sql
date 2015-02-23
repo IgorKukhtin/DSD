@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ProfitLossService(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat, AmountOut TFloat
+             , BonusValue TFloat
              , Comment TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -44,6 +45,7 @@ BEGIN
            , lfObject_Status.Name             AS StatusName
            , 0::TFloat                        AS AmountIn
            , 0::TFloat                        AS AmountOut
+           , 0::TFloat                        AS BonusValue
            , ''::TVarChar                     AS Comment
            , 0                                AS JuridicalId
            , CAST ('' as TVarChar)            AS JuridicalName
@@ -96,6 +98,7 @@ BEGIN
                        THEN -1 * MovementItem.Amount * ((Movement.descid <> zc_Movement_SendDebt())::INTEGER*2 - 1)
                   ELSE 0
              END :: TFloat                          AS AmountOut
+           , MIFloat_BonusValue.ValueData           AS BonusValue
            , MIString_Comment.ValueData             AS Comment
            , Object_Juridical.Id                    AS JuridicalId
            , Object_Juridical.ValueData             AS JuridicalName
@@ -131,6 +134,9 @@ BEGIN
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE(MILinkObject_MoneyPlace.ObjectId, MovementItem.ObjectId)
 
+            LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
+                                        ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -203,5 +209,4 @@ ALTER FUNCTION gpGet_Movement_ProfitLossService (Integer, Integer, TDateTime, TV
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ProfitLossService (inMovementId:= 1, inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin());
--- select * from gpGet_Movement_ProfitLossService(inMovementId := -1 , inMovementId_Value := 266333 , inOperDate := ('01.05.2014')::TDateTime ,  inSession := '5');
+-- SELECT * FROM gpGet_Movement_ProfitLossService(inMovementId := 1 , inMovementId_Value := 266333 , inOperDate := ('01.05.2014')::TDateTime ,  inSession := '5');

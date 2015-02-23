@@ -24,7 +24,7 @@ BEGIN
      vbBranchId:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
 
      -- Определяются параметры
-     SELECT MovementLinkMovement_MasterEDI.MovementId, MovementLinkMovement_ChildEDI.MovementId
+     SELECT Movement_ReturnIn.Id, Movement_TaxCorrective.Id
           , TRIM (MovementString_InvNumberTax.ValueData), MovementDate_OperDateTax.ValueData, MovementLinkObject_Juridical.ObjectId
             INTO vbMovementId_ReturnIn, vbMovementId_TaxCorrective
                , vbInvNumberPartner_Tax, vbOperDate_Tax, vbJuridicalId_Tax
@@ -32,9 +32,13 @@ BEGIN
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
                                          ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id
                                         AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
+          LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = MovementLinkMovement_MasterEDI.MovementId
+                                                 AND Movement_ReturnIn.StatusId <> zc_Enum_Status_Erased()
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                          ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id
                                         AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
+          LEFT JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = MovementLinkMovement_ChildEDI.MovementId
+                                                      AND Movement_TaxCorrective.StatusId <> zc_Enum_Status_Erased()
           LEFT JOIN MovementString AS MovementString_InvNumberTax
                                    ON MovementString_InvNumberTax.MovementId =  Movement.Id
                                   AND MovementString_InvNumberTax.DescId = zc_MovementString_InvNumberTax()
@@ -44,7 +48,7 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                        ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                       AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-     WHERE Id = inMovementId;
+     WHERE Movement.Id = inMovementId;
 
      -- Проверка
      IF COALESCE (vbInvNumberPartner_Tax, '') = ''
