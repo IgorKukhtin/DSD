@@ -69,6 +69,7 @@ BEGIN
                                                                                                           WHEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId IN (zc_Enum_AccountDirection_20100() -- Запасы + на складах ГП
                                                                                                                                                                     , zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                                                                                                                                     , zc_Enum_AccountDirection_20400() -- Запасы + на производстве
+                                                                                                                                                                    , zc_Enum_AccountDirection_20800() -- Запасы + на упаковке
                                                                                                                                                                      )
                                                                                                                THEN zc_Enum_ProfitLossDirection_20500() -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация)
                                                                                                           WHEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId IN (zc_Enum_AccountDirection_20700() -- Запасы + на филиалах
