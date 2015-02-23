@@ -11,8 +11,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProfitLossService(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat, AmountOut TFloat
+             , BonusValue TFloat, AmountPartner TFloat, Summ TFloat
              , Comment TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar, OKPO TVarChar
+             , JuridicalCode_Child Integer, JuridicalName_Child TVarChar, OKPO_Child TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -55,11 +57,20 @@ BEGIN
                        THEN -1 * MovementItem.Amount
                   ELSE 0
              END::TFloat                                    AS AmountOut
+
+           , MIFloat_BonusValue.ValueData                   AS BonusValue
+           , MIFloat_AmountPartner.ValueData                AS AmountPartner
+           , MIFloat_Summ.ValueData                         AS Summ
+
            , MIString_Comment.ValueData                     AS Comment
            , Object_Juridical.ObjectCode                    AS JuridicalCode
            , Object_Juridical.ValueData                     AS JuridicalName
            , ObjectDesc.ItemName
            , ObjectHistory_JuridicalDetails_View.OKPO
+           , Object_Juridical_Child.ObjectCode              AS JuridicalCode_Child
+           , Object_Juridical_Child.ValueData               AS JuridicalName_Child
+           , ObjectHistory_JuridicalDetails_View_Child.OKPO AS OKPO_Child
+
            , Object_InfoMoney_View.InfoMoneyGroupName       AS InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName AS InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyCode            AS InfoMoneyCode
@@ -68,10 +79,10 @@ BEGIN
            , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber              AS ContractInvNumber
            , View_Contract_InvNumber.ContractTagName
-           , View_ContractMaster_InvNumber.ContractId     AS ContractMasterId
-           , View_ContractMaster_InvNumber.InvNumber      AS ContractMasterInvNumber
-           , View_ContractChild_InvNumber.ContractId      AS ContractChildId
-           , View_ContractChild_InvNumber.InvNumber       AS ContractChildInvNumber
+           , View_Contract_InvNumber_master.ContractId     AS ContractMasterId
+           , View_Contract_InvNumber_master.InvNumber      AS ContractMasterInvNumber
+           , View_Contract_InvNumber_child.ContractId      AS ContractChildId
+           , View_Contract_InvNumber_child.InvNumber       AS ContractChildInvNumber
            , Object_Unit.ValueData                          AS UnitName
            , Object_PaidKind.ValueData                      AS PaidKindName
            , Object_ContractConditionKind.Id                AS ContractConditionKindId
@@ -99,6 +110,16 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
 
+            LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
+                                        ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -116,14 +137,14 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractMaster
                                              ON MILinkObject_ContractMaster.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ContractMaster.DescId = zc_MILinkObject_ContractMaster()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractMaster_InvNumber 
-                                                     ON View_ContractMaster_InvNumber.ContractId = MILinkObject_ContractMaster.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_master 
+                                                     ON View_Contract_InvNumber_master.ContractId = MILinkObject_ContractMaster.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
                                              ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractChild_InvNumber 
-                                                     ON View_ContractChild_InvNumber.ContractId = MILinkObject_ContractChild.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_child 
+                                                     ON View_Contract_InvNumber_child.ContractId = MILinkObject_ContractChild.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -145,10 +166,15 @@ BEGIN
                                             AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
             LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = MILinkObject_BonusKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical
+                                             ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+            LEFT JOIN Object AS Object_Juridical_Child ON Object_Juridical_Child.Id = MILinkObject_Juridical.ObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ObjectHistory_JuridicalDetails_View_Child ON ObjectHistory_JuridicalDetails_View_Child.JuridicalId = MILinkObject_Juridical.ObjectId
+
             LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
                                       ON MovementBoolean_isLoad.MovementId =  Movement.Id
                                      AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
-
       ;
 
 END;
@@ -166,4 +192,4 @@ ALTER FUNCTION gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Boolea
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())

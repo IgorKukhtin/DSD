@@ -1340,6 +1340,23 @@ begin
                cbLastComplete.Checked:=false;
                OKCompleteDocumentButtonClick(Self);
           end;
+     if ParamStr(2)='autoReComplete'
+     then begin
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-7)+') as RetV');
+               StartDate:=fromSqlQuery.FieldByName('RetV').AsDateTime;
+
+               StartDateCompleteEdit.Text:=DateToStr(StartDate);
+               EndDateCompleteEdit.Text:=DateToStr(Date);
+
+               UnitCodeSendOnPriceEdit.Text:='ReComplete(7Day)';
+               //Перепроводим
+               cbComplete.Checked:=true;
+               cbUnComplete.Checked:=true;
+               cbInsertHistoryCost.Checked:=true;
+               cbComplete_List.Checked:=true;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+          end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
@@ -1471,7 +1488,9 @@ begin
 
      if System.Pos('auto',ParamStr(2))<=0
      then
-     if fStop then ShowMessage('Справочники НЕ загружены. Time=('+StrTime+').') else ShowMessage('Справочники загружены. Time=('+StrTime+').');
+         if fStop then ShowMessage('Справочники НЕ загружены. Time=('+StrTime+').')
+                  else ShowMessage('Справочники загружены. Time=('+StrTime+').')
+     else OKPOEdit.Text:=OKPOEdit.Text + ' Guide:'+StrTime;
      //
      fStop:=true;
 end;
@@ -1623,7 +1642,8 @@ begin
      if fStop then ShowMessage('Документы НЕ загружены. Time=('+StrTime+').')
      else
          if System.Pos('auto',ParamStr(2))<=0
-         then ShowMessage('Документы загружены. Time=('+StrTime+').');
+         then ShowMessage('Документы загружены. Time=('+StrTime+').')
+         else OKPOEdit.Text:=OKPOEdit.Text + ' Doc:'+StrTime;
      //
      fStop:=true;
 end;
@@ -1883,7 +1903,8 @@ begin
                else if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
                else if cbInsertHistoryCost.Checked then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана полностью. Time=('+StrTime+').')
                     else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
-     end;
+     end
+     else OKPOEdit.Text:=OKPOEdit.Text + ' Complete:'+StrTime;
      //
      fStop:=true;
 end;
@@ -18681,6 +18702,12 @@ begin
      // !!!заливка в сибасе!!!
 
      // Get Data
+     if (ParamStr(2)='autoReComplete') and (isBefoHistoryCost = TRUE)
+     then fOpenSqToQuery ('select * from gpComplete_SelectAllBranch_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
+     else
+     if (ParamStr(2)='autoReComplete') and (isBefoHistoryCost = FALSE)
+     then fOpenSqToQuery ('select * from gpComplete_SelectAllBranch_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)')
+     else
      if isBefoHistoryCost = TRUE
      then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
      else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)');

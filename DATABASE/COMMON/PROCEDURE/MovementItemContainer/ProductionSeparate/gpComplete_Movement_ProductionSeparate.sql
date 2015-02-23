@@ -619,8 +619,10 @@ BEGIN
                                                    ) AS AccountId
                      , _tmpItem_group.InfoMoneyDestinationId
                 FROM (SELECT _tmpItemChild.InfoMoneyDestinationId
-                           , CASE WHEN (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                           , CASE WHEN (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Ирна
+                                    OR (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
                                     OR (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                                    OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Запасы + на производстве AND Доходы + Ирна
                                     OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
                                     OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
                                        THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
@@ -631,8 +633,10 @@ BEGIN
                       FROM _tmpItemChild
                       WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
                       GROUP BY _tmpItemChild.InfoMoneyDestinationId
-                             , CASE WHEN (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                             , CASE WHEN (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Ирна
+                                      OR (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
                                       OR (_tmpItemChild.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                                      OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Запасы + на производстве AND Доходы + Ирна
                                       OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
                                       OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
                                          THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство

@@ -1,11 +1,11 @@
 inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   Caption = 
-    #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076 +
+    #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076 +
     #1086#1074')>'
   ClientHeight = 302
   ClientWidth = 990
-  ExplicitWidth = 998
-  ExplicitHeight = 336
+  ExplicitWidth = 1006
+  ExplicitHeight = 337
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,25 +27,45 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = clAmountIn
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmountOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = clAmountIn
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmountOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -77,23 +97,46 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 64
+            Width = 70
           end
           object colAmountOut: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 65
+            Width = 70
+          end
+          object AmountPartner: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1073#1072#1079#1072
+            DataBinding.FieldName = 'Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clJuridicalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' ('#1102#1088'.'#1083'.)'
+            Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -114,6 +157,29 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 37
+          end
+          object JuridicalCode_Child: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1102#1088'.'#1083'. ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'JuridicalCode_Child'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object JuridicalName_Child: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'JuridicalName_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object OKPO_Child: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'OKPO_Child'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -200,11 +266,18 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             Width = 55
           end
           object clContractConditionKindName: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractConditionKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
+          end
+          object BonusValue: TcxGridDBColumn
+            Caption = ' % '#1073#1086#1085#1091#1089#1072' '
+            DataBinding.FieldName = 'BonusValue'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
           object clBonusKindName: TcxGridDBColumn
             Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
@@ -259,6 +332,12 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   inherited Panel: TPanel
     Width = 990
     ExplicitWidth = 990
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -473,6 +552,9 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       end>
     Left = 80
     Top = 176
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    Top = 136
   end
   object spMovementReCompleteAll: TdsdStoredProc
     StoredProcName = 'gpCompletePeriod_Movement_ProfitLossService'

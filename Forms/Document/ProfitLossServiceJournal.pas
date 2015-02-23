@@ -33,6 +33,12 @@ type
     clisLoad: TcxGridDBColumn;
     clContractMasterInvNumber: TcxGridDBColumn;
     clContractChildInvNumber: TcxGridDBColumn;
+    BonusValue: TcxGridDBColumn;
+    AmountPartner: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
+    JuridicalCode_Child: TcxGridDBColumn;
+    JuridicalName_Child: TcxGridDBColumn;
+    OKPO_Child: TcxGridDBColumn;
   private
     { Private declarations }
   public

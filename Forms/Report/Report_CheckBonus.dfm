@@ -11,17 +11,17 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Height = 267
     TabOrder = 3
     ExplicitTop = 57
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     ExplicitHeight = 267
     ClientRectBottom = 267
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
+      ExplicitWidth = 1020
       ExplicitHeight = 267
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 267
-        ExplicitWidth = 1110
+        ExplicitWidth = 1020
         ExplicitHeight = 267
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -39,6 +39,16 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
               Format = ',0.00##'
               Kind = skSum
               Column = clSum_BonusFact
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_CheckBonusFact
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_SaleFact
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -55,6 +65,16 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
               Format = ',0.00##'
               Kind = skSum
               Column = clSum_BonusFact
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_CheckBonusFact
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_SaleFact
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -109,7 +129,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'InvNumber_master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 60
           end
@@ -131,14 +150,12 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Width = 104
           end
           object clConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ConditionKindName'
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Width = 75
           end
           object clValue: TcxGridDBColumn
@@ -146,7 +163,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'Value'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 48
           end
@@ -181,7 +197,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 55
           end
@@ -190,11 +205,10 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'Sum_CheckBonus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Width = 80
           end
           object clSum_Bonus: TcxGridDBColumn
@@ -202,11 +216,10 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'Sum_Bonus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Width = 80
           end
           object clSum_BonusFact: TcxGridDBColumn
@@ -214,11 +227,30 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'Sum_BonusFact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
+            Width = 80
+          end
+          object clSum_CheckBonusFact: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1073#1072#1079#1072' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'Sum_CheckBonusFact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object clSum_SaleFact: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1080' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'Sum_SaleFact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
         end
@@ -227,13 +259,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
     end
     object cxLabel4: TcxLabel

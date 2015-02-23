@@ -1,11 +1,11 @@
 ﻿inherited ProfitLossServiceForm: TProfitLossServiceForm
   ActiveControl = ceAmountDebet
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' < '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')>'
   ClientHeight = 347
   ClientWidth = 614
   AddOnFormData.isSingle = False
   ExplicitWidth = 620
-  ExplicitHeight = 379
+  ExplicitHeight = 372
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -26,20 +26,20 @@
   end
   object cxLabel1: TcxLabel [2]
     Left = 152
-    Top = 11
+    Top = 14
     Caption = #1044#1072#1090#1072
   end
   object Код: TcxLabel [3]
     Left = 8
-    Top = 11
+    Top = 14
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object ceInvNumber: TcxCurrencyEdit [4]
-    Left = 9
-    Top = 34
-    Enabled = False
+    Left = 8
+    Top = 33
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 2
     Width = 129
   end
@@ -49,8 +49,8 @@
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object cxLabel4: TcxLabel [6]
-    Left = 296
-    Top = 114
+    Left = 295
+    Top = 112
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel5: TcxLabel [7]
@@ -59,7 +59,7 @@
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object cePaidKind: TcxButtonEdit [8]
-    Left = 9
+    Left = 8
     Top = 228
     Properties.Buttons = <
       item
@@ -72,7 +72,7 @@
   end
   object ceUnit: TcxButtonEdit [9]
     Left = 295
-    Top = 132
+    Top = 131
     Properties.Buttons = <
       item
         Default = True
@@ -96,7 +96,7 @@
   end
   object ceOperDate: TcxDateEdit [11]
     Left = 152
-    Top = 34
+    Top = 33
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 3
@@ -104,15 +104,15 @@
   end
   object ceAmountDebet: TcxCurrencyEdit [12]
     Left = 295
-    Top = 34
+    Top = 33
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 7
-    Width = 142
+    Width = 141
   end
   object cxLabel7: TcxLabel [13]
-    Left = 293
-    Top = 11
+    Left = 295
+    Top = 14
     Caption = #1044#1077#1073#1077#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1086#1082#1072#1079#1072#1083#1080')'
   end
   object ceJuridical: TcxButtonEdit [14]
@@ -128,8 +128,8 @@
     Width = 304
   end
   object cxLabel6: TcxLabel [15]
-    Left = 296
-    Top = 156
+    Left = 295
+    Top = 158
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceContract: TcxButtonEdit [16]
@@ -149,8 +149,8 @@
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object cxLabel10: TcxLabel [18]
-    Left = 11
-    Top = 257
+    Left = 8
+    Top = 260
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [19]
@@ -160,44 +160,44 @@
     Width = 591
   end
   object ceAmountKredit: TcxCurrencyEdit [20]
-    Left = 447
-    Top = 34
+    Left = 445
+    Top = 33
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 8
-    Width = 152
+    Width = 154
   end
   object cxLabel3: TcxLabel [21]
-    Left = 447
-    Top = 11
+    Left = 445
+    Top = 14
     Caption = #1050#1088#1077#1076#1080#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1087#1086#1083#1091#1095#1080#1083#1080')'
   end
   object cxLabel9: TcxLabel [22]
-    Left = 10
-    Top = 156
-    Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+    Left = 125
+    Top = 158
+    Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object ceContractConditionKind: TcxButtonEdit [23]
-    Left = 8
+    Left = 125
     Top = 178
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
     TabOrder = 23
-    Width = 272
+    Width = 156
   end
   object cxLabel11: TcxLabel [24]
-    Left = 9
-    Top = 114
-    Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
+    Left = 8
+    Top = 112
+    Caption = #1042#1080#1076' '#1073#1086#1085#1091#1089#1072
   end
   object ceBonusKind: TcxButtonEdit [25]
-    Left = 9
-    Top = 129
+    Left = 8
+    Top = 131
     Properties.Buttons = <
       item
         Default = True
@@ -205,17 +205,17 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 25
-    Width = 272
+    Width = 273
   end
   object cxLabel12: TcxLabel [26]
     Left = 125
     Top = 207
-    Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1091#1089#1083#1086#1074#1080#1103')'
+    Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1091#1089#1083#1086#1074#1080#1077')'
   end
   object cxLabel13: TcxLabel [27]
-    Left = 370
+    Left = 295
     Top = 207
-    Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1073#1072#1079#1072')'
+    Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1073#1072#1079#1072')'
   end
   object ceContractMaster: TcxButtonEdit [28]
     Left = 125
@@ -226,10 +226,10 @@
         Kind = bkEllipsis
       end>
     TabOrder = 28
-    Width = 230
+    Width = 156
   end
   object ceContractChild: TcxButtonEdit [29]
-    Left = 369
+    Left = 295
     Top = 228
     Properties.Buttons = <
       item
@@ -237,7 +237,21 @@
         Kind = bkEllipsis
       end>
     TabOrder = 29
-    Width = 230
+    Width = 304
+  end
+  object ceBonusValue: TcxCurrencyEdit [30]
+    Left = 8
+    Top = 178
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.0###'
+    Properties.ReadOnly = True
+    TabOrder = 30
+    Width = 97
+  end
+  object cxLabel14: TcxLabel [31]
+    Left = 8
+    Top = 158
+    Caption = '% '#1073#1086#1085#1091#1089#1072
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -269,8 +283,8 @@
         Value = '0'
         ParamType = ptInput
       end>
-    Left = 209
-    Top = 182
+    Left = 409
+    Top = 270
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService'
@@ -307,6 +321,13 @@
         Name = 'inAmountOut'
         Value = 0.000000000000000000
         Component = ceAmountKredit
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBonusValue'
+        Value = Null
+        Component = ceBonusValue
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -441,6 +462,12 @@
         Name = 'AmountOut'
         Value = 0.000000000000000000
         Component = ceAmountKredit
+        DataType = ftFloat
+      end
+      item
+        Name = 'BonusValue'
+        Value = Null
+        Component = ceBonusValue
         DataType = ftFloat
       end
       item
@@ -812,9 +839,15 @@
         Component = BonusKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'Value'
+        Value = Null
+        Component = ceBonusValue
+        DataType = ftFloat
       end>
-    Left = 161
-    Top = 126
+    Left = 201
+    Top = 102
   end
   object ContractConditionKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -837,8 +870,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 97
-    Top = 166
+    Left = 225
+    Top = 150
   end
   object ContractMasterGuides: TdsdGuides
     KeyField = 'Id'
@@ -906,7 +939,7 @@
         Component = FormParams
         ComponentItem = 'inPaidKindId'
       end>
-    Left = 271
+    Left = 247
     Top = 220
   end
   object ContractChildGuides: TdsdGuides

@@ -39,6 +39,7 @@ BEGIN
                                                       , inOperDate          := inEndDate
                                                       , inAmountIn          := 0  :: tfloat
                                                       , inAmountOut         := Sum_Bonus
+                                                      , inBonusValue        := Value
                                                       , inComment           := '' :: TVarChar
                                                       , inContractId        := ContractId_find
                                                       , inContractMasterId  := ContractId_master
@@ -49,7 +50,7 @@ BEGIN
                                                       , inUnitId            := 0 :: Integer
                                                       , inContractConditionKindId   := ConditionKindId
                                                       , inBonusKindId       := BonusKindId
-                                                      , inisLoad            := TRUE
+                                                      , inIsLoad            := TRUE
                                                       , inUserId            := vbUserId
                                                        )
      FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inSession:= inSession) AS tmp

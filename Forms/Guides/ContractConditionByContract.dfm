@@ -1,9 +1,9 @@
 object ContractConditionByContractForm: TContractConditionByContractForm
   Left = 0
   Top = 0
-  Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
   ClientHeight = 380
-  ClientWidth = 599
+  ClientWidth = 644
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object ContractConditionByContractForm: TContractConditionByContractForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 599
+    Width = 644
     Height = 354
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 599
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -119,8 +120,8 @@ object ContractConditionByContractForm: TContractConditionByContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -154,6 +155,10 @@ object ContractConditionByContractForm: TContractConditionByContractForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -163,6 +168,10 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -191,6 +200,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -203,28 +213,40 @@ object ContractConditionByContractForm: TContractConditionByContractForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractConditionKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
         end
         item
           Name = 'BonusKindId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'BonusKindId'
         end
         item
           Name = 'BonusKindName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'BonusKindName'
           DataType = ftString
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Value'
+          DataType = ftFloat
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -245,6 +267,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         ComponentItem = 'inContractId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 144
     Top = 120
   end
@@ -268,6 +291,8 @@ object ContractConditionByContractForm: TContractConditionByContractForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 120
     Top = 200
   end

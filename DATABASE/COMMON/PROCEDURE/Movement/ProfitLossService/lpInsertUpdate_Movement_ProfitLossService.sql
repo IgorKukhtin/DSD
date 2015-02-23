@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_Movement_ProfitLossService()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, tdatetime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, tdatetime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
     IN inOperDate                 TDateTime , -- Дата документа
     IN inAmountIn                 TFloat    , -- Сумма операции
     IN inAmountOut                TFloat    , -- Сумма операции
+    IN inBonusValue               TFloat    , -- % бонуса
     IN inComment                  TVarChar  , -- Комментарий
     IN inContractId               Integer   , -- Договор
     IN inContractMasterId         Integer   , -- Договор(условия)
@@ -69,6 +71,8 @@ BEGIN
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inJuridicalId, ioId, vbAmount, NULL);
 
+     -- % бонуса 
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BonusValue(), vbMovementItemId, inBonusValue);
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
@@ -100,6 +104,15 @@ BEGIN
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
+
+     -- !!!распределяются затраты!!!
+     IF vbIsInsert = TRUE OR NOT EXISTS (SELECT MovementId FROM MovementItem WHERE MovementId = ioId AND DescId = zc_MI_Child() AND isErased = FALSE)
+     THEN
+         PERFORM lpInsertUpdate_MI_ProfitLossService_AmountPartner (inMovementId:= ioId
+                                                                  , inAmount    := -1 * vbAmount
+                                                                  , inUserId    := inUserId
+                                                                   );
+     END IF;
 
      -- 5.3. проводим Документ
      PERFORM lpComplete_Movement_Service (inMovementId := ioId

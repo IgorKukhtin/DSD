@@ -17,8 +17,10 @@ RETURNS TABLE (ContractId_master Integer, ContractId_child Integer, ContractId_f
              , BonusKindId Integer, BonusKindName TVarChar
              , Value TFloat
              , Sum_CheckBonus TFloat
+             , Sum_CheckBonusFact TFloat
              , Sum_Bonus TFloat
              , Sum_BonusFact TFloat
+             , Sum_SaleFact TFloat
               )  
 AS
 $BODY$
@@ -168,7 +170,7 @@ BEGIN
                           
       -- список ContractId по которым будет расчет "базы"
     , tmpContainer AS (SELECT Container.Id AS ContainerId
-                            , tmpContractGroup.JuridicalId 
+                            , tmpContractGroup.JuridicalId
                             , tmpContractGroup.ContractId_child
                             , tmpContractGroup.InfoMoneyId_child
                             , tmpContractGroup.PaidKindId
@@ -214,7 +216,7 @@ BEGIN
                                                              AND MIContainer.DescId = zc_MIContainer_Summ()
                                                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                    JOIN Movement ON Movement.Id = MIContainer.MovementId
-                                                AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt()) 
+                                                AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
                               GROUP BY tmpContainer.JuridicalId
                                      , tmpContainer.ContractId_child
                                      , tmpContainer.InfoMoneyId_child
@@ -258,9 +260,11 @@ BEGIN
 
             , CAST (tmpAll.Value AS TFloat)                 AS Value
 
-            , CAST ( (tmpAll.Sum_CheckBonus) AS TFloat)     AS Sum_CheckBonus
-            , CAST ( (tmpAll.Sum_Bonus) AS TFloat)          AS Sum_Bonus
-            , CAST ( (tmpAll.Sum_BonusFact)*(-1) AS TFloat) AS Sum_BonusFact
+            , CAST (/*SUM*/ (tmpAll.Sum_CheckBonus) AS TFloat)     AS Sum_CheckBonus
+            , CAST (/*SUM*/ (tmpAll.Sum_CheckBonusFact) AS TFloat) AS Sum_CheckBonusFact
+            , CAST (/*SUM*/ (tmpAll.Sum_Bonus) AS TFloat)          AS Sum_Bonus
+            , CAST (/*SUM*/ (tmpAll.Sum_BonusFact)*(-1) AS TFloat) AS Sum_BonusFact
+            , CAST (/*SUM*/ (tmpAll.Sum_SaleFact)       AS TFloat) AS Sum_SaleFact
       FROM  
           (SELECT tmpContract.InvNumber_master
                 , tmpContract.InvNumber_child
@@ -305,6 +309,8 @@ BEGIN
                              WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
                         ELSE 0 END  AS TFloat) AS Sum_Bonus
                 , 0 :: TFloat                  AS Sum_BonusFact
+                , 0 :: TFloat                  AS Sum_CheckBonusFact
+                , 0 :: TFloat                  AS Sum_SaleFact
               
            FROM tmpContract
                 INNER JOIN tmpMovement ON tmpMovement.JuridicalId       = tmpContract.JuridicalId
@@ -314,38 +320,58 @@ BEGIN
                 LEFT JOIN tmpContractBonus ON tmpContractBonus.ContractId_master = tmpContract.ContractId_master
 
          UNION ALL 
-           SELECT '' :: TVarChar AS InvNumber_master
-                , '' :: TVarChar AS InvNumber_child
+           SELECT View_Contract_InvNumber_master.InvNumber AS InvNumber_master
+                , View_Contract_InvNumber_child.InvNumber AS InvNumber_child
                 , View_Contract_InvNumber_find.InvNumber AS InvNumber_find
 
-                , '' :: TVarChar                                 AS ContractTagName_child
-                , 0                                              AS ContractStateKindCode_child
+                , View_Contract_InvNumber_child.ContractTagName  AS ContractTagName_child
+                , View_Contract_InvNumber_child.ContractStateKindCode AS ContractStateKindCode_child
 
-                , 0                                              AS ContractId_master  
-                , 0                                              AS ContractId_child            
+                , MILinkObject_ContractMaster.ObjectId           AS ContractId_master  
+                , MILinkObject_ContractChild.ObjectId            AS ContractId_child            
                 , MILinkObject_Contract.ObjectId                 AS ContractId_find
 
-                , 0                                              AS InfoMoneyId_master  
-                , 0                                              AS InfoMoneyId_child            
+                , View_Contract_InvNumber_master.InfoMoneyId     AS InfoMoneyId_master
+                , View_Contract_InvNumber_child.InfoMoneyId      AS InfoMoneyId_child
                 , MILinkObject_InfoMoney.ObjectId                AS InfoMoneyId_find
 
                 , MovementItem.ObjectId                          AS JuridicalId
                 , MILinkObject_PaidKind.ObjectId                 AS PaidKindId
                 , MILinkObject_ContractConditionKind.ObjectId    AS ContractConditionKindId
                 , MILinkObject_BonusKind.ObjectId                AS BonusKindId
-                , 0                                              AS Value
+                , MIFloat_BonusValue.ValueData                   AS Value
 
                 , 0 :: TFloat                                    AS Sum_CheckBonus
                 , 0 :: TFloat                                    AS Sum_Bonus
                 , MovementItem.Amount                            AS Sum_BonusFact
+                , MIFloat_Summ.ValueData                         AS Sum_CheckBonusFact
+                , MIFloat_AmountPartner.ValueData                AS Sum_SaleFact
            FROM Movement 
                 LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
+                                            ON MIFloat_BonusValue.MovementItemId = MovementItem.Id
+                                           AND MIFloat_BonusValue.DescId = zc_MIFloat_BonusValue()
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                            ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                  ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                  ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractMaster
+                                                 ON MILinkObject_ContractMaster.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_ContractMaster.DescId = zc_MILinkObject_ContractMaster()
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
+                                                 ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
+
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                                  ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
@@ -355,7 +381,10 @@ BEGIN
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_BonusKind
                                                  ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
+
                 LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_find ON View_Contract_InvNumber_find.ContractId = MILinkObject_Contract.ObjectId
+                LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_master ON View_Contract_InvNumber_master.ContractId = MILinkObject_ContractMaster.ObjectId
+                LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_child ON View_Contract_InvNumber_child.ContractId = MILinkObject_ContractChild.ObjectId
            
            WHERE Movement.DescId = zc_Movement_ProfitLossService()
              AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -377,19 +406,36 @@ BEGIN
       WHERE tmpAll.Sum_CheckBonus > 0
          OR tmpAll.Sum_Bonus > 0
          OR tmpAll.Sum_BonusFact <> 0
-      /*GROUP BY  View_Contract_InvNumber.ContractId                    
-              , View_Contract_InvNumber.InvNumber   
-              , View_Contract_2.InvNumber           
-              , tmpAll.JuridicalId                        
-              , Object_Juridical.ValueData                     
-              , tmpAll.ContractConditionKindId                
-              , Object_ContractConditionKind.ValueData      
-              , tmpAll.BonusKindId                           
-              , Object_BonusKind.ValueData                    
-              , Object_InfoMoney_View.InfoMoneyId                
-              , Object_InfoMoney_View.InfoMoneyName          
+      /*GROUP BY  tmpAll.ContractId_master
+              , tmpAll.ContractId_child
+              , tmpAll.ContractId_find
+              , tmpAll.InvNumber_master
+              , tmpAll.InvNumber_child
+              , tmpAll.InvNumber_find
+
+              , tmpAll.ContractTagName_child
+              , tmpAll.ContractStateKindCode_child
+
+              , Object_InfoMoney_master.Id
+              , Object_InfoMoney_find.Id
+
+              , Object_InfoMoney_master.ValueData
+              , Object_InfoMoney_child.ValueData
+              , Object_InfoMoney_find.ValueData
+
+              , Object_Juridical.Id
+              , Object_Juridical.ValueData
+
+              , Object_PaidKind.Id
               , Object_PaidKind.ValueData
-              , tmpAll.value*/
+
+              , Object_ContractConditionKind.Id
+              , Object_ContractConditionKind.ValueData
+
+              , Object_BonusKind.Id
+              , Object_BonusKind.ValueData
+
+              , tmpAll.Value*/
     ;
 
 END;
