@@ -59,6 +59,9 @@ type
     StartAmountK: TcxGridDBColumn;
     EndAmountD: TcxGridDBColumn;
     EndAmountK: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
+    colGroupName: TcxGridDBColumn;
+    GroupId: TcxGridDBColumn;
   private
     { Private declarations }
   public

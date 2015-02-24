@@ -20,9 +20,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 82
+    Top = 80
     Width = 1329
-    Height = 588
+    Height = 590
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -1951,8 +1951,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1970,7 +1970,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -2071,10 +2071,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Category = 0
       Hint = '   '
       Visible = ivAlways
-    end
-    object bbPrintBy_Goods_Partion_Grid: TdxBarButton
-      Action = actPrintBy_Goods_Partion_Grid
-      Category = 0
     end
   end
   object ActionList: TActionList
@@ -2480,54 +2476,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           DataType = ftString
         end>
       isShowModal = False
-    end
-    object actPrintBy_Goods_Partion_Grid: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1086' '#1087#1072#1088#1090#1080#1103#1084', '#1080#1079' '#1075#1088#1080#1076#1072')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1086' '#1087#1072#1088#1090#1080#1103#1084', '#1080#1079' '#1075#1088#1080#1076#1072')'
-      ImageIndex = 16
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-        end
-        item
-          Name = 'ReportType'
-          Value = '1'
-          ParamType = ptInput
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          Component = UnitGroupGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ReportNameParam.DataType = ftString
     end
   end
   object dsdStoredProc: TdsdStoredProc

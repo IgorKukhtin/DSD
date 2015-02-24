@@ -352,8 +352,8 @@ BEGIN
                                                                                                           ELSE zc_ContainerLinkObject_BankAccount()
                                                                                                      END
                                                                             , inObjectId_1        := _tmpItem.ObjectId
-                                                                            , inDescId_2          := CASE WHEN COALESCE (_tmpItem.CurrencyId, 0) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
-                                                                            , inObjectId_2        := CASE WHEN COALESCE (_tmpItem.CurrencyId, 0) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
+                                                                            , inDescId_2          := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
+                                                                            , inObjectId_2        := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
                                                                              )
                                             WHEN _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
