@@ -3,28 +3,28 @@ inherited Report_CashUserForm: TReport_CashUserForm
   ClientHeight = 555
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 590
+  ExplicitWidth = 1028
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
+    Top = 85
     Width = 1020
-    Height = 472
+    Height = 470
     TabOrder = 3
-    ExplicitTop = 83
+    ExplicitTop = 85
     ExplicitWidth = 1020
-    ExplicitHeight = 472
-    ClientRectBottom = 472
-    ClientRectRight = 1020
+    ExplicitHeight = 470
+    ClientRectBottom = 466
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 472
+      ExplicitWidth = 1014
+      ExplicitHeight = 464
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 472
-        ExplicitWidth = 1020
-        ExplicitHeight = 472
+        Width = 1014
+        Height = 464
+        ExplicitWidth = 1014
+        ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -472,9 +472,9 @@ inherited Report_CashUserForm: TReport_CashUserForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'cashname;InfoMoneyName'
+          IndexFieldNames = 'cashname;GroupId;InfoMoneyName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -1740,7 +1740,6 @@ inherited Report_CashUserForm: TReport_CashUserForm
     Top = 184
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Cash'
     Params = <
       item
         Name = 'inStartDate'
@@ -1791,7 +1790,7 @@ inherited Report_CashUserForm: TReport_CashUserForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
