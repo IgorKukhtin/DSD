@@ -46,6 +46,8 @@ type
     actInsert: TdsdInsertUpdateAction;
     colGLNCode: TcxGridDBColumn;
     clGoodsPropertyName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

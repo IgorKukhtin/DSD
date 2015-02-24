@@ -63,6 +63,8 @@ type
     clFuelMasterName: TcxGridDBColumn;
     clFuelChildName: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

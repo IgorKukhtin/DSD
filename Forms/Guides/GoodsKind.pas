@@ -55,6 +55,8 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoiceGuide: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

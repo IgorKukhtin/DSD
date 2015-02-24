@@ -20,6 +20,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
+     IF ioSummRemains <> 0
+     THEN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
      
@@ -30,13 +32,14 @@ BEGIN
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inPersonalId, inMovementId, ioAmount, NULL);
  
      -- рассчет осталось к выплате
-     ioSummRemains := 0 :: TFLOAT;
+     --ioSummRemains := 0 :: TFLOAT;
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
       -- сохранили протокол
       PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+      END IF;
 
 END;
 $BODY$

@@ -59,6 +59,8 @@ type
     clRouteKind: TcxGridDBColumn;
     clFreight: TcxGridDBColumn;
     clBranchName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
 
   private
     { Private declarations }

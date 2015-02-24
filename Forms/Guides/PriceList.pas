@@ -60,6 +60,7 @@ type
     CurrencyName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    ProtocolOpenForm: TdsdOpenForm;
   private
     { Private declarations }
   public
