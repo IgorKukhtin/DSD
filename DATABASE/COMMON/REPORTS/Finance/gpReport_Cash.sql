@@ -91,7 +91,7 @@ BEGIN
                   0                         AS DebetSumm,
                   0                         AS KreditSumm,
                   Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS EndAmount,
-                  '' AS Comment
+                  '' AS Comment,
                   NULL :: Boolean           AS isActive
 
            FROM ContainerLinkObject AS CLO_Cash
@@ -118,7 +118,7 @@ BEGIN
                   SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm,
                   SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm,
                   0                                 AS EndAmount,
-                  COALESCE (MIString_Comment.ValueData, '') AS Comment
+                  COALESCE (MIString_Comment.ValueData, '') AS Comment,
                   MIContainer.isActive
 
            FROM ContainerLinkObject AS CLO_Cash
