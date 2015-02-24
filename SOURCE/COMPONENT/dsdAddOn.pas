@@ -10,6 +10,7 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
 
 const
   WM_SETFLAG = WM_USER + 2;
+  WM_SETFLAGHeaderSaver = WM_USER + 3;
 
 type
   // 1. Обработка признака isErased
@@ -324,6 +325,9 @@ type
   // Вызывает процедуру сохранения для СОХРАНЕННОГО документа в случае изменения значений
   THeaderSaver = class(TComponent)
   private
+    { field to store the window handle }
+    FHWnd: HWND;
+    FNotSave: boolean;
     FControlList: TControlList;
     FStoredProc: TdsdStoredProc;
     FEnterValue: TStringList;
@@ -334,6 +338,7 @@ type
     procedure OnExit(Sender: TObject);
     // процедура вызывается после открытия формы и заполняет FEnterValue начальными параметрами
     procedure OnAfterShow(Sender: TObject);
+    procedure WndMethod(var Msg: TMessage);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -1194,6 +1199,8 @@ end;
 constructor THeaderSaver.Create(AOwner: TComponent);
 begin
   inherited;
+//  FHWnd := AllocateHWnd(WndMethod);
+  FNotSave := false;
   FParam := TdsdParam.Create(nil);
   FControlList := TControlList.Create(Self, TControlListItem);
   FEnterValue := TStringList.Create;
@@ -1208,6 +1215,7 @@ begin
   FParam.Free;
   FControlList.Free;
   FEnterValue.Free;
+  DeallocateHWnd(FHWnd);
   if Self.Owner is TParentForm then
      TParentForm(Owner).onAfterShow := FOnAfterShow;
   inherited;
@@ -1265,6 +1273,8 @@ procedure THeaderSaver.OnExit(Sender: TObject);
 var isChanged: boolean;
 begin
   isChanged := false;
+  if FNotSave then
+     exit;
   if not Assigned(IdParam) then
      raise Exception.Create('Не установлено свойство IdParam');
   if (IdParam.Value = 0) or VarIsNull(IdParam.Value) then
@@ -1290,6 +1300,30 @@ begin
        GetStoredProc.Execute;
     raise;
   end;
+  FNotSave := true;
+  PostMessage(FHWnd, WM_SETFLAGHeaderSaver, 0, 0);
+end;
+
+procedure THeaderSaver.WndMethod(var Msg: TMessage);
+var
+  Handled: Boolean;
+begin
+  // Assume we handle message
+  Handled := True;
+  case Msg.Msg of
+    WM_SETFLAGHeaderSaver: FNotSave := false;
+    else
+      // We didn't handle message
+      Handled := False;
+  end;
+  if Handled then
+    // We handled message - record in message result
+    Msg.Result := 0
+  else
+    // We didn't handle message
+    // pass to DefWindowProc and record result
+    Msg.Result := DefWindowProc(fHWnd, Msg.Msg,
+      Msg.WParam, Msg.LParam);
 end;
 
 { TControlList }
