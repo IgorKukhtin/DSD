@@ -98,7 +98,7 @@ BEGIN
                                    , CASE WHEN MILinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
                                            AND View_Constant_isCorporate.InfoMoneyId IS NULL
                                            AND COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = FALSE
-                                               THEN COALESCE (MILinkObject_Branch.ObjectId, 0)
+                                               THEN COALESCE (MILinkObject_Branch.ObjectId, 0) -- !!! zc_Branch_Basis
                                           ELSE 0
                                      END AS BranchId
                                    , COALESCE (MILinkObject_Contract.ObjectId, 0)  AS ContractId

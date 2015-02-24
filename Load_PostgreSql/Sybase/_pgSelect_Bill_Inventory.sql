@@ -47,7 +47,7 @@ begin
           left outer join dba._pgPersonal on _pgPersonal.Id = Unit.PersonalId_Postgres -- and Unit.ParentId = 4137 -- MO
           -- left outer join dba.Unit AS Unit_find on Unit_find.pgUnitId = _pgUnit.Id or Unit_find.PersonalId_Postgres = _pgPersonal.Id
      where (isUnit.UnitId is not null
-            or (@inEndDate < '2014-06-01' and (Unit.ParentId = 4137 or Unit.ParentId = 8217)) -- MO + ¿¬“ŒÃŒ¡»À»
+            or (/*@inEndDate < '2014-06-01' and */(Unit.ParentId = 4137 or Unit.ParentId = 8217)) -- MO + ¿¬“ŒÃŒ¡»À»
            )
        -- and Unit.Id <> 2791 -- —ÍÎ‡‰ ”“»À‹
        and Unit.Id <> 2324 -- —ÍÎ‡‰ —/ 

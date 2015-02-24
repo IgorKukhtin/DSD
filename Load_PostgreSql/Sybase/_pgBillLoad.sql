@@ -7,8 +7,8 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
-      select '209119' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '211336' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+      select '215110' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+union select '215037' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 
 union select '201775' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '199470' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
