@@ -13,7 +13,7 @@ BEGIN
      -- проверка - inValueData
      IF inValueData IS NULL
      THEN
-         RAISE EXCEPTION 'Ошибка-1.Не определено числовое значение.';
+         RAISE EXCEPTION 'Ошибка-1.Не определено числовое значение Id=<%> ParentId=<%> MovementId=<%> InvNumber=<%>.', inMovementItemId, (SELECT ParentId FROM MovementItem WHERE Id = inMovementItemId), (SELECT MovementId FROM MovementItem WHERE Id = inMovementItemId), (SELECT InvNumber FROM Movement WHERE Id = (SELECT MovementId FROM MovementItem WHERE Id = inMovementItemId);
      END IF;
 
      --

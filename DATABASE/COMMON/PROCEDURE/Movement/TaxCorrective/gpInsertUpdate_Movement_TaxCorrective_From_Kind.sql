@@ -192,7 +192,7 @@ BEGIN
              , tmpMovement_Corrective_Count AS (SELECT COUNT(*) AS myCOUNT FROM tmpMovement_Corrective)
           INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice, CountForPrice)
              SELECT COALESCE (tmpMovement_Corrective.MovementId_Corrective, 0)
-                  , COALESCE (tmpMovement_Corrective.MovementId_Corrective, 0)
+                  , COALESCE (tmpMovement_Corrective.MovementId_Tax, 0)
                   , GoodsId, GoodsKindId, Amount, OperPrice, CountForPrice
              FROM _tmpMI_Return
                   LEFT JOIN tmpMovement_Corrective_Count ON tmpMovement_Corrective_Count.myCOUNT = 1

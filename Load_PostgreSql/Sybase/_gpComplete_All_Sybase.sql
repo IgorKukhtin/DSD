@@ -119,7 +119,17 @@ BEGIN
                                                            , inIsLastComplete := NULL
                                                            , inSession        := zfCalc_UserAdmin());
      ELSE
+     -- !!!10. - Cash!!!
+     IF vbMovementDescId = zc_Movement_Cash()
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             -- PERFORM lpComplete_Movement_Finance_CreateTemp();
+             -- !!! проводим - Cash !!!
+             PERFORM gpComplete_Movement_Cash (inMovementId     := inMovementId
+                                             , inSession        := zfCalc_UserAdmin());
+     ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
      END IF;
      END IF;
      END IF;

@@ -1737,6 +1737,11 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 200
       end
+      object LineNum: TcxGridDBColumn
+        DataBinding.FieldName = 'LineNum'
+        Visible = False
+        Width = 60
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -2013,10 +2018,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintBy_Goods_Partion_Grid'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2070,10 +2071,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Category = 0
       Hint = '   '
       Visible = ivAlways
-    end
-    object bbPrintBy_Goods_Partion_Grid: TdxBarButton
-      Action = actPrintBy_Goods_Partion_Grid
-      Category = 0
     end
   end
   object ActionList: TActionList
@@ -2172,6 +2169,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Value = ''
           Component = GoodsGroupGuides
           ComponentItem = 'Key'
+          ParamType = ptInput
         end
         item
           Name = 'GoodsGroupName'
@@ -2179,12 +2177,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
         end
         item
           Name = 'UnitGroupId'
           Value = ''
           Component = UnitGroupGuides
           ComponentItem = 'Key'
+          ParamType = ptInput
         end
         item
           Name = 'UnitGroupName'
@@ -2192,12 +2192,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Component = UnitGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
         end
         item
           Name = 'UnitId'
           Value = ''
           Component = LocationGuides
           ComponentItem = 'Key'
+          ParamType = ptInput
         end
         item
           Name = 'UnitName'
@@ -2205,6 +2207,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Component = LocationGuides
           ComponentItem = 'Key'
           DataType = ftString
+          ParamType = ptInput
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -2218,12 +2221,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       ImageIndex = 19
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
             'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
             'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
             'l'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -2266,12 +2269,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       ImageIndex = 16
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
             'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
             'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
             'l'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -2315,12 +2318,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
             'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
             'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
             'l'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -2473,54 +2476,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           DataType = ftString
         end>
       isShowModal = False
-    end
-    object actPrintBy_Goods_Partion_Grid: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1086' '#1087#1072#1088#1090#1080#1103#1084', '#1080#1079' '#1075#1088#1080#1076#1072')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1086' '#1087#1072#1088#1090#1080#1103#1084', '#1080#1079' '#1075#1088#1080#1076#1072')'
-      ImageIndex = 16
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-        end
-        item
-          Name = 'ReportType'
-          Value = '1'
-          ParamType = ptInput
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          Component = UnitGroupGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ReportNameParam.DataType = ftString
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -2729,6 +2684,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 27
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ShowDialogAction = ExecuteDialog
     ComponentList = <

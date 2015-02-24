@@ -43,6 +43,8 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

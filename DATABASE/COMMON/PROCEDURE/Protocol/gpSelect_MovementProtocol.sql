@@ -21,7 +21,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
-  IF inMovementId <> 0 
+  IF inMovementId <> 0 AND EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_ProfitLossService(), zc_Movement_Service()))
   THEN
   RETURN QUERY 
   SELECT 
@@ -36,7 +36,38 @@ BEGIN
   JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
   JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
   JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
- ;
+ UNION ALL
+  SELECT 
+     MovementItemProtocol.OperDate,
+     MovementItemProtocol.ProtocolData::Text,
+     Object_User.ValueData,
+     Movement.InvNumber, 
+     Movement.OperDate, 
+     MovementItemDesc.ItemName AS MovementDescName,
+     MovementItemProtocol.isInsert
+  FROM MovementItemProtocol
+  JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+  JOIN MovementItem ON MovementItem.Id = MovementItemProtocol.MovementItemId AND MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+  JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
+  JOIN Movement ON Movement.Id = MovementItem.MovementId;
+
+  ELSE
+
+  IF inMovementId <> 0 
+  THEN
+  RETURN QUERY 
+  SELECT 
+     MovementProtocol.OperDate,
+     MovementProtocol.ProtocolData::Text,
+     Object_User.ValueData,
+     Movement.InvNumber, 
+     Movement.OperDate, 
+     MovementDesc.ItemName AS MovementDescName,
+     MovementProtocol.isInsert
+  FROM MovementProtocol 
+  JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
+  JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
+  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
 
   ELSE
 
@@ -56,6 +87,7 @@ BEGIN
   JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
  WHERE MovementProtocol.OperDate BETWEEN inStartDate AND inEndDate;
 
+  END IF;
   END IF;
 
 --inUserId        Integer,    -- пользователь  

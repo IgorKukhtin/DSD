@@ -70,6 +70,8 @@ type
     clInfoMoneyName_all: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
     actChoiceInfoMoneyForm: TOpenChoiceForm;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
+    IN inShowAll     Boolean,   
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -30,6 +32,8 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
+       WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
             , Object_Goods.ValueData      AS Name
@@ -69,7 +73,11 @@ BEGIN
                   JOIN Object AS Object_Goods ON Object_Goods.AccessKeyId = tmpRoleAccessKey.AccessKeyId AND Object_Goods.DescId = zc_Object_Goods()
              WHERE vbAccessKeyRight = TRUE
             UNION ALL*/
-             SELECT Object_Goods.* FROM Object AS Object_Goods WHERE Object_Goods.DescId = zc_Object_Goods() -- AND vbAccessKeyRight = FALSE
+             SELECT Object_Goods.* 
+             FROM Object AS Object_Goods 
+	         INNER JOIN tmpIsErased on tmpIsErased.isErased= Object_Goods.isErased
+             WHERE Object_Goods.DescId = zc_Object_Goods()
+             -- AND vbAccessKeyRight = FALSE
             ) AS Object_Goods
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -137,13 +145,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.02.15         * add inShowAll 
  24.11.14         * add GoodsGroupAnalyst
  13.09.14                                        * add zc_ObjectLink_Goods_GoodsTag()
  04.09.14         * add zc_ObjectLink_Goods_GoodsGroupStat()

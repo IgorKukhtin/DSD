@@ -2,6 +2,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1099#1087#1083#1072#1090#1072' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 623
   ClientWidth = 1104
+  ExplicitLeft = -114
   ExplicitWidth = 1112
   ExplicitHeight = 657
   PixelsPerInch = 96
@@ -51,6 +52,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.####'
               Kind = skSum
               Column = colSummCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummRemains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -79,6 +85,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.####'
               Kind = skSum
               Column = colSummCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummRemains
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -217,6 +228,9 @@ inherited Cash_PersonalForm: TCash_PersonalForm
           object colSummRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'SummRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -455,6 +469,17 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       Caption = 'actUpdateAmountParam'
       ImageIndex = 47
     end
+    object MultiAction1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmountParam
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1085#1086#1089' '#1074#1099#1087#1083#1072#1090
+      ImageIndex = 50
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -558,6 +583,10 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         end
         item
           Visible = True
+          ItemName = 'bbMultiAction1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -610,6 +639,10 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     end
     object bbUpdateAmountParam: TdxBarButton
       Action = actUpdateAmountParam
+      Category = 0
+    end
+    object bbMultiAction1: TdxBarButton
+      Action = MultiAction1
       Category = 0
     end
   end

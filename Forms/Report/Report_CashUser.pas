@@ -24,7 +24,6 @@ type
     StartAmount: TcxGridDBColumn;
     EndAmount: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
-    dsdPrintAction: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colInfoMoneyCode: TcxGridDBColumn;
     DebetSumm: TcxGridDBColumn;
@@ -42,8 +41,6 @@ type
     SaleRealJournal: TdsdOpenForm;
     ReturnInRealJournal: TdsdOpenForm;
     TransferDebtJournal: TdsdOpenForm;
-    dsdPrintRealAction: TdsdPrintAction;
-    bbPrintReal: TdxBarButton;
     MoneyPlaceName: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     ceCash: TcxButtonEdit;
@@ -59,6 +56,13 @@ type
     StartAmountK: TcxGridDBColumn;
     EndAmountD: TcxGridDBColumn;
     EndAmountK: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
+    colGroupName: TcxGridDBColumn;
+    GroupId: TcxGridDBColumn;
+    actPrint_byElements: TdsdPrintAction;
+    actPrint_byElements_byComments: TdsdPrintAction;
+    bbPrint_byElements: TdxBarButton;
+    bbPrint_byElements_byComments: TdxBarButton;
   private
     { Private declarations }
   public

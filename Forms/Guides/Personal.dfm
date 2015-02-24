@@ -231,8 +231,8 @@ object PersonalForm: TPersonalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -344,6 +344,10 @@ object PersonalForm: TPersonalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end>
       OneOnRow = True
       Row = 0
@@ -425,6 +429,10 @@ object PersonalForm: TPersonalForm
       Visible = ivAlways
       Control = deEnd
     end
+    object bb: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -486,6 +494,7 @@ object PersonalForm: TPersonalForm
         end
         item
           Name = 'MaskId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -507,6 +516,7 @@ object PersonalForm: TPersonalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -548,56 +558,92 @@ object PersonalForm: TPersonalForm
       isSetErased = False
       DataSource = DataSource
     end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberCode'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberName'
           DataType = ftString
         end
         item
           Name = 'PositionId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionId'
         end
         item
           Name = 'PositionName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionName'
           DataType = ftString
         end
         item
           Name = 'UnitId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
         end
         item
           Name = 'UnitName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName_all'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
@@ -666,11 +712,13 @@ object PersonalForm: TPersonalForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
@@ -687,11 +735,13 @@ object PersonalForm: TPersonalForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionName'
           DataType = ftString
@@ -746,6 +796,7 @@ object PersonalForm: TPersonalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 48
     Top = 216
   end
@@ -760,10 +811,12 @@ object PersonalForm: TPersonalForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 288
     Top = 208
   end
@@ -817,17 +870,20 @@ object PersonalForm: TPersonalForm
     Params = <
       item
         Name = 'ioId '
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'ioIsMain'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'isMain'
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>
+    PackSize = 1
     Left = 232
     Top = 379
   end
@@ -838,29 +894,34 @@ object PersonalForm: TPersonalForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inPositionId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PositionId'
         ParamType = ptInput
       end
       item
         Name = 'inUnitId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'UnitId'
         ParamType = ptInput
       end
       item
         Name = 'inIsMain'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'isMain'
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 531
     Top = 310
   end

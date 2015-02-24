@@ -65,7 +65,9 @@ BEGIN
                   AND MovementItem.DescId = zc_MI_Master()
                   AND (COALESCE (MILinkObject_Partner.ObjectId, 0) = COALESCE (inPartnerId, 0) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm()) -- AND inPartnerId <> 0
                   AND (COALESCE (MILinkObject_Branch.ObjectId, 0) = COALESCE (inBranchId, 0) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm()) -- AND inBranchId <> 0
-                  AND MovementItem.Id <> COALESCE (ioId, 0))
+                  AND MovementItem.Id <> COALESCE (ioId, 0)
+                  AND MovementItem.isErased = FALSE
+                )
      THEN
          RAISE EXCEPTION 'Ошибка.В документе уже существует <%>% <%> <%> <%>% <%> <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), CASE WHEN inPartnerId <> 0 THEN ' <' || lfGet_Object_ValueData (inPartnerId) || '>' ELSE '' END, lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId), CASE WHEN inBranchId <> 0 THEN ' <' || lfGet_Object_ValueData (inBranchId) || '>' ELSE '' END, inJuridicalId, inPartnerId, inBranchId;
      END IF;

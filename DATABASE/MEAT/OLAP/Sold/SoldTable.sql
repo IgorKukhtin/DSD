@@ -77,6 +77,7 @@ CREATE TABLE SoldTable
  , SaleReturn_Amount_Weight  TFloat
  , SaleReturn_Amount_Sh      TFloat
 
+ , BonusBasis            TFloat
  , Bonus                 TFloat
  , Plan_Weight           TFloat
  , Plan_Summ             TFloat

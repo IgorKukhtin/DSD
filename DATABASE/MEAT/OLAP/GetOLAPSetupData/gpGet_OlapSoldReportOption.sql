@@ -50,7 +50,9 @@ BEGIN
    UNION SELECT 132, 'data'::TVarChar, 'Сумма скидки (на весе)' :: TVarChar, 'Sale_SummCost_10500'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
 
-   UNION SELECT 133, 'data'::TVarChar, 'Сумма бонус' :: TVarChar, 'Bonus'::TVarChar, ',0.00'::TVarChar, 
+   UNION SELECT 133, 'data'::TVarChar, 'Сумма бонус (прямой)' :: TVarChar, 'BonusBasis'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+   UNION SELECT 134, 'data'::TVarChar, 'Сумма бонус (другой)' :: TVarChar, 'Bonus'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    -- UNION SELECT 132, 'data'::TVarChar, 'Сумма продажа-бонус' :: TVarChar, 'SaleBonus'::TVarChar, ',0.00'::TVarChar, 
    --               ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar

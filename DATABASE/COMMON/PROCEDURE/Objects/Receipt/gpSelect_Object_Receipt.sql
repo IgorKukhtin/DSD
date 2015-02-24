@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Receipt()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Receipt(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
+    IN inShowAll     Boolean, 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
@@ -24,6 +26,8 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Receipt());
 
    RETURN QUERY
+     WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+
      SELECT
            Object_Receipt.Id         AS Id
          , Object_Receipt.ObjectCode AS Code
@@ -71,6 +75,7 @@ BEGIN
          , Object_Receipt.isErased AS isErased
 
      FROM OBJECT AS Object_Receipt
+          INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_Receipt.isErased
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
                               AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
@@ -156,14 +161,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Receipt (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Receipt (Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 14.02.15                                        *all
- 19.07.13         * rename zc_ObjectDate_
- 10.07.13         *
+              Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.02.15        * add 
+ 14.02.15                                      *all
+ 19.07.13        * rename zc_ObjectDate_
+ 10.07.13        *
 */
 
 -- тест

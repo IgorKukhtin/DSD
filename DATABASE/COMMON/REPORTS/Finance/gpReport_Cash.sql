@@ -10,15 +10,17 @@ CREATE OR REPLACE FUNCTION gpReport_Cash(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar
+             , GroupId Integer, GroupName TVarChar
              , BranchName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AccountName TVarChar
              , UnitName TVarChar
-             , MoneyPlaceName TVarChar
+             , MoneyPlaceName TVarChar, ItemName TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -44,6 +46,8 @@ BEGIN
         Operation.ContainerId,
         Object_Cash.ObjectCode                                                                      AS CashCode,
         Object_Cash.ValueData                                                                       AS CashName,
+        CASE WHEN Operation.ContainerId > 0 THEN 1          WHEN Operation.DebetSumm > 0 THEN 2               WHEN Operation.KreditSumm > 0 THEN 3           ELSE -1 END :: Integer AS GroupId,
+        CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.KreditSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
         Object_Branch.ValueData                                                                     AS BranchName,
         Object_InfoMoney_View.InfoMoneyGroupName                                                    AS InfoMoneyGroupName,
         Object_InfoMoney_View.InfoMoneyDestinationName                                              AS InfoMoneyDestinationName,
@@ -53,6 +57,7 @@ BEGIN
         Object_Account_View.AccountName_all                                                         AS AccountName,
         Object_Unit.ValueData                                                                       AS UnitName,
         Object_MoneyPlace.ValueData                                                                 AS MoneyPlaceName,
+        ObjectDesc.ItemName                                                                         AS ItemName,
         Object_Contract_InvNumber_View.ContractCode                                                 AS ContractCode,
         Object_Contract_InvNumber_View.InvNumber                                                    AS ContractInvNumber,
         Object_Contract_InvNumber_View.ContractTagName                                              AS ContractTagName,
@@ -63,12 +68,12 @@ BEGIN
         Operation.KreditSumm::TFloat                                                                AS KreditSumm,
         Operation.EndAmount ::TFloat                                                                AS EndAmount,
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
-        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
-
+        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK,
+        Operation.Comment :: TVarChar                                                               AS Comment
 
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId,
-                 Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId,
+                 Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment,
                      SUM (Operation_all.StartAmount) AS StartAmount,
                      SUM (Operation_all.DebetSumm)   AS DebetSumm,
                      SUM (Operation_all.KreditSumm)  AS KreditSumm,
@@ -85,7 +90,9 @@ BEGIN
                   Container.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                             AS StartAmount,
                   0                         AS DebetSumm,
                   0                         AS KreditSumm,
-                  Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS EndAmount
+                  Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS EndAmount,
+                  '' AS Comment,
+                  NULL :: Boolean           AS isActive
 
            FROM ContainerLinkObject AS CLO_Cash
                   INNER JOIN Container ON Container.Id = CLO_Cash.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -100,7 +107,7 @@ BEGIN
 
            UNION ALL
            -- движение
-           SELECT CLO_Cash.ContainerId              AS ContainerId,
+           SELECT 0                                 AS ContainerId,
                   Container.ObjectId                AS ObjectId,
                   CLO_Cash.ObjectId                 AS CashId,
                   MILO_InfoMoney.ObjectId           AS InfoMoneyId,
@@ -110,7 +117,9 @@ BEGIN
                   0                                 AS StartAmount,
                   SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm,
                   SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm,
-                  0                                 AS EndAmount
+                  0                                 AS EndAmount,
+                  COALESCE (MIString_Comment.ValueData, '') AS Comment,
+                  MIContainer.isActive
 
            FROM ContainerLinkObject AS CLO_Cash
                   INNER JOIN Container ON Container.Id = CLO_Cash.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -118,6 +127,9 @@ BEGIN
                   LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = Container.Id
                                                                 AND MIContainer.OperDate >= inStartDate
 
+                  LEFT JOIN MovementItemString AS MIString_Comment
+                                               ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
+                                              AND MIString_Comment.DescId = zc_MIString_Comment()
                   LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
                                                    ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
                                                   AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
@@ -136,13 +148,15 @@ BEGIN
              AND (Container.ObjectId = inAccountId OR inAccountId = 0)
              AND (CLO_Cash.ObjectId = inCashId OR inCashId = 0)
            GROUP BY CLO_Cash.ContainerId , Container.ObjectId, CLO_Cash.ObjectId, MILO_InfoMoney.ObjectId,
-                    MILO_Unit.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId
+                    MILO_Unit.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId,
+                    MIString_Comment.ValueData,
+                    MIContainer.isActive
 
            ) AS Operation_all
 
 
 
-          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId
+          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment, Operation_all.isActive
          ) AS Operation
 
 
@@ -151,6 +165,7 @@ BEGIN
      LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Operation.UnitId
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
+     LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
 
      LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
                           ON ObjectLink_Cash_Branch.ObjectId = Operation.CashId

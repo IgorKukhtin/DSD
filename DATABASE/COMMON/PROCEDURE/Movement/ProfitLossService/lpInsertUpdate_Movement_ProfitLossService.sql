@@ -106,7 +106,8 @@ BEGIN
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 
      -- !!!распредел€ютс€ затраты!!!
-     IF vbIsInsert = TRUE OR NOT EXISTS (SELECT MovementId FROM MovementItem WHERE MovementId = ioId AND DescId = zc_MI_Child() AND isErased = FALSE)
+     -- IF vbIsInsert = TRUE OR NOT EXISTS (SELECT MovementId FROM MovementItem WHERE MovementId = ioId AND DescId = zc_MI_Child() AND isErased = FALSE)
+     IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          PERFORM lpInsertUpdate_MI_ProfitLossService_AmountPartner (inMovementId:= ioId
                                                                   , inAmount    := -1 * vbAmount
