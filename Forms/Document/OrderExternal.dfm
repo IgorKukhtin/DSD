@@ -2,9 +2,9 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 668
   ClientWidth = 1228
-  ExplicitLeft = -263
-  ExplicitWidth = 1244
-  ExplicitHeight = 703
+  ExplicitTop = -312
+  ExplicitWidth = 1236
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,17 +12,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1228
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1228
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1228
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1228
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1228
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1228
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -268,7 +268,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1228
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1228
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1419,6 +1419,10 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
