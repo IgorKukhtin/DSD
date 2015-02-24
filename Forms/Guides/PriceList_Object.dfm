@@ -131,8 +131,8 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -299,7 +299,13 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inShowAll'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 248
     Top = 224

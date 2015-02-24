@@ -61,6 +61,7 @@ type
     clProvinceName: TcxGridDBColumn;
     clRegionName: TcxGridDBColumn;
     clCityKindName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
   private
     { Private declarations }
   public

@@ -52,6 +52,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clFuelName: TcxGridDBColumn;
     clBusinessName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

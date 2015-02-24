@@ -71,6 +71,10 @@ type
     clGroupStatName: TcxGridDBColumn;
     clGoodsTagName: TcxGridDBColumn;
     clGoodsGroupAnalystName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

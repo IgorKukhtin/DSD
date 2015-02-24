@@ -63,6 +63,8 @@ type
     spUpdateAmountParam: TdsdStoredProc;
     actUpdateAmountParam: TdsdExecStoredProc;
     bbUpdateAmountParam: TdxBarButton;
+    MultiAction1: TMultiAction;
+    bbMultiAction1: TdxBarButton;
   private
     { Private declarations }
   public

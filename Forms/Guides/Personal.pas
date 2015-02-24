@@ -77,6 +77,8 @@ type
     actUnitChoice: TOpenChoiceForm;
     actInsertMask: TdsdInsertUpdateAction;
     bbCopy: TdxBarButton;
+    ProtocolOpenForm: TdsdOpenForm;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
