@@ -47,7 +47,7 @@ BEGIN
         Object_Cash.ObjectCode                                                                      AS CashCode,
         Object_Cash.ValueData                                                                       AS CashName,
         CASE WHEN Operation.ContainerId > 0 THEN 1 WHEN Operation.DebetSumm > 0 THEN 2 WHEN Operation.DebetSumm > 0 THEN 3 ELSE -1 END :: Integer AS GroupId,
-        CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.DebetSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
+        CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.KreditSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
         Object_Branch.ValueData                                                                     AS BranchName,
         Object_InfoMoney_View.InfoMoneyGroupName                                                    AS InfoMoneyGroupName,
         Object_InfoMoney_View.InfoMoneyDestinationName                                              AS InfoMoneyDestinationName,
@@ -92,6 +92,7 @@ BEGIN
                   0                         AS KreditSumm,
                   Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS EndAmount,
                   '' AS Comment
+                  NULL :: Boolean           AS isActive
 
            FROM ContainerLinkObject AS CLO_Cash
                   INNER JOIN Container ON Container.Id = CLO_Cash.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -118,6 +119,7 @@ BEGIN
                   SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm,
                   0                                 AS EndAmount,
                   COALESCE (MIString_Comment.ValueData, '') AS Comment
+                  MIContainer.isActive
 
            FROM ContainerLinkObject AS CLO_Cash
                   INNER JOIN Container ON Container.Id = CLO_Cash.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -147,13 +149,14 @@ BEGIN
              AND (CLO_Cash.ObjectId = inCashId OR inCashId = 0)
            GROUP BY CLO_Cash.ContainerId , Container.ObjectId, CLO_Cash.ObjectId, MILO_InfoMoney.ObjectId,
                     MILO_Unit.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId,
-                    MIString_Comment.ValueData
+                    MIString_Comment.ValueData,
+                    MIContainer.isActive
 
            ) AS Operation_all
 
 
 
-          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment
+          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment, Operation_all.isActive
          ) AS Operation
 
 
