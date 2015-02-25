@@ -3,30 +3,28 @@ inherited Report_CashForm: TReport_CashForm
   ClientHeight = 555
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1028
-  ExplicitHeight = 589
+  ExplicitWidth = 1036
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 85
+    Top = 83
     Width = 1020
-    Height = 470
+    Height = 472
     TabOrder = 3
-    ExplicitTop = 85
+    ExplicitTop = 83
     ExplicitWidth = 1020
-    ExplicitHeight = 470
-    ClientRectBottom = 466
-    ClientRectRight = 1016
+    ExplicitHeight = 472
+    ClientRectBottom = 472
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1014
-      ExplicitHeight = 464
+      ExplicitWidth = 1020
+      ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 464
-        ExplicitWidth = 1014
-        ExplicitHeight = 464
+        Width = 1020
+        Height = 472
+        ExplicitWidth = 1020
+        ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -473,7 +471,7 @@ inherited Report_CashForm: TReport_CashForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'cashname;GroupId;InfoMoneyName;MoneyPlaceName;Comment'
+          IndexFieldNames = 'cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -532,7 +530,7 @@ inherited Report_CashForm: TReport_CashForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'cashname;GroupId;InfoMoneyName;MoneyPlaceName;Comment'
+          IndexFieldNames = 'cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -591,7 +589,7 @@ inherited Report_CashForm: TReport_CashForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'cashname;GroupId;InfoMoneyName;MoneyPlaceName;Comment'
+          IndexFieldNames = 'cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1793,7 +1791,7 @@ inherited Report_CashForm: TReport_CashForm
     Top = 184
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'cashname;GroupId;InfoMoneyName;MoneyPlaceName;Comment'
+    IndexFieldNames = 'cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
     Top = 184
   end
   inherited spSelect: TdsdStoredProc
@@ -1826,18 +1824,6 @@ inherited Report_CashForm: TReport_CashForm
         Component = CashGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end>
     Left = 112
     Top = 184
@@ -1848,7 +1834,7 @@ inherited Report_CashForm: TReport_CashForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
