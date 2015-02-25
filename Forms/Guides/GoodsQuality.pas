@@ -75,6 +75,8 @@ type
     QualityChoiceForm: TOpenChoiceForm;
     clGoodsCode: TcxGridDBColumn;
     clQualityCode: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

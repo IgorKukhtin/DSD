@@ -216,6 +216,14 @@ object PriceListForm: TPriceListForm
         item
           Visible = True
           ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -259,6 +267,10 @@ object PriceListForm: TPriceListForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end

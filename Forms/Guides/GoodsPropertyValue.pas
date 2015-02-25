@@ -79,6 +79,8 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

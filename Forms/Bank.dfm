@@ -19,14 +19,13 @@ object BankForm: TBankForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 520
-    Height = 348
+    Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 438
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -140,7 +139,7 @@ object BankForm: TBankForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -182,6 +181,14 @@ object BankForm: TBankForm
         item
           Visible = True
           ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
@@ -230,6 +237,10 @@ object BankForm: TBankForm
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end
@@ -309,6 +320,33 @@ object BankForm: TBankForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'

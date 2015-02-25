@@ -9,7 +9,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
-  Vcl.ActnList, dsdAction, ParentForm, DataModul, dsdAddOn, dxBarExtItems;
+  Vcl.ActnList, dsdAction, ParentForm, DataModul, dsdAddOn, dxBarExtItems,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TGoodsPropertyForm = class(TParentForm)
@@ -43,6 +44,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dxBarStatic: TdxBarStatic;
     dsdChoiceGuides: TdsdChoiceGuides;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

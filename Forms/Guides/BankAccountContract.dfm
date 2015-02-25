@@ -165,6 +165,14 @@ object BankAccountContractForm: TBankAccountContractForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end>
       OneOnRow = True
@@ -204,6 +212,10 @@ object BankAccountContractForm: TBankAccountContractForm
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
+      Category = 0
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end
@@ -256,6 +268,7 @@ object BankAccountContractForm: TBankAccountContractForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -306,12 +319,40 @@ object BankAccountContractForm: TBankAccountContractForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
@@ -319,6 +360,7 @@ object BankAccountContractForm: TBankAccountContractForm
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -326,11 +368,13 @@ object BankAccountContractForm: TBankAccountContractForm
         end
         item
           Name = 'CurrencyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyId'
         end
         item
           Name = 'CurrencyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
           DataType = ftString
@@ -348,6 +392,7 @@ object BankAccountContractForm: TBankAccountContractForm
         DataSet = MasterCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 176
     Top = 152
   end
@@ -390,10 +435,12 @@ object BankAccountContractForm: TBankAccountContractForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 136
     Top = 248
   end
