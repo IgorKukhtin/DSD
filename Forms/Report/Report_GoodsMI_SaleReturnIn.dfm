@@ -3,28 +3,30 @@
   ClientHeight = 387
   ClientWidth = 1462
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1478
-  ExplicitHeight = 422
+  ExplicitWidth = 1470
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 82
     Width = 1462
-    Height = 307
+    Height = 305
     TabOrder = 3
-    ExplicitTop = 80
+    ExplicitTop = 82
     ExplicitWidth = 1462
-    ExplicitHeight = 307
-    ClientRectBottom = 307
-    ClientRectRight = 1462
+    ExplicitHeight = 305
+    ClientRectBottom = 301
+    ClientRectRight = 1458
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1462
-      ExplicitHeight = 307
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1456
+      ExplicitHeight = 299
       inherited cxGrid: TcxGrid
-        Width = 1462
-        Height = 307
-        ExplicitWidth = 1462
-        ExplicitHeight = 307
+        Width = 1456
+        Height = 299
+        ExplicitWidth = 1456
+        ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1147,11 +1149,7 @@
     object actPrint_byPartner: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
       ImageIndex = 21
@@ -1182,20 +1180,16 @@
     object actPrint_byJuridical: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1080#1090#1086#1075#1080')'
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
       ImageIndex = 19
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'juridicalname;partnername'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -1217,20 +1211,16 @@
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1080#1090#1086#1075#1080')'
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1080#1090#1086#1075#1080')'
       ImageIndex = 18
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupName;GoodsName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -1252,20 +1242,16 @@
     object actPrint_byStatGroup: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1073#1091#1093#1075'. '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1073#1091#1093#1075'. '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
       ImageIndex = 20
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupStatName;GoodsName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -1404,7 +1390,7 @@
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <

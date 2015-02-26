@@ -38,6 +38,11 @@ type
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
     clFuelKindName: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    PartnerId: TcxGridDBColumn;
+    bbPrint: TdxBarButton;
+    actPrintByGoods: TdsdPrintAction;
+    bbPrintByGoods: TdxBarButton;
   private
     { Private declarations }
   public
