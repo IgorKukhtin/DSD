@@ -128,7 +128,47 @@ BEGIN
              PERFORM gpComplete_Movement_Cash (inMovementId     := inMovementId
                                              , inSession        := zfCalc_UserAdmin());
      ELSE
+     -- !!!11. - SendDebt!!!
+     IF vbMovementDescId = zc_Movement_SendDebt()
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             -- PERFORM lpComplete_Movement_Finance_CreateTemp();
+             -- !!! проводим - SendDebt !!!
+             PERFORM gpComplete_Movement_SendDebt (inMovementId     := inMovementId
+                                                 , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!12. - Service!!!
+     IF vbMovementDescId = zc_Movement_Service()
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             -- PERFORM lpComplete_Movement_Finance_CreateTemp();
+             -- !!! проводим - Service !!!
+             PERFORM gpComplete_Movement_Service (inMovementId     := inMovementId
+                                                , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!13. - PersonalAccount!!!
+     IF vbMovementDescId = zc_Movement_PersonalAccount()
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             -- PERFORM lpComplete_Movement_Finance_CreateTemp();
+             -- !!! проводим - PersonalAccount !!!
+             PERFORM gpComplete_Movement_PersonalAccount (inMovementId     := inMovementId
+                                                        , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!14. - ProfitLossService!!!
+     IF vbMovementDescId = zc_Movement_ProfitLossService()
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             -- PERFORM lpComplete_Movement_Finance_CreateTemp();
+             -- !!! проводим - ProfitLossService !!!
+             PERFORM gpComplete_Movement_ProfitLossService (inMovementId     := inMovementId
+                                                          , inSession        := zfCalc_UserAdmin());
+     ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
+     END IF;
+     END IF;
+     END IF;
      END IF;
      END IF;
      END IF;

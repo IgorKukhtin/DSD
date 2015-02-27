@@ -1,15 +1,15 @@
-п»ї-- Function: gpGet_Movement_ProductionUnionTech()
+-- Function: gpGet_Movement_ProductionUnionTech()
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, Integer, TDateTime, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnionTech(
-    IN inId          Integer,       -- РєР»СЋС‡ Р”РѕРєСѓРјРµРЅС‚Р°
-    IN inMIOrderId   Integer,       -- РєР»СЋС‡
-    IN inOperDate    TDateTime,     -- РґР°С‚Р° Р”РѕРєСѓРјРµРЅС‚Р°
+    IN inId          Integer,       -- ключ Документа
+    IN inMIOrderId   Integer,       -- ключ
+    IN inOperDate    TDateTime,     -- дата Документа
     IN inFromId      Integer,
     IN inToId        Integer,
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 
 )
 RETURNS TABLE (Id Integer, /*InvNumber TVarChar,*/ OperDate TDateTime
@@ -30,7 +30,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ProductionUnion());
      vbUserId := inSession;
      IF COALESCE (inId, 0) = 0
@@ -222,10 +222,10 @@ LANGUAGE PLPGSQL VOLATILE;
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  12.12.14                                                        *
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Movement_ProductionUnionTech (inMovementId := 0, inOperDate := '01.01.2014', inSession:= '2')

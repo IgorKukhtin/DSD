@@ -39,6 +39,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     clSum_CheckBonusFact: TcxGridDBColumn;
     clSum_SaleFact: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

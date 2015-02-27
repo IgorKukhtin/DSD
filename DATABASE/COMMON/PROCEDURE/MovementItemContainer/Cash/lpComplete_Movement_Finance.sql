@@ -14,6 +14,11 @@ BEGIN
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+     IF EXISTS (SELECT SUM (OperSumm) FROM _tmpItem WHERE MovementDescId = zc_Movement_ProfitLossService() HAVING SUM (OperSumm) <> 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%)', (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = TRUE), (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = FALSE);
+     END IF;
+
      -- 1.1.1 определяется AccountDirectionId для проводок суммового учета
      UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.AccountId <> 0
                                                            THEN _tmpItem.AccountDirectionId
@@ -438,8 +443,8 @@ BEGIN
                                                                             , inObjectId_4        := _tmpItem.PaidKindId
                                                                             , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                                             , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
-                                                                            , inDescId_6          := CASE WHEN COALESCE (_tmpItem.CurrencyId, 0) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
-                                                                            , inObjectId_6        := CASE WHEN COALESCE (_tmpItem.CurrencyId, 0) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
+                                                                            , inDescId_6          := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
+                                                                            , inObjectId_6        := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
                                                                             , inDescId_7          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
                                                                             , inObjectId_7        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) ELSE _tmpItem.ObjectId END ELSE NULL END -- and <> наши компании
                                                                             , inDescId_8          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END -- and <> наши компании
@@ -462,8 +467,8 @@ BEGIN
                                                                             , inObjectId_3        := _tmpItem.InfoMoneyId
                                                                             , inDescId_4          := zc_ContainerLinkObject_PaidKind()
                                                                             , inObjectId_4        := _tmpItem.PaidKindId
-                                                                            , inDescId_5          := CASE WHEN COALESCE (_tmpItem.CurrencyId, 0) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
-                                                                            , inObjectId_5        := CASE WHEN COALESCE (_tmpItem.CurrencyId, 0) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
+                                                                            , inDescId_5          := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
+                                                                            , inObjectId_5        := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
                                                                             , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
                                                                             , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) ELSE _tmpItem.ObjectId END ELSE NULL END -- and <> наши компании
                                                                             , inDescId_7          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END -- and <> наши компании
@@ -660,7 +665,29 @@ BEGIN
                                               , inAmount   := _tmpItem.OperSumm
                                               , inOperDate := _tmpItem.OperDate
                                                )
-     FROM (SELECT _tmpItem_Active.MovementDescId
+     FROM (SELECT _tmpItem.MovementDescId
+                , _tmpItem.MovementItemId
+                , _tmpItem.OperSumm
+                , _tmpItem.OperDate
+                , _tmpItem.ActiveContainerId
+                , _tmpItem.ActiveAccountId
+                , _tmpItem.PassiveContainerId
+                , _tmpItem.PassiveAccountId
+           FROM (SELECT _tmpItem_Child.MovementDescId
+                      , _tmpItem_Child.MovementItemId
+                      , ABS (_tmpItem_Child.OperSumm) AS OperSumm
+                      , _tmpItem_Child.OperDate
+                      , CASE WHEN _tmpItem_Child.OperSumm >=0 THEN _tmpItem_Child.ContainerId  ELSE _tmpItem_Master.ContainerId END AS ActiveContainerId
+                      , CASE WHEN _tmpItem_Child.OperSumm >=0 THEN _tmpItem_Child.AccountId    ELSE _tmpItem_Master.AccountId   END AS ActiveAccountId
+                      , CASE WHEN _tmpItem_Child.OperSumm >=0 THEN _tmpItem_Master.ContainerId ELSE _tmpItem_Child.ContainerId  END AS PassiveContainerId
+                      , CASE WHEN _tmpItem_Child.OperSumm >=0 THEN _tmpItem_Master.AccountId   ELSE _tmpItem_Child.AccountId    END AS PassiveAccountId
+                 FROM _tmpItem AS _tmpItem_Master
+                      LEFT JOIN _tmpItem AS _tmpItem_Child ON _tmpItem_Child.IsMaster = FALSE
+                 WHERE _tmpItem_Master.IsMaster = TRUE
+                   AND _tmpItem_Master.MovementDescId = zc_Movement_ProfitLossService()
+                ) AS _tmpItem
+          UNION ALL
+           SELECT _tmpItem_Active.MovementDescId
                 , _tmpItem_Active.MovementItemId
                 , _tmpItem_Active.OperSumm + CASE WHEN _tmpItem_Active.ObjectDescId = zc_Object_BankAccount() THEN (_tmpItem_Passive.OperSumm_Diff) ELSE 0 END AS OperSumm
                 , _tmpItem_Active.OperDate
@@ -672,6 +699,7 @@ BEGIN
                 LEFT JOIN _tmpItem AS _tmpItem_Passive ON _tmpItem_Passive.OperSumm < 0 AND _tmpItem_Passive.MovementItemId = _tmpItem_Active.MovementItemId
                 LEFT JOIN _tmpItem AS _tmpItem_Passive_SendDebt ON _tmpItem_Passive_SendDebt.OperSumm < 0 AND _tmpItem_Passive_SendDebt.MovementDescId = zc_Movement_SendDebt()
            WHERE _tmpItem_Active.OperSumm > 0
+             AND _tmpItem_Active.MovementDescId <> zc_Movement_ProfitLossService()
           UNION ALL
            SELECT _tmpItem_BankAccount.MovementDescId
                 , _tmpItem_BankAccount.MovementItemId
@@ -686,9 +714,9 @@ BEGIN
            WHERE _tmpItem_BankAccount.ObjectDescId = zc_Object_BankAccount() AND _tmpItem_BankAccount.ContainerId_Diff = 0
           ) AS _tmpItem
     ;
-
-     -- убрал, т.к. св-во пишется теперь в ОПиУ
-     DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
+     
+     -- убрал, т.к. св-во пишется теперь в ОПиУ, !!!но это свойство надо для zc_Movement_LossDebt() а может и других!!!
+     -- DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
      /* убрал, т.к. св-во пишется теперь в ОПиУ
      -- !!!5.1. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, tmp.BranchId_ProfitLoss)

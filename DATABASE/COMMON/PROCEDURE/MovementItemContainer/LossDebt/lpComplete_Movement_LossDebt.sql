@@ -141,7 +141,7 @@ BEGIN
                                                        AND ObjectLink_Juridical_InfoMoney.DescId   = zc_ObjectLink_Juridical_InfoMoney()
                                    LEFT JOIN Constant_InfoMoney_isCorporate_View AS View_Constant_isCorporate ON View_Constant_isCorporate.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
                              )
-        , tmpListContainer AS (-- Все контейнеры - по которым есть ввод долга
+        , tmpListContainer AS (-- Все контейнеры - по которым есть ввод долга + счет в документе + Вид формы оплаты
                                SELECT Container.Id AS ContainerId
                                     , Container.Amount
                                     , tmpMovementItem.JuridicalId
@@ -232,6 +232,9 @@ BEGIN
                                                                  AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
                                                                  AND ContainerLO_PartionMovement.ObjectId = 0
                                WHERE tmpMovement.AccountId <> 0
+                                 AND ((ContainerLO_Branch.ObjectId = zc_Branch_Basis()
+                                       AND tmpMovement.MovementId = 1110118  -- № 27 от 31.12.2014
+                                      ) OR tmpMovement.MovementId <> 1110118) -- № 27 от 31.12.2014
                                  AND ContainerLO_PartionMovement.ContainerId IS NULL -- !!!некрасивое решение!!!
                               UNION
                                -- Все контейнеры - для Вид формы оплаты, если пустой счет
@@ -259,6 +262,7 @@ BEGIN
                                                                                                                   )
                                      WHERE tmpMovement.AccountId = 0
                                        AND tmpMovement.MovementId <> 123096 -- № 15 от 31.12.2013
+                                       AND tmpMovement.MovementId <> 1110118  -- № 27 от 31.12.2014
                                     ) AS tmpMovement
                                     JOIN ContainerLinkObject AS ContainerLO_PaidKind
                                                              ON ContainerLO_PaidKind.ObjectId = tmpMovement.PaidKindId

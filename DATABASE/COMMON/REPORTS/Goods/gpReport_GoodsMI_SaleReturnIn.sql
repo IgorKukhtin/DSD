@@ -51,6 +51,7 @@ $BODY$
    DECLARE vbIsGoods Boolean;
    DECLARE vbIsPartner Boolean;
    DECLARE vbIsJuridical Boolean;
+   DECLARE vbIsJuridicalBranch Boolean;
    DECLARE vbIsCost Boolean;
 
    DECLARE vbObjectId_Constraint_Branch Integer;
@@ -85,6 +86,8 @@ BEGIN
                                                        );
        RETURN;
     END IF;
+
+    vbIsJuridicalBranch:= COALESCE (inBranchId, 0) = 0;
 
     -- определяется уровень доступа
     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
@@ -155,6 +158,42 @@ BEGIN
     -- Ограничения
     CREATE TEMP TABLE _tmpPartner (PartnerId Integer, JuridicalId Integer/*, AreaId Integer*/) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer/*, RetailId Integer, JuridicalGroupId Integer, OKPO TVarChar*/) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpJuridicalBranch (JuridicalId Integer) ON COMMIT DROP;
+    --
+    IF vbIsJuridicalBranch = TRUE vbObjectId_Constraint_Branch <> 0
+    THEN
+        INSERT INTO _tmpJuridicalBranch (JuridicalId)
+                                     SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                    UNION
+                                     SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                     GROUP BY ObjectLink_Contract_Juridical.ChildObjectId;
+    END IF;
+    --
     IF inAreaId <> 0
     THEN
         -- устанавливается признак
@@ -323,9 +362,11 @@ BEGIN
                                                               AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
 
                               LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = ContainerLO_Juridical.ObjectId
+                              LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = ContainerLO_Juridical.ObjectId
+
 
                          WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
-                           AND (MILinkObject_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0)
+                           AND (MILinkObject_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
                          GROUP BY MIContainer.ContainerId_Analyzer
                                 , MIContainer.ObjectId_Analyzer                 
                                 , MILinkObject_GoodsKind.ObjectId

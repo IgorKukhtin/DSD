@@ -1,27 +1,27 @@
 ﻿inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   Caption = #1054#1090#1095#1077#1090' < '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'> '
   ClientHeight = 387
-  ClientWidth = 1462
+  ClientWidth = 1020
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1478
+  ExplicitWidth = 1036
   ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1462
+    Width = 1020
     Height = 307
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1462
     ExplicitHeight = 307
     ClientRectBottom = 307
-    ClientRectRight = 1462
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1462
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1462
+        Width = 1020
         Height = 307
         ExplicitWidth = 1462
         ExplicitHeight = 307
@@ -883,7 +883,7 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1462
+    Width = 1020
     Height = 54
     ExplicitWidth = 1462
     ExplicitHeight = 54

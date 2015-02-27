@@ -214,6 +214,11 @@ BEGIN
            , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
 
+           , Movement_Sale.InvNumber                        AS InvNumber_Sale
+           , MovementString_InvNumberPartner_Sale.ValueData AS InvNumberPartner_Sale
+           , MovementString_InvNumberOrder_Sale.ValueData   AS InvNumberOrder_Sale
+           , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
+
            , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
            , Object_BankAccount.Name                            AS BankAccount_ByContract
            , Object_BankAccount.MFO                             AS BankMFO_ByContract
@@ -221,6 +226,37 @@ BEGIN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TaxCorrective
+                                           ON MovementLinkMovement_TaxCorrective.MovementChildId = Movement.Id
+                                          AND MovementLinkMovement_TaxCorrective.DescId = zc_MovementLinkMovement_Master()
+                                          AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_child
+                                           ON MovementLinkMovement_child.MovementId = MovementLinkMovement_TaxCorrective.MovementId
+                                          AND MovementLinkMovement_child.DescId = zc_MovementLinkMovement_Child()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Child
+                                         ON MovementLinkObject_DocumentTaxKind_Child.MovementId = MovementLinkMovement_child.MovementChildId
+                                        AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child_Sale
+                                           ON MovementLinkMovement_Child_Sale.MovementChildId = MovementLinkMovement_Child.MovementChildId
+                                          AND MovementLinkMovement_Child_Sale.DescId = zc_MovementLinkMovement_Master()
+                                          AND MovementLinkObject_DocumentTaxKind_Child.ObjectId = zc_Enum_DocumentTaxKind_Tax() -- налоговая
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Child_Sale.MovementId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Sale
+                                     ON MovementString_InvNumberPartner_Sale.MovementId =  MovementLinkMovement_Child_Sale.MovementId
+                                    AND MovementString_InvNumberPartner_Sale.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberOrder_Sale
+                                     ON MovementString_InvNumberOrder_Sale.MovementId =  MovementLinkMovement_Child_Sale.MovementId
+                                    AND MovementString_InvNumberOrder_Sale.DescId = zc_MovementString_InvNumberOrder()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Sale
+                                   ON MovementDate_OperDatePartner_Sale.MovementId =  MovementLinkMovement_Child_Sale.MovementId
+                                  AND MovementDate_OperDatePartner_Sale.DescId = zc_MovementDate_OperDatePartner()
+
+
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
