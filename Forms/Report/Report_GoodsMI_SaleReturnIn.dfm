@@ -3,6 +3,7 @@
   ClientHeight = 387
   ClientWidth = 1462
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -264
   ExplicitWidth = 1470
   ExplicitHeight = 421
   PixelsPerInch = 96
@@ -880,6 +881,11 @@
             Options.Editing = False
             Width = 55
           end
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1072#1088#1090#1085#1077#1088#1072
+            DataBinding.FieldName = 'PartnerCode'
+            Visible = False
+          end
         end
       end
     end
@@ -1149,16 +1155,20 @@
     object actPrint_byPartner: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
       ImageIndex = 21
       ShortCut = 16464
       DataSets = <
         item
+          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'partnername'
-          GridView = cxGridDBTableView
         end>
       Params = <
         item

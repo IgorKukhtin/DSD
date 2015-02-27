@@ -116,6 +116,7 @@ type
     GoodsGroupAnalystName: TcxGridDBColumn;
     clContractTagGroupName: TcxGridDBColumn;
     Address: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
