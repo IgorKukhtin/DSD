@@ -62,6 +62,8 @@ type
     clGoodsName: TcxGridDBColumn;
     clCarModelName: TcxGridDBColumn;
     clCardFuelLimit: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
 
   private
     { Private declarations }

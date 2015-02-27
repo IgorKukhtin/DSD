@@ -45,6 +45,8 @@ type
     bbChoice: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

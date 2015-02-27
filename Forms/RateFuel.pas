@@ -56,6 +56,8 @@ type
     spInsertUpdateObject: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     clCarModelName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

@@ -23,7 +23,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Width = 986
     Height = 438
     Align = alClient
-    TabOrder = 3
+    TabOrder = 2
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -216,8 +216,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -313,6 +313,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         item
           Visible = True
           ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -370,6 +378,10 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end
@@ -455,6 +467,33 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
     end
     object GoodsPropertyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'

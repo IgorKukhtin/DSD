@@ -55,6 +55,10 @@ type
     SummPartner_10200: TcxGridDBColumn;
     SummPartner_10300: TcxGridDBColumn;
     SummDiff: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    actPrintByGoods: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    bbPrintByGoods: TdxBarButton;
   private
     { Private declarations }
   public

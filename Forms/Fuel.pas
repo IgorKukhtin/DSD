@@ -58,6 +58,8 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     clRateFuelKind: TcxGridDBColumn;
+    bbProtocolOpenForm: TdxBarButton;
+    ProtocolOpenForm: TdsdOpenForm;
   private
     { Private declarations }
   public

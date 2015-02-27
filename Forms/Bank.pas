@@ -9,7 +9,8 @@ uses
   cxDataStorage, cxEdit, ParentForm, Data.DB, cxDBData, cxCheckBox, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TBankForm = class(TParentForm)
@@ -47,6 +48,8 @@ type
     clMFO: TcxGridDBColumn;
     SWIFT: TcxGridDBColumn;
     IBAN: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

@@ -53,6 +53,8 @@ type
     BeneficiarysBankAccount: TcxGridDBColumn;
     BeneficiarysAccount: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
