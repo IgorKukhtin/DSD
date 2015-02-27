@@ -18,7 +18,7 @@ BEGIN
 
     -- если есть
     IF vbMovementId_EDI <> 0 
-       OR EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inId AND DescId = zc_MovementLinkMovement_Sale() AND MovementChildId <> 0)
+       -- OR EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inId AND DescId = zc_MovementLinkMovement_Sale() AND MovementChildId <> 0)
     THEN
         IF vbMovementId_EDI <> 0
         THEN

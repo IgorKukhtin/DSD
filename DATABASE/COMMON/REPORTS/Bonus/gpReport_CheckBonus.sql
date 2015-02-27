@@ -21,6 +21,7 @@ RETURNS TABLE (ContractId_master Integer, ContractId_child Integer, ContractId_f
              , Sum_Bonus TFloat
              , Sum_BonusFact TFloat
              , Sum_SaleFact TFloat
+             , Comment TVarChar
               )  
 AS
 $BODY$
@@ -49,7 +50,8 @@ BEGIN
                                            , COALESCE (ObjectLink_ContractCondition_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_Condition
                                            , View_Contract.PaidKindId
                                            , ObjectLink_ContractCondition_BonusKind.ChildObjectId AS BonusKindId
-                                           , COALESCE (ObjecTFloat_Value.ValueData, 0) AS Value
+                                           , COALESCE (ObjecTFloat_Value.ValueData, 0)    AS Value
+                                           , COALESCE (Object_Comment.ValueData, '') AS Comment
                                       FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                            INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
                                                                                         AND Object_ContractCondition.isErased = FALSE
@@ -68,6 +70,7 @@ BEGIN
                                                                   ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
                                                                  AND ObjectFloat_Value.DescId = zc_ObjecTFloat_ContractCondition_Value()
                                                                  AND ObjectFloat_Value.ValueData <> 0  
+                                           LEFT JOIN Object AS Object_Comment ON Object_Comment.Id = Object_ContractCondition.Id
                                            LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
                                                                 ON ObjectLink_ContractCondition_BonusKind.ObjectId = Object_ContractCondition.Id
                                                                AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
@@ -132,6 +135,7 @@ BEGIN
                            , tmpContractConditionKind.ContractConditionKindID
                            , tmpContractConditionKind.BonusKindId
                            , tmpContractConditionKind.Value
+                           , tmpContractConditionKind.Comment
                       FROM tmpContractConditionKind
                       WHERE tmpContractConditionKind.InfoMoneyId_master = tmpContractConditionKind.InfoMoneyId_child -- это будут не бонусные договора (но в них есть бонусы)
                     UNION ALL
@@ -149,6 +153,7 @@ BEGIN
                            , tmpContractConditionKind.ContractConditionKindID
                            , tmpContractConditionKind.BonusKindId
                            , tmpContractConditionKind.Value
+                           , tmpContractConditionKind.Comment
                       FROM tmpContractConditionKind
                            JOIN Object_Contract_View AS View_Contract_child
                                                      ON View_Contract_child.JuridicalId = tmpContractConditionKind.JuridicalId
@@ -265,6 +270,7 @@ BEGIN
             , CAST (/*SUM*/ (tmpAll.Sum_Bonus) AS TFloat)          AS Sum_Bonus
             , CAST (/*SUM*/ (tmpAll.Sum_BonusFact)*(-1) AS TFloat) AS Sum_BonusFact
             , CAST (/*SUM*/ (tmpAll.Sum_SaleFact)       AS TFloat) AS Sum_SaleFact
+            , tmpAll.Comment :: TVarChar                           AS Comment
       FROM  
           (SELECT tmpContract.InvNumber_master
                 , tmpContract.InvNumber_child
@@ -311,6 +317,7 @@ BEGIN
                 , 0 :: TFloat                  AS Sum_BonusFact
                 , 0 :: TFloat                  AS Sum_CheckBonusFact
                 , 0 :: TFloat                  AS Sum_SaleFact
+                , tmpContract.Comment
               
            FROM tmpContract
                 INNER JOIN tmpMovement ON tmpMovement.JuridicalId       = tmpContract.JuridicalId
@@ -346,7 +353,9 @@ BEGIN
                 , MovementItem.Amount                            AS Sum_BonusFact
                 , MIFloat_Summ.ValueData                         AS Sum_CheckBonusFact
                 , MIFloat_AmountPartner.ValueData                AS Sum_SaleFact
-           FROM Movement 
+  
+                , MIString_Comment.ValueData                     AS Comment
+         FROM Movement 
                 LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
                 LEFT JOIN MovementItemFloat AS MIFloat_BonusValue
@@ -358,6 +367,9 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                             ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                            AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                LEFT JOIN MovementItemString AS MIString_Comment
+                                             ON MIString_Comment.MovementItemId = MovementItem.Id
+                                            AND MIString_Comment.DescId = zc_MIString_Comment()
 
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                  ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -435,7 +447,8 @@ BEGIN
               , Object_BonusKind.Id
               , Object_BonusKind.ValueData
 
-              , tmpAll.Value*/
+              , tmpAll.Value
+              , tmpAll.Comment*/
     ;
 
 END;

@@ -1872,6 +1872,10 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
