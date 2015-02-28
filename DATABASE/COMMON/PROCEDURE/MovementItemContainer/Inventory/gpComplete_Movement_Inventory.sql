@@ -642,6 +642,7 @@ BEGIN
                                                 -- !!!временно для первого раза!!!
                                            ELSE (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60101) -- Амортизация + Административные ОС + Основные средства*****
                                       END
+
                              WHEN(tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
@@ -681,6 +682,7 @@ BEGIN
                                                                                                                                                                                             , 32032 -- Склад Брак
                                                                                                                                                                                             , 32033 -- Склад УТИЛЬ
                                                                                                                                                                                             , 22122 -- Склад возвратов ф.Запорожье
+                                                                                                                                                                                            , 8461  -- Склад возвратов ф.Одесса
                                                                                                                                                                                              )
                                                                                                                     )
                                                                                                         AND vbOperDate >= '01.06.2014' -- !!!временно кроме первого раза!!!
@@ -692,11 +694,21 @@ BEGIN
                                                                                                                                                                                             , 32032 -- Склад Брак
                                                                                                                                                                                             , 32033 -- Склад УТИЛЬ
                                                                                                                                                                                             , 22122 -- Склад возвратов ф.Запорожье
+                                                                                                                                                                                            , 8461  -- Склад возвратов ф.Одесса
                                                                                                                                                                                              )
                                                                                                                     )
                                                                                                         AND vbOperDate >= '01.06.2014' -- !!!временно кроме первого раза!!!
                                                                                                         AND tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                                                         THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLossDirection() AND ObjectCode = 10900) -- Результат основной деятельности + Утилизация возвратов
+
+                                                                                                   WHEN (tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                                      OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                                      OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                                        )
+                                                                                                        AND vbOperDate < '01.04.2015' -- !!!временно для НЕ первого раза!!!
+                                                                                                        AND vbProfitLossDirectionId = zc_Enum_ProfitLossDirection_20500() -- Прочие потери (Списание+инвентаризация)
+                                                                                                        THEN zc_Enum_ProfitLossDirection_20100() -- Содержание производства
+
                                                                                                    ELSE vbProfitLossDirectionId
                                                                                               END
                                                                 , inInfoMoneyDestinationId := tmpItem_group.InfoMoneyDestinationId_calc

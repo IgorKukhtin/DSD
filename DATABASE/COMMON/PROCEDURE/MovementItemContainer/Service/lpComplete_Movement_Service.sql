@@ -227,6 +227,7 @@ BEGIN
                                                                                                           AND NOT (vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE) -- !!!нужен только для затрат!!!
              LEFT JOIN MovementItem AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
                                                AND MI_Child.DescId = zc_MI_Child()
+                                               AND MI_Child.isErased = FALSE
                                                AND _tmpItem.MovementDescId = zc_Movement_ProfitLossService()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                               ON MILinkObject_Branch.MovementItemId = MI_Child.Id

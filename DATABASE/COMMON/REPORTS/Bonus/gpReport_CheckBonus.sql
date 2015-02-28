@@ -490,4 +490,4 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
     where Sum_Bonus <> 0 -- and Sum_Bonus =30
 */
 -- тест
--- select * from gpReport_CheckBonus (inStartDate:= '03.01.2014', inEndDate:= '31.03.2014', inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_CheckBonus (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015', inSession:= zfCalc_UserAdmin());

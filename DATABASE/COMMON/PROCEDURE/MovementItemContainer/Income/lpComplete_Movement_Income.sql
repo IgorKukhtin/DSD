@@ -10,6 +10,10 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Income(
 RETURNS VOID
 AS
 $BODY$
+  DECLARE vbContainerId_Analyzer Integer;
+  DECLARE vbContainerId_Analyzer_PartnerTo Integer;
+  DECLARE vbWhereObjectId_Analyzer Integer;
+
   DECLARE vbMovementDescId Integer;
 
   DECLARE vbOperSumm_Partner_byItem TFloat;
