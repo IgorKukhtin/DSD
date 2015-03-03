@@ -41,6 +41,33 @@ type
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colAmountSecond: TcxGridDBColumn;
+    spUpdateAmountRemains: TdsdStoredProc;
+    spUpdateAmountPartner: TdsdStoredProc;
+    spUpdateAmountForecast: TdsdStoredProc;
+    actUpdateAmountRemains: TdsdExecStoredProc;
+    MultiAmountRemain: TMultiAction;
+    edOperDatePartner: TcxDateEdit;
+    cxLabel10: TcxLabel;
+    cxLabel18: TcxLabel;
+    edDayCount: TcxCurrencyEdit;
+    edOperDateStart: TcxDateEdit;
+    cxLabel19: TcxLabel;
+    cxLabel20: TcxLabel;
+    edOperDateEnd: TcxDateEdit;
+    colAmountRemains: TcxGridDBColumn;
+    colAmountPartner: TcxGridDBColumn;
+    colAmountForecast: TcxGridDBColumn;
+    colAmountForecastOrder: TcxGridDBColumn;
+    colCuterCount: TcxGridDBColumn;
+    bbMultiAmountRemain: TdxBarButton;
+    actUpdateAmountPartner: TdsdExecStoredProc;
+    MultiAmountPartner: TMultiAction;
+    actUpdateAmountForecast: TdsdExecStoredProc;
+    MultiAmountForecast: TMultiAction;
+    actUpdateAmountAll: TMultiAction;
+    bbMultiAmountPartner: TdxBarButton;
+    bbMultiAmountForecast: TdxBarButton;
+    bbUpdateAmountAll: TdxBarButton;
   private
     { Private declarations }
   public

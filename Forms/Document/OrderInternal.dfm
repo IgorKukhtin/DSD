@@ -54,6 +54,31 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountForecast
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountForecastOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colCuterCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -88,6 +113,31 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountForecast
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountForecastOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colCuterCount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -151,6 +201,45 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colAmountRemains: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'AmountRemains'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colAmountPartner: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'AmountPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colAmountForecast: TcxGridDBColumn
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'. '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'AmountForecast'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colAmountForecastOrder: TcxGridDBColumn
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'AmountForecastOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object colCuterCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1091#1090#1077#1088#1086#1074
+            DataBinding.FieldName = 'CuterCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -159,27 +248,30 @@ inherited OrderInternalForm: TOrderInternalForm
     Width = 1064
     Height = 100
     TabOrder = 3
+    ExplicitLeft = -24
     ExplicitWidth = 1064
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
-      ExplicitWidth = 74
-      Width = 74
+      ExplicitWidth = 99
+      Width = 99
     end
     inherited cxLabel1: TcxLabel
       Left = 8
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 89
+      Left = 123
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 89
+      ExplicitLeft = 123
+      ExplicitWidth = 103
+      Width = 103
     end
     inherited cxLabel2: TcxLabel
-      Left = 89
-      ExplicitLeft = 89
+      Left = 123
+      ExplicitLeft = 123
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -193,12 +285,12 @@ inherited OrderInternalForm: TOrderInternalForm
       Width = 218
     end
     object cxLabel3: TcxLabel
-      Left = 195
+      Left = 234
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 195
+      Left = 234
       Top = 23
       Properties.Buttons = <
         item
@@ -209,7 +301,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Width = 270
     end
     object edTo: TcxButtonEdit
-      Left = 477
+      Left = 516
       Top = 23
       Properties.Buttons = <
         item
@@ -220,10 +312,65 @@ inherited OrderInternalForm: TOrderInternalForm
       Width = 270
     end
     object cxLabel4: TcxLabel
-      Left = 477
+      Left = 516
       Top = 5
       Caption = #1050#1086#1084#1091
     end
+    object cxLabel18: TcxLabel
+      Left = 334
+      Top = 45
+      Caption = #1044#1085#1080
+    end
+    object edDayCount: TcxCurrencyEdit
+      Left = 334
+      Top = 63
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 39
+    end
+    object edOperDateStart: TcxDateEdit
+      Left = 380
+      Top = 63
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 12
+      Width = 89
+    end
+    object cxLabel19: TcxLabel
+      Left = 380
+      Top = 45
+      Caption = #1055#1088#1086#1075#1085#1086#1079' '#1089
+    end
+    object cxLabel20: TcxLabel
+      Left = 476
+      Top = 45
+      Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086
+    end
+    object edOperDateEnd: TcxDateEdit
+      Left = 476
+      Top = 63
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 15
+      Width = 89
+    end
+  end
+  object edOperDatePartner: TcxDateEdit [2]
+    Left = 234
+    Top = 63
+    Enabled = False
+    Properties.ReadOnly = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 6
+    Width = 93
+  end
+  object cxLabel10: TcxLabel [3]
+    Left = 234
+    Top = 45
+    Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -317,6 +464,112 @@ inherited OrderInternalForm: TOrderInternalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actUpdateAmountRemains: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateAmountRemains
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAmountRemains
+        end>
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082
+      ImageIndex = 47
+    end
+    object MultiAmountRemain: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmountRemains
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>'
+      ImageIndex = 47
+    end
+    object actUpdateAmountPartner: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateAmountPartner
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAmountPartner
+        end>
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
+      ImageIndex = 48
+    end
+    object MultiAmountPartner: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmountPartner
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      ImageIndex = 48
+    end
+    object actUpdateAmountForecast: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateAmountForecast
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAmountForecast
+        end>
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1075#1085#1086#1079
+      ImageIndex = 49
+    end
+    object MultiAmountForecast: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmountForecast
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
+      ImageIndex = 49
+    end
+    object actUpdateAmountAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmountRemains
+        end
+        item
+          Action = actUpdateAmountPartner
+        end
+        item
+          Action = actUpdateAmountForecast
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077'?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 50
     end
   end
   inherited MasterDS: TDataSource
@@ -425,6 +678,30 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateAmountAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMultiAmountRemain'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMultiAmountPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMultiAmountForecast'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -477,6 +754,22 @@ inherited OrderInternalForm: TOrderInternalForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       Visible = ivAlways
       ImageIndex = 41
+    end
+    object bbMultiAmountRemain: TdxBarButton
+      Action = MultiAmountRemain
+      Category = 0
+    end
+    object bbMultiAmountPartner: TdxBarButton
+      Action = MultiAmountPartner
+      Category = 0
+    end
+    object bbMultiAmountForecast: TdxBarButton
+      Action = MultiAmountForecast
+      Category = 0
+    end
+    object bbUpdateAmountAll: TdxBarButton
+      Action = actUpdateAmountAll
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -621,24 +914,28 @@ inherited OrderInternalForm: TOrderInternalForm
         DataType = ftString
       end
       item
+        Name = 'OperDatePartner'
         Value = 0d
+        Component = edOperDatePartner
         DataType = ftDateTime
-        ParamType = ptUnknown
       end
       item
+        Name = 'OperDateStart'
         Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Component = edOperDateStart
+        DataType = ftDateTime
       end
       item
+        Name = 'OperDateEnd'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = edOperDateEnd
+        DataType = ftDateTime
       end
       item
+        Name = 'DayCount'
         Value = 0.000000000000000000
+        Component = edDayCount
         DataType = ftFloat
-        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -733,6 +1030,32 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
       end
       item
+        Name = 'outOperDatePartner'
+        Value = 0d
+        Component = edOperDatePartner
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inOperDateStart'
+        Value = 'False'
+        Component = edOperDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDateEnd'
+        Value = 0.000000000000000000
+        Component = edOperDateEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'outDayCount'
+        Value = ''
+        Component = edDayCount
+        DataType = ftFloat
+      end
+      item
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
@@ -745,25 +1068,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end
       item
         Value = 0.000000000000000000
@@ -822,8 +1126,10 @@ inherited OrderInternalForm: TOrderInternalForm
         Control = edInvNumber
       end
       item
+        Control = edOperDateStart
       end
       item
+        Control = edOperDateEnd
       end
       item
         Control = edOperDate
@@ -1040,7 +1346,7 @@ inherited OrderInternalForm: TOrderInternalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 360
+    Left = 336
     Top = 8
   end
   object GuidesTo: TdsdGuides
@@ -1066,7 +1372,104 @@ inherited OrderInternalForm: TOrderInternalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 536
+    Left = 624
     Top = 8
+  end
+  object spUpdateAmountRemains: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountRemains'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 770
+    Top = 160
+  end
+  object spUpdateAmountPartner: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 160
+  end
+  object spUpdateAmountForecast: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountForecast'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartDate'
+        Value = 0d
+        Component = edOperDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 0d
+        Component = edOperDateEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 928
+    Top = 160
   end
 end
