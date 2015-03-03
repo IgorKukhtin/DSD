@@ -46,6 +46,9 @@ type
     BankMarfinLoad: TClientBankLoadAction;
     BankMarfin: TMultiAction;
     bbMarfinLoad: TdxBarButton;
+    ProcreditBankLoad: TClientBankLoadAction;
+    ProcreditBank: TMultiAction;
+    bbProkreditBank: TdxBarButton;
   private
     { Private declarations }
   public
