@@ -762,10 +762,9 @@ begin
      if Component is TcxCheckBox then
         Result := BoolToStr((Component as TcxCheckBox).Checked, true);
      if Component is TcxDateEdit then begin
-        DateTime := (Component as TcxDateEdit).Date;
-        if DateTime = -700000 then
-           DateTime := 0;
-        Result := DateTime;
+        if (Component as TcxDateEdit).Date = -700000 then
+           (Component as TcxDateEdit).Date := Date;
+        Result := (Component as TcxDateEdit).Date;
      end;
      if Component is TBooleanStoredProcAction then
         Result := (Component as TBooleanStoredProcAction).Value;
