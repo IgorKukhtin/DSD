@@ -837,8 +837,8 @@
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Id'
+        Component = ContractMasterGuides
+        ComponentItem = 'Key'
       end
       item
         Name = 'BonusKindId'

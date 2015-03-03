@@ -5,6 +5,24 @@ begin
   declare @saveRemains smallint;
   //
   --
+  declare local temporary table _tmp1_opt(
+  GoodsPropertyId integer not null,
+  UnitId integer not null,
+  ) on commit delete rows;
+  --
+  declare local temporary table _tmp2_opt(
+  GoodsPropertyId integer not null,
+  UnitId integer not null,
+  BillDate Date
+  ) on commit delete rows;
+  --
+  declare local temporary table _tmp21_opt(
+  GoodsPropertyId integer not null,
+  UnitId integer not null,
+  PartionDate date 
+  ) on commit delete rows;
+  --
+  //
   --
   declare local temporary table _tmpList_Partion_find(
   UnitId integer not null,
@@ -366,49 +384,65 @@ begin
    end if;
 
 
+
+  -- 2.1.1. insert into _tmp1_opt
+  print '2.1.1. insert into _tmp1_opt';
+  insert into _tmp1_opt (GoodsPropertyId, UnitId)
+      select GoodsProperty.Id as GoodsPropertyId, _tmpList_Remains_byKindPackage_two.UnitId
+      from dba.GoodsProperty
+           inner join _tmpList_Remains_byKindPackage_two on _tmpList_Remains_byKindPackage_two.GoodsPropertyId = GoodsProperty.Id
+      where GoodsProperty.InfoMoneyCode in (20201, 20202, 20203, 20204, 20205, 20206, 20207,    20301, 20302, 20303, 20304, 20305, 20306, 20307,   70101, 70102, 70103, 70104, 70105)
+      group by GoodsProperty.Id, _tmpList_Remains_byKindPackage_two.UnitId;
+  -- 2.1.2. insert into _tmp2_opt
+  print '2.1.2. insert into _tmp2_opt';
+  insert into _tmp2_opt (GoodsPropertyId, UnitId, BillDate)
+          select GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId, max (Bill.BillDate) as BillDate
+          from _tmp1_opt as GoodsProperty
+                join dba.Bill on Bill.ToId = GoodsProperty.UnitId
+                             -- and Bill.FromId in (zc_UnitId_Composition(), zc_UnitId_CompositionZ())
+                             and Bill.BillKind = zc_bkSendUnitToUnit()
+                join dba.BillItems on BillItems.BillId = Bill.Id
+                                  and BillItems.GoodsPropertyId = GoodsProperty.GoodsPropertyId
+                                  -- and BillItems.BillKind = zc_bkSendUnitToUnit()
+                                  and BillItems.OperCount <> 0
+          group by GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId;
+
     // 
-    -- 2.1. Calculate PartionDate - TM÷ and ÃÕÃ¿
+    -- 2.1.3. Calculate PartionDate - TM÷ and ÃÕÃ¿
+    print '2.1.3. Calculate PartionDate - TM÷ and ÃÕÃ¿';
     update _tmpList_Remains_byKindPackage_two
           set _tmpList_Remains_byKindPackage_two.PartionDate = GoodsProperty.BillDate
-    from dba.Unit
-       , (select GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId, max (Bill.BillDate) as BillDate
-          from (select GoodsProperty.Id as GoodsPropertyId, _tmpList_Remains_byKindPackage_two.UnitId
-                from dba.GoodsProperty
-                     inner join _tmpList_Remains_byKindPackage_two on _tmpList_Remains_byKindPackage_two.GoodsPropertyId = GoodsProperty.Id
-                where GoodsProperty.InfoMoneyCode in (20201, 20202, 20203, 20204, 20205, 20206, 20207,    20301, 20302, 20303, 20304, 20305, 20306, 20307,   70101, 70102, 70103, 70104, 70105)
-                group by GoodsProperty.Id, _tmpList_Remains_byKindPackage_two.UnitId
-                ) as GoodsProperty
-                join dba.BillItems on BillItems.GoodsPropertyId = GoodsProperty.GoodsPropertyId
-                                  and BillItems.BillKind = zc_bkSendUnitToUnit()
-                                  and BillItems.OperCount <>0
-                join dba.Bill on Bill.Id = BillItems.BillId
-                             -- and Bill.FromId in (zc_UnitId_Composition(), zc_UnitId_CompositionZ())
-                             and Bill.ToId = GoodsProperty.UnitId
-          group by GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId
-         ) as GoodsProperty
+    from dba.Unit, _tmp2_opt as GoodsProperty
      where _tmpList_Remains_byKindPackage_two.UnitId = Unit.Id and Unit.ParentId in (4137, 8217) -- MO + ¿¬“ŒÃŒ¡»À»
        and _tmpList_Remains_byKindPackage_two.GoodsPropertyId = GoodsProperty.GoodsPropertyId
        and _tmpList_Remains_byKindPackage_two.UnitId = GoodsProperty.UnitId;
-    -- 2.2. Calculate Partion - TM÷ and ÃÕÃ¿
-    insert into _tmpList_Partion_find (GoodsPropertyId, UnitId, BillItemsId)
-                          select GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId, max (BillItems.Id) as BillItemsId
-                          from (select GoodsProperty.Id as GoodsPropertyId, _tmpList_Remains_byKindPackage_two.UnitId, max (isnull(_tmpList_Remains_byKindPackage_two.PartionDate,zc_DateEnd())) as PartionDate
+
+    -- 2.2.1. insert into _tmp21_opt
+    print '2.2.1. insert into _tmp21_opt';
+    insert into _tmp21_opt (GoodsPropertyId, UnitId, PartionDate)
+                                select GoodsProperty.Id as GoodsPropertyId, _tmpList_Remains_byKindPackage_two.UnitId, max (isnull(_tmpList_Remains_byKindPackage_two.PartionDate,zc_DateEnd())) as PartionDate
                                 from dba.GoodsProperty
                                      inner join _tmpList_Remains_byKindPackage_two on _tmpList_Remains_byKindPackage_two.GoodsPropertyId = GoodsProperty.Id
                                      inner join dba.Unit on Unit.Id = _tmpList_Remains_byKindPackage_two.UnitId
                                                         and Unit.ParentId in (4137, 8217) -- MO + ¿¬“ŒÃŒ¡»À»
                                 where GoodsProperty.InfoMoneyCode in (20201, 20202, 20203, 20204, 20205, 20206, 20207,    20301, 20302, 20303, 20304, 20305, 20306, 20307,   70101, 70102, 70103, 70104, 70105)
-                                group by GoodsProperty.Id, _tmpList_Remains_byKindPackage_two.UnitId
-                                ) as GoodsProperty
-                                join dba.BillItems on BillItems.GoodsPropertyId = GoodsProperty.GoodsPropertyId
-                                                  and BillItems.BillKind = zc_bkIncomeToUnit()
+                                group by GoodsProperty.Id, _tmpList_Remains_byKindPackage_two.UnitId;
+    -- 2.2.2. Calculate Partion - TM÷ and ÃÕÃ¿
+    print '2.2.2. Calculate Partion - TM÷ and ÃÕÃ¿';
+    insert into _tmpList_Partion_find (GoodsPropertyId, UnitId, BillItemsId)
+                          select GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId, max (BillItems.Id) as BillItemsId
+                           from _tmp21_opt as GoodsProperty
+                                join dba.Bill on Bill.BillDate <= GoodsProperty.PartionDate
+                                             and Bill.BillKind = zc_bkIncomeToUnit()
+                                join dba.BillItems on BillItems.BillId = Bill.Id
+                                                  and BillItems.GoodsPropertyId = GoodsProperty.GoodsPropertyId
+                                                  -- and BillItems.BillKind = zc_bkIncomeToUnit()
                                                   and BillItems.OperCount <>0
                                                   and BillItems.OperPrice <>0
-                                join dba.Bill on Bill.Id = BillItems.BillId
-                                             and Bill.BillDate <= GoodsProperty.PartionDate
                           group by GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId;
     // 
     -- 3.1. find exists isRemains = zc_rvYes
+    print '3.1. find exists isRemains = zc_rvYes';
     insert into _tmpList_Bill (BillId, UnitId) -- _tmpList_Bill_find (BillId, UnitId)
                           select max (Bill.Id) as BillId, Bill.FromId as UnitId -- Unit_find.Id as UnitId
                           from dba.Bill

@@ -3499,6 +3499,10 @@ begin
                             +'                                           , TRUE'
                             +'                                           , FALSE'
                             +'                                           , TRUE'
+                            +'                                           , NULL'
+                            +'                                           , NULL'
+                            +'                                           , NULL'
+                            +'                                           , NULL'
                             +'                                           , zfCalc_UserAdmin()'
                             +'                                           )'
                             );
@@ -10302,6 +10306,10 @@ begin
                                      +'                                           , TRUE'
                                      +'                                           , FALSE'
                                      +'                                           , TRUE'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
                                      +'                                           , zfCalc_UserAdmin()'
                                      +'                                           )'
                                      );
@@ -10569,6 +10577,10 @@ begin
                                      +'                                           , TRUE'
                                      +'                                           , FALSE'
                                      +'                                           , TRUE'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
                                      +'                                           , zfCalc_UserAdmin()'
                                      +'                                           )'
                                      );

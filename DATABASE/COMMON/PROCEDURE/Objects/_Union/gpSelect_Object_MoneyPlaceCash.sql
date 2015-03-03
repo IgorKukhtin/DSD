@@ -7,8 +7,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MoneyPlaceCash(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isErased Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , ContractId Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime, EndDate TDateTime
+             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime, EndDate TDateTime
              , ContractTagName TVarChar, ContractKindName TVarChar
+             , OKPO TVarChar
+             , AmountDebet TFloat
+             , AmountKredit TFloat
+             , BranchName TVarChar
               )
 AS
 $BODY$
@@ -61,12 +65,17 @@ BEGIN
           , View_InfoMoney.InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all
           , NULL::Integer AS ContractId
-          , ''::TVarChar AS ContractNumber
+          , NULL::Integer AS ContractCode
+          , ''::TVarChar  AS ContractNumber
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
+          , ''::TVarChar AS OKPO
+          , 0 :: TFloat  AS AmountDebet
+          , 0 :: TFloat  AS AmountKredit
+          , ''::TVarChar AS BranchName
      FROM Object AS Object_Cash
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
@@ -83,13 +92,18 @@ BEGIN
           , View_InfoMoney.InfoMoneyDestinationName
           , View_InfoMoney.InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all
-          , NULL::Integer
-          , ''::TVarChar
+          , NULL::Integer AS ContractId
+          , NULL::Integer AS ContractCode
+          , ''::TVarChar  AS ContractNumber
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
+          , ''::TVarChar AS OKPO
+          , 0 :: TFloat  AS AmountDebet
+          , 0 :: TFloat  AS AmountKredit
+          , ''::TVarChar AS BranchName
      FROM Object_BankAccount_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
@@ -107,13 +121,18 @@ BEGIN
           , ''::TVarChar AS InfoMoneyDestinationName
           , ''::TVarChar AS InfoMoneyName
           , ''::TVarChar AS InfoMoneyName_all
-          , NULL::Integer
-          , ''::TVarChar
+          , NULL::Integer AS ContractId
+          , NULL::Integer AS ContractCode
+          , ''::TVarChar  AS ContractNumber
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
+          , ''::TVarChar AS OKPO
+          , 0 :: TFloat  AS AmountDebet
+          , 0 :: TFloat  AS AmountKredit
+          , ''::TVarChar AS BranchName
      FROM Object AS Object_Member
           LEFT JOIN tmpPersonal_Branch ON tmpPersonal_Branch.MemberId = Object_Member.Id
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
@@ -134,27 +153,44 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyDestinationName
           , Object_InfoMoney_View.InfoMoneyName
           , Object_InfoMoney_View.InfoMoneyName_all
-          , View_Contract.ContractId 
-          , View_Contract.InvNumber
-          , View_Contract.ContractStateKindCode
-          , View_Contract.StartDate
-          , View_Contract.EndDate
-          , View_Contract.ContractTagName
-          , View_Contract.ContractKindName
+          , COALESCE (Object_Contract_View_Container.ContractId, View_Contract.ContractId)     :: Integer   AS ContractId
+          , COALESCE (Object_Contract_View_Container.ContractCode, View_Contract.ContractCode) :: Integer   AS Code
+          , COALESCE (Object_Contract_View_Container.InvNumber, View_Contract.InvNumber)       :: TVarChar  AS InvNumber
+          , COALESCE (Object_Contract_View_Container.ContractStateKindCode, View_Contract.ContractStateKindCode)   AS ContractStateKindCode
+          , COALESCE (Object_Contract_View_Container.StartDate, View_Contract.StartDate)       :: TDateTime AS StartDate
+          , COALESCE (Object_Contract_View_Container.EndDate, View_Contract.EndDate)           :: TDateTime AS EndDate
+          , COALESCE (Object_Contract_View_Container.ContractTagName, View_Contract.ContractTagName) :: TVarChar   AS ContractTagName
+          , COALESCE (Object_Contract_View_Container.ContractKindName, View_Contract.ContractKindName) :: TVarChar AS ContractKindName
+          , ObjectHistory_JuridicalDetails_View.OKPO
+          , Container_Partner_View.AmountDebet
+          , Container_Partner_View.AmountKredit
+          , Object_Branch.ValueData AS BranchName
      FROM Object AS Object_Partner
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
+
+          LEFT JOIN Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
+
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
-          LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id
-          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+                              AND Container_Partner_View.PartnerId IS NULL
+
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
+          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+          LEFT JOIN Object_Contract_View AS Object_Contract_View_Container ON Object_Contract_View_Container.ContractId = Container_Partner_View.ContractId
+          LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
+
      WHERE Object_Partner.DescId = zc_Object_Partner()
        AND Object_Partner.isErased = FALSE
-       AND View_Contract.isErased = FALSE
+       AND COALESCE (Object_Contract_View_Container.isErased, View_Contract.isErased) = FALSE
+       -- AND COALESCE (Object_Contract_View_Container.PaidKindId, View_Contract.PaidKindId) = zc_Enum_PaidKind_SecondForm()
        AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
             OR vbIsConstraint = FALSE)
     UNION ALL
@@ -170,12 +206,17 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyName
           , Object_InfoMoney_View.InfoMoneyName_all
           , View_Contract.ContractId 
+          , View_Contract.ContractCode
           , View_Contract.InvNumber
           , View_Contract.ContractStateKindCode
           , View_Contract.StartDate
           , View_Contract.EndDate
           , View_Contract.ContractTagName
           , View_Contract.ContractKindName
+          , ObjectHistory_JuridicalDetails_View.OKPO
+          , 0 :: TFloat  AS AmountDebet
+          , 0 :: TFloat  AS AmountKredit
+          , ''::TVarChar AS BranchName
      FROM Object AS Object_Juridical
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
@@ -199,13 +240,18 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyDestinationName
           , Object_InfoMoney_View.InfoMoneyName
           , Object_InfoMoney_View.InfoMoneyName_all
-          , NULL::Integer
-          , ''::TVarChar
+          , NULL::Integer AS ContractId
+          , NULL::Integer AS ContractCode
+          , ''::TVarChar  AS ContractNumber
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
+          , ''::TVarChar AS OKPO
+          , 0 :: TFloat  AS AmountDebet
+          , 0 :: TFloat  AS AmountKredit
+          , ''::TVarChar AS BranchName
      FROM Object AS Object_Founder
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
           LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney

@@ -1,24 +1,24 @@
 inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
-  ClientHeight = 411
-  ClientWidth = 693
-  ExplicitWidth = 701
-  ExplicitHeight = 438
+  ClientHeight = 424
+  ClientWidth = 699
+  ExplicitWidth = 715
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 693
-    Height = 385
+    Width = 699
+    Height = 398
     ExplicitWidth = 693
     ExplicitHeight = 385
-    ClientRectBottom = 385
-    ClientRectRight = 693
+    ClientRectBottom = 398
+    ClientRectRight = 699
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 693
       ExplicitHeight = 385
       inherited cxGrid: TcxGrid
-        Width = 693
-        Height = 385
+        Width = 699
+        Height = 398
         ExplicitWidth = 693
         ExplicitHeight = 385
         inherited cxGridDBTableView: TcxGridDBTableView

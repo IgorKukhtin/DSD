@@ -1,26 +1,25 @@
 inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1099#1087#1083#1072#1090#1072' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 623
-  ClientWidth = 1104
-  ExplicitLeft = -114
-  ExplicitWidth = 1112
-  ExplicitHeight = 657
+  ClientWidth = 885
+  ExplicitWidth = 901
+  ExplicitHeight = 658
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 1104
+    Width = 885
     Height = 508
     ExplicitTop = 115
     ExplicitWidth = 1104
     ExplicitHeight = 508
     ClientRectBottom = 508
-    ClientRectRight = 1104
+    ClientRectRight = 885
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1104
       ExplicitHeight = 484
       inherited cxGrid: TcxGrid
-        Width = 1104
+        Width = 885
         Height = 484
         ExplicitWidth = 1104
         ExplicitHeight = 484
@@ -119,15 +118,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 120
           end
-          object colINN: TcxGridDBColumn [2]
-            Caption = #1048#1053#1053
-            DataBinding.FieldName = 'INN'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colPersonalCode: TcxGridDBColumn [3]
+          object colPersonalCode: TcxGridDBColumn [2]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'PersonalCode'
             Visible = False
@@ -136,13 +127,22 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 55
           end
-          object colPersonalName: TcxGridDBColumn [4]
+          object colPersonalName: TcxGridDBColumn [3]
             Caption = #1060#1048#1054' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object colINN: TcxGridDBColumn [4]
+            Caption = #1048#1053#1053
+            DataBinding.FieldName = 'INN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colPositionName: TcxGridDBColumn [5]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -163,6 +163,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
           object colIsMain: TcxGridDBColumn [6]
             Caption = #1054#1089#1085#1086#1074'. '#1084#1077#1089#1090#1086' '#1088'.'
             DataBinding.FieldName = 'isMain'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -171,6 +172,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
           object colIsOfficial: TcxGridDBColumn [7]
             Caption = #1054#1092#1086#1088#1084#1083'. '#1086#1092#1080#1094'.'
             DataBinding.FieldName = 'isOfficial'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -196,7 +198,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Width = 75
           end
           object colAmountCash: TcxGridDBColumn [10]
-            Caption = #1056#1072#1089#1095#1077#1090#1099' '#1076#1088#1091#1075#1080#1077
+            Caption = #1042#1099#1087#1083#1072#1090#1099' '#1076#1088#1091#1075#1080#1077
             DataBinding.FieldName = 'AmountCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -241,93 +243,99 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 133
+            Width = 194
           end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1104
+    Width = 885
     Height = 89
     TabOrder = 3
     ExplicitWidth = 1104
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
-      Left = 144
-      ExplicitLeft = 144
-      ExplicitWidth = 74
-      Width = 74
+      Left = 8
+      ExplicitLeft = 8
+      ExplicitWidth = 75
+      Width = 75
     end
     inherited cxLabel1: TcxLabel
-      Left = 144
-      ExplicitLeft = 144
+      Left = 8
+      ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 232
+      Left = 100
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 232
+      ExplicitLeft = 100
     end
     inherited cxLabel2: TcxLabel
-      Left = 232
-      ExplicitLeft = 232
+      Left = 100
+      ExplicitLeft = 100
+    end
+    inherited cxLabel15: TcxLabel
+      Top = 45
+      ExplicitTop = 45
     end
     inherited ceStatus: TcxButtonEdit
-      ExplicitWidth = 121
+      Top = 63
+      ExplicitTop = 63
+      ExplicitWidth = 192
       ExplicitHeight = 22
-      Width = 121
+      Width = 192
     end
     object deServiceDate: TcxDateEdit
-      Left = 349
-      Top = 23
+      Left = 217
+      Top = 63
       EditValue = 41640d
-      Enabled = False
       Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 6
       Width = 97
     end
     object cxLabel6: TcxLabel
-      Left = 349
-      Top = 5
+      Left = 217
+      Top = 45
       Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
     end
     object edComment: TcxTextEdit
-      Left = 792
-      Top = 23
+      Left = 470
+      Top = 63
       TabOrder = 8
-      Width = 296
+      Width = 387
     end
     object cxLabel12: TcxLabel
-      Left = 792
-      Top = 5
+      Left = 470
+      Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
     end
     object cePersonalServiceList: TcxButtonEdit
-      Left = 349
-      Top = 67
+      Left = 215
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 10
-      Width = 242
+      Width = 240
     end
     object cxLabel3: TcxLabel
-      Left = 349
-      Top = 49
+      Left = 217
+      Top = 5
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
     end
     object cxLabel4: TcxLabel
-      Left = 466
-      Top = 5
-      Caption = #8470' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1087
+      Left = 320
+      Top = 45
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
     end
     object ceCash: TcxButtonEdit
-      Left = 631
+      Left = 470
       Top = 23
       Properties.Buttons = <
         item
@@ -338,13 +346,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       Width = 140
     end
     object cxLabel9: TcxLabel
-      Left = 631
-      Top = 50
+      Left = 625
+      Top = 5
       Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
     end
     object ceMember: TcxButtonEdit
-      Left = 631
-      Top = 67
+      Left = 625
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -352,23 +360,24 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 170
+      Width = 232
     end
   end
   object edDocumentPersonalService: TcxButtonEdit [2]
-    Left = 466
-    Top = 23
-    Enabled = False
+    Left = 320
+    Top = 63
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
-    Width = 149
+    Width = 137
   end
   object cxLabel5: TcxLabel [3]
-    Left = 631
+    Left = 470
     Top = 5
     Caption = #1050#1072#1089#1089#1072':'
   end
@@ -710,8 +719,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 24
-    Top = 16
+    Left = 88
+    Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PersonalService'
@@ -1059,8 +1068,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 792
+    Top = 344
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PersonalService_SetErased'
@@ -1176,6 +1185,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Top = 228
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -1278,8 +1288,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 424
-    Top = 61
+    Left = 384
+    Top = 65533
   end
   object DocumentPersonalServiceGuides: TdsdGuides
     KeyField = 'Id'
@@ -1324,8 +1334,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 528
-    Top = 16
+    Left = 360
+    Top = 48
   end
   object CashGuides: TdsdGuides
     KeyField = 'Id'
@@ -1348,8 +1358,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 672
-    Top = 13
+    Left = 528
+    Top = 65533
   end
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
@@ -1372,8 +1382,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 712
-    Top = 61
+    Left = 736
+    Top = 65533
   end
   object spUpdateAmountParam: TdsdStoredProc
     StoredProcName = 'gptUpdateMI_Cash_Personal_AmountParam'

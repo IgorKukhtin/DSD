@@ -33,8 +33,7 @@ $BODY$
    DECLARE vbOKPO             TVarChar;
 BEGIN
      -- Определяются параметры
-     SELECT MovementLinkMovement_Order.MovementId AS MovementId_Order
-          , TRIM (Movement.InvNumber)             AS InvNumber
+     SELECT TRIM (Movement.InvNumber)             AS InvNumber
           , Movement.OperDate                     AS OperDate
           , Movement.OperDate + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL AS OperDatePartner
           , ObjectString_Partner_GLNCode.ObjectId AS PartnerId
@@ -53,7 +52,7 @@ BEGIN
           , ObjectLink_Partner_MemberTake.ChildObjectId      AS MemberTakeId
           , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
           , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
-            INTO vbMovementId_Order, vbInvNumber, vbOperDate, vbOperDatePartner, vbPartnerId, vbJuridicalId, vbUnitId, vbContractId, vbPaidKindId, vbChangePercent
+            INTO vbInvNumber, vbOperDate, vbOperDatePartner, vbPartnerId, vbJuridicalId, vbUnitId, vbContractId, vbPaidKindId, vbChangePercent
                , vbRouteId, vbRouteSortingId, vbMemberTakeId
                , vbGoodsPropertyId, vbOKPO
      FROM Movement
@@ -63,9 +62,7 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                         ON MovementLinkMovement_Order.MovementChildId = Movement.Id
-                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+
           LEFT JOIN MovementString AS MovementString_GLNCode
                                    ON MovementString_GLNCode.MovementId =  Movement.Id
                                   AND MovementString_GLNCode.DescId = zc_MovementString_GLNCode()
@@ -128,6 +125,27 @@ BEGIN
     ;
 
      -- Проверка
+     IF 1 < (SELECT COUNT (*)
+             FROM MovementLinkMovement AS MovementLinkMovement_Order
+                  INNER JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
+                                                       AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
+             WHERE MovementLinkMovement_Order.MovementChildId = inMovementId
+               AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> для значения GLN - место доставки (EDI) = <%> не определен <Контрагент>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), (SELECT ValueData FROM MovementString WHERE MovementId = inMovementId AND DescId = zc_MovementString_GLNPlaceCode());
+     ELSE
+         -- находим отдельно
+         vbMovementId_Order:= (SELECT Movement_Order.Id
+                               FROM MovementLinkMovement AS MovementLinkMovement_Order
+                                    INNER JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
+                                                                         AND Movement_Order.StatusId <> zc_Enum_Status_Erased()
+                               WHERE MovementLinkMovement_Order.MovementChildId = inMovementId
+                                 AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                              );
+     END IF;
+
+     -- Проверка
      IF COALESCE (vbPartnerId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> для значения GLN - место доставки (EDI) = <%> не определен <Контрагент>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), (SELECT ValueData FROM MovementString WHERE MovementId = inMovementId AND DescId = zc_MovementString_GLNPlaceCode());
@@ -159,6 +177,8 @@ BEGIN
             INTO vbPriceListId, vbPriceWithVAT, vbVATPercent
      FROM lfGet_Object_Partner_PriceList (inPartnerId:= vbPartnerId, inOperDate:= vbOperDatePartner);
 
+     -- находим, если его набирали вручную (т.е. у заявки нет связи с EDI)
+     vbMovementId_Order:= 
 
      -- сохранили <Заявки сторонние>
      vbMovementId_Order:= lpInsertUpdate_Movement_OrderExternal (ioId                  := vbMovementId_Order
@@ -191,6 +211,7 @@ BEGIN
      WHERE MovementItem.MovementId = vbMovementId_Order
        AND MovementItem.DescId =  zc_MI_Master()
        AND MovementItem.isErased = FALSE;*/
+
      -- "удалили" кол-во <Элемент документа>
      PERFORM lpSetErased_MovementItem (MovementItem.Id, inUserId)
      FROM MovementItem

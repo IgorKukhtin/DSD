@@ -21,7 +21,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxImageComboBox, cxButtonEdit;
+  dxSkinXmas2008Blue, cxImageComboBox, cxButtonEdit, cxCurrencyEdit;
 
 type
   TContractChoicePartnerOrderForm = class(TAncestorEnumForm)
@@ -53,6 +53,10 @@ type
     actChoiceRouteSorting: TOpenChoiceForm;
     actChoiceMemberTake: TOpenChoiceForm;
     clItemName: TcxGridDBColumn;
+    AmountDebet: TcxGridDBColumn;
+    AmountKredit: TcxGridDBColumn;
+    DelayDay: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

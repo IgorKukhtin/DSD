@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MoneyPlace(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isErased Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime, EndDate TDateTime
+             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime, EndDate TDateTime
              , ContractTagName TVarChar, ContractKindName TVarChar
              , OKPO TVarChar
               )
@@ -35,10 +35,11 @@ BEGIN
           , View_InfoMoney.InfoMoneyDestinationName
           , View_InfoMoney.InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all
-          , NULL::Integer   AS PaidKindId
-          , ''::TVarChar AS PaidKindName
+          , NULL::Integer AS PaidKindId
+          , ''::TVarChar  AS PaidKindName
           , NULL::Integer AS ContractId
-          , ''::TVarChar AS ContractNumber
+          , NULL::Integer AS ContractCode
+          , ''::TVarChar  AS ContractNumber
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
@@ -62,10 +63,11 @@ BEGIN
           , View_InfoMoney.InfoMoneyDestinationName
           , View_InfoMoney.InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all
-          , NULL::Integer   AS PaidKindId
-          , ''::TVarChar AS PaidKindName
-          , NULL::Integer
-          , ''::TVarChar
+          , NULL::Integer AS PaidKindId
+          , ''::TVarChar  AS PaidKindName
+          , NULL::Integer AS ContractId
+          , NULL::Integer AS ContractCode
+          , ''::TVarChar  AS ContractNumber
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
@@ -89,10 +91,11 @@ BEGIN
           , ''::TVarChar AS InfoMoneyDestinationName
           , ''::TVarChar AS InfoMoneyName
           , ''::TVarChar AS InfoMoneyName_all
-          , NULL::Integer   AS PaidKindId
-          , ''::TVarChar AS PaidKindName
-          , NULL::Integer
-          , ''::TVarChar
+          , NULL::Integer AS PaidKindId
+          , ''::TVarChar  AS PaidKindName
+          , NULL::Integer AS ContractId
+          , NULL::Integer AS ContractCode
+          , ''::TVarChar  AS ContractNumber
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
@@ -118,6 +121,7 @@ BEGIN
           , Object_PaidKind.Id            AS PaidKindId
           , Object_PaidKind.ValueData     AS PaidKindName
           , View_Contract.ContractId 
+          , View_Contract.ContractCode
           , View_Contract.InvNumber
           , View_Contract.ContractStateKindCode
           , View_Contract.StartDate

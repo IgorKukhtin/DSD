@@ -1,4 +1,4 @@
--- View: Object_ContractCondition_PercentView
+-- View: Object_ContractCondition_DefermentPaymentView
 
 CREATE OR REPLACE VIEW Object_ContractCondition_DefermentPaymentView AS
         SELECT zc_Enum_ContractConditionKind_DelayDayCalendar()  AS ConditionKindId
@@ -16,4 +16,4 @@ ALTER TABLE Object_ContractCondition_DefermentPaymentView  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_ContractCondition_PercentView
+-- SELECT * FROM Object_ContractCondition_DefermentPaymentView

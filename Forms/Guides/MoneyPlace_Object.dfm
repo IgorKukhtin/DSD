@@ -20,6 +20,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -53,6 +54,15 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object clContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
@@ -190,44 +200,52 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'ContractName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyCode'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName_all'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString

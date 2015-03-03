@@ -257,7 +257,6 @@ BEGIN
                                   AND MovementDate_OperDatePartner_Sale.DescId = zc_MovementDate_OperDatePartner()
 
 
-
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -321,6 +320,11 @@ BEGIN
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND View_Contract.InvNumber <> '-'
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
+                                 ON ObjectLink_Contract_JuridicalDocument.ObjectId = MovementLinkObject_Contract.ObjectId
+                                AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
+                                AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+
 -- ============================
             --по контрагенту находим юр.лицо
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -333,7 +337,7 @@ BEGIN
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, Object_To.Id)
+                                                                ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId, COALESCE (View_Contract.JuridicalBasisId, Object_To.Id))
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
 -- bank account

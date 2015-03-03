@@ -2250,6 +2250,7 @@ inherited ReturnInForm: TReturnInForm
     Top = 196
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -2685,8 +2686,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 552
-    Top = 132
+    Left = 696
+    Top = 12
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'

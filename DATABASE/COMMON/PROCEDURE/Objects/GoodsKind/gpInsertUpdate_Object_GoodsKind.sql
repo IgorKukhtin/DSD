@@ -1,25 +1,23 @@
-п»ї-- Function: gpInsertUpdate_Object_GoodsKind()
+-- Function: gpInsertUpdate_Object_GoodsKind()
 
 -- DROP FUNCTION gpInsertUpdate_Object_GoodsKind();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsKind(
- INOUT ioId	                 Integer   ,   	-- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° < РўРёРї С‚РѕРІР°СЂР°> 
-    IN inCode                Integer   ,    -- РљРѕРґ РѕР±СЉРµРєС‚Р° <РўРёРї С‚РѕРІР°СЂР°> 
-    IN inName                TVarChar  ,    -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РўРёРї С‚РѕРІР°СЂР°>
-    IN inSession             TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	                 Integer   ,   	-- ключ объекта < Тип товара> 
+    IN inCode                Integer   ,    -- Код объекта <Тип товара> 
+    IN inName                TVarChar  ,    -- Название объекта <Тип товара>
+    IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE Code_max Integer;  
    
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsKind());
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsKind());
-   UserId := inSession;
-
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
+   -- Если код не установлен, определяем его каи последний+1
    IF COALESCE (inCode, 0) = 0
    THEN 
        SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_GoodsKind();
@@ -27,16 +25,16 @@ BEGIN
        Code_max := inCode;
    END IF; 
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ РўРёРїР° РўРѕРІР°СЂР°>
+   -- проверка прав уникальности для свойства <Наименование Типа Товара>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_GoodsKind(), inName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ РўРёРїР° РўРѕРІР°СЂР°>
+   -- проверка прав уникальности для свойства <Код Типа Товара>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsKind(), Code_max);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsKind(), inCode, inName);
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);   
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);   
 
 END;$BODY$
 
@@ -47,12 +45,12 @@ ALTER FUNCTION gpInsertUpdate_Object_GoodsKind (Integer, Integer, TVarChar, TVar
   
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.06.13          *
  00.06.13          
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_GoodsKind()
                           

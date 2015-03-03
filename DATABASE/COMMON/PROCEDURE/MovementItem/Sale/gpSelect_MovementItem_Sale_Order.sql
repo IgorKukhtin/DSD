@@ -32,7 +32,8 @@ BEGIN
      END IF;
 
 
-     IF inShowAll THEN
+     IF inShowAll = TRUE
+     THEN
 
      RETURN QUERY
        WITH tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
@@ -225,7 +226,7 @@ BEGIN
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = tmpMI.MovementItemId
-                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                       AND MIFloat_HeadCount.DescId = NULL -- zc_MIFloat_HeadCount()
             LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                         ON MIFloat_BoxCount.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
@@ -382,7 +383,7 @@ BEGIN
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = tmpMI.MovementItemId
-                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                       AND MIFloat_HeadCount.DescId = NULL -- zc_MIFloat_HeadCount()
             LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                         ON MIFloat_BoxCount.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()

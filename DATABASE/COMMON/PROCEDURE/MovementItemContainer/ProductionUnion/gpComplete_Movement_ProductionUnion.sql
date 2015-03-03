@@ -328,8 +328,10 @@ BEGIN
                    , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     AS isPartionCount
                    , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)      AS isPartionSumm
 
-              FROM Movement
-                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
+              -- FROM Movement
+              --     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
+              FROM _tmpItem
+                   INNER JOIN MovementItem ON MovementItem.ParentId = _tmpItem.MovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -360,9 +362,9 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-              WHERE Movement.Id = inMovementId
-                AND Movement.DescId = zc_Movement_ProductionUnion()
-                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+              -- WHERE Movement.Id = inMovementId
+              --   AND Movement.DescId = zc_Movement_ProductionUnion()
+              --   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp;
 
 

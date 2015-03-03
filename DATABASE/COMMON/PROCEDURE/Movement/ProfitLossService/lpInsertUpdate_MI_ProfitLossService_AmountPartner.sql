@@ -100,10 +100,10 @@ BEGIN
                                                                                    AND ContainerLO_Juridical.ObjectId = vbJuridicalId
                             INNER JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = ContainerLO_Contract.ContainerId
                                                                                    AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                                                                   -- AND ContainerLO_InfoMoney.ObjectId = ???
+                                                                                   AND ContainerLO_InfoMoney.ObjectId = vbInfoMoneyId
                             INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = ContainerLO_Contract.ContainerId
                                                                                   AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                                                                                  -- AND ContainerLO_PaidKind.ObjectId = ???
+                                                                                  AND ContainerLO_PaidKind.ObjectId = vbPaidKindId
                             INNER JOIN Container ON Container.Id = ContainerLO_Contract.ContainerId
                                                 AND Container.ObjectId NOT IN (SELECT AccountId FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
                                                 AND Container.DescId = zc_Container_Summ()
@@ -356,7 +356,7 @@ BEGIN
                                                       , inJuridicalId      := vbJuridicalId
                                                       , inJuridicalId_Child:= _tmpMIChild.JuridicalId
                                                       , inPartnerId        := MovementLinkObject_To.ObjectId
-                                                      , inBranchId         := CASE WHEN vbContractId_child <> 0 THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) END -- zc_Branch_Basis()
+                                                      , inBranchId         := CASE WHEN vbContractId_child <> 0 THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) END
                                                       , inGoodsId          := _tmpMIChild.GoodsId
                                                       , inGoodsKindId      := _tmpMIChild.GoodsKindId
                                                       , inAmount           := _tmpMIChild.Amount_recalc

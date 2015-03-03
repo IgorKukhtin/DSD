@@ -6,10 +6,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsKind(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
-$BODY$BEGIN
-   
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsKind());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_GoodsKind());
+   vbUserId:= lpGetUserBySession (inSession);
 
    RETURN QUERY 
    SELECT 
@@ -19,6 +21,7 @@ $BODY$BEGIN
        , Object.isErased   AS isErased
    FROM Object
    WHERE Object.DescId = zc_Object_GoodsKind()
+       AND (Object.Id <> 268778 OR vbUserId = 5) -- Админ
   UNION ALL
    SELECT 0 AS Id
         , 0 AS Code

@@ -2,7 +2,8 @@ inherited CashJournalForm: TCashJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 990
+  ExplicitWidth = 998
+  ExplicitHeight = 710
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -90,6 +91,14 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 150
           end
+          object OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object clMemberName: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'MemberName'
@@ -101,7 +110,8 @@ inherited CashJournalForm: TCashJournalForm
             Caption = #1055#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -111,7 +121,8 @@ inherited CashJournalForm: TCashJournalForm
             Caption = #1056#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -232,6 +243,12 @@ inherited CashJournalForm: TCashJournalForm
   inherited Panel: TPanel
     Width = 982
     ExplicitWidth = 982
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
     inherited cxLabel1: TcxLabel
       Top = 7
       ExplicitTop = 7
@@ -313,7 +330,6 @@ inherited CashJournalForm: TCashJournalForm
         end>
     end
     inherited MovementProtocolOpenForm: TdsdOpenForm
-      ImageIndex = 34
       FormNameParam.Value = ''
     end
   end
@@ -427,6 +443,8 @@ inherited CashJournalForm: TCashJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Cash'
+    Left = 352
+    Top = 176
   end
   object CashGuides: TdsdGuides
     KeyField = 'Id'

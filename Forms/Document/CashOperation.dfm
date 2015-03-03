@@ -5,7 +5,7 @@
   ClientWidth = 569
   AddOnFormData.isSingle = False
   ExplicitWidth = 575
-  ExplicitHeight = 307
+  ExplicitHeight = 300
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -48,10 +48,10 @@
   object ceCash: TcxButtonEdit [7]
     Left = 430
     Top = 25
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -139,10 +139,10 @@
   object ceContract: TcxButtonEdit [18]
     Left = 430
     Top = 70
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -165,7 +165,6 @@
   object edInvNumber: TcxTextEdit [21]
     Left = 15
     Top = 25
-    Enabled = False
     Properties.ReadOnly = True
     TabOrder = 21
     Text = '0'
@@ -213,7 +212,7 @@
   object ceServiceDate: TcxDateEdit [27]
     Left = 245
     Top = 25
-    EditValue = 41640d
+    EditValue = 42005d
     Properties.DisplayFormat = 'mmmm yyyy'
     Properties.SaveTime = False
     Properties.ShowTime = False

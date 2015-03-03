@@ -67,6 +67,8 @@ type
     clGLNCodeJuridical: TcxGridDBColumn;
     GLNCodeRetail: TcxGridDBColumn;
     GLNCodeCorporate: TcxGridDBColumn;
+    DocumentDayCount: TcxGridDBColumn;
+    PrepareDayCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

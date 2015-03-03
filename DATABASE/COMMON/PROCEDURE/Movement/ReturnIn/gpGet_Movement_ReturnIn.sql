@@ -77,7 +77,7 @@ BEGIN
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN 0 = COALESCE ((SELECT BranchId FROM tmpBranch), 0)
                                                                          THEN 8461 -- !!!Склад Возвратов!!!
                                                                     WHEN 8374 = COALESCE ((SELECT BranchId FROM tmpBranch), 0) -- филиал Одесса
-                                                                         THEN 8461 -- !!!Склад возвратов ф.Одесса!!!
+                                                                         THEN 346094 -- !!!Склад возвратов ф.Одесса!!!
                                                                     WHEN 301310 = (SELECT BranchId FROM tmpBranch) -- филиал Запорожье
                                                                          THEN 309599 -- !!!Склад возвратов ф.Запорожье!!!
                                                                     ELSE 0

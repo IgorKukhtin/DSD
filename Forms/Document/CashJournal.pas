@@ -32,6 +32,7 @@ type
     clMemberName: TcxGridDBColumn;
     clPositionName: TcxGridDBColumn;
     clItemName: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -103,6 +103,8 @@ type
     bbUpdateEdiDesadv: TdxBarButton;
     GLNCodeRetail: TcxGridDBColumn;
     GLNCodeCorporate: TcxGridDBColumn;
+    PrepareDayCount: TcxGridDBColumn;
+    DocumentDayCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

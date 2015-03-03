@@ -11,7 +11,7 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxImageComboBox, Vcl.Menus;
+  cxImageComboBox, Vcl.Menus, cxCurrencyEdit;
 
 type
   TMoneyPlaceCash_ObjectForm = class(TAncestorEnumForm)
@@ -29,6 +29,11 @@ type
     clEndDate: TcxGridDBColumn;
     clContractKindName: TcxGridDBColumn;
     clInfoMoneyName_all: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    AmountDebet: TcxGridDBColumn;
+    AmountKredit: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public
