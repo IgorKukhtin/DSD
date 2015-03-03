@@ -21,6 +21,10 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyId Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , OKPO TVarChar
              , ChangePercent TFloat
+             , DelayDay TVarChar
+             , AmountDebet TFloat
+             , AmountKredit TFloat
+             , BranchName TVarChar, ContainerId Integer
              , isErased Boolean
               )
 AS
@@ -37,22 +41,22 @@ BEGIN
 
 
    -- определяется уровень доступа
-   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
-   vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
-   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbBranchId_Constraint, 0) > 0;
+   vbObjectId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0), 0);
+   vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0), 0);
+   vbIsConstraint:= vbObjectId_Constraint > 0 OR vbBranchId_Constraint > 0;
 
 
    IF inShowAll= TRUE THEN
    -- Результат такой
    RETURN QUERY
    SELECT
-         Object_Contract_View.ContractId   AS Id
-       , Object_Contract_View.ContractCode AS Code
-       , Object_Contract_View.InvNumber
-       , Object_Contract_View.StartDate
-       , Object_Contract_View.EndDate
-       , Object_Contract_View.ContractTagId
-       , Object_Contract_View.ContractTagName
+         COALESCE (Object_Contract_View_Container.ContractId, Object_Contract_View.ContractId)     :: Integer   AS Id
+       , COALESCE (Object_Contract_View_Container.ContractCode, Object_Contract_View.ContractCode) :: Integer   AS Code
+       , COALESCE (Object_Contract_View_Container.InvNumber, Object_Contract_View.InvNumber)       :: TVarChar  AS InvNumber
+       , COALESCE (Object_Contract_View_Container.StartDate, Object_Contract_View.StartDate)       :: TDateTime AS StartDate
+       , COALESCE (Object_Contract_View_Container.EndDate, Object_Contract_View.EndDate)           :: TDateTime AS EndDate
+       , COALESCE (Object_Contract_View_Container.ContractTagId, Object_Contract_View.ContractTagId)     :: Integer  AS ContractTagId
+       , COALESCE (Object_Contract_View_Container.ContractTagName, Object_Contract_View.ContractTagName) :: TVarChar AS ContractTagName
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
        , Object_Juridical.ValueData    AS JuridicalName
@@ -62,7 +66,7 @@ BEGIN
        , ObjectString_GLNCode.ValueData AS GLNCode
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
-       , Object_Contract_View.ContractStateKindCode
+       , COALESCE (Object_Contract_View_Container.ContractStateKindCode, Object_Contract_View.ContractStateKindCode) AS ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
        , Object_Route.Id               AS RouteId
@@ -80,7 +84,16 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName_all
 
        , ObjectHistory_JuridicalDetails_View.OKPO
-       , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
+
+       , View_ContractCondition_Value.ChangePercent
+       , View_ContractCondition_Value.DelayDay
+
+       , Container_Partner_View.AmountDebet
+       , Container_Partner_View.AmountKredit
+
+       , Object_Branch.ValueData AS BranchName
+       , Container_Partner_View.ContainerId
+
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
@@ -113,22 +126,29 @@ BEGIN
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
          LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
 
+         LEFT JOIN Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
+
         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
-        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                            AND Container_Partner_View.PartnerId IS NULL
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
+        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+        LEFT JOIN Object_Contract_View AS Object_Contract_View_Container ON Object_Contract_View_Container.ContractId = Container_Partner_View.ContractId
 
         LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                       AND Object_Contract_View.isErased = FALSE
-        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
-        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
+                                      -- AND Container_Partner_View.ContractId IS NULL
+
+        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, Object_Contract_View.InfoMoneyId)
+        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (Container_Partner_View.PaidKindId, Object_Contract_View.PaidKindId)
 
         LEFT JOIN ObjectString AS ObjectString_Comment
-                               ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
+                               ON ObjectString_Comment.ObjectId = COALESCE (Container_Partner_View.ContractId, Object_Contract_View.ContractId)
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
- 	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+ 	LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                         INNER JOIN ObjectFloat AS ObjectFloat_Value
@@ -142,17 +162,22 @@ BEGIN
                                              AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                    WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                  ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
+                  )*/ Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = COALESCE (Container_Partner_View.ContractId, Object_Contract_View.ContractId)
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
-     AND (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
-                                                                          , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
-                                                                          , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
-                                                                           )
+     AND ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+           AND vbBranchId_Constraint > 0)
+       OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
+                                                                            , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                                                            , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
+                                                                             )
+           AND vbBranchId_Constraint = 0)
        OR Object_InfoMoney_View.InfoMoneyId = 8942 -- Кротон
          )
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
@@ -175,13 +200,13 @@ BEGIN
    -- Результат другой
    RETURN QUERY
    SELECT
-         Object_Contract_View.ContractId   AS Id
-       , Object_Contract_View.ContractCode AS Code
-       , Object_Contract_View.InvNumber
-       , Object_Contract_View.StartDate
-       , Object_Contract_View.EndDate
-       , Object_Contract_View.ContractTagId
-       , Object_Contract_View.ContractTagName
+         COALESCE (Object_Contract_View_Container.ContractId, Object_Contract_View.ContractId)     :: Integer   AS Id
+       , COALESCE (Object_Contract_View_Container.ContractCode, Object_Contract_View.ContractCode) :: Integer   AS Code
+       , COALESCE (Object_Contract_View_Container.InvNumber, Object_Contract_View.InvNumber)       :: TVarChar  AS InvNumber
+       , COALESCE (Object_Contract_View_Container.StartDate, Object_Contract_View.StartDate)       :: TDateTime AS StartDate
+       , COALESCE (Object_Contract_View_Container.EndDate, Object_Contract_View.EndDate)           :: TDateTime AS EndDate
+       , COALESCE (Object_Contract_View_Container.ContractTagId, Object_Contract_View.ContractTagId)     :: Integer  AS ContractTagId
+       , COALESCE (Object_Contract_View_Container.ContractTagName, Object_Contract_View.ContractTagName) :: TVarChar AS ContractTagName
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
        , Object_Juridical.ValueData    AS JuridicalName
@@ -191,15 +216,15 @@ BEGIN
        , ObjectString_GLNCode.ValueData AS GLNCode
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
-       , Object_Contract_View.ContractStateKindCode
+       , COALESCE (Object_Contract_View_Container.ContractStateKindCode, Object_Contract_View.ContractStateKindCode) AS ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
        , Object_Route.Id               AS RouteId
        , Object_Route.ValueData        AS RouteName
        , Object_RouteSorting.Id        AS RouteSortingId
        , Object_RouteSorting.ValueData AS RouteSortingName
-       , Object_MemberTake.Id          AS PersonalTakeId
-       , Object_MemberTake.ValueData   AS PersonalTakeName
+       , Object_MemberTake.Id        AS PersonalTakeId
+       , Object_MemberTake.ValueData AS PersonalTakeName
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -209,7 +234,16 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName_all
 
        , ObjectHistory_JuridicalDetails_View.OKPO
-       , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
+
+       , View_ContractCondition_Value.ChangePercent
+       , View_ContractCondition_Value.DelayDay
+
+       , Container_Partner_View.AmountDebet
+       , Container_Partner_View.AmountKredit
+
+       , Object_Branch.ValueData AS BranchName
+       , Container_Partner_View.ContainerId
+
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
@@ -242,23 +276,30 @@ BEGIN
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
          LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
 
+         LEFT JOIN Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
+
         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
-        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                            AND Container_Partner_View.PartnerId IS NULL
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
+        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+        LEFT JOIN Object_Contract_View AS Object_Contract_View_Container ON Object_Contract_View_Container.ContractId = Container_Partner_View.ContractId
 
         LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                       AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                       AND Object_Contract_View.isErased = FALSE
-        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
-        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
+                                      -- AND Container_Partner_View.ContractId IS NULL
+
+        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, Object_Contract_View.InfoMoneyId)
+        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (Container_Partner_View.PaidKindId, Object_Contract_View.PaidKindId)
 
         LEFT JOIN ObjectString AS ObjectString_Comment
-                               ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
+                               ON ObjectString_Comment.ObjectId = COALESCE (Container_Partner_View.ContractId, Object_Contract_View.ContractId)
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
- 	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+ 	LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                         INNER JOIN ObjectFloat AS ObjectFloat_Value
@@ -272,19 +313,24 @@ BEGIN
                                              AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                    WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                  ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
+                  )*/ Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = COALESCE (Container_Partner_View.ContractId, Object_Contract_View.ContractId)
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
-     AND (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
-                                                                          , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
-                                                                          , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
-                                                                           )
+     AND ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+           AND vbBranchId_Constraint > 0)
+       OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
+                                                                            , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                                                            , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
+                                                                             )
+           AND vbBranchId_Constraint = 0)
        OR Object_InfoMoney_View.InfoMoneyId = 8942 -- Кротон
          )
-
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE

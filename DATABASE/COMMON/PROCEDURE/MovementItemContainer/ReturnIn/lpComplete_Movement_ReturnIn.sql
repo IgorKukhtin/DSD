@@ -136,10 +136,13 @@ BEGIN
           , 0 AS MemberId_To -- COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN Object_To.Id WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_PersonalTo_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_To
           , COALESCE (CASE WHEN ObjectLink_Partner_Branch.ChildObjectId <> 0
                                 THEN ObjectLink_Partner_Branch.ChildObjectId
+
                            WHEN Object_To.DescId = zc_Object_Unit()
                                 THEN ObjectLink_UnitTo_Branch.ChildObjectId
+
                            WHEN Object_To.DescId = zc_Object_Partner()
                                 THEN ObjectLink_PartnerTo_Branch.ChildObjectId
+
                            WHEN Object_To.DescId = zc_Object_Personal()
                                 THEN ObjectLink_UnitPersonalTo_Branch.ChildObjectId
                            ELSE 0
@@ -257,7 +260,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Branch
                                ON ObjectLink_Partner_Branch.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_Partner_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
-                              AND Object_To.DescId = zc_Object_Partner()
+                              AND Object_From.DescId = zc_Object_Partner()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                   ON ObjectBoolean_isCorporate.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()

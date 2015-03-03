@@ -47,8 +47,7 @@ BEGIN
        FROM (SELECT Object_Goods.Id           AS GoodsId
                   , Object_Goods.ObjectCode   AS GoodsCode
                   , Object_Goods.ValueData    AS GoodsName
-                  , zc_Enum_GoodsKind_Main()  AS GoodsKindId
-                  
+                  , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN zc_Enum_GoodsKind_Main() ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция + Доходы Мясное сырье
              FROM Object_InfoMoney_View
                   LEFT JOIN tmpParams ON 1 = 1
                   INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -184,4 +183,4 @@ ALTER FUNCTION gpSelect_MovementItem_PriceCorrective (Integer, TDateTime, Boolea
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_PriceCorrective (inMovementId:= 25173, inPriceListId:= 18840, inOperDate:='01.01.2014'::TDateTime, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_PriceCorrective (inMovementId:= 25173, inOperDate:='01.01.2014'::TDateTime, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')

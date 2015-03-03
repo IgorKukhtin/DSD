@@ -123,10 +123,13 @@ BEGIN
           , 0 AS MemberId_From -- COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
           , COALESCE (CASE WHEN ObjectLink_Partner_Branch.ChildObjectId <> 0
                                 THEN ObjectLink_Partner_Branch.ChildObjectId
+
                            WHEN Object_From.DescId = zc_Object_Unit()
                                 THEN ObjectLink_UnitFrom_Branch.ChildObjectId
+
                            WHEN Object_From.DescId = zc_Object_Partner()
                                 THEN ObjectLink_PartnerFrom_Branch.ChildObjectId
+
                            WHEN Object_From.DescId = zc_Object_Personal()
                                 THEN ObjectLink_UnitPersonalFrom_Branch.ChildObjectId
                            ELSE 0

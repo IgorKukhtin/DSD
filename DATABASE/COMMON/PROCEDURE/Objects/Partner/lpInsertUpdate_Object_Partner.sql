@@ -54,6 +54,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
 )
   RETURNS Integer AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
 BEGIN
 
    -- Проверка для TPartner1CLinkPlaceForm
@@ -66,6 +67,9 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
    END IF;
    
+
+   -- определяется признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    IF COALESCE (ioId, 0) = 0
    THEN
@@ -84,7 +88,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeCorporate(), ioId, inGLNCodeCorporate);   
       
    -- сохранили свойство <За сколько дней принимается заказ>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount);
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, CASE WHEN vbIsInsert = TRUE AND COALESCE (inPrepareDayCount, 0) = 0 THEN 1 ELSE inPrepareDayCount END);
    -- сохранили свойство <Через сколько дней оформляется документально>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount(), ioId, inDocumentDayCount);
    

@@ -21,7 +21,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxImageComboBox, cxButtonEdit;
+  dxSkinXmas2008Blue, cxImageComboBox, cxButtonEdit, cxCurrencyEdit;
 
 type
   TContractChoicePartnerForm = class(TAncestorEnumForm)
@@ -49,6 +49,11 @@ type
     actChoicePersonalTake: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    DelayDay: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    AmountDebet: TcxGridDBColumn;
+    AmountKredit: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
   private
     { Private declarations }
   public

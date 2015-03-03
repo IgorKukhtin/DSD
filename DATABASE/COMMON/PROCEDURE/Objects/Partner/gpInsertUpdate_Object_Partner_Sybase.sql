@@ -19,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner_Sybase(
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -36,6 +37,8 @@ BEGIN
    IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), inCode); END IF;
 
 
+   -- определяется признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), inCode, inName);
    -- сохранили свойство <Код GLN>
@@ -43,7 +46,7 @@ BEGIN
    -- сохранили свойство <Адрес точки доставки>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, inAddress);
    -- сохранили свойство <За сколько дней принимается заказ>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount);
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, CASE WHEN vbIsInsert = TRUE AND COALESCE (inPrepareDayCount, 0) = 0 THEN 1 ELSE inPrepareDayCount END);
    -- сохранили свойство <Через сколько дней оформляется документально>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount(), ioId, inDocumentDayCount);
    -- сохранили связь с <Юридические лица>

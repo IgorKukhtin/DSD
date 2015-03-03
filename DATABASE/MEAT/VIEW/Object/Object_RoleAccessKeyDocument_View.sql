@@ -34,6 +34,10 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                               , zc_Enum_Process_AccessKey_DocumentKiev()
                                               , zc_Enum_Process_AccessKey_DocumentZaporozhye()
                                               , zc_Enum_Process_AccessKey_DocumentOdessa()
+                                              , zc_Enum_Process_AccessKey_DocumentKrRog()
+                                              , zc_Enum_Process_AccessKey_DocumentNikolaev()
+                                              , zc_Enum_Process_AccessKey_DocumentKharkov()
+                                              , zc_Enum_Process_AccessKey_DocumentCherkassi()
                                                )
                                          THEN TRUE
                                     ELSE NULL

@@ -74,10 +74,7 @@ BEGIN
    
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Member (Integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -87,8 +84,7 @@ ALTER FUNCTION gpGet_Object_Member (Integer, TVarChar) OWNER TO postgres;
  01.10.13         * add DriverCertificate, Comment             
  01.07.13         *
  19.07.13                        *
-
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Member('2')
+-- SELECT * FROM gpGet_Object_Member (1, '2')

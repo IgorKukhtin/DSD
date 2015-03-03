@@ -1,27 +1,49 @@
 inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
   ClientHeight = 411
-  ClientWidth = 693
-  ExplicitWidth = 701
-  ExplicitHeight = 438
+  ClientWidth = 881
+  ExplicitWidth = 897
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 693
+    Width = 881
     Height = 385
-    ExplicitWidth = 693
+    ExplicitWidth = 822
     ExplicitHeight = 385
     ClientRectBottom = 385
-    ClientRectRight = 693
+    ClientRectRight = 881
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 693
+      ExplicitWidth = 822
       ExplicitHeight = 385
       inherited cxGrid: TcxGrid
-        Width = 693
+        Width = 881
         Height = 385
-        ExplicitWidth = 693
+        ExplicitWidth = 822
         ExplicitHeight = 385
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDebet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountKredit
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDebet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountKredit
+            end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -47,6 +69,44 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 240
+          end
+          object OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object AmountDebet: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090
+            DataBinding.FieldName = 'AmountDebet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object AmountKredit: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090
+            DataBinding.FieldName = 'AmountKredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
@@ -77,6 +137,15 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clContractNumber: TcxGridDBColumn

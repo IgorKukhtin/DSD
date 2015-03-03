@@ -136,6 +136,24 @@ object Partner_ObjectForm: TPartner_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 88
       end
+      object DocumentDayCount: TcxGridDBColumn
+        Caption = #1044#1085'. '#1076#1086#1082'.'
+        DataBinding.FieldName = 'DocumentDayCount'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object PrepareDayCount: TcxGridDBColumn
+        Caption = #1044#1085'. '#1079#1072#1082#1072#1079
+        DataBinding.FieldName = 'PrepareDayCount'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
       object clGLNCode: TcxGridDBColumn
         Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
         DataBinding.FieldName = 'GLNCode'
@@ -491,6 +509,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
     Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
