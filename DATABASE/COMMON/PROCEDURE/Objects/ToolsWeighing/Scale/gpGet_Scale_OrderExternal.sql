@@ -136,4 +136,5 @@ ALTER FUNCTION gpGet_Scale_OrderExternal (TDateTime, TVarChar, TVarChar) OWNER T
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_OrderExternal ('01.01.2015', '0000007448300', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_OrderExternal ('27.02.2015', '0000007448300', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_OrderExternal ('27.02.2015', '3535', zfCalc_UserAdmin())

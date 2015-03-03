@@ -61,19 +61,20 @@ BEGIN
      vbEndDate:= DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
 
      -- таблица - элементы документа
-     CREATE TEMP TABLE _tmpMIChild (MovementId Integer, MovementItemId Integer, OperDate TDateTime, JuridicalId Integer, UnitId Integer, GoodsId Integer, GoodsKindId Integer, Summ_Sale TFloat, Summ_Baza TFloat, Summ_Baza_recalc TFloat, Amount_recalc TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIChild (isVirtual Boolean, MovementId Integer, MovementItemId Integer, OperDate TDateTime, JuridicalId Integer, UnitId Integer, GoodsId Integer, GoodsKindId Integer, Summ_Sale TFloat, Summ_Baza TFloat, Summ_Baza_recalc TFloat, Amount_recalc TFloat) ON COMMIT DROP;
 
      -- 
      DELETE FROM _tmpMIChild;
      -- 
-     INSERT INTO _tmpMIChild (MovementId, MovementItemId, OperDate, JuridicalId, UnitId, GoodsId, GoodsKindId, Summ_Sale, Summ_Baza, Summ_Baza_recalc, Amount_recalc)
+     INSERT INTO _tmpMIChild (isVirtual, MovementId, MovementItemId, OperDate, JuridicalId, UnitId, GoodsId, GoodsKindId, Summ_Sale, Summ_Baza, Summ_Baza_recalc, Amount_recalc)
       WITH 
           tmpContract AS (SELECT COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) AS ContractId
                           FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey
                                LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
                           WHERE View_Contract_ContractKey.ContractId = vbContractId_child
                          )
-    , tmpContainer AS (SELECT Container.Id                   AS ContainerId
+    , tmpContainer AS (-- данные по всем продажам, связанные с  <Договор "база"> этого юр. лица
+                       SELECT Container.Id                   AS ContainerId
                             , ContainerLO_Juridical.ObjectId AS JuridicalId
                        FROM tmpContract
                             INNER JOIN ContainerLinkObject AS ContainerLO_Contract ON ContainerLO_Contract.ObjectId = tmpContract.ContractId
@@ -90,6 +91,7 @@ BEGIN
                                                 AND Container.ObjectId NOT IN (SELECT AccountId FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
                                                 AND Container.DescId = zc_Container_Summ()
                       UNION
+                       -- если не установлен <Договор "база"> тогда берем все продажи этого юр. лица
                        SELECT Container.Id                   AS ContainerId
                             , ContainerLO_Juridical.ObjectId AS JuridicalId
                        FROM ContainerLinkObject AS ContainerLO_Contract
@@ -123,7 +125,7 @@ BEGIN
                             UNION
                              SELECT zc_Movement_Sale()        AS DescId, zc_Enum_ContractConditionKind_BonusPercentSale()       AS ContractConditionKindId -- % бонуса за отгрузку
                             UNION
-                             SELECT zc_Movement_Sale()        AS DescId, 0                                                      AS ContractConditionKindId -- распределяется на отгрузку
+                             SELECT zc_Movement_Sale()        AS DescId, 0                                                      AS ContractConditionKindId -- распределяется на ВСЮ отгрузку
                             ) AS tmpDesc
                             INNER JOIN tmpContainer ON vbContractConditionKindId = tmpDesc.ContractConditionKindId
                       )
@@ -207,7 +209,8 @@ BEGIN
                                , MIContainer.WhereObjectId_Analyzer
                        )
         -- данные по База для распределения (!!!здесь еще могут быть продажи!!!)
-        SELECT tmpBaza.MovementId
+        SELECT FALSE AS isVirtual
+             , tmpBaza.MovementId
              , MAX (tmpBaza.MovementItemId) AS MovementItemId
              , tmpBaza.OperDate
              , tmpBaza.JuridicalId
@@ -230,7 +233,8 @@ BEGIN
                , MILinkObject_GoodsKind.ObjectId
        UNION ALL
         -- данные по продажам (!!!если в базе их нет, т.е. BonusPercentAccount!!!)
-        SELECT tmpSale.MovementId
+        SELECT FALSE AS isVirtual
+             , tmpSale.MovementId
              , MAX (tmpSale.MovementItemId) AS MovementItemId
              , tmpSale.OperDate
              , tmpSale.JuridicalId
@@ -253,20 +257,41 @@ BEGIN
                , MILinkObject_GoodsKind.ObjectId
        ;
 
+     -- если нет данных по базе (есть или нет продажи - не важно)
+     IF NOT EXISTS (SELECT MovementId FROM _tmpMIChild WHERE Summ_Sale > 0)
+     THEN
+         -- все пустые значения, кроме даты и юр.лица (т.к. оно в ОЛАПе)
+         INSERT INTO _tmpMIChild (isVirtual, MovementId, MovementItemId, OperDate, JuridicalId, UnitId, GoodsId, GoodsKindId, Summ_Sale, Summ_Baza, Summ_Baza_recalc, Amount_recalc)
+            SELECT TRUE AS isVirtual, 0 AS MovementId, 0 AS MovementItemId, vbOperDate AS OperDate, vbJuridicalId AS JuridicalId, 0 AS UnitId, 0 AS GoodsId, 0 AS GoodsKindId, 0 AS Summ_Sale, 0 AS Summ_Baza, 0 AS Summ_Baza_recalc, 0 AS Amount_recalc;
+     END IF;
+
      -- опеределяется Итого - База для начисления (или сумма оплат, или сумма продаж, или сумма продажа минус возврат)
      vbSumm_Baza:= COALESCE ((SELECT SUM (Summ_Baza) FROM _tmpMIChild), 0);
+     IF vbSumm_Baza < 0 THEN vbSumm_Baza:= 0; END IF;
      -- опеределяется Итого - Продажи
      vbSumm_Sale:= COALESCE ((SELECT SUM (Summ_Sale) FROM _tmpMIChild WHERE _tmpMIChild.Summ_Sale > 0), 0); -- теоретически могут быть продажи с "минусом"
 
 
-     IF vbContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSale(), 0)
-        AND NOT EXISTS (SELECT Summ_Sale FROM _tmpMIChild WHERE Summ_Sale < 0) -- !!!т.е. нет продаж с "минусом"!!!
+     IF vbSumm_Baza = vbSumm_Sale AND vbSumm_Sale > 0 /*vbContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSale(), 0)
+        AND NOT EXISTS (SELECT Summ_Sale FROM _tmpMIChild WHERE Summ_Sale < 0) -- !!!т.е. нет продаж с "минусом"!!!*/
      THEN
          -- "База для начисления" равна "Продажам", распределять не надо
          UPDATE _tmpMIChild SET Summ_Baza_recalc = _tmpMIChild.Summ_Sale WHERE _tmpMIChild.Summ_Sale = _tmpMIChild.Summ_Baza; -- условие - т.к. они должны быть равны иначе ошибка
 
          -- распределяется "Сумма начислений" пропорционально "Продажам"
          UPDATE _tmpMIChild SET Amount_recalc = inAmount * _tmpMIChild.Summ_Sale / vbSumm_Sale WHERE _tmpMIChild.Summ_Sale > 0; -- теоретически могут быть продажи с "минусом"
+
+         -- Расчет Итоговых сумм по по элементам
+          SELECT SUM (_tmpMIChild.Amount_recalc) INTO vbAmount_recalc FROM _tmpMIChild;
+         --
+         -- если не равны ДВЕ Итоговые суммы "Сумма начислений"
+         IF COALESCE (inAmount, 0) <> COALESCE (vbAmount_recalc, 0)
+         THEN
+             -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
+             UPDATE _tmpMIChild SET Amount_recalc = _tmpMIChild.Amount_recalc - (vbAmount_recalc - inAmount)
+             WHERE _tmpMIChild.MovementItemId IN (SELECT _tmpMIChild.MovementItemId FROM _tmpMIChild ORDER BY _tmpMIChild.Amount_recalc DESC LIMIT 1
+                                                 );
+         END IF;
 
      ELSE
      IF vbSumm_Sale > 0
@@ -301,7 +326,7 @@ BEGIN
          -- записывается в !!!одну!!! строку - "База для начисления" и "Сумма начислений"
          UPDATE _tmpMIChild SET Summ_Baza_recalc = vbSumm_Baza
                               , Amount_recalc = inAmount
-         WHERE _tmpMIChild.Summ_Baza <> 0;
+         WHERE _tmpMIChild.Summ_Sale > 0 OR isVirtual = TRUE;
      END IF;
      END IF;
 
@@ -311,7 +336,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка распределения для <База>. Real = <%>   Calc = <%>   MovementId = <%>   InvNumber = <%>', vbSumm_Baza, (SELECT SUM (Summ_Baza_recalc) FROM _tmpMIChild), inMovementId, (SELECT InvNumber FROM Movement WHERE Id = inMovementId);
      END IF;
      -- !!!Проверка!!!
-     IF inAmount < 0 OR inAmount <> COALESCE ((SELECT SUM (Amount_recalc) FROM _tmpMIChild), 0)
+     IF inAmount <> COALESCE ((SELECT SUM (Amount_recalc) FROM _tmpMIChild), 0)
      THEN  
          RAISE EXCEPTION 'Ошибка распределения для <Сумма>. Real = <%>   Calc = <%>   MovementId = <%>   InvNumber = <%>', inAmount, (SELECT SUM (Amount_recalc) FROM _tmpMIChild), inMovementId, (SELECT InvNumber FROM Movement WHERE Id = inMovementId);
      END IF;
@@ -331,7 +356,7 @@ BEGIN
                                                       , inJuridicalId      := vbJuridicalId
                                                       , inJuridicalId_Child:= _tmpMIChild.JuridicalId
                                                       , inPartnerId        := MovementLinkObject_To.ObjectId
-                                                      , inBranchId         := CASE WHEN vbContractId_child <> 0 THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) END
+                                                      , inBranchId         := CASE WHEN vbContractId_child <> 0 THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) END -- zc_Branch_Basis()
                                                       , inGoodsId          := _tmpMIChild.GoodsId
                                                       , inGoodsKindId      := _tmpMIChild.GoodsKindId
                                                       , inAmount           := _tmpMIChild.Amount_recalc
@@ -348,7 +373,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                ON ObjectLink_Unit_Branch.ObjectId = _tmpMIChild.UnitId
                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-     WHERE _tmpMIChild.Summ_Baza_recalc <> 0 OR _tmpMIChild.Amount_recalc <> 0;
+     WHERE _tmpMIChild.Summ_Baza_recalc <> 0 OR _tmpMIChild.Summ_Sale <> 0 OR _tmpMIChild.Amount_recalc <> 0;
 
 
      -- обновляются данные - Master

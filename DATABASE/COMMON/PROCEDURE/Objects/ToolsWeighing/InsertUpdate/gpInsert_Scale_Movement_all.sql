@@ -31,22 +31,25 @@ BEGIN
 
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+     -- !!!для заявки дата берется из неё!!
+     inOperDate:= COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()) AND DescId = zc_MovementDate_OperDatePartner())
+                           , inOperDate);
 
 
      IF vbMovementDescId = zc_Movement_Sale()
      THEN
           -- поиск существующего документа <Продажа покупателю> по Заявке
           vbMovementId_begin:= (SELECT Movement.Id
-                              FROM MovementLinkMovement
-                                   INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                                                   ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
-                                                                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                                   INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
-                                                      AND Movement.DescId = zc_Movement_Sale()
-                                                      AND Movement.OperDate = inOperDate
-                                                      AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-                              WHERE MovementLinkMovement.MovementId = inMovementId
-                                AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order());
+                                FROM MovementLinkMovement
+                                     INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                     ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                                    AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                     INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
+                                                        AND Movement.DescId = zc_Movement_Sale()
+                                                        AND Movement.OperDate = inOperDate
+                                                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                WHERE MovementLinkMovement.MovementId = inMovementId
+                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order());
      END IF;
 
 

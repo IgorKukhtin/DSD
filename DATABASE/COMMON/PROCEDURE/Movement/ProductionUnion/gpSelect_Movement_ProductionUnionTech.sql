@@ -1,4 +1,4 @@
-п»ї-- Function: gpSelect_Movement_ProductionUnionTech()
+-- Function: gpSelect_Movement_ProductionUnionTech()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Integer, Integer, Integer, Boolean, TVarChar);
 
@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inToId           Integer,
     IN inGoodsGroupId   Integer,
     IN inisErased       Boolean, --
-    IN inSession        TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -18,11 +18,11 @@ $BODY$
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ProductionUnion());
      vbUserId := inSession;
 
-    -- РћРіСЂР°РЅРёС‡РµРЅРёСЏ РїРѕ С‚РѕРІР°СЂСѓ
+    -- Ограничения по товару
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
 
     IF inGoodsGroupId <> 0
@@ -289,14 +289,14 @@ ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Intege
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  19.12.14                                                        *
  09.12.14                                                        *
 */
 
--- С‚РµСЃС‚
+-- тест
 /*
 BEGIN;
 select * from gpSelect_Movement_ProductionUnionTech(inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('01.06.2014')::TDateTime , inFromId := 0 , inToId := 0 , inGoodsGroupId := 0 , inIsErased := 'False' ,  inSession := '5');

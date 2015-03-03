@@ -166,16 +166,16 @@ BEGIN
                           )
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
-             , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE
+             , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
                          THEN _tmpItem.ObjectId -- из предыдущей проводки
                     ELSE 0 -- значит попадет в ОПиУ
                END AS ObjectId
-             , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE
+             , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
                          THEN _tmpItem.ObjectDescId -- из предыдущей проводки
                     ELSE 0 -- значит попадет в ОПиУ
                END AS ObjectDescId
-             , -1 * _tmpItem.OperSumm
-             , _tmpItem.MovementItemId
+             , COALESCE (MI_Child.Amount, -1 * _tmpItem.OperSumm)
+             , COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
 
              , 0 AS ContainerId                                                     -- сформируем позже
              , 0 AS AccountGroupId, 0 AS AccountDirectionId                         -- сформируем позже, или ...
@@ -210,7 +210,7 @@ BEGIN
                -- Филиал Баланс: всегда из предыдущей проводки
              , _tmpItem.BranchId_Balance
                -- Филиал ОПиУ: всегда из предыдущей проводки
-             , _tmpItem.BranchId_ProfitLoss
+             , COALESCE (MILinkObject_Branch.ObjectId, _tmpItem.BranchId_ProfitLoss)
 
                -- Месяц начислений: не используется
              , 0 AS ServiceDateId
@@ -225,6 +225,13 @@ BEGIN
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
                                                                                                           AND NOT (vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE) -- !!!нужен только для затрат!!!
+             LEFT JOIN MovementItem AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
+                                               AND MI_Child.DescId = zc_MI_Child()
+                                               AND MI_Child.isErased = FALSE
+                                               AND _tmpItem.MovementDescId = zc_Movement_ProfitLossService()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                              ON MILinkObject_Branch.MovementItemId = MI_Child.Id
+                                             AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
        ;
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки

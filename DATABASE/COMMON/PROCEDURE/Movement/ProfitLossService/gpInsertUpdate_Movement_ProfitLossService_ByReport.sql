@@ -40,7 +40,7 @@ BEGIN
                                                       , inAmountIn          := 0  :: tfloat
                                                       , inAmountOut         := Sum_Bonus
                                                       , inBonusValue        := Value
-                                                      , inComment           := '' :: TVarChar
+                                                      , inComment           := Comment
                                                       , inContractId        := ContractId_find
                                                       , inContractMasterId  := ContractId_master
                                                       , inContractChildId   := ContractId_Child

@@ -796,6 +796,19 @@
         Value = '0'
         Component = FormParams
         ComponentItem = 'inPaidKindId'
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 128
     Top = 69
@@ -845,6 +858,12 @@
         Value = Null
         Component = ceBonusValue
         DataType = ftFloat
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 201
     Top = 102
@@ -895,49 +914,17 @@
         DataType = ftString
       end
       item
-        Name = 'JuridicalId'
-        Value = ''
+        Name = 'MasterJuridicalId'
+        Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'JuridicalName'
-        Value = ''
+        Name = 'MasterJuridicalName'
+        Value = Null
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'InfoMoneyName_all'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
       end>
     Left = 247
     Top = 220
@@ -964,49 +951,17 @@
         DataType = ftString
       end
       item
-        Name = 'JuridicalId'
-        Value = ''
+        Name = 'MasterJuridicalId'
+        Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'JuridicalName'
-        Value = ''
+        Name = 'MasterJuridicalName'
+        Value = Null
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'InfoMoneyName_all'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
       end>
     Left = 503
     Top = 220

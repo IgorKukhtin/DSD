@@ -16,8 +16,8 @@ begin
    //
 
    -- !!!!!!!!!!!!!
-   -- set @saveRemains = zc_rvYes();
-   set @saveRemains = zc_rvNo();
+   set @saveRemains = zc_rvYes();
+   -- set @saveRemains = zc_rvNo();
    -- !!!!!!!!!!!!!
 
    -- !!!!!!!!!!!!!

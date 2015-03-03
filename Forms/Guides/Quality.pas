@@ -14,6 +14,8 @@ uses
 
 type
   TQualityForm = class(TAncestorGuidesForm)
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
