@@ -12,8 +12,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternal(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , OperDatePartner TDateTime
+             , OperDateStart TDateTime, OperDateEnd TDateTime
              , TotalCount TFloat, TotalCountKg TFloat, TotalCountSh TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , DayCount TFloat
               )
 
 AS
@@ -44,6 +47,11 @@ BEGIN
            , Movement.OperDate                      AS OperDate
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
+           
+           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+           , MovementDate_OperDateStart.ValueData   AS OperDateStart
+           , MovementDate_OperDateEnd.ValueData     AS OperDateEnd           
+           
            , MovementFloat_TotalCount.ValueData     AS TotalCount
            , MovementFloat_TotalCountKg.ValueData   AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData   AS TotalCountSh
@@ -51,7 +59,9 @@ BEGIN
            , Object_From.ValueData                  AS FromName
            , Object_To.Id                           AS ToId
            , Object_To.ValueData                    AS ToName
-
+           , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime
+                                   - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime)
+                          )) :: TFloat AS DayCount
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -62,6 +72,17 @@ BEGIN
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                   ON MovementDate_OperDateStart.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+            LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                   ON MovementDate_OperDateEnd.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -95,6 +116,7 @@ ALTER FUNCTION gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.03.15         * add OperDatePartner, OperDateStart, OperDateEnd, DayCount
  06.06.14                                                        *
 
 */

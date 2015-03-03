@@ -11,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderInternal(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountSecond TFloat
+             , AmountRemains TFloat, AmountPartner TFloat, AmountForecast TFloat, AmountForecastOrder TFloat
+             , CuterCount TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , isErased Boolean
               )
@@ -33,6 +35,11 @@ BEGIN
            , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountSecond
+           , CAST (NULL AS TFloat)      AS AmountRemains
+           , CAST (NULL AS TFloat)      AS AmountPartner 
+           , CAST (NULL AS TFloat)      AS AmountForecast
+           , CAST (NULL AS TFloat)      AS AmountForecastOrder           
+           , CAST (NULL AS TFloat)      AS CuterCount
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , FALSE                      AS isErased
@@ -76,6 +83,13 @@ BEGIN
            , Object_Goods.ValueData             AS GoodsName
            , MovementItem.Amount                AS Amount
            , MIFloat_AmountSecond.ValueData     AS AmountSecond
+
+           , MIFloat_AmountRemains.ValueData        AS AmountRemains
+           , MIFloat_AmountPartner.ValueData        AS AmountPartner
+           , MIFloat_AmountForecast.ValueData       AS AmountForecast
+           , MIFloat_AmountForecastOrder.ValueData  AS AmountForecastOrder
+           , MIFloat_CuterCount.ValueData           AS CuterCount
+           
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , MovementItem.isErased              AS isErased
@@ -89,6 +103,23 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
+                                        ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
+                                        ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrder
+                                        ON MIFloat_AmountForecastOrder.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountForecastOrder.DescId = zc_MIFloat_AmountForecastOrder()
+ 
+            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                        ON MIFloat_CuterCount.MovementItemId = MovementItem.Id 
+                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -107,6 +138,11 @@ BEGIN
            , Object_Goods.ValueData             AS GoodsName
            , MovementItem.Amount                AS Amount
            , MIFloat_AmountSecond.ValueData     AS AmountSecond
+           , MIFloat_AmountRemains.ValueData        AS AmountRemains
+           , MIFloat_AmountPartner.ValueData        AS AmountPartner
+           , MIFloat_AmountForecast.ValueData       AS AmountForecast
+           , MIFloat_AmountForecastOrder.ValueData  AS AmountForecastOrder      
+           , MIFloat_CuterCount.ValueData           AS CuterCount     
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , MovementItem.isErased              AS isErased
@@ -121,7 +157,24 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                       
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
+                                        ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
+                                        ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrder
+                                        ON MIFloat_AmountForecastOrder.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountForecastOrder.DescId = zc_MIFloat_AmountForecastOrder()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                        ON MIFloat_CuterCount.MovementItemId = MovementItem.Id 
+                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                                      
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -139,6 +192,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.03.14         * add AmountRemains, AmountPartner, AmountForecast, AmountForecastOrder
  06.06.14                                                       *
 
 */

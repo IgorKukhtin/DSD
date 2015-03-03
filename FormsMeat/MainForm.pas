@@ -241,7 +241,7 @@ type
     miInventory: TMenuItem;
     N9: TMenuItem;
     miOrderExternal: TMenuItem;
-    miOrderInternal: TMenuItem;
+    miGoodsQualityMovement: TMenuItem;
     miFinanceDocuments: TMenuItem;
     miIncomeCashOld: TMenuItem;
     miIncomeCash: TMenuItem;
@@ -486,11 +486,12 @@ type
     miCashOdessa: TMenuItem;
     actQuality: TdsdOpenForm;
     N39: TMenuItem;
-    dsdOpenForm1: TdsdOpenForm;
+    actOrderInternal: TdsdOpenForm;
     actOrderExternalUnit: TdsdOpenForm;
     N40: TMenuItem;
     miReport_JuridicalDefermentIncome: TMenuItem;
     actReport_JuridicalDefermentIncome: TdsdOpenForm;
+    miOrderInternal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
