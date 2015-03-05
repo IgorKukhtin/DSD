@@ -9,17 +9,17 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
   inherited PageControl: TcxPageControl
     Width = 881
     Height = 385
-    ExplicitWidth = 822
+    ExplicitWidth = 881
     ExplicitHeight = 385
     ClientRectBottom = 385
     ClientRectRight = 881
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 822
+      ExplicitWidth = 881
       ExplicitHeight = 385
       inherited cxGrid: TcxGrid
         Width = 881
         Height = 385
-        ExplicitWidth = 822
+        ExplicitWidth = 881
         ExplicitHeight = 385
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -99,6 +99,14 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083

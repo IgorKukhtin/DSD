@@ -30,7 +30,7 @@ BEGIN
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST (0 as Integer)    AS InfoMoneyCode
            , CAST ('' as TVarChar)  AS InfoMoneyName   
-           , Object_InfoMoney_View.InfoMoneyName_all       
+           , CAST ('' as TVarChar)  AS InfoMoneyName_all       
            , FALSE AS isOfficial;
    ELSE
        RETURN QUERY 

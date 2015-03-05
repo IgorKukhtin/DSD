@@ -2,29 +2,27 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')>'
   ClientHeight = 668
   ClientWidth = 740
-  ExplicitWidth = 748
-  ExplicitHeight = 702
+  ExplicitWidth = 756
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 740
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 740
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 736
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 740
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 734
-      ExplicitHeight = 514
+      ExplicitWidth = 740
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 734
-        Height = 514
-        ExplicitWidth = 734
-        ExplicitHeight = 514
+        Width = 740
+        Height = 518
+        ExplicitWidth = 740
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -243,7 +241,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 168
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 168
     end
     object cxLabel3: TcxLabel
@@ -388,8 +386,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         item
           StoredProc = spSelectPrintOut
         end>
-      Caption = #1056#1072#1089#1093#1086#1076
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1093#1086#1076')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1093#1086#1076')'
       ImageIndex = 19
       ShortCut = 16464
       DataSets = <
@@ -419,7 +417,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1088#1080#1093#1086#1076
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1088#1080#1093#1086#1076')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1088#1080#1093#1086#1076')'
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -548,7 +547,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -607,11 +606,15 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrintOut'
         end
         item
           Visible = True
-          ItemName = 'bbPrintOut'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -1075,6 +1078,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item

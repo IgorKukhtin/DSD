@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isEra
              , AmountDebet TFloat
              , AmountKredit TFloat
              , BranchName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
               )
 AS
 $BODY$
@@ -76,6 +77,8 @@ BEGIN
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit
           , ''::TVarChar AS BranchName
+          , 0 :: Integer AS PaidKindId
+          , ''::TVarChar AS PaidKindName
      FROM Object AS Object_Cash
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
@@ -104,6 +107,8 @@ BEGIN
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit
           , ''::TVarChar AS BranchName
+          , 0 :: Integer AS PaidKindId
+          , ''::TVarChar AS PaidKindName
      FROM Object_BankAccount_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
@@ -133,6 +138,8 @@ BEGIN
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit
           , ''::TVarChar AS BranchName
+          , 0 :: Integer AS PaidKindId
+          , ''::TVarChar AS PaidKindName
      FROM Object AS Object_Member
           LEFT JOIN tmpPersonal_Branch ON tmpPersonal_Branch.MemberId = Object_Member.Id
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
@@ -153,35 +160,39 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyDestinationName
           , Object_InfoMoney_View.InfoMoneyName
           , Object_InfoMoney_View.InfoMoneyName_all
-          , COALESCE (Object_Contract_View_Container.ContractId, View_Contract.ContractId)     :: Integer   AS ContractId
-          , COALESCE (Object_Contract_View_Container.ContractCode, View_Contract.ContractCode) :: Integer   AS Code
-          , COALESCE (Object_Contract_View_Container.InvNumber, View_Contract.InvNumber)       :: TVarChar  AS InvNumber
-          , COALESCE (Object_Contract_View_Container.ContractStateKindCode, View_Contract.ContractStateKindCode)   AS ContractStateKindCode
-          , COALESCE (Object_Contract_View_Container.StartDate, View_Contract.StartDate)       :: TDateTime AS StartDate
-          , COALESCE (Object_Contract_View_Container.EndDate, View_Contract.EndDate)           :: TDateTime AS EndDate
-          , COALESCE (Object_Contract_View_Container.ContractTagName, View_Contract.ContractTagName) :: TVarChar   AS ContractTagName
-          , COALESCE (Object_Contract_View_Container.ContractKindName, View_Contract.ContractKindName) :: TVarChar AS ContractKindName
+          , View_Contract.ContractId      :: Integer   AS ContractId
+          , View_Contract.ContractCode    :: Integer   AS Code
+          , View_Contract.InvNumber       :: TVarChar  AS InvNumber
+          , View_Contract.ContractStateKindCode        AS ContractStateKindCode
+          , View_Contract.StartDate       :: TDateTime AS StartDate
+          , View_Contract.EndDate         :: TDateTime AS EndDate
+          , View_Contract.ContractTagName :: TVarChar  AS ContractTagName
+          , View_Contract.ContractKindName :: TVarChar AS ContractKindName
           , ObjectHistory_JuridicalDetails_View.OKPO
           , Container_Partner_View.AmountDebet
           , Container_Partner_View.AmountKredit
-          , Object_Branch.ValueData AS BranchName
+          , Object_Branch.ValueData   AS BranchName
+          , Object_PaidKind.Id        AS PaidKindId
+          , Object_PaidKind.ValueData AS PaidKindName
      FROM Object AS Object_Partner
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
-
-          LEFT JOIN Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
 
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                              AND Container_Partner_View.PartnerId IS NULL
+          LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+
+          LEFT JOIN Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
+                                          AND Container_Partner_View.ContractId = View_Contract.ContractId
+
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
-          LEFT JOIN Object_Contract_View AS Object_Contract_View_Container ON Object_Contract_View_Container.ContractId = Container_Partner_View.ContractId
-          LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
 
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
+          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (Container_Partner_View.PaidKindId, View_Contract.PaidKindId)
+
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
@@ -189,7 +200,7 @@ BEGIN
 
      WHERE Object_Partner.DescId = zc_Object_Partner()
        AND Object_Partner.isErased = FALSE
-       AND COALESCE (Object_Contract_View_Container.isErased, View_Contract.isErased) = FALSE
+       AND View_Contract.isErased = FALSE
        -- AND COALESCE (Object_Contract_View_Container.PaidKindId, View_Contract.PaidKindId) = zc_Enum_PaidKind_SecondForm()
        AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
             OR vbIsConstraint = FALSE)
@@ -217,6 +228,8 @@ BEGIN
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit
           , ''::TVarChar AS BranchName
+          , Object_PaidKind.Id            AS PaidKindId
+          , Object_PaidKind.ValueData     AS PaidKindName
      FROM Object AS Object_Juridical
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
@@ -252,6 +265,8 @@ BEGIN
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit
           , ''::TVarChar AS BranchName
+          , 0 :: Integer AS PaidKindId
+          , ''::TVarChar AS PaidKindName
      FROM Object AS Object_Founder
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
           LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney

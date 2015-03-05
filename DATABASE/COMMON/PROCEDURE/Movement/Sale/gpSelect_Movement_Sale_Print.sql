@@ -308,6 +308,12 @@ BEGIN
 
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
 
+           , CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+                        THEN ' та знижкой'
+                  ELSE ''
+             END AS Price_info
+
+
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
@@ -641,6 +647,11 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
+           , CASE WHEN vbGoodsPropertyId = 83954 -- Метро
+                       THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))
+                  ELSE ''
+             END AS Article_order
+
              -- сумма по ценам док-та
            , CASE WHEN tmpMI.CountForPrice <> 0
                        THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
@@ -656,8 +667,21 @@ BEGIN
 
              -- расчет цены с НДС, до 4 знаков
            , CASE WHEN vbPriceWithVAT <> TRUE
-                  THEN CAST (tmpMI.Price + tmpMI.Price * (vbVATPercent / 100) AS NUMERIC (16, 4))
-                  ELSE tmpMI.Price
+                  THEN CAST ((tmpMI.Price + tmpMI.Price * (vbVATPercent / 100))
+                                         * CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ учитываем!!!
+                                                     THEN (1 - vbDiscountPercent / 100)
+                                                WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ учитываем!!!
+                                                     THEN (1 + vbExtraChargesPercent / 100)
+                                                ELSE 1
+                                           END
+                             AS NUMERIC (16, 4))
+                  ELSE CAST (tmpMI.Price * CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
+                                                     THEN (1 - vbDiscountPercent / 100)
+                                                WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
+                                                     THEN (1 + vbExtraChargesPercent / 100)
+                                                ELSE 1
+                                           END
+                             AS NUMERIC (16, 4))
              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceWVAT
 
@@ -751,7 +775,11 @@ BEGIN
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
 
        WHERE tmpMI.AmountPartner <> 0
-       ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
+       ORDER BY CASE WHEN vbGoodsPropertyId = 83954 -- Метро
+                          THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))
+                     ELSE ''
+                END
+              , Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
 
     RETURN NEXT Cursor2;

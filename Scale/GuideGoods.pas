@@ -622,6 +622,7 @@ begin
            //
            if (ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0)and(CDS.RecordCount=1)
            then begin
+                     fEnterGoodsKindCode:=true;
                      EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
                      //ActiveControl:=EditTareCount;
            end;

@@ -84,7 +84,7 @@ BEGIN
             , Movement.MovementId_Order AS MovementId_Order
             , Movement_Order.InvNumber  AS InvNumber_Order
 
-            , ('№ <' || Movement_Order.InvNumber || '>' || ' от <' || DATE (Movement_Order.OperDate) :: TVarChar || '>') :: TVarChar AS OrderExternalName_master
+            , ('№ <' || Movement_Order.InvNumber || '>' || ' от <' || DATE (Movement_Order.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 
             , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
@@ -121,7 +121,7 @@ BEGIN
                          AND MovementLinkObject_User.ObjectId = vbUserId
              WHERE Movement.DescId = zc_Movement_WeighingPartner()
                AND Movement.StatusId = zc_Enum_Status_UnComplete()
-               AND Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate + INTERVAL '5 DAY'
+               AND Movement.OperDate BETWEEN inOperDate - INTERVAL '3 DAY' AND inOperDate + INTERVAL '3 DAY'
             ) AS Movement_find
               LEFT JOIN Movement ON Movement.Id = Movement_find.Id
               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -144,6 +144,9 @@ BEGIN
             ) AS Movement
 
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement.MovementId_Order
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.MovementId_Order
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
             LEFT JOIN Object AS Object_From ON Object_From.Id = Movement.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = Movement.ToId
@@ -153,12 +156,15 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
                                     ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  Movement.PartnerId
                                    AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+                                   AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice
                                     ON ObjectBoolean_Partner_EdiInvoice.ObjectId =  Movement.PartnerId
                                    AND ObjectBoolean_Partner_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+                                   AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv
                                     ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  Movement.PartnerId
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
+                                   AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
@@ -179,6 +185,11 @@ BEGIN
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = Movement.MovementId_Order
+                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
       ;
 
 END;
@@ -194,4 +205,4 @@ ALTER FUNCTION gpGet_Scale_Movement (TDateTime, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Movement ('01.01.2015', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Movement (CURRENT_TIMESTAMP, zfCalc_UserAdmin())

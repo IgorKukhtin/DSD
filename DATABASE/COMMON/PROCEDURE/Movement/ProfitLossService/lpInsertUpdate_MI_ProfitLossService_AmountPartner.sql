@@ -18,8 +18,10 @@ $BODY$
   DECLARE vbContractConditionKindId Integer;
   DECLARE vbJuridicalId Integer;
   DECLARE vbContractId_child Integer;
-  DECLARE vbInfoMoneyId Integer;
-  DECLARE vbPaidKindId Integer;
+  DECLARE vbInfoMoneyId_child Integer;
+  DECLARE vbPaidKindId_child Integer;
+  DECLARE vbInfoMoneyId_all Integer;
+  DECLARE vbPaidKindId_all Integer;
 
   DECLARE vbSumm_Baza TFloat;
   DECLARE vbSumm_Sale TFloat;
@@ -32,22 +34,34 @@ BEGIN
           , MovementItem.Id                              AS MovementItemId
           , MovementItem.ObjectId                        AS JuridicalId
           , COALESCE (MILinkObject_ContractConditionKind.ObjectId, 0) AS ContractConditionKindId
-          , COALESCE (MILinkObject_ContractChild.ObjectId, 0)         AS ContractId
-          , ObjectLink_Contract_InfoMoney.ChildObjectId  AS InfoMoneyId
-          , ObjectLink_Contract_PaidKind.ChildObjectId   AS PaidKindId
+          , COALESCE (MILinkObject_ContractChild.ObjectId, 0)         AS ContractId_child
+          , ObjectLink_Contract_InfoMoney.ChildObjectId               AS InfoMoneyId_child
+          , ObjectLink_Contract_PaidKind.ChildObjectId                AS PaidKindId_child
+          , CASE WHEN MILinkObject_InfoMoney.ObjectId <> zc_Enum_InfoMoney_21502() -- Общефирменные + Маркетинг + Бонусы за мясное сырье
+                      THEN zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                 ELSE NULL
+            END AS InfoMoneyId_all
+          , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId_all
             INTO vbOperDate, vbMovementItemId, vbJuridicalId, vbContractConditionKindId
-               , vbContractId_child, vbInfoMoneyId, vbPaidKindId
+               , vbContractId_child, vbInfoMoneyId_child, vbPaidKindId_child
+               , vbInfoMoneyId_all, vbPaidKindId_all
      FROM MovementItem
           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
           INNER JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
                                             ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
                                            AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                           ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                           ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
           LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
                                            ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
                                           AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
           LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                                ON ObjectLink_Contract_InfoMoney.ObjectId = MILinkObject_ContractChild.ObjectId
-                               AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                               ON ObjectLink_Contract_InfoMoney.ObjectId = MILinkObject_ContractChild.ObjectId
+                              AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
           LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                ON ObjectLink_Contract_PaidKind.ObjectId = MILinkObject_ContractChild.ObjectId
                               AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
@@ -83,10 +97,10 @@ BEGIN
                                                                                    AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                             INNER JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = ContainerLO_Contract.ContainerId
                                                                                    AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                                                                   AND ContainerLO_InfoMoney.ObjectId = vbInfoMoneyId
+                                                                                   AND ContainerLO_InfoMoney.ObjectId = vbInfoMoneyId_child
                             INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = ContainerLO_Contract.ContainerId
                                                                                   AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                                                                                  AND ContainerLO_PaidKind.ObjectId = vbPaidKindId
+                                                                                  AND ContainerLO_PaidKind.ObjectId = vbPaidKindId_child
                             INNER JOIN Container ON Container.Id = ContainerLO_Contract.ContainerId
                                                 AND Container.ObjectId NOT IN (SELECT AccountId FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
                                                 AND Container.DescId = zc_Container_Summ()
@@ -100,10 +114,10 @@ BEGIN
                                                                                    AND ContainerLO_Juridical.ObjectId = vbJuridicalId
                             INNER JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = ContainerLO_Contract.ContainerId
                                                                                    AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                                                                   AND ContainerLO_InfoMoney.ObjectId = vbInfoMoneyId
+                                                                                   AND ContainerLO_InfoMoney.ObjectId = vbInfoMoneyId_all
                             INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = ContainerLO_Contract.ContainerId
                                                                                   AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                                                                                  AND ContainerLO_PaidKind.ObjectId = vbPaidKindId
+                                                                                  AND ContainerLO_PaidKind.ObjectId = vbPaidKindId_all
                             INNER JOIN Container ON Container.Id = ContainerLO_Contract.ContainerId
                                                 AND Container.ObjectId NOT IN (SELECT AccountId FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
                                                 AND Container.DescId = zc_Container_Summ()
@@ -164,6 +178,7 @@ BEGIN
                                                        AND MIContainer.DescId = zc_MIContainer_Summ()
                                                        AND MIContainer.OperDate BETWEEN vbStartDate AND vbEndDate
                                                        AND MIContainer.MovementDescId = tmpContainerDesc.MovementDescId
+                                                       -- AND MIContainer.MovementItemId > 0
                         GROUP BY tmpContainerDesc.JuridicalId
                                , CASE WHEN tmpContainerDesc.MovementDescId = zc_Movement_Sale()
                                            THEN MIContainer.MovementId
@@ -201,6 +216,7 @@ BEGIN
                                                        AND MIContainer.DescId = zc_MIContainer_Summ()
                                                        AND MIContainer.OperDate BETWEEN vbStartDate AND vbEndDate
                                                        AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                                       -- AND MIContainer.MovementItemId > 0
                         GROUP BY tmpContainer_Sale.JuridicalId
                                , MIContainer.MovementId
                                , MIContainer.MovementItemId
@@ -282,14 +298,14 @@ BEGIN
          UPDATE _tmpMIChild SET Amount_recalc = inAmount * _tmpMIChild.Summ_Sale / vbSumm_Sale WHERE _tmpMIChild.Summ_Sale > 0; -- теоретически могут быть продажи с "минусом"
 
          -- Расчет Итоговых сумм по по элементам
-          SELECT SUM (_tmpMIChild.Amount_recalc) INTO vbAmount_recalc FROM _tmpMIChild;
+         SELECT SUM (_tmpMIChild.Amount_recalc) INTO vbAmount_recalc FROM _tmpMIChild;
          --
          -- если не равны ДВЕ Итоговые суммы "Сумма начислений"
          IF COALESCE (inAmount, 0) <> COALESCE (vbAmount_recalc, 0)
          THEN
              -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
              UPDATE _tmpMIChild SET Amount_recalc = _tmpMIChild.Amount_recalc - (vbAmount_recalc - inAmount)
-             WHERE _tmpMIChild.MovementItemId IN (SELECT _tmpMIChild.MovementItemId FROM _tmpMIChild ORDER BY _tmpMIChild.Amount_recalc DESC LIMIT 1
+             WHERE _tmpMIChild.MovementItemId IN (SELECT _tmpMIChild.MovementItemId FROM _tmpMIChild WHERE MovementItemId > 0 ORDER BY _tmpMIChild.Amount_recalc DESC LIMIT 1
                                                  );
          END IF;
 
@@ -310,7 +326,7 @@ BEGIN
          THEN
              -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
              UPDATE _tmpMIChild SET Summ_Baza_recalc = _tmpMIChild.Summ_Baza_recalc - (vbSumm_Baza_recalc - vbSumm_Baza)
-             WHERE _tmpMIChild.MovementItemId IN (SELECT _tmpMIChild.MovementItemId FROM _tmpMIChild ORDER BY _tmpMIChild.Summ_Baza_recalc DESC LIMIT 1
+             WHERE _tmpMIChild.MovementItemId IN (SELECT _tmpMIChild.MovementItemId FROM _tmpMIChild WHERE MovementItemId > 0 ORDER BY _tmpMIChild.Summ_Baza_recalc DESC LIMIT 1
                                                  );
          END IF;
          -- если не равны ДВЕ Итоговые суммы "Сумма начислений"
@@ -318,7 +334,7 @@ BEGIN
          THEN
              -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
              UPDATE _tmpMIChild SET Amount_recalc = _tmpMIChild.Amount_recalc - (vbAmount_recalc - inAmount)
-             WHERE _tmpMIChild.MovementItemId IN (SELECT _tmpMIChild.MovementItemId FROM _tmpMIChild ORDER BY _tmpMIChild.Amount_recalc DESC LIMIT 1
+             WHERE _tmpMIChild.MovementItemId IN (SELECT _tmpMIChild.MovementItemId FROM _tmpMIChild WHERE MovementItemId > 0 ORDER BY _tmpMIChild.Amount_recalc DESC LIMIT 1
                                                  );
          END IF;
 

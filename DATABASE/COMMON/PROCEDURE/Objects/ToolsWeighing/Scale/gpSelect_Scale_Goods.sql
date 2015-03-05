@@ -66,6 +66,7 @@ BEGIN
                             FROM MovementLinkMovement
                                  INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
                                                     AND Movement.DescId = zc_Movement_WeighingPartner()
+                                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE

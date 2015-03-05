@@ -102,19 +102,34 @@ end;
 procedure EDI_Invoice (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  UtilPrintForm.mactInvoice.Execute;
+  try UtilPrintForm.mactInvoice.Execute;
+  except
+        ShowMessage('Ошибка при отправке в EXITE документа <Счет>.');
+        exit;
+  end;
+  ShowMessage('Документ <Счет> отправлен успешно в EXITE.');
 end;
 //------------------------------------------------------------------------------------------------
 procedure EDI_OrdSpr (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  UtilPrintForm.mactOrdSpr.Execute;
+  try UtilPrintForm.mactOrdSpr.Execute;
+  except
+        ShowMessage('Ошибка при отправке в EXITE документа <Подтверждение отгрузки>.');
+        exit;
+  end;
+  ShowMessage('Документ <Подтверждение отгрузки> отправлен успешно в EXITE.');
 end;
 //------------------------------------------------------------------------------------------------
 procedure EDI_Desadv (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  UtilPrintForm.mactDesadv.Execute;
+  try UtilPrintForm.mactDesadv.Execute;
+  except
+        ShowMessage('Ошибка при отправке в EXITE документа <Уведомление об отгрузке>.');
+        exit;
+  end;
+  ShowMessage('Документ <Уведомление об отгрузке> отправлен успешно в EXITE.');
 end;
 //------------------------------------------------------------------------------------------------
 end.

@@ -363,7 +363,9 @@ BEGIN
      OPEN curMovement FOR 
                    SELECT Sale1C.InvNumber
                         , Sale1C.OperDate
-                        , zfGetUnitFromUnitId (Sale1C.UnitId) AS UnitId
+                        , CASE WHEN zfGetUnitFromUnitId (Sale1C.UnitId) = 346093 THEN 346094 -- Склад ГП ф.Одесса -> Склад возвратов ф.Одесса 
+                               ELSE zfGetUnitFromUnitId (Sale1C.UnitId)
+                          END AS UnitId
                         , Sale1C.UnitId AS UnitId_1C
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
                         , tmpPartner1CLink.ContractId
@@ -426,7 +428,9 @@ BEGIN
 
                  GROUP BY Sale1C.InvNumber
                         , Sale1C.OperDate
-                        , zfGetUnitFromUnitId (Sale1C.UnitId)
+                        , CASE WHEN zfGetUnitFromUnitId (Sale1C.UnitId) = 346093 THEN 346094 -- Склад ГП ф.Одесса -> Склад возвратов ф.Одесса 
+                               ELSE zfGetUnitFromUnitId (Sale1C.UnitId)
+                          END
                         , Sale1C.UnitId
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId
                         , tmpPartner1CLink.ContractId

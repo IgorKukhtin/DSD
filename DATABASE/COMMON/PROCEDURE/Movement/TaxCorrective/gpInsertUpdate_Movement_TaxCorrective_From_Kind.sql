@@ -131,6 +131,9 @@ BEGIN
      CREATE TEMP TABLE _tmpMI_Return (GoodsId Integer, GoodsKindId Integer, OperPrice TFloat, CountForPrice TFloat, Amount TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpMovement_find (MovementId_Corrective Integer, MovementId_Tax Integer) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpResult (MovementId_Corrective Integer, MovementId_Tax Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, OperPrice TFloat, CountForPrice TFloat) ON COMMIT DROP;
+     -- данные дл€ курсор2 - отдельно !!!дл€ оптимизации!!!
+     CREATE TEMP TABLE _tmp1_SubQuery (MovementId Integer, OperDate TDateTime, isRegistered Boolean, Amount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmp2_SubQuery (MovementId_Tax Integer, Amount TFloat) ON COMMIT DROP;
 
      -- выбрали <¬озврат от покупател€> или <ѕеревод долга (приход)> или < орректировка цены>
      INSERT INTO _tmpMI_Return (GoodsId, GoodsKindId, OperPrice, CountForPrice, Amount)
@@ -210,12 +213,13 @@ BEGIN
               -- если данные закончились, тогда выход
               IF NOT FOUND THEN EXIT; END IF;
 
-              -- курсор2 - все налоговые !!!за минусом прошлых корректировок!!! по товару и цене
-              OPEN curMI_Tax FOR
-                   SELECT tmpMovement_Tax.MovementId
-                        , tmpMovement_Tax.Amount - COALESCE (tmpMovement_Corrective.Amount, 0) AS Amount
-                         -- это все налоговые по покупатель, товар и цена
-                   FROM (SELECT Movement.Id AS MovementId
+
+     -- 
+     DELETE FROM _tmp1_SubQuery;
+     DELETE FROM _tmp2_SubQuery;
+     -- данные дл€ курсор2 - отдельно !!!дл€ оптимизации!!!
+     INSERT INTO _tmp1_SubQuery (MovementId, OperDate, isRegistered, Amount)
+                         SELECT Movement.Id AS MovementId
                               , Movement.OperDate
                               , COALESCE (MB_Registered.ValueData, FALSE) AS isRegistered
                               , SUM (MovementItem.Amount) AS Amount
@@ -243,10 +247,10 @@ BEGIN
                            AND MLO_Partner.DescId IN (zc_MovementLinkObject_To(), zc_MovementLinkObject_Partner())
                          GROUP BY Movement.Id
                                 , Movement.OperDate
-                                , MB_Registered.ValueData
-                        ) AS tmpMovement_Tax
-                        -- это !!!все!!! корректировки по товар и цена (дл€ !!!всех!!! налоговых)
-                        LEFT JOIN (SELECT CASE WHEN MLM_Master.MovementChildId = inMovementId THEN 0 ELSE MLM_Child.MovementChildId END AS MovementId_Tax
+                                , MB_Registered.ValueData;
+                        
+     -- данные дл€ курсор2 - отдельно !!!дл€ оптимизации!!!
+              WITH tmpMovement AS (SELECT Movement.Id
                                         , SUM (MovementItem.Amount) AS Amount
                                    FROM Movement
                                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -257,16 +261,29 @@ BEGIN
                                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                                     AND MIFloat_Price.ValueData = vbOperPrice
                                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                   WHERE Movement.DescId = zc_Movement_TaxCorrective()
+                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                   GROUP BY Movement.Id)
+     INSERT INTO _tmp2_SubQuery (MovementId_Tax, Amount)
+                                   SELECT CASE WHEN MLM_Master.MovementChildId = inMovementId THEN 0 ELSE MLM_Child.MovementChildId END AS MovementId_Tax
+                                        , SUM (Movement.Amount) AS Amount
+                                   FROM tmpMovement AS Movement
                                         INNER JOIN MovementLinkMovement AS MLM_Child
                                                                         ON MLM_Child.MovementId = Movement.Id
                                                                        AND MLM_Child.DescId = zc_MovementLinkMovement_Child()
                                         INNER JOIN MovementLinkMovement AS MLM_Master
                                                                         ON MLM_Master.MovementId = Movement.Id
                                                                        AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
-                                   WHERE Movement.DescId = zc_Movement_TaxCorrective()
-                                     AND Movement.StatusId = zc_Enum_Status_Complete()
-                                   GROUP BY CASE WHEN MLM_Master.MovementChildId = inMovementId THEN 0 ELSE MLM_Child.MovementChildId END
-                                  ) AS tmpMovement_Corrective ON tmpMovement_Corrective.MovementId_Tax = tmpMovement_Tax.MovementId
+                                   GROUP BY CASE WHEN MLM_Master.MovementChildId = inMovementId THEN 0 ELSE MLM_Child.MovementChildId END;
+
+              -- курсор2 - все налоговые !!!за минусом прошлых корректировок!!! по товару и цене
+              OPEN curMI_Tax FOR
+                   SELECT tmpMovement_Tax.MovementId
+                        , tmpMovement_Tax.Amount - COALESCE (tmpMovement_Corrective.Amount, 0) AS Amount
+                         -- это все налоговые по покупатель, товар и цена
+                   FROM _tmp1_SubQuery AS tmpMovement_Tax
+                        -- это !!!все!!! корректировки по товар и цена (дл€ !!!всех!!! налоговых)
+                        LEFT JOIN _tmp2_SubQuery AS tmpMovement_Corrective ON tmpMovement_Corrective.MovementId_Tax = tmpMovement_Tax.MovementId
                    WHERE tmpMovement_Tax.Amount > COALESCE (tmpMovement_Corrective.Amount, 0)
                      AND tmpMovement_Tax.isRegistered = FALSE
                    ORDER BY tmpMovement_Tax.OperDate DESC, 2 DESC

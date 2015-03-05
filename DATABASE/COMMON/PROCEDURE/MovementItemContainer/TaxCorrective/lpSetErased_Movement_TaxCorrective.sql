@@ -20,8 +20,13 @@ BEGIN
           -- у всех возвратов "удаляем" <Тип формирования налогового документа>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), MovementLinkMovement.MovementChildId, NULL)
           FROM MovementLinkMovement
+               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_find
+                                              ON MovementLinkMovement_find.MovementChildId = MovementLinkMovement.MovementChildId
+                                             AND MovementLinkMovement_find.DescId = zc_MovementLinkMovement_Master()
+                                             AND MovementLinkMovement_find.MovementId <> inMovementId
           WHERE MovementLinkMovement.MovementId = inMovementId
-            AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master();
+            AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
+            AND MovementLinkMovement_find.MovementChildId IS NULL;
      /*ELSE 
      !!!!!!!!!! ДОДЕЛАТЬ !!!!!!!
      IF vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR())

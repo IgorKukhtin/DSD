@@ -664,7 +664,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
           Kind = bkEllipsis
         end>
