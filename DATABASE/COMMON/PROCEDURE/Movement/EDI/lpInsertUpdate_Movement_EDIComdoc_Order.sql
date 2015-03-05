@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_EDIComdoc_Order(
 RETURNS VOID
 AS
 $BODY$
+   DECLARE vbIsFind_InvNumberPartner Boolean;
+
    DECLARE vbMovementId_Order Integer;
    DECLARE vbInvNumber        TVarChar;
    DECLARE vbOperDate         TDateTime;
@@ -37,7 +39,7 @@ BEGIN
           , Movement.OperDate                     AS OperDate
           , Movement.OperDate + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL AS OperDatePartner
           , ObjectString_Partner_GLNCode.ObjectId AS PartnerId
-          , CASE WHEN MovementString_GLNCode.ValueData = ObjectString_Partner_GLNCodeJuridical
+          , CASE WHEN MovementString_GLNCode.ValueData = ObjectString_Partner_GLNCodeJuridical.ValueData
                       THEN ObjectLink_Partner_Juridical.ChildObjectId -- здесь условие что GLN код юр.лица в документе и у св-ва д.б. одинаковый
                  WHEN MovementString_GLNCode.ValueData = ObjectString_Juridical_GLNCode.ValueData
                       THEN ObjectString_Juridical_GLNCode.ObjectId -- здесь условие что GLN код юр.лица в документе и у св-ва д.б. одинаковый
@@ -135,7 +137,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> для значения GLN - место доставки (EDI) = <%> не определен <Контрагент>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), (SELECT ValueData FROM MovementString WHERE MovementId = inMovementId AND DescId = zc_MovementString_GLNPlaceCode());
      ELSE
-         -- находим отдельно
+         -- находим отдельно !!!через связь!!!
          vbMovementId_Order:= (SELECT Movement_Order.Id
                                FROM MovementLinkMovement AS MovementLinkMovement_Order
                                     INNER JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
@@ -144,6 +146,39 @@ BEGIN
                                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                               );
      END IF;
+
+
+     -- находим, если его набирали вручную (т.е. у заявки нет связи с EDI)
+     IF COALESCE (vbMovementId_Order, 0) = 0
+     OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         -- Поиск документа <Заявка> по значению <Номер заявки у контрагента>
+         vbMovementId_Order:= (SELECT Movement.Id
+                               FROM MovementString AS MovementString_InvNumberPartner
+                                    INNER JOIN Movement ON Movement.Id = MovementString_InvNumberPartner.MovementId
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
+                                                       AND Movement.DescId = zc_Movement_OrderExternal()
+                                                       AND Movement.OperDate BETWEEN (vbOperDate - (INTERVAL '1 DAY')) AND (vbOperDate + (INTERVAL '1 DAY'))
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                  ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                 AND MovementLinkObject_From.ObjectId = vbPartnerId
+                                    /*INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                 AND MovementLinkObject_To.ObjectId = vbUnitId*/
+                               WHERE MovementString_InvNumberPartner.ValueData = vbInvNumber
+                                 AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                              );
+         -- 
+         vbContractId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order ANd DescId = zc_MovementLinkObject_Contract());
+         vbUnitId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order ANd DescId = zc_MovementLinkObject_To());
+         -- 
+         vbIsFind_InvNumberPartner:= COALESCE (vbMovementId_Order, 0) > 0;
+     ELSE
+         vbIsFind_InvNumberPartner:= FALSE;
+     END IF;
+
 
      -- Проверка
      IF COALESCE (vbPartnerId, 0) = 0
@@ -177,9 +212,10 @@ BEGIN
             INTO vbPriceListId, vbPriceWithVAT, vbVATPercent
      FROM lfGet_Object_Partner_PriceList (inPartnerId:= vbPartnerId, inOperDate:= vbOperDatePartner);
 
-     -- находим, если его набирали вручную (т.е. у заявки нет связи с EDI)
-     vbMovementId_Order:= 
 
+     -- только если не нашли по значению <Номер заявки у контрагента> + набирали вручную
+     IF vbIsFind_InvNumberPartner = FALSE
+     THEN
      -- сохранили <Заявки сторонние>
      vbMovementId_Order:= lpInsertUpdate_Movement_OrderExternal (ioId                  := vbMovementId_Order
                                                                , inInvNumber           := CASE WHEN vbMovementId_Order <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_Order) ELSE CAST (NEXTVAL ('movement_orderexternal_seq') AS TVarChar) END :: TVarChar
@@ -288,7 +324,23 @@ BEGIN
                   , tmpMI.GoodsKindId
                   , tmpMI.Price
           ) AS tmpMI
-    ;
+     ;
+     ELSE
+         -- сформировали связь <Расходная накладная> с EDI (если по она уже сформирована по заявке)
+         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), Movement.Id, inMovementId)
+         FROM MovementLinkMovement
+              INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
+                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 AND Movement.DescId =zc_Movement_Sale()
+         WHERE MovementLinkMovement.MovementChildId = vbMovementId_Order
+           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order();
+
+         -- в документе эди сохранили св-ва из заявки
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, vbContractId);
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), inMovementId, vbUnitId);
+
+     END IF; -- if vbIsFind_InvNumberPartner = FALSE
+
 
      -- сформировали связь <Заявки сторонние> с EDI
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), vbMovementId_Order, inMovementId);

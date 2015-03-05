@@ -88,12 +88,15 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
                                     ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  Object_Partner.PartnerId
                                    AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+                                   AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice
                                     ON ObjectBoolean_Partner_EdiInvoice.ObjectId =  Object_Partner.PartnerId
                                    AND ObjectBoolean_Partner_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+                                   AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv
                                     ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  Object_Partner.PartnerId
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
+                                   AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
       ;
 
 END;

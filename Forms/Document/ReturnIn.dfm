@@ -663,7 +663,6 @@ inherited ReturnInForm: TReturnInForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
           Kind = bkEllipsis
         end>

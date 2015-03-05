@@ -60,6 +60,8 @@ BEGIN
                                                 , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.AccountId ELSE 0 END AS AccountId_110101
                                                 , MIContainer.ParentId
                                                 , MIContainer.ContainerId
+                                                , 0 AS ObjectId_Analyzer
+                                                -- , MIContainer.ObjectId_Analyzer
                                                 , MIContainer.OperDate
                                                 , MIContainer.isActive
                                                 , SUM (CASE WHEN MIContainer.isActive = TRUE OR MIContainer.DescId = zc_MIContainer_Summ() OR MIContainer.DescId = zc_MIContainer_SummCurrency() THEN 1 ELSE -1 END * MIContainer.Amount) AS Amount
@@ -77,6 +79,7 @@ BEGIN
                                                 , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.AccountId ELSE 0 END
                                                 , MIContainer.ParentId
                                                 , MIContainer.ContainerId
+                                                -- , MIContainer.ObjectId_Analyzer
                                                 , MIContainer.OperDate
                                                 , MIContainer.isActive
                                                 , tmpMovement.MovementId
@@ -103,6 +106,7 @@ BEGIN
                                                 , tmpMIContainer_all.AccountId_110101
                                                 , tmpMIContainer_all.ParentId
                                                 , Container_Parent.Id AS ContainerId
+                                                , tmpMIContainer_all.ObjectId_Analyzer
                                                 , tmpMIContainer_all.OperDate
                                                 , tmpMIContainer_all.isActive
                                                 , 0 AS Amount
@@ -212,7 +216,7 @@ BEGIN
                                                   , tmpMIContainer_Summ_all.AccountId_110101
                                                   , NULL AS GoodsId_Parent
                                                   , NULL AS GoodsKindId_Parent
-                                                  , NULL AS GoodsId
+                                                  , tmpMIContainer_Summ_all.ObjectId_Analyzer AS GoodsId -- NULL
                                                   , NULL AS GoodsKindId
                                                   , tmpMIContainer_Summ_all.isActive
                                                   , NULL AS Amount_Count
@@ -230,6 +234,7 @@ BEGIN
                                              WHERE tmpMIContainer_Count_all.MovementId IS NULL
                                              GROUP BY tmpMIContainer_Summ_all.MovementItemId
                                                     , tmpMIContainer_Summ_all.AccountId_110101
+                                                    , tmpMIContainer_Summ_all.ObjectId_Analyzer
                                                     , tmpMIContainer_Summ_all.isActive
                                                     , tmpMIContainer_Summ_all.MovementId
                                                     , tmpMIContainer_Summ_all.MovementDescId

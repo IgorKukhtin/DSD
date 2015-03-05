@@ -34,6 +34,7 @@ type
     AmountKredit: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
     OKPO: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

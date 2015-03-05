@@ -7,7 +7,37 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SaleLinkEDI(
     IN inMovementId          Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS VOID 
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar, OperDateTax TDateTime, InvNumberTax TVarChar
+             , TotalCountPartner TFloat
+             , TotalSumm TFloat
+             , OKPO TVarChar, JuridicalName TVarChar
+             , GLNCode TVarChar,  GLNPlaceCode TVarChar
+             , JuridicalId_Find Integer, JuridicalNameFind TVarChar, PartnerNameFind TVarChar
+
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
+             , UnitId Integer, UnitName TVarChar
+
+             , MovementId_Sale Integer
+             , OperDatePartner_Sale TDateTime, InvNumber_Sale TVarChar
+             , FromName_Sale TVarChar, ToName_Sale TVarChar
+             , TotalCountPartner_Sale TFloat
+             , TotalSumm_Sale TFloat
+
+             , MovementId_Tax Integer
+             , OperDate_Tax TDateTime, InvNumberPartner_Tax TVarChar
+
+             , MovementId_TaxCorrective Integer
+             , OperDate_TaxCorrective TDateTime, InvNumberPartner_TaxCorrective TVarChar
+
+             , MovementId_Order Integer
+             , OperDate_Order TDateTime, InvNumber_Order TVarChar
+
+             , DescName TVarChar
+             , isCheck Boolean
+             , isElectron Boolean
+             , isError Boolean
+              )
 AS
 $BODY$
 DECLARE
@@ -143,6 +173,10 @@ BEGIN
      END IF;
 
 
+     RETURN QUERY 
+     SELECT * FROM lpGet_Movement_EDI (inMovementId:= inMovementId_EDI
+                                     , inUserId:= vbUserId
+                                      );
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

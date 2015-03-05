@@ -169,7 +169,7 @@ BEGIN
                , tmpMovement.GoodsId
                , tmpMovement.GoodsKindId   
                , tmpMovement.Price
-               , CASE WHEN SUM (tmpMovement.Amount_ReturnIn) > 0 THEN SUM (tmpMovement.Amount_ReturnIn) ELSE 0 END AS Amount_ReturnIn
+               , CASE WHEN SUM (tmpMovement.Amount_ReturnIn) > 0 THEN SUM (tmpMovement.Amount_ReturnIn) ELSE SUM (tmpMovement.Amount_ReturnIn) END AS Amount_ReturnIn
                , SUM (tmpMovement.Amount_TaxCorrective)  AS Amount_TaxCorrective
                , CASE WHEN SUM (tmpMovement.Amount_ReturnIn) > 0 THEN SUM (CAST (tmpMovement.Amount_ReturnIn * tmpMovement.Price / tmpMovement.CountForPrice AS NUMERIC (16, 2))) ELSE 0 END AS Summ_ReturnIn
                , SUM (CAST (tmpMovement.Amount_TaxCorrective * tmpMovement.Price / tmpMovement.CountForPrice AS NUMERIC (16, 2))) AS Summ_TaxCorrective

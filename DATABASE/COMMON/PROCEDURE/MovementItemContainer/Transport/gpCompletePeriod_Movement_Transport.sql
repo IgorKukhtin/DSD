@@ -15,6 +15,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompletePeriod_Transport());
 
+if NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+then 
+RAISE EXCEPTION 'Ошибка.Нет прав.';
+end if;
 
      -- таблица - Документы которые надо сначала Распровести, потом Провести
      CREATE TEMP TABLE _tmpMovement (MovementId Integer, OperDate TDateTime) ON COMMIT DROP;
@@ -58,4 +62,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpCompletePeriod_Movement_Transport (inStartDate:= '01.10.2013', inEndDate:= '01.10.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpCompletePeriod_Movement_Transport (inStartDate:= '01.02.2015', inEndDate:= '28.02.2015', inSession:= zfCalc_UserAdmin())

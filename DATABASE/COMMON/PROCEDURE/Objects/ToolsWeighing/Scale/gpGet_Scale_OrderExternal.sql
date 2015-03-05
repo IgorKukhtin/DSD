@@ -75,11 +75,11 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
-            , ('№ <' || Movement.InvNumber || '>' || ' от <' || DATE (Movement.OperDate) :: TVarChar || '>') :: TVarChar AS OrderExternalName_master
+            , ('№ <' || Movement.InvNumber || '>' || ' от <' || DATE (Movement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 
-       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.MovementId AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
+       FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.MovementId AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY' AND Movement.StatusId <> zc_Enum_Status_Erased()
            UNION
-             SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1000 DAY' AND inOperDate + INTERVAL '1 DAY'
+             SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY' AND Movement.StatusId <> zc_Enum_Status_Erased()
             ) AS Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -112,15 +112,26 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
                                     ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  MovementLinkObject_From.ObjectId
                                    AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+                                   AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice
                                     ON ObjectBoolean_Partner_EdiInvoice.ObjectId =  MovementLinkObject_From.ObjectId
                                    AND ObjectBoolean_Partner_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+                                   AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv
                                     ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  MovementLinkObject_From.ObjectId
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
+                                   AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
       ;
 
 END;

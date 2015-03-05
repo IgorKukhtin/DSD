@@ -1,26 +1,27 @@
 inherited EDIJournalForm: TEDIJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EXITE>'
   ClientHeight = 424
-  ClientWidth = 1183
+  ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1191
-  ExplicitHeight = 451
+  ExplicitLeft = -199
+  ExplicitWidth = 1300
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
-    Width = 1183
+    Width = 1284
     Height = 367
     ExplicitTop = 57
     ExplicitWidth = 1183
     ExplicitHeight = 367
     ClientRectBottom = 367
-    ClientRectRight = 1183
+    ClientRectRight = 1284
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1183
       ExplicitHeight = 367
       inherited cxGrid: TcxGrid
-        Width = 1183
+        Width = 1284
         Height = 209
         Align = alTop
         ExplicitWidth = 1183
@@ -387,19 +388,21 @@ inherited EDIJournalForm: TEDIJournalForm
       object Splitter: TcxSplitter
         Left = 0
         Top = 209
-        Width = 1183
+        Width = 1284
         Height = 5
         AlignSplitter = salTop
         Control = cxGrid
+        ExplicitWidth = 1183
       end
       object BottomPanel: TPanel
         Left = 0
         Top = 214
-        Width = 1183
+        Width = 1284
         Height = 153
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitWidth = 1183
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
@@ -638,11 +641,12 @@ inherited EDIJournalForm: TEDIJournalForm
         object cxProtocolGrid: TcxGrid
           Left = 957
           Top = 0
-          Width = 226
+          Width = 327
           Height = 153
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
+          ExplicitWidth = 226
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -710,10 +714,11 @@ inherited EDIJournalForm: TEDIJournalForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 1183
+    Width = 1284
     Height = 31
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 1183
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -1750,6 +1755,7 @@ inherited EDIJournalForm: TEDIJournalForm
     Top = 72
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -2044,6 +2050,113 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
+      end
+      item
+        Name = 'MovementId_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+      end
+      item
+        Name = 'OperDatePartner_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner_Sale'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'InvNumber_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Sale'
+        DataType = ftString
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Order'
+      end
+      item
+        Name = 'OperDate_Order'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_Order'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'InvNumber_Order'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Order'
+        DataType = ftString
+      end
+      item
+        Name = 'FromName_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FromName_Sale'
+        DataType = ftString
+      end
+      item
+        Name = 'ToName_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToName_Sale'
+        DataType = ftString
+      end
+      item
+        Name = 'TotalSumm_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSumm_Sale'
+        DataType = ftFloat
+      end
+      item
+        Name = 'TotalCountPartner_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalCountPartner_Sale'
+        DataType = ftFloat
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+      end
+      item
+        Name = 'ContractCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractCode'
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractName'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractTagName'
+        DataType = ftString
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitName'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 680

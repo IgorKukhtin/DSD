@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = #1069#1082#1089#1087#1077#1076#1080#1094#1080#1103
   ClientHeight = 700
-  ClientWidth = 953
+  ClientWidth = 984
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,15 +20,16 @@ object MainForm: TMainForm
   object GridPanel: TPanel
     Left = 133
     Top = 66
-    Width = 820
+    Width = 851
     Height = 634
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 820
     object DBGrid: TDBGrid
       Left = 0
       Top = 33
-      Width = 820
+      Width = 851
       Height = 560
       Align = alClient
       DataSource = DataSource
@@ -190,11 +191,12 @@ object MainForm: TMainForm
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 820
+      Width = 851
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 820
       object ButtonDeleteItem: TSpeedButton
         Left = 148
         Top = 3
@@ -381,11 +383,12 @@ object MainForm: TMainForm
     object infoPanelTotalSumm: TPanel
       Left = 0
       Top = 593
-      Width = 820
+      Width = 851
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitWidth = 820
       object gbRealWeight: TGroupBox
         Left = 249
         Top = 0
@@ -462,13 +465,14 @@ object MainForm: TMainForm
         end
       end
       object gbTotalSumm: TGroupBox
-        Left = 712
+        Left = 743
         Top = 0
         Width = 108
         Height = 41
         Align = alRight
         Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1075#1088#1085
         TabOrder = 3
+        ExplicitLeft = 712
         object PanelTotalSumm: TPanel
           Left = 2
           Top = 15
@@ -988,7 +992,7 @@ object MainForm: TMainForm
   object infoPanel_mastre: TPanel
     Left = 0
     Top = 0
-    Width = 953
+    Width = 984
     Height = 66
     Align = alTop
     BevelOuter = bvNone
@@ -999,20 +1003,22 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
+    ExplicitWidth = 953
     object PanelMovement: TPanel
-      Left = 669
+      Left = 664
       Top = 0
-      Width = 284
+      Width = 320
       Height = 28
       Align = alRight
       BevelOuter = bvNone
       Caption = 'PanelMovement'
       TabOrder = 0
+      ExplicitLeft = 683
     end
     object PanelMovementDesc: TPanel
       Left = 0
       Top = 0
-      Width = 669
+      Width = 664
       Height = 28
       Align = alClient
       BevelOuter = bvNone
@@ -1024,11 +1030,12 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
+      ExplicitWidth = 669
     end
     object infoPanel: TPanel
       Left = 0
       Top = 28
-      Width = 953
+      Width = 984
       Height = 38
       Align = alBottom
       BevelOuter = bvNone
@@ -1039,19 +1046,21 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 2
+      ExplicitWidth = 953
       object infoPanelPartner: TPanel
         Left = 133
         Top = 0
-        Width = 364
+        Width = 359
         Height = 38
         Align = alClient
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitWidth = 364
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 362
+          Width = 357
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1067,7 +1076,7 @@ object MainForm: TMainForm
         object PanelPartner: TPanel
           Left = 1
           Top = 14
-          Width = 362
+          Width = 357
           Height = 23
           Align = alClient
           Alignment = taLeftJustify
@@ -1080,6 +1089,7 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 362
         end
       end
       object infoPanelPriceList: TPanel
@@ -1126,18 +1136,19 @@ object MainForm: TMainForm
         end
       end
       object infoPanelOrderExternal: TPanel
-        Left = 669
+        Left = 664
         Top = 0
-        Width = 284
+        Width = 320
         Height = 38
         Align = alRight
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitLeft = 647
         object LabelOrderExternal: TLabel
           Left = 1
           Top = 1
-          Width = 282
+          Width = 318
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1153,7 +1164,7 @@ object MainForm: TMainForm
         object PanelOrderExternal: TPanel
           Left = 1
           Top = 14
-          Width = 282
+          Width = 318
           Height = 23
           Align = alClient
           Alignment = taLeftJustify
@@ -1166,10 +1177,11 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 282
         end
       end
       object infoPanelContract: TPanel
-        Left = 497
+        Left = 492
         Top = 0
         Width = 172
         Height = 38
@@ -1177,6 +1189,7 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 3
+        ExplicitLeft = 497
         object LabelContract: TLabel
           Left = 1
           Top = 1
