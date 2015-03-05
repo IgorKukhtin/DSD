@@ -20,7 +20,8 @@ type
     // возвращаем данные для тестирования
     procedure TearDown; override;
   published
-    procedure LoadReportFormTest;
+    procedure LoadAllReportFormTest;
+    procedure LoadTransportReportFormTest;
   end;
 
 implementation
@@ -55,7 +56,14 @@ begin
   Report.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
 end;
 
-procedure TLoadReportTest.LoadReportFormTest;
+procedure TLoadReportTest.LoadTransportReportFormTest;
+begin
+  // Транспорт
+  LoadReportFromFile('Путевой лист - Сбыт', ReportPath + '\Транспорт\Путевой лист - Сбыт.fr3');
+  LoadReportFromFile('Ведомость расхода топлива', ReportPath + '\Транспорт\Ведомость расхода топлива.fr3');
+end;
+
+procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
@@ -64,8 +72,6 @@ begin
   // Другие
   LoadReportFromFile('Шаблон по точкам доставки', ReportPath + '\Отчеты (товарные)\Шаблон по точкам доставки.fr3');
 
-  // Транспорт
-  LoadReportFromFile('Путевой лист - Сбыт', ReportPath + '\Транспорт\Путевой лист - Сбыт.fr3');
   // Отчеты(Финансы)
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой-накладные реализация)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой-накладные реализация).fr3');
   LoadReportFromFile('Отчет Итог по покупателю (c отсрочкой-накладные)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c отсрочкой-накладные).fr3');
