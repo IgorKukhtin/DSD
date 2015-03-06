@@ -33,6 +33,13 @@ type
     clPositionName: TcxGridDBColumn;
     clItemName: TcxGridDBColumn;
     OKPO: TcxGridDBColumn;
+    clAmountCurrency: TcxGridDBColumn;
+    clAmountSumm: TcxGridDBColumn;
+    clCurrencyName: TcxGridDBColumn;
+    clCurrencyPartnerValue: TcxGridDBColumn;
+    clParPartnerValue: TcxGridDBColumn;
+    clCurrencyValue: TcxGridDBColumn;
+    clParValue: TcxGridDBColumn;
   private
     { Private declarations }
   public

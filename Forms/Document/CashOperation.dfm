@@ -1,11 +1,11 @@
 ﻿inherited CashOperationForm: TCashOperationForm
   ActiveControl = ceAmountIn
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientHeight = 275
-  ClientWidth = 569
+  ClientHeight = 279
+  ClientWidth = 563
   AddOnFormData.isSingle = False
-  ExplicitWidth = 575
-  ExplicitHeight = 300
+  ExplicitWidth = 569
+  ExplicitHeight = 311
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -42,7 +42,7 @@
   end
   object cxLabel5: TcxLabel [6]
     Left = 245
-    Top = 140
+    Top = 185
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceCash: TcxButtonEdit [7]
@@ -72,7 +72,7 @@
   end
   object ceInfoMoney: TcxButtonEdit [9]
     Left = 245
-    Top = 160
+    Top = 204
     Properties.Buttons = <
       item
         Default = True
@@ -100,12 +100,12 @@
   end
   object cxLabel7: TcxLabel [12]
     Left = 15
-    Top = 50
+    Top = 52
     Caption = #1055#1088#1080#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
   object ceObject: TcxButtonEdit [13]
     Left = 245
-    Top = 115
+    Top = 160
     Properties.Buttons = <
       item
         Default = True
@@ -117,7 +117,7 @@
   end
   object cxLabel6: TcxLabel [14]
     Left = 245
-    Top = 95
+    Top = 140
     Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
   end
   object cxLabel10: TcxLabel [15]
@@ -127,18 +127,18 @@
   end
   object ceComment: TcxTextEdit [16]
     Left = 15
-    Top = 205
+    Top = 204
     TabOrder = 10
-    Width = 535
+    Width = 215
   end
   object cxLabel8: TcxLabel [17]
     Left = 430
-    Top = 50
+    Top = 95
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object ceContract: TcxButtonEdit [18]
     Left = 430
-    Top = 70
+    Top = 115
     Properties.Buttons = <
       item
         Default = True
@@ -151,7 +151,7 @@
   end
   object cxLabel3: TcxLabel [19]
     Left = 130
-    Top = 50
+    Top = 52
     Caption = #1056#1072#1089#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
   object ceAmountOut: TcxCurrencyEdit [20]
@@ -172,12 +172,12 @@
   end
   object cxLabel9: TcxLabel [22]
     Left = 245
-    Top = 50
+    Top = 95
     Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
   end
   object ceMember: TcxButtonEdit [23]
     Left = 245
-    Top = 70
+    Top = 115
     Properties.Buttons = <
       item
         Default = True
@@ -218,6 +218,66 @@
     Properties.ShowTime = False
     TabOrder = 27
     Width = 170
+  end
+  object cxLabel13: TcxLabel [28]
+    Left = 245
+    Top = 52
+    Caption = #1050#1091#1088#1089
+  end
+  object ceCurrencyPartnerValue: TcxCurrencyEdit [29]
+    Left = 247
+    Top = 70
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = False
+    TabOrder = 29
+    Width = 68
+  end
+  object cxLabel14: TcxLabel [30]
+    Left = 322
+    Top = 52
+    Caption = #1053#1086#1084#1080#1085#1072#1083
+  end
+  object ceParPartnerValue: TcxCurrencyEdit [31]
+    Left = 322
+    Top = 70
+    EditValue = 1.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
+    Properties.ReadOnly = False
+    TabOrder = 31
+    Width = 47
+  end
+  object cxLabel15: TcxLabel [32]
+    Left = 384
+    Top = 52
+    Caption = #1042#1072#1083#1102#1090#1072
+  end
+  object ceCurrency: TcxButtonEdit [33]
+    Left = 384
+    Top = 70
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 33
+    Width = 63
+  end
+  object cxLabel16: TcxLabel [34]
+    Left = 458
+    Top = 52
+    Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
+  end
+  object ceAmountSumm: TcxCurrencyEdit [35]
+    Left = 458
+    Top = 70
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 35
+    Width = 92
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -287,6 +347,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inAmountSumm'
+        Value = Null
+        Component = ceAmountSumm
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = ceComment
@@ -341,6 +408,27 @@
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyPartnerValue'
+        Value = Null
+        Component = ceCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inParPartnerValue'
+        Value = Null
+        Component = ceParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
       end>
     Left = 456
     Top = 230
@@ -392,6 +480,12 @@
         Name = 'AmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
+        DataType = ftFloat
+      end
+      item
+        Name = 'AmountSumm'
+        Value = Null
+        Component = ceAmountSumm
         DataType = ftFloat
       end
       item
@@ -496,6 +590,31 @@
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyPartnerValue'
+        Value = Null
+        Component = ceCurrencyPartnerValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'ParPartnerValue'
+        Value = Null
+        Component = ceParPartnerValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 408
     Top = 230
@@ -520,9 +639,24 @@
         Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
-    Left = 480
-    Top = 5
+    Left = 472
+    Top = 13
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -570,7 +704,7 @@
         DataType = ftString
       end>
     Left = 376
-    Top = 157
+    Top = 204
   end
   object ObjectlGuides: TdsdGuides
     KeyField = 'Id'
@@ -633,7 +767,7 @@
         DataType = ftString
       end>
     Left = 368
-    Top = 93
+    Top = 140
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -696,7 +830,7 @@
         DataType = ftString
       end>
     Left = 480
-    Top = 54
+    Top = 101
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -794,6 +928,30 @@
         DataType = ftString
       end>
     Left = 344
-    Top = 45
+    Top = 92
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCurrency
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrencyForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 416
+    Top = 50
   end
 end
