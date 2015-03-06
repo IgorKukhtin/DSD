@@ -303,7 +303,7 @@ begin
        PaymentDate := VarToDateTime(ElementList[13]);
 
     PriceWithVAT := ElementList[14] = '1';
-    SyncCode := StrToInt(ElementList[15]);
+    SyncCode := StrToIntDef(ElementList[15], 0);
 
     Remark := '';
     ElementList := SplitString(StringList[2], #9);

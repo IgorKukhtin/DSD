@@ -814,16 +814,23 @@ begin
        DataSet.Edit;
     Field := DataSet.FieldByName(FieldName);
     if Assigned(Field) then begin
-       // в случае дробного числа и если строка, то надо конвертить
-       if (Field.DataType in [ftFloat]) and (VarType(FValue) in [vtString, vtClass]) then
-           Field.Value := gfStrToFloat(FValue)
-       else
-         // в случае даты и если строка, то надо конвертить
-         if (Field.DataType in [ftDateTime, ftDate, ftTime]) and (VarType(FValue) in [vtString, vtClass]) then begin
-            Field.Value := gfXSStrToDate(FValue); // convert to TDateTime
+         // в случае дробного числа и если строка, то надо конвертить
+         if (Field.DataType in [ftFloat, ftInteger]) and (VarType(FValue) in [vtString, vtClass]) then begin
+             if FValue = '' then
+                Field.Value := null
+             else
+                Field.Value := gfStrToFloat(FValue)
          end
          else
-            Field.Value := FValue;
+           // в случае даты и если строка, то надо конвертить
+           if (Field.DataType in [ftDateTime, ftDate, ftTime]) and (VarType(FValue) in [vtString, vtClass]) then begin
+              if FValue = '' then
+                Field.Value := null
+              else
+                Field.Value := gfXSStrToDate(FValue); // convert to TDateTime
+           end
+           else
+              Field.Value := FValue;
     end
     else
       raise Exception.Create('” дата сета "' + Component.Name + '" нет пол€ "' + FieldName + '"');
