@@ -211,7 +211,7 @@ type
 implementation
 
 uses cxDBLookupComboBox, cxButtonEdit, Variants, ParentForm, FormStorage, DB,
-     SysUtils, Dialogs, dsdAction, cxDBEdit;
+     SysUtils, Dialogs, dsdAction, cxDBEdit, dsdAddOn;
 
 procedure Register;
 begin
@@ -406,13 +406,21 @@ begin
               end;
        // ѕрошли по всем справочникам и они заполнены
        // ¬ыполн€ем все Action
-       for I := 0 to FActionItemList.Count - 1 do
-          if Assigned(FActionItemList[i].Action) then
-               if FActionItemList[i].Action.Enabled then
-                  FActionItemList[i].Action.Execute;
+          for I := 0 to FActionItemList.Count - 1 do
+             if Assigned(FActionItemList[i].Action) then
+                 if FActionItemList[i].Action.Enabled then begin
+                    // ну раз уж сохранили »ƒ, то уж
+                    // нет смысла вызывать THeaderSaver
+                      FActionItemList[i].Action.Execute;
+                 end;
+       // Ёмулирует заход во все контролы, чтобы установить текущие значени€
+          if Assigned(Owner) then
+             for i :=0 to Owner.ComponentCount - 1 do
+                 if Owner.Components[i] is THeaderSaver then
+                    THeaderSaver(Owner.Components[i]).EnterAll;
      end;
    // ≈сли не возникло ошибок!!! закроем форму справочника
-   if Sender is TForm then
+   if (Sender is TForm) then
       TForm(Sender).Close;
 end;
 

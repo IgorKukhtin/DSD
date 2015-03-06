@@ -2,6 +2,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080'>'
   ClientWidth = 873
   ExplicitWidth = 881
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -111,10 +112,35 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       end>
   end
   inherited ActionList: TActionList
+    object ProcreditBankLoad: TClientBankLoadAction [0]
+      Category = 'Load'
+      MoveParams = <>
+      ClientBankType = cbProkreditBank
+      StartDateParam.Value = 41640d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      EndDateParam.Value = 41640d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+    end
+    object ProcreditBank: TMultiAction [1]
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = BankMarfinLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1086#1082#1088#1077#1076#1080#1090' '#1041#1072#1085#1082#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1086#1082#1088#1077#1076#1080#1090' '#1041#1072#1085#1082#1072
+      ImageIndex = 73
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TBankStatementForm'
     end
-    object BankMarfinLoad: TClientBankLoadAction [4]
+    object BankMarfinLoad: TClientBankLoadAction [6]
       Category = 'Load'
       MoveParams = <>
       ClientBankType = cbMarfinBank
@@ -125,7 +151,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
     end
-    object BankMarfin: TMultiAction [5]
+    object BankMarfin: TMultiAction [7]
       Category = 'Load'
       MoveParams = <>
       ActionList = <
@@ -377,6 +403,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           ItemName = 'bbMarfinLoad'
         end
         item
+          Visible = True
+          ItemName = 'bbProkreditBank'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -452,6 +482,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object bbMarfinLoad: TdxBarButton
       Action = BankMarfin
+      Category = 0
+    end
+    object bbProkreditBank: TdxBarButton
+      Action = ProcreditBank
       Category = 0
     end
   end

@@ -344,6 +344,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    // Эмулирует заход во все контролы, чтобы установить текущие значения
+    procedure EnterAll;
   published
     property IdParam: TdsdParam read FParam write FParam;
     property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
@@ -399,6 +401,7 @@ type
     FCheckIdParam: boolean;
     procedure SetShowDialogAction(const Value: TExecuteDialog);
     procedure WndMethod(var Msg: TMessage);
+    procedure SetFlag;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -1199,7 +1202,7 @@ end;
 constructor THeaderSaver.Create(AOwner: TComponent);
 begin
   inherited;
-//  FHWnd := AllocateHWnd(WndMethod);
+  FHWnd := AllocateHWnd(WndMethod);
   FNotSave := false;
   FParam := TdsdParam.Create(nil);
   FControlList := TControlList.Create(Self, TControlListItem);
@@ -1219,6 +1222,14 @@ begin
   if Self.Owner is TParentForm then
      TParentForm(Owner).onAfterShow := FOnAfterShow;
   inherited;
+end;
+
+procedure THeaderSaver.EnterAll;
+var
+   Item: TCollectionItem;
+begin
+  for Item in FControlList do
+      onEnter(TControlListItem(Item).Control)
 end;
 
 procedure THeaderSaver.Notification(AComponent: TComponent;
@@ -1245,8 +1256,7 @@ var i: integer;
 begin
   if Assigned(FOnAfterShow) then
      FOnAfterShow(Sender);
-  for I := 0 to ControlList.Count - 1 do
-      onEnter(ControlList[i].Control)
+  EnterAll;
 end;
 
 procedure THeaderSaver.OnEnter(Sender: TObject);
@@ -1565,6 +1575,11 @@ begin
         else
            TParentForm(Self.Owner).NeedRefreshOnExecute := true;
   FNotRefresh := true;
+  SetFlag;
+end;
+
+procedure TRefreshDispatcher.SetFlag;
+begin
   PostMessage(FHWnd, WM_SETFLAG, 0, 0);
 end;
 

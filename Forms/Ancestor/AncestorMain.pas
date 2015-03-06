@@ -108,28 +108,20 @@ procedure TAncestorMainForm.OnException(Sender: TObject; E: Exception);
   end;
 var TextMessage: String;
     isMessage: boolean;
-    FullMessage: String;
 begin
   if E is ESortException then
      exit;
 
-  TextMessage := GetTextMessage(E, isMessage);
-
-  if E is EStorageException then
-     FullMessage := E.Message
-  else
-     FullMessage := E.Message  ;//+ #10#13 + E.StackTrace;
-
+  TMessagesForm.Create(nil).Execute(GetTextMessage(E, isMessage), E.Message);
   if not isMessage then begin
     // Сохраняем протокол в базе
     try
-      spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(FullMessage);
+      spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message);
       spUserProtocol.Execute;
     except
       // Обязательно так, потому как иначе он может зациклиться.
     end;
   end;
-  TMessagesForm.Create(nil).Execute(TextMessage, FullMessage);
 end;
 
 procedure TAncestorMainForm.FormCreate(Sender: TObject);
