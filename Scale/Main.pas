@@ -156,7 +156,8 @@ var
 
 implementation
 {$R *.dfm}
-uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint;
+uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint
+,UnilWin;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_all:Boolean;
 begin
@@ -340,7 +341,7 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
-  Caption:='Ёкспедици€ - <'+DMMainScaleForm.gpGet_Scale_User+'>';
+  Caption:='Ёкспедици€ ('+GetFileVersionString(ParamStr(0))+') - <'+DMMainScaleForm.gpGet_Scale_User+'>';
   EnterGoodsCodeScanerEdit.Text:='';
   //global Initialize
   gpInitialize_Const;

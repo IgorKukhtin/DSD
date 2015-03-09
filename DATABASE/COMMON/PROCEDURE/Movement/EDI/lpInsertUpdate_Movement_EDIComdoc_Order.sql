@@ -171,8 +171,11 @@ BEGIN
                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                               );
          -- 
-         vbContractId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order ANd DescId = zc_MovementLinkObject_Contract());
-         vbUnitId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order ANd DescId = zc_MovementLinkObject_To());
+         IF vbMovementId_Order <> 0 
+         THEN
+             vbContractId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order ANd DescId = zc_MovementLinkObject_Contract());
+             vbUnitId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order ANd DescId = zc_MovementLinkObject_To());
+         END IF;
          -- 
          vbIsFind_InvNumberPartner:= COALESCE (vbMovementId_Order, 0) > 0;
      ELSE

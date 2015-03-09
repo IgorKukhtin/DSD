@@ -8,6 +8,8 @@ from Object
 where DescId = zc_Object_ContractGoods()
 
 
+select lpDelete_Object (userroleId, '5')
+from gpSelect_Object_RoleUser( inSession := '5') as a where name = 'ъ-Климентьев К.И.'
 
 
 select lpDelete_Object (Object.Id, '5') 

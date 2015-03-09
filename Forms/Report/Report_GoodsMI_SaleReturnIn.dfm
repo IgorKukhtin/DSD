@@ -3,29 +3,28 @@
   ClientHeight = 387
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -264
-  ExplicitWidth = 1470
-  ExplicitHeight = 421
+  ExplicitWidth = 1036
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 82
-    Width = 1462
-    Height = 305
+    Top = 80
+    Width = 1020
+    Height = 307
     TabOrder = 3
-    ExplicitTop = 82
-    ExplicitWidth = 1462
-    ExplicitHeight = 305
-    ClientRectBottom = 301
-    ClientRectRight = 1458
+    ExplicitTop = 80
+    ExplicitWidth = 1020
+    ExplicitHeight = 307
+    ClientRectBottom = 307
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1456
-      ExplicitHeight = 299
+      ExplicitWidth = 1020
+      ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1456
-        Height = 299
-        ExplicitWidth = 1456
-        ExplicitHeight = 299
+        Width = 1020
+        Height = 307
+        ExplicitWidth = 1020
+        ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -850,6 +849,7 @@
           end
           object clReturnPercent: TcxGridDBColumn
             Caption = '% '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'ReturnPercent'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -891,7 +891,7 @@
   inherited Panel: TPanel
     Width = 1020
     Height = 54
-    ExplicitWidth = 1462
+    ExplicitWidth = 1020
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 60
@@ -1398,7 +1398,7 @@
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

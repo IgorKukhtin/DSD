@@ -143,8 +143,8 @@ from
             where Bill.BillDate between @inStartDate and @inEndDate
               and Bill.BillKind in (zc_bkSaleToClient(), zc_bkSendUnitToUnit())
               and Bill.MoneyKindId = zc_mkNal()
-              and Bill.FromId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО
-              and Bill.ToId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
+              and Bill.FromId not in (3830, 3304, 10594) -- КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+              and Bill.ToId not in (3830, 3304, 10594) -- КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
               and isUnitFrom.UnitId is not null
               and isUnitTo.UnitId is null
               and (isnull (UnitTo.PersonalId_Postgres, 0) = 0 OR Bill.FromId = zc_UnitId_StoreSale())

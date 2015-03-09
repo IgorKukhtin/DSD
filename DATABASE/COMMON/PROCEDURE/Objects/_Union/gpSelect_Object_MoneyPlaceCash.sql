@@ -54,6 +54,9 @@ BEGIN
                                     OR View_Personal.UnitId = 8409 -- Отдел экспедиторов
                                  GROUP BY View_Personal.MemberId
                                 )
+        , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
+        , tmpObject_InfoMoney_View AS (SELECT * FROM tmpObject_InfoMoney_View)
+
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode
           , Object_Cash.Valuedata AS Name
@@ -182,15 +185,13 @@ BEGIN
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
 
-          LEFT JOIN Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
-                                          AND Container_Partner_View.ContractId = View_Contract.ContractId
-
+          LEFT JOIN tmpContainer_Partner_View AS Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
+                                                                       AND Container_Partner_View.ContractId = View_Contract.ContractId
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
-
-          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
+          LEFT JOIN tmpObject_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (Container_Partner_View.PaidKindId, View_Contract.PaidKindId)
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup

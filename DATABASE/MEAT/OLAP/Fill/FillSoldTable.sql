@@ -116,7 +116,7 @@ BEGIN
                               , '' :: TVarChar                                                            AS InvNumber
                               , COALESCE (MILinkObject_Juridical.ObjectId, CLO_Juridical.ObjectId)        AS JuridicalId
                               , COALESCE (MILinkObject_Partner.ObjectId, 0)                               AS PartnerId
-                              , COALESCE (ObjectLink_Contract_InfoMoney.ObjectId, CLO_InfoMoney.ObjectId) AS InfoMoneyId
+                              , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, CLO_InfoMoney.ObjectId) AS InfoMoneyId
                               , COALESCE (MovementLinkObject_PaidKind.ObjectId, CLO_PaidKind.ObjectId)    AS PaidKindId
                               , COALESCE (MILinkObject_Branch.ObjectId, 0)                                AS BranchId
                               , COALESCE (MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId)     AS ContractId

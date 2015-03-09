@@ -337,6 +337,9 @@ BEGIN
      FROM Movement
      WHERE Id = inMovementId ;
 
+     -- сохранили свойство <ѕротокол взвешивани€>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), inMovementId, CURRENT_TIMESTAMP);
+
      -- финиш - ќб€зательно мен€ем статус документа + сохранили протокол - <¬звешивание (контрагент)>
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_WeighingPartner()

@@ -372,7 +372,7 @@ BEGIN
                                                       , inJuridicalId      := vbJuridicalId
                                                       , inJuridicalId_Child:= _tmpMIChild.JuridicalId
                                                       , inPartnerId        := MovementLinkObject_To.ObjectId
-                                                      , inBranchId         := CASE WHEN vbContractId_child <> 0 THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) END
+                                                      , inBranchId         := COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) -- CASE WHEN vbContractId_child <> 0 THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) END
                                                       , inGoodsId          := _tmpMIChild.GoodsId
                                                       , inGoodsKindId      := _tmpMIChild.GoodsKindId
                                                       , inAmount           := _tmpMIChild.Amount_recalc

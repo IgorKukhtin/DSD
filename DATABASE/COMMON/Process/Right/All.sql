@@ -458,4 +458,43 @@ update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashKharkov() from M
 update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashCherkassi() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 279791  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKharkov();
 update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashDoneck() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 280185  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKharkov();
 update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashOdessa() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 280296  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKharkov();
+
+update Movement set AccessKeyId  = caSE  WHEN MovementLinkObject_To.ObjectId = 8411 -- Склад ГП ф Киев
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                          WHEN MovementLinkObject_To.ObjectId = 346093 -- Склад ГП ф.Одесса
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
+                          WHEN MovementLinkObject_To.ObjectId = 8413 -- Склад ГП ф.Кривой Рог
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
+                          WHEN MovementLinkObject_To.ObjectId = 8417 -- Склад ГП ф.Николаев (Херсон)
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
+                          WHEN MovementLinkObject_To.ObjectId = 8425 -- Склад ГП ф.Харьков
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
+                          WHEN MovementLinkObject_To.ObjectId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                     end
+from MovementLinkObject AS MovementLinkObject_To
+                                         
+where Movement.DescId = zc_Movement_ReturnIn()
+and AccessKeyId  <> caSE  WHEN MovementLinkObject_To.ObjectId = 8411 -- Склад ГП ф Киев
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                          WHEN MovementLinkObject_To.ObjectId = 346093 -- Склад ГП ф.Одесса
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
+                          WHEN MovementLinkObject_To.ObjectId = 8413 -- Склад ГП ф.Кривой Рог
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
+                          WHEN MovementLinkObject_To.ObjectId = 8417 -- Склад ГП ф.Николаев (Херсон)
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
+                          WHEN MovementLinkObject_To.ObjectId = 8425 -- Склад ГП ф.Харьков
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
+                          WHEN MovementLinkObject_To.ObjectId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                     end
+
+and MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                        AND MovementLinkObject_To.ObjectId in (8411 -- 
+                                                                             , 346093 -- Склад ГП ф.Одесса
+                                                                             , 8413 -- Склад ГП ф.Кривой Рог
+                                                                             , 8417 -- Склад ГП ф.Николаев (Херсон)
+                                                                             , 8425 -- Склад ГП ф.Харьков
+                                                                             , 8415)
 */
