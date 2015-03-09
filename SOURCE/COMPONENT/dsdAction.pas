@@ -1079,8 +1079,8 @@ function TdsdChoiceGuides.LocalExecute: Boolean;
 begin
   result := true;
   if Assigned(FParams.ParamByName('Key')) and
-    Assigned(FParams.ParamByName('TextValue')) then
-    FChoiceCaller.AfterChoice(FParams, TForm(Owner))
+     Assigned(FParams.ParamByName('TextValue')) then
+     FChoiceCaller.AfterChoice(FParams, TForm(Owner))
   else
     raise Exception.Create
       ('Не определены параметры возврата значений при выборе из справочника');

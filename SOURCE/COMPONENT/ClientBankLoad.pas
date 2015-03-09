@@ -7,10 +7,11 @@ uses dsdAction, DB, dsdDb, Classes, ExternalLoad;
 type
 
   TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank,
-    cbPireusBank, cbPireusBankDBF, cbMarfinBank, cbUrkExim);
+    cbPireusBank, cbPireusBankDBF, cbMarfinBank, cbUrkExim, cbProkreditBank);
 
   TClientBankLoad = class(TFileExternalLoad)
   private
+    function IsDebet: boolean; virtual; abstract;
     function GetOperSumm: real; virtual; abstract;
     function GetDocNumber: string; virtual; abstract;
     function GetOperDate: TDateTime; virtual; abstract;
@@ -207,6 +208,24 @@ type
     function GetCurrencyName: string; override;
   end;
 
+  TProkeditBankLoad = class(TClientBankLoad)
+    function IsDebet: boolean; override;
+    function GetOperSumm: real; override;
+    function GetDocNumber: string; override;
+    function GetOperDate: TDateTime; override;
+
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
+    function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
+  end;
+
 constructor TClientBankLoadAction.Create(Owner: TComponent);
 begin
   inherited;
@@ -245,6 +264,8 @@ begin
       result := TPireusBankLoad.Create(StartDate, EndDate);
     cbUrkExim:
       result := TUkrEximBankLoad.Create(StartDate, EndDate);
+    cbProkreditBank:
+      result := TProkeditBankLoad.Create(StartDate, EndDate);
   end;
 end;
 
@@ -955,6 +976,101 @@ begin
   result := FDataSet.FieldByName('SUMMA').AsFloat;
   if FDataSet.FieldByName('FLAG_DK').AsInteger = 0 then
      result := - result;
+end;
+
+{ TProkeditBankLoad }
+
+function TProkeditBankLoad.GetBankAccount: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('KL_CHK').AsString
+  else
+    result := FDataSet.FieldByName('KL_CHK_K').AsString
+end;
+
+function TProkeditBankLoad.GetBankAccountMain: string;
+begin
+  if not IsDebet then
+    result := FDataSet.FieldByName('KL_CHK').AsString
+  else
+    result := FDataSet.FieldByName('KL_CHK_K').AsString
+end;
+
+function TProkeditBankLoad.GetBankMFO: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('MFO').AsString
+  else
+    result := FDataSet.FieldByName('MFO_K').AsString
+end;
+
+function TProkeditBankLoad.GetBankMFOMain: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('MFO_K').AsString
+  else
+    result := FDataSet.FieldByName('MFO').AsString
+end;
+
+function TProkeditBankLoad.GetBankName: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('MFO_NM').AsString
+  else
+    result := FDataSet.FieldByName('MFO_NM_K').AsString;
+end;
+
+function TProkeditBankLoad.GetComment: string;
+begin
+  result := FDataSet.FieldByName('N_P').AsString
+end;
+
+function TProkeditBankLoad.GetCurrencyCode: string;
+begin
+  result := FDataSet.FieldByName('CUR_ID').AsString
+end;
+
+function TProkeditBankLoad.GetCurrencyName: string;
+begin
+  result := ''
+end;
+
+function TProkeditBankLoad.GetDocNumber: string;
+begin
+  result := FDataSet.FieldByName('ND').AsString
+end;
+
+function TProkeditBankLoad.GetJuridicalName: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('KL_NM').AsString
+  else
+    result := FDataSet.FieldByName('KL_NM_K').AsString;
+end;
+
+function TProkeditBankLoad.GetOKPO: string;
+begin
+  if IsDebet then
+    result := trim(FDataSet.FieldByName('KL_OKP').AsString)
+  else
+    result := trim(FDataSet.FieldByName('KL_OKP_K').AsString);
+end;
+
+function TProkeditBankLoad.GetOperDate: TDateTime;
+begin
+  result := FDataSet.FieldByName('DATA').AsDateTime;
+end;
+
+function TProkeditBankLoad.GetOperSumm: real;
+begin
+  result := FDataSet.FieldByName('S').AsFloat;
+  if IsDebet then
+     result := - result;
+end;
+
+function TProkeditBankLoad.IsDebet: boolean;
+begin
+  result := FDataSet.FieldByName('DK').AsInteger = 2
 end;
 
 end.

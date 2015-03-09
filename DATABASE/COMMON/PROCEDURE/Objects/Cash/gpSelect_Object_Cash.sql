@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
-               CurrencyName TVarChar, BranchName TVarChar,
+               CurrencyId Integer, CurrencyName TVarChar, 
+               BranchName TVarChar,
                JuridicalName TVarChar, 
                BusinessName TVarChar, 
                PaidKindName TVarChar)
@@ -27,6 +28,7 @@ BEGIN
    , Object.ObjectCode  AS Code
    , Object.ValueData   AS Name
    , Object.isErased    AS isErased
+   , Currency.Id        AS CurrencyId
    , Currency.ValueData AS CurrencyName
    , Branch.ValueData   AS BranchName
    , JuridicalBasis.ValueData  AS JuridicalName

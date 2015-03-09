@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat 
              , AmountOut TFloat 
+             , AmountSumm TFloat 
              , ServiceDate TDateTime
              , Comment TVarChar
              , CashId Integer, CashName TVarChar
@@ -21,6 +22,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PositionId Integer, PositionName TVarChar
              , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
+             , CurrencyValue TFloat, ParValue TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              )
 AS
 $BODY$
@@ -44,6 +48,7 @@ BEGIN
            
            , 0::TFloat                                         AS AmountIn
            , 0::TFloat                                         AS AmountOut
+           , 0::TFloat                                         AS AmountSumm
 
            , DATE_TRUNC ('Month', inOperDate - INTERVAL '1 MONTH') :: TDateTime AS ServiceDate
            , ''::TVarChar                                      AS Comment
@@ -62,8 +67,19 @@ BEGIN
            , 0                                                 AS UnitId
            , CAST ('' as TVarChar)                             AS UnitName
 
+           , Object_Currency.Id                AS CurrencyId
+           , Object_Currency.ValueData         AS CurrencyName
+           , 0 :: TFloat                                       AS CurrencyValue
+           , 0 :: TFloat                                       AS ParValue
+           , 0 :: TFloat                                       AS CurrencyPartnerValue
+           , 0 :: TFloat                                       AS ParPartnerValue
+
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inKassaId -- IN (SELECT MIN (Object.Id) FROM Object WHERE Object.AccessKeyId IN (SELECT MIN (lpGetAccessKey) FROM lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Cash())))
+            LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
+               ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
+              AND ObjectLink_Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
+        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Cash_Currency.ChildObjectId
       ;
      ELSE
      
@@ -85,6 +101,8 @@ BEGIN
                   ELSE
                       0
                   END::TFloat AS AmountOut
+           
+           , MovementFloat_Amount.ValueData    AS AmountSumm
 
            , COALESCE (MIDate_ServiceDate.ValueData, Movement.OperDate) AS ServiceDate
            , MIString_Comment.ValueData        AS Comment
@@ -103,10 +121,35 @@ BEGIN
            , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ValueData              AS UnitName
+
+           , Object_Currency.Id                AS CurrencyId
+           , Object_Currency.ValueData         AS CurrencyName
+           , MovementFloat_CurrencyValue.ValueData        AS CurrencyValue
+           , MovementFloat_ParValue.ValueData             AS ParValue
+           , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData      AS ParPartnerValue
+           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+
+            LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                    ON MovementFloat_Amount.MovementId = Movement.Id
+                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
  
@@ -147,6 +190,11 @@ BEGIN
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                             ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
        WHERE Movement.Id =  inMovementId;
 
    END IF;  
@@ -159,6 +207,7 @@ ALTER FUNCTION gpGet_Movement_Cash (Integer, TDateTime, Integer, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.03.15         * add Currency...
  30.08.14                                        * all
  25.01.14                                        * add inOperDate
  26.12.13                                        * add View_InfoMoney

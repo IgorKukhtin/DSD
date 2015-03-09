@@ -46,6 +46,15 @@ type
     PersonalGuides: TdsdGuides;
     MemberGuides: TdsdGuides;
     ceServiceDate: TcxDateEdit;
+    cxLabel13: TcxLabel;
+    ceCurrencyPartnerValue: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    ceParPartnerValue: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    ceCurrency: TcxButtonEdit;
+    cxLabel16: TcxLabel;
+    ceAmountSumm: TcxCurrencyEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -21,11 +21,14 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbObjectId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
      vbUserId := inSession;
+   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
 
      IF inShowAll THEN
 
@@ -46,10 +49,10 @@ BEGIN
            , NULL::TVarChar             AS MakerName
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
-                  , Object_Goods.ObjectCode                                           AS GoodsCode
-                  , Object_Goods.ValueData                                            AS GoodsName
-             FROM Object AS Object_Goods
-             WHERE Object_Goods.DescId = zc_Object_Goods() AND Object_Goods.isErased = FALSE
+                  , Object_Goods.GoodsCodeInt                                         AS GoodsCode
+                  , Object_Goods.GoodsName                                            AS GoodsName
+             FROM Object_Goods_View AS Object_Goods
+             WHERE Object_Goods.isErased = FALSE AND Object_Goods.ObjectId = vbObjectId
             ) AS tmpGoods
 
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
@@ -115,6 +118,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.03.15                         *
  26.12.14                         *
  09.12.14                         *
  03.07.14                                                       *

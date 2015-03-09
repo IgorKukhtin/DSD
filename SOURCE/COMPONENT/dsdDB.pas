@@ -762,10 +762,9 @@ begin
      if Component is TcxCheckBox then
         Result := BoolToStr((Component as TcxCheckBox).Checked, true);
      if Component is TcxDateEdit then begin
-        DateTime := (Component as TcxDateEdit).Date;
-        if DateTime = -700000 then
-           DateTime := 0;
-        Result := DateTime;
+        if (Component as TcxDateEdit).Date = -700000 then
+           (Component as TcxDateEdit).Date := Date;
+        Result := (Component as TcxDateEdit).Date;
      end;
      if Component is TBooleanStoredProcAction then
         Result := (Component as TBooleanStoredProcAction).Value;
@@ -815,16 +814,23 @@ begin
        DataSet.Edit;
     Field := DataSet.FieldByName(FieldName);
     if Assigned(Field) then begin
-       // в случае дробного числа и если строка, то надо конвертить
-       if (Field.DataType in [ftFloat]) and (VarType(FValue) in [vtString, vtClass]) then
-           Field.Value := gfStrToFloat(FValue)
-       else
-         // в случае даты и если строка, то надо конвертить
-         if (Field.DataType in [ftDateTime, ftDate, ftTime]) and (VarType(FValue) in [vtString, vtClass]) then begin
-            Field.Value := gfXSStrToDate(FValue); // convert to TDateTime
+         // в случае дробного числа и если строка, то надо конвертить
+         if (Field.DataType in [ftFloat, ftInteger]) and (VarType(FValue) in [vtString, vtClass]) then begin
+             if FValue = '' then
+                Field.Value := null
+             else
+                Field.Value := gfStrToFloat(FValue)
          end
          else
-            Field.Value := FValue;
+           // в случае даты и если строка, то надо конвертить
+           if (Field.DataType in [ftDateTime, ftDate, ftTime]) and (VarType(FValue) in [vtString, vtClass]) then begin
+              if FValue = '' then
+                Field.Value := null
+              else
+                Field.Value := gfXSStrToDate(FValue); // convert to TDateTime
+           end
+           else
+              Field.Value := FValue;
     end
     else
       raise Exception.Create('” дата сета "' + Component.Name + '" нет пол€ "' + FieldName + '"');

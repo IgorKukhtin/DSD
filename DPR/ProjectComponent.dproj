@@ -113,7 +113,6 @@
 			<DCCReference Include="dxSkinsCoreRS16.dcp"/>
 			<DCCReference Include="kbmMemRunDXE2Pro.dcp"/>
 			<DCCReference Include="adortl.dcp"/>
-			<DCCReference Include="ZLibEx.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
