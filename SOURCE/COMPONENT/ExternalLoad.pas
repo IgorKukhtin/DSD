@@ -351,7 +351,10 @@ begin
             FieldByName('VAT').AsInteger := round(gfStrToFloat(ElementList[8]));
             FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
             FieldByName('ExpirationDate').AsDateTime := ExpirationDate;    // Срок годности
-            FieldByName('FEA').AsString := ElementList[21]; // КВЭД
+            if High(ElementList) < 21 then
+               FieldByName('FEA').AsString := '' // КВЭД
+            else
+               FieldByName('FEA').AsString := ElementList[21]; // КВЭД
             FieldByName('MeasureName').AsString := ElementList[14]; // Ед Изм
             FieldByName('Amount').AsFloat := gfStrToFloat(ElementList[15]);    // Количество
             FieldByName('Price').AsFloat  := Price;    // Цена Отпускная (для аптеки это закупочная)

@@ -611,7 +611,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   Menus, cxGridExportLink, ShellApi,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
   cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants,
-  frxDBSet,
+  frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave;
 
 procedure Register;
@@ -1396,6 +1396,14 @@ begin
     result := FReportName
 end;
 
+function GetDefaultPrinter: string;
+var
+  ResStr: array[0..255] of Char;
+begin
+  GetProfileString('Windows', 'device', '', ResStr, 255);
+  Result := StrPas(ResStr);
+end;
+
 function TdsdPrintAction.LocalExecute: Boolean;
 var
   i: Integer;
@@ -1501,6 +1509,8 @@ begin
             // Вдруг что!
             // FReport.PreviewOptions.modal := false;
             if WithOutPreview then begin
+               PrintOptions.ShowDialog := false;
+               PrintOptions.Printer := GetDefaultPrinter;
                PrepareReport;
                Print
             end
