@@ -148,6 +148,7 @@ type
     edChangePercent: TcxCurrencyEdit;
     cxLabel20: TcxLabel;
     edVATPercent: TcxCurrencyEdit;
+    MeasureName: TcxGridDBColumn;
   private
   public
   end;

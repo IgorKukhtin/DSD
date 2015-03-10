@@ -62,6 +62,9 @@ type
     actUpdateEdiDesadvTrue: TdsdExecStoredProc;
     actUpdateEdiInvoiceTrue: TdsdExecStoredProc;
     actUpdateEdiOrdsprTrue: TdsdExecStoredProc;
+    actExecPrintStoredProc: TdsdExecStoredProc;
+    spGetDefaultEDI: TdsdStoredProc;
+    actSetDefaults: TdsdExecStoredProc;
   private
   end;
 

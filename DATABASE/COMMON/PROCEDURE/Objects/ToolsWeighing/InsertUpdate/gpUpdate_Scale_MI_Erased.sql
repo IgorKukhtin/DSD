@@ -25,7 +25,8 @@ BEGIN
     ELSE PERFORM lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
     END IF;
 
-     -- 
+    -- сохранили свойство <Дата/время>
+    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), inMovementItemId, CURRENT_TIMESTAMP);
 
      -- Результат
      RETURN QUERY

@@ -43,6 +43,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Sale_Amount_10500_Weight TFloat
              , Sale_Amount_40200_Weight TFloat
              , Return_Amount_40200_Weight TFloat
+             , ReturnPercent TFloat
               )
 AS
 $BODY$
@@ -91,8 +92,8 @@ BEGIN
 
     -- определ€етс€ уровень доступа
     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
-     -- !!!мен€етс€ параметр!!!
-     IF vbObjectId_Constraint_Branch > 0 THEN inBranchId:= vbObjectId_Constraint_Branch; END IF;
+    -- !!!мен€етс€ параметр!!!
+    IF vbObjectId_Constraint_Branch > 0 THEN inBranchId:= vbObjectId_Constraint_Branch; END IF;
 
     -- определ€етс€ уровень доступа дл€ с/с
     vbIsCost:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId); -- ќтчеты (управленцы) + јналитики по продажам
@@ -160,7 +161,7 @@ BEGIN
     CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer/*, RetailId Integer, JuridicalGroupId Integer, OKPO TVarChar*/) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpJuridicalBranch (JuridicalId Integer) ON COMMIT DROP;
     --
-    IF vbIsJuridicalBranch = TRUE vbObjectId_Constraint_Branch <> 0
+    IF vbIsJuridicalBranch = TRUE AND vbObjectId_Constraint_Branch <> 0
     THEN
         INSERT INTO _tmpJuridicalBranch (JuridicalId)
                                      SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
@@ -528,6 +529,8 @@ BEGIN
          , tmpOperationGroup.Sale_Amount_10500_Weight    :: TFloat AS Sale_Amount_10500_Weight
          , tmpOperationGroup.Sale_Amount_40200_Weight    :: TFloat AS Sale_Amount_40200_Weight
          , tmpOperationGroup.Return_Amount_40200_Weight  :: TFloat AS Return_Amount_40200_Weight
+
+         , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
 
      FROM tmpOperationGroup
 

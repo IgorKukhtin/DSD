@@ -318,6 +318,9 @@ type
     function pLoadDocument_OrderExternal:Integer;
     procedure pLoadDocumentItem_OrderExternal(SaveCount:Integer);
 
+    function pLoadDocument_OrderInternal:Integer;
+    procedure pLoadDocumentItem_OrderInternal(SaveCount:Integer);
+
     function pLoadDocument_WeighingPartner:Integer;
     procedure pLoadDocumentItem_WeighingPartner(SaveCount:Integer);
 
@@ -1616,6 +1619,9 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_OrderExternal;
      if not fStop then pLoadDocumentItem_OrderExternal(myRecordCount1);
+
+     if not fStop then myRecordCount1:=pLoadDocument_OrderInternal;
+     if not fStop then pLoadDocumentItem_OrderInternal(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_WeighingPartner;
      if not fStop then pLoadDocumentItem_WeighingPartner(myRecordCount1);
@@ -9669,8 +9675,8 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
-           +'  and Bill.FromId not in (3830, 3304)' //КРОТОН ООО (хранение) + КРОТОН ООО
-           +'  and Bill.ToId not in (3830, 3304)'  // КРОТОН ООО (хранение) + КРОТОН ООО
+           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
 //           +'  and Bill.FromId<>4928'//ФОЗЗИ-ПЕРЕПАК ПРОДУКЦИИ
            +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
@@ -10014,8 +10020,8 @@ begin
            +'  and Id_Postgres >0'
            +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
            +'  and Bill.FromId not in (5347)' //ИЗЛИШКИ ПО ПРИХОДУ СО
-           +'  and Bill.FromId not in (3830, 3304)' //КРОТОН ООО (хранение) + КРОТОН ООО
-           +'  and Bill.ToId not in (3830, 3304)'  // КРОТОН ООО (хранение) + КРОТОН ООО
+           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
            +'  and isUnitFrom.UnitId is null'
            +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkNal()'
@@ -10712,8 +10718,8 @@ begin
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
            +'  and Bill.FromId not in (5347)' //ИЗЛИШКИ ПО ПРИХОДУ СО
-           +'  and Bill.FromId not in (3830, 3304)' //КРОТОН ООО (хранение) + КРОТОН ООО
-           +'  and Bill.ToId not in (3830, 3304)'  // КРОТОН ООО (хранение) + КРОТОН ООО
+           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
 //           +'  and Bill.FromId<>4928'//ФОЗЗИ-ПЕРЕПАК ПРОДУКЦИИ
            +'  and isUnitFrom.UnitId is null'
            +'  and UnitFrom.PersonalId_Postgres is null'
@@ -10993,8 +10999,8 @@ begin
            +'  and Bill.Id_Postgres>0'
            +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
            +'  and Bill.FromId not in (5347)' //ИЗЛИШКИ ПО ПРИХОДУ СО
-           +'  and Bill.FromId not in (3830, 3304)' //КРОТОН ООО (хранение) + КРОТОН ООО
-           +'  and Bill.ToId not in (3830, 3304)'  // КРОТОН ООО (хранение) + КРОТОН ООО
+           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
            +'  and isUnitFrom.UnitId is null'
            +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkNal()');
@@ -14777,8 +14783,8 @@ begin
            +'  and Bill.BillKind=zc_bkReturnToClient()'
 //           +'  and Bill.ToId<>4928'//ФОЗЗИ-ПЕРЕПАК ПРОДУКЦИИ
            +'  and Bill.FromId<>4927'//СКЛАД ПЕРЕПАК
-           +'  and Bill.FromId not in (3830, 3304)' //КРОТОН ООО (хранение) + КРОТОН ООО
-           +'  and Bill.ToId not in (3830, 3304)'  // КРОТОН ООО (хранение) + КРОТОН ООО
+           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
            );
@@ -15196,8 +15202,8 @@ begin
            +'  and Bill.BillKind=zc_bkReturnToClient()'
 //           +'  and Bill.ToId<>4928'//ФОЗЗИ-ПЕРЕПАК ПРОДУКЦИИ
            +'  and Bill.FromId<>4927'//СКЛАД ПЕРЕПАК
-           +'  and Bill.FromId not in (3830, 3304)' //КРОТОН ООО (хранение) + КРОТОН ООО
-           +'  and Bill.ToId not in (3830, 3304)'  // КРОТОН ООО (хранение) + КРОТОН ООО
+           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkNal()'
            );
@@ -19878,7 +19884,7 @@ begin
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
 
-        Add('     , BillItems.ZakazCount1 + BillItems.ZakazCount1 as Amount');
+        Add('     , isnull(BillItems.ZakazCount1,0) + isnull(BillItems.ZakazCount2,0) as Amount');
         Add('     , BillItems.ZakazChange as AmountSecond');
 
         Add('     , PriceListItems_byHistory.NewPrice as Price');
@@ -19974,6 +19980,202 @@ begin
      end;
      //
      myDisabledCB(cbOrderExternal);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pLoadDocument_OrderInternal:Integer;
+begin
+     Result:=0;
+     if (not cbOrderInternal.Checked)or(not cbOrderInternal.Enabled) then exit;
+     //
+     myEnabledCB(cbOrderInternal);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillNumber || case when (FromId_Postgres is null)'
+           +'                                 or (ToId_Postgres is null)'
+           +'                                    then '+FormatToVarCharServer_notNULL('-ошибка')
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'                       || case when FromId_Postgres is null'
+           +'                                    then '+FormatToVarCharServer_notNULL(' От Кого:')+'|| UnitFrom.UnitName'
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'                       || case when ToId_Postgres is null'
+           +'                                    then '+FormatToVarCharServer_notNULL(' Кому:')+'|| UnitTo.UnitName'
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'       as InvNumber');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , Bill.BillDate - 55 - 2 as inOperDateStart');
+        Add('     , Bill.BillDate - 2 as inOperDateEnd');
+
+        Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
+        Add('     , pgUnitTo.Id_Postgres as ToId_Postgres');
+
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+
+        Add('from dba.Bill');
+        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
+        Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('  and Bill.BillKind = zc_bkProductionInZakaz()'
+           +'  and (isUnitFrom.UnitId is not null and isUnitTo.UnitId is not null)'
+// +' and Bill.Id_Postgres=22081'
+           );
+        Add('order by OperDate, ObjectId');
+        Open;
+        Result:=RecordCount;
+        cbOrderInternal.Caption:='7.2. ('+IntToStr(RecordCount)+')Заявки пр-во';
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_OrderInternal';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inOperDateStart',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inOperDateEnd',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             //
+             //сохранение
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inOperDateStart').Value:=FieldByName('inOperDateStart').AsDateTime;
+             toStoredProc.Params.ParamByName('inOperDateEnd').Value:=FieldByName('inOperDateEnd').AsDateTime;
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+
+             //fExecSqFromQuery('update dba.BillItems set Id_Postgres= null where BillId = '+FieldByName('ObjectId').AsString);
+             //fExecSqFromQuery('update dba.Bill set Id_Postgres= null where Id = '+FieldByName('ObjectId').AsString);
+             //fExecSqToQuery (' select * from lpSetErased_Movement('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+',5)');
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbOrderInternal);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_OrderInternal(SaveCount:Integer);
+begin
+     if (not cbOrderInternal.Checked)or(not cbOrderInternal.Enabled) then exit;
+     myEnabledCB(cbOrderInternal);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select BillItems.Id as ObjectId');
+        Add('     , Bill.BillDate as BillDate');
+        Add('     , Bill.BillNumber as BillNumber');
+        Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
+
+        Add('     , isnull(BillItems.ZakazCount1,0) + isnull(BillItems.ZakazCount2,0) as Amount');
+        Add('     , BillItems.ZakazChange as AmountSecond');
+
+        Add('     , isnull(BillItems.RemainsOperCount, 0) + isnull(BillItems.RemainsOperCount_two,0) as AmountRemains');
+        Add('     , isnull(BillItems.PrognozCount,0) as PrognozCount');
+        Add('     , isnull(BillItems.PrognozCount_two,0) as PrognozCount_two');
+
+        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
+
+        Add('     left outer join dba.BillItemsZakaz as BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
+        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind = zc_bkProductionInZakaz()'
+           +'  and (isUnitFrom.UnitId is not null and isUnitTo.UnitId is not null)'
+           +'  and BillItems.Id is not null'
+           +'  and Bill.Id_Postgres>0'
+           );
+        Add('order by 2,3,1');
+        Open;
+
+        cbOrderInternal.Caption:='7.2.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Заявки пр-во';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_OrderInternal';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountSecond',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountSecond').Value:=FieldByName('AmountSecond').AsFloat;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))
+             then fExecSqFromQuery('update dba.BillItemsZakaz set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             //
+             fExecSqToQuery ('select lpInsertUpdate_MovementItemFloat(zc_MIFloat_AmountRemains(),'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+','+FloatToStr(FieldByName('AmountRemains').AsFloat)+')');
+             fExecSqToQuery ('select lpInsertUpdate_MovementItemFloat(zc_MIFloat_AmountForecast(),'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+','+FloatToStr(FieldByName('PrognozCount').AsFloat)+')');
+             fExecSqToQuery ('select lpInsertUpdate_MovementItemFloat(zc_MIFloat_AmountForecastOrder(),'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+','+FloatToStr(FieldByName('PrognozCount_two').AsFloat)+')');
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbOrderInternal);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_WeighingPartner:Integer;

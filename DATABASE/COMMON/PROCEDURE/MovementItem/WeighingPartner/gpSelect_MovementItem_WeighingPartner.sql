@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , ChangePercentAmount TFloat, AmountChangePercent TFloat
              , Price TFloat, CountForPrice TFloat
              , PartionGoodsDate TDateTime
-             , GoodsKindName TVarChar
+             , GoodsKindName TVarChar, MeasureName TVarChar
              , BoxName TVarChar
              , PriceListName  TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -65,6 +65,7 @@ BEGIN
            , CASE WHEN tmpMI.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
 
            , Object_GoodsKind.ValueData      AS GoodsKindName
+           , Object_Measure.ValueData        AS MeasureName
            , Object_Box.ValueData            AS BoxName
            , Object_PriceList.ValueData      AS PriceListName
            
@@ -92,7 +93,7 @@ BEGIN
                   , SUM (tmpMI.BoxCount_mi)    AS BoxCount_mi
 
                   , tmpMI.BoxNumber            AS BoxNumber
-                  , MAX (tmpMI.LevelNumber)    AS LevelNumber
+                  , MAX (tmpMI.LevelNumber)    AS LevelNumber -- MAX
 
                   , tmpMI.ChangePercentAmount
                   , SUM (tmpMI.AmountChangePercent) AS AmountChangePercent
@@ -325,6 +326,10 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
             LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMI.BoxId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMI.PriceListId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
      ;
 

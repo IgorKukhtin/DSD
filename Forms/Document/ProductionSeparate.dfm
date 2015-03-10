@@ -1,19 +1,26 @@
 inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  ClientHeight = 678
+  ClientWidth = 903
+  ExplicitWidth = 919
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 122
-    Height = 610
+    Width = 903
+    Height = 556
     TabOrder = 2
     ExplicitTop = 122
-    ExplicitHeight = 610
-    ClientRectBottom = 610
+    ExplicitHeight = 556
+    ClientRectBottom = 556
+    ClientRectRight = 903
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 586
+      ExplicitHeight = 532
       inherited cxGrid: TcxGrid
-        Height = 228
-        ExplicitHeight = 228
+        Width = 903
+        Height = 174
+        ExplicitHeight = 174
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -74,9 +81,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 228
-        ExplicitTop = 228
+        Top = 174
+        Width = 903
+        ExplicitTop = 174
         inherited cxGridDBTableViewChild: TcxGridDBTableView
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
           Styles.Content = nil
           object colChildGoodsName: TcxGridDBColumn [1]
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
@@ -92,7 +103,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 236
           end
-          object colChildHeadCount: TcxGridDBColumn
+          object colChildHeadCount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -100,11 +111,22 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Width = 60
           end
+          inherited colChildPartionGoods: TcxGridDBColumn [4]
+            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+          end
+          inherited colChildAmountReceipt: TcxGridDBColumn [5]
+            VisibleForCustomization = False
+          end
+          inherited colChildComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            VisibleForCustomization = False
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
+    Width = 903
     Height = 96
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit

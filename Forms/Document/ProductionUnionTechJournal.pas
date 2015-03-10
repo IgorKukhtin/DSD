@@ -60,6 +60,11 @@ type
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     MIOrderId: TcxGridDBColumn;
+    ReceiptCode: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    colChildMeasureName: TcxGridDBColumn;
+    colChildAmountCalc: TcxGridDBColumn;
+    colChildGroupNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

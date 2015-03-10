@@ -8,6 +8,8 @@ from Object
 where DescId = zc_Object_ContractGoods()
 
 
+select lpDelete_Object (userroleId, '5')
+from gpSelect_Object_RoleUser( inSession := '5') as a where name = 'ъ-Климентьев К.И.'
 
 
 select lpDelete_Object (Object.Id, '5') 
@@ -35,6 +37,41 @@ select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Branch(), Id, (select Id fr
 -- select *
 from Object
 where Id in (79447, 329598, 78274) -- Преміум Фудс ТОВ
+
+
+select    -- gpInsertUpdate_Object_RoleProcess (ioId :=  b.roleprocessid , inRoleId := tmpRole.RoleId , inProcessId := a.Id ,  inSession := '5')
+          b.roleprocessid , tmpRole.RoleId  , a.Id 
+from (select 279795  as RoleId -- Бухгалтер Киев
+ union select 279937 as RoleId -- Бухгалтер КРИВОЙ РОГ
+ union select 279916 as RoleId -- Бухгалтер НИКОЛАЕВ
+ union select 279931 as RoleId -- Бухгалтер ХАРЬКОВ 
+ union select 279922 as RoleId -- Бухгалтер ЧЕРКАССЫ
+     ) as tmpRole
+left join gpSelect_Object_Process( inSession := '5') as a
+         on EnumName in ('zc_Enum_Process_InsertUpdate_Movement_Sale'
+                       , 'zc_Enum_Process_Complete_Sale'
+                       , 'zc_Enum_Process_SetErased_Sale'
+                       , 'zc_Enum_Process_UnComplete_Sale'
+
+                       , 'zc_Enum_Process_InsertUpdate_MI_Sale'
+                       , 'zc_Enum_Process_SetErased_MI_Sale'
+                       , 'zc_Enum_Process_SetUnErased_MI_Sale'
+
+                       , 'zc_Enum_Process_InsertUpdate_Movement_ReturnIn'
+                       , 'zc_Enum_Process_Complete_ReturnIn'
+                       , 'zc_Enum_Process_UnComplete_ReturnIn'
+                       , 'zc_Enum_Process_SetErased_ReturnIn'
+
+                       , 'zc_Enum_Process_InsertUpdate_MI_ReturnIn'
+                       , 'zc_Enum_Process_SetErased_MI_ReturnIn'
+                       , 'zc_Enum_Process_SetUnErased_MI_ReturnIn'
+                        )
+left join gpSelect_Object_RoleProcess( inSession := '5') as b
+         on b.RoleId = tmpRole.RoleId -- Бухгалтер КРИВОЙ РОГ
+        and Process_EnumName = EnumName
+where Process_EnumName is null
+
+
 
 
 -- 2.1 - !!!!!!!!!!!!!!!!!!!! Change Sale FromId

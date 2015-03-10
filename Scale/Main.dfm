@@ -25,7 +25,6 @@ object MainForm: TMainForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 820
     object DBGrid: TDBGrid
       Left = 0
       Top = 33
@@ -196,7 +195,6 @@ object MainForm: TMainForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 820
       object ButtonDeleteItem: TSpeedButton
         Left = 148
         Top = 3
@@ -388,7 +386,6 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitWidth = 820
       object gbRealWeight: TGroupBox
         Left = 249
         Top = 0
@@ -472,7 +469,6 @@ object MainForm: TMainForm
         Align = alRight
         Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1075#1088#1085
         TabOrder = 3
-        ExplicitLeft = 712
         object PanelTotalSumm: TPanel
           Left = 2
           Top = 15
@@ -1003,7 +999,6 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
-    ExplicitWidth = 953
     object PanelMovement: TPanel
       Left = 664
       Top = 0
@@ -1013,7 +1008,6 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       Caption = 'PanelMovement'
       TabOrder = 0
-      ExplicitLeft = 683
     end
     object PanelMovementDesc: TPanel
       Left = 0
@@ -1030,7 +1024,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
-      ExplicitWidth = 669
     end
     object infoPanel: TPanel
       Left = 0
@@ -1046,7 +1039,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 2
-      ExplicitWidth = 953
       object infoPanelPartner: TPanel
         Left = 133
         Top = 0
@@ -1056,7 +1048,6 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 364
         object LabelPartner: TLabel
           Left = 1
           Top = 1
@@ -1089,7 +1080,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 362
         end
       end
       object infoPanelPriceList: TPanel
@@ -1144,7 +1134,6 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitLeft = 647
         object LabelOrderExternal: TLabel
           Left = 1
           Top = 1
@@ -1177,7 +1166,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 282
         end
       end
       object infoPanelContract: TPanel
@@ -1189,7 +1177,6 @@ object MainForm: TMainForm
         BevelInner = bvRaised
         BevelOuter = bvNone
         TabOrder = 3
-        ExplicitLeft = 497
         object LabelContract: TLabel
           Left = 1
           Top = 1

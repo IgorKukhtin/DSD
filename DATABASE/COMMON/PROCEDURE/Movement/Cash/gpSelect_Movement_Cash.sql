@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat 
              , AmountOut TFloat 
+             , AmountCurrency TFloat
              , ServiceDate TDateTime
              , Comment TVarChar
              , CashName TVarChar
@@ -23,6 +24,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberName TVarChar, PositionName TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , UnitName TVarChar
+             , CurrencyName TVarChar
+             , CurrencyValue TFloat, ParValue TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+
 )
 AS
 $BODY$
@@ -73,6 +78,7 @@ BEGIN
                        THEN -1 * MovementItem.Amount
                   ELSE 0
              END::TFloat AS AmountOut
+           , MovementFloat_AmountCurrency.ValueData AS AmountCurrency
            , MIDate_ServiceDate.ValueData      AS ServiceDate
            , MIString_Comment.ValueData        AS Comment
            , Object_Cash.ValueData             AS CashName
@@ -91,6 +97,13 @@ BEGIN
            , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , View_Contract_InvNumber.ContractTagName
            , Object_Unit.ValueData              AS UnitName
+
+           , Object_Currency.ValueData                     AS CurrencyName 
+           , MovementFloat_CurrencyValue.ValueData         AS CurrencyValue
+           , MovementFloat_ParValue.ValueData              AS ParValue
+           , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
+           
        FROM Movement
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId = zc_MI_Master()
@@ -141,6 +154,30 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                             ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+            
+                                       
        ;
   
 END;
@@ -151,6 +188,7 @@ ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.03.15         * add Currency... 
  30.08.14                                        * all
  14.01.14                                        * add Object_Contract_InvNumber_View
  26.12.13                                        * add View_InfoMoney

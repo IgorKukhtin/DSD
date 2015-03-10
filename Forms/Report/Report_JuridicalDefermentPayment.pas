@@ -78,6 +78,7 @@ type
     clRetailName_main: TcxGridDBColumn;
     clContractTagGroupName: TcxGridDBColumn;
     clPersonalTradeName: TcxGridDBColumn;
+    colPersonalTradeName_Partner: TcxGridDBColumn;
   private
     { Private declarations }
   public

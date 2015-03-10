@@ -2,6 +2,9 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat,Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -11,6 +14,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inServiceDate         TDateTime , -- Дата начисления
     IN inAmountIn            TFloat    , -- Сумма прихода
     IN inAmountOut           TFloat    , -- Сумма расхода
+    IN inAmountSumm          TFloat    , -- Cумма грн, обмен
+    IN inAmountCurrency      TFloat    , -- Сумма в валюте
     IN inComment             TVarChar  , -- Комментарий
     IN inCashId              Integer   , -- Касса
     IN inMoneyPlaceId        Integer   , -- Объекты работы с деньгами
@@ -19,6 +24,13 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inInfoMoneyId         Integer   , -- Управленческие статьи
     IN inMemberId            Integer   , -- Физ лицо (через кого)
     IN inUnitId              Integer   , -- Подразделения
+   
+    IN inCurrencyId            Integer   , -- Валюта 
+    IN inCurrencyValue         TFloat    , -- Курс для перевода в валюту баланса
+    IN inParValue              TFloat    , -- Номинал для перевода в валюту баланса
+    IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции
+    IN inParPartnerValue       TFloat    , -- Номинал для расчета суммы операции
+    
     IN inUserId              Integer     -- Пользователь
 )                              
 RETURNS Integer AS
@@ -112,6 +124,18 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, inParentId, vbAccessKeyId);
 
+     -- Cумма грн, обмен
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmountSumm);
+     -- Сумма в валюте
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), ioId, inAmountCurrency);
+     -- Курс для перевода в валюту баланса
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, inCurrencyValue);
+     -- Номинал для перевода в валюту баланса
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, inParValue);
+     -- Курс для расчета суммы операции
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, inCurrencyPartnerValue);
+     -- Номинал для расчета суммы операции
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, inParPartnerValue);
 
      -- поиск <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
@@ -139,6 +163,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
      -- сохранили связь с <Подразделением>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
+     -- сохранили связь с <Валютой>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);

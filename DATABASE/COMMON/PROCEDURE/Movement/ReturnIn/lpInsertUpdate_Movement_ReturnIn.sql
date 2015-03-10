@@ -65,8 +65,21 @@ BEGIN
      END IF;
 
 
-     -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
+     -- определяем ключ доступа !!!то что захардкоженно - временно!!!
+     vbAccessKeyId:= CASE WHEN COALESCE (ioId, 0) = 0 AND inToId = 8411 -- Склад ГП ф Киев
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev() 
+                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (346093, 346094) -- Склад ГП ф.Одесса
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
+                          WHEN COALESCE (ioId, 0) = 0 AND inToId = 8413 -- Склад ГП ф.Кривой Рог
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
+                          WHEN COALESCE (ioId, 0) = 0 AND inToId = 8417 -- Склад ГП ф.Николаев (Херсон)
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
+                          WHEN COALESCE (ioId, 0) = 0 AND inToId = 8425 -- Склад ГП ф.Харьков
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
+                          WHEN COALESCE (ioId, 0) = 0 AND inToId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                          ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn())
+                     END;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

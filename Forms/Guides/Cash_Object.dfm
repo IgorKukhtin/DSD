@@ -107,6 +107,35 @@ inherited Cash_ObjectForm: TCash_ObjectForm
     inherited dsdSetErased: TdsdUpdateErased
       Enabled = False
     end
+    inherited dsdChoiceGuides: TdsdChoiceGuides
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyId'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
+        end>
+    end
   end
   inherited MasterCDS: TClientDataSet
     AfterInsert = nil
@@ -115,6 +144,7 @@ inherited Cash_ObjectForm: TCash_ObjectForm
     StoredProcName = 'gpSelect_Object_Cash'
   end
   inherited BarManager: TdxBarManager
+    Left = 112
     DockControlHeights = (
       0
       0

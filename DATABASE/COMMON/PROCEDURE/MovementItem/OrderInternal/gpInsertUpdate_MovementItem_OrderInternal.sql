@@ -14,6 +14,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbReceiptId Integer;
+   DECLARE vbCuterCount TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -25,6 +28,41 @@ BEGIN
 
      -- сохранили свойство <Количество дозаказ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), ioId, inAmountSecond);
+
+     -- расчет <Количество кутеров>
+     SELECT ReceiptId
+         , (CAST (AmountOrder / (PartionValue * PartionCount) AS NUMERIC (16, 0)) + 1) * PartionCount AS CuterCount
+            INTO vbReceiptId, vbCuterCount
+     FROM (SELECT ObjectLink_Receipt_Goods.ObjectId AS ReceiptId
+                , COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0) AS AmountOrder
+                , CASE WHEN ObjectFloat_PartionCount.ValueData > 0 THEN ObjectFloat_PartionCount.ValueData ELSE 0.5 END AS PartionCount
+                , ObjectFloat_Value.ValueData AS PartionValue
+           FROM ObjectLink AS ObjectLink_Receipt_Goods
+                INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                               AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                               AND ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId
+                INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                   ON ObjectBoolean_Main.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                  AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                  AND ObjectBoolean_Main.ValueData = TRUE
+                INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                 ON ObjectFloat_Value.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()
+                                                AND ObjectFloat_Value.ValueData <> 0
+                LEFT JOIN ObjectFloat AS ObjectFloat_PartionCount
+                                                ON ObjectFloat_PartionCount.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                               AND ObjectFloat_PartionCount.DescId = zc_ObjectFloat_Receipt_PartionCount()
+           WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
+             AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+          ) AS tmp
+     WHERE AmountOrder > 0;
+
+     -- сохранили свойство <Количество кутеров>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCount(), ioId, COALESCE (vbCuterCount, 0));
+
+     -- сохранили связь с <Виды товаров>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), ioId, vbReceiptId);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);

@@ -2,8 +2,7 @@ inherited CashJournalForm: TCashJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 998
-  ExplicitHeight = 710
+  ExplicitWidth = 990
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,6 +26,36 @@ inherited CashJournalForm: TCashJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = clAmountOut
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clAmountCurrency
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clAmountSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clCurrencyPartnerValue
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clParPartnerValue
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clCurrencyValue
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clParValue
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -38,6 +67,36 @@ inherited CashJournalForm: TCashJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = clAmountOut
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clAmountCurrency
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clAmountSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clCurrencyPartnerValue
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clParPartnerValue
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clCurrencyValue
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clParValue
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -235,6 +294,54 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object clAmountCurrency: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+            DataBinding.FieldName = 'AmountCurrency'
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clAmountSumm: TcxGridDBColumn
+            Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
+            DataBinding.FieldName = 'AmountSumm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clCurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clCurrencyPartnerValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089
+            DataBinding.FieldName = 'CurrencyPartnerValue'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clParPartnerValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParPartnerValue'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clCurrencyValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1059#1055
+            DataBinding.FieldName = 'CurrencyValue'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clParValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083' '#1082#1091#1088#1089' '#1059#1055
+            DataBinding.FieldName = 'ParValue'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
         end
       end

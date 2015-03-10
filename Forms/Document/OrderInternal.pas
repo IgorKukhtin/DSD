@@ -68,6 +68,9 @@ type
     bbMultiAmountPartner: TdxBarButton;
     bbMultiAmountForecast: TdxBarButton;
     bbUpdateAmountAll: TdxBarButton;
+    MeasureName: TcxGridDBColumn;
+    ReceiptCode: TcxGridDBColumn;
+    ReceiptName: TcxGridDBColumn;
   private
     { Private declarations }
   public

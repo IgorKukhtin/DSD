@@ -972,7 +972,10 @@ object UtilPrintForm: TUtilPrintForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actPrint_Sale
+          Action = actSetDefaults
+        end
+        item
+          Action = actExecPrintStoredProc
         end
         item
           Action = actInvoice
@@ -988,7 +991,10 @@ object UtilPrintForm: TUtilPrintForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actPrint_Sale
+          Action = actSetDefaults
+        end
+        item
+          Action = actExecPrintStoredProc
         end
         item
           Action = actOrdSpr
@@ -1004,7 +1010,10 @@ object UtilPrintForm: TUtilPrintForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actPrint_Sale
+          Action = actSetDefaults
+        end
+        item
+          Action = actExecPrintStoredProc
         end
         item
           Action = actDesadv
@@ -1044,6 +1053,26 @@ object UtilPrintForm: TUtilPrintForm
           StoredProc = spUpdateEdiOrdspr
         end>
       Caption = 'actUpdateEdiOrdsprTrue'
+    end
+    object actExecPrintStoredProc: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Sale
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Sale
+        end>
+      Caption = 'actExecPrintStoredProc'
+    end
+    object actSetDefaults: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spGetDefaultEDI
+      StoredProcList = <
+        item
+          StoredProc = spGetDefaultEDI
+        end>
+      Caption = 'actSetDefaults'
     end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
@@ -1144,12 +1173,6 @@ object UtilPrintForm: TUtilPrintForm
         ParamType = ptInput
       end
       item
-        Name = 'ioValue'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end
-      item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiDesadv'
         DataType = ftString
@@ -1172,12 +1195,6 @@ object UtilPrintForm: TUtilPrintForm
         ParamType = ptInput
       end
       item
-        Name = 'ioValue'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end
-      item
         Name = 'inDescCode'
         Value = 'zc_MovementBoolean_EdiInvoice'
         DataType = ftString
@@ -1193,17 +1210,11 @@ object UtilPrintForm: TUtilPrintForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-      end
-      item
-        Name = 'ioValue'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
       end
       item
         Name = 'inDescCode'
@@ -1214,5 +1225,35 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 320
     Top = 320
+  end
+  object spGetDefaultEDI: TdsdStoredProc
+    StoredProcName = 'gpGetDefaultEDI'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Host'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Host'
+        DataType = ftString
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 448
   end
 end
