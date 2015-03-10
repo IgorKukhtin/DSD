@@ -2,8 +2,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 661
   ClientWidth = 1064
-  ExplicitWidth = 1080
-  ExplicitHeight = 696
+  ExplicitWidth = 1072
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -403,14 +403,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TOrderExternalForm'
-    end
-    inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TOrderExternalForm'
-    end
-    object actPrint: TdsdPrintAction [19]
-      Category = 'DSDLib'
+    object actPrintSilent: TdsdPrintAction [0]
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -429,8 +423,101 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_OrderExternal'
+      ReportNameParam.Value = 'PrintMovement_OrderExternal'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactSilentPrint: TMultiAction [1]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actPrintSilent
+        end
+        item
+          Action = actSPSavePrintState
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+    end
+    object mactSilentList: TMultiAction [4]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = mactSilentPrint
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1095#1072#1090#1080' '#1087#1072#1082#1077#1090#1072'?'
+      Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
+      Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       ImageIndex = 3
-      ShortCut = 16464
+    end
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TOrderExternalForm'
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TOrderExternalForm'
+    end
+    object actPrint: TdsdPrintAction [22]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -454,7 +541,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ReportNameParam.ParamType = ptInput
     end
     object actSPSavePrintState: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       StoredProc = spSavePrintState
       StoredProcList = <
@@ -464,7 +551,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Caption = 'actSPSavePrintState'
     end
     object mactPrint_Order: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -616,6 +703,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
+    object N13: TMenuItem [12]
+      Action = mactSilentList
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 288

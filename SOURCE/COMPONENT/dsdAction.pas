@@ -526,8 +526,10 @@ type
     FReportNameParam: TdsdParam;
     FDataSets: TdsdDataSets;
     FDataSetList: TList;
+    FWithOutPreview: boolean;
     function GetReportName: String;
     procedure SetReportName(const Value: String);
+    procedure SetWithOutPreview(const Value: boolean);
   protected
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
@@ -536,9 +538,13 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    // Печать без Preview
+    property WithOutPreview: boolean read FWithOutPreview write SetWithOutPreview default false;
+    // Список датасетов
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
     property Params: TdsdParams read FParams write FParams;
     property ReportName: String read GetReportName write SetReportName;
+    // Название отчета
     property ReportNameParam: TdsdParam read FReportNameParam
       write FReportNameParam;
     property Caption;
@@ -1372,6 +1378,7 @@ begin
   FReportNameParam.DataType := ftString;
   FReportNameParam.Value := '';
   FDataSets := TdsdDataSets.Create(Self, TAddOnDataSet);
+  WithOutPreview := false
 end;
 
 destructor TdsdPrintAction.Destroy;
@@ -1493,7 +1500,12 @@ begin
           try
             // Вдруг что!
             // FReport.PreviewOptions.modal := false;
-            ShowReport;
+            if WithOutPreview then begin
+               PrepareReport;
+               Print
+            end
+            else
+               ShowReport;
           finally
             if Assigned(Self.Owner) then
               for i := 0 to Self.Owner.ComponentCount - 1 do
@@ -1536,6 +1548,11 @@ begin
     ShowMessage('Используйте ReportNameParam')
   else
     FReportName := Value;
+end;
+
+procedure TdsdPrintAction.SetWithOutPreview(const Value: boolean);
+begin
+  FWithOutPreview := Value;
 end;
 
 { TdsdInsertUpdateGuides }

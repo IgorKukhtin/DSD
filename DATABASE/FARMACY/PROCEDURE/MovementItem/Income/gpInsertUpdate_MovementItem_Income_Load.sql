@@ -55,6 +55,22 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load
            Boolean,
            TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load 
+          (Integer, TVarChar, TDateTime,
+           Integer, TVarChar, TVarChar, TVarChar, 
+           TFloat, TFloat,
+           TDateTime, 
+           TVarChar,
+           TDateTime, 
+           Boolean,
+           TFloat, 
+           TVarChar,
+           TVarChar,
+           TVarChar,
+           TVarChar,
+           Boolean,
+           TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inInvNumber           TVarChar  , 
@@ -73,6 +89,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inVAT                 TFloat    ,
     IN inUnitName            TVarChar  ,
     IN inMakerName           TVarChar  ,
+    IN inFEA                 TVarChar  , -- УК ВЭД
+    IN inMeasure             TVarChar  , -- Ед. измерения
     IN inisLastRecord        Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -200,7 +218,7 @@ BEGIN
         AND MovementItem.PartionGoods = inPartitionGoods
         AND MovementItem.ExpirationDate = inExpirationDate;
   
-     vbMovementItemId := lpInsertUpdate_MovementItem_Income(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, vbUserId);
+     vbMovementItemId := lpInsertUpdate_MovementItem_Income(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);
 
      -- Срок годности заодно влепим

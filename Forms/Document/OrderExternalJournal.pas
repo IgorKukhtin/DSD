@@ -62,6 +62,10 @@ type
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
+    actPrintSilent: TdsdPrintAction;
+    mactSilentList: TMultiAction;
+    mactSilentPrint: TMultiAction;
+    N13: TMenuItem;
   private
     { Private declarations }
   public

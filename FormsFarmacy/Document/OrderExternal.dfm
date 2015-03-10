@@ -433,6 +433,9 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Action = SMTPFileAction
+        end
+        item
+          Action = actCompleteMovement
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1083#1099#1082#1077' E-mail?'
       InfoAfterExecute = 'E-mail '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
@@ -982,6 +985,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item

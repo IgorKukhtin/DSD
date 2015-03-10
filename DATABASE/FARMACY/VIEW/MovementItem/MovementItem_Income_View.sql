@@ -18,6 +18,8 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
            , MovementItem.MovementId            AS MovementId
            , MIDate_ExpirationDate.ValueData    AS ExpirationDate
            , MIString_PartionGoods.ValueData    AS PartionGoods
+           , MIString_FEA.ValueData             AS FEA
+           , MIString_Measure.ValueData         AS Measure
            , Object_PartnerGoods.MakerName      AS MakerName
 
        FROM  MovementItem 
@@ -32,6 +34,14 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()                                         
+
+            LEFT JOIN MovementItemString AS MIString_Measure
+                                         ON MIString_Measure.MovementItemId = MovementItem.Id
+                                        AND MIString_Measure.DescId = zc_MIString_Measure()                                         
+
+            LEFT JOIN MovementItemString AS MIString_FEA
+                                         ON MIString_FEA.MovementItemId = MovementItem.Id
+                                        AND MIString_FEA.DescId = zc_MIString_FEA()                                         
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
@@ -51,6 +61,7 @@ ALTER TABLE MovementItem_Income_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.03.15                        * 
  11.12.14                        * 
 */
 

@@ -34,6 +34,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_MMOLoad(
     IN inExpirationDate      TDateTime , -- Срок годности
     IN inAmount              TFloat    , -- Количество 
     IN inPrice               TFloat    , -- Цена Отпускная (для аптеки это закупочная)
+    IN inFEA                 TVarChar  , -- УК ВЭД
+    IN inMeasure             TVarChar  , -- Ед. измерения
 
     IN inisLastRecord        Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
@@ -70,6 +72,8 @@ BEGIN
                                                     inVAT            := inVAT           ,
                                                     inUnitName       := inRemark        ,
                                                     inMakerName      := inMakerName     ,
+                                                    inFEA            := inFEA           , -- УК ВЭД
+                                                    inMeasure        := inMeasure       , -- Ед. измерения
                                                     inisLastRecord   := inisLastRecord  ,
                                                     inSession        := inSession);
 
@@ -81,5 +85,6 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.03.15                        *   
  05.01.15                        *   
 */

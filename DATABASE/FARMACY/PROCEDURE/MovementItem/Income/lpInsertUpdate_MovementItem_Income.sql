@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_Income();
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
+    IN inFEA                 TVarChar  , -- УК ВЭД
+    IN inMeasure             TVarChar  , -- Ед. измерения
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -21,6 +24,9 @@ BEGIN
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_FEA(), ioId, inFEA);
+
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Measure(), ioId, inMeasure);
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -29,6 +35,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.03.14                        *
  07.12.14                        *
 */
 

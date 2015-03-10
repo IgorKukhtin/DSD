@@ -1,13 +1,16 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_Income();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat   , -- Цена
+    IN inPrice               TFloat    , -- Цена
+    IN inFEA                 TVarChar  , -- УК ВЭД
+    IN inMeasure             TVarChar  , -- Ед. измерения
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -19,7 +22,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
      vbUserId := inSession;
 
-     ioId := lpInsertUpdate_MovementItem_Income(ioId, inMovementId, inGoodsId, inAmount, inPrice, vbUserId);
+     ioId := lpInsertUpdate_MovementItem_Income(ioId, inMovementId, inGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
 
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -33,6 +36,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.03.15                        *
  26.12.14                        *
  07.12.14                        *
  03.07.14                                                       *
