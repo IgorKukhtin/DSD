@@ -1,0 +1,64 @@
+-- Function: zfCalc_ReceiptChild_GroupNumber
+
+DROP FUNCTION IF EXISTS zfCalc_ReceiptChild_GroupNumber (Integer, Integer, Integer, Integer, Boolean);
+
+CREATE OR REPLACE FUNCTION zfCalc_ReceiptChild_GroupNumber(
+    IN inGoodsId                Integer, -- 
+    IN inGoodsKindId            Integer, -- 
+    IN inInfoMoneyDestinationId Integer, -- 
+    IN inInfoMoneyId            Integer, -- 
+    IN inWeightMain             Boolean
+)
+RETURNS Integer AS
+$BODY$
+BEGIN
+     -- возвращаем результат
+     RETURN (CASE WHEN inGoodsId = zc_Goods_WorkIce()
+                     THEN 6
+
+                WHEN inGoodsKindId = zc_GoodsKind_WorkProgress()
+                  OR inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+                     THEN 3
+
+                WHEN inInfoMoneyId = zc_Enum_InfoMoney_10105() -- Основное сырье + Мясное сырье + Прочее мясное сырье
+                     THEN 2
+
+                WHEN inInfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
+                 AND inWeightMain = TRUE
+                     THEN 5
+
+                WHEN inInfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
+                     THEN 7
+
+                WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                     THEN 1
+
+                WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье (осталось Оболочка + Упаковка + Прочее сырье)
+                     THEN 8
+
+                WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
+                     THEN 4
+
+                ELSE 10
+           END);
+
+END;
+$BODY$
+  LANGUAGE PLPGSQL IMMUTABLE;
+ALTER FUNCTION zfCalc_ReceiptChild_GroupNumber (Integer, Integer, Integer, Integer, Boolean) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.03.15                                        *
+*/
+/*
+-- тест
+SELECT * FROM zfCalc_ReceiptChild_GroupNumber (inGoodsId                := 100
+                                             , inGoodsKindId            := 1
+                                             , inInfoMoneyDestinationId := 17
+                                             , inInfoMoneyId            := 100
+                                             , inWeightMain             := FALSE
+                                              )
+*/

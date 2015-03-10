@@ -33,6 +33,11 @@ type
     colChildGoodsKindName: TcxGridDBColumn;
     clChildPartionGoodsDate: TcxGridDBColumn;
     GoodsKindCompleteName: TcxGridDBColumn;
+    ReceiptCode: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    colChildMeasureName: TcxGridDBColumn;
+    colChildAmountCalc: TcxGridDBColumn;
+    colChildGroupNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

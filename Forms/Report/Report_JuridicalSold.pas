@@ -114,6 +114,7 @@ type
     clRetailName: TcxGridDBColumn;
     clRetailReportName: TcxGridDBColumn;
     clContractTagGroupName: TcxGridDBColumn;
+    colPersonalTradeName_Partner: TcxGridDBColumn;
   private
     { Private declarations }
   public

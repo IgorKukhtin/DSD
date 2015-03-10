@@ -73,6 +73,7 @@ BEGIN
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
+            , Object_Measure.ValueData          AS MeasureName
 
             , Object_GoodsKindComplete.Id         AS GoodsKindCompleteId
             , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
@@ -83,7 +84,6 @@ BEGIN
             , Object_Receipt.ValueData          AS ReceiptName
             , Object_Status.ObjectCode          AS StatusCode
             , Object_Status.ValueData           AS StatusName
-
 
             , MovementItem.isErased             AS isErased
 
@@ -203,8 +203,10 @@ BEGIN
              LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE(MovementLinkObject_From.ObjectId, tmpMovementItemOrder.FromId)
              LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE(MovementLinkObject_To.ObjectId, tmpMovementItemOrder.ToId)
 
-
-
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
        WHERE COALESCE(Object_From.Id,0) = CASE WHEN inFromId = 0 THEN COALESCE(COALESCE(Object_From.Id,0),0) ELSE inFromId END
          AND COALESCE(Object_To.Id,0)   = CASE WHEN inToId = 0   THEN COALESCE(COALESCE(Object_To.Id,0),0) ELSE inToId END
@@ -227,6 +229,8 @@ BEGIN
 
             , MIFloat_AmountReceipt.ValueData   AS AmountReceipt
 
+            , MIFloat_CuterCount.ValueData * MIFloat_AmountReceipt.ValueData AS AmountCalc
+
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
             , MIString_PartionGoods.ValueData   AS PartionGoods
 
@@ -235,6 +239,14 @@ BEGIN
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
+            , Object_Measure.ValueData          AS MeasureName
+
+            , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := Object_Goods.Id
+                                             , inGoodsKindId            := Object_GoodsKind.Id
+                                             , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
+                                             , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
+                                             , inWeightMain             := MIBoolean_WeightMain.ValueData
+                                              ) AS GroupNumber
 
             , MovementItem.isErased             AS isErased
 
@@ -254,6 +266,10 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
+             LEFT JOIN MovementItemBoolean AS MIBoolean_WeightMain
+                                           ON MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
+                                          AND MIBoolean_WeightMain.MovementItemId =  MovementItem.Id
+
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                        AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -266,6 +282,10 @@ BEGIN
                                          ON MIFloat_AmountReceipt.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
 
+             LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                         ON MIFloat_CuterCount.MovementItemId = MovementItem.ParentId
+                                        AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -274,13 +294,23 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
        WHERE MovementLinkObject_From.ObjectId = CASE WHEN inFromId = 0 THEN MovementLinkObject_From.ObjectId ELSE inFromId END
          AND MovementLinkObject_To.ObjectId   = CASE WHEN inToId = 0   THEN MovementLinkObject_To.ObjectId ELSE inToId END
 
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;
-
 
 END;
 $BODY$

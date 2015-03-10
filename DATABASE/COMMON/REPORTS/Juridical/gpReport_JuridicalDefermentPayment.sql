@@ -21,6 +21,7 @@ RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar
              , PersonalName TVarChar
              , PersonalTradeName TVarChar
              , PersonalCollationName TVarChar
+             , PersonalTradeName_Partner TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , DebetRemains TFloat, KreditRemains TFloat
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
@@ -88,6 +89,7 @@ BEGIN
              , a.PersonalName
              , a.PersonalTradeName
              , a.PersonalCollationName
+             , a.PersonalTradeName_Partner
              , a.StartDate, a.EndDate
              , a.DebetRemains, a.KreditRemains
              , a.SaleSumm, a.DefermentPaymentRemains
@@ -118,9 +120,10 @@ from (
    , View_Contract.ContractTagGroupName
    , View_Contract.ContractTagName
    , View_Contract.ContractStateKindCode
-   , Object_Personal_View.PersonalName      AS PersonalName
-   , Object_PersonalTrade.PersonalName      AS PersonalTradeName
-   , Object_PersonalCollation.PersonalName  AS PersonalCollationName
+   , Object_Personal.ValueData              AS PersonalName
+   , Object_PersonalTrade.ValueData         AS PersonalTradeName
+   , Object_PersonalCollation.ValueData     AS PersonalCollationName
+   , Object_PersonalTrade_Partner.ValueData AS PersonalTradeName_Partner
    , View_Contract.StartDate
    , View_Contract.EndDate
 
@@ -313,19 +316,25 @@ from (
        LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = RESULT.AccountId
        LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = RESULT.ContractId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                ON ObjectLink_Partner_PersonalTrade.ObjectId = RESULT.PartnerId
+                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+           LEFT JOIN Object AS Object_PersonalTrade_Partner ON Object_PersonalTrade_Partner.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                ON ObjectLink_Contract_Personal.ObjectId = RESULT.ContractId
                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-           LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId               
+           LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
                                 ON ObjectLink_Contract_PersonalTrade.ObjectId = RESULT.ContractId
                                AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
-           LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Contract_PersonalTrade.ChildObjectId
+           LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Contract_PersonalTrade.ChildObjectId
+
            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
                                 ON ObjectLink_Contract_PersonalCollation.ObjectId = RESULT.ContractId
                                AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
-           LEFT JOIN Object_Personal_View AS Object_PersonalCollation ON Object_PersonalCollation.PersonalId = ObjectLink_Contract_PersonalCollation.ChildObjectId        
+           LEFT JOIN Object AS Object_PersonalCollation ON Object_PersonalCollation.Id = ObjectLink_Contract_PersonalCollation.ChildObjectId
 
            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 

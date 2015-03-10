@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Amount TFloat, AmountSecond TFloat
              , AmountRemains TFloat, AmountPartner TFloat, AmountForecast TFloat, AmountForecastOrder TFloat
              , CuterCount TFloat
-             , GoodsKindId Integer, GoodsKindName  TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
+             , ReceiptId Integer, ReceiptCode Integer, ReceiptName TVarChar
              , isErased Boolean
               )
 AS
@@ -42,6 +43,10 @@ BEGIN
            , CAST (NULL AS TFloat)      AS CuterCount
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
+           , Object_Measure.ValueData   AS MeasureName
+           , CAST (NULL AS Integer)     AS ReceiptId
+           , CAST (NULL AS Integer)     AS ReceiptCode
+           , CAST (NULL AS TVarChar)    AS ReceiptName
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -73,6 +78,11 @@ BEGIN
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -92,6 +102,11 @@ BEGIN
            
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_Measure.ValueData           AS MeasureName
+           , Object_Receipt.Id                  AS ReceiptId
+           , Object_Receipt.ObjectCode          AS ReceiptCode
+           , Object_Receipt.ValueData           AS ReceiptName
+
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -126,6 +141,15 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                             ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+            LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
             ;
 
      ELSE
@@ -145,6 +169,10 @@ BEGIN
            , MIFloat_CuterCount.ValueData           AS CuterCount     
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_Measure.ValueData           AS MeasureName
+           , Object_Receipt.Id                  AS ReceiptId
+           , Object_Receipt.ObjectCode          AS ReceiptCode
+           , Object_Receipt.ValueData           AS ReceiptName
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -179,6 +207,16 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                             ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+            LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
             ;
 
      END IF;

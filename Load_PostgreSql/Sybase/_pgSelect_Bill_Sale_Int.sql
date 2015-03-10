@@ -189,8 +189,8 @@ from
         and Bill.FromId in (zc_UnitId_StoreMaterialBasis(), zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())
         and Bill.BillKind in (zc_bkSaleToClient())
         and (Bill.MoneyKindId = zc_mkBN()) -- or isnull(Bill.Id_Postgres,0) <> 0)
-        and Bill.FromId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО
-        and Bill.ToId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
+        and Bill.FromId not in (3830, 3304, 10594) -- КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+        and Bill.ToId not in (3830, 3304, 10594) -- КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
 --       and Bill.BillNumber = 1635
 --       and Bill.Id = 1260716
        group by Bill.Id

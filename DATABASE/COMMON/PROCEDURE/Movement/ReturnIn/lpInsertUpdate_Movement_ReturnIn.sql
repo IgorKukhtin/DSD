@@ -68,7 +68,7 @@ BEGIN
      -- определяем ключ доступа !!!то что захардкоженно - временно!!!
      vbAccessKeyId:= CASE WHEN COALESCE (ioId, 0) = 0 AND inToId = 8411 -- Склад ГП ф Киев
                                THEN zc_Enum_Process_AccessKey_DocumentKiev() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inToId = 346093 -- Склад ГП ф.Одесса
+                          WHEN COALESCE (ioId, 0) = 0 AND inToId IN (346093, 346094) -- Склад ГП ф.Одесса
                                THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
                           WHEN COALESCE (ioId, 0) = 0 AND inToId = 8413 -- Склад ГП ф.Кривой Рог
                                THEN zc_Enum_Process_AccessKey_DocumentKrRog() 

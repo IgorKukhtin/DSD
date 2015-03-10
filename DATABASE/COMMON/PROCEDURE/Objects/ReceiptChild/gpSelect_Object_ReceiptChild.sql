@@ -42,34 +42,12 @@ BEGIN
          , Object_GoodsKind.ValueData  AS GoodsKindName
 
          , Object_Measure.ValueData     AS MeasureName
-         , CASE WHEN Object_Goods.Id = zc_Goods_WorkIce()
-                     THEN 6
-
-                WHEN Object_GoodsKind.Id = zc_GoodsKind_WorkProgress()
-                  OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
-                     THEN 3
-
-                WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_10105() -- Основное сырье + Мясное сырье + Прочее мясное сырье
-                     THEN 2
-
-                WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
-                 AND ObjectBoolean_WeightMain.ValueData = TRUE
-                     THEN 5
-
-                WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
-                     THEN 7
-
-                WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-                     THEN 1
-
-                WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье (осталось Оболочка + Упаковка + Прочее сырье)
-                     THEN 8
-
-                WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
-                     THEN 4
-
-                ELSE 10
-           END :: Integer AS GroupNumber
+         , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := Object_Goods.Id
+                                          , inGoodsKindId            := Object_GoodsKind.Id
+                                          , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
+                                          , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
+                                          , inWeightMain             := ObjectBoolean_WeightMain.ValueData
+                                           ) AS GroupNumber
 
          , Object_ReceiptChild.isErased AS isErased
          
@@ -90,7 +68,7 @@ BEGIN
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                               ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
