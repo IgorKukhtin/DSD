@@ -61,6 +61,8 @@ type
     actRefreshGoodsCode: TdsdExecStoredProc;
     bbRefreshGoodsCode: TdxBarButton;
     spIncome_GoodsId: TdsdStoredProc;
+    colFEA: TcxGridDBColumn;
+    colMeasure: TcxGridDBColumn;
   private
     { Private declarations }
   public

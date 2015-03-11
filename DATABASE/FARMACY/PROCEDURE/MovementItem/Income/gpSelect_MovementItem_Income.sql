@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , ExpirationDate TDateTime
              , PartionGoods TVarChar
              , MakerName TVarChar
+             , FEA TVarChar
+             , Measure TVarChar
               )
 AS
 $BODY$
@@ -47,6 +49,8 @@ BEGIN
            , NULL::TDateTime            AS ExpirationDate
            , NULL::TVarChar             AS PartionGoods
            , NULL::TVarChar             AS MakerName
+           , NULL::TVarChar             AS FEA
+           , NULL::TVarChar             AS Measure
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.GoodsCodeInt                                         AS GoodsCode
@@ -79,6 +83,8 @@ BEGIN
            , MovementItem.ExpirationDate
            , MovementItem.PartionGoods
            , MovementItem.MakerName
+           , MovementItem.FEA
+           , MovementItem.Measure
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
@@ -102,6 +108,8 @@ BEGIN
            , MovementItem.ExpirationDate
            , MovementItem.PartionGoods
            , MovementItem.MakerName
+           , MovementItem.FEA
+           , MovementItem.Measure
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 

@@ -2,6 +2,8 @@ inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 776
+  ExplicitLeft = 6
+  ExplicitTop = -127
   ExplicitWidth = 784
   ExplicitHeight = 553
   PixelsPerInch = 96
@@ -184,6 +186,18 @@ inherited IncomeForm: TIncomeForm
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object colFEA: TcxGridDBColumn
+            Caption = #1059#1050' '#1042#1069#1044
+            DataBinding.FieldName = 'FEA'
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object colMeasure: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084
+            DataBinding.FieldName = 'Measure'
+            HeaderAlignmentVert = vaCenter
+            Width = 53
           end
         end
       end
@@ -1092,13 +1106,20 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
       end
       item
+        Name = 'inFEA'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'FEA'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
+        Name = 'inMeasure'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Measure'
         DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
         Value = Null
@@ -1202,6 +1223,7 @@ inherited IncomeForm: TIncomeForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item

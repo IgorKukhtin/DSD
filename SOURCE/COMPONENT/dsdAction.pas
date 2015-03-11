@@ -526,8 +526,10 @@ type
     FReportNameParam: TdsdParam;
     FDataSets: TdsdDataSets;
     FDataSetList: TList;
+    FWithOutPreview: boolean;
     function GetReportName: String;
     procedure SetReportName(const Value: String);
+    procedure SetWithOutPreview(const Value: boolean);
   protected
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
@@ -536,9 +538,13 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    // Печать без Preview
+    property WithOutPreview: boolean read FWithOutPreview write SetWithOutPreview default false;
+    // Список датасетов
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
     property Params: TdsdParams read FParams write FParams;
     property ReportName: String read GetReportName write SetReportName;
+    // Название отчета
     property ReportNameParam: TdsdParam read FReportNameParam
       write FReportNameParam;
     property Caption;
@@ -605,7 +611,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   Menus, cxGridExportLink, ShellApi,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
   cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants,
-  frxDBSet,
+  frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave;
 
 procedure Register;
@@ -1372,6 +1378,7 @@ begin
   FReportNameParam.DataType := ftString;
   FReportNameParam.Value := '';
   FDataSets := TdsdDataSets.Create(Self, TAddOnDataSet);
+  WithOutPreview := false
 end;
 
 destructor TdsdPrintAction.Destroy;
@@ -1387,6 +1394,14 @@ begin
   result := FReportNameParam.AsString;
   if result = '' then
     result := FReportName
+end;
+
+function GetDefaultPrinter: string;
+var
+  ResStr: array[0..255] of Char;
+begin
+  GetProfileString('Windows', 'device', '', ResStr, 255);
+  Result := StrPas(ResStr);
 end;
 
 function TdsdPrintAction.LocalExecute: Boolean;
@@ -1493,7 +1508,14 @@ begin
           try
             // Вдруг что!
             // FReport.PreviewOptions.modal := false;
-            ShowReport;
+            if WithOutPreview then begin
+               PrintOptions.ShowDialog := false;
+               PrintOptions.Printer := GetDefaultPrinter;
+               PrepareReport;
+               Print
+            end
+            else
+               ShowReport;
           finally
             if Assigned(Self.Owner) then
               for i := 0 to Self.Owner.ComponentCount - 1 do
@@ -1536,6 +1558,11 @@ begin
     ShowMessage('Используйте ReportNameParam')
   else
     FReportName := Value;
+end;
+
+procedure TdsdPrintAction.SetWithOutPreview(const Value: boolean);
+begin
+  FWithOutPreview := Value;
 end;
 
 { TdsdInsertUpdateGuides }

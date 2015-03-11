@@ -280,6 +280,8 @@ begin
   FDataSet.FieldDefs.Add('VAT', ftInteger);
   FDataSet.FieldDefs.Add('PartitionGoods', ftString, 255); // Номер серии
   FDataSet.FieldDefs.Add('ExpirationDate', ftDateTime);    // Срок годности
+  FDataSet.FieldDefs.Add('FEA', ftString, 255); //
+  FDataSet.FieldDefs.Add('MeasureName', ftString, 255); //
 
   FDataSet.FieldDefs.Add('Amount', ftFloat);    // Количество
   FDataSet.FieldDefs.Add('Price', ftFloat);     // Цена Отпускная (для аптеки это закупочная)
@@ -349,7 +351,11 @@ begin
             FieldByName('VAT').AsInteger := round(gfStrToFloat(ElementList[8]));
             FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
             FieldByName('ExpirationDate').AsDateTime := ExpirationDate;    // Срок годности
-
+            if High(ElementList) < 21 then
+               FieldByName('FEA').AsString := '' // КВЭД
+            else
+               FieldByName('FEA').AsString := ElementList[21]; // КВЭД
+            FieldByName('MeasureName').AsString := ElementList[14]; // Ед Изм
             FieldByName('Amount').AsFloat := gfStrToFloat(ElementList[15]);    // Количество
             FieldByName('Price').AsFloat  := Price;    // Цена Отпускная (для аптеки это закупочная)
             Post;
