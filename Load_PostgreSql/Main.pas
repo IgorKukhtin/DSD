@@ -417,7 +417,7 @@ type
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
   public
-    { Public declarations }
+    procedure StartProcess;
   end;
 
 var
@@ -1266,14 +1266,18 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormShow(Sender: TObject);
-var StartDate:TDateTime;
 begin
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.StartProcess;
+var Day_ReComplete:Integer;
+begin
+
      if ParamStr(2)='autoFillSoldTable'
      then begin
                fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-31)+') as RetV');
-               StartDate:=fromSqlQuery.FieldByName('RetV').AsDateTime;
-
-               StartDateEdit.Text:=DateToStr(StartDate);
+               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
                EndDateEdit.Text:=DateToStr(Date-1);
 
                cbFillSoldTable.Checked:=true;
@@ -1315,13 +1319,15 @@ begin
      if ParamStr(2)='auto'
      then begin
                fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-1)+') as RetV');
-               StartDate:=fromSqlQuery.FieldByName('RetV').AsDateTime;
+               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
 
-               StartDateEdit.Text:=DateToStr(StartDate);
-               EndDateEdit.Text:=DateToStr(Date-1);
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-1)+') as RetV');
+               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
+               then EndDateEdit.Text:=DateToStr(Date-1)
+               else EndDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
 
-               StartDateCompleteEdit.Text:=DateToStr(StartDate);
-               EndDateCompleteEdit.Text:=DateToStr(Date-1);
+               StartDateCompleteEdit.Text:=StartDateEdit.Text;
+               EndDateCompleteEdit.Text:=EndDateEdit.Text;
 
                cbSendUnitBranch.Checked:=true;//загрузка док-тов : Перемещение с филиалами
                cbCompleteSendOnPrice.Checked:=true;//проведение/распроведение док-тов: Перемещение с филиалами
@@ -1345,13 +1351,18 @@ begin
           end;
      if ParamStr(2)='autoReComplete'
      then begin
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-7)+') as RetV');
-               StartDate:=fromSqlQuery.FieldByName('RetV').AsDateTime;
+               try Day_ReComplete:=StrToInt(ParamStr(3));
+               except Day_ReComplete:=7
+               end;
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               StartDateCompleteEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
 
-               StartDateCompleteEdit.Text:=DateToStr(StartDate);
-               EndDateCompleteEdit.Text:=DateToStr(Date);
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
+               then EndDateCompleteEdit.Text:=DateToStr(Date-1)
+               else EndDateCompleteEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
 
-               UnitCodeSendOnPriceEdit.Text:='ReComplete(7Day)';
+               UnitCodeSendOnPriceEdit.Text:='ReComplete('+IntToStr(Day_ReComplete)+'Day)';
                //Перепроводим
                cbComplete.Checked:=true;
                cbUnComplete.Checked:=true;
@@ -11648,7 +11659,7 @@ begin
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Id_Postgres >0'
-           +'  and Bill.BillKind in (zc_bkSendUnitToUnit(), zc_bkSaleToClient())'
+           +'  and Bill.BillKind in (zc_bkSendUnitToUnit(), zc_bkSaleToClient(), zc_bkReturnToUnit())'
            +'  and Bill.MoneyKindId=zc_mkNal()'
            +'  and UnitFrom.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
            +'  and UnitTo.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
@@ -11789,7 +11800,7 @@ begin
         Add('     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
 // +' and Bill.Id_Postgres=22081'
-           +'  and Bill.BillKind in (zc_bkSendUnitToUnit(), zc_bkSaleToClient())'
+           +'  and Bill.BillKind in (zc_bkSendUnitToUnit(), zc_bkSaleToClient(), zc_bkReturnToUnit())'
            +'  and Bill.MoneyKindId=zc_mkNal()'
            +'  and UnitFrom.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
            +'  and UnitTo.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
@@ -11908,11 +11919,11 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
            //+'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
-           +'               then -1 * BillItems.OperCount '
-           +'            else -1 * BillItems.OperCount'
+           +'               then BillItems.OperCount * case when Bill.BillKind = zc_bkReturnToUnit() then 1 else -1 end'
+           +'            else BillItems.OperCount * case when Bill.BillKind = zc_bkReturnToUnit() then 1 else -1 end'
            +'       end as Amount');
-        Add('     , -1 * BillItems.OperCount as AmountPartner');
-        Add('     , -1 * BillItems.OperCount as AmountChangePercent');
+        Add('     , BillItems.OperCount * case when Bill.BillKind = zc_bkReturnToUnit() then 1 else -1 end as AmountPartner');
+        Add('     , BillItems.OperCount * case when Bill.BillKind = zc_bkReturnToUnit() then 1 else -1 end as AmountChangePercent');
         Add('     , isnull(tmpBI_byDiscountWeight.DiscountWeight,0) as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -11944,7 +11955,7 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and BillItems.Id is not null'
 // +' and Bill.Id_Postgres=367617'
-           +'  and Bill.BillKind in (zc_bkSendUnitToUnit(), zc_bkSaleToClient())'
+           +'  and Bill.BillKind in (zc_bkSendUnitToUnit(), zc_bkSaleToClient(), zc_bkReturnToUnit())'
            +'  and Bill.MoneyKindId=zc_mkNal()'
            +'  and UnitFrom.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
            +'  and UnitTo.pgUnitId NOT IN (3, 1625)' // !!!ф. Одесса OR ф. Никополь!!!
