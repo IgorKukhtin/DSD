@@ -9,17 +9,17 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   inherited PageControl: TcxPageControl
     Width = 1000
     Height = 470
-    ExplicitWidth = 853
+    ExplicitWidth = 1000
     ExplicitHeight = 470
     ClientRectBottom = 470
     ClientRectRight = 1000
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 853
+      ExplicitWidth = 1000
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
         Width = 1000
         Height = 470
-        ExplicitWidth = 853
+        ExplicitWidth = 1000
         ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -75,6 +75,22 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object PrepareDayCount: TcxGridDBColumn
+            Caption = #1044#1085'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'PrepareDayCount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object DocumentDayCount: TcxGridDBColumn
+            Caption = #1044#1085'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DocumentDayCount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           object AmountDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
@@ -257,9 +273,9 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clPersonalTakeName: TcxGridDBColumn
+          object MemberTakeName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-            DataBinding.FieldName = 'PersonalTakeName'
+            DataBinding.FieldName = 'MemberTakeName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -701,10 +717,26 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         ParamType = ptInput
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inMemberId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PersonalTakeId'
+        ComponentItem = 'MemberTakeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrepareDayCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PrepareDayCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentDayCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DocumentDayCount'
+        DataType = ftFloat
         ParamType = ptInput
       end>
     PackSize = 1

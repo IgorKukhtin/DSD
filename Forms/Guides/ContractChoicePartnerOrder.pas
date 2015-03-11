@@ -46,7 +46,7 @@ type
     colContractComment: TcxGridDBColumn;
     clRouteSortingName: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
-    clPersonalTakeName: TcxGridDBColumn;
+    MemberTakeName: TcxGridDBColumn;
     actChoiceRoute: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
@@ -57,6 +57,8 @@ type
     AmountKredit: TcxGridDBColumn;
     DelayDay: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
+    DocumentDayCount: TcxGridDBColumn;
+    PrepareDayCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -258,17 +258,17 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 100
       end
-      object DocumentDayCount: TcxGridDBColumn
-        Caption = #1044#1085'. '#1076#1086#1082'.'
-        DataBinding.FieldName = 'DocumentDayCount'
+      object PrepareDayCount: TcxGridDBColumn
+        Caption = #1044#1085'. '#1079#1072#1082#1072#1079
+        DataBinding.FieldName = 'PrepareDayCount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 45
       end
-      object PrepareDayCount: TcxGridDBColumn
-        Caption = #1044#1085'. '#1079#1072#1082#1072#1079
-        DataBinding.FieldName = 'PrepareDayCount'
+      object DocumentDayCount: TcxGridDBColumn
+        Caption = #1044#1085'. '#1076#1086#1082'.'
+        DataBinding.FieldName = 'DocumentDayCount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

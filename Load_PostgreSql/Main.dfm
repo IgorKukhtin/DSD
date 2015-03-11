@@ -980,8 +980,8 @@ object MainForm: TMainForm
     end
     object cbSaleInt: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 480
+      Left = 6
+      Top = 478
       Width = 235
       Height = 17
       Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int - '#1041#1053
@@ -1169,8 +1169,8 @@ object MainForm: TMainForm
     end
     object cbIncomeNal: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 119
+      Left = 6
+      Top = 118
       Width = 235
       Height = 17
       Caption = '1.4. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1053#1040#1051

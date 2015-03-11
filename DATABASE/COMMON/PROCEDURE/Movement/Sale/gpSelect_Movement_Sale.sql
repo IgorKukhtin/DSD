@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar, RouteName TVarChar
+             , RouteSortingId Integer, RouteSortingName TVarChar, RouteName TVarChar, PersonalName TVarChar
              , PriceListName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
@@ -116,6 +116,7 @@ BEGIN
            , Object_RouteSorting.Id                         AS RouteSortingId
            , Object_RouteSorting.ValueData                  AS RouteSortingName
            , Object_Route.ValueData                         AS RouteName
+           , Object_Personal.ValueData                      AS PersonalName
            , Object_PriceList.ValueData                     AS PriceListName
            , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
@@ -332,6 +333,14 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id 
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
             ;
 
 END;

@@ -2120,12 +2120,12 @@ inherited Sale_OrderForm: TSale_OrderForm
     Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Sale_Partner_SetErased'
+    StoredProcName = 'gpMovementItem_Sale_SetErased'
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Sale_Partner_SetUnErased'
+    StoredProcName = 'gpMovementItem_Sale_SetUnErased'
     Left = 718
     Top = 464
   end

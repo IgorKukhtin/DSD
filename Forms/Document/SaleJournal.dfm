@@ -2,29 +2,26 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 641
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 675
+  ExplicitWidth = 1036
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 582
+    Height = 584
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 582
-    ClientRectBottom = 578
-    ClientRectRight = 1016
+    ExplicitHeight = 584
+    ClientRectBottom = 584
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1014
-      ExplicitHeight = 576
+      ExplicitWidth = 1020
+      ExplicitHeight = 584
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 576
-        ExplicitWidth = 1014
-        ExplicitHeight = 576
+        Width = 1020
+        Height = 584
+        ExplicitWidth = 1020
+        ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -577,6 +574,12 @@ inherited SaleJournalForm: TSaleJournalForm
   inherited Panel: TPanel
     Width = 1020
     ExplicitWidth = 1020
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
     object edIsPartnerDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -647,6 +650,25 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actMovementCheck: TdsdOpenForm [13]
       Category = 'DSDLib'
@@ -1305,7 +1327,7 @@ inherited SaleJournalForm: TSaleJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

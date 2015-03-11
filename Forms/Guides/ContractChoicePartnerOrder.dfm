@@ -76,6 +76,21 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Options.Editing = False
             Width = 55
           end
+          object PrepareDayCount: TcxGridDBColumn
+            Caption = #1044#1085'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'PrepareDayCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object DocumentDayCount: TcxGridDBColumn
+            Caption = #1044#1085'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DocumentDayCount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
           object AmountDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'AmountDebet'
@@ -225,6 +240,22 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Options.Editing = False
             Width = 55
           end
+          object MemberTakeName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+            DataBinding.FieldName = 'MemberTakeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceMemberTake
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object clRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
@@ -256,22 +287,6 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object clPersonalTakeName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-            DataBinding.FieldName = 'PersonalTakeName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoiceMemberTake
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -315,6 +330,14 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Options.Editing = False
             Width = 70
           end
+          object clGLNCode: TcxGridDBColumn
+            Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
+            DataBinding.FieldName = 'GLNCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object clItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ItemName'
@@ -323,14 +346,6 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object clGLNCode: TcxGridDBColumn
-            Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
-            DataBinding.FieldName = 'GLNCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
           end
           object colisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -706,6 +721,22 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MemberTakeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrepareDayCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PrepareDayCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentDayCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DocumentDayCount'
+        DataType = ftFloat
         ParamType = ptInput
       end>
     PackSize = 1

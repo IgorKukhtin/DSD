@@ -215,7 +215,8 @@ BEGIN
                                  AND ObjectBoolean_Default.ValueData = TRUE
     WHERE View_Contract.JuridicalId = vbJuridicalId
       AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-      AND View_Contract.isErased = FALSE;
+      AND View_Contract.isErased = FALSE
+      AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
 
     -- 1.2. находим свойство <Договор> "по умолчанию" для inAmount < 0
     IF COALESCE (vbContractId, 0) = 0
@@ -232,7 +233,8 @@ BEGIN
                                      AND ObjectBoolean_Default.ValueData = TRUE
         WHERE View_Contract.JuridicalId = vbJuridicalId
           AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-          AND View_Contract.isErased = FALSE;
+          AND View_Contract.isErased = FALSE
+          AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
     END IF;
 
     -- 1.3. находим свойство <Договор> "по умолчанию" для остальных
@@ -250,7 +252,8 @@ BEGIN
                                      AND ObjectBoolean_Default.ValueData = TRUE
         WHERE View_Contract.JuridicalId = vbJuridicalId
           AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-          AND View_Contract.isErased = FALSE;
+          AND View_Contract.isErased = FALSE
+          AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
     END IF;
 
     -- 1.4. Находим <УП статья назначения> !!!всегда!!! у Договора
@@ -288,11 +291,13 @@ BEGIN
                                            AND View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
                                            AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                            AND View_Contract.isErased = FALSE
+                                           AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
              LEFT JOIN Object_Contract_View AS View_Contract_next
                                             ON View_Contract_next.JuridicalId = vbJuridicalId
                                            AND View_Contract_next.InfoMoneyId = tmpInfoMoney.InfoMoneyId_next
                                            AND View_Contract_next.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                            AND View_Contract_next.isErased = FALSE
+                                           AND View_Contract_next.PaidKindId = zc_Enum_PaidKind_FirstForm()
                                            AND View_Contract.JuridicalId IS NULL
         ;
         -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
@@ -302,7 +307,8 @@ BEGIN
             FROM Object_Contract_View AS View_Contract
             WHERE View_Contract.JuridicalId = vbJuridicalId
               AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-              AND View_Contract.isErased = FALSE;
+              AND View_Contract.isErased = FALSE
+              AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
         END IF;
 
         -- Находим <УП статья назначения> !!!всегда!!! у Договора

@@ -1316,6 +1316,101 @@ begin
                OKCompleteDocumentButtonClick(Self);
      end;
 
+     if ParamStr(2)='autoNal'
+     then begin
+               try Day_ReComplete:=StrToInt(ParamStr(3));
+               except Day_ReComplete:=7
+               end;
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
+               then EndDateEdit.Text:=DateToStr(Date-1)
+               else EndDateEdit.Text:=DateToStr(Date-1);//DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+
+               StartDateCompleteEdit.Text:=StartDateEdit.Text;
+               EndDateCompleteEdit.Text:=EndDateEdit.Text;
+
+
+               cbIncomeBN.Checked:=true;//загрузка док-тов:  1.1. Приход от поставщика - БН
+               cbReturnOutBN.Checked:=true;//загрузка док-тов:  1.2. Возврат поставщику - БН
+               cbIncomePacker.Checked:=true;//загрузка док-тов:   1.3. Приход от заготовителя
+               cbIncomeNal.Checked:=true;//загрузка док-тов:  1.4. Приход от поставщика - НАЛ
+               cbReturnOutNal.Checked:=true;//загрузка док-тов:  1.5. Возврат поставщику - НАЛ
+               cbPartner_Income.Checked:=true;//загрузка док-тов:  !!!новые поставщики/договора НАЛ!!!
+               cbSaleIntNal.Checked:=true;//загрузка док-тов:  3.1.Прод.пок. - НАЛ
+               cbReturnInIntNal.Checked:=true;//загрузка док-тов:  3.2.Воз.от пок. - НАЛ
+               cbPartner_Sale.Checked:=true;//загрузка док-тов:  !!!новые покупатели/договора НАЛ!!!
+
+               cbCompleteIncomeBN.Checked:=true;//проведение/распроведение док-тов:  1.1. Приход от поставщика - БН
+               cbCompleteReturnOutBN.Checked:=true;//проведение/распроведение док-тов:  1.2. Возврат поставщику - БН
+               cbCompleteIncomeNal.Checked:=true;//проведение/распроведение док-тов:  1.4. Приход от поставщика - НАЛ
+               cbCompleteReturnOutNal.Checked:=true;//проведение/распроведение док-тов:  1.5. Возврат поставщику - НАЛ
+               cbCompleteSaleIntNal.Checked:=true;//проведение/распроведение док-тов:  3.1.Прод.пок. - НАЛ
+               cbCompleteReturnInIntNal.Checked:=true;//проведение/распроведение док-тов:  3.2.Воз.от пок. - НАЛ
+
+               cbDeleteInt.Checked:=true;//3.0.2.Удаление Int
+
+               UnitCodeSendOnPriceEdit.Text:='autoNal('+IntToStr(Day_ReComplete)+'Day)';
+               //Распроводим
+               cbComplete.Checked:=false;
+               cbUnComplete.Checked:=true;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+               //
+               //Загружаем
+               OKDocumentButtonClick(Self);
+               //Проводим
+               cbComplete.Checked:=true;
+               cbUnComplete.Checked:=false;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+     end;
+
+     if ParamStr(2)='autoBN'
+     then begin
+               try Day_ReComplete:=StrToInt(ParamStr(3));
+               except Day_ReComplete:=7
+               end;
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
+               then EndDateEdit.Text:=DateToStr(Date-1)
+               else EndDateEdit.Text:=DateToStr(Date-1);//DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+
+               StartDateCompleteEdit.Text:=StartDateEdit.Text;
+               EndDateCompleteEdit.Text:=EndDateEdit.Text;
+
+               cbSaleInt.Checked:=true;//загрузка док-тов:   3.3.Прод.пок.Int - БН
+               cbReturnInInt.Checked:=true;//загрузка док-тов:   3.4.Воз.от пок.Int - БН
+               cbTaxInt.Checked:=true;//загрузка док-тов:   8.3. Налоговые Int
+
+               cbCompleteSendOnPrice.Checked:=true;//проведение/распроведение док-тов:   2.2. Перемещение с филиалами
+               cbCompleteSaleInt.Checked:=true;//проведение/распроведение док-тов:   3.3.Прод.пок.Int - БН
+               cbCompleteReturnInInt.Checked:=true;//проведение/распроведение док-тов:   3.4.Воз.от пок.Int - БН
+               cbCompleteTaxInt.Checked:=true;//проведение/распроведение док-тов:   8.3. Налоговые Int
+
+               cbDeleteInt.Checked:=true;//3.0.2.Удаление Int
+
+               UnitCodeSendOnPriceEdit.Text:='autoBN('+IntToStr(Day_ReComplete)+'Day)';
+               //Распроводим
+               cbComplete.Checked:=false;
+               cbUnComplete.Checked:=true;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+               //
+               //Загружаем
+               OKDocumentButtonClick(Self);
+               //Проводим
+               cbComplete.Checked:=true;
+               cbUnComplete.Checked:=false;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+     end;
+
      if ParamStr(2)='auto'
      then begin
                fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-1)+') as RetV');
@@ -18295,7 +18390,9 @@ begin
                            +'       , case when MovementBoolean_Medoc.ValueData = TRUE or MovementBoolean.ValueData = TRUE'
                            +'              then '+IntToStr(zc_rvYes)+' else '+IntToStr(zc_rvNo)
                            +'         end as isMedoc'
+                           +'       , case when Movement.DescId = zc_Movement_SendOnPrice() then '+IntToStr(zc_Enum_PaidKind_FirstForm)+' else MLO_PaidKind.ObjectId end AS PaidKindId'
                            +' from Movement'
+                           +'      left join MovementLinkObject as MLO_PaidKind on MLO_PaidKind.MovementId = Movement.Id and MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()'
                            +'      left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
                            +'      left join MovementDate AS MD on MD.MovementId = Movement.Id and MD.DescId = zc_MovementDate_OperDatePartner()'
                            +'      left join MovementLinkMovement on MovementLinkMovement.MovementId=Movement.Id and MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())'
@@ -18306,8 +18403,10 @@ begin
                            +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
 
 // if FieldByName('Id_Postgres').AsString = '259257' then showMessage('');
-             //
-             if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
+             if (((cbSaleInt.Checked)and(toSqlQuery.FieldByName('PaidKindId').AsInteger = zc_Enum_PaidKind_FirstForm))
+               or ((cbSaleIntNal.Checked)and(toSqlQuery.FieldByName('PaidKindId').AsInteger = zc_Enum_PaidKind_SecondForm))
+                )
+              and(toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
               and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
               and(toSqlQuery.FieldByName('isMedoc').AsInteger = zc_rvNo)
              then begin
