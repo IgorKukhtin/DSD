@@ -76,6 +76,7 @@ type
     procedure LoadMovementFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
+    procedure LoadOrderTypeFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPartnerTagFormTest;
     procedure LoadPartionGoodsChoiceFormTest;
@@ -561,6 +562,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitJournalForm');
+end;
+
+procedure TLoadFormTest.LoadOrderTypeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderTypeForm');
 end;
 
 procedure TLoadFormTest.LoadSendDebtFormTest;

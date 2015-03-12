@@ -629,7 +629,8 @@ uses
   OrderExternalUnit in '..\..\Forms\Document\OrderExternalUnit.pas' {OrderExternalUnitForm: TParentForm},
   OrderExternalUnitJournal in '..\..\Forms\Document\OrderExternalUnitJournal.pas' {OrderExternalUnitJournalForm: TParentForm},
   GoodsProperty in '..\..\Forms\Guides\GoodsProperty.pas' {GoodsPropertyForm: TParentForm},
-  Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {Report_JuridicalDefermentPaymentForm: TParentForm};
+  Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {Report_JuridicalDefermentPaymentForm: TParentForm},
+  OrderType in '..\..\Forms\Guides\OrderType.pas' {OrderTypeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
