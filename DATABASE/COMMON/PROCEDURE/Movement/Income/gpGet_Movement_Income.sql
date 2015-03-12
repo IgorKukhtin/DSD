@@ -20,9 +20,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Income());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Income());
+     vbUserId:= lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN

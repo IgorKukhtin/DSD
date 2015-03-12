@@ -837,7 +837,7 @@ object ContractForm: TContractForm
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object colCode: TcxGridDBColumn
-          Caption = #1050#1086#1076
+          Caption = #1050#1086#1076' '#1089#1074#1103#1079#1080
           DataBinding.FieldName = 'Code'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -845,8 +845,15 @@ object ContractForm: TContractForm
           Options.Editing = False
           Width = 57
         end
+        object isConnected: TcxGridDBColumn
+          Caption = #1055#1086#1076#1082#1083'.'
+          DataBinding.FieldName = 'isConnected'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
         object clPartnerCode: TcxGridDBColumn
-          Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+          Caption = #1050#1086#1076
           DataBinding.FieldName = 'PartnerCode'
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -908,8 +915,8 @@ object ContractForm: TContractForm
         OptionsView.HeaderHeight = 40
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object cxGridDBColumn1: TcxGridDBColumn
-          Caption = #1050#1086#1076
+        object Code: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1089#1074#1103#1079#1080
           DataBinding.FieldName = 'Code'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -918,7 +925,7 @@ object ContractForm: TContractForm
           Width = 57
         end
         object clGoodsCode: TcxGridDBColumn
-          Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+          Caption = #1050#1086#1076
           DataBinding.FieldName = 'GoodsCode'
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -1035,8 +1042,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2447,6 +2454,7 @@ object ContractForm: TContractForm
     Top = 120
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

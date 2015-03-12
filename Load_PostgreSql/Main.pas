@@ -1399,7 +1399,7 @@ begin
                //Распроводим
                cbComplete.Checked:=false;
                cbUnComplete.Checked:=true;
-               cbLastComplete.Checked:=false;
+               cbLastComplete.Checked:=true;
                OKCompleteDocumentButtonClick(Self);
                //
                //Загружаем
@@ -1407,7 +1407,7 @@ begin
                //Проводим
                cbComplete.Checked:=true;
                cbUnComplete.Checked:=false;
-               cbLastComplete.Checked:=false;
+               cbLastComplete.Checked:=true;
                OKCompleteDocumentButtonClick(Self);
      end;
 

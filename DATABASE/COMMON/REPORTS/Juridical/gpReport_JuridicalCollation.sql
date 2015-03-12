@@ -322,24 +322,33 @@ BEGIN
                                                                                  THEN zc_MovementLinkObject_Personal()
                                                                             WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
                                                                                  THEN zc_MovementLinkObject_From()
-                                                                            WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn())
+                                                                            WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
                                                                                  THEN zc_MovementLinkObject_From()
                                                                        END
       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                    ON MovementLinkObject_To.MovementId = Movement.Id 
                                   AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
                                                                                THEN zc_MovementLinkObject_To()
-                                                                          WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn())
+                                                                          WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
                                                                                THEN zc_MovementLinkObject_To()
                                                                      END
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                   ON MovementLinkObject_Partner.MovementId = Movement.Id 
+                                  AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+
       LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                            ON ObjectLink_BankAccount_Bank.ObjectId = MovementItem_by.ObjectId
                           AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
       LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
-      LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE (MovementLinkObject_From.ObjectId, COALESCE (CASE WHEN Operation.MovementSumm < 0 THEN MILinkObject_MoneyPlace.ObjectId ELSE MovementItem_by.ObjectId END, MILinkObject_Unit.ObjectId))
-      LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MovementLinkObject_To.ObjectId, COALESCE (CASE WHEN Operation.MovementSumm > 0 THEN MILinkObject_MoneyPlace.ObjectId ELSE MovementItem_by.ObjectId END, MILinkObject_Unit.ObjectId))
-
+      LEFT JOIN Object AS Object_From ON Object_From.Id = CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) AND MovementLinkObject_Partner.ObjectId IS NOT NULL
+                                                                    THEN MovementLinkObject_Partner.ObjectId
+                                                               ELSE COALESCE (MovementLinkObject_From.ObjectId, COALESCE (CASE WHEN Operation.MovementSumm < 0 THEN MILinkObject_MoneyPlace.ObjectId ELSE MovementItem_by.ObjectId END, MILinkObject_Unit.ObjectId))
+                                                          END
+      LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtOut()) AND MovementLinkObject_Partner.ObjectId IS NOT NULL
+                                                                THEN MovementLinkObject_Partner.ObjectId
+                                                           ELSE COALESCE (MovementLinkObject_To.ObjectId, COALESCE (CASE WHEN Operation.MovementSumm > 0 THEN MILinkObject_MoneyPlace.ObjectId ELSE MovementItem_by.ObjectId END, MILinkObject_Unit.ObjectId))
+                                                      END
       LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
       
   ORDER BY Operation.OperationSort;
