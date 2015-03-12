@@ -114,8 +114,8 @@ BEGIN
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
        WHERE Object_Partner.Id IN (298605 -- Одесса - "ОГОРЕНКО новый дистрибьютор"
-                                   , 256624 -- Никополь - "Мержиєвський О.В. ФОП м. Нікополь вул. Альпова 6"
-                                    )
+                                 , 256624 -- Никополь - "Мержиєвський О.В. ФОП м. Нікополь вул. Альпова 6"
+                                  )
       ;
 
 END;

@@ -8,18 +8,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPartner(
 RETURNS TABLE (Id Integer, Code Integer
              , ContractId Integer, InvNumber TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
-             , isErased boolean
+             , isConnected Boolean
+             , isErased Boolean
         
              ) AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_ContractPartner());
      vbUserId:= lpGetUserBySession (inSession);
-     -- определяется - может ли пользовать видеть весь справочник
-     vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
      -- Результат
      RETURN QUERY 
@@ -34,11 +32,11 @@ BEGIN
            , Object_Partner.ObjectCode AS PartnerCode
            , Object_Partner.ValueData  AS PartnerName
        
+           , TRUE AS isConnected
            , Object_ContractPartner.isErased    AS isErased
 
            
        FROM Object AS Object_ContractPartner
-           -- LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_ContractPartner.AccessKeyId
                                                             
             LEFT JOIN ObjectLink AS ContractPartner_Contract
                                  ON ContractPartner_Contract.ObjectId = Object_ContractPartner.Id
@@ -49,9 +47,29 @@ BEGIN
                                  ON ObjectLink_ContractPartner_Partner.ObjectId = Object_ContractPartner.Id
                                 AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_ContractPartner_Partner.ChildObjectId
-         
+
      WHERE Object_ContractPartner.DescId = zc_Object_ContractPartner()
-       --AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+   UNION ALL
+       SELECT 
+             0 :: Integer  AS Id
+           , 0 :: Integer  AS Code
+         
+           , Object_Contract_View.ContractId    AS ContractId
+           , Object_Contract_View.InvNumber     AS InvNumber
+
+           , Object_Partner.Id         AS PartnerId
+           , Object_Partner.ObjectCode AS PartnerCode
+           , Object_Partner.ValueData  AS PartnerName
+       
+           , FALSE AS isConnected
+           , Object_Partner.isErased   AS isErased
+           
+       FROM Object AS Object_Partner
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+       WHERE Object_Partner.DescId = zc_Object_Partner()
     ;
 
 END;
