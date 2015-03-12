@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , MemberTakeId Integer, MemberTakeName TVarChar
+             , personalTakeId Integer, personalTakeName TVarChar
              , InfoMoneyId Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , OKPO TVarChar
              , ChangePercent TFloat
@@ -77,6 +78,9 @@ BEGIN
        , Object_MemberTake.Id        AS PersonalTakeId
        , Object_MemberTake.ValueData AS PersonalTakeName
 
+       , Object_MemberTake.Id        AS personalTakeId
+       , Object_MemberTake.ValueData AS personalTakeName
+ 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupName
        , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -233,6 +237,10 @@ BEGIN
        , Object_RouteSorting.ValueData AS RouteSortingName
        , Object_MemberTake.Id        AS PersonalTakeId
        , Object_MemberTake.ValueData AS PersonalTakeName
+
+
+       , Object_MemberTake.Id        AS personalTakeId
+       , Object_MemberTake.ValueData AS personalTakeName
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupName

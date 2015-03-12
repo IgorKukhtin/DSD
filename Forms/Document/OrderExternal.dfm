@@ -11,17 +11,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1020
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1228
+    ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1228
+      ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 518
-        ExplicitWidth = 1228
+        ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -267,7 +267,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1228
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1787,13 +1787,13 @@ inherited OrderExternalForm: TOrderExternalForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerOrderForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerOrderForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PartnerId'
+        Name = 'Key'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
@@ -1801,7 +1801,7 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
-        Name = 'PartnerName'
+        Name = 'TextValue'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'TextValue'

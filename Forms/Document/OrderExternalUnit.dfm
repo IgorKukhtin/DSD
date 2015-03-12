@@ -2,7 +2,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
   ClientWidth = 1280
-  ExplicitLeft = -315
   ExplicitWidth = 1296
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -1878,136 +1877,24 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TContractChoicePartnerOrderForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerOrderForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ContractTagId'
-        Value = Null
-        Component = ContractTagGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'ContractTagName'
-        Value = Null
-        Component = ContractTagGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'RouteId'
-        Value = Null
-        Component = GuidesRoute
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'RouteName'
-        Value = Null
-        Component = GuidesRoute
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'RouteSortingId'
-        Value = Null
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'RouteSortingName'
-        Value = Null
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'PriceListId'
-        Value = Null
-        Component = PriceListGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'PriceListName'
-        Value = Null
-        Component = PriceListGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'PersonalTakeId'
-        Value = Null
-        Component = GuidesPersonal
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'PersonalTakeName'
-        Value = Null
-        Component = GuidesPersonal
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ChangePercent'
-        Value = '0'
-        Component = edChangePercent
-        DataType = ftFloat
         ParamType = ptInput
       end>
     Left = 456
@@ -2110,13 +1997,13 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerOrderForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerOrderForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PartnerId'
+        Name = 'Key'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
@@ -2124,7 +2011,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end
       item
-        Name = 'PartnerName'
+        Name = 'TextValue'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'TextValue'
