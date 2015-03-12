@@ -187,7 +187,7 @@ BEGIN
                          GROUP BY MIDate_OperDate.ValueData, MovementItemContainer.OperDate
                                 , MILinkObject_Juridical.ObjectId, CLO_Juridical.ObjectId
                                 , MILinkObject_Partner.ObjectId
-                                , ObjectLink_Contract_InfoMoney.ObjectId, CLO_InfoMoney.ObjectId
+                                , ObjectLink_Contract_InfoMoney.ChildObjectId, CLO_InfoMoney.ObjectId
                                 , MovementLinkObject_PaidKind.ObjectId, CLO_PaidKind.ObjectId
                                 , MILinkObject_Branch.ObjectId
                                 , MILinkObject_ContractChild.ObjectId, CLO_Contract.ObjectId

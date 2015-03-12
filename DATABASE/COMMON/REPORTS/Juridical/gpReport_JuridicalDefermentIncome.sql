@@ -63,7 +63,7 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH tmpAccount AS (SELECT inAccountId AS AccountId
-                   UNION SELECT AccountId FROM Object_Account_View WHERE AccountDirectionId = zc_Enum_AccountDirection_70100() AND EXISTS (SELECT AccountId FROM Object_Account_View WHERE AccountId = inAccountId AND AccountDirectionId = zc_Enum_AccountDirection_70100()) -- Кредиторы + поставщики
+                   UNION SELECT AccountId FROM Object_Account_View WHERE InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20700() AND AccountDirectionId = zc_Enum_AccountDirection_70100() AND EXISTS (SELECT AccountId FROM Object_Account_View WHERE AccountId = inAccountId AND AccountDirectionId = zc_Enum_AccountDirection_70100() AND InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20700()) -- Кредиторы + поставщики AND <> Товары + Прочие товары
                    UNION SELECT AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_70000() -- Кредиторы
                         )
         , tmpListBranch_Constraint AS (SELECT ObjectLink_Contract_Personal.ObjectId AS ContractId

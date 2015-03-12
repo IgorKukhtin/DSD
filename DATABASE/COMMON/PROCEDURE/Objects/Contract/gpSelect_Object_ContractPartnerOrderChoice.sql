@@ -17,11 +17,13 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractComment TVarChar
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
-             , PersonalTakeId Integer, PersonalTakeName TVarChar
+             , MemberTakeId Integer, MemberTakeName TVarChar
+             , personalTakeId Integer, personalTakeName TVarChar
              , InfoMoneyId Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , OKPO TVarChar
              , ChangePercent TFloat
              , DelayDay TVarChar
+             , PrepareDayCount TFloat, DocumentDayCount TFloat
              , AmountDebet TFloat
              , AmountKredit TFloat
              , BranchName TVarChar
@@ -74,8 +76,12 @@ BEGIN
        , Object_Route.ValueData        AS RouteName
        , Object_RouteSorting.Id        AS RouteSortingId
        , Object_RouteSorting.ValueData AS RouteSortingName
-       , Object_MemberTake.Id        AS PersonalTakeId
-       , Object_MemberTake.ValueData AS PersonalTakeName
+       , Object_MemberTake.Id        AS MemberTakeId
+       , Object_MemberTake.ValueData AS MemberTakeName
+
+       , Object_MemberTake.Id        AS personalTakeId
+       , Object_MemberTake.ValueData AS personalTakeName
+ 
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -88,6 +94,8 @@ BEGIN
 
        , View_ContractCondition_Value.ChangePercent
        , View_ContractCondition_Value.DelayDay
+       , ObjectFloat_PrepareDayCount.ValueData  AS PrepareDayCount
+       , ObjectFloat_DocumentDayCount.ValueData AS DocumentDayCount
 
        , Container_Partner_View.AmountDebet
        , Container_Partner_View.AmountKredit
@@ -101,6 +109,13 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
                                AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
+                               ON ObjectFloat_PrepareDayCount.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
+         LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount
+                               ON ObjectFloat_DocumentDayCount.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
@@ -272,6 +287,9 @@ BEGIN
        , Object_MemberTake.Id        AS PersonalTakeId
        , Object_MemberTake.ValueData AS PersonalTakeName
 
+       , Object_MemberTake.Id        AS personalTakeId
+       , Object_MemberTake.ValueData AS personalTakeName
+ 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupName
        , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -283,6 +301,8 @@ BEGIN
 
        , View_ContractCondition_Value.ChangePercent
        , View_ContractCondition_Value.DelayDay
+       , ObjectFloat_PrepareDayCount.ValueData  AS PrepareDayCount
+       , ObjectFloat_DocumentDayCount.ValueData AS DocumentDayCount
 
        , Container_Partner_View.AmountDebet
        , Container_Partner_View.AmountKredit
@@ -296,6 +316,13 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
                                AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
+                               ON ObjectFloat_PrepareDayCount.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
+         LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount
+                               ON ObjectFloat_DocumentDayCount.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
@@ -366,6 +393,7 @@ BEGIN
         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
+     AND Object_Partner.isErased = FALSE
      AND ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
            AND vbBranchId_Constraint > 0)
        OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные

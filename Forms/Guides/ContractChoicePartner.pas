@@ -54,6 +54,8 @@ type
     AmountDebet: TcxGridDBColumn;
     AmountKredit: TcxGridDBColumn;
     Id: TcxGridDBColumn;
+    PrepareDayCount: TcxGridDBColumn;
+    DocumentDayCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

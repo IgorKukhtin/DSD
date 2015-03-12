@@ -551,6 +551,8 @@ BEGIN
            INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = _tmpMovement.MovementId
                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
                                           AND MovementLinkMovement.MovementChildId <> COALESCE (vbMovementId_Tax, 0)
+           INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                              AND Movement.StatusId <> zc_Enum_Status_Erased()
       WHERE _tmpMovement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut());
 
       -- удаляем все "лишние" корректировки у "базы"
@@ -560,6 +562,8 @@ BEGIN
            INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = _tmpMovement.MovementId
                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
                                           AND MovementLinkMovement.MovementId <> COALESCE (vbMovementId_TaxCorrective, 0)
+           INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
+                              AND Movement.StatusId <> zc_Enum_Status_Erased()
       WHERE _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn());
 
       -- удаляем для НЕ "база" связь с Налоговым документом

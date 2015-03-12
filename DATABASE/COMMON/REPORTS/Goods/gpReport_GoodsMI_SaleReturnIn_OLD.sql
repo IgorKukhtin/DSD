@@ -43,6 +43,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Sale_Amount_10500_Weight TFloat
              , Sale_Amount_40200_Weight TFloat
              , Return_Amount_40200_Weight TFloat
+             , ReturnPercent TFloat
               )
 AS
 $BODY$
@@ -403,6 +404,8 @@ BEGIN
          , tmpOperationGroup.Sale_Amount_10500_Weight    :: TFloat AS Sale_Amount_10500_Weight
          , tmpOperationGroup.Sale_Amount_40200_Weight    :: TFloat AS Sale_Amount_40200_Weight
          , tmpOperationGroup.Return_Amount_40200_Weight  :: TFloat AS Return_Amount_40200_Weight
+
+         , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
 
      FROM (SELECT tmpOperation.JuridicalId
                 , tmpOperation.PartnerId

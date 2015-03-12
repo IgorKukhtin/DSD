@@ -127,6 +127,7 @@ type
     spSelectPrintQuality: TdsdStoredProc;
     actPrint_Quality: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;
+    PersonalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

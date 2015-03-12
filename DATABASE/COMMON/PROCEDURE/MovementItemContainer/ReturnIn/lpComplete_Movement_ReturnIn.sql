@@ -297,7 +297,7 @@ BEGIN
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
      -- проверка
-     IF vbOperDate <> vbOperDatePartner
+     IF (vbOperDate <> vbOperDatePartner) AND (vbPartnerId_To <> 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Значение <Дата(склад)> должно соответствовать значению <Дата документа у покупателя>.';
      END IF;
