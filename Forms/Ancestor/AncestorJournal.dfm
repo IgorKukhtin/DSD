@@ -666,7 +666,6 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 136
   end
   object RefreshDispatcher: TRefreshDispatcher
-    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
