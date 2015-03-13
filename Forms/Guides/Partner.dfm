@@ -101,17 +101,31 @@ object PartnerForm: TPartnerForm
       object clPersonalName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
         DataBinding.FieldName = 'PersonalName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 120
       end
       object clPersonalTradeName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
         DataBinding.FieldName = 'PersonalTradeName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalTradeChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 120
       end
       object clPriceListName: TcxGridDBColumn
@@ -128,6 +142,7 @@ object PartnerForm: TPartnerForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 84
       end
       object clPriceListPromoName: TcxGridDBColumn
@@ -144,6 +159,7 @@ object PartnerForm: TPartnerForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 86
       end
       object clStartPromo: TcxGridDBColumn
@@ -152,6 +168,7 @@ object PartnerForm: TPartnerForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 85
       end
       object clEndPromo: TcxGridDBColumn
@@ -160,6 +177,7 @@ object PartnerForm: TPartnerForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 88
       end
       object clRouteName: TcxGridDBColumn
@@ -258,17 +276,17 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 100
       end
-      object DocumentDayCount: TcxGridDBColumn
-        Caption = #1044#1085'. '#1076#1086#1082'.'
-        DataBinding.FieldName = 'DocumentDayCount'
+      object PrepareDayCount: TcxGridDBColumn
+        Caption = #1044#1085'. '#1079#1072#1082#1072#1079
+        DataBinding.FieldName = 'PrepareDayCount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 45
       end
-      object PrepareDayCount: TcxGridDBColumn
-        Caption = #1044#1085'. '#1079#1072#1082#1072#1079
-        DataBinding.FieldName = 'PrepareDayCount'
+      object DocumentDayCount: TcxGridDBColumn
+        Caption = #1044#1085'. '#1076#1086#1082'.'
+        DataBinding.FieldName = 'DocumentDayCount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -888,6 +906,52 @@ object PartnerForm: TPartnerForm
         end>
       isShowModal = True
     end
+    object PersonalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object PersonalTradeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalTradeId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalTradeName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner'
@@ -1017,6 +1081,20 @@ object PartnerForm: TPartnerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceListPromoId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalTradeId'
         ParamType = ptInput
       end>
     PackSize = 1

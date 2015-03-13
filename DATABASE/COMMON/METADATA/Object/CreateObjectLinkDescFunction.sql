@@ -873,6 +873,15 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Retail_GoodsProperty', 'Связь торг.сеть с Классификаторы свойств товаров', zc_Object_Retail(), zc_Object_GoodsProperty() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_GoodsProperty');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderType_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderType_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderType_Unit', 'Связь Типf расчета заявки на производство с Подразделением', zc_Object_OrderType(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderType_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderType_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderType_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderType_Goods', 'Связь Типf расчета заявки на производство с Товаром', zc_Object_OrderType(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderType_Goods');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -990,6 +999,8 @@ SELECT 'zc_ObjectLink_PriceList_Currency', 'Валюта', zc_Object_PriceList(), zc_O
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.03.15         * add zc_ObjectLink_OrderType_Goods
+                      , zc_ObjectLink_OrderType_Unit
  12.02.15         * add zc_ObjectLink_Contract_PriceListPromo
                         zc_ObjectLink_Contract_PriceList
  09.02.15         * zc_ObjectLink_Quality_Juridical

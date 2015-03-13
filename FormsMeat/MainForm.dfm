@@ -134,6 +134,17 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actOrderType: TdsdOpenForm [6]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      Hint = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      FormName = 'TOrderTypeForm'
+      FormNameParam.Value = 'TOrderTypeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actReport_GoodsMI_ProductionUnion: TdsdOpenForm [7]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
@@ -2903,7 +2914,7 @@ inherited MainForm: TMainForm
       object miReportProductionUnion: TMenuItem
         Action = actReport_Production_Union
       end
-      object N41: TMenuItem
+      object N42: TMenuItem
         Action = actReport_ProductionOrder
       end
       object N27: TMenuItem
@@ -3144,6 +3155,9 @@ inherited MainForm: TMainForm
       end
       object miGoodsQuality: TMenuItem
         Action = actGoodsQuality
+      end
+      object N41: TMenuItem
+        Action = actOrderType
       end
       object miTradeMark: TMenuItem
         Action = actTradeMark

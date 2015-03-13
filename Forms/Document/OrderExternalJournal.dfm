@@ -7,18 +7,18 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1064
+    Width = 1020
     Height = 604
     TabOrder = 3
     ExplicitWidth = 1064
     ExplicitHeight = 604
     ClientRectBottom = 604
-    ClientRectRight = 1064
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1064
       ExplicitHeight = 604
       inherited cxGrid: TcxGrid
-        Width = 1064
+        Width = 1020
         Height = 604
         ExplicitWidth = 1064
         ExplicitHeight = 604
@@ -391,8 +391,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1064
+    Width = 1020
     ExplicitWidth = 1064
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179

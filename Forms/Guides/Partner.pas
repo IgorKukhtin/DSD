@@ -105,6 +105,8 @@ type
     GLNCodeCorporate: TcxGridDBColumn;
     PrepareDayCount: TcxGridDBColumn;
     DocumentDayCount: TcxGridDBColumn;
+    PersonalChoiceForm: TOpenChoiceForm;
+    PersonalTradeChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

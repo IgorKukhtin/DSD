@@ -154,7 +154,7 @@ type
     Panel: TPanel;
     cxGridGoods: TcxGrid;
     cxGridDBTableViewGoods: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     cxGridLevelGoods: TcxGridLevel;
     cxLeftSplitter: TcxSplitter;
@@ -194,6 +194,7 @@ type
     clPriceListPromoName: TcxGridDBColumn;
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
+    isConnected: TcxGridDBColumn;
   private
     { Private declarations }
   public

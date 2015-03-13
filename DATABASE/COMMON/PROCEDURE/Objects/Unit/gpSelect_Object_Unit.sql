@@ -78,6 +78,44 @@ BEGIN
                                        , 256716 -- Склад УТИЛЬ
                                         )
              )
+      UNION ALL
+       SELECT 
+             Object_Partner.Id     
+           , Object_Partner.ObjectCode   
+           , Object_Partner.ValueData
+         
+           , 0 :: Integer AS ParentId
+           , '' :: TVarChar AS ParentName 
+
+           , 0 :: Integer AS BusinessId
+           , '' :: TVarChar AS BusinessName 
+         
+           , Object_Branch.Id :: Integer AS BranchId
+           , Object_Branch.ValueData :: TVarChar AS BranchName
+         
+           , 0 :: Integer AS JuridicalId
+           , '' :: TVarChar AS JuridicalName
+         
+           , 0 :: Integer AS AccountGroupCode
+           , '' :: TVarChar AS AccountGroupName
+           , 0 :: Integer AS AccountDirectionCode
+           , '' :: TVarChar AS AccountDirectionName
+         
+           , 0 :: Integer AS ProfitLossGroupCode
+           , '' :: TVarChar AS ProfitLossGroupName
+           , 0 :: Integer AS ProfitLossDirectionCode
+           , '' :: TVarChar AS ProfitLossDirectionName
+         
+           , FALSE AS isErased
+           , TRUE AS isLeaf
+       FROM Object as Object_Partner
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+       WHERE Object_Partner.Id IN (298605 -- Одесса - "ОГОРЕНКО новый дистрибьютор"
+                                 , 256624 -- Никополь - "Мержиєвський О.В. ФОП м. Нікополь вул. Альпова 6"
+                                  )
       ;
 
 END;

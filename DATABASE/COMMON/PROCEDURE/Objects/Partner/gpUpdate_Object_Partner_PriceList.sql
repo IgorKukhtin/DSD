@@ -1,6 +1,7 @@
 -- Function: gpUpdate_Object_Partner_PriceList()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_PriceList (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_PriceList (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_PriceList(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -11,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_PriceList(
     IN inMemberId            Integer   ,    -- 
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
+    IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
+    IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -22,9 +25,9 @@ BEGIN
 
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, inStartPromo);
+--   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, inStartPromo);
       -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, inEndPromo);
+--   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, inEndPromo);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);
@@ -34,9 +37,14 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberId);
  
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceList(), ioId, inPriceListId);
+--   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceList(), ioId, inPriceListId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceListPromo(), ioId, inPriceListPromoId);
+--   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceListPromo(), ioId, inPriceListPromoId);
+
+   -- сохранили связь с <Сотрудник (супервайзер)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
+   -- сохранили связь с <Сотрудник (торговый)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

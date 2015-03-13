@@ -1,28 +1,27 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 668
-  ClientWidth = 1228
-  ExplicitTop = -312
-  ExplicitWidth = 1236
-  ExplicitHeight = 695
+  ClientWidth = 1020
+  ExplicitWidth = 1028
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1228
+    Width = 1020
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1228
+    ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1228
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1228
+      ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1228
+        Width = 1020
         Height = 518
-        ExplicitWidth = 1228
+        ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -265,10 +264,10 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1228
+    Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1228
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -799,9 +798,6 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Order
-    end
-    inherited bbAddMask: TdxBarButton
-      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1411,6 +1407,60 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_OrderExternal'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountSecond'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        ParamType = ptInputOutput
+      end>
     Left = 368
     Top = 272
   end
@@ -1788,13 +1838,13 @@ inherited OrderExternalForm: TOrderExternalForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerOrderForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerOrderForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PartnerId'
+        Name = 'Key'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
@@ -1802,7 +1852,7 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
-        Name = 'PartnerName'
+        Name = 'TextValue'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'TextValue'

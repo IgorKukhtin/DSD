@@ -630,7 +630,8 @@ uses
   OrderExternalUnitJournal in '..\..\Forms\Document\OrderExternalUnitJournal.pas' {OrderExternalUnitJournalForm: TParentForm},
   GoodsProperty in '..\..\Forms\Guides\GoodsProperty.pas' {GoodsPropertyForm: TParentForm},
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {Report_JuridicalDefermentPaymentForm: TParentForm},
-  ProductionOrderReportUnit in '..\..\FormsMeat\Report\Production\ProductionOrderReportUnit.pas' {ProductionOrderReportForm: TParentForm};
+  ProductionOrderReportUnit in '..\..\FormsMeat\Report\Production\ProductionOrderReportUnit.pas' {ProductionOrderReportForm: TParentForm},
+  OrderType in '..\..\Forms\Guides\OrderType.pas' {OrderTypeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
