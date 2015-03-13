@@ -22,10 +22,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TaxCorrective());
+     vbUserId := lpGetUserBySession (inSession);
+
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -45,7 +47,10 @@ BEGIN
              , CAST (0 as TFloat)                   AS TotalCount
              , CAST (0 as TFloat)                   AS TotalSummMVAT
              , CAST (0 as TFloat)                   AS TotalSummPVAT
-             , lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), inOperDate) ::TVarChar AS InvNumberPartner
+             , lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), inOperDate, CASE WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()) = zc_Enum_Process_AccessKey_DocumentOdessa()
+                                                                                                    THEN '6' -- !!!Одесса!!!
+                                                                                               ELSE ''
+                                                                                          END) ::TVarChar AS InvNumberPartner
              , 0                     				AS FromId
              , CAST ('' as TVarChar) 				AS FromName
              , 0                                    AS PartnerId
@@ -62,6 +67,10 @@ BEGIN
              , 0                     				AS DocumentChildId
              , CAST ('' as TVarChar) 				AS DocumentChildName
              , CAST ('' as TVarChar) 				AS InvNumberBranch
+             , CASE WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()) = zc_Enum_Process_AccessKey_DocumentOdessa()
+                         THEN '6' -- !!!Одесса!!!
+                    ELSE ''
+               END :: TVarChar   				AS InvNumberBranch
 
           FROM (SELECT CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar) AS InvNumber) AS tmpInvNumber
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1

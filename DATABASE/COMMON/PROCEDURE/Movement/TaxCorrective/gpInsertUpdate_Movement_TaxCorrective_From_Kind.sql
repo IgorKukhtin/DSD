@@ -422,7 +422,10 @@ BEGIN
                                                       ) AS MovementId_Corrective
                 , tmpResult_insert.MovementId_Tax
            FROM (SELECT NEXTVAL ('movement_taxcorrective_seq') AS InvNumber
-                      , lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), vbOperDate) AS InvNumberPartner
+                      , lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), vbOperDate, CASE WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()) = zc_Enum_Process_AccessKey_DocumentOdessa()
+                                                                                                             THEN '6' -- !!!Одесса!!!
+                                                                                                        ELSE ''
+                                                                                                   END) AS InvNumberPartner
                       , tmpResult_insert.MovementId_Tax
                  FROM (SELECT MovementId_Tax
                        FROM _tmpResult

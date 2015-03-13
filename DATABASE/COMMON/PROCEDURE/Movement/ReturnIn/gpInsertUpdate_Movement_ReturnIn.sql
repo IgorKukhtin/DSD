@@ -69,7 +69,7 @@ BEGIN
                                       , inInvNumberPartner := inInvNumberPartner
                                       , inInvNumberMark    := inInvNumberMark
                                       , inOperDate         := inOperDate
-                                      , inOperDatePartner  := inOperDatePartner
+                                      , inOperDatePartner  := CASE WHEN vbUserId = 5 AND ioId > 0 THEN COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()), inOperDatePartner) ELSE inOperDatePartner END
                                       , inChecked          := inChecked
                                       , inPriceWithVAT     := inPriceWithVAT
                                       , inVATPercent       := inVATPercent

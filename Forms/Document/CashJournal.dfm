@@ -2,7 +2,8 @@ inherited CashJournalForm: TCashJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 990
+  ExplicitWidth = 998
+  ExplicitHeight = 710
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -112,6 +113,15 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 50
+          end
+          object isLoad: TcxGridDBColumn [1]
+            Caption = '1'#1057
+            DataBinding.FieldName = 'isLoad'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
           end
           inherited colInvNumber: TcxGridDBColumn
             Visible = False

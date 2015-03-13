@@ -132,8 +132,8 @@ BEGIN
              , COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , CASE WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
-                     AND */_tmpItem.isActive = TRUE
-                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                     AND _tmpItem.isActive = TRUE
+                     AND*/ _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
                     WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN -1 * _tmpItem.OperSumm
@@ -146,8 +146,8 @@ BEGIN
                     ELSE 0
                END AS OperSumm_Currency
              , CASE WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
-                     AND */_tmpItem.isActive = TRUE
-                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                     AND _tmpItem.isActive = TRUE
+                     AND*/ _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN COALESCE (MovementFloat_Amount.ValueData, 0) - _tmpItem.OperSumm
                     WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN 0
@@ -212,7 +212,7 @@ BEGIN
 
              , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                      AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
-                     AND _tmpItem.isActive = FALSE
+                     /*AND _tmpItem.isActive = FALSE*/
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN zc_Enum_Currency_Basis() -- !!!меняется валюта!!!
                     WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())

@@ -35,6 +35,7 @@ type
     actReport_CashUser: TdsdOpenForm;
     bbReport_CashUser: TdxBarButton;
     OKPO: TcxGridDBColumn;
+    isLoad: TcxGridDBColumn;
   private
     { Private declarations }
   public

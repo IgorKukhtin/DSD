@@ -19,7 +19,7 @@ BEGIN
       
      -- сохранили <Документ>
      select lpInsert_Movement_Tax_Mask( 0, CAST (NEXTVAL ('movement_tax_seq') AS TVarChar)
-                                        , lpInsertFind_Object_InvNumberTax (zc_Movement_Tax(),  tmp.OperDate) ::TVarChar
+                                        , '' ::TVarChar
                                         , tmp.InvNumberBranch, tmp.OperDate
                                         , tmp.Checked, tmp.Document
                                         , tmp.PriceWithVAT, tmp.VATPercent
@@ -30,8 +30,7 @@ BEGIN
      INTO vbMovementId
      FROM gpGet_Movement_Tax (ioId, 'False', inOperDate, inSession) AS tmp;
 
-  -- записываем строки документа
-  
+   -- записываем строки документа
    PERFORM lpInsertUpdate_MovementItem_Tax (ioId                := 0
                                          , inMovementId         := vbMovementId
                                          , inGoodsId            := tmp.GoodsId
@@ -41,8 +40,9 @@ BEGIN
                                          , inGoodsKindId        := tmp.GoodsKindId
                                          , inUserId             := vbUserId
                                           ) 
-   FROM gpSelect_MovementItem_Tax( ioId, 'False', 'False', inSession)  AS tmp;
+   FROM gpSelect_MovementItem_Tax (ioId, 'False', 'False', inSession)  AS tmp;
    
+   -- записываем строки документа
    ioid := vbMovementId;
 
 END;

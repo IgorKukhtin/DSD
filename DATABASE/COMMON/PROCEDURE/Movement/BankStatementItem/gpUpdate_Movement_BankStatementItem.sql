@@ -56,6 +56,9 @@ BEGIN
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50200() -- Налоговые платежи
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50300() -- Налоговые платежи (прочие)
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет
+
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_41100() -- Банковская гарантия
                                                                                                                                  )
                                                                                                          OR InfoMoneyId = zc_Enum_InfoMoney_21419() -- Штрафы за недовоз
                                                                                                         )

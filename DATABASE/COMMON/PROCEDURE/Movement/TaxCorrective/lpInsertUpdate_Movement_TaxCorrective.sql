@@ -37,6 +37,38 @@ BEGIN
      END IF;
 
 
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
+
+     -- определяется филиал
+     vbBranchId:= CASE WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentBread()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentOdessa()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
+                  END;
+     -- проверка
+     IF COALESCE (vbBranchId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Невозможно определить <Филиал>.';
+     END IF;
+
+     -- определяется  Номер филиала
+     IF COALESCE (ioId, 0) = 0
+        AND vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentOdessa()
+     THEN
+         inInvNumberBranch:= '6'; -- !!!Одесса!!!
+     END IF;
+
+
      -- если надо, создаем <Номер документа>
      IF COALESCE (inInvNumber, '') = ''
      THEN
@@ -45,12 +77,9 @@ BEGIN
      -- если надо, создаем <Номер налогового документа>
      IF COALESCE (inInvNumberPartner, '') = ''
      THEN
-         inInvNumberPartner:= lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), inOperDate) ::TVarChar;
+         inInvNumberPartner:= lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), inOperDate, inInvNumberBranch) ::TVarChar;
      END IF;
 
-
-     -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -87,26 +116,6 @@ BEGIN
      -- сохранили связь с <Тип формирования налогового документа>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKindId);
 
-     -- определяется филиал
-     vbBranchId:= CASE WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentBread()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentOdessa()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
-                  END;
-     -- проверка
-     IF COALESCE (vbBranchId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Невозможно определить <Филиал>.';
-     END IF;
      -- сохранили связь с <филиал>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), ioId, vbBranchId);
 

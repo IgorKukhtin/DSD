@@ -54,6 +54,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
             Options.Editing = False
             Width = 50
           end
+          object isLoad: TcxGridDBColumn [1]
+            Caption = '1'#1057
+            DataBinding.FieldName = 'isLoad'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
           inherited colInvNumber: TcxGridDBColumn
             Visible = False
             HeaderAlignmentHorz = taCenter

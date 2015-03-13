@@ -61,7 +61,7 @@ BEGIN
      -- сохранили свойство <Количество кутеров>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCount(), ioId, COALESCE (vbCuterCount, 0));
 
-     -- сохранили связь с <Виды товаров>
+     -- сохранили связь с <Рецептуры>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), ioId, vbReceiptId);
 
      -- сохранили связь с <Виды товаров>
