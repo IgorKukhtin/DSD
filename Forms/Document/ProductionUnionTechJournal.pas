@@ -41,7 +41,7 @@ type
     actGoodsKindChoiceMaster: TOpenChoiceForm;
     colChildGoodsName: TcxGridDBColumn;
     colChildGoodsKindName: TcxGridDBColumn;
-    clChildPartionGoodsDate: TcxGridDBColumn;
+    colChildPartionGoodsDate: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     deStart: TcxDateEdit;
     cxLabel6: TcxLabel;
@@ -51,20 +51,16 @@ type
     GoodsGroupGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     OperDate: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    AmountOrder: TcxGridDBColumn;
-    GoodsKindCompleteName: TcxGridDBColumn;
+    colAmountOrder: TcxGridDBColumn;
+    colGoodsKindCompleteName: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    MIOrderId: TcxGridDBColumn;
-    ReceiptCode: TcxGridDBColumn;
-    MeasureName: TcxGridDBColumn;
+    colMeasureName: TcxGridDBColumn;
+    colReceiptCode: TcxGridDBColumn;
     colChildMeasureName: TcxGridDBColumn;
     colChildAmountCalc: TcxGridDBColumn;
-    colChildGroupNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

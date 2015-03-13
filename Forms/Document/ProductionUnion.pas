@@ -19,7 +19,6 @@ type
   TProductionUnionForm = class(TAncestorDocumentMCForm)
     actUpdateChildDS: TdsdUpdateDataSet;
     colCount: TcxGridDBColumn;
-    colLineNum: TcxGridDBColumn;
     colPartionClose: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
