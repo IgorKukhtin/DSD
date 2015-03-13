@@ -492,6 +492,8 @@ type
     miReport_JuridicalDefermentIncome: TMenuItem;
     actReport_JuridicalDefermentIncome: TdsdOpenForm;
     miOrderInternal: TMenuItem;
+    actReport_ProductionOrder: TdsdOpenForm;
+    N41: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
