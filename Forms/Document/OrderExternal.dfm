@@ -2,8 +2,8 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitWidth = 1028
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -799,9 +799,6 @@ inherited OrderExternalForm: TOrderExternalForm
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Order
     end
-    inherited bbAddMask: TdxBarButton
-      Visible = ivNever
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1410,6 +1407,60 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_OrderExternal'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountSecond'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        ParamType = ptInputOutput
+      end>
     Left = 368
     Top = 272
   end
