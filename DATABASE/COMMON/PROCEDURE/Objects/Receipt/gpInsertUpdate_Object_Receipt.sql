@@ -44,7 +44,7 @@ BEGIN
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
    -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Receipt()); 
+   vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Receipt()); 
 
 
    -- расчет названия

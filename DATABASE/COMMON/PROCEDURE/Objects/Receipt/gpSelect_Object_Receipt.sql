@@ -1,7 +1,7 @@
 -- Function: gpSelect_Object_Receipt()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt(TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt(Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
     IN inShowAll     Boolean, 
@@ -17,11 +17,17 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
                GoodsKindCompleteId Integer, GoodsKindCompleteCode Integer, GoodsKindCompleteName TVarChar,
                ReceiptCostId Integer, ReceiptCostCode Integer, ReceiptCostName TVarChar,
                ReceiptKindId Integer, ReceiptKindCode Integer, ReceiptKindName TVarChar,
-               MeasureName TVarChar,
-               isErased Boolean) AS
+               MeasureName TVarChar
+             , Code_Parent Integer, Name_Parent TVarChar, ReceiptCode_Parent TVarChar, isMain_Parent Boolean
+             , GoodsCode_Parent Integer, GoodsName_Parent TVarChar, MeasureName_Parent TVarChar
+             , GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar
+             , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
+             , isCheck_Parent Boolean
+             , isErased Boolean
+              )
+AS
 $BODY$
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Receipt());
 
@@ -31,7 +37,7 @@ BEGIN
      SELECT
            Object_Receipt.Id         AS Id
          , Object_Receipt.ObjectCode AS Code
-         , Object_Receipt.ValueData  AS NAME
+         , Object_Receipt.ValueData  AS Name
 
          , ObjectString_Code.ValueData    AS ReceiptCode
          , ObjectString_Comment.ValueData AS Comment
@@ -72,10 +78,61 @@ BEGIN
 
          , Object_Measure.ValueData     AS MeasureName
 
+         , Object_Receipt_Parent.ObjectCode      AS Code_Parent
+         , Object_Receipt_Parent.ValueData       AS Name_Parent
+         , ObjectString_Code_Parent.ValueData    AS ReceiptCode_Parent
+         , ObjectBoolean_Main_Parent.ValueData   AS isMain_Parent
+         , Object_Goods_Parent.ObjectCode              AS GoodsCode_Parent
+         , Object_Goods_Parent.ValueData               AS GoodsName_Parent
+         , Object_Measure_Parent.ValueData             AS MeasureName_Parent
+         , Object_GoodsKind_Parent.ValueData           AS GoodsKindName_Parent
+         , Object_GoodsKindComplete_Parent.ValueData   AS GoodsKindCompleteName_Parent
+
+         , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+         , Object_GoodsGroupAnalyst.ValueData          AS GoodsGroupAnalystName
+         , Object_GoodsTag.ValueData                   AS GoodsTagName
+         , Object_TradeMark.ValueData                  AS TradeMarkName
+
+         , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
          , Object_Receipt.isErased AS isErased
 
-     FROM OBJECT AS Object_Receipt
+     FROM Object AS Object_Receipt
           INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_Receipt.isErased
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent
+                               ON ObjectLink_Receipt_Parent.ObjectId = Object_Receipt.Id
+                              AND ObjectLink_Receipt_Parent.DescId = zc_ObjectLink_Receipt_Parent()
+          LEFT JOIN Object AS Object_Receipt_Parent ON Object_Receipt_Parent.Id = ObjectLink_Receipt_Parent.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Code_Parent
+                                 ON ObjectString_Code_Parent.ObjectId = Object_Receipt_Parent.Id
+                                AND ObjectString_Code_Parent.DescId = zc_ObjectString_Receipt_Code()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Parent
+                               ON ObjectLink_Receipt_Goods_Parent.ObjectId = Object_Receipt_Parent.Id
+                              AND ObjectLink_Receipt_Goods_Parent.DescId = zc_ObjectLink_Receipt_Goods()
+          LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = ObjectLink_Receipt_Goods_Parent.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_Parent
+                               ON ObjectLink_Goods_Measure_Parent.ObjectId = Object_Goods_Parent.Id 
+                              AND ObjectLink_Goods_Measure_Parent.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure_Parent ON Object_Measure_Parent.Id = ObjectLink_Goods_Measure_Parent.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent
+                              ON ObjectLink_Receipt_GoodsKind_Parent.ObjectId = Object_Receipt_Parent.Id
+                             AND ObjectLink_Receipt_GoodsKind_Parent.DescId = zc_ObjectLink_Receipt_GoodsKind()
+          LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = ObjectLink_Receipt_GoodsKind_Parent.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete_Parent
+                               ON ObjectLink_Receipt_GoodsKindComplete_Parent.ObjectId = Object_Receipt_Parent.Id
+                              AND ObjectLink_Receipt_GoodsKindComplete_Parent.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+          LEFT JOIN Object AS Object_GoodsKindComplete_Parent ON Object_GoodsKindComplete_Parent.Id = ObjectLink_Receipt_GoodsKindComplete_Parent.ChildObjectId
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_Parent
+                                  ON ObjectBoolean_Main_Parent.ObjectId = Object_Receipt_Parent.Id
+                                 AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main()
+
+
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
                               AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
@@ -156,6 +213,25 @@ BEGIN
                                 ON ObjectFloat_TotalWeight.ObjectId = Object_Receipt.Id
                                AND ObjectFloat_TotalWeight.DescId = zc_ObjectFloat_Receipt_TotalWeight()
 
+          LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                 ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                               ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+          LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                               ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
      WHERE Object_Receipt.DescId = zc_Object_Receipt();
 
 END;
@@ -168,9 +244,9 @@ ALTER FUNCTION gpSelect_Object_Receipt (Boolean, TVarChar) OWNER TO postgres;
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  23.02.15        * add 
  14.02.15                                      *all
- 19.07.13        * rename zc_ObjectDate_
+ 19.07.13        * reName zc_ObjectDate_
  10.07.13        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Receipt ('2')
+-- SELECT * FROM gpSelect_Object_Receipt (FALSE, '2')

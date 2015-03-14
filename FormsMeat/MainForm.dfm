@@ -10,9 +10,10 @@ inherited MainForm: TMainForm
   inherited ActionList: TActionList
     Top = 48
     object actProductionUnionTech: TdsdOpenForm [0]
-      Category = #1055#1088#1086#1086#1079#1074#1086#1076#1089#1090#1074#1086
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1050#1086#1083#1073#1072#1089#1085#1099#1081
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1050#1086#1083#1073#1072#1089#1085#1099#1081
       FormName = 'TProductionUnionTechJournalForm'
       FormNameParam.Value = 'TProductionUnionTechJournalForm'
       FormNameParam.DataType = ftString
@@ -38,9 +39,10 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actProductionUnionTechDelic: TdsdOpenForm [1]
-      Category = #1055#1088#1086#1086#1079#1074#1086#1076#1089#1090#1074#1086
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1044#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1044#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074
       FormName = 'TProductionUnionTechJournalForm'
       FormNameParam.Value = 'TProductionUnionTechJournalForm'
       FormNameParam.DataType = ftString
@@ -180,10 +182,10 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actOrderType: TdsdOpenForm [8]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
-      Hint = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      Hint = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       FormName = 'TOrderTypeForm'
       FormNameParam.Value = 'TOrderTypeForm'
       FormNameParam.DataType = ftString
@@ -270,7 +272,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReceiptCost: TdsdOpenForm [14]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1047#1072#1090#1088#1072#1090#1099' '#1074' '#1088#1077#1094#1077#1087#1090#1091#1088#1072#1093
       Hint = #1047#1072#1090#1088#1072#1090#1099' '#1074' '#1088#1077#1094#1077#1087#1090#1091#1088#1072#1093
@@ -281,10 +283,10 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actQuality: TdsdOpenForm [15]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1050#1072#1095'. '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103
-      Hint = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103
+      Caption = #1042#1080#1076#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
+      Hint = #1042#1080#1076#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
       FormName = 'TQualityForm'
       FormNameParam.Value = 'TQualityForm'
       FormNameParam.DataType = ftString
@@ -354,10 +356,10 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actGoodsQuality: TdsdOpenForm [22]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1055#1072#1088#1072#1084'. '#1082#1072#1095'. '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103
-      Hint = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103
+      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
+      Hint = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
       FormName = 'TGoodsQualityForm'
       FormNameParam.Value = 'TGoodsQualityForm'
       FormNameParam.DataType = ftString
@@ -591,7 +593,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReceipt: TdsdOpenForm [38]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1099
       Hint = #1056#1077#1094#1077#1087#1090#1091#1088#1099
@@ -1189,9 +1191,10 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actProductionSeparate: TdsdOpenForm
-      Category = #1055#1088#1086#1086#1079#1074#1086#1076#1089#1090#1074#1086
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       FormName = 'TProductionSeparateJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -1199,9 +1202,10 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actProductionUnion: TdsdOpenForm
-      Category = #1055#1088#1086#1086#1079#1074#1086#1076#1089#1090#1074#1086
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
       FormName = 'TProductionUnionJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -1209,9 +1213,10 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actOrderInternal: TdsdOpenForm
-      Category = #1055#1088#1086#1086#1079#1074#1086#1076#1089#1090#1074#1086
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
       FormName = 'TOrderInternalJournalForm'
       FormNameParam.Value = 'TOrderInternalJournalForm'
       FormNameParam.DataType = ftString
@@ -1589,9 +1594,10 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actGoodsQualityMovement: TdsdOpenForm
-      Category = #1055#1088#1086#1086#1079#1074#1086#1076#1089#1090#1074#1086
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Caption = #1046#1091#1088#1085#1072#1083' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
+      Hint = #1046#1091#1088#1085#1072#1083' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
       FormName = 'TGoodsQualityMovementJournalForm'
       FormNameParam.Value = 'TGoodsQualityMovementJournalForm'
       FormNameParam.DataType = ftString
@@ -2224,8 +2230,8 @@ inherited MainForm: TMainForm
     object actGoodsKindWeighing: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1042#1080#1076#1099' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1076#1083#1103' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
-      Hint = #1042#1080#1076#1099' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1076#1083#1103' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Caption = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Hint = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
       FormName = 'TGoodsKindWeighingTreeForm'
       FormNameParam.Value = 'TGoodsKindWeighingTreeForm'
       FormNameParam.DataType = ftString
@@ -2696,11 +2702,29 @@ inherited MainForm: TMainForm
       object miOrderInternal: TMenuItem
         Action = actOrderInternal
       end
+      object N41: TMenuItem
+        Action = actOrderType
+      end
       object N46: TMenuItem
         Caption = '-'
       end
+      object N39: TMenuItem
+        Action = actQuality
+      end
+      object miGoodsQuality: TMenuItem
+        Action = actGoodsQuality
+      end
       object miGoodsQualityMovement: TMenuItem
         Action = actGoodsQualityMovement
+      end
+      object N47: TMenuItem
+        Caption = '-'
+      end
+      object miReceipt: TMenuItem
+        Action = actReceipt
+      end
+      object miReceiptCost: TMenuItem
+        Action = actReceiptCost
       end
     end
     object miFinanceDocuments: TMenuItem [2]
@@ -3113,18 +3137,6 @@ inherited MainForm: TMainForm
       end
     end
     inherited miGuides: TMenuItem
-      object miFounder: TMenuItem
-        Action = actFounder
-      end
-      object N1: TMenuItem
-        Caption = '-'
-      end
-      object miPaidKind: TMenuItem
-        Action = actPaidKind
-      end
-      object N33: TMenuItem
-        Caption = '-'
-      end
       object miBusiness: TMenuItem
         Action = actBusiness
       end
@@ -3137,8 +3149,14 @@ inherited MainForm: TMainForm
       object miUnit: TMenuItem
         Action = actUnit
       end
-      object miCash: TMenuItem
-        Action = actCash
+      object miStorage_Object: TMenuItem
+        Action = actStorage_Object
+      end
+      object N33: TMenuItem
+        Caption = '-'
+      end
+      object miPaidKind: TMenuItem
+        Action = actPaidKind
       end
       object miBank: TMenuItem
         Action = actBank
@@ -3152,14 +3170,23 @@ inherited MainForm: TMainForm
       object miCorrAccount: TMenuItem
         Action = actCorrAccount
       end
+      object miCash: TMenuItem
+        Action = actCash
+      end
       object miCurrency: TMenuItem
         Action = actCurrency
+      end
+      object miFounder: TMenuItem
+        Action = actFounder
       end
       object N34: TMenuItem
         Caption = '-'
       end
-      object miStorage_Object: TMenuItem
-        Action = actStorage_Object
+      object miPriceList: TMenuItem
+        Action = actPriceList
+      end
+      object miTradeMark: TMenuItem
+        Action = actTradeMark
       end
       object miGoodsGroup: TMenuItem
         Action = actGoodsGroup
@@ -3176,47 +3203,29 @@ inherited MainForm: TMainForm
       object miGoods: TMenuItem
         Action = actGoods
       end
-      object miGoodsKind: TMenuItem
-        Action = actGoodsKind
-      end
       object miGoodsTag: TMenuItem
         Action = actGoodsTag
+      end
+      object miGoodsKind: TMenuItem
+        Action = actGoodsKind
       end
       object miGoodsKindWeighing: TMenuItem
         Action = actGoodsKindWeighing
       end
+      object miMeasure: TMenuItem
+        Action = actMeasure
+      end
       object miBox: TMenuItem
         Action = actBox
       end
-      object miMeasure: TMenuItem
-        Action = actMeasure
+      object N1: TMenuItem
+        Caption = '-'
       end
       object miGoodsProperty: TMenuItem
         Action = actGoodsProperty
       end
       object miGoodsPropertyValue: TMenuItem
         Action = actGoodsPropertyValue
-      end
-      object N39: TMenuItem
-        Action = actQuality
-      end
-      object miGoodsQuality: TMenuItem
-        Action = actGoodsQuality
-      end
-      object N41: TMenuItem
-        Action = actOrderType
-      end
-      object miTradeMark: TMenuItem
-        Action = actTradeMark
-      end
-      object miPriceList: TMenuItem
-        Action = actPriceList
-      end
-      object miReceipt: TMenuItem
-        Action = actReceipt
-      end
-      object miReceiptCost: TMenuItem
-        Action = actReceiptCost
       end
       object N37: TMenuItem
         Caption = '-'

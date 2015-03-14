@@ -1,20 +1,21 @@
 inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
-  ClientHeight = 732
+  ClientHeight = 674
   ClientWidth = 935
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
+  ExplicitTop = 7
   ExplicitWidth = 951
-  ExplicitHeight = 767
+  ExplicitHeight = 709
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 120
     Width = 935
-    Height = 612
+    Height = 554
     ExplicitTop = 120
     ExplicitWidth = 935
     ExplicitHeight = 612
-    ClientRectBottom = 612
+    ClientRectBottom = 554
     ClientRectRight = 935
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -25,7 +26,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ExplicitHeight = 588
       inherited cxGrid: TcxGrid
         Width = 935
-        Height = 230
+        Height = 172
         ExplicitWidth = 935
         ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -51,7 +52,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
             Width = 200
           end
           object colIsErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
             Options.Editing = False
@@ -61,12 +62,13 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 230
+        Top = 172
         Width = 935
         Height = 358
         Align = alBottom
         PopupMenu = PopupMenuChild
         TabOrder = 1
+        ExplicitTop = 230
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -105,7 +107,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
             Width = 200
           end
           object colChildIsErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'IsErased'
             Visible = False
             Options.Editing = False

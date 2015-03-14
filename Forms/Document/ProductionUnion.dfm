@@ -7,14 +7,15 @@ inherited ProductionUnionForm: TProductionUnionForm
   inherited PageControl: TcxPageControl
     Top = 122
     Width = 1020
-    Height = 610
+    Height = 552
     TabOrder = 2
     ExplicitTop = 122
     ExplicitWidth = 1020
     ExplicitHeight = 610
-    ClientRectBottom = 610
+    ClientRectBottom = 552
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1020
       ExplicitHeight = 586
       inherited cxGrid: TcxGrid
@@ -112,6 +113,9 @@ inherited ProductionUnionForm: TProductionUnionForm
           object colAmount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -177,7 +181,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Width = 60
           end
           object colPartionGoods: TcxGridDBColumn [12]
-            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -265,6 +269,9 @@ inherited ProductionUnionForm: TProductionUnionForm
           object colChildAmountReceipt: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086' 1 '#1082#1091#1090#1077#1088
             DataBinding.FieldName = 'AmountReceipt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -318,9 +325,6 @@ inherited ProductionUnionForm: TProductionUnionForm
     Height = 96
     ExplicitWidth = 1020
     ExplicitHeight = 96
-    inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 22
-    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 763

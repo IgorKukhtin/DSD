@@ -101,6 +101,20 @@ type
     clGroupNumber: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    Code_Parent: TcxGridDBColumn;
+    Name_Parent: TcxGridDBColumn;
+    ReceiptCode_Parent: TcxGridDBColumn;
+    isMain_Parent: TcxGridDBColumn;
+    GoodsCode_Parent: TcxGridDBColumn;
+    GoodsName_Parent: TcxGridDBColumn;
+    MeasureName_Parent: TcxGridDBColumn;
+    GoodsKindName_Parent: TcxGridDBColumn;
+    GoodsKindCompleteName_Parent: TcxGridDBColumn;
+    GoodsGroupAnalystName: TcxGridDBColumn;
+    GoodsTagName: TcxGridDBColumn;
+    TradeMarkName: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    isCheck_Parent: TcxGridDBColumn;
   private
     { Private declarations }
   public

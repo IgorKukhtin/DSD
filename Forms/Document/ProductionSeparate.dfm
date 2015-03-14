@@ -63,6 +63,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           object colAmount: TcxGridDBColumn [2]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -88,10 +91,35 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ExplicitTop = 174
         ExplicitWidth = 903
         inherited cxGridDBTableViewChild: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildHeadCount
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildHeadCount
+            end>
           Styles.Content = nil
           object colChildAmount: TcxGridDBColumn [2]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

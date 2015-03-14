@@ -175,6 +175,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           object colAmount: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -217,6 +220,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           object colAmount_order: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'Amount_order'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -225,6 +231,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           object colCuterCount_order: TcxGridDBColumn [13]
             Caption = #1050#1091#1090#1077#1088#1086#1074' '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'CuterCount_order'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -350,6 +359,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           object colChildAmountReceipt: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086' 1 '#1082#1091#1090#1077#1088
             DataBinding.FieldName = 'AmountReceipt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -358,6 +370,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           object colChildAmount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -366,6 +381,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           object colChildAmountCalc: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'AmountCalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -515,6 +533,22 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       TabOrder = 13
       Width = 85
     end
+  end
+  object RefreshDispatcher: TRefreshDispatcher [2]
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesFrom
+      end
+      item
+        Component = GuidesTo
+      end>
+    Left = 288
+    Top = 232
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -724,22 +758,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = True
     end
-  end
-  object RefreshDispatcher: TRefreshDispatcher [6]
-    IdParam.Value = Null
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-        Component = GuidesFrom
-      end
-      item
-        Component = GuidesTo
-      end>
-    Left = 288
-    Top = 232
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnionTech'
