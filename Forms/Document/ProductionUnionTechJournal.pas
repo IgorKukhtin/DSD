@@ -23,13 +23,14 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxImageComboBox, ChoicePeriod;
 
 type
   TProductionUnionTechJournalForm = class(TAncestorDocumentMCForm)
     actUpdateChildDS: TdsdUpdateDataSet;
     colCount: TcxGridDBColumn;
-    InvNumber: TcxGridDBColumn;
+    colInvNumber: TcxGridDBColumn;
     colPartionClose: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
@@ -46,11 +47,8 @@ type
     deStart: TcxDateEdit;
     cxLabel6: TcxLabel;
     deEnd: TcxDateEdit;
-    cxLabel7: TcxLabel;
-    edGoodsGroup: TcxButtonEdit;
-    GoodsGroupGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
-    OperDate: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     colAmount_order: TcxGridDBColumn;
@@ -63,6 +61,7 @@ type
     colChildAmountCalc: TcxGridDBColumn;
     colCuterCount_order: TcxGridDBColumn;
     colChildGroupNumber: TcxGridDBColumn;
+    PeriodChoice: TPeriodChoice;
   private
     { Private declarations }
   public

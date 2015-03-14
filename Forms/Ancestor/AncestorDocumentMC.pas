@@ -85,6 +85,15 @@ type
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
+    bbComplete: TdxBarButton;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    actUnComplete: TdsdChangeMovementStatus;
+    actComplete: TdsdChangeMovementStatus;
+    actSetErased: TdsdChangeMovementStatus;
+    spMovementUnComplete: TdsdStoredProc;
+    spMovementSetErased: TdsdStoredProc;
+    spMovementComplete: TdsdStoredProc;
   private
     { Private declarations }
   public
