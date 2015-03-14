@@ -31,9 +31,34 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Kind = skSum
             end
             item
-              Format = ',0.####;-,0.####; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colRealWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colCuterCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount_order
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colCuterCount_order
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -41,9 +66,34 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Kind = skSum
             end
             item
-              Format = ',0.####;-,0.####; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colRealWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colCuterCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount_order
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colCuterCount_order
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -233,6 +283,38 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ExplicitTop = 205
         ExplicitWidth = 1097
         inherited cxGridDBTableViewChild: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmountReceipt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmountCalc
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmountReceipt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmountCalc
+            end>
           Styles.Content = nil
           object colChildGroupNumber: TcxGridDBColumn [0]
             Caption = #1043#1088#1091#1087#1087#1072' '#8470
@@ -374,6 +456,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ExplicitLeft = 767
       ExplicitTop = 25
       ExplicitWidth = 100
+      ExplicitHeight = 22
       Width = 100
     end
     inherited cxLabel3: TcxLabel
@@ -642,6 +725,22 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Enabled = True
     end
   end
+  object RefreshDispatcher: TRefreshDispatcher [6]
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesFrom
+      end
+      item
+        Component = GuidesTo
+      end>
+    Left = 288
+    Top = 232
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnionTech'
     Params = <
@@ -770,22 +869,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Action = actInsert
       Category = 0
     end
-  end
-  object RefreshDispatcher: TRefreshDispatcher [10]
-    IdParam.Value = Null
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-        Component = GuidesFrom
-      end
-      item
-        Component = GuidesTo
-      end>
-    Left = 288
-    Top = 232
   end
   inherited PopupMenu: TPopupMenu
     Left = 152

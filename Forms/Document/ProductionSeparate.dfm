@@ -31,9 +31,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Kind = skSum
             end
             item
-              Format = ',0.####;-,0.####; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -41,9 +46,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Kind = skSum
             end
             item
-              Format = ',0.####;-,0.####; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -119,6 +129,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Height = 96
     ExplicitWidth = 903
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61

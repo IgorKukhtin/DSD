@@ -29,7 +29,7 @@ inherited ProductionUnionForm: TProductionUnionForm
               Kind = skSum
             end
             item
-              Format = ',0.####;-,0.####; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colCount
             end
@@ -42,6 +42,11 @@ inherited ProductionUnionForm: TProductionUnionForm
               Format = ',0.####'
               Kind = skSum
               Column = colCuterCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -49,7 +54,7 @@ inherited ProductionUnionForm: TProductionUnionForm
               Kind = skSum
             end
             item
-              Format = ',0.####;-,0.####; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colCount
             end
@@ -62,6 +67,11 @@ inherited ProductionUnionForm: TProductionUnionForm
               Format = ',0.####'
               Kind = skSum
               Column = colCuterCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -195,6 +205,28 @@ inherited ProductionUnionForm: TProductionUnionForm
         ExplicitTop = 228
         ExplicitWidth = 1020
         inherited cxGridDBTableViewChild: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmountReceipt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmount
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmountReceipt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmount
+            end>
           Styles.Content = nil
           object colChildGroupNumber: TcxGridDBColumn [0]
             Caption = #1043#1088#1091#1087#1087#1072' '#8470
@@ -286,6 +318,9 @@ inherited ProductionUnionForm: TProductionUnionForm
     Height = 96
     ExplicitWidth = 1020
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 763
