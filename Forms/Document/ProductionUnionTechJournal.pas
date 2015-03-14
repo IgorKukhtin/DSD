@@ -53,7 +53,7 @@ type
     OperDate: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    colAmountOrder: TcxGridDBColumn;
+    colAmount_order: TcxGridDBColumn;
     colGoodsKindCompleteName: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
@@ -61,6 +61,8 @@ type
     colReceiptCode: TcxGridDBColumn;
     colChildMeasureName: TcxGridDBColumn;
     colChildAmountCalc: TcxGridDBColumn;
+    colCuterCount_order: TcxGridDBColumn;
+    colChildGroupNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

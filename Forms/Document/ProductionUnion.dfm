@@ -2,6 +2,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientWidth = 1020
   ExplicitWidth = 1036
+  ExplicitHeight = 767
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -77,7 +78,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             Options.Editing = False
           end
-          object MeasureName: TcxGridDBColumn [2]
+          object colMeasureName: TcxGridDBColumn [2]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -91,9 +92,9 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object GoodsKindCompleteName: TcxGridDBColumn [4]
+          object colGoodsKindName_Complete: TcxGridDBColumn [4]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
-            DataBinding.FieldName = 'GoodsKindCompleteName'
+            DataBinding.FieldName = 'GoodsKindName_Complete'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -103,6 +104,7 @@ inherited ProductionUnionForm: TProductionUnionForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           inherited colAmount: TcxGridDBColumn [5]
@@ -121,7 +123,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Width = 50
           end
           object colCuterCount: TcxGridDBColumn [7]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1091#1090#1077#1088#1086#1074
+            Caption = #1050#1091#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
             DataBinding.FieldName = 'CuterCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -141,7 +143,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object ReceiptCode: TcxGridDBColumn [9]
+          object colReceiptCode: TcxGridDBColumn [9]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
             DataBinding.FieldName = 'ReceiptCode'
             HeaderAlignmentHorz = taCenter
@@ -157,9 +159,9 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 90
           end
-          object colPartionClose: TcxGridDBColumn [11]
+          object colIsPartionClose: TcxGridDBColumn [11]
             Caption = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1088#1099#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'PartionClose'
+            DataBinding.FieldName = 'isPartionClose'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
