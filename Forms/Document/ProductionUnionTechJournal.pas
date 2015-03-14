@@ -40,7 +40,6 @@ type
     colReceiptName: TcxGridDBColumn;
     actGoodsKindChoiceChild: TOpenChoiceForm;
     actGoodsKindChoiceMaster: TOpenChoiceForm;
-    colChildGoodsName: TcxGridDBColumn;
     colChildGoodsKindName: TcxGridDBColumn;
     colChildPartionGoodsDate: TcxGridDBColumn;
     cxLabel5: TcxLabel;
@@ -62,6 +61,11 @@ type
     colCuterCount_order: TcxGridDBColumn;
     colChildGroupNumber: TcxGridDBColumn;
     PeriodChoice: TPeriodChoice;
+    colAmount: TcxGridDBColumn;
+    colChildAmount: TcxGridDBColumn;
+    colChildAmountReceipt: TcxGridDBColumn;
+    colChildPartionGoods: TcxGridDBColumn;
+    colChildComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

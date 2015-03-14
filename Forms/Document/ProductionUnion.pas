@@ -28,15 +28,18 @@ type
     colReceiptName: TcxGridDBColumn;
     actGoodsKindChoiceChild: TOpenChoiceForm;
     actGoodsKindChoiceMaster: TOpenChoiceForm;
-    colChildGoodsName: TcxGridDBColumn;
     colChildGoodsKindName: TcxGridDBColumn;
-    clChildPartionGoodsDate: TcxGridDBColumn;
+    colChildPartionGoodsDate: TcxGridDBColumn;
     colGoodsKindName_Complete: TcxGridDBColumn;
     colReceiptCode: TcxGridDBColumn;
     colMeasureName: TcxGridDBColumn;
     colChildMeasureName: TcxGridDBColumn;
-    colChildAmountCalc: TcxGridDBColumn;
+    colChildAmount: TcxGridDBColumn;
     colChildGroupNumber: TcxGridDBColumn;
+    colAmount: TcxGridDBColumn;
+    colChildAmountReceipt: TcxGridDBColumn;
+    colChildPartionGoods: TcxGridDBColumn;
+    colChildComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

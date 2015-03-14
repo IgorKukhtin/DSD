@@ -29,7 +29,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colAmount
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -40,7 +39,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colAmount
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -74,6 +72,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
                 Value = 3
               end>
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colInvNumber: TcxGridDBColumn [1]
@@ -91,14 +90,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
-          end
-          inherited colGoodsCode: TcxGridDBColumn
-            Options.Editing = False
-            Width = 45
-          end
-          inherited colGoodsName: TcxGridDBColumn
-            Options.Editing = False
-            Width = 150
           end
           object colMeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -131,9 +122,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          inherited colAmount: TcxGridDBColumn
-            Properties.DecimalPlaces = 4
+          object colAmount: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 60
           end
           object colRealWeight: TcxGridDBColumn [9]
             Caption = #1060#1072#1082#1090' '#1074#1077#1089
@@ -247,25 +242,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 55
           end
-          inherited colChildGoodsCode: TcxGridDBColumn
-            Options.Editing = False
-            Width = 55
-          end
-          object colChildGoodsName: TcxGridDBColumn [2]
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'GoodsName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 150
-          end
           object colChildMeasureName: TcxGridDBColumn [3]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -289,14 +265,19 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          inherited colChildAmountReceipt: TcxGridDBColumn [5]
-            Caption = #1050#1086#1083'-'#1074#1086' 1 '#1082#1091#1090#1077#1088' '
-            Visible = True
+          object colChildAmountReceipt: TcxGridDBColumn [5]
+            Caption = #1050#1086#1083'-'#1074#1086' 1 '#1082#1091#1090#1077#1088
+            DataBinding.FieldName = 'AmountReceipt'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
-          inherited colChildAmount: TcxGridDBColumn [6]
+          object colChildAmount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -306,7 +287,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object colChildPartionGoodsDate: TcxGridDBColumn [8]
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
@@ -314,22 +295,28 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 76
+            Width = 70
           end
-          inherited colChildPartionGoods: TcxGridDBColumn
+          object colChildPartionGoods: TcxGridDBColumn [9]
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
+            DataBinding.FieldName = 'PartionGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
-          inherited colChildComment: TcxGridDBColumn
+          object colChildComment: TcxGridDBColumn [10]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            Visible = True
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
           inherited colChildIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 45
           end
         end
@@ -784,6 +771,22 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Category = 0
     end
   end
+  object RefreshDispatcher: TRefreshDispatcher [10]
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesFrom
+      end
+      item
+        Component = GuidesTo
+      end>
+    Left = 288
+    Top = 232
+  end
   inherited PopupMenu: TPopupMenu
     Left = 152
     Top = 240
@@ -1007,22 +1010,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   inherited HeaderSaver: THeaderSaver
     Left = 328
     Top = 137
-  end
-  object RefreshDispatcher: TRefreshDispatcher [18]
-    IdParam.Value = Null
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-        Component = GuidesFrom
-      end
-      item
-        Component = GuidesTo
-      end>
-    Left = 288
-    Top = 232
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = ''

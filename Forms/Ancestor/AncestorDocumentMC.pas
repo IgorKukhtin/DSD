@@ -54,7 +54,6 @@ type
     spInsertUpdateMIChild: TdsdStoredProc;
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
     bbAddChild: TdxBarButton;
     InsertRecordChild: TInsertRecord;
     actMIChildSetErased: TdsdUpdateErased;
@@ -74,10 +73,6 @@ type
     cxGridChild: TcxGrid;
     cxGridDBTableViewChild: TcxGridDBTableView;
     colChildGoodsCode: TcxGridDBColumn;
-    colChildAmount: TcxGridDBColumn;
-    colChildAmountReceipt: TcxGridDBColumn;
-    colChildPartionGoods: TcxGridDBColumn;
-    colChildComment: TcxGridDBColumn;
     colChildIsErased: TcxGridDBColumn;
     cxGridLevelChild: TcxGridLevel;
     actGoodsChoiceForm: TOpenChoiceForm;
@@ -94,6 +89,7 @@ type
     spMovementUnComplete: TdsdStoredProc;
     spMovementSetErased: TdsdStoredProc;
     spMovementComplete: TdsdStoredProc;
+    colChildGoodsName: TcxGridDBColumn;
   private
     { Private declarations }
   public

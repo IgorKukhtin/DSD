@@ -29,18 +29,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ExplicitWidth = 935
         ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####;-,0.####; ;'
-              Kind = skSum
-              Column = colAmount
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####;-,0.####; ;'
-              Kind = skSum
-              Column = colAmount
-            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -51,23 +39,16 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Options.Editing = False
+            Width = 55
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 236
-          end
-          object colAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
+            Options.Editing = False
+            Width = 200
           end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -90,53 +71,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
           DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Kind = skSum
-              Position = spFooter
-            end
-            item
-              Kind = skSum
-              Position = spFooter
-            end
-            item
-              Kind = skSum
-              Position = spFooter
-            end
-            item
-              Kind = skSum
-              Position = spFooter
-            end
-            item
-              Kind = skSum
-              Position = spFooter
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colChildAmount
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colChildAmount
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end>
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
@@ -157,43 +93,22 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Options.Editing = False
+            Width = 55
           end
-          object colChildAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
+          object colChildGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colChildAmountReceipt: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072' 1 '#1082#1091#1090#1077#1088' '
-            DataBinding.FieldName = 'AmountReceipt'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colChildPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'PartionGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 103
-          end
-          object colChildComment: TcxGridDBColumn
-            Caption = ' '#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '
-            DataBinding.FieldName = 'Comment'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
+            Options.Editing = False
+            Width = 200
           end
           object colChildIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'IsErased'
             Visible = False
+            Options.Editing = False
             Width = 60
           end
         end

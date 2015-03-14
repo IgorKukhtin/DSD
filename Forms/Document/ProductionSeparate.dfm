@@ -12,21 +12,23 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Height = 556
     TabOrder = 2
     ExplicitTop = 122
+    ExplicitWidth = 903
     ExplicitHeight = 556
     ClientRectBottom = 556
     ClientRectRight = 903
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 903
       ExplicitHeight = 532
       inherited cxGrid: TcxGrid
         Width = 903
         Height = 174
+        ExplicitWidth = 903
         ExplicitHeight = 174
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colAmount
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -37,7 +39,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colAmount
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -49,32 +50,23 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colLineNum: TcxGridDBColumn [0]
-            Caption = #8470#1087'/'#1087
-            DataBinding.FieldName = 'LineNum'
+          object colAmount: TcxGridDBColumn [2]
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 20
+            Width = 60
           end
-          inherited colIsErased: TcxGridDBColumn
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          inherited colGoodsCode: TcxGridDBColumn
-            Options.Editing = False
-          end
-          inherited colGoodsName: TcxGridDBColumn
-            Options.Editing = False
-          end
-          inherited colAmount: TcxGridDBColumn
-            Properties.DecimalPlaces = 4
-          end
-          object colHeadCount: TcxGridDBColumn
+          object colHeadCount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
@@ -84,24 +76,16 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Top = 174
         Width = 903
         ExplicitTop = 174
+        ExplicitWidth = 903
         inherited cxGridDBTableViewChild: TcxGridDBTableView
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsCustomize.DataRowSizing = True
           Styles.Content = nil
-          object colChildGoodsName: TcxGridDBColumn [1]
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'GoodsName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
+          object colChildAmount: TcxGridDBColumn [2]
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 236
+            Options.Editing = False
+            Width = 70
           end
           object colChildHeadCount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
@@ -109,17 +93,22 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
-          inherited colChildPartionGoods: TcxGridDBColumn [4]
-            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+          object colChildPartionGoods: TcxGridDBColumn [4]
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
-          inherited colChildAmountReceipt: TcxGridDBColumn [5]
-            VisibleForCustomization = False
-          end
-          inherited colChildComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            VisibleForCustomization = False
+          inherited colChildIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end
@@ -128,10 +117,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   inherited DataPanel: TPanel
     Width = 903
     Height = 96
+    ExplicitWidth = 903
     ExplicitHeight = 96
-    inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 22
-    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -141,7 +128,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     object cxLabel10: TcxLabel
       Left = 214
       Top = 43
-      Caption = #1055#1072#1088#1090#1080#1103
+      Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
     end
   end
   inherited ActionList: TActionList
@@ -314,7 +301,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 418
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetErased'
