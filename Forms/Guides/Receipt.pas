@@ -115,6 +115,8 @@ type
     TradeMarkName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     isCheck_Parent: TcxGridDBColumn;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

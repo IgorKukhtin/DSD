@@ -549,8 +549,8 @@ object ReceiptForm: TReceiptForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -600,6 +600,14 @@ object ReceiptForm: TReceiptForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic1'
         end
@@ -725,6 +733,10 @@ object ReceiptForm: TReceiptForm
       Action = actShowAll
       Category = 0
     end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -747,6 +759,33 @@ object ReceiptForm: TReceiptForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 54
+      FormName = 'TReceiptEditForm'
+      FormNameParam.Value = 'TReceiptEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InMaskId'
+          Value = 'True'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -762,7 +801,7 @@ object ReceiptForm: TReceiptForm
           Value = Null
         end
         item
-          Name = 'JuridicalId'
+          Name = 'inMaskId'
           Value = 0
         end
         item
@@ -790,6 +829,11 @@ object ReceiptForm: TReceiptForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InMaskId'
+          Value = '0'
           ParamType = ptInput
         end>
       isShowModal = True
