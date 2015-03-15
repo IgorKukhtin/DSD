@@ -1,4 +1,4 @@
-unit RecipesMaster;
+unit Receipt_Object;
 
 interface
 
@@ -20,22 +20,20 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxCheckBox, dxSkinsdxBarPainter,
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxContainer,
+  dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel;
 
 type
-  TRecipesMasterForm = class(TParentForm)
+  TReceipt_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clWeight: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    clTradeMarkName: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -46,14 +44,27 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     dsdChoiceGuides: TdsdChoiceGuides;
-    dsdGridToExcel1: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    dsdGridToExcel: TdsdGridToExcel;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     GoodsName: TcxGridDBColumn;
-    Code: TcxGridDBColumn;
+    ReceiptCode: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     GoodsKindCompleteName: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
+    bbGoodsLabel: TdxBarControlContainerItem;
+    bbGoods: TdxBarControlContainerItem;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    FormParams: TdsdFormParams;
+    GoodsCode: TcxGridDBColumn;
+    isMain: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
+    TaxExit: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -63,5 +74,5 @@ type
 implementation
 {$R *.dfm}
 initialization
-  RegisterClass(TRecipesMasterForm);
+  RegisterClass(TReceipt_ObjectForm);
 end.

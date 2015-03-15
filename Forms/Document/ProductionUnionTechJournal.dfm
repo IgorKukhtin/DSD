@@ -1,5 +1,5 @@
 inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
-  Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+  Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075
   ClientHeight = 685
   ClientWidth = 1097
   ExplicitWidth = 1113
@@ -21,9 +21,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ExplicitHeight = 563
       inherited cxGrid: TcxGrid
         Width = 1097
-        Height = 205
+        Height = 255
         ExplicitWidth = 1097
-        ExplicitHeight = 205
+        ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -157,9 +157,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colGoodsKindCompleteName: TcxGridDBColumn [7]
+          object colGoodsKindName_Complete: TcxGridDBColumn [7]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
-            DataBinding.FieldName = 'GoodsKindCompleteName'
+            DataBinding.FieldName = 'GoodsKindName_Complete'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -184,7 +184,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Width = 60
           end
           object colRealWeight: TcxGridDBColumn [9]
-            Caption = #1060#1072#1082#1090' '#1074#1077#1089
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
             DataBinding.FieldName = 'RealWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -211,11 +211,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 55
           end
           object colAmount_order: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
@@ -287,9 +286,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 205
+        Top = 260
         Width = 1097
-        ExplicitTop = 205
+        ExplicitTop = 260
         ExplicitWidth = 1097
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -421,6 +420,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           end
         end
       end
+      inherited cxBottomSplitter: TcxSplitter
+        Top = 255
+        Width = 1097
+        ExplicitTop = 255
+        ExplicitWidth = 1097
+      end
     end
   end
   inherited DataPanel: TPanel
@@ -533,22 +538,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       TabOrder = 13
       Width = 85
     end
-  end
-  object RefreshDispatcher: TRefreshDispatcher [2]
-    IdParam.Value = Null
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-        Component = GuidesFrom
-      end
-      item
-        Component = GuidesTo
-      end>
-    Left = 288
-    Top = 232
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1341,6 +1330,22 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   end
   inherited spMovementSetErased: TdsdStoredProc
     Top = 248
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesFrom
+      end
+      item
+        Component = GuidesTo
+      end>
+    Left = 288
+    Top = 232
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart

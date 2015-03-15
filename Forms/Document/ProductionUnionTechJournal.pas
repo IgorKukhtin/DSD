@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxImageComboBox, ChoicePeriod;
+  cxImageComboBox, ChoicePeriod, cxSplitter;
 
 type
   TProductionUnionTechJournalForm = class(TAncestorDocumentMCForm)
@@ -51,7 +51,7 @@ type
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     colAmount_order: TcxGridDBColumn;
-    colGoodsKindCompleteName: TcxGridDBColumn;
+    colGoodsKindName_Complete: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     colMeasureName: TcxGridDBColumn;

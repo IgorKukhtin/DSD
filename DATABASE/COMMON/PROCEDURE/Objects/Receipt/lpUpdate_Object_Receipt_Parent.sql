@@ -141,4 +141,4 @@ ALTER FUNCTION lpUpdate_Object_Receipt_Parent (Integer, Integer, Integer) OWNER 
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Object_Receipt_Parent (355308, 0, 0)
+-- SELECT * FROM lpUpdate_Object_Receipt_Parent (0, 0, 0) -- 355308

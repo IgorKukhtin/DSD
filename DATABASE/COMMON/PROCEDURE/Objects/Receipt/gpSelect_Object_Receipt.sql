@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
-    IN inShowAll     Boolean, 
+    IN inGoodsId     Integer,
+    IN inShowAll     Boolean,
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
@@ -33,7 +35,6 @@ BEGIN
 
    RETURN QUERY
      WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
-
      SELECT
            Object_Receipt.Id         AS Id
          , Object_Receipt.ObjectCode AS Code
@@ -232,12 +233,13 @@ BEGIN
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
-     WHERE Object_Receipt.DescId = zc_Object_Receipt();
+     WHERE Object_Receipt.DescId = zc_Object_Receipt()
+       AND (ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Receipt (Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Receipt (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -249,4 +251,4 @@ ALTER FUNCTION gpSelect_Object_Receipt (Boolean, TVarChar) OWNER TO postgres;
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Object_Receipt (FALSE, '2')
+-- SELECT * FROM gpSelect_Object_Receipt (0, FALSE, zfCalc_UserAdmin())

@@ -17,14 +17,14 @@ type
     ceRealWeight: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     ceRecipe: TcxButtonEdit;
-    RecipeGuides: TdsdGuides;
+    ReceiptGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
     ceGooods: TcxButtonEdit;
     cxLabel12: TcxLabel;
-    GooodsRecipesGuides: TdsdGuides;
+    ReceiptGoodsGuides: TdsdGuides;
     cxLabel3: TcxLabel;
     ceCount: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
@@ -37,7 +37,7 @@ type
     cxLabel5: TcxLabel;
     GooodsKindGuides: TdsdGuides;
     ceGooodsKindGuides: TcxButtonEdit;
-    ceRecipeCode: TcxTextEdit;
+    ceReceiptCode: TcxTextEdit;
     cxLabel8: TcxLabel;
     ceGooodsKindCompleateGuides: TcxButtonEdit;
     GooodsKindCompleateGuides: TdsdGuides;
