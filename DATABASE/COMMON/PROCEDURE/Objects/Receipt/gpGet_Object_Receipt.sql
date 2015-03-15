@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_Receipt(integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_Receipt(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Receipt(integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Receipt(
     IN inId          Integer,       -- Составляющие рецептур 
+    IN inMaskId      Integer,       -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
@@ -23,7 +25,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Receipt());
   
-   IF COALESCE (inId, 0) = 0
+   IF (COALESCE (inId, 0) = 0 AND COALESCE (inMaskId, 0) = 0)
    THEN
        RETURN QUERY 
        SELECT
@@ -75,10 +77,10 @@ BEGIN
      RETURN QUERY 
      SELECT 
            Object_Receipt.Id         AS Id
-         , Object_Receipt.ObjectCode AS Code
+         , CASE WHEN  COALESCE (inId, 0) = 0 THEN lfGet_ObjectCode (0, zc_Object_Receipt()) ELSE Object_Receipt.ObjectCode END AS Code
          , Object_Receipt.ValueData  AS NAME
           
-         , ObjectString_Code.ValueData    AS ReceiptCode
+         , ObjectString_Code.ValueData  AS ReceiptCode
          , ObjectString_Comment.ValueData AS Comment         
  
          , ObjectFloat_Value.ValueData         AS Value  
@@ -184,18 +186,19 @@ BEGIN
                                 ON ObjectFloat_WeightPackage.ObjectId = Object_Receipt.Id 
                                AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_Receipt_WeightPackage()
                                
-     WHERE Object_Receipt.Id = inId;
+     WHERE Object_Receipt.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
      
   END IF;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Receipt(integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Object_Receipt(integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.03.15         * inMaskId
  14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_
  09.07.13         *              
