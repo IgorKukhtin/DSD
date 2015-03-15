@@ -13,7 +13,7 @@ uses
   cxGridDBTableView, Vcl.Menus, dxBarExtItems, dxBar, cxClasses,
   Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  cxCurrencyEdit, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  cxCurrencyEdit, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
 
 type
   TAncestorDocumentMCForm = class(TAncestorDBGridForm)
@@ -90,6 +90,7 @@ type
     spMovementSetErased: TdsdStoredProc;
     spMovementComplete: TdsdStoredProc;
     colChildGoodsName: TcxGridDBColumn;
+    cxBottomSplitter: TcxSplitter;
   private
     { Private declarations }
   public

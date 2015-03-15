@@ -26,9 +26,9 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ExplicitHeight = 588
       inherited cxGrid: TcxGrid
         Width = 935
-        Height = 172
+        Height = 222
         ExplicitWidth = 935
-        ExplicitHeight = 230
+        ExplicitHeight = 171
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -62,13 +62,13 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 172
+        Top = 227
         Width = 935
-        Height = 358
+        Height = 303
         Align = alBottom
         PopupMenu = PopupMenuChild
         TabOrder = 1
-        ExplicitTop = 230
+        ExplicitTop = 226
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -117,6 +117,15 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         object cxGridLevelChild: TcxGridLevel
           GridView = cxGridDBTableViewChild
         end
+      end
+      object cxBottomSplitter: TcxSplitter
+        Left = 0
+        Top = 222
+        Width = 935
+        Height = 5
+        AlignSplitter = salBottom
+        Control = cxGridChild
+        ExplicitTop = 221
       end
     end
   end
@@ -1380,6 +1389,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   end
   object ChildDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewChild
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
