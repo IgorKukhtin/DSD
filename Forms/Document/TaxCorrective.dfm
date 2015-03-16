@@ -2,8 +2,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1113
-  ExplicitWidth = 1129
-  ExplicitHeight = 703
+  ExplicitWidth = 1121
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -773,6 +773,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inMask'
+        Value = '0'
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 280
     Top = 552
@@ -794,6 +800,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -1393,6 +1407,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Top = 248
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     ComponentList = <>
     Left = 496
     Top = 96
