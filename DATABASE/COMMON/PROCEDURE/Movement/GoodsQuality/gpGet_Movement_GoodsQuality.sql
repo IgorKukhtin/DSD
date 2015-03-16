@@ -118,4 +118,4 @@ ALTER FUNCTION gpGet_Movement_GoodsQuality (Integer, TDateTime, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_GoodsQuality (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_GoodsQuality (inMovementId:= 1, inOperDate:= null, inSession:= '9818')

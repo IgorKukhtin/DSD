@@ -25,7 +25,6 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 835
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -55,9 +54,9 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object GoodsName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'GoodsName'
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 200
@@ -376,8 +375,6 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
-      end
-      item
       end>
     ActionItemList = <
       item

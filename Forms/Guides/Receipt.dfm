@@ -549,8 +549,8 @@ object ReceiptForm: TReceiptForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -588,6 +588,10 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -600,14 +604,6 @@ object ReceiptForm: TReceiptForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertMask'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic1'
         end
@@ -638,10 +634,6 @@ object ReceiptForm: TReceiptForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -745,10 +737,10 @@ object ReceiptForm: TReceiptForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end
         item
           StoredProc = spSelectReceiptChild
@@ -929,10 +921,13 @@ object ReceiptForm: TReceiptForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectReceiptChild
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -1001,7 +996,7 @@ object ReceiptForm: TReceiptForm
       DataSource = DataSource
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Receipt'
     DataSet = ClientDataSet
     DataSets = <
@@ -1009,6 +1004,16 @@ object ReceiptForm: TReceiptForm
         DataSet = ClientDataSet
       end>
     Params = <
+      item
+        Name = 'inGoodsId'
+        Value = 0
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = 0
+        ParamType = ptInput
+      end
       item
         Name = 'inShowAll'
         Value = Null
@@ -1175,7 +1180,14 @@ object ReceiptForm: TReceiptForm
       item
         DataSet = ReceiptChildCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 650
     Top = 397

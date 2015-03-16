@@ -65,6 +65,7 @@ BEGIN
           ) AS tmpGoods
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
+          INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_Goods.isErased
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure

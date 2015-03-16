@@ -66,7 +66,6 @@ BEGIN
              , CAST ('' as TVarChar) 				AS DocumentMasterName
              , 0                     				AS DocumentChildId
              , CAST ('' as TVarChar) 				AS DocumentChildName
-             , CAST ('' as TVarChar) 				AS InvNumberBranch
              , CASE WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()) = zc_Enum_Process_AccessKey_DocumentOdessa()
                          THEN '6' -- !!!Одесса!!!
                     ELSE ''

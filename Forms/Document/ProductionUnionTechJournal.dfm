@@ -7,21 +7,21 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 98
+    Top = 61
     Width = 1097
-    Height = 587
+    Height = 624
     TabOrder = 2
     ExplicitTop = 98
     ExplicitWidth = 1097
     ExplicitHeight = 587
-    ClientRectBottom = 587
+    ClientRectBottom = 624
     ClientRectRight = 1097
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1097
       ExplicitHeight = 563
       inherited cxGrid: TcxGrid
         Width = 1097
-        Height = 255
+        Height = 292
         ExplicitWidth = 1097
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -286,7 +286,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 260
+        Top = 297
         Width = 1097
         ExplicitTop = 260
         ExplicitWidth = 1097
@@ -421,7 +421,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
       end
       inherited cxBottomSplitter: TcxSplitter
-        Top = 255
+        Top = 292
         Width = 1097
         ExplicitTop = 255
         ExplicitWidth = 1097
@@ -430,94 +430,97 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   end
   inherited DataPanel: TPanel
     Width = 1097
-    Height = 72
+    Height = 35
     ExplicitWidth = 1097
-    ExplicitHeight = 72
+    ExplicitHeight = 35
     inherited edInvNumber: TcxTextEdit
-      Left = 619
-      Top = 25
+      Left = 835
+      Top = 7
       Visible = False
-      ExplicitLeft = 619
-      ExplicitTop = 25
+      ExplicitLeft = 835
+      ExplicitTop = 7
       ExplicitWidth = 75
       Width = 75
     end
     inherited cxLabel1: TcxLabel
-      Left = 619
-      Top = 6
+      Left = 835
+      Top = -2
       Visible = False
-      ExplicitLeft = 619
-      ExplicitTop = 6
+      ExplicitLeft = 835
+      ExplicitTop = -2
     end
     inherited edOperDate: TcxDateEdit
-      Left = 700
-      Top = 25
+      Left = 916
+      Top = 7
       Visible = False
-      ExplicitLeft = 700
-      ExplicitTop = 25
+      ExplicitLeft = 916
+      ExplicitTop = 7
       ExplicitWidth = 61
       Width = 61
     end
     inherited cxLabel2: TcxLabel
-      Left = 704
-      Top = 7
+      Left = 916
+      Top = -2
       Visible = False
-      ExplicitLeft = 704
-      ExplicitTop = 7
+      ExplicitLeft = 916
+      ExplicitTop = -2
     end
     inherited cxLabel15: TcxLabel
-      Left = 767
-      Top = 6
+      Left = 983
+      Top = -2
       Visible = False
-      ExplicitLeft = 767
-      ExplicitTop = 6
+      ExplicitLeft = 983
+      ExplicitTop = -2
     end
     inherited ceStatus: TcxButtonEdit
-      Left = 767
-      Top = 25
+      Left = 983
+      Top = 17
       Visible = False
-      ExplicitLeft = 767
-      ExplicitTop = 25
+      ExplicitLeft = 983
+      ExplicitTop = 17
       ExplicitWidth = 100
-      ExplicitHeight = 22
       Width = 100
     end
     inherited cxLabel3: TcxLabel
-      Left = 209
-      Top = 6
-      ExplicitLeft = 209
-      ExplicitTop = 6
+      Left = 315
+      Top = 8
+      Caption = #1054#1090' '#1082#1086#1075#1086' :'
+      ExplicitLeft = 315
+      ExplicitTop = 8
+      ExplicitWidth = 51
     end
     inherited cxLabel4: TcxLabel
-      Left = 224
-      Top = 30
-      ExplicitLeft = 224
-      ExplicitTop = 30
+      Left = 590
+      Top = 8
+      Caption = #1050#1086#1084#1091' :'
+      ExplicitLeft = 590
+      ExplicitTop = 8
+      ExplicitWidth = 36
     end
     inherited edFrom: TcxButtonEdit
-      Left = 259
-      Top = 5
-      ExplicitLeft = 259
-      ExplicitTop = 5
+      Left = 366
+      Top = 7
+      ExplicitLeft = 366
+      ExplicitTop = 7
       ExplicitWidth = 200
       Width = 200
     end
     inherited edTo: TcxButtonEdit
-      Left = 259
-      Top = 30
-      ExplicitLeft = 259
-      ExplicitTop = 30
+      Left = 628
+      Top = 7
+      ExplicitLeft = 628
+      ExplicitTop = 7
       ExplicitWidth = 200
       Width = 200
     end
     object cxLabel5: TcxLabel
-      Left = 19
-      Top = 6
-      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+      Left = 5
+      Top = 8
+      Caption = #1044#1072#1090#1072' '#1089' :'
     end
     object deStart: TcxDateEdit
-      Left = 112
-      Top = 5
+      Left = 52
+      Top = 7
       EditValue = 41791d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -525,13 +528,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Width = 85
     end
     object cxLabel6: TcxLabel
-      Left = 0
-      Top = 30
-      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+      Left = 150
+      Top = 8
+      Caption = #1044#1072#1090#1072' '#1087#1086' :'
     end
     object deEnd: TcxDateEdit
-      Left = 112
-      Top = 29
+      Left = 204
+      Top = 7
       EditValue = 41791d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -650,38 +653,46 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'Id'
+          Name = 'inMovementId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'MovementId'
           ParamType = ptInput
         end
         item
-          Name = 'OperDate'
+          Name = 'inOperDate'
           Value = 41791d
-          Component = deStart
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
         end
         item
-          Name = 'FromId'
+          Name = 'inMovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inMovementItemId_order'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId_order'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inFromId'
           Value = Null
           Component = GuidesFrom
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
-          Name = 'ToId'
+          Name = 'inToId'
           Value = Null
           Component = GuidesTo
           ComponentItem = 'Key'
-          ParamType = ptInput
-        end
-        item
-          Name = 'MIOrderId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MIOrderId'
           ParamType = ptInput
         end>
       isShowModal = False
@@ -694,6 +705,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TProductionUnionTechEditForm'
@@ -877,6 +889,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Category = 0
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
+  end
   inherited PopupMenu: TPopupMenu
     Left = 152
     Top = 240
@@ -943,8 +961,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end>
   end
   inherited StatusGuides: TdsdGuides
-    Left = 880
-    Top = 56
+    Left = 968
+    Top = 8
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ProductionUnion'
@@ -963,7 +981,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ComponentItem = 'StatusCode'
         ParamType = ptInput
       end>
-    Left = 808
+    Left = 1032
+    Top = 8
   end
   inherited spGet: TdsdStoredProc
     OutputType = otResult
@@ -1235,6 +1254,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         DataType = ftString
       end>
   end
+  inherited ChildCDS: TClientDataSet
+    MasterFields = 'MovementItemId'
+  end
   inherited spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetErased'
   end
@@ -1242,12 +1264,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetUnErased'
   end
   inherited GuidesTo: TdsdGuides
-    Left = 280
-    Top = 32
+    Left = 768
+    Top = 8
   end
   inherited GuidesFrom: TdsdGuides
-    Left = 344
-    Top = 0
+    Left = 512
   end
   inherited spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Child'
@@ -1350,7 +1371,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 56
-    Top = 8
+    Left = 64
+    Top = 40
   end
 end

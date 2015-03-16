@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ReceiptChild()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptChild(
+    IN inShowAll     Boolean,
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Value   TFloat, isWeightMain Boolean, isTaxExit Boolean,
@@ -20,6 +22,7 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ReceiptChild());
 
    RETURN QUERY 
+     WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
      SELECT 
            Object_ReceiptChild.Id      AS Id
          , ObjectFloat_Value.ValueData AS Value  
@@ -56,7 +59,8 @@ BEGIN
                                ON ObjectLink_ReceiptChild_Receipt.ObjectId = Object_ReceiptChild.Id
                               AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
           LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_ReceiptChild_Receipt.ChildObjectId
-           
+          INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_Receipt.isErased
+
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
                                ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
                               AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
@@ -103,7 +107,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ReceiptChild (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_ReceiptChild (Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -114,4 +118,4 @@ ALTER FUNCTION gpSelect_Object_ReceiptChild (TVarChar) OWNER TO postgres;
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Object_ReceiptChild ('2')
+-- SELECT * FROM gpSelect_Object_ReceiptChild (FALSE, '2')

@@ -54,7 +54,7 @@ type
     GoodsKindCompleteName: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edGoods: TcxButtonEdit;
-    GoodsGuides: TdsdGuides;
+    ReceiptGoodsGuides: TdsdGuides;
     bbGoodsLabel: TdxBarControlContainerItem;
     bbGoods: TdxBarControlContainerItem;
     actShowAll: TBooleanStoredProcAction;
@@ -65,6 +65,7 @@ type
     Value: TcxGridDBColumn;
     TaxExit: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

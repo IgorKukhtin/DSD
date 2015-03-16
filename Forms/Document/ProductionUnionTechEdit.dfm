@@ -33,6 +33,7 @@
   object ceOperDate: TcxDateEdit [3]
     Left = 370
     Top = 175
+    EditValue = 42078d
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -43,7 +44,7 @@
     Left = 8
     Top = 125
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.0000'
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 4
     Width = 120
   end
@@ -106,7 +107,7 @@
     Left = 142
     Top = 125
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.0000'
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 13
     Width = 115
   end
@@ -119,7 +120,7 @@
     Left = 270
     Top = 125
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.0000'
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 15
     Width = 80
   end
@@ -132,7 +133,7 @@
     Left = 370
     Top = 125
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.0000'
+    Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 17
     Width = 85
@@ -146,7 +147,7 @@
     Left = 462
     Top = 125
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.0000'
+    Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 19
     Width = 77
@@ -220,34 +221,34 @@
   inherited FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'Id'
+        Name = 'inMovementId'
         Value = '0'
         ParamType = ptInput
       end
       item
-        Name = 'MIOrderId'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'FromId'
-        Value = '0'
-        ParamType = ptInput
-      end
-      item
-        Name = 'ToId'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'inMovementId_Value'
-        Value = '0'
-        ParamType = ptInput
-      end
-      item
-        Name = 'OperDate'
+        Name = 'inOperDate'
         Value = Null
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementItemId_order'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 56
@@ -365,46 +366,78 @@
     StoredProcName = 'gpGet_Movement_ProductionUnionTech'
     Params = <
       item
-        Name = 'inId'
-        Value = '0'
+        Name = 'inMovementId'
+        Value = ''
         Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inMIOrderId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'MIOrderId'
+        ComponentItem = 'inMovementId'
         ParamType = ptInput
       end
       item
         Name = 'inOperDate'
         Value = Null
         Component = FormParams
-        ComponentItem = 'OperDate'
+        ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inFromId'
+        Name = 'inMovementItemId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'FromId'
+        ComponentItem = 'inMovementItemId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementItemId_order'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inMovementItemId_order'
+        ParamType = ptInput
+      end
+      item
+        Name = 'FromId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inFromId'
         ParamType = ptInput
       end
       item
         Name = 'inToId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'ToId'
+        ComponentItem = 'inToId'
         ParamType = ptInput
+      end
+      item
+        Name = 'MovementId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inMovementId'
+        DataType = ftString
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
+      end
+      item
+        Name = 'FromId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inFromId'
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inToId'
+      end
+      item
+        Name = 'MovementItemId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inMovementItemId'
       end
       item
         Name = 'GoodsId'
@@ -464,18 +497,6 @@
         DataType = ftString
       end
       item
-        Name = 'Comment'
-        Value = 0.000000000000000000
-        Component = ceComment
-        DataType = ftString
-      end
-      item
-        Name = 'Count'
-        Value = ''
-        Component = ceCount
-        DataType = ftFloat
-      end
-      item
         Name = 'RealWeight'
         Value = ''
         Component = ceRealWeight
@@ -488,49 +509,28 @@
         DataType = ftFloat
       end
       item
-        Name = 'AmountOrder'
+        Name = 'Count'
+        Value = ''
+        Component = ceCount
+        DataType = ftFloat
+      end
+      item
+        Name = 'Amount_order'
         Value = ''
         Component = ceAmountOrder
         DataType = ftFloat
       end
       item
-        Name = 'CuterCountOrder'
+        Name = 'CuterCount_order'
         Value = ''
         Component = ceСuterCountOrder
         DataType = ftFloat
       end
       item
-        Name = 'isErased'
-        Value = ''
-        DataType = ftBoolean
-      end
-      item
-        Value = ''
+        Name = 'Comment'
+        Value = 0.000000000000000000
         Component = ceComment
         DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        Component = ReceiptGoodsGuides
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        Component = ReceiptGoodsGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 48
     Top = 176
@@ -596,14 +596,14 @@
         ParamType = ptInput
       end
       item
-        Name = 'GoodsKindCompleteId'
+        Name = 'GoodsKindCompleteId_calc'
         Value = ''
         Component = GooodsKindCompleateGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'GoodsKindCompleteName'
+        Name = 'GoodsKindCompleteName_calc'
         Value = ''
         Component = GooodsKindCompleateGuides
         ComponentItem = 'TextValue'
@@ -622,6 +622,12 @@
         Component = ReceiptGoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MasterGoodsKindId'
+        Value = Null
+        Component = GooodsKindGuides
+        ComponentItem = 'Key'
       end>
     Left = 192
     Top = 49

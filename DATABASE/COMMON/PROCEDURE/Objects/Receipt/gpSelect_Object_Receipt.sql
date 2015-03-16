@@ -3,11 +3,13 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
-    IN inGoodsId     Integer,
-    IN inShowAll     Boolean,
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inGoodsId      Integer,
+    IN inGoodsKindId  Integer,
+    IN inShowAll      Boolean,
+    IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
                Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
@@ -16,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
                isMain Boolean,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar,
-               GoodsKindCompleteId Integer, GoodsKindCompleteCode Integer, GoodsKindCompleteName TVarChar,
+               GoodsKindCompleteId Integer, GoodsKindCompleteCode Integer, GoodsKindCompleteName TVarChar, GoodsKindCompleteId_calc Integer, GoodsKindCompleteName_calc TVarChar,
                ReceiptCostId Integer, ReceiptCostCode Integer, ReceiptCostName TVarChar,
                ReceiptKindId Integer, ReceiptKindCode Integer, ReceiptKindName TVarChar,
                MeasureName TVarChar
@@ -68,6 +70,9 @@ BEGIN
          , Object_GoodsKindComplete.Id          AS GoodsKindCompleteId
          , Object_GoodsKindComplete.ObjectCode  AS GoodsKindCompleteCode
          , Object_GoodsKindComplete.ValueData   AS GoodsKindCompleteName
+         , COALESCE (Object_GoodsKindComplete.Id, Object_GoodsKindComplete_basis.Id) :: Integer                AS GoodsKindCompleteId_calc
+         , COALESCE (Object_GoodsKindComplete.ValueData, Object_GoodsKindComplete_basis.ValueData) :: TVarChar AS GoodsKindCompleteName_calc
+
 
          , Object_ReceiptCost.Id          AS ReceiptCostId
          , Object_ReceiptCost.ObjectCode  AS ReceiptCostCode
@@ -145,14 +150,15 @@ BEGIN
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                              ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
-                             AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                               ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                              AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_Receipt_GoodsKind.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
                                ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = Object_Receipt.Id
                               AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
           LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = ObjectLink_Receipt_GoodsKindComplete.ChildObjectId
+          LEFT JOIN Object AS Object_GoodsKindComplete_basis ON Object_GoodsKindComplete_basis.Id = zc_GoodsKind_Basis()
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_ReceiptCost
                                ON ObjectLink_Receipt_ReceiptCost.ObjectId = Object_Receipt.Id
@@ -234,12 +240,13 @@ BEGIN
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
      WHERE Object_Receipt.DescId = zc_Object_Receipt()
-       AND (ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0);
+       AND (ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
+       AND (ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId OR inGoodsKindId = 0);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Receipt (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Receipt (Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

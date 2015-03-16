@@ -15,6 +15,7 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -25,7 +26,6 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 835
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -416,6 +416,19 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindCompleteName'
           DataType = ftString
+        end
+        item
+          Name = 'GoodsKindCompleteId_calc'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindCompleteId_calc'
+        end
+        item
+          Name = 'GoodsKindCompleteName_calc'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindCompleteName_calc'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -460,8 +473,15 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = GoodsGuides
+        Component = ReceiptGoodsGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterGoodsKindId'
         ParamType = ptInput
       end
       item
@@ -476,7 +496,7 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
     Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 40
+    Left = 48
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
@@ -485,8 +505,6 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
-      end
-      item
       end>
     ActionItemList = <
       item
@@ -501,25 +519,25 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
     Left = 208
     Top = 192
   end
-  object GoodsGuides: TdsdGuides
+  object ReceiptGoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'ReceiptGoods_ObjectForm'
+    FormNameParam.Value = 'TReceiptGoods_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'ReceiptGoods_ObjectForm'
+    FormName = 'TReceiptGoods_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGuides
+        Component = ReceiptGoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGuides
+        Component = ReceiptGoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -532,17 +550,31 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
       item
         Name = 'MasterGoodsId'
         Value = ''
-        Component = GoodsGuides
+        Component = ReceiptGoodsGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'MasterGoodsName'
         Value = ''
-        Component = GoodsGuides
+        Component = ReceiptGoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MasterGoodsKindId'
+        Value = Null
       end>
     Left = 416
     Top = 152
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = ReceiptGoodsGuides
+      end>
+    Left = 304
+    Top = 88
   end
 end

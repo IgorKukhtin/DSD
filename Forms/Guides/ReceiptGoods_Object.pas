@@ -47,7 +47,7 @@ type
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    GoodsName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     GoodsGroupAnalystName: TcxGridDBColumn;
     GoodsTagName: TcxGridDBColumn;
