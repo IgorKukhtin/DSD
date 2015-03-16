@@ -2999,7 +2999,7 @@ inherited MainForm: TMainForm
       object miReportProductionUnion: TMenuItem
         Action = actReport_Production_Union
       end
-      object N42: TMenuItem
+      object N50: TMenuItem
         Action = actReport_ProductionOrder
       end
       object N27: TMenuItem
