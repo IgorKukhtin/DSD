@@ -503,6 +503,8 @@ type
     actProductionUnionTechDelic: TdsdOpenForm;
     N47: TMenuItem;
     N50: TMenuItem;
+    miCashPav: TMenuItem;
+    actCashOperationPav: TdsdOpenForm;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
