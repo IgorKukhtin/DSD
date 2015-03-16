@@ -34,8 +34,7 @@ BEGIN
                                      , inFromId, inToId, inPartnerId, inContractId, inDocumentTaxKindId, inUserId
                                       ) AS tmp;
 
-    
-END;
+ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 

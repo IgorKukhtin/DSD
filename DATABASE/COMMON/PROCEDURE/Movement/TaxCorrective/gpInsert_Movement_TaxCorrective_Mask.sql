@@ -16,7 +16,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
 
-      
      -- сохранили <Документ>
      select lpInsert_Movement_TaxCorrective_Mask(
                                           0
@@ -31,6 +30,7 @@ BEGIN
                                          )
      INTO vbMovementId
      FROM gpGet_Movement_TaxCorrective (ioId, 'False', inOperDate, inSession) AS tmp;
+
 
    -- записываем строки документа
    PERFORM lpInsertUpdate_MovementItem_TaxCorrective (
