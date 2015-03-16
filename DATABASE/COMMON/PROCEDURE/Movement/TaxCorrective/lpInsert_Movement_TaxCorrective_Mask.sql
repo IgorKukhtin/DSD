@@ -1,32 +1,32 @@
-п»ї--select * from gpGet_Movement_TaxCorrective(inMovementId := 846233 , inMask := 'True' , inOperDate := ('07.01.2015')::TDateTime ,  inSession := '5');
+--select * from gpGet_Movement_TaxCorrective(inMovementId := 846233 , inMask := 'True' , inOperDate := ('07.01.2015')::TDateTime ,  inSession := '5');
 
 -- Function: lpInsert_Movement_TaxCorrective_Mask()
 
 DROP FUNCTION IF EXISTS lpInsert_Movement_TaxCorrective_Mask (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsert_Movement_TaxCorrective_Mask (
- INOUT ioId                  Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚ РџРµСЂРµРјРµС‰РµРЅРёРµ>
-    IN inInvNumber           TVarChar  , -- РќРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р°
-    IN inInvNumberPartner    TVarChar  , -- РќРѕРјРµСЂ РЅР°Р»РѕРіРѕРІРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
-    IN inInvNumberBranch     TVarChar  , -- РќРѕРјРµСЂ С„РёР»РёР°Р»Р°
-    IN inOperDate            TDateTime , -- Р”Р°С‚Р° РґРѕРєСѓРјРµРЅС‚Р°
-    IN inChecked             Boolean   , -- РџСЂРѕРІРµСЂРµРЅ
-    IN inDocument            Boolean   , -- Р•СЃС‚СЊ Р»Рё РїРѕРґРїРёСЃР°РЅРЅС‹Р№ РґРѕРєСѓРјРµРЅС‚
-    IN inPriceWithVAT        Boolean   , -- Р¦РµРЅР° СЃ РќР”РЎ (РґР°/РЅРµС‚)
-    IN inVATPercent          TFloat    , -- % РќР”РЎ
-    IN inFromId              Integer   , -- РћС‚ РєРѕРіРѕ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)
-    IN inToId                Integer   , -- РљРѕРјСѓ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)
-    IN inPartnerId           Integer   , -- РљРѕРЅС‚СЂР°РіРµРЅС‚
-    IN inContractId          Integer   , -- Р”РѕРіРѕРІРѕСЂР°
-    IN inDocumentTaxKindId   Integer   , -- РўРёРї С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ РЅР°Р»РѕРіРѕРІРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
-    IN inUserId              Integer   -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber           TVarChar  , -- Номер документа
+    IN inInvNumberPartner    TVarChar  , -- Номер налогового документа
+    IN inInvNumberBranch     TVarChar  , -- Номер филиала
+    IN inOperDate            TDateTime , -- Дата документа
+    IN inChecked             Boolean   , -- Проверен
+    IN inDocument            Boolean   , -- Есть ли подписанный документ
+    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    IN inVATPercent          TFloat    , -- % НДС
+    IN inFromId              Integer   , -- От кого (в документе)
+    IN inToId                Integer   , -- Кому (в документе)
+    IN inPartnerId           Integer   , -- Контрагент
+    IN inContractId          Integer   , -- Договора
+    IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
+    IN inUserId              Integer   -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
   
 BEGIN
     
-     -- СЃРѕС…СЂР°РЅРёР»Рё <Р”РѕРєСѓРјРµРЅС‚>
+     -- сохранили <Документ>
      SELECT tmp.ioId
         INTO ioId
      FROM lpInsertUpdate_Movement_TaxCorrective (ioId, inInvNumber, inInvNumberPartner, inInvNumberBranch, inOperDate
@@ -40,11 +40,11 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  16.03.15         * 
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM lpInsert_Movement_TaxCorrective_Mask (ioId:= 0, ioInvNumber:= '-1',ioInvNumberPartner:= '-1', inOperDate:= '01.01.2013', inChecked:= FALSE, inDocument:=FALSE, inPriceWithVAT:= true, inVATPercent:= 20, inFromId:= 1, inToId:= 2, inContractId:= 0, inDocumentTaxKind:= 0, inSession:= '2')

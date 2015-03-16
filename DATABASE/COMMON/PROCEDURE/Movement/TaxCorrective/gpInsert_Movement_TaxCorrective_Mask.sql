@@ -1,11 +1,11 @@
-п»ї-- Function: gpInsert_Movement_TaxCorrectiveMask()
+-- Function: gpInsert_Movement_TaxCorrectiveMask()
 
 DROP FUNCTION IF EXISTS gpInsert_Movement_TaxCorrective_Mask (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_TaxCorrective_Mask(
- INOUT ioId                  Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚ >
-    IN inOperDate            TDateTime , -- Р”Р°С‚Р° РґРѕРєСѓРјРµРЅС‚Р°
-    IN inSession             TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ >
+    IN inOperDate            TDateTime , -- Дата документа
+    IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -13,11 +13,11 @@ $BODY$
    DECLARE vbUserId Integer;
 
 BEGIN
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
 
       
-     -- СЃРѕС…СЂР°РЅРёР»Рё <Р”РѕРєСѓРјРµРЅС‚>
+     -- сохранили <Документ>
      select lpInsert_Movement_TaxCorrective_Mask(
                                           0
                                         , CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar)
@@ -32,7 +32,7 @@ BEGIN
      INTO vbMovementId
      FROM gpGet_Movement_TaxCorrective (ioId, 'False', inOperDate, inSession) AS tmp;
 
-   -- Р·Р°РїРёСЃС‹РІР°РµРј СЃС‚СЂРѕРєРё РґРѕРєСѓРјРµРЅС‚Р°
+   -- записываем строки документа
    PERFORM lpInsertUpdate_MovementItem_TaxCorrective (
                                            ioId                := 0
                                          , inMovementId         := vbMovementId
@@ -45,7 +45,7 @@ BEGIN
                                           ) 
    FROM gpSelect_MovementItem_TaxCorrective (ioId, 'False', 'False', inSession)  AS tmp;
    
-   -- Р·Р°РїРёСЃС‹РІР°РµРј СЃС‚СЂРѕРєРё РґРѕРєСѓРјРµРЅС‚Р°
+   -- записываем строки документа
    ioid := vbMovementId;
 
 END;
@@ -53,10 +53,10 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
   16.03.15        *
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsert_Movement_TaxCorrective_Mask (ioId:= 0, ioInvNumber:= '-1',ioInvNumberPartner:= '-1', inOperDate:= '01.01.2013', inChecked:= FALSE, inDocument:=FALSE, inPriceWithVAT:= true, inVATPercent:= 20, inFromId:= 1, inToId:= 2, inContractId:= 0, inDocumentTaxKind:= 0, inSession:= '2')
