@@ -168,6 +168,7 @@ type
     EDIError: TEDIAction;
     mactErrorEDI: TMultiAction;
     bbEDIError: TdxBarButton;
+    mactDeclarSilent: TMultiAction;
   private
     { Private declarations }
   public

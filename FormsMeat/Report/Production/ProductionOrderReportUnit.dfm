@@ -2,7 +2,6 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
   Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
   ClientHeight = 363
   ClientWidth = 806
-  ExplicitLeft = -16
   ExplicitWidth = 814
   ExplicitHeight = 390
   PixelsPerInch = 96
@@ -12,19 +11,17 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
     Width = 806
     Height = 304
     TabOrder = 3
-    ExplicitTop = 57
-    ExplicitHeight = 251
+    ExplicitWidth = 806
+    ExplicitHeight = 304
     ClientRectBottom = 304
     ClientRectRight = 806
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 251
+      ExplicitWidth = 806
+      ExplicitHeight = 304
       inherited cxGrid: TcxGrid
         Width = 806
         Height = 304
-        ExplicitLeft = -168
-        ExplicitTop = -112
-        ExplicitWidth = 781
+        ExplicitWidth = 806
         ExplicitHeight = 304
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -91,8 +88,11 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
             HeaderAlignmentVert = vaCenter
             Width = 68
           end
-          object cxGridDBTableViewColumn11: TcxGridDBColumn
+          object colKoeff: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092#1092'. '#1089#1077#1079#1086#1085'.'
+            DataBinding.FieldName = 'Koeff'
             HeaderAlignmentVert = vaCenter
+            Width = 52
           end
           object cxGridDBTableViewColumn12: TcxGridDBColumn
             HeaderAlignmentVert = vaCenter
@@ -110,7 +110,7 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
   inherited Panel: TPanel
     Width = 806
     Height = 33
-    ExplicitWidth = 781
+    ExplicitWidth = 806
     ExplicitHeight = 33
     inherited deEnd: TcxDateEdit
       EditValue = 42075d
@@ -154,6 +154,7 @@ inherited ProductionOrderReportForm: TProductionOrderReportForm
       end
       item
         Name = 'inUnitId'
+        Value = Null
         Component = GuidesUnit
         ParamType = ptInput
       end>

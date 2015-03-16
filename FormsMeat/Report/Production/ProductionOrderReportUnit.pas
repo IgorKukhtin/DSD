@@ -29,7 +29,7 @@ type
     colRemainsInDays: TcxGridDBColumn;
     colNotShippedOrder: TcxGridDBColumn;
     colTodayOrder: TcxGridDBColumn;
-    cxGridDBTableViewColumn11: TcxGridDBColumn;
+    colKoeff: TcxGridDBColumn;
     cxGridDBTableViewColumn12: TcxGridDBColumn;
     cxGridDBTableViewColumn13: TcxGridDBColumn;
     cxGridDBTableViewColumn14: TcxGridDBColumn;
