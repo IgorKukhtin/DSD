@@ -324,6 +324,13 @@
         ParamType = ptInputOutput
       end
       item
+        Name = 'inMaskId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'inMaskId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
@@ -451,6 +458,11 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        ParamType = ptInputOutput
       end>
     Left = 336
     Top = 73
@@ -465,6 +477,13 @@
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'inMaskId'
         ParamType = ptInput
       end
       item

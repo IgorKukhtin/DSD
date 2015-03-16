@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
-
+             , isLoad Boolean
 )
 AS
 $BODY$
@@ -103,12 +103,18 @@ BEGIN
            , MovementFloat_ParValue.ValueData              AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
+
+           , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) :: Boolean AS isLoad
            
        FROM Movement
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND MovementItem.ObjectId = inCashId
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isLoad 
+                                      ON MovementBoolean_isLoad.MovementId = Movement.Id
+                                     AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                          ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id

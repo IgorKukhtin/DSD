@@ -40,6 +40,7 @@ type
     clParPartnerValue: TcxGridDBColumn;
     clCurrencyValue: TcxGridDBColumn;
     clParValue: TcxGridDBColumn;
+    isLoad: TcxGridDBColumn;
   private
     { Private declarations }
   public

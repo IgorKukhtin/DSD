@@ -19,7 +19,7 @@ BEGIN
     OPEN Cursor1 FOR
        SELECT
               0                                     AS Id
-            , 0                                     AS LineNum
+--            , 0                                     AS LineNum
             , tmpGoods.GoodsId                      AS GoodsId
             , tmpGoods.GoodsCode                    AS GoodsCode
             , tmpGoods.GoodsName                    AS GoodsName
@@ -70,7 +70,7 @@ BEGIN
        SELECT
              MovementItem.Id                    AS Id
 --           , 0 AS LineNum
-           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS LineNum
+--           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS LineNum
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
@@ -86,18 +86,18 @@ BEGIN
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
 
-            , Object_GoodsKind.Id               AS GoodsKindId
-            , Object_GoodsKind.ObjectCode       AS GoodsKindCode
-            , Object_GoodsKind.ValueData        AS GoodsKindName
+            , Object_GoodsKind.Id                 AS GoodsKindId
+            , Object_GoodsKind.ObjectCode         AS GoodsKindCode
+            , Object_GoodsKind.ValueData          AS GoodsKindName
             , Object_GoodsKindComplete.Id         AS GoodsKindCompleteId
             , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
             , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
 
-            , Object_Receipt.Id                 AS ReceiptId
-            , Object_Receipt.ObjectCode         AS ReceiptCode
-            , Object_Receipt.ValueData          AS ReceiptName
+            , Object_Receipt.Id                   AS ReceiptId
+            , ObjectString_Receipt_Code.ValueData AS ReceiptCode
+            , Object_Receipt.ValueData            AS ReceiptName
 
-            , MovementItem.isErased             AS isErased
+            , MovementItem.isErased               AS isErased
 
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -150,10 +150,16 @@ BEGIN
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
-       ORDER BY 2--MovementItem.Id
+             LEFT JOIN ObjectString AS ObjectString_Receipt_Code
+                                    ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
+                                   AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
+
             ;
+
     RETURN NEXT Cursor1;
+
    ELSE
+
     OPEN Cursor1 FOR
        SELECT
              MovementItem.Id					AS Id
@@ -181,11 +187,11 @@ BEGIN
             , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
             , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
 
-            , Object_Receipt.Id                 AS ReceiptId
-            , Object_Receipt.ObjectCode         AS ReceiptCode
-            , Object_Receipt.ValueData          AS ReceiptName
+            , Object_Receipt.Id                   AS ReceiptId
+            , ObjectString_Receipt_Code.ValueData AS ReceiptCode
+            , Object_Receipt.ValueData            AS ReceiptName
 
-            , MovementItem.isErased             AS isErased
+            , MovementItem.isErased               AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -236,7 +242,10 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartionGoods
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-       ORDER BY MovementItem.Id
+             LEFT JOIN ObjectString AS ObjectString_Receipt_Code
+                                    ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
+                                   AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
+
             ;
     RETURN NEXT Cursor1;
    END IF;

@@ -23,13 +23,14 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxImageComboBox, ChoicePeriod, cxSplitter;
 
 type
   TProductionUnionTechJournalForm = class(TAncestorDocumentMCForm)
     actUpdateChildDS: TdsdUpdateDataSet;
     colCount: TcxGridDBColumn;
-    InvNumber: TcxGridDBColumn;
+    colInvNumber: TcxGridDBColumn;
     colPartionClose: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
@@ -39,32 +40,32 @@ type
     colReceiptName: TcxGridDBColumn;
     actGoodsKindChoiceChild: TOpenChoiceForm;
     actGoodsKindChoiceMaster: TOpenChoiceForm;
-    colChildGoodsName: TcxGridDBColumn;
     colChildGoodsKindName: TcxGridDBColumn;
-    clChildPartionGoodsDate: TcxGridDBColumn;
+    colChildPartionGoodsDate: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     deStart: TcxDateEdit;
     cxLabel6: TcxLabel;
     deEnd: TcxDateEdit;
-    cxLabel7: TcxLabel;
-    edGoodsGroup: TcxButtonEdit;
-    GoodsGroupGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
-    OperDate: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    AmountOrder: TcxGridDBColumn;
-    GoodsKindCompleteName: TcxGridDBColumn;
+    colAmount_order: TcxGridDBColumn;
+    colGoodsKindName_Complete: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    MIOrderId: TcxGridDBColumn;
-    ReceiptCode: TcxGridDBColumn;
-    MeasureName: TcxGridDBColumn;
+    colMeasureName: TcxGridDBColumn;
+    colReceiptCode: TcxGridDBColumn;
     colChildMeasureName: TcxGridDBColumn;
     colChildAmountCalc: TcxGridDBColumn;
+    colCuterCount_order: TcxGridDBColumn;
     colChildGroupNumber: TcxGridDBColumn;
+    PeriodChoice: TPeriodChoice;
+    colAmount: TcxGridDBColumn;
+    colChildAmount: TcxGridDBColumn;
+    colChildAmountReceipt: TcxGridDBColumn;
+    colChildPartionGoods: TcxGridDBColumn;
+    colChildComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

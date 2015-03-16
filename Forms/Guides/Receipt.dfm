@@ -54,7 +54,7 @@ object ReceiptForm: TReceiptForm
         Width = 39
       end
       object clReceiptCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
         DataBinding.FieldName = 'ReceiptCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -69,6 +69,39 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 173
+      end
+      object GoodsGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        DataBinding.FieldName = 'GoodsGroupNameFull'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsGroupAnalystName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+        DataBinding.FieldName = 'GoodsGroupAnalystName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object GoodsTagName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsTagName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object TradeMarkName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+        DataBinding.FieldName = 'TradeMarkName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object clGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'
@@ -91,6 +124,7 @@ object ReceiptForm: TReceiptForm
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object clGoodsKindName: TcxGridDBColumn
@@ -102,7 +136,7 @@ object ReceiptForm: TReceiptForm
         Width = 100
       end
       object clGoodsKindCompleteName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1075'.'#1087'.)'
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
         DataBinding.FieldName = 'GoodsKindCompleteName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -123,7 +157,7 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 40
       end
       object clValue: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -139,7 +173,7 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 83
+        Width = 70
       end
       object clTotalWeightMain: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1089#1099#1088#1100#1103' (100 '#1082#1075'.)'
@@ -163,6 +197,7 @@ object ReceiptForm: TReceiptForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object clPartionValue: TcxGridDBColumn
@@ -223,6 +258,90 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 69
+      end
+      object Code_Parent: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'Code_Parent'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object ReceiptCode_Parent: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'ReceiptCode_Parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Name_Parent: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'Name_Parent'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object isMain_Parent: TcxGridDBColumn
+        Caption = #1043#1083#1072#1074#1085'. ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'isMain_Parent'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object GoodsCode_Parent: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'GoodsCode_Parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object GoodsName_Parent: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'GoodsName_Parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object MeasureName_Parent: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'. ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'MeasureName_Parent'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object GoodsKindName_Parent: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'GoodsKindName_Parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsKindCompleteName_Parent: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'GoodsKindCompleteName_Parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object isCheck_Parent: TcxGridDBColumn
+        Caption = #1056#1072#1079#1085'. ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'isCheck_Parent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -486,6 +605,14 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertRecCCK'
         end
         item
@@ -606,6 +733,10 @@ object ReceiptForm: TReceiptForm
       Action = actShowAll
       Category = 0
     end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -628,6 +759,33 @@ object ReceiptForm: TReceiptForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 54
+      FormName = 'TReceiptEditForm'
+      FormNameParam.Value = 'TReceiptEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InMaskId'
+          Value = 'True'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -643,7 +801,7 @@ object ReceiptForm: TReceiptForm
           Value = Null
         end
         item
-          Name = 'JuridicalId'
+          Name = 'inMaskId'
           Value = 0
         end
         item
@@ -671,6 +829,11 @@ object ReceiptForm: TReceiptForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InMaskId'
+          Value = '0'
           ParamType = ptInput
         end>
       isShowModal = True
@@ -1101,6 +1264,7 @@ object ReceiptForm: TReceiptForm
     Top = 120
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

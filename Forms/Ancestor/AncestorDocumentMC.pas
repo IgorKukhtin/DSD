@@ -13,7 +13,7 @@ uses
   cxGridDBTableView, Vcl.Menus, dxBarExtItems, dxBar, cxClasses,
   Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  cxCurrencyEdit, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  cxCurrencyEdit, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
 
 type
   TAncestorDocumentMCForm = class(TAncestorDBGridForm)
@@ -54,7 +54,6 @@ type
     spInsertUpdateMIChild: TdsdStoredProc;
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
     bbAddChild: TdxBarButton;
     InsertRecordChild: TInsertRecord;
     actMIChildSetErased: TdsdUpdateErased;
@@ -74,10 +73,6 @@ type
     cxGridChild: TcxGrid;
     cxGridDBTableViewChild: TcxGridDBTableView;
     colChildGoodsCode: TcxGridDBColumn;
-    colChildAmount: TcxGridDBColumn;
-    colChildAmountReceipt: TcxGridDBColumn;
-    colChildPartionGoods: TcxGridDBColumn;
-    colChildComment: TcxGridDBColumn;
     colChildIsErased: TcxGridDBColumn;
     cxGridLevelChild: TcxGridLevel;
     actGoodsChoiceForm: TOpenChoiceForm;
@@ -85,6 +80,17 @@ type
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
+    bbComplete: TdxBarButton;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    actUnComplete: TdsdChangeMovementStatus;
+    actComplete: TdsdChangeMovementStatus;
+    actSetErased: TdsdChangeMovementStatus;
+    spMovementUnComplete: TdsdStoredProc;
+    spMovementSetErased: TdsdStoredProc;
+    spMovementComplete: TdsdStoredProc;
+    colChildGoodsName: TcxGridDBColumn;
+    cxBottomSplitter: TcxSplitter;
   private
     { Private declarations }
   public

@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , AmountRemains TFloat, AmountPartner TFloat, AmountForecast TFloat, AmountForecastOrder TFloat
              , CuterCount TFloat
              , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
-             , ReceiptId Integer, ReceiptCode Integer, ReceiptName TVarChar
+             , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
              , isErased Boolean
               )
 AS
@@ -45,7 +45,7 @@ BEGIN
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
            , CAST (NULL AS Integer)     AS ReceiptId
-           , CAST (NULL AS Integer)     AS ReceiptCode
+           , CAST (NULL AS TVarChar)    AS ReceiptCode
            , CAST (NULL AS TVarChar)    AS ReceiptName
            , FALSE                      AS isErased
 
@@ -100,14 +100,14 @@ BEGIN
            , MIFloat_AmountForecastOrder.ValueData  AS AmountForecastOrder
            , MIFloat_CuterCount.ValueData           AS CuterCount
            
-           , Object_GoodsKind.Id                AS GoodsKindId
-           , Object_GoodsKind.ValueData         AS GoodsKindName
-           , Object_Measure.ValueData           AS MeasureName
-           , Object_Receipt.Id                  AS ReceiptId
-           , Object_Receipt.ObjectCode          AS ReceiptCode
-           , Object_Receipt.ValueData           AS ReceiptName
+           , Object_GoodsKind.Id                 AS GoodsKindId
+           , Object_GoodsKind.ValueData          AS GoodsKindName
+           , Object_Measure.ValueData            AS MeasureName
+           , Object_Receipt.Id                   AS ReceiptId
+           , ObjectString_Receipt_Code.ValueData AS ReceiptCode
+           , Object_Receipt.ValueData            AS ReceiptName
 
-           , MovementItem.isErased              AS isErased
+           , MovementItem.isErased               AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -150,6 +150,9 @@ BEGIN
                                              ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_Receipt_Code
+                                   ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
+                                  AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
             ;
 
      ELSE
@@ -167,13 +170,13 @@ BEGIN
            , MIFloat_AmountForecast.ValueData       AS AmountForecast
            , MIFloat_AmountForecastOrder.ValueData  AS AmountForecastOrder      
            , MIFloat_CuterCount.ValueData           AS CuterCount     
-           , Object_GoodsKind.Id                AS GoodsKindId
-           , Object_GoodsKind.ValueData         AS GoodsKindName
-           , Object_Measure.ValueData           AS MeasureName
-           , Object_Receipt.Id                  AS ReceiptId
-           , Object_Receipt.ObjectCode          AS ReceiptCode
-           , Object_Receipt.ValueData           AS ReceiptName
-           , MovementItem.isErased              AS isErased
+           , Object_GoodsKind.Id                 AS GoodsKindId
+           , Object_GoodsKind.ValueData          AS GoodsKindName
+           , Object_Measure.ValueData            AS MeasureName
+           , Object_Receipt.Id                   AS ReceiptId
+           , ObjectString_Receipt_Code.ValueData AS ReceiptCode
+           , Object_Receipt.ValueData            AS ReceiptName
+           , MovementItem.isErased               AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
@@ -217,6 +220,9 @@ BEGIN
                                              ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_Receipt_Code
+                                   ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
+                                  AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
             ;
 
      END IF;

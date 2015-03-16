@@ -32,8 +32,8 @@ $BODY$
    DECLARE vbPaidKindId       Integer;
    DECLARE vbDocumentTaxKindId_TaxCorrective Integer;
 
-   DECLARE vbDiscountPercent TFloat;
-   DECLARE vbExtraChargesPercent TFloat;
+--   DECLARE vbDiscountPercent TFloat;
+--   DECLARE vbExtraChargesPercent TFloat;
 
   DECLARE vbCurrencyDocumentId Integer;
   DECLARE vbCurrencyValue TFloat;
@@ -90,15 +90,15 @@ BEGIN
            , CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_Partner.ObjectId WHEN Movement.DescId = zc_Movement_Tax() THEN MovementLinkObject_Partner.ObjectId ELSE MovementLinkObject_To.ObjectId END AS PartnerId
            , COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId) AS ContractId
            , zc_Enum_PaidKind_FirstForm() AS PaidKindId
-           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
-           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+           -- , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
+           -- , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
 
            , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyDocumentId
            , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                               AS CurrencyValue
            , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
 
              INTO vbMovementId_Sale, vbMovementId_Tax, vbMovementDescId, vbInvNumber_Tax, vbInvNumberPartner_Tax, vbOperDate, vbStartDate, vbEndDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId, vbPaidKindId
-                , vbDiscountPercent, vbExtraChargesPercent
+                -- , vbDiscountPercent, vbExtraChargesPercent
                 , vbCurrencyDocumentId, vbCurrencyValue, vbParValue
       FROM Movement
            LEFT JOIN MovementString AS MS_InvNumberPartner
@@ -122,10 +122,10 @@ BEGIN
            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+           /*LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-                                  AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
+                                  AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()*/
 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
@@ -507,10 +507,10 @@ BEGIN
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в налоговых цены всегда будут без НДС
-                                      THEN CAST (CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                      THEN CAST (CASE WHEN MovementFloat_ChangePercent.ValueData <> 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
                                                / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
-                                 ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0
-                                                THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                 ELSE CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                                                THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                       END
                             END AS Price
@@ -533,9 +533,20 @@ BEGIN
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                                  ON MovementFloat_ChangePercent.MovementId = _tmpMovement.MovementId
+                                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                      GROUP BY MovementItem.ObjectId
                             , MILinkObject_GoodsKind.ObjectId
-                            , MIFloat_Price.ValueData 
+                            , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                        -- в налоговых цены всегда будут без НДС
+                                        THEN CAST (CASE WHEN MovementFloat_ChangePercent.ValueData <> 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                                 / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
+                                   ELSE CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                                                  THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                             ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                        END
+                              END
                             , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END
                     ) AS tmpMI_all
                WHERE tmpMI_all.Amount_Sale <> 0 OR tmpMI_all.Amount_ReturnIn <> 0

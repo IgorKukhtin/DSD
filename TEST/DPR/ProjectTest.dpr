@@ -600,7 +600,7 @@ uses
   GoodsQualityMovement in '..\..\Forms\Document\GoodsQualityMovement.pas' {GoodsQualityMovementForm: TParentForm},
   ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
   Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm: TParentForm},
-  RecipesMaster in '..\..\Forms\Guides\RecipesMaster.pas' {RecipesMasterForm: TParentForm},
+  Receipt_Object in '..\..\Forms\Guides\Receipt_Object.pas' {Receipt_ObjectForm: TParentForm},
   Receipt in '..\..\Forms\Guides\Receipt.pas' {ReceiptForm: TParentForm},
   ReceiptEdit in '..\..\Forms\Guides\ReceiptEdit.pas' {ReceiptEditForm: TParentForm},
   ReceiptCost in '..\..\Forms\Guides\ReceiptCost.pas' {ReceiptCostForm: TParentForm},
@@ -631,7 +631,8 @@ uses
   GoodsProperty in '..\..\Forms\Guides\GoodsProperty.pas' {GoodsPropertyForm: TParentForm},
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {Report_JuridicalDefermentPaymentForm: TParentForm},
   ProductionOrderReportUnit in '..\..\FormsMeat\Report\Production\ProductionOrderReportUnit.pas' {ProductionOrderReportForm: TParentForm},
-  OrderType in '..\..\Forms\Guides\OrderType.pas' {OrderTypeForm: TParentForm};
+  OrderType in '..\..\Forms\Guides\OrderType.pas' {OrderTypeForm: TParentForm},
+  ReceiptGoods_Object in '..\..\Forms\Guides\ReceiptGoods_Object.pas' {ReceiptGoods_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -24,19 +24,20 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
-DECLARE vbUserId Integer;
-
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Tax());
+     vbUserId := lpGetUserBySession (inSession);
      
+
      IF COALESCE (inMask, False) = True
      THEN
      inMovementId := gpInsert_Movement_Tax_Mask (ioId        := inMovementId
                                               , inOperDate  := inOperDate
                                               , inSession   := inSession); 
      END If;
+
 
 
      IF COALESCE (inMovementId, 0) = 0
@@ -57,7 +58,10 @@ BEGIN
              , CAST (0 as TFloat)                   AS TotalCount
              , CAST (0 as TFloat)                   AS TotalSummMVAT
              , CAST (0 as TFloat)                   AS TotalSummPVAT
-             , lpInsertFind_Object_InvNumberTax (zc_Movement_Tax(), inOperDate) ::TVarChar AS InvNumberPartner
+             , lpInsertFind_Object_InvNumberTax (zc_Movement_Tax(), inOperDate, CASE WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentOdessa()
+                                                                                          THEN '6' -- !!!Одесса!!!
+                                                                                     ELSE ''
+                                                                                END) ::TVarChar AS InvNumberPartner
              , Object_Juridical_Basis.Id			AS FromId
              , Object_Juridical_Basis.ValueData		AS FromName
              , 0                     				AS ToId
@@ -69,7 +73,10 @@ BEGIN
              , CAST ('' as TVarChar) 				AS ContractTagName
              , 0                     				AS TaxKindId
              , CAST ('' as TVarChar) 				AS TaxKindName
-             , CAST ('' as TVarChar) 				AS InvNumberBranch
+             , CASE WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentOdessa()
+                         THEN '6' -- !!!Одесса!!!
+                    ELSE ''
+               END :: TVarChar   				AS InvNumberBranch
 
           FROM (SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) AS InvNumber) AS tmpInvNumber
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1

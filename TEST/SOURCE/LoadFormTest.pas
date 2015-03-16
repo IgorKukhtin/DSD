@@ -372,9 +372,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecipesMasterForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TRecipesMasterForm');
-
 end;
 
 procedure TLoadFormTest.LoadGoodsKindWeighingFormTest;
@@ -1643,6 +1640,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptKindForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceipt_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceipt_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoods_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptGoods_ObjectForm');
 end;
 
 procedure TLoadFormTest.SetUp;

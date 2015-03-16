@@ -1,6 +1,6 @@
 ﻿-- Function: gpSelect_Object_ActionByUser()
 
---DROP FUNCTION gpSelect_Object_ActionByUser();
+-- DROP FUNCTION gpSelect_Object_ActionByUser();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ActionByUser(
     IN inSession     TVarChar       -- сессия пользователя
@@ -13,7 +13,7 @@ BEGIN
   vbUserId := lpGetUserBySession(inSession);
   -- Проверяем нет ли случайно у него прав Админа
   PERFORM 1 FROM ObjectLink_UserRole_View 
-           WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin();
+           WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 296580); -- Admin + Просмотр ВСЕ (управленцы)
   IF FOUND THEN
      -- возвращаем все 
      RETURN QUERY 
@@ -48,4 +48,4 @@ ALTER FUNCTION gpSelect_Object_ActionByUser(TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Action('2')
+-- SELECT * FROM gpSelect_Object_Action ('9461')

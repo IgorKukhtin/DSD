@@ -1779,8 +1779,8 @@
 				<Form>Goods_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\RecipesMaster.pas">
-				<Form>RecipesMasterForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Receipt_Object.pas">
+				<Form>Receipt_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Receipt.pas">
@@ -1893,6 +1893,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\OrderType.pas">
 				<Form>OrderTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ReceiptGoods_Object.pas">
+				<Form>ReceiptGoods_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

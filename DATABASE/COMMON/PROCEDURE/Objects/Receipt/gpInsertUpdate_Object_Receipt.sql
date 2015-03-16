@@ -1,9 +1,12 @@
 -- Function: gpInsertUpdate_Object_Receipt()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
  INOUT ioId                  Integer   , -- ключ объекта <Составляющие рецептур>
+    IN inMaskId              Integer   , -- ключ документа маски
     IN inCode                Integer   , -- Код
     IN inReceiptCode         TVarChar  , -- Код рецептуры
     IN inComment             TVarChar  , -- Комментарий
@@ -44,7 +47,7 @@ BEGIN
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
    -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Receipt()); 
+   vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Receipt()); 
 
 
    -- расчет названия
@@ -104,17 +107,39 @@ BEGIN
    -- сохранили свойство <Признак главный>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Receipt_Main(), ioId, inIsMain);
 
+   IF COALESCE (inMaskId, 0) <> 0
+      THEN
+          -- записываем строки документа
+   PERFORM gpInsertUpdate_Object_ReceiptChild (ioId                 := 0
+                                             , inValue              := tmp.Value
+                                             , inIsWeightMain       := tmp.IsWeightMain
+                                             , inIsTaxExit          := tmp.IsTaxExit
+                                             , inStartDate          := tmp.StartDate
+                                             , inEndDate            := tmp.EndDate
+                                             , inComment            := tmp.Comment 
+                                             , inReceiptId          := ioId            --tmp.ReceiptId
+                                             , inGoodsId            := tmp.GoodsId
+                                             , inGoodsKindId        := tmp.GoodsKindId
+                                             , inSession            := inSession
+                                          ) 
+   FROM gpSelect_Object_ReceiptChild (inSession)  AS tmp
+   WHERE tmp.ReceiptId = inMaskId;
+      
+   END IF;
+   
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Receipt (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.03.15         * add inMaskId
  13.02.15                                        * all
  24.12.14         *
  19.07.13         * rename zc_ObjectDate_               
