@@ -9,6 +9,17 @@ inherited MainForm: TMainForm
   TextHeight = 13
   inherited ActionList: TActionList
     Top = 48
+    object actReport_ProductionOrder: TdsdOpenForm [0]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      FormName = 'TProductionOrderReportForm'
+      FormNameParam.Value = 'TProductionOrderReportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <>
+      isShowModal = False
+    end
     object actProductionUnionTech: TdsdOpenForm [0]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
@@ -2987,6 +2998,9 @@ inherited MainForm: TMainForm
       Caption = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       object miReportProductionUnion: TMenuItem
         Action = actReport_Production_Union
+      end
+      object N50: TMenuItem
+        Action = actReport_ProductionOrder
       end
       object N27: TMenuItem
         Caption = '-'

@@ -3,9 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 424
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -199
-  ExplicitWidth = 1300
-  ExplicitHeight = 459
+  ExplicitWidth = 1292
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,18 +12,18 @@ inherited EDIJournalForm: TEDIJournalForm
     Width = 1284
     Height = 367
     ExplicitTop = 57
-    ExplicitWidth = 1183
+    ExplicitWidth = 1284
     ExplicitHeight = 367
     ClientRectBottom = 367
     ClientRectRight = 1284
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1183
+      ExplicitWidth = 1284
       ExplicitHeight = 367
       inherited cxGrid: TcxGrid
         Width = 1284
         Height = 209
         Align = alTop
-        ExplicitWidth = 1183
+        ExplicitWidth = 1284
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -392,7 +391,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Height = 5
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitWidth = 1183
       end
       object BottomPanel: TPanel
         Left = 0
@@ -402,7 +400,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitWidth = 1183
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
@@ -646,7 +643,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitWidth = 226
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -718,7 +714,6 @@ inherited EDIJournalForm: TEDIJournalForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1183
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -875,7 +870,18 @@ inherited EDIJournalForm: TEDIJournalForm
       EDIDocType = ediError
       Directory = '/error'
     end
-    object mactOrdSpr: TMultiAction [6]
+    object mactDeclarSilent: TMultiAction [6]
+      Category = 'EDI COMDOC DataSet'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actStoredProcTaxPrint
+        end
+        item
+          Action = EDIDeclar
+        end>
+    end
+    object mactOrdSpr: TMultiAction [7]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -892,7 +898,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1074' EXITE'
     end
-    object actDesadv: TEDIAction [7]
+    object actDesadv: TEDIAction [8]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -902,7 +908,7 @@ inherited EDIJournalForm: TEDIJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object mactDesadv: TMultiAction [8]
+    object mactDesadv: TMultiAction [9]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -1230,7 +1236,7 @@ inherited EDIJournalForm: TEDIJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = EDIDeclar
+          Action = mactDeclarSilent
         end>
       View = cxGridDBTableView
       Caption = 'EDI '#1053#1072#1083#1086#1075#1086#1074#1072#1103

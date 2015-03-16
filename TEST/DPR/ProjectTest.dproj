@@ -1887,6 +1887,10 @@
 				<Form>Report_JuridicalDefermentPaymentForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsMeat\Report\Production\ProductionOrderReportUnit.pas">
+				<Form>ProductionOrderReportForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\OrderType.pas">
 				<Form>OrderTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
