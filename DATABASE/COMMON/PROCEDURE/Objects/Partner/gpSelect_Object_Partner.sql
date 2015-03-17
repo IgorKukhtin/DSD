@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
                ShortName TVarChar, GLNCode TVarChar,
+               GLNCodeJuridical_property TVarChar, GLNCodeRetail_property TVarChar, GLNCodeCorporate_property TVarChar,
                GLNCodeJuridical TVarChar, GLNCodeRetail TVarChar, GLNCodeCorporate TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
@@ -29,6 +30,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
+
+               UnitId Integer, UnitCode Integer, UnitName TVarChar,
                isErased Boolean
               )
 AS
@@ -62,6 +65,10 @@ BEGIN
 
          , ObjectString_ShortName.ValueData   AS ShortName
          , ObjectString_GLNCode.ValueData     AS GLNCode
+
+         , ObjectString_GLNCodeJuridical.ValueData AS GLNCodeJuridical_property
+         , ObjectString_GLNCodeRetail.ValueData    AS GLNCodeRetail_property
+         , ObjectString_GLNCodeCorporate.ValueData AS GLNCodeCorporate_property
 
          , CASE WHEN ObjectString_GLNCodeJuridical.ValueData <> '' THEN ObjectString_GLNCodeJuridical.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN ObjectString_Juridical_GLNCode.ValueData ELSE '' END :: TVarChar AS GLNCodeJuridical
          , CASE WHEN ObjectString_GLNCodeRetail.ValueData <> '' THEN ObjectString_GLNCodeRetail.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN CASE WHEN ObjectString_Retail_GLNCode.ValueData <> '' THEN ObjectString_Retail_GLNCode.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END ELSE '' END :: TVarChar AS GLNCodeRetail
@@ -126,7 +133,11 @@ BEGIN
        
          , ObjectDate_StartPromo.ValueData AS StartPromo
          , ObjectDate_EndPromo.ValueData   AS EndPromo 
-       
+
+         , Object_Unit.Id         AS UnitId
+         , Object_Unit.ObjectCode AS UnitCode
+         , Object_Unit.ValueData  AS UnitName 
+
          , Object_Partner.isErased   AS isErased
          
      FROM Object AS Object_Partner
@@ -262,6 +273,11 @@ BEGIN
                               ON ObjectLink_Partner_PriceListPromo.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
          LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Partner_PriceListPromo.ChildObjectId         
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Unit
+                              ON ObjectLink_Partner_Unit.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
+         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Partner_Unit.ChildObjectId
 
     WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint

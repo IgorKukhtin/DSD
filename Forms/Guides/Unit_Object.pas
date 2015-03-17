@@ -14,6 +14,10 @@ uses
 
 type
   TUnit_ObjectForm = class(TAncestorEnumForm)
+    ceBranchName: TcxGridDBColumn;
+    ceBusinessName: TcxGridDBColumn;
+    ceJuridicalName: TcxGridDBColumn;
+    ceParentName: TcxGridDBColumn;
   private
     { Private declarations }
   public

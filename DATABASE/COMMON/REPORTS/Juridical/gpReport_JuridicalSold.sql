@@ -28,7 +28,7 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
              , StartDate TDateTime, EndDate TDateTime
              , PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , AreaName TVarChar
+             , AreaName TVarChar, AreaName_Partner TVarChar
              , ContractConditionKindName TVarChar, ContractConditionValue TFloat
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
@@ -135,6 +135,7 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyName,
         Object_InfoMoney_View.InfoMoneyName_all,
         Object_Area.ValueData AS AreaName,
+        Object_Area_Partner.ValueData AS AreaName_Partner,
 
         Object_ContractConditionKind.ValueData AS ContractConditionKindName,
         tmpContract.Value :: TFloat AS ContractConditionValue,
@@ -306,6 +307,11 @@ BEGIN
                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Operation.PartnerId
                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
            LEFT JOIN Object AS Object_PersonalTrade_Partner ON Object_PersonalTrade_Partner.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                                ON ObjectLink_Partner_Area.ObjectId = Operation.PartnerId
+                               AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+           LEFT JOIN Object AS Object_Area_Partner ON Object_Area_Partner.Id = ObjectLink_Partner_Area.ChildObjectId
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                ON ObjectLink_Contract_Personal.ObjectId = Operation.ContractId

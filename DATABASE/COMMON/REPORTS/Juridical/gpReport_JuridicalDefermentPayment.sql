@@ -28,7 +28,7 @@ RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
              , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , AreaName TVarChar
+             , AreaName TVarChar, AreaName_Partner TVarChar
               )
 AS
 $BODY$
@@ -96,7 +96,7 @@ BEGIN
              , a.SaleSumm1, a.SaleSumm2, a.SaleSumm3, a.SaleSumm4, a.SaleSumm5
              , a.Condition, a.StartContractDate, a.Remains
              , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyCode, a.InfoMoneyName
-             , a.AreaName
+             , a.AreaName, a.AreaName_Partner
 from (
   SELECT 
      Object_Account_View.AccountName_all AS AccountName
@@ -196,6 +196,7 @@ from (
       , Object_InfoMoney_View.InfoMoneyName
 
       , Object_Area.ValueData AS AreaName
+      , Object_Area_Partner.ValueData AS AreaName_Partner
 
   FROM (SELECT RESULT_all.AccountId
              , RESULT_all.ContractId
@@ -320,6 +321,11 @@ from (
                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = RESULT.PartnerId
                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
            LEFT JOIN Object AS Object_PersonalTrade_Partner ON Object_PersonalTrade_Partner.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                                ON ObjectLink_Partner_Area.ObjectId = RESULT.PartnerId
+                               AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+           LEFT JOIN Object AS Object_Area_Partner ON Object_Area_Partner.Id = ObjectLink_Partner_Area.ChildObjectId
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                ON ObjectLink_Contract_Personal.ObjectId = RESULT.ContractId

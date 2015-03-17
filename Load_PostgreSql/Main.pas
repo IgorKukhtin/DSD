@@ -3040,6 +3040,8 @@ begin
                     + '           , trim (_pgPartner.OKPO)as OKPO'
                     + '      from dba._pgPartner'
                     + '      where trim (_pgPartner.OKPO)<>' + FormatToVarCharServer_notNULL('')
+                    + '        and trim (Main) <> '+FormatToVarCharServer_notNULL('')
+                    + '        and trim (Main) <> '+FormatToVarCharServer_notNULL('0')
                     + '      group by OKPO'
                     + '     ) as _pgPartner_find'
                     + '     left join (select max (_pgPartner.Id) as Id'
@@ -3047,6 +3049,8 @@ begin
                     + '                from dba._pgPartner'
                     + '                where trim (_pgPartner.OKPO)<>' + FormatToVarCharServer_notNULL('')
                     + '                  and _pgPartner.NumberSheet = 1'
+                    + '                  and trim (Main) <> '+FormatToVarCharServer_notNULL('')
+                    + '                  and trim (Main) <> '+FormatToVarCharServer_notNULL('0')
                     + '                group by OKPO'
                     + '               ) as _pgPartner_find_two on _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
                     + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)'
@@ -3085,6 +3089,7 @@ begin
                                                                                                                  +'    when fIsClient_GD(Unit.Id)=zc_rvYes() then 14'
                                                                                                                  +'    else null'
                                                                                                                  +' end'}
+                  Add('where cast(_pgPartner.Main as integer) < 1000');
                   //Add('where _pgPartner_find.Id>10000');
                   //Add('  and(isnull(_pgPartner_find.JuridicalDetailsId_pg,0) = 0 ');
                   //Add('   or isnull(_pgPartner_find.JuridicalId_pg,0)=0)');
@@ -4182,13 +4187,15 @@ begin
                     + '           , OKPO'
                     + '           , Main'
                     + '      from dba._pgPartner'
-                    + '      where JuridicalId_pg<>0'
+                    + '      where (JuridicalId_pg<>0'
                     + '        and trim (UnitId) <> '+FormatToVarCharServer_notNULL('')
                     + '        and trim (UnitId) <> '+FormatToVarCharServer_notNULL('0')
                     + '        and trim (Main) <> '+FormatToVarCharServer_notNULL('')
                     + '        and trim (Main) <> '+FormatToVarCharServer_notNULL('0')
                     + '        and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
 //                    + '        and _pgPartner.Id = 938'
+                    + '           )'
+                    + '           or cast (Main as integer) > 1000'
                     + '      group by JuridicalId_pg'
                     + '             , OKPO'
                     + '             , Main'
@@ -4198,13 +4205,14 @@ begin
                     + '                     , OKPO'
                     + '                     , Main'
                     + '                from dba._pgPartner'
-                    + '                where JuridicalId_pg<>0'
+                    + '                where (JuridicalId_pg<>0'
                     + '                  and trim (UnitId) <> '+FormatToVarCharServer_notNULL('')
                     + '                  and trim (UnitId) <> '+FormatToVarCharServer_notNULL('0')
                     + '                  and trim (Main) <> '+FormatToVarCharServer_notNULL('')
                     + '                  and trim (Main) <> '+FormatToVarCharServer_notNULL('0')
                     + '                  and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
                     + '                  and trim (AdrUnit) <> '+FormatToVarCharServer_notNULL('')
+                    + '                  )'
                     + '                group by JuridicalId_pg'
                     + '                       , OKPO'
                     + '                       , Main'
@@ -4233,7 +4241,7 @@ begin
                      +'                  and OKPO <> ' + FormatToVarCharServer_notNULL('')
                      +'                group by OKPO'
                      +'               ) as Unit on Unit.OKPO = _pgPartner_find.OKPO');
-                  Add('where Unit.OKPO is not null or isnull(Id_Postgres,0) <> 0');
+                  Add('where Unit.OKPO is not null or isnull(Id_Postgres,0) <> 0 or _pgPartner_find.Main > 1000');
                   //Add('and _pgPartner_find.PartnerId_pg=0');
                   Add('order by inJuridicalId, ObjectName, ObjectId');
 
@@ -4266,7 +4274,8 @@ begin
              //!!!
              if fStop then begin exit;end;
 
-             if (FieldByName('Id_Postgres').AsInteger=0)and((FieldByName('pgPartnerId').AsInteger>10000)
+             if (FieldByName('Main').AsInteger<1000)
+             and(FieldByName('Id_Postgres').AsInteger=0)and((FieldByName('pgPartnerId').AsInteger>10000)
                                                           //or(FieldByName('pgPartnerId').AsInteger=1310)
                                                           //or(FieldByName('pgPartnerId').AsInteger=2859)
                                                            )
@@ -4288,29 +4297,57 @@ begin
                 PartnerId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
 
              end // if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('pgPartnerId').AsInteger>10000)
-             else begin
-                 PartnerId_pg:=FieldByName('Id_Postgres').AsInteger;
-                 if trim(FieldByName('inGLNCode').AsString) <> ''
-                 then
-                     fExecSqToQuery ('update ObjectString set ValueData = '+FormatToVarCharServer_notNULL(trim(FieldByName('inGLNCode').AsString))+' where ObjectId = '+IntToStr(PartnerId_pg)+' and DescId = zc_objectString_Partner_GLNCode()');
+             else
+                 if FieldByName('Main').AsInteger >= 1000
+                 then // !!!ничего не делать!!!!
+                 else
+                 begin
+                      PartnerId_pg:=FieldByName('Id_Postgres').AsInteger;
+                      if trim(FieldByName('inGLNCode').AsString) <> ''
+                      then
+                          fExecSqToQuery ('update ObjectString set ValueData = '+FormatToVarCharServer_notNULL(trim(FieldByName('inGLNCode').AsString))+' where ObjectId = '+IntToStr(PartnerId_pg)+' and DescId = zc_objectString_Partner_GLNCode()');
                  end;
 
-             //
-             //if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
-             if (PartnerId_pg>0)
-             then fExecSqFromQuery(' update dba._pgPartner set PartnerId_pg = case when trim (UnitId) = '+FormatToVarCharServer_notNULL('')
-                                 + '                                                 or trim (UnitId) = '+FormatToVarCharServer_notNULL('0')
-                                 + '                                                 or trim (UnitName) = '+FormatToVarCharServer_notNULL('')
-                                  +'                                                    then ' + FormatToVarCharServer_notNULL('0')
-                                  +'                                               else '+IntToStr(PartnerId_pg)
-                                  +'                                          end'
-                                  +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
-                                  +'   and Main = '+FieldByName('Main').AsString
-                                  +'   and (Id>10000'
-                                  //+'     or Id=1310'
-                                  //+'     or Id=2859'
-                                  +'       )'
-                                  );
+             if FieldByName('Main').AsInteger >=1000
+             then begin
+                       fOpenSqToQuery ('select Object.Id as PartnerId'
+                                     +'      , Object.DescId'
+                                     +'      , zc_Object_Partner() as zc_Object_Partner'
+                                     +'      , coalesce(ObjectLink_Partner_Juridical.ChildObjectId,0) AS JuridicalId'
+                                     +' from Object'
+                                     +'      left join ObjectLink AS ObjectLink_Partner_Juridical'
+                                     +'                           ON ObjectLink_Partner_Juridical.ObjectId = Object.Id'
+                                     +'                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                     +' where Object.Id = '+IntToStr(FieldByName('Main').AsInteger));
+                       if (toSqlQuery.FieldByName('DescId').AsInteger <> toSqlQuery.FieldByName('zc_Object_Partner').AsInteger)
+                        or(toSqlQuery.FieldByName('PartnerId').AsInteger <> FieldByName('Main').AsInteger)
+                       then ShowMessage ('Ошибка.Контрагент с Id = <'+IntToStr(FieldByName('Main').AsInteger)+'> не найден.')
+                       else if (toSqlQuery.FieldByName('JuridicalId').AsInteger = 0)
+                            then ShowMessage ('Ошибка.Не определено Юр.Лицо у контрагента с Id = <'+IntToStr(FieldByName('Main').AsInteger)+'>.')
+                            else fExecSqFromQuery(' update dba._pgPartner set PartnerId_pg = '+IntToStr(FieldByName('Main').AsInteger)
+                                            +'                              , JuridicalId_pg = '+IntToStr(toSqlQuery.FieldByName('JuridicalId').AsInteger)
+                                            +'      where Main = '+FormatToVarCharServer_notNULL(FieldByName('Main').AsString)
+                                            );
+
+             end
+             else begin
+                       //
+                       //if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
+                       if (PartnerId_pg>0)
+                       then fExecSqFromQuery(' update dba._pgPartner set PartnerId_pg = case when trim (UnitId) = '+FormatToVarCharServer_notNULL('')
+                                           + '                                                 or trim (UnitId) = '+FormatToVarCharServer_notNULL('0')
+                                           + '                                                 or trim (UnitName) = '+FormatToVarCharServer_notNULL('')
+                                            +'                                                    then ' + FormatToVarCharServer_notNULL('0')
+                                            +'                                               else '+IntToStr(PartnerId_pg)
+                                            +'                                          end'
+                                            +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
+                                            +'   and Main = '+FieldByName('Main').AsString
+                                            +'   and (Id>10000'
+                                            //+'     or Id=1310'
+                                            //+'     or Id=2859'
+                                            +'       )'
+                                            );
+             end;
 
              //
              Next;
@@ -8307,8 +8344,9 @@ begin
         Add('     , null as ObjectName16');
         Add('     , case when is16=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.Code_byTavriya,15,2) else cast (null as TSumm) end as Amount16');
         Add('     , case when length (GoodsProperty_Detail.Code_byTavriya)>=13 then SUBSTR(GoodsProperty_Detail.Code_byTavriya,1,13)'
-           +'            when length (GoodsProperty_Detail.Code_byTavriya)=4 then '+FormatToVarCharServer_notNULL('250')+' + GoodsProperty_Detail.Code_byTavriya+'+FormatToVarCharServer_notNULL('000000')
-           +'            when length (GoodsProperty_Detail.Code_byTavriya)=5 then '+FormatToVarCharServer_notNULL('25')+' + GoodsProperty_Detail.Code_byTavriya+'+FormatToVarCharServer_notNULL('000000')
+           //+'            when length (GoodsProperty_Detail.Code_byTavriya)=4 then '+FormatToVarCharServer_notNULL('250')+' + GoodsProperty_Detail.Code_byTavriya+'+FormatToVarCharServer_notNULL('000000')
+           //+'            when length (GoodsProperty_Detail.Code_byTavriya)=5 then '+FormatToVarCharServer_notNULL('25')+' + GoodsProperty_Detail.Code_byTavriya+'+FormatToVarCharServer_notNULL('000000')
+           +'            else GoodsProperty_Detail.Code_byTavriya'
            +'       end as BarCode16'); // GoodsCodeScaner_byMain + Code_byTavriya
         Add('     , case when length (GoodsProperty_Detail.Code_byTavriya)>=13 and SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,3)='+FormatToVarCharServer_notNULL('000')+' then SUBSTR(GoodsProperty_Detail.Code_byTavriya,21,4)'
            +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 and SUBSTR(GoodsProperty_Detail.Code_byTavriya,18,2)='+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.Code_byTavriya,20,5)'
@@ -19709,6 +19747,7 @@ begin
         Add('select Bill.Id as ObjectId');
         Add('     , Bill.BillDate as OperDate');
         Add('     , cast(Bill.BillNumber as integer)as InvNumber');
+        Add('     , case when pgUnitFrom.Id>0 then zc_rvYes() else zc_rvNo() end as isUnit_Branch');
         Add('     , Bill.FromID');
         Add('     , Bill.ToID');
         Add('     , Bill.MoneyKindId');
@@ -19716,6 +19755,8 @@ begin
         Add('from dba.Bill');
         Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
         Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
+        Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind = zc_bkProductionInZakaz()'
            +'  and Bill.Id_Postgres>0'
@@ -19756,15 +19797,21 @@ begin
              begin
                   // проверка что он проведется
                   fOpenSqToQuery (' select COALESCE (MLO_From.ObjectId, 0) AS FromId'
+                                 +'      , COALESCE (MLO_Contract.ObjectId, 0) AS ContractId'
                                  +' from Movement'
                                  +'      LEFT JOIN MovementLinkObject AS MLO_From'
                                  +'                                   ON MLO_From.MovementId = Movement.Id'
                                  +'                                  AND MLO_From.DescId = zc_MovementLinkObject_From()'
+                                 +'      LEFT JOIN MovementLinkObject AS MLO_Contract'
+                                 +'                                   ON MLO_Contract.MovementId = Movement.Id'
+                                 +'                                  AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()'
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_OrderExternal()'
                                  );
                   //
-                  if toSqlQuery.FieldByName('FromId').AsInteger>0 then
+                  if ((toSqlQuery.FieldByName('FromId').AsInteger>0)and((toSqlQuery.FieldByName('ContractId').AsInteger>0)))
+                      or(FieldByName('isUnit_Branch').AsInteger=zc_rvYes)
+                  then
                   begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                        if not myExecToStoredProc_two then ;//exit;

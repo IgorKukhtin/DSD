@@ -331,6 +331,8 @@ BEGIN
      ELSE
          -- сформировали связь <Расходная накладная> с EDI (если по она уже сформирована по заявке)
          PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), Movement.Id, inMovementId)
+                 -- !!!обновили!! свойство <Номер заявки у контрагента>
+               , lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), Movement.Id, vbInvNumber)
          FROM MovementLinkMovement
               INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
                                  AND Movement.StatusId <> zc_Enum_Status_Erased()

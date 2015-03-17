@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_PriceList (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_PriceList (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_PriceList (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_PriceList(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_PriceList(
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
     IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
     IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
+    IN inUnitId              Integer   ,    -- 
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -46,6 +48,9 @@ BEGIN
    -- сохранили связь с <Сотрудник (торговый)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Unit(), ioId, inUnitId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -56,6 +61,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.03.15                                        * all
  27.10.14                                        *
 */
 

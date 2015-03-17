@@ -52,7 +52,7 @@ type
     dsdSetUnErased: TdsdUpdateErased;
     GridDS: TDataSource;
     ClientDataSet: TClientDataSet;
-    spGrid: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ceBusinessName: TcxGridDBColumn;
@@ -65,6 +65,9 @@ type
     ceProfitLossGroupName: TcxGridDBColumn;
     ceProfitLossDirectionCode: TcxGridDBColumn;
     ceProfitLossDirectionName: TcxGridDBColumn;
+    ceParentName: TcxGridDBColumn;
+    actGridToExcel: TdsdGridToExcel;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
