@@ -828,7 +828,7 @@ begin
   // Адреса підприємства
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_ADR', HeaderDataSet.FieldByName('JuridicalAddress_To').AsString);
   // Код податкових зобов'язань
-  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'PZOB', '5');
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'PZOB', HeaderDataSet.FieldByName('PZOB').AsString);
 
   if HeaderDataSet.FieldByName('isERPN').asBoolean then
      // Підлягає реєстрації в ЄРПН покупцем
