@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_TaxCorrective()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_TaxCorrective (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_TaxCorrective (Integer, Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_TaxCorrective(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inMask              Boolean  ,
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -27,6 +29,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TaxCorrective());
      vbUserId := lpGetUserBySession (inSession);
+
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_TaxCorrective_Mask (ioId        := inMovementId
+                                                         , inOperDate  := inOperDate
+                                                         , inSession   := inSession); 
+     END If;
 
 
      IF COALESCE (inMovementId, 0) = 0
@@ -210,12 +219,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, Boolean, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.03.15         * add inMask
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  24.04.14                                                        * add zc_MovementString_InvNumberBranch
  15.04.14                                                        *   + Partner

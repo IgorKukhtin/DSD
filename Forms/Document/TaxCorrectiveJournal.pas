@@ -85,6 +85,7 @@ type
     spMedoc_False: TdsdStoredProc;
     actMedocFalse: TdsdExecStoredProc;
     bbMedocFalse: TdxBarButton;
+    actInsertMaskMulti: TMultiAction;
   private
     { Private declarations }
   public

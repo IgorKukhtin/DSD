@@ -2,8 +2,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitWidth = 1126
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -472,7 +472,47 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1076#1087#1080#1089#1072#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 33
     end
-    inherited actInsert: TdsdInsertUpdateAction
+    inherited actInsertMask: TdsdInsertUpdateAction [8]
+      FormName = 'TTaxCorrectiveForm'
+      FormNameParam.Value = 'TTaxCorrectiveForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inMask'
+          Value = 'True'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+    end
+    object actInsertMaskMulti: TMultiAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMask
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
+    inherited actInsert: TdsdInsertUpdateAction [10]
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
@@ -482,7 +522,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
     end
-    object actMovementCheck: TdsdOpenForm [12]
+    object actMovementCheck: TdsdOpenForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -843,6 +883,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -962,6 +1010,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited bbInsertMask: TdxBarButton
+      Action = actInsertMaskMulti
     end
     object bbPrintTaxCorrective_Us: TdxBarButton
       Action = mactPrint_TaxCorrective_Us
