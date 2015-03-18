@@ -633,7 +633,8 @@ uses
   ProductionOrderReportUnit in '..\..\FormsMeat\Report\Production\ProductionOrderReportUnit.pas' {ProductionOrderReportForm: TParentForm},
   OrderType in '..\..\Forms\Guides\OrderType.pas' {OrderTypeForm: TParentForm},
   ReceiptGoods_Object in '..\..\Forms\Guides\ReceiptGoods_Object.pas' {ReceiptGoods_ObjectForm: TParentForm},
-  JuridicalGLN in '..\..\Forms\Guides\JuridicalGLN.pas' {JuridicalGLNForm: TParentForm};
+  JuridicalGLN in '..\..\Forms\Guides\JuridicalGLN.pas' {JuridicalGLNForm: TParentForm},
+  PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

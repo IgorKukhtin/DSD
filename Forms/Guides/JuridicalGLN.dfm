@@ -205,7 +205,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actChoicePriceListForm
+            Caption = 'PriceListChoiceForm'
             Default = True
             Kind = bkEllipsis
           end>
@@ -412,8 +412,10 @@ object JuridicalGLNForm: TJuridicalGLNForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = GridStoredProc
       StoredProcList = <
         item
+          StoredProc = GridStoredProc
         end
         item
           StoredProc = GridStoredProc
@@ -479,29 +481,6 @@ object JuridicalGLNForm: TJuridicalGLNForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = GridDS
-    end
-    object actChoicePriceListForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PriceListChoiceForm'
-      FormName = 'TPriceListForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListName'
-          DataType = ftString
-        end>
-      isShowModal = True
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'

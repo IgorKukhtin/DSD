@@ -218,9 +218,11 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\Measure\gpSelect_Object_Measure.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Measure\gpGet_Object_Measure.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpInsertUpdate_Object_Partner.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpSelect_Object_Partner.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpGet_Object_Partner.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpInsertUpdate_Object_Partner.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpSelect_Object_Partner.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpGet_Object_Partner.sql', ZQuery);
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Partner\';
+  ProcedureLoad;
 
   ExecFile(ProcedurePath + 'OBJECTS\PriceList\gpInsertUpdate_Object_PriceList.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\PriceList\gpSelect_Object_PriceList.sql', ZQuery);

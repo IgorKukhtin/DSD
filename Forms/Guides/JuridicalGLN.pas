@@ -68,7 +68,6 @@ type
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     clPriceListName: TcxGridDBColumn;
-    actChoicePriceListForm: TOpenChoiceForm;
     clPriceListPromoName: TcxGridDBColumn;
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;

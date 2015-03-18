@@ -965,6 +965,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerGLNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerGLNForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerTagFormTest;

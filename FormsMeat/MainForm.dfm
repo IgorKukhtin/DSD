@@ -686,6 +686,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPartnerGLN: TdsdOpenForm [47]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1082#1086#1088#1088#1077#1082#1090' GLN '#1082#1086#1076#1072')'
+      Hint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1082#1086#1088#1088#1077#1082#1090' GLN '#1082#1086#1076#1072')'
+      FormName = 'TPartnerGLNForm'
+      FormNameParam.Value = 'TPartnerGLNForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actAssetGroup: TdsdOpenForm
       Category = #1054#1057
       MoveParams = <>
@@ -3337,6 +3348,9 @@ inherited MainForm: TMainForm
       end
       object miPartnerAddress: TMenuItem
         Action = actPartnerAddress
+      end
+      object GLN1: TMenuItem
+        Action = actPartnerGLN
       end
       object miRouteSorting: TMenuItem
         Action = actRouteSorting
