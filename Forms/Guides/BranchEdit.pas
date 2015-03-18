@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdAddOn;
+  dxSkinXmas2008Blue, dsdAddOn, cxButtonEdit;
 
 type
   TBranchEditForm = class(TParentForm)
@@ -40,6 +40,11 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
+    edInvNumber: TcxTextEdit;
+    cxLabel2: TcxLabel;
+    edPersonalBookkeeper: TcxButtonEdit;
+    PersonalBookkeeperGuides: TdsdGuides;
+    cxLabel19: TcxLabel;
   private
     { Private declarations }
   public

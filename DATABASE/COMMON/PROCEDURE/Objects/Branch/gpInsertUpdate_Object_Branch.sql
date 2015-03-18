@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Branch(
- INOUT ioId                  Integer,       -- ключ объекта <Филиал>
-    IN inCode                Integer,       -- Код объекта <Филиал> 
-    IN inName                TVarChar,      -- Название объекта <Филиал>
-    IN inSession             TVarChar       -- сессия пользователя
+ INOUT ioId                     Integer,       -- ключ объекта <Филиал>
+    IN inCode                   Integer,       -- Код объекта <Филиал> 
+    IN inName                   TVarChar,      -- Название объекта <Филиал>
+    IN inInvNumber              TVarChar,      -- Номер филиала в налоговой
+    IN inPersonalBookkeeperId   Integer,       -- Сотрудник (бухгалтер)
+    IN inSession                TVarChar       -- сессия пользователя
 )
 RETURNS integer AS
 $BODY$
@@ -62,19 +65,26 @@ BEGIN
                                                        WHEN vbCode_calc = 11 -- филиал Запорожье
                                                             THEN zc_Enum_Process_AccessKey_TrasportZaporozhye()
                                                   END);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Branch_InvNumber(), ioId, inInvNumber);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Branch_PersonalBookkeeper(), ioId, inPersonalBookkeeperId);
+                                                     
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.03.15         * add InvNumber, PersonalBookkeeper                 
  14.12.13                                        * add inAccessKeyId
- 10.05.13          *
+ 10.05.13         *
  05.06.13          
  02.07.13                        * Убрал JuridicalId     
 */
