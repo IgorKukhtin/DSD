@@ -1890,6 +1890,7 @@
 			<DCCReference Include="..\..\FormsMeat\Report\Production\ProductionOrderReportUnit.pas">
 				<Form>ProductionOrderReportForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\OrderType.pas">
 				<Form>OrderTypeForm</Form>
@@ -1897,6 +1898,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ReceiptGoods_Object.pas">
 				<Form>ReceiptGoods_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\JuridicalGLN.pas">
+				<Form>JuridicalGLNForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -38,7 +38,6 @@ object RetailForm: TRetailForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -70,6 +69,7 @@ object RetailForm: TRetailForm
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsPropertyName'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 104
       end
       object clErased: TcxGridDBColumn
@@ -116,8 +116,8 @@ object RetailForm: TRetailForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -331,6 +331,17 @@ object RetailForm: TRetailForm
       ImageIndex = 7
       DataSource = DataSource
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
@@ -427,5 +438,29 @@ object RetailForm: TRetailForm
     SummaryItemList = <>
     Left = 48
     Top = 216
+  end
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Retail_GLNCode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inGLNCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GLNCode'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 120
   end
 end

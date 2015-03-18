@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 262
+  ExplicitWidth = 1094
+  ExplicitHeight = 261
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -664,7 +664,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actContractTagGroup: TdsdOpenForm [45]
+    object actJuridicalGLN: TdsdOpenForm [44]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1082#1086#1088#1088#1077#1082#1090' GLN '#1082#1086#1076#1072')'
+      Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1082#1086#1088#1088#1077#1082#1090' GLN '#1082#1086#1076#1072')'
+      FormName = 'TJuridicalGLNForm'
+      FormNameParam.Value = 'TJuridicalGLNForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actContractTagGroup: TdsdOpenForm [46]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1043#1088#1091#1087#1087#1099' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
@@ -3317,6 +3328,9 @@ inherited MainForm: TMainForm
       end
       object miJuridical: TMenuItem
         Action = actJuridical
+      end
+      object N48: TMenuItem
+        Action = actJuridicalGLN
       end
       object miPartner: TMenuItem
         Action = actPartner

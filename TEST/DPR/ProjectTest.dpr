@@ -632,7 +632,8 @@ uses
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {Report_JuridicalDefermentPaymentForm: TParentForm},
   ProductionOrderReportUnit in '..\..\FormsMeat\Report\Production\ProductionOrderReportUnit.pas' {ProductionOrderReportForm: TParentForm},
   OrderType in '..\..\Forms\Guides\OrderType.pas' {OrderTypeForm: TParentForm},
-  ReceiptGoods_Object in '..\..\Forms\Guides\ReceiptGoods_Object.pas' {ReceiptGoods_ObjectForm: TParentForm};
+  ReceiptGoods_Object in '..\..\Forms\Guides\ReceiptGoods_Object.pas' {ReceiptGoods_ObjectForm: TParentForm},
+  JuridicalGLN in '..\..\Forms\Guides\JuridicalGLN.pas' {JuridicalGLNForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

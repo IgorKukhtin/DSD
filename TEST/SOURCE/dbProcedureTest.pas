@@ -204,9 +204,11 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\InfoMoneyGroup\gpSelect_Object_InfoMoneyGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InfoMoneyGroup\gpGet_Object_InfoMoneyGroup.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpInsertUpdate_Object_Juridical.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpSelect_Object_Juridical.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpGet_Object_Juridical.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpInsertUpdate_Object_Juridical.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpSelect_Object_Juridical.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpGet_Object_Juridical.sql', ZQuery);
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Juridical\';
+  ProcedureLoad;
 
   ExecFile(ProcedurePath + 'OBJECTS\JuridicalGroup\gpInsertUpdate_Object_JuridicalGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\JuridicalGroup\gpSelect_Object_JuridicalGroup.sql', ZQuery);
