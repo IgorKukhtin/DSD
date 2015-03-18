@@ -3,7 +3,7 @@ object BranchForm: TBranchForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1083#1080#1072#1083#1099'>'
   ClientHeight = 374
-  ClientWidth = 363
+  ClientWidth = 458
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object BranchForm: TBranchForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 363
+    Width = 458
     Height = 348
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 363
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,13 +52,13 @@ object BranchForm: TBranchForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 84
+        Width = 81
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 246
+        Width = 199
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -65,6 +66,18 @@ object BranchForm: TBranchForm
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 57
+      end
+      object clInvNumber: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
+        DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
+      object clPersonalBookkeeperName: TcxGridDBColumn
+        Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088
+        DataBinding.FieldName = 'PersonalBookkeeperName'
+        HeaderAlignmentVert = vaCenter
+        Width = 89
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -22,6 +22,7 @@ type
   published
     procedure LoadAllReportFormTest;
     procedure LoadTransportReportFormTest;
+    procedure LoadReceiptFormTest;
   end;
 
 implementation
@@ -39,6 +40,12 @@ begin
   SetLength(OKPO, Length(a));
   for i := Low(A) to High(A) do
     OKPO[i] := A[i];
+end;
+
+procedure TLoadReportTest.LoadReceiptFormTest;
+begin
+  LoadReportFromFile('Печать_рецептов', ReportPath + '\Рецепты\Печать_рецептов.fr3');
+  LoadReportFromFile('Печать_рецептов_детальная', ReportPath + '\Рецепты\Печать_рецептов_детальная.fr3');
 end;
 
 procedure TLoadReportTest.LoadReportFromFile(ReportName, ReportPath: string);

@@ -803,6 +803,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalTreeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGLNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalGLNForm');
 end;
 procedure TLoadFormTest.LoadProductionSeparateFormTest;
 begin
@@ -962,6 +965,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerGLNForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerGLNForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerTagFormTest;

@@ -58,6 +58,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    clInvNumber: TcxGridDBColumn;
+    clPersonalBookkeeperName: TcxGridDBColumn;
   private
     { Private declarations }
   public
