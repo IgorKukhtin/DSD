@@ -117,6 +117,12 @@ type
     isCheck_Parent: TcxGridDBColumn;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
+    actPrint: TdsdPrintAction;
+    actPrintDetail: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    bbPrintDetail: TdxBarButton;
+    spPrintReceiptChildDetail: TdsdStoredProc;
+    PrintReceiptChildDetailCDS: TClientDataSet;
   private
     { Private declarations }
   public

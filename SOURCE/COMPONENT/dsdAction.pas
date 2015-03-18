@@ -1443,8 +1443,9 @@ begin
         if Assigned(Self.DataSets[i].DataSet) then
         begin
           if Self.DataSets[i].DataSet is TClientDataSet then
-            TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
-              TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
+             if TAddOnDataSet(Self.DataSets[i]).IndexFieldNames <> '' then
+                TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
+                    TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
           DataSet := DataSets[i].DataSet;
         end;
         if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then

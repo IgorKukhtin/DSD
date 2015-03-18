@@ -549,8 +549,8 @@ object ReceiptForm: TReceiptForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -610,6 +610,18 @@ object ReceiptForm: TReceiptForm
         item
           Visible = True
           ItemName = 'bbInsertRecCCK'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDetail'
         end
         item
           Visible = True
@@ -727,6 +739,14 @@ object ReceiptForm: TReceiptForm
     end
     object bbInsertMask: TdxBarButton
       Action = actInsertMask
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
+    object bbPrintDetail: TdxBarButton
+      Action = actPrintDetail
       Category = 0
     end
   end
@@ -995,6 +1015,52 @@ object ReceiptForm: TReceiptForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actPrint: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1086#1073#1099#1095#1085#1072#1103
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = ClientDataSet
+          UserName = 'Master'
+        end
+        item
+          DataSet = ReceiptChildCDS
+          UserName = 'Client'
+          IndexFieldNames = 'ReceiptId;GroupNumber'
+        end>
+      Params = <>
+      ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
+      ReportNameParam.DataType = ftString
+    end
+    object actPrintDetail: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spPrintReceiptChildDetail
+      StoredProcList = <
+        item
+          StoredProc = spPrintReceiptChildDetail
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1072#1079#1074#1077#1088#1085#1091#1090#1072#1103
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = ClientDataSet
+          UserName = 'Master'
+        end
+        item
+          DataSet = PrintReceiptChildDetailCDS
+          UserName = 'Client'
+          IndexFieldNames = 'GroupNumber'
+        end>
+      Params = <>
+      ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074'_'#1076#1077#1090#1072#1083#1100#1085#1072#1103
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074'_'#1076#1077#1090#1072#1083#1100#1085#1072#1103
+      ReportNameParam.DataType = ftString
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Receipt'
@@ -1080,7 +1146,7 @@ object ReceiptForm: TReceiptForm
   end
   object ReceiptChildCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'ReceiptId'
+    IndexFieldNames = 'ReceiptId;GroupNumber'
     MasterFields = 'Id'
     MasterSource = DataSource
     PacketRecords = 0
@@ -1284,5 +1350,30 @@ object ReceiptForm: TReceiptForm
       end>
     Left = 536
     Top = 160
+  end
+  object spPrintReceiptChildDetail: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_PrintReceiptChildDetail'
+    DataSet = PrintReceiptChildDetailCDS
+    DataSets = <
+      item
+        DataSet = PrintReceiptChildDetailCDS
+      end>
+    Params = <
+      item
+        Name = 'ReceiptId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 280
+    Top = 232
+  end
+  object PrintReceiptChildDetailCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 216
+    Top = 288
   end
 end

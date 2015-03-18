@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Value   TFloat, isWeightMain Boolean, isTaxExit Boole
                ReceiptId Integer, ReceiptName TVarChar, 
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar,
-               MeasureName TVarChar,
+               MeasureName TVarChar, InfoMoneyName TVarChar,
                GroupNumber Integer,
                isErased Boolean) AS
 $BODY$
@@ -45,6 +45,7 @@ BEGIN
          , Object_GoodsKind.ValueData  AS GoodsKindName
 
          , Object_Measure.ValueData     AS MeasureName
+         , Object_InfoMoney_View.InfoMoneyName AS InfoMoneyName
          , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := Object_Goods.Id
                                           , inGoodsKindId            := Object_GoodsKind.Id
                                           , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
@@ -112,6 +113,7 @@ ALTER FUNCTION gpSelect_Object_ReceiptChild (Boolean, TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.03.15                        * InfoMoneyName
  14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_
  09.07.13         * 
