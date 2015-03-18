@@ -45,6 +45,7 @@ end;
 procedure TLoadReportTest.LoadReceiptFormTest;
 begin
   LoadReportFromFile('Печать_рецептов', ReportPath + '\Рецепты\Печать_рецептов.fr3');
+  LoadReportFromFile('Печать_рецептов_детальная', ReportPath + '\Рецепты\Печать_рецептов_детальная.fr3');
 end;
 
 procedure TLoadReportTest.LoadReportFromFile(ReportName, ReportPath: string);
