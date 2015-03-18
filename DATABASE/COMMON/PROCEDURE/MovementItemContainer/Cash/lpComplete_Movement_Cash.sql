@@ -66,7 +66,7 @@ BEGIN
              , 0 AS ServiceDateId
 
              , 0 AS ContractId -- не используется
-             , COALESCE (ObjectLink_Cash_PaidKind.ChildObjectId, zc_Enum_PaidKind_SecondForm()) AS PaidKindId -- !!!НЕ Всегда НАЛ!!!, но здесь пока не используется
+             , COALESCE (ObjectLink_Cash_PaidKind.ChildObjectId, zc_Enum_PaidKind_SecondForm()) AS PaidKindId -- !!!НЕ Всегда НАЛ!!!, но для этой проводки пока не используется
 
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
@@ -171,7 +171,10 @@ BEGIN
                END AS ServiceDateId
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
-             , _tmpItem.PaidKindId -- !!!НЕ Всегда НАЛ!!!
+             , CASE WHEN ObjectLink_Partner_Unit.ChildObjectId > 0
+                         THEN zc_Enum_PaidKind_SecondForm() -- !!!меняется на НАЛ!!!
+                    ELSE _tmpItem.PaidKindId -- !!!НЕ Всегда НАЛ!!!
+               END AS PaidKindId
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
@@ -213,6 +216,8 @@ BEGIN
                                                               AND ObjectLink_Partner_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
                                                                                                           AND Object.Id IS NULL -- !!!нужен только для затрат!!!
+             LEFT JOIN ObjectLink AS ObjectLink_Partner_Unit ON ObjectLink_Partner_Unit.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                            AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
        ;
 
 

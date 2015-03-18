@@ -219,6 +219,7 @@ BEGIN
              END AS ERPN
            , Movement_child.Id as x11
            , Movement_child.OperDate as x12
+           , '51' ::TVarChar AS PZOB -- поля для Медка
 
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE

@@ -32,6 +32,10 @@ BEGIN
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.PaidKindId = zc_Enum_PaidKind_FirstForm()
                                                            THEN zc_Enum_AccountDirection_40500() -- касса БН
+
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.BusinessId_Balance <> 0
+                                                           THEN zc_Enum_AccountDirection_40600() -- касса Павильонов
+
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NOT NULL
                                                            THEN zc_Enum_AccountDirection_40200() -- касса филиалов
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NULL
@@ -163,6 +167,8 @@ BEGIN
                                                THEN zc_Enum_Account_40101() -- касса + касса
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40500() -- касса БН
                                                THEN zc_Enum_Account_40501() -- касса БН + касса
+                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40600() -- касса Павильонов
+                                               THEN zc_Enum_Account_40601() -- касса Павильонов + касса Павильонов БН
 
                                           ELSE lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem.AccountGroupId
                                                                           , inAccountDirectionId     := _tmpItem.AccountDirectionId
@@ -333,6 +339,7 @@ BEGIN
                                                                             , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100()
                                                                                                                                              , zc_Enum_AccountDirection_40200()
                                                                                                                                              , zc_Enum_AccountDirection_40500()
+                                                                                                                                             , zc_Enum_AccountDirection_40600()
                                                                                                                                               )
                                                                                                                THEN zc_ContainerLinkObject_Cash()
                                                                                                           ELSE zc_ContainerLinkObject_BankAccount()
@@ -352,6 +359,7 @@ BEGIN
                                                                             , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100()
                                                                                                                                              , zc_Enum_AccountDirection_40200()
                                                                                                                                              , zc_Enum_AccountDirection_40500()
+                                                                                                                                             , zc_Enum_AccountDirection_40600()
                                                                                                                                               )
                                                                                                                THEN zc_ContainerLinkObject_Cash()
                                                                                                           ELSE zc_ContainerLinkObject_BankAccount()
@@ -491,6 +499,7 @@ BEGIN
                                                                             , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100()
                                                                                                                                              , zc_Enum_AccountDirection_40200()
                                                                                                                                              , zc_Enum_AccountDirection_40500()
+                                                                                                                                             , zc_Enum_AccountDirection_40600()
                                                                                                                                               )
                                                                                                                THEN zc_ContainerLinkObject_Cash()
                                                                                                           ELSE zc_ContainerLinkObject_BankAccount()
@@ -510,6 +519,7 @@ BEGIN
                                                                             , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100()
                                                                                                                                              , zc_Enum_AccountDirection_40200()
                                                                                                                                              , zc_Enum_AccountDirection_40500()
+                                                                                                                                             , zc_Enum_AccountDirection_40600()
                                                                                                                                               )
                                                                                                                THEN zc_ContainerLinkObject_Cash()
                                                                                                           ELSE zc_ContainerLinkObject_BankAccount()

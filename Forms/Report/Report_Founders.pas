@@ -60,6 +60,12 @@ type
     StartAmountK: TcxGridDBColumn;
     EndAmountD: TcxGridDBColumn;
     EndAmountK: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
+    MoneyPlaceName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    Name_by: TcxGridDBColumn;
+    ItemName_by: TcxGridDBColumn;
+    GroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -107,6 +107,9 @@ type
     DocumentDayCount: TcxGridDBColumn;
     PersonalChoiceForm: TOpenChoiceForm;
     PersonalTradeChoiceForm: TOpenChoiceForm;
+    UnitCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    actChoiceUnit: TOpenChoiceForm;
   private
     { Private declarations }
   public

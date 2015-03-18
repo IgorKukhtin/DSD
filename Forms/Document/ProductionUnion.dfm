@@ -11,18 +11,17 @@ inherited ProductionUnionForm: TProductionUnionForm
     TabOrder = 2
     ExplicitTop = 122
     ExplicitWidth = 1020
-    ExplicitHeight = 610
+    ExplicitHeight = 552
     ClientRectBottom = 552
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1020
-      ExplicitHeight = 586
+      ExplicitHeight = 528
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 228
+        Height = 220
         ExplicitWidth = 1020
-        ExplicitHeight = 228
+        ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -204,9 +203,9 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 228
+        Top = 225
         Width = 1020
-        ExplicitTop = 228
+        ExplicitTop = 225
         ExplicitWidth = 1020
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -317,6 +316,11 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
           end
         end
+      end
+      inherited cxBottomSplitter: TcxSplitter
+        Top = 220
+        Width = 1020
+        ExplicitTop = 220
       end
     end
   end

@@ -3,12 +3,15 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, Integer, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnionTech(
     IN inMovementId           Integer,       -- ключ
     IN inOperDate             TDateTime,     -- дата Документа
     IN inMovementItemId       Integer,       -- ключ
     IN inMovementItemId_order Integer,       -- ключ
+    IN inFromId               Integer,       -- ключ
+    IN inToId                 Integer,       -- ключ
     IN inSession              TVarChar       -- сессия пользователя
 
 )
@@ -32,7 +35,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     IF COALESCE (inMovementId, 0) = 0
+     IF COALESCE (inMovementId, 0) = 0 AND inMovementItemId_order <> 0
      THEN
           RETURN QUERY
           SELECT 0                                  AS MovementId
@@ -94,11 +97,13 @@ BEGIN
           WHERE MovementItem.Id = inMovementItemId_order;
 
      ELSE
+     IF inMovementItemId <> 0
+     THEN
           RETURN QUERY
-          SELECT MovementItem.MovementId            AS MovementId
-               , Movement.OperDate                  AS OperDate
-               , MLO_From.ObjectId		    AS FromId
-               , MLO_To.ObjectId                    AS ToId
+          SELECT MovementItem.MovementId             AS MovementId
+               , Movement.OperDate                   AS OperDate
+               , MLO_From.ObjectId		     AS FromId
+               , MLO_To.ObjectId                     AS ToId
 
                , MovementItem.Id                     AS MovementItemId
                , Object_Goods.Id                     AS GoodsId
@@ -170,6 +175,35 @@ BEGIN
 
           WHERE MovementItem.Id = inMovementItemId;
 
+     ELSE
+          RETURN QUERY
+          SELECT 0                                   AS MovementId
+               , inOperDate                          AS OperDate
+               , inFromId	                     AS FromId
+               , inToId                              AS ToId
+
+               , 0                                   AS MovementItemId
+               , 0                                   AS GoodsId
+               , '' :: TVarChar                      AS GoodsName
+               , 0                                   AS GoodsKindId
+               , '' :: TVarChar                      AS GoodsKindName
+               , 0                                   AS GoodsKindId_Complete
+               , '' :: TVarChar                      AS GoodsKindName_Complete
+
+               , 0                                   AS ReceiptId
+               , '' :: TVarChar                      AS ReceiptName
+               , '' :: TVarChar                      AS ReceiptCode
+
+               , 0 :: TFloat		             AS Amount_order
+               , 0 :: TFloat		             AS CuterCount_order
+
+               , 0 :: TFloat		             AS RealWeight
+               , 0 :: TFloat   		             AS CuterCount
+               , 0 :: TFloat		             AS Count
+               , '' :: TVarChar                      AS Comment
+         ;
+
+     END IF;
      END IF;
 
 END;
@@ -184,4 +218,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ProductionUnionTech (inMovementId := 0, inOperDate := '01.01.2014', inMovementItemId:= 0, inMovementItemId_order:= 0, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_ProductionUnionTech (inMovementId := 0, inOperDate := '01.01.2014', inMovementItemId:= 0, inMovementItemId_order:= 0, inFromId:=0, inToId:=0, inSession:= '2')
