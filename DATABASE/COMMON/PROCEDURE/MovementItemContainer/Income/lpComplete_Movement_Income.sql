@@ -1153,6 +1153,8 @@ BEGIN
                 , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummPartner.AccountId_Transit ELSE _tmpItem_SummPartner.AccountId END AS PassiveAccountId
            FROM _tmpItem
                 LEFT JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem.InfoMoneyId_Detail
+                                              AND _tmpItem_SummPartner.BusinessId = _tmpItem.BusinessId
+                                              AND _tmpItem_SummPartner.UnitId_Asset = _tmpItem.UnitId_Asset
                 LEFT JOIN (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
                                                                                                                    OR  (tmpOperDate.OperDate = vbOperDatePartner
                                                                                                                     AND COALESCE (_tmpItem_SummPartner.AccountId_Transit, 0) <> 0)
@@ -1185,6 +1187,7 @@ BEGIN
                                                )
      FROM _tmpItem
           LEFT JOIN _tmpItem_SummPacker ON _tmpItem_SummPacker.InfoMoneyId = _tmpItem.InfoMoneyId
+                                       AND _tmpItem_SummPacker.BusinessId = _tmpItem.BusinessId
      WHERE _tmpItem.OperSumm_Packer <> 0;
 
 

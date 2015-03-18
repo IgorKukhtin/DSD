@@ -11,19 +11,19 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Width = 1097
     Height = 624
     TabOrder = 2
-    ExplicitTop = 98
+    ExplicitTop = 61
     ExplicitWidth = 1097
-    ExplicitHeight = 587
+    ExplicitHeight = 624
     ClientRectBottom = 624
     ClientRectRight = 1097
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1097
-      ExplicitHeight = 563
+      ExplicitHeight = 600
       inherited cxGrid: TcxGrid
         Width = 1097
         Height = 292
         ExplicitWidth = 1097
-        ExplicitHeight = 255
+        ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -288,7 +288,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       inherited cxGridChild: TcxGrid
         Top = 297
         Width = 1097
-        ExplicitTop = 260
+        ExplicitTop = 297
         ExplicitWidth = 1097
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -423,7 +423,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       inherited cxBottomSplitter: TcxSplitter
         Top = 292
         Width = 1097
-        ExplicitTop = 255
+        ExplicitTop = 292
         ExplicitWidth = 1097
       end
     end
@@ -591,6 +591,37 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
+    end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spReport_GoodsMI_ProductionUnion_Tax
+      StoredProcList = <
+        item
+          StoredProc = spReport_GoodsMI_ProductionUnion_Tax
+        end>
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')>'
+      DataSets = <
+        item
+          DataSet = PrintMasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsName;PartionGoodsDate;GoodsKindName_Comp' +
+            'lete'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
+      ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
     end
     inherited actAddMask: TdsdExecStoredProc
       Enabled = False
@@ -876,9 +907,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited bbPrint: TdxBarButton
-      Visible = ivNever
     end
     object bbEdit: TdxBarButton [18]
       Action = actUpdate
@@ -1373,5 +1401,49 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     DateEnd = deEnd
     Left = 64
     Top = 40
+  end
+  object PrintMasterCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 233
+  end
+  object PrintChildCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 278
+  end
+  object spReport_GoodsMI_ProductionUnion_Tax: TdsdStoredProc
+    StoredProcName = 'gpReport_GoodsMI_ProductionUnion_Tax'
+    DataSet = PrintMasterCDS
+    DataSets = <
+      item
+        DataSet = PrintMasterCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41791d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41791d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesTo
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 272
   end
 end

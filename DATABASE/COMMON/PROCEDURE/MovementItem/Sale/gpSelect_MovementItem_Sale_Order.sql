@@ -229,21 +229,21 @@ BEGIN
                                        AND MIFloat_HeadCount.DescId = NULL -- zc_MIFloat_HeadCount()
             LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                         ON MIFloat_BoxCount.MovementItemId = tmpMI.MovementItemId
-                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                                       AND MIFloat_BoxCount.DescId = NULL -- zc_MIFloat_BoxCount()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                         ON MIString_PartionGoods.MovementItemId =  tmpMI.MovementItemId
-                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                         ON MIString_PartionGoods.MovementItemId = tmpMI.MovementItemId
+                                        AND MIString_PartionGoods.DescId = NULL -- zc_MIString_PartionGoods()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
                                              ON MILinkObject_Box.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
-            LEFT JOIN Object AS Object_Box ON Object_Box.Id = MILinkObject_Box.ObjectId
+                                            AND MILinkObject_Box.DescId = NULL -- zc_MILinkObject_Box()
+            LEFT JOIN Object AS Object_Box ON Object_Box.Id = NULL -- MILinkObject_Box.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+                                            AND MILinkObject_Asset.DescId = NULL -- zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = NULL -- MILinkObject_Asset.ObjectId
             ;
      ELSE
 
@@ -386,20 +386,20 @@ BEGIN
                                        AND MIFloat_HeadCount.DescId = NULL -- zc_MIFloat_HeadCount()
             LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                         ON MIFloat_BoxCount.MovementItemId = tmpMI.MovementItemId
-                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                                       AND MIFloat_BoxCount.DescId = NULL -- zc_MIFloat_BoxCount()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  tmpMI.MovementItemId
-                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                        AND MIString_PartionGoods.DescId = NULL -- zc_MIString_PartionGoods()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
                                              ON MILinkObject_Box.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+                                            AND MILinkObject_Box.DescId = NULL -- zc_MILinkObject_Box()
             LEFT JOIN Object AS Object_Box ON Object_Box.Id = NULL -- MILinkObject_Box.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                            AND MILinkObject_Asset.DescId = NULL -- zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = NULL -- MILinkObject_Asset.ObjectId
             ;
 

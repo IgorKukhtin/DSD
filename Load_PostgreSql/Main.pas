@@ -3151,7 +3151,7 @@ begin
              if (JuridicalId_pg=0)and(FieldByName('pgPartnerId').AsInteger>10000)
              then begin
 
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=0;//FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('inGLNCode').AsString;
@@ -3181,8 +3181,9 @@ begin
                        JuridicalId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
                        JuridicalDetailsId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
              end // if (JuridicalId_pg=0)and(FieldByName('pgPartnerId').AsInteger>10000)
-             else if trim(FieldByName('inGLNCode').AsString) <> ''
+             else if (trim(FieldByName('inGLNCode').AsString) <> '') and (1=0)
                   then
+                       //!!!отключил
                        fExecSqToQuery ('update ObjectString set ValueData = '+FormatToVarCharServer_notNULL(trim(FieldByName('inGLNCode').AsString))+' where ObjectId = '+IntToStr(JuridicalId_pg)+' and DescId = zc_objectString_Juridical_GLNCode()');
              //
              //if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -3383,6 +3384,9 @@ var ParentId_pg:Integer;
     ContractId_pg:Integer;
 begin
      if (not cbJuridicalBranchNal.Checked)or(not cbJuridicalBranchNal.Enabled) then exit;
+     //
+     ShowMessage ('Ошибка.cbJuridicalBranchNal - отключен.');
+     exit;
      //
      myEnabledCB(cbJuridicalBranchNal);
      //
@@ -3639,6 +3643,9 @@ procedure TMainForm.pLoadGuide_Partner1C_BranchNal;
 var PartnerId_pg:Integer;
 begin
      if (not cbPartnerBranchNal.Checked)or(not cbPartnerBranchNal.Enabled) then exit;
+     //
+     ShowMessage ('Ошибка.cbPartnerBranchNal - отключен.');
+     exit;
      //
      myEnabledCB(cbPartnerBranchNal);
 
@@ -4303,8 +4310,9 @@ begin
                  else
                  begin
                       PartnerId_pg:=FieldByName('Id_Postgres').AsInteger;
-                      if trim(FieldByName('inGLNCode').AsString) <> ''
+                      if (trim(FieldByName('inGLNCode').AsString) <> '') and (1=0)
                       then
+                          //!!!отключил
                           fExecSqToQuery ('update ObjectString set ValueData = '+FormatToVarCharServer_notNULL(trim(FieldByName('inGLNCode').AsString))+' where ObjectId = '+IntToStr(PartnerId_pg)+' and DescId = zc_objectString_Partner_GLNCode()');
                  end;
 
@@ -4953,6 +4961,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
+//select GoodsProperty_Kachestvo.GroupId as ObjectCode from dba.GoodsProperty_Kachestvo         left join pSelect_GoodsProperty_Kachestvo() as tmp on tmp.GoodsPropertyId = GoodsProperty_Kachestvo.GoodsPropertyId and tmp.byGroupId = GoodsProperty_Kachestvo.GroupId
         Add('select GoodsProperty_Kachestvo.GroupId as ObjectId');
         Add('     , GoodsProperty_Kachestvo.GroupId as ObjectCode');
         Add('     , tmp.byGroupName as ObjectName');

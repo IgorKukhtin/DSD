@@ -699,7 +699,7 @@ BEGIN
           UNION ALL
            SELECT _tmpItem_Active.MovementDescId
                 , _tmpItem_Active.MovementItemId
-                , _tmpItem_Active.OperSumm + CASE WHEN _tmpItem_Active.ObjectDescId = zc_Object_BankAccount() THEN (_tmpItem_Passive.OperSumm_Diff) ELSE 0 END AS OperSumm
+                , _tmpItem_Active.OperSumm + CASE WHEN _tmpItem_Active.ObjectDescId = zc_Object_BankAccount() THEN COALESCE (_tmpItem_Passive.OperSumm_Diff, 0) ELSE 0 END AS OperSumm
                 , _tmpItem_Active.OperDate
                 , _tmpItem_Active.ContainerId AS ActiveContainerId
                 , _tmpItem_Active.AccountId AS ActiveAccountId

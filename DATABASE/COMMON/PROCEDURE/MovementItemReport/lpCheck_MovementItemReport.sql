@@ -101,5 +101,5 @@ ALTER FUNCTION lpCheck_MovementItemReport (TDateTime, TDateTime) OWNER TO postgr
 
 -- тест
 -- SELECT * FROM lpCheck_MovementItemReport ('01.10.2013', '31.10.2013') WHERE (Amount <> Amount_check) ORDER BY 2
--- SELECT * FROM lpCheck_MovementItemReport ('12.11.2014', '12.11.2014') WHERE (Amount <> Amount_check) ORDER BY 2
+-- SELECT * FROM lpCheck_MovementItemReport ('31.07.2014', '31.07.2014') WHERE (Amount <> Amount_check) ORDER BY 2
 -- SELECT * FROM lpCheck_MovementItemReport ('02.01.2015', '02.28.2015') WHERE (Amount <> Amount_check) ORDER BY 2

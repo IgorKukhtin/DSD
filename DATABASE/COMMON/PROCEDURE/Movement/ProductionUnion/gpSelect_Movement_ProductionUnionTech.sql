@@ -91,7 +91,7 @@ BEGIN
                                , COALESCE (MIFloat_CuterCount.ValueData, 0)                     AS CuterCount
                           FROM Movement
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                      AND MovementItem.isErased = FALSE
+                                                      AND MovementItem.isErased   = FALSE
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                                            ON MIFloat_CuterCount.MovementItemId = MovementItem.Id

@@ -198,7 +198,8 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-            ;
+
+       WHERE COALESCE (Object_From.DescId, 0) <> zc_Object_Unit();
 
 END;
 $BODY$
