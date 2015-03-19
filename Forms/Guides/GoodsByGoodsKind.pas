@@ -22,6 +22,8 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     GoodsOpenChoice: TOpenChoiceForm;
     GoodsKindChoiceForm: TOpenChoiceForm;
+    InsertRecord: TInsertRecord;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

@@ -110,7 +110,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'GoodsId'
         end
         item
           Name = 'Code'
@@ -122,21 +122,17 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'GoodsName'
           DataType = ftString
         end
         item
-          Name = 'Key_two'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
+          ParamType = ptUnknown
         end
         item
-          Name = 'TextValue_two'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Name'
           DataType = ftString
+          ParamType = ptUnknown
         end>
     end
     object actUpdateDataSet: TdsdUpdateDataSet
@@ -203,6 +199,16 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end>
       isShowModal = True
     end
+    object InsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      Action = GoodsOpenChoice
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1074#1103#1079#1100'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1074#1103#1079#1100'>'
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -224,6 +230,10 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -252,6 +262,10 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bb: TdxBarButton
+      Action = InsertRecord
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -302,7 +316,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       end
       item
         Name = 'inisOrder'
-        Value = Null
+        Value = 'Felse'
         Component = MasterCDS
         ComponentItem = 'isOrder'
         DataType = ftBoolean
