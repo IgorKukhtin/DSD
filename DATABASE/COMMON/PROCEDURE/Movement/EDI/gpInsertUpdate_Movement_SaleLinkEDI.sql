@@ -140,7 +140,7 @@ BEGIN
                                      , inSession        := inSession);
 
      -- сохранили протокол
-     PERFORM lpInsert_Movement_EDIEvents (vbMovementId_EDI, 'Завершен перенос данных из ComDoc в документ (' || (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale()) || ').', vbUserId);
+     PERFORM lpInsert_Movement_EDIEvents (vbMovementId_EDI, 'Завершен перенос данных из ComDoc в документ (' || (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()) || ').', vbUserId);
 
      -- END !!!так для продажи!!!
 

@@ -8392,7 +8392,7 @@ begin
         Add('     , case when is18=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.Code_byKray,15,2) else cast (null as TSumm) end as Amount18');
 
         Add('     , case when is18=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.Code_byKray,1,13) else SUBSTR(GoodsProperty_Detail.Code_byKray,1,13) end as BarCode18');
-        Add('     , case when is18=zc_rvNo() then null when SUBSTR(GoodsProperty_Detail.Code_byKray,18,1) = '+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.Code_byKray,19,5)'
+        Add('     , case when is18=zc_rvNo() then null when 1=0 and SUBSTR(GoodsProperty_Detail.Code_byKray,18,1) = '+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.Code_byKray,19,5)'
                                                     +' else SUBSTR(GoodsProperty_Detail.Code_byKray,18,6) end as Article18');
         Add('     , BarCode18 as BarCodeGLN18');
         Add('     , Article18 as ArticleGLN18');
