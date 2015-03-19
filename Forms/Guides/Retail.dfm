@@ -44,35 +44,52 @@ object RetailForm: TRetailForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 53
+        Width = 35
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 235
+        Width = 100
       end
-      object colGLNCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' GLN'
+      object GLNCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' GLN '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'GLNCode'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 135
+        Width = 80
       end
-      object clGoodsPropertyName: TcxGridDBColumn
+      object GLNCodeCorporate: TcxGridDBColumn
+        Caption = #1050#1086#1076' GLN '#1055#1086#1089#1090#1072#1074#1097#1080#1082' '
+        DataBinding.FieldName = 'GLNCodeCorporate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object GoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsPropertyName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceGoodsProperty
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 104
+        Width = 100
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -116,8 +133,8 @@ object RetailForm: TRetailForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -378,6 +395,29 @@ object RetailForm: TRetailForm
         end>
       isShowModal = False
     end
+    object actChoiceGoodsProperty: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actChoiceGoodsProperty'
+      FormName = 'TGoodsPropertyForm'
+      FormNameParam.Value = 'TGoodsPropertyForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsPropertyId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsPropertyName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Retail'
@@ -457,6 +497,21 @@ object RetailForm: TRetailForm
         Component = ClientDataSet
         ComponentItem = 'GLNCode'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGLNCodeCorporate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GLNCodeCorporate'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsPropertyId'
         ParamType = ptInput
       end>
     PackSize = 1

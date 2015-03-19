@@ -77,7 +77,6 @@ type
     colPartnerTagName: TcxGridDBColumn;
     clPersonalName: TcxGridDBColumn;
     clPersonalTradeName: TcxGridDBColumn;
-    Id: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;

@@ -11,7 +11,7 @@ uses
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit;
 
 type
   TRetailForm = class(TParentForm)
@@ -37,19 +37,21 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actInsert: TdsdInsertUpdateAction;
-    colGLNCode: TcxGridDBColumn;
-    clGoodsPropertyName: TcxGridDBColumn;
+    GLNCode: TcxGridDBColumn;
+    GoodsPropertyName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     spUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    GLNCodeCorporate: TcxGridDBColumn;
+    actChoiceGoodsProperty: TOpenChoiceForm;
   private
     { Private declarations }
   public

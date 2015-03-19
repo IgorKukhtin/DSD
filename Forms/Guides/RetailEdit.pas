@@ -32,6 +32,8 @@ type
     cxLabel4: TcxLabel;
     ceGoodsProperty: TcxButtonEdit;
     GoodsPropertyGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edGLNCodeCorporate: TcxTextEdit;
   private
     { Private declarations }
   public

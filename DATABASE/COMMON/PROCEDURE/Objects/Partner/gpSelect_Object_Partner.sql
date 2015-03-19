@@ -72,7 +72,8 @@ BEGIN
 
          , CASE WHEN ObjectString_GLNCodeJuridical.ValueData <> '' THEN ObjectString_GLNCodeJuridical.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN ObjectString_Juridical_GLNCode.ValueData ELSE '' END :: TVarChar AS GLNCodeJuridical
          , CASE WHEN ObjectString_GLNCodeRetail.ValueData <> '' THEN ObjectString_GLNCodeRetail.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN CASE WHEN ObjectString_Retail_GLNCode.ValueData <> '' THEN ObjectString_Retail_GLNCode.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END ELSE '' END :: TVarChar AS GLNCodeRetail
-         , CASE WHEN ObjectString_GLNCodeCorporate.ValueData <> '' THEN ObjectString_GLNCodeCorporate.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN vbGLNCodeCorporate ELSE '' END :: TVarChar AS GLNCodeCorporate
+         , CASE WHEN ObjectString_GLNCodeCorporate.ValueData <> '' THEN ObjectString_GLNCodeCorporate.ValueData WHEN ObjectString_Retail_GLNCodeCorporate.ValueData <> '' THEN vbGLNCodeCorporate ELSE '' END :: TVarChar AS GLNCodeCorporate
+
         
          , ObjectString_Address.ValueData     AS Address
          , ObjectString_HouseNumber.ValueData AS HouseNumber
@@ -221,6 +222,9 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Retail_GLNCode
                                 ON ObjectString_Retail_GLNCode.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                AND ObjectString_Retail_GLNCode.DescId = zc_ObjectString_Retail_GLNCode()
+         LEFT JOIN ObjectString AS ObjectString_Retail_GLNCodeCorporate
+                                ON ObjectString_Retail_GLNCodeCorporate.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                               AND ObjectString_Retail_GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
 
          LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id

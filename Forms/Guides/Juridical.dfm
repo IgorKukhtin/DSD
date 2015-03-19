@@ -30,7 +30,6 @@ object JuridicalForm: TJuridicalForm
     Height = 379
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -73,13 +72,13 @@ object JuridicalForm: TJuridicalForm
         Width = 50
       end
       object clGLNCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' GLN'
+        Caption = 'GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
         DataBinding.FieldName = 'GLNCode'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 100
       end
       object clRetailName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
@@ -287,8 +286,8 @@ object JuridicalForm: TJuridicalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -492,14 +491,12 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput

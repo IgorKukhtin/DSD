@@ -41,8 +41,11 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), inCode, inName);
-   -- сохранили свойство <Код GLN>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
+   IF vbIsInsert = TRUE
+   THEN
+       -- сохранили свойство <Код GLN>
+       PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
+   END IF;
    -- сохранили свойство <Адрес точки доставки>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, inAddress);
    -- сохранили свойство <За сколько дней принимается заказ>

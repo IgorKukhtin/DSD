@@ -332,7 +332,7 @@ BEGIN
          -- сформировали связь <Расходная накладная> с EDI (если по она уже сформирована по заявке)
          PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), Movement.Id, inMovementId)
                  -- !!!обновили!! свойство <Номер заявки у контрагента>
-               , lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), Movement.Id, vbInvNumber)
+               , lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), Movement.Id, vbInvNumber)
          FROM MovementLinkMovement
               INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -365,7 +365,7 @@ BEGIN
 
 
      -- сохранили протокол
-     PERFORM lpInsert_Movement_EDIEvents (inMovementId, 'Завершен перенос данных из EDI в документ (' || (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_OrderExternal()) || ').', inUserId);
+     PERFORM lpInsert_Movement_EDIEvents (inMovementId, 'Завершен перенос данных из EDI в документ (' || (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()) || ').', inUserId);
 
 END;
 $BODY$

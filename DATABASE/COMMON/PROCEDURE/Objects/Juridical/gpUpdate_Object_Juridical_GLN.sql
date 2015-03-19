@@ -1,10 +1,11 @@
 -- Function: gpUpdate_Object_Juridical_GLN()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_GLN (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_GLN (Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Juridical_GLN(
  INOUT ioId                  Integer   ,    -- ключ объекта <Юридическое лицо>
     IN inGLNCode             TVarChar  ,    -- Код GLN
+    IN inGoodsPropertyId     Integer   ,  -- Классификаторы свойств товаров
     IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS Integer AS
@@ -17,13 +18,16 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_GLNCode(), ioId, inGLNCode);
    
+   -- сохранили связь с <Классификаторы свойств товаров>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Juridical_GoodsProperty(), ioId, inGoodsPropertyId);   
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpUpdate_Object_Juridical_GLN (Integer,TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpUpdate_Object_Juridical_GLN (Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -72,12 +72,12 @@ type
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
     clGoodsPropertyName: TcxGridDBColumn;
-    clRetailReportName: TcxGridDBColumn;
     actChoiceJuridicalGroup: TOpenChoiceForm;
     clRetailName: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
+    actChoiceGoodsProperty: TOpenChoiceForm;
   private
     { Private declarations }
   public
