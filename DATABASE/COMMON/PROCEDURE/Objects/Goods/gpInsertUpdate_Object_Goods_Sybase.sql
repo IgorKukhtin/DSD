@@ -39,6 +39,29 @@ BEGIN
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
 
 
+   -- !!!заменили!!!
+   IF inInfoMoneyId NOT IN (zc_Enum_InfoMoney_10202(), zc_Enum_InfoMoney_10203()) -- Прочее сырье + Оболочка + Упаковка
+      AND inInfoMoneyId IN (zc_Enum_InfoMoney_10201(), zc_Enum_InfoMoney_10204()) -- Прочее сырье + Специи + Прочее сырье
+      AND ioId > 0 
+      AND EXISTS (SELECT ObjectLink_Receipt_Goods.ObjectId
+                  FROM ObjectLink AS ObjectLink_Receipt_GoodsKind
+                       INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods ON ObjectLink_Receipt_Goods.ChildObjectId = ObjectLink_Receipt_GoodsKind.ObjectId
+                                                                        AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                                                        AND ObjectLink_Receipt_Goods.ObjectId = ioId
+                       INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = ObjectLink_Receipt_GoodsKind.ObjectId
+                                                                               AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                       INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                               AND Object_ReceiptChild.isErased = FALSE
+                       INNER JOIN ObjectBoolean AS ObjectBoolean_TaxExit
+                                                ON ObjectBoolean_TaxExit.ObjectId = Object_ReceiptChild.Id 
+                                               AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+                                               AND ObjectBoolean_TaxExit.ValueData = TRUE
+                  WHERE ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                    AND ObjectLink_Receipt_GoodsKind.ChildObjectId = zc_GoodsKind_WorkProgress())
+   THEN
+       inInfoMoneyId:= zc_Enum_InfoMoney_10203(); -- Упаковка
+   END IF;
+
    -- расчетно свойство <Полное название группы>
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
 
@@ -47,6 +70,8 @@ BEGIN
                                 , inAccessKeyId:= CASE WHEN ioId <> 0
                                                             THEN (SELECT AccessKeyId FROM Object WHERE Id= ioId)
                                                   END);
+
+
 
    -- сохранили свойство <Полное название группы>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), ioId, vbGroupNameFull);

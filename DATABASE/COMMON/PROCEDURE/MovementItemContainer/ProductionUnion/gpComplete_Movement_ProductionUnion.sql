@@ -552,7 +552,7 @@ BEGIN
                                                  , inAccountId      := 0                                   -- нет счета
                                                  , inAnalyzerId     := 0                                   -- нет аналитики
                                                  , inObjectId_Analyzer       := _tmpItem.GoodsId           -- Товар
-                                                 , inWhereObjectId_Analyzer  := vbToWhereObjectId_Analyzer -- Подраделение или..
+                                                 , inWhereObjectId_Analyzer  := vbToWhereObjectId_Analyzer -- Подраделение или...
                                                  , inContainerId_Analyzer    := 0                          -- количественный Контейнер-Мастер (для прихода не надо)
                                                  , inAmount         := _tmpItem.OperCount
                                                  , inOperDate       := vbOperDate
@@ -567,7 +567,7 @@ BEGIN
             , 0                                       AS AccountId  -- нет счета
             , 0                                       AS AnalyzerId -- нет аналитики
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
-            , vbFromWhereObjectId_Analyzer            AS WhereObjectId_Analyzer -- Подраделение или..
+            , vbFromWhereObjectId_Analyzer            AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItem.ContainerId_GoodsTo            AS ContainerId_Analyzer   -- количественный Контейнер-Мастер (т.е. из прихода)
             , _tmpItem.MIContainerId_To               AS ParentId
             , -1 * _tmpItemChild.OperCount
@@ -674,7 +674,7 @@ BEGIN
                                                       , inAccountId      := _tmpItemSumm_group.AccountId_To     -- счет есть всегда
                                                       , inAnalyzerId     := 0                                   -- нет аналитики
                                                       , inObjectId_Analyzer       := _tmpItem.GoodsId           -- Товар
-                                                      , inWhereObjectId_Analyzer  := vbToWhereObjectId_Analyzer -- Подраделение или..
+                                                      , inWhereObjectId_Analyzer  := vbToWhereObjectId_Analyzer -- Подраделение или...
                                                       , inContainerId_Analyzer    := 0                          -- суммовой Контейнер-Мастер (для прихода не надо)
                                                       , inAmount         := _tmpItemSumm_group.OperSumm
                                                       , inOperDate       := vbOperDate
@@ -698,7 +698,7 @@ BEGIN
             , _tmpItemSummChild.AccountId_From        AS AccountId  -- счет есть всегда
             , 0                                       AS AnalyzerId -- нет аналитики
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
-            , vbFromWhereObjectId_Analyzer            AS WhereObjectId_Analyzer -- Подраделение или..
+            , vbFromWhereObjectId_Analyzer            AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItemSumm.ContainerId_To             AS ContainerId_Analyzer   -- суммовой Контейнер-Мастер (т.е. из прихода)
             , _tmpItemSumm.MIContainerId_To           AS ParentId
             , -1 * _tmpItemSummChild.OperSumm

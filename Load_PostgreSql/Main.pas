@@ -4880,7 +4880,7 @@ begin
            +'            else zc_rvNo()'
            +'       end as inIsWeightMain');
 
-        Add('     , isnull(ReceiptItem_byHistory.isTaxExit,zc_rvNo()) as inIsTaxExit');
+        Add('     , case when ReceiptItem_byHistory.KindPackageId_parent = zc_KindPackage_groupPF() or ReceiptItem_byHistory.KindPackageId_parent = zc_KindPackage_PF() then isnull(ReceiptItem_byHistory.isTaxExit,zc_rvNo()) else zc_rvYes() end as inIsTaxExit');
         Add('     , zc_rvYes() as zc_rvYes');
 
         Add('     , Receipt_byHistory.Id_pg as inReceiptId');
