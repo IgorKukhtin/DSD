@@ -70,11 +70,23 @@ BEGIN
          , ObjectString_GLNCodeRetail.ValueData    AS GLNCodeRetail_property
          , ObjectString_GLNCodeCorporate.ValueData AS GLNCodeCorporate_property
 
-         , CASE WHEN ObjectString_GLNCodeJuridical.ValueData <> '' THEN ObjectString_GLNCodeJuridical.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN ObjectString_Juridical_GLNCode.ValueData ELSE '' END :: TVarChar AS GLNCodeJuridical
-         , CASE WHEN ObjectString_GLNCodeRetail.ValueData <> '' THEN ObjectString_GLNCodeRetail.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN CASE WHEN ObjectString_Retail_GLNCode.ValueData <> '' THEN ObjectString_Retail_GLNCode.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END ELSE '' END :: TVarChar AS GLNCodeRetail
-         , CASE WHEN ObjectString_GLNCodeCorporate.ValueData <> '' THEN ObjectString_GLNCodeCorporate.ValueData WHEN ObjectString_Retail_GLNCodeCorporate.ValueData <> '' THEN vbGLNCodeCorporate ELSE '' END :: TVarChar AS GLNCodeCorporate
+         , zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_GLNCode.ValueData
+                                  , inGLNCodeJuridical_partner := ObjectString_GLNCodeJuridical.ValueData
+                                  , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode.ValueData
+                                   ) AS GLNCodeJuridical
 
-        
+         , zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_GLNCode.ValueData
+                               , inGLNCodeRetail_partner := ObjectString_GLNCodeRetail.ValueData
+                               , inGLNCodeRetail         := ObjectString_Retail_GLNCode.ValueData
+                               , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode.ValueData
+                                ) AS GLNCodeRetail
+
+         , zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_GLNCode.ValueData
+                                  , inGLNCodeCorporate_partner := ObjectString_GLNCodeCorporate.ValueData
+                                  , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate.ValueData
+                                  , inGLNCodeCorporate_main    := vbGLNCodeCorporate
+                                   ) AS GLNCodeCorporate
+
          , ObjectString_Address.ValueData     AS Address
          , ObjectString_HouseNumber.ValueData AS HouseNumber
          , ObjectString_CaseNumber.ValueData  AS CaseNumber

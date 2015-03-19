@@ -17,9 +17,14 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbGLNCodeCorporate TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_GLN());
+
+   -- определяется 
+   vbGLNCodeCorporate:= (SELECT ValueData FROM ObjectString WHERE ObjectId = zc_Juridical_Basis() AND DescId = zc_ObjectString_Juridical_GLNCode());
+
 
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
@@ -35,12 +40,26 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 
-    SELECT CASE WHEN ObjectString_GLNCodeJuridical.ValueData <> '' THEN ObjectString_GLNCodeJuridical.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN ObjectString_Juridical_GLNCode.ValueData ELSE '' END :: TVarChar AS GLNCodeJuridical
-         , CASE WHEN ObjectString_GLNCodeRetail.ValueData <> '' THEN ObjectString_GLNCodeRetail.ValueData WHEN ObjectString_GLNCode.ValueData <> '' THEN CASE WHEN ObjectString_Retail_GLNCode.ValueData <> '' THEN ObjectString_Retail_GLNCode.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END ELSE '' END :: TVarChar AS GLNCodeRetail
-         , CASE WHEN ObjectString_GLNCodeCorporate.ValueData <> '' THEN ObjectString_GLNCodeCorporate.ValueData WHEN ObjectString_Retail_GLNCodeCorporate.ValueData <> '' THEN vbGLNCodeCorporate ELSE '' END :: TVarChar AS GLNCodeCorporate
+    -- 
+    SELECT zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_GLNCode.ValueData
+                                  , inGLNCodeJuridical_partner := ObjectString_GLNCodeJuridical.ValueData
+                                  , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode.ValueData
+                                   ) AS GLNCodeJuridical
+
+         , zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_GLNCode.ValueData
+                               , inGLNCodeRetail_partner := ObjectString_GLNCodeRetail.ValueData
+                               , inGLNCodeRetail         := ObjectString_Retail_GLNCode.ValueData
+                               , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode.ValueData
+                                ) AS GLNCodeRetail
+
+         , zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_GLNCode.ValueData
+                                  , inGLNCodeCorporate_partner := ObjectString_GLNCodeCorporate.ValueData
+                                  , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate.ValueData
+                                  , inGLNCodeCorporate_main    := vbGLNCodeCorporate
+                                   ) AS GLNCodeCorporate
+
            INTO outGLNCodeJuridical, outGLNCodeRetail, outGLNCodeCorporate
-        
-         
+
      FROM Object AS Object_Partner
          LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
@@ -64,7 +83,7 @@ BEGIN
                                AND ObjectString_Juridical_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
+                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
          LEFT JOIN ObjectString AS ObjectString_Retail_GLNCode
                                 ON ObjectString_Retail_GLNCode.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId

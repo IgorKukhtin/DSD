@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, T
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
     IN inOrderInvNumber      TVarChar  , -- Номер документа
     IN inOrderOperDate       TDateTime , -- Дата документа
-    IN inGLN                 TVarChar   , -- 
-    IN inGLNPlace            TVarChar   , -- 
+    IN inGLN                 TVarChar  , -- Код GLN - Покупатель
+    IN inGLNPlace            TVarChar  , -- Код GLN - место доставки
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (MovementId Integer, GoodsPropertyID Integer) -- Классификатор товаров) 
