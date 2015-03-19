@@ -14,6 +14,8 @@ program ProjectTest;
 {$APPTYPE CONSOLE}
 {$ENDIF}
 
+
+
 uses
   DUnitTestRunner,
   VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
@@ -634,7 +636,8 @@ uses
   OrderType in '..\..\Forms\Guides\OrderType.pas' {OrderTypeForm: TParentForm},
   ReceiptGoods_Object in '..\..\Forms\Guides\ReceiptGoods_Object.pas' {ReceiptGoods_ObjectForm: TParentForm},
   JuridicalGLN in '..\..\Forms\Guides\JuridicalGLN.pas' {JuridicalGLNForm: TParentForm},
-  PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm};
+  PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm},
+  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
