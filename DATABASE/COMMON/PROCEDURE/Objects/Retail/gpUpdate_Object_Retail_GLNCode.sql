@@ -1,31 +1,35 @@
 -- Function: gpUpdate_Object_Retail_GLNCode()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Retail_GLNCode(
- INOUT ioId             Integer   ,     -- ключ объекта <Торговая сеть> 
-    IN inGLNCode        TVarChar  ,     -- Код GLN
-    IN inSession        TVarChar        -- сессия пользователя
+ INOUT ioId                Integer   ,  -- ключ объекта <Торговая сеть> 
+    IN inGLNCode           TVarChar  ,  -- Код GLN - Получатель
+    IN inGLNCodeCorporate  TVarChar  ,  -- Код GLN - Поставщик 
+    IN inGoodsPropertyId   Integer   ,  -- Классификаторы свойств товаров
+    IN inSession           TVarChar     -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Retail_GLNCode());
-   --vbUserId := inSession;
 
-   -- сохранили св-во <Код GLN>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Retail_GLNCode(), ioId, inGLNCode);
-   
+   -- сохранили св-во <Код GLN - Получатель>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCode(), ioId, inGLNCode);
+   -- сохранили св-во <Код GLN - Поставщик>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCodeCorporate(), ioId, inGLNCodeCorporate);
+
+   -- сохранили связь с <Классификаторы свойств товаров>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_GoodsProperty(), ioId, inGoodsPropertyId);   
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

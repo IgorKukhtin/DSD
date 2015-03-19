@@ -10,7 +10,8 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxSplitter, cxLookAndFeels, cxLookAndFeelPainters, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  cxCheckBox;
+  cxCheckBox, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TJuridical_ObjectForm = class(TParentForm)

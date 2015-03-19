@@ -1,7 +1,7 @@
 object PartnerGLNForm: TPartnerGLNForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' GLN)>'
   ClientHeight = 464
   ClientWidth = 1000
   Color = clBtnFace
@@ -54,11 +54,12 @@ object PartnerGLNForm: TPartnerGLNForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 133
+        Width = 150
       end
       object clAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -71,6 +72,58 @@ object PartnerGLNForm: TPartnerGLNForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
+      end
+      object clGLNCode: TcxGridDBColumn
+        Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
+        DataBinding.FieldName = 'GLNCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clGLNCodeJuridical_property: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'GLNCodeJuridical_property'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clGLNCodeRetail_property: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'GLNCodeRetail_property'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clGLNCodeCorporate_property: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'GLNCodeCorporate_property'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clGLNCodeJuridical: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1088#1072#1089#1095#1077#1090')'
+        DataBinding.FieldName = 'GLNCodeJuridical'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object GLNCodeRetail: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100' ('#1088#1072#1089#1095#1077#1090')'
+        DataBinding.FieldName = 'GLNCodeRetail'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object GLNCodeCorporate: TcxGridDBColumn
+        Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082' ('#1088#1072#1089#1095#1077#1090')'
+        DataBinding.FieldName = 'GLNCodeCorporate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
       end
       object clJuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
@@ -92,6 +145,7 @@ object PartnerGLNForm: TPartnerGLNForm
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -108,6 +162,7 @@ object PartnerGLNForm: TPartnerGLNForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -124,6 +179,7 @@ object PartnerGLNForm: TPartnerGLNForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -232,41 +288,10 @@ object PartnerGLNForm: TPartnerGLNForm
         Options.Editing = False
         Width = 100
       end
-      object clGLNCode: TcxGridDBColumn
-        Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
-        DataBinding.FieldName = 'GLNCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object clGLNCodeJuridical: TcxGridDBColumn
-        Caption = 'GLN - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1088#1072#1089#1095#1077#1090')'
-        DataBinding.FieldName = 'GLNCodeJuridical'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object GLNCodeRetail: TcxGridDBColumn
-        Caption = 'GLN - '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100' ('#1088#1072#1089#1095#1077#1090')'
-        DataBinding.FieldName = 'GLNCodeRetail'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object GLNCodeCorporate: TcxGridDBColumn
-        Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082' ('#1088#1072#1089#1095#1077#1090')'
-        DataBinding.FieldName = 'GLNCodeCorporate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
       object colAreaName: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
         DataBinding.FieldName = 'AreaName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -275,6 +300,7 @@ object PartnerGLNForm: TPartnerGLNForm
       object colPartnerTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
         DataBinding.FieldName = 'PartnerTagName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -328,7 +354,7 @@ object PartnerGLNForm: TPartnerGLNForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 100
       end
       object clEdiInvoice: TcxGridDBColumn
         Caption = 'EDI - '#1057#1095#1077#1090
@@ -336,7 +362,7 @@ object PartnerGLNForm: TPartnerGLNForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 55
       end
       object clEdiDesadv: TcxGridDBColumn
         Caption = 'EDI - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
@@ -344,7 +370,7 @@ object PartnerGLNForm: TPartnerGLNForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 90
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -355,43 +381,6 @@ object PartnerGLNForm: TPartnerGLNForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
-      end
-      object Id: TcxGridDBColumn
-        Caption = #1050#1083#1102#1095'-2'
-        DataBinding.FieldName = 'Id'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Enabled = False
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object clGLNCodeJuridical_property: TcxGridDBColumn
-        Caption = 'GLN - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
-        DataBinding.FieldName = 'GLNCodeJuridical_property'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object clGLNCodeRetail_property: TcxGridDBColumn
-        Caption = 'GLN - '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
-        DataBinding.FieldName = 'GLNCodeRetail_property'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object clGLNCodeCorporate_property: TcxGridDBColumn
-        Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
-        DataBinding.FieldName = 'GLNCodeCorporate_property'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -442,8 +431,8 @@ object PartnerGLNForm: TPartnerGLNForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -475,10 +464,6 @@ object PartnerGLNForm: TPartnerGLNForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic1'
@@ -838,6 +823,27 @@ object PartnerGLNForm: TPartnerGLNForm
         ComponentItem = 'GLNCodeCorporate_property'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'outGLNCodeJuridical'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GLNCodeJuridical'
+        DataType = ftString
+      end
+      item
+        Name = 'outGLNCodeRetail'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GLNCodeRetail'
+        DataType = ftString
+      end
+      item
+        Name = 'outGLNCodeCorporate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GLNCodeCorporate'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 88

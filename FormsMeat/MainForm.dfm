@@ -3,8 +3,9 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitLeft = -104
+  ExplicitWidth = 1102
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -3340,8 +3341,9 @@ inherited MainForm: TMainForm
       object miJuridical: TMenuItem
         Action = actJuridical
       end
-      object N48: TMenuItem
+      object miJuridicalGLN: TMenuItem
         Action = actJuridicalGLN
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' GLN)'
       end
       object miPartner: TMenuItem
         Action = actPartner
@@ -3349,8 +3351,9 @@ inherited MainForm: TMainForm
       object miPartnerAddress: TMenuItem
         Action = actPartnerAddress
       end
-      object GLN1: TMenuItem
+      object miPartnerGLN: TMenuItem
         Action = actPartnerGLN
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' GLN)'
       end
       object miRouteSorting: TMenuItem
         Action = actRouteSorting

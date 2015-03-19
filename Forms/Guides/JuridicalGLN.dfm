@@ -1,7 +1,7 @@
 object JuridicalGLNForm: TJuridicalGLNForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' GLN)>'
   ClientHeight = 568
   ClientWidth = 953
   Color = clBtnFace
@@ -22,7 +22,6 @@ object JuridicalGLNForm: TJuridicalGLNForm
     Top = 26
     Width = 8
     Height = 542
-    ExplicitHeight = 379
   end
   object cxGrid: TcxGrid
     Left = 8
@@ -31,7 +30,6 @@ object JuridicalGLNForm: TJuridicalGLNForm
     Height = 542
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 379
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -68,37 +66,37 @@ object JuridicalGLNForm: TJuridicalGLNForm
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
       end
       object clGLNCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' GLN'
+        Caption = 'GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
         DataBinding.FieldName = 'GLNCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 100
       end
-      object clRetailName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-        DataBinding.FieldName = 'RetailName'
+      object clGoodsPropertyName: TcxGridDBColumn
+        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsPropertyName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Caption = 'RetailChoiceForm'
+            Action = actChoiceGoodsProperty
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
+        Width = 80
       end
-      object clRetailReportName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
-        DataBinding.FieldName = 'RetailReportName'
+      object clRetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -168,6 +166,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
       object clInfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -176,6 +175,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
       object clInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -251,15 +251,6 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 65
       end
-      object clGoodsPropertyName: TcxGridDBColumn
-        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsPropertyName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
       object ceIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -293,8 +284,8 @@ object JuridicalGLNForm: TJuridicalGLNForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -560,6 +551,29 @@ object JuridicalGLNForm: TJuridicalGLNForm
         end>
       isShowModal = True
     end
+    object actChoiceGoodsProperty: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actChoiceGoodsProperty'
+      FormName = 'TGoodsPropertyForm'
+      FormNameParam.Value = 'TGoodsPropertyForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsPropertyId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsPropertyName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 296
@@ -649,6 +663,13 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Component = MasterCDS
         ComponentItem = 'JuridicalGroupId'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsPropertyId'
         ParamType = ptInput
       end>
     PackSize = 1

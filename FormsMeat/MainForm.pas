@@ -506,9 +506,9 @@ type
     miCashPav: TMenuItem;
     actCashOperationPav: TdsdOpenForm;
     actJuridicalGLN: TdsdOpenForm;
-    N48: TMenuItem;
+    miJuridicalGLN: TMenuItem;
     actPartnerGLN: TdsdOpenForm;
-    GLN1: TMenuItem;
+    miPartnerGLN: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

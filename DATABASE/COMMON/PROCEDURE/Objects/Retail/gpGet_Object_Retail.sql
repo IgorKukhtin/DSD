@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Retail(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , GLNCode TVarChar 
+             , GLNCode TVarChar, GLNCodeCorporate TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , isErased boolean) AS
 $BODY$
@@ -24,6 +24,7 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Retail()) AS Code
            , CAST ('' as TVarChar)  AS NAME
            , CAST ('' as TVarChar)  AS GLNCode
+           , CAST ('' as TVarChar)  AS GLNCodeCorporate
            , CAST (0 as Integer)    AS GoodsPropertyId 
            , CAST ('' as TVarChar)  AS GoodsPropertyName           
            , CAST (NULL AS Boolean) AS isErased;
@@ -33,7 +34,8 @@ BEGIN
              Object_Retail.Id         AS Id
            , Object_Retail.ObjectCode AS Code
            , Object_Retail.ValueData  AS NAME
-           , GLNCode.ValueData AS GLNCode
+           , GLNCode.ValueData               AS GLNCode
+           , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
            , Object_GoodsProperty.Id         AS GoodsPropertyId
            , Object_GoodsProperty.ValueData  AS GoodsPropertyName           
            , Object_Retail.isErased   AS isErased
@@ -41,6 +43,9 @@ BEGIN
         LEFT JOIN ObjectString AS GLNCode
                                ON GLNCode.ObjectId = Object_Retail.Id 
                               AND GLNCode.DescId = zc_ObjectString_Retail_GLNCode()
+        LEFT JOIN ObjectString AS GLNCodeCorporate
+                               ON GLNCodeCorporate.ObjectId = Object_Retail.Id 
+                              AND GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
 
         LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
