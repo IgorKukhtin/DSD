@@ -39,11 +39,15 @@ BEGIN
           , Movement.OperDate                     AS OperDate
           , Movement.OperDate + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL AS OperDatePartner
           , ObjectString_Partner_GLNCode.ObjectId AS PartnerId
-          , CASE WHEN MovementString_GLNCode.ValueData = ObjectString_Partner_GLNCodeJuridical.ValueData
+          , CASE WHEN MovementString_GLNCode.ValueData = zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
+                                                                                , inGLNCodeJuridical_partner := ObjectString_Partner_GLNCodeJuridical.ValueData
+                                                                                , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode.ValueData
+                                                                                 ) -- ObjectString_Partner_GLNCodeJuridical.ValueData
                       THEN ObjectLink_Partner_Juridical.ChildObjectId -- здесь условие что GLN код юр.лица в документе и у св-ва д.б. одинаковый
-                 WHEN MovementString_GLNCode.ValueData = ObjectString_Juridical_GLNCode.ValueData
+                 /*WHEN MovementString_GLNCode.ValueData = ObjectString_Juridical_GLNCode.ValueData
                       THEN ObjectString_Juridical_GLNCode.ObjectId -- здесь условие что GLN код юр.лица в документе и у св-ва д.б. одинаковый
-                 ELSE ObjectString_Juridical_GLNCode.ObjectId -- так убрал ошибку
+                 ELSE ObjectString_Juridical_GLNCode.ObjectId -- так убрал ошибку*/
+                 ELSE 0 -- ошибка
             END JuridicalId
           , MovementLinkObject_Unit.ObjectId           AS UnitId
           , MovementLinkObject_Contract.ObjectId       AS ContractId
@@ -94,8 +98,11 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Partner_GLNCode
                                  ON ObjectString_Partner_GLNCode.ValueData = MovementString_GLNPlaceCode.ValueData
                                 AND ObjectString_Partner_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+--          LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeJuridical
+--                                 ON ObjectString_Partner_GLNCodeJuridical.ValueData = MovementString_GLNPlaceCode.ValueData
+--                                AND ObjectString_Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
           LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeJuridical
-                                 ON ObjectString_Partner_GLNCodeJuridical.ValueData = MovementString_GLNPlaceCode.ValueData
+                                 ON ObjectString_Partner_GLNCodeJuridical.ObjectId = ObjectString_Partner_GLNCode.ObjectId
                                 AND ObjectString_Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Partner_PrepareDayCount

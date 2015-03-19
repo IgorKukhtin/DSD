@@ -165,7 +165,18 @@ BEGIN
              ELSE OH_JuridicalDetails_To.Phone END      AS Phone_To
 
 
-           , ObjectString_BuyerGLNCode.ValueData        AS BuyerGLNCode
+           /*, ObjectString_BuyerGLNCode.ValueData        AS BuyerGLNCode
+           , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode*/
+           , zfCalc_GLNCodeJuridical (inGLNCode                  := 'ok'
+                                    , inGLNCodeJuridical_partner := ObjectString_Partner_GLNCodeJuridical.ValueData
+                                    , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode.ValueData
+                                     ) AS BuyerGLNCode
+
+           , zfCalc_GLNCodeCorporate (inGLNCode                  := 'ok'
+                                    , inGLNCodeCorporate_partner := ObjectString_Partner_GLNCodeCorporate.ValueData
+                                    , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate.ValueData
+                                    , inGLNCodeCorporate_main    := ObjectString_JuridicalFrom_GLNCode.ValueData
+                                     ) AS SupplierGLNCode
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
@@ -177,7 +188,6 @@ BEGIN
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
            , OH_JuridicalDetails_From.Phone             AS Phone_From
-           , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode
 
            , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
            , COALESCE (Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData)     AS OperDatePartnerEDI
@@ -266,13 +276,33 @@ BEGIN
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
                                                                AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate AND Movement.OperDate < OH_JuridicalDetails_From.EndDate
-            LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
+            /*LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
                                    ON ObjectString_BuyerGLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
                                   AND ObjectString_BuyerGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-
             LEFT JOIN ObjectString AS ObjectString_SupplierGLNCode
                                    ON ObjectString_SupplierGLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
-                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()*/
+
+            LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeJuridical
+                                   ON ObjectString_Partner_GLNCodeJuridical.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
+                                  AND ObjectString_Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+            LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate
+                                   ON ObjectString_Partner_GLNCodeCorporate.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
+                                  AND ObjectString_Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = OH_JuridicalDetails_To.JuridicalId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode
+                                   ON ObjectString_Juridical_GLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
+                                  AND ObjectString_Juridical_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+            LEFT JOIN ObjectString AS ObjectString_Retail_GLNCodeCorporate
+                                   ON ObjectString_Retail_GLNCodeCorporate.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                  AND ObjectString_Retail_GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
+
+            LEFT JOIN ObjectString AS ObjectString_JuridicalFrom_GLNCode
+                                   ON ObjectString_JuridicalFrom_GLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
+                                  AND ObjectString_JuridicalFrom_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id

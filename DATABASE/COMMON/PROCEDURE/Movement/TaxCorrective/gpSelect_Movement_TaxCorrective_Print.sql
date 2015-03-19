@@ -253,7 +253,21 @@ BEGIN
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
            , OH_JuridicalDetails_To.Phone                                   AS Phone_To
-           , ObjectString_BuyerGLNCode.ValueData                            AS BuyerGLNCode
+
+           /*, ObjectString_BuyerGLNCode.ValueData                          AS BuyerGLNCode
+           , ObjectString_SupplierGLNCode.ValueData                         AS SupplierGLNCode*/
+
+           , zfCalc_GLNCodeJuridical (inGLNCode                  := 'ok'
+                                    , inGLNCodeJuridical_partner := ObjectString_Partner_GLNCodeJuridical.ValueData
+                                    , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode.ValueData
+                                     ) AS BuyerGLNCode
+
+           , zfCalc_GLNCodeCorporate (inGLNCode                  := 'ok'
+                                    , inGLNCodeCorporate_partner := ObjectString_Partner_GLNCodeCorporate.ValueData
+                                    , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate.ValueData
+                                    , inGLNCodeCorporate_main    := ObjectString_JuridicalTo_GLNCode.ValueData
+                                     ) AS SupplierGLNCode
+
 
            , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
                   THEN 'ÍÅÏËÀÒÍÈÊ'
@@ -272,7 +286,6 @@ BEGIN
            , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
                   THEN ''
              ELSE OH_JuridicalDetails_From.Phone END                        AS Phone_From
-           , ObjectString_SupplierGLNCode.ValueData                         AS SupplierGLNCode
 
            , MovementItem.Id                                                AS Id
            , Object_Goods.ObjectCode                                        AS GoodsCode
@@ -427,13 +440,41 @@ BEGIN
                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
                                                                AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate AND Movement.OperDate < OH_JuridicalDetails_From.EndDate
 
-            LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN ObjectString AS ObjectString_FromAddress
+                                   ON ObjectString_FromAddress.ObjectId = MovementLinkObject_Partner.ObjectId
+                                  AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
+
+            /*LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
                                    ON ObjectString_BuyerGLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
                                   AND ObjectString_BuyerGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-
             LEFT JOIN ObjectString AS ObjectString_SupplierGLNCode
                                    ON ObjectString_SupplierGLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
-                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()*/
+
+            LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeJuridical
+                                   ON ObjectString_Partner_GLNCodeJuridical.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_From.Id)
+                                  AND ObjectString_Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+            LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate
+                                   ON ObjectString_Partner_GLNCodeCorporate.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_From.Id)
+                                  AND ObjectString_Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = OH_JuridicalDetails_From.JuridicalId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode
+                                   ON ObjectString_Juridical_GLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
+                                  AND ObjectString_Juridical_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+            LEFT JOIN ObjectString AS ObjectString_Retail_GLNCodeCorporate
+                                   ON ObjectString_Retail_GLNCodeCorporate.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                  AND ObjectString_Retail_GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
+
+            LEFT JOIN ObjectString AS ObjectString_JuridicalTo_GLNCode
+                                   ON ObjectString_JuridicalTo_GLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
+                                  AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -489,12 +530,6 @@ BEGIN
             LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = Movement_child.Id
                                                                          AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-            LEFT JOIN ObjectString AS ObjectString_FromAddress
-                                   ON ObjectString_FromAddress.ObjectId = MovementLinkObject_Partner.ObjectId
-                                  AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
 
        ORDER BY MovementString_InvNumberPartner.ValueData
       ;
