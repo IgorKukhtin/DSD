@@ -6,8 +6,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsByGoodsKind(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
-             , GoodsKindId Integer
-             , GoodsKindName TVarChar)
+             , GoodsKindId Integer, GoodsKindName TVarChar
+             , WeightPackage TFloat, WeightTotal TFloat
+             , isOrder Boolean)
 AS
 $BODY$
 BEGIN
@@ -22,8 +23,25 @@ BEGIN
            , Object_GoodsByGoodsKind_View.GoodsName
            , Object_GoodsByGoodsKind_View.GoodsKindId
            , Object_GoodsByGoodsKind_View.GoodsKindName
+           
+           , ObjectFloat_WeightPackage.ValueData AS WeightPackage
+           , ObjectFloat_WeightTotal.ValueData   AS WeightTotal
+           , ObjectBoolean_Order.ValueData       AS isOrder
+           
+       FROM Object_GoodsByGoodsKind_View
+           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                 ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
 
-       FROM Object_GoodsByGoodsKind_View;
+           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
+                                   ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                  AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+
+;
 
 END;
 $BODY$
@@ -33,9 +51,10 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+              Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.03.15        * add redmine 17.03.2015
  29.01.14                        * 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Account (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_GoodsByGoodsKind(zfCalc_UerAdmin())

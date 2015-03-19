@@ -3,7 +3,7 @@
   ClientHeight = 524
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 556
+  ExplicitHeight = 549
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -48,8 +48,8 @@
   end
   object cxLabel2: TcxLabel [6]
     Left = 5
-    Top = 91
-    Caption = #1050#1086#1076' GLN'
+    Top = 94
+    Caption = #1050#1086#1076' GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
   end
   object edGLNCode: TcxTextEdit [7]
     Left = 5
@@ -662,7 +662,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 27
+    TabOrder = 26
     Width = 273
   end
   object cxLabel20: TcxLabel [26]
@@ -1329,8 +1329,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1457,14 +1457,14 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 96
-    Top = 80
+    Left = 80
+    Top = 40
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
-    Top = 80
+    Left = 48
+    Top = 40
   end
   object PartnerDS: TDataSource
     DataSet = PartnerCDS

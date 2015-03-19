@@ -19,6 +19,7 @@ BEGIN
                         , SUM (CASE WHEN Object_InfoMoney_View.InfoMoneyId <> zc_Enum_InfoMoney_10202() -- Основное сырье + Прочее сырье + Оболочка
                                      AND Object_InfoMoney_View.InfoMoneyId <> zc_Enum_InfoMoney_10203() -- Основное сырье + Прочее сырье + Упаковка
                                      AND Object_InfoMoney_View.InfoMoneyId <> zc_Enum_InfoMoney_10204() -- Основное сырье + Прочее сырье + Прочее сырье
+                                     AND COALESCE (ObjectBoolean_TaxExit.ValueData, FALSE) = FALSE
                                          THEN COALESCE (ObjectFloat_Value.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS TotalWeight
                    FROM ObjectLink AS ObjectLink_ReceiptChild_Receipt
                         INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
@@ -47,6 +48,10 @@ BEGIN
                         LEFT JOIN ObjectBoolean AS ObjectBoolean_WeightMain
                                                 ON ObjectBoolean_WeightMain.ObjectId = Object_ReceiptChild.Id 
                                                AND ObjectBoolean_WeightMain.DescId = zc_ObjectBoolean_ReceiptChild_WeightMain()
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
+                                                ON ObjectBoolean_TaxExit.ObjectId = Object_ReceiptChild.Id 
+                                               AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+
                    WHERE ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
                      AND ObjectLink_ReceiptChild_Receipt.ChildObjectId = inReceiptId
                    GROUP BY ObjectLink_ReceiptChild_Receipt.ChildObjectId

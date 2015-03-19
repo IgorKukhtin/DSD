@@ -3,6 +3,7 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
+  ExplicitLeft = -104
   ExplicitWidth = 1102
   ExplicitHeight = 262
   PixelsPerInch = 96
@@ -664,13 +665,35 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actContractTagGroup: TdsdOpenForm [45]
+    object actJuridicalGLN: TdsdOpenForm [44]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1082#1086#1088#1088#1077#1082#1090' GLN '#1082#1086#1076#1072')'
+      Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1082#1086#1088#1088#1077#1082#1090' GLN '#1082#1086#1076#1072')'
+      FormName = 'TJuridicalGLNForm'
+      FormNameParam.Value = 'TJuridicalGLNForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actContractTagGroup: TdsdOpenForm [46]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1043#1088#1091#1087#1087#1099' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
       Hint = #1043#1088#1091#1087#1087#1099' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
       FormName = 'TContractTagGroupForm'
       FormNameParam.Value = 'TContractTagGroupForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPartnerGLN: TdsdOpenForm [47]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1082#1086#1088#1088#1077#1082#1090' GLN '#1082#1086#1076#1072')'
+      Hint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1082#1086#1088#1088#1077#1082#1090' GLN '#1082#1086#1076#1072')'
+      FormName = 'TPartnerGLNForm'
+      FormNameParam.Value = 'TPartnerGLNForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3318,11 +3341,19 @@ inherited MainForm: TMainForm
       object miJuridical: TMenuItem
         Action = actJuridical
       end
+      object miJuridicalGLN: TMenuItem
+        Action = actJuridicalGLN
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' GLN)'
+      end
       object miPartner: TMenuItem
         Action = actPartner
       end
       object miPartnerAddress: TMenuItem
         Action = actPartnerAddress
+      end
+      object miPartnerGLN: TMenuItem
+        Action = actPartnerGLN
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077' GLN)'
       end
       object miRouteSorting: TMenuItem
         Action = actRouteSorting

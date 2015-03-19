@@ -204,9 +204,11 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\InfoMoneyGroup\gpSelect_Object_InfoMoneyGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InfoMoneyGroup\gpGet_Object_InfoMoneyGroup.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpInsertUpdate_Object_Juridical.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpSelect_Object_Juridical.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpGet_Object_Juridical.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpInsertUpdate_Object_Juridical.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpSelect_Object_Juridical.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Juridical\gpGet_Object_Juridical.sql', ZQuery);
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Juridical\';
+  ProcedureLoad;
 
   ExecFile(ProcedurePath + 'OBJECTS\JuridicalGroup\gpInsertUpdate_Object_JuridicalGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\JuridicalGroup\gpSelect_Object_JuridicalGroup.sql', ZQuery);
@@ -216,9 +218,11 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\Measure\gpSelect_Object_Measure.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Measure\gpGet_Object_Measure.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpInsertUpdate_Object_Partner.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpSelect_Object_Partner.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpGet_Object_Partner.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpInsertUpdate_Object_Partner.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpSelect_Object_Partner.sql', ZQuery);
+//  ExecFile(ProcedurePath + 'OBJECTS\Partner\gpGet_Object_Partner.sql', ZQuery);
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Partner\';
+  ProcedureLoad;
 
   ExecFile(ProcedurePath + 'OBJECTS\PriceList\gpInsertUpdate_Object_PriceList.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\PriceList\gpSelect_Object_PriceList.sql', ZQuery);

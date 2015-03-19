@@ -66,6 +66,9 @@ type
     colChildAmountReceipt: TcxGridDBColumn;
     colChildPartionGoods: TcxGridDBColumn;
     colChildComment: TcxGridDBColumn;
+    PrintMasterCDS: TClientDataSet;
+    PrintChildCDS: TClientDataSet;
+    spReport_GoodsMI_ProductionUnion_Tax: TdsdStoredProc;
   private
     { Private declarations }
   public

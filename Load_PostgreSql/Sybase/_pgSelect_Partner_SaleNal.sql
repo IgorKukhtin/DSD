@@ -86,6 +86,8 @@ begin
             group by ClientId, InfoMoneyCode
            )as tmpBill
 
+                left outer join dba._pgPartner on _pgPartner.UnitId = tmpBill.ClientId
+
                 left outer join dba.Unit on Unit.Id = tmpBill.ClientId
                 left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
                                                                       and Information1.OKPO <> ''
@@ -94,6 +96,7 @@ begin
                 left outer join dba.ClientSumm on ClientSumm.ClientId = isnull(zf_ChangeIntToNull(Unit.DolgByUnitID),Unit.Id)
 
            where trim(OKPO)<>''
+             and _pgPartner.UnitId is null
         -- and zf_isOKPO_Virtual_PG(OKPO) = zc_rvYes()'
         -- and isnull(Unit.Id3_Postgres,0)=0' // !!!только новые
            order by ObjectName, tmpBill.InfoMoneyCode;

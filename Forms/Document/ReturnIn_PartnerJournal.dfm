@@ -477,6 +477,22 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = edIsPartnerDate
+        Properties.Strings = (
+          'Checked')
+      end>
     Left = 40
     Top = 243
   end

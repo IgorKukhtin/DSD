@@ -182,7 +182,7 @@ BEGIN
         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
-     AND ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+     AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
            AND vbBranchId_Constraint > 0)
        OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                                             , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
@@ -345,7 +345,7 @@ BEGIN
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
-     AND ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+     AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
            AND vbBranchId_Constraint > 0)
        OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                                             , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг

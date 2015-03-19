@@ -2,8 +2,8 @@ object RetailEditForm: TRetailEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
-  ClientHeight = 234
-  ClientWidth = 299
+  ClientHeight = 287
+  ClientWidth = 342
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object RetailEditForm: TRetailEditForm
     Left = 10
     Top = 72
     TabOrder = 0
-    Width = 273
+    Width = 311
   end
   object cxLabel1: TcxLabel
     Left = 10
@@ -28,8 +28,8 @@ object RetailEditForm: TRetailEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 33
-    Top = 201
+    Left = 55
+    Top = 249
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object RetailEditForm: TRetailEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 201
+    Left = 207
+    Top = 249
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -57,27 +57,27 @@ object RetailEditForm: TRetailEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 311
   end
   object cxLabel3: TcxLabel
     Left = 10
     Top = 98
-    Caption = #1050#1086#1076' GLN'
+    Caption = #1050#1086#1076' GLN '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
   end
   object edGLNCode: TcxTextEdit
     Left = 10
     Top = 118
     TabOrder = 7
-    Width = 273
+    Width = 311
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 145
+    Top = 193
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsProperty: TcxButtonEdit
     Left = 10
-    Top = 166
+    Top = 214
     Properties.Buttons = <
       item
         Default = True
@@ -85,7 +85,18 @@ object RetailEditForm: TRetailEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 273
+    Width = 311
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 144
+    Caption = #1050#1086#1076' GLN '#1055#1086#1089#1090#1072#1074#1097#1080#1082' '
+  end
+  object edGLNCodeCorporate: TcxTextEdit
+    Left = 10
+    Top = 164
+    TabOrder = 11
+    Width = 311
   end
   object ActionList: TActionList
     Left = 152
@@ -150,6 +161,13 @@ object RetailEditForm: TRetailEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inGLNCodeCorporate'
+        Value = Null
+        Component = edGLNCodeCorporate
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsPropertyId'
         Value = Null
         Component = GoodsPropertyGuides
@@ -176,7 +194,7 @@ object RetailEditForm: TRetailEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -197,6 +215,12 @@ object RetailEditForm: TRetailEditForm
         Name = 'GLNCode'
         Value = ''
         Component = edGLNCode
+        DataType = ftString
+      end
+      item
+        Name = 'GLNCodeCorporate'
+        Value = Null
+        Component = edGLNCodeCorporate
         DataType = ftString
       end
       item
@@ -260,6 +284,6 @@ object RetailEditForm: TRetailEditForm
         ParamType = ptInput
       end>
     Left = 128
-    Top = 144
+    Top = 192
   end
 end
