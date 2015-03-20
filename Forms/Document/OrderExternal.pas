@@ -17,8 +17,8 @@ uses
 
 type
   TOrderExternalForm = class(TAncestorDocumentForm)
-    Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;

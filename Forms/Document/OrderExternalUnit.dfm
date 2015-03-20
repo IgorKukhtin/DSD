@@ -2,8 +2,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
   ClientWidth = 1280
-  ExplicitWidth = 1288
-  ExplicitHeight = 702
+  ExplicitWidth = 1296
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -137,7 +137,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object Code: TcxGridDBColumn [0]
+          object GoodsCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -145,7 +145,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 45
           end
-          object Name: TcxGridDBColumn [1]
+          object GoodsName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -1085,6 +1085,24 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
+    ColumnAddOnList = <
+      item
+        Column = GoodsCode
+        FindByFullValue = True
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <
+      item
+        Column = GoodsCode
+      end
+      item
+        Column = GoodsName
+      end
+      item
+        Column = Amount
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -1748,6 +1766,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
