@@ -637,7 +637,8 @@ uses
   ReceiptGoods_Object in '..\..\Forms\Guides\ReceiptGoods_Object.pas' {ReceiptGoods_ObjectForm: TParentForm},
   JuridicalGLN in '..\..\Forms\Guides\JuridicalGLN.pas' {JuridicalGLNForm: TParentForm},
   PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm},
-  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm};
+  GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
+  Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -647,6 +648,7 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TReport_ReceiptProductionAnalyzeForm, Report_ReceiptProductionAnalyzeForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

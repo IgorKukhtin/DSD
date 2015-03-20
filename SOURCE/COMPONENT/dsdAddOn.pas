@@ -599,7 +599,7 @@ begin
     // 1. Идем от текущей колонки вправо
     for i := View.Controller.FocusedColumnIndex + 1 to View.VisibleColumnCount - 1 do
         if inColumnEnterList(View.VisibleColumns[i]) then begin
-           View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index - 1;
+           View.Controller.FocusedColumnIndex := View.VisibleColumns[i].VisibleIndex;
            if (not View.VisibleColumns[i].Editing) and (TcxDBDataController(FView.DataController).DataSource.State in dsEditModes) then
                TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
            exit;
@@ -607,7 +607,7 @@ begin
 
     for i := 0 to View.Controller.FocusedColumnIndex do
         if inColumnEnterList(View.VisibleColumns[i]) then begin
-           View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index - 1;
+           View.Controller.FocusedColumnIndex := View.VisibleColumns[i].VisibleIndex;
            if (not View.VisibleColumns[i].Editing) and (TcxDBDataController(FView.DataController).DataSource.State in dsEditModes) then
                TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
            exit;
