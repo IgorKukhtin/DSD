@@ -9,16 +9,16 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
   inherited PageControl: TcxPageControl
     Width = 806
     ExplicitTop = 57
-    ExplicitWidth = 798
+    ExplicitWidth = 806
     ExplicitHeight = 251
     ClientRectRight = 806
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 798
+      ExplicitWidth = 806
       ExplicitHeight = 251
       inherited cxGrid: TcxGrid
         Width = 806
         Height = 251
-        ExplicitWidth = 798
+        ExplicitWidth = 806
         ExplicitHeight = 251
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -65,6 +65,12 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 46
+          end
+          object colStatusName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusName'
+            HeaderAlignmentVert = vaCenter
+            Width = 73
           end
           object colMovementDesc: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -147,13 +153,19 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             VisibleForCustomization = False
             Width = 66
           end
+          object colComment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 806
-    ExplicitWidth = 798
+    ExplicitWidth = 806
     inherited deStart: TcxDateEdit
       EditValue = 41760d
       TabOrder = 1

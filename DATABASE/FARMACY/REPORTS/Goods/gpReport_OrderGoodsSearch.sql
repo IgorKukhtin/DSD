@@ -12,7 +12,7 @@ RETURNS TABLE (ItemName TVarChar, Amount TFloat,
                Code Integer, Name TVarChar, 
                OperDate TDateTime, InvNumber TVarChar, 
                UnitName TVarChar, JuridicalName TVarChar, Price TFloat, StatusName TVarChar
-             , OrderKindId Integer,  OrderKindName TVarChar)
+             , OrderKindId Integer,  OrderKindName TVarChar, Comment  TVarChar)
 
 
 AS
@@ -35,8 +35,9 @@ BEGIN
       SELECT MovementDesc.ItemName,  MovementItem.Amount, Object.ObjectCode, Object.ValueData, 
        Movement.OperDate, Movement.InvNumber, Object_Unit.ValueData, Object_From.ValueData, 
        MIFloat_Price.ValueData, Status.ValueData
-           , Object_OrderKind.Id                                AS OrderKindId
-           , Object_OrderKind.ValueData                         AS OrderKindName
+           , Object_OrderKind.Id                AS OrderKindId
+           , Object_OrderKind.ValueData         AS OrderKindName
+           , MIString_Comment.ValueData         AS Comment
 
  FROM Movement 
    JOIN Object AS Status ON Status.Id = Movement.StatusId AND Status.Id <> zc_Enum_Status_Erased()
@@ -68,6 +69,10 @@ BEGIN
 
             LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
 
+            LEFT JOIN MovementItemString AS MIString_Comment 
+                                         ON MIString_Comment.DescId = zc_MIString_Comment()
+                                        AND MIString_Comment.MovementItemId = MovementItem.id  
+
    WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal())
      AND ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
      AND Movement.OperDate BETWEEN inStartDate AND inEndDate AND Object.Id = inGoodsId;
@@ -81,6 +86,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 18.03.15                        *
  27.01.15                        *
  21.01.15                        *
  02.12.14                        *

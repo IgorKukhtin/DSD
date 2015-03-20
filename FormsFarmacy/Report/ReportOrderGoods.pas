@@ -38,6 +38,8 @@ type
     ceCode: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     gpGetObjectGoods: TdsdStoredProc;
+    colStatusName: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
