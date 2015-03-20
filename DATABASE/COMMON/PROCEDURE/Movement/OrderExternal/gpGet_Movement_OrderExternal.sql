@@ -86,6 +86,7 @@ BEGIN
                                                                          THEN 301309 -- Склад ГП ф.Запорожье
                                                                     WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 4 --
                                                                          THEN 346093 -- Склад ГП ф.Одесса
+                                                                    ELSE 8459 -- Склад Реализации
                                                                END
                LEFT JOIN Object AS Object_StoreMain ON Object_StoreMain.Id = 8459 -- Склад Реализации
          ;

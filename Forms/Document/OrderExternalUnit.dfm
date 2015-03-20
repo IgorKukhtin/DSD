@@ -1085,6 +1085,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
     ColumnAddOnList = <
       item
         Column = GoodsCode
