@@ -28,7 +28,9 @@ BEGIN
      RETURN QUERY
      SELECT
              '0' :: TVarChar                                           AS UnitId
-           , CASE WHEN Movement.DescId IN (zc_Movement_Sale())
+           , CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective())
+                       THEN 123
+                  WHEN Movement.DescId IN (zc_Movement_Sale())
                        THEN 2
                   WHEN Movement.DescId IN (zc_Movement_PriceCorrective()) AND MIFloat_Price.ValueData < 0
                        THEN 2
@@ -63,6 +65,7 @@ BEGIN
                         THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                    ELSE COALESCE (MIFloat_Price.ValueData, 0)
               END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+            * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
              ) :: TVarChar                                             AS OperPrice
            , '0' :: TVarChar                                           AS Tax
 

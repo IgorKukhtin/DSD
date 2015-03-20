@@ -228,7 +228,7 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isERPN
 
-           , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.01.2015'
+           , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.02.2015'
                   THEN 'X' ELSE '' END                                      AS ERPN2
 
            , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN

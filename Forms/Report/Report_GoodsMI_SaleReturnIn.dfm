@@ -895,14 +895,14 @@
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 60
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 60
     end
     inherited deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 60
       ExplicitTop = 30

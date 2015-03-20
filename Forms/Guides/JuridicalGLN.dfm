@@ -661,7 +661,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Name = 'inGLNCode'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'JuridicalGroupId'
+        ComponentItem = 'GLNCode'
         DataType = ftString
         ParamType = ptInput
       end
