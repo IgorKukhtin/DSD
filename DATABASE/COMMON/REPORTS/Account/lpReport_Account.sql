@@ -64,7 +64,7 @@ BEGIN
                     )
                 AND (inStartDate = inEndDate
                      OR EXISTS (SELECT AccountId FROM Object_Account_View AS View_Account WHERE View_Account.AccountId = inAccountId AND View_Account.AccountCode > 80000 AND View_Account.AccountId <> zc_Enum_Account_100301()) -- > Кредитование AND <> Прибыль текущего периода
-                     OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+                     OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId , 10898, 76933, 14604)) -- Отчеты (управленческие) + Клиент банк-ввод документов + Касса Днепр
                     )
                    ) OR inIsMovement
                 OR (inProfitLossId <> 0 AND inBusinessId <> 0)-- 8371 - Мясо 
