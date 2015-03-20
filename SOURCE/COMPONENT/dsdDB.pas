@@ -895,12 +895,17 @@ begin
      end;
      if Component is TCustomGuides then
         if LowerCase(ComponentItem) = 'textvalue' then begin
+           if VarIsNull(FValue) then
+              FValue := '';
            (Component as TCustomGuides).TextValue := FValue;
         end else
           if LowerCase(ComponentItem) = 'parentid' then
              (Component as TCustomGuides).ParentId := FValue
-          else
+          else begin
+             if VarIsNull(FValue) then
+                FValue := 0;
              (Component as TCustomGuides).Key := FValue;
+          end;
   end;
   if Assigned(FonChange) then
      FonChange(Self);

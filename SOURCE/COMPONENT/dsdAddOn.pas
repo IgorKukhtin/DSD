@@ -124,10 +124,12 @@ type
   private
     FAction: TCustomAction;
     FonExitColumn: TColumnActionOptions;
+    FFindByFullValue: boolean;
   public
     constructor Create(Collection: TCollection); override;
     procedure Init;
   published
+    property FindByFullValue: boolean read FFindByFullValue write FFindByFullValue default false;
     property Action: TCustomAction read FAction write FAction;
     property onExitColumn: TColumnActionOptions read FonExitColumn write FonExitColumn;
   end;
@@ -205,7 +207,7 @@ type
     procedure SetOnlyEditingCellOnEnter(const Value: boolean);
     function GetErasedColumn(Sender: TObject): TcxGridColumn;
     procedure SetSearchAsFilter(const Value: boolean);
-
+    function GetColumnAddOn(FindColumn: TcxGridColumn): TColumnAddOn;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure Loaded; override;
@@ -678,6 +680,18 @@ begin
      Abort;
 end;
 
+function TdsdDBViewAddOn.GetColumnAddOn(FindColumn: TcxGridColumn): TColumnAddOn;
+var Item: TCollectionItem;
+begin
+  result := nil;
+  for Item in ColumnAddOnList do
+      if TColumnAddOn(Item).Column = FindColumn then
+      begin
+        result := TColumnAddOn(Item);
+        break;
+      end;
+end;
+
 function TdsdDBViewAddOn.GetErasedColumn(Sender: TObject): TcxGridColumn;
 begin
   result := nil;
@@ -929,20 +943,38 @@ procedure TdsdDBViewAddOn.lpSetFilter;
 var
   FilterCriteriaItem: TcxFilterCriteriaItem;
   vbValue: string;
+  CurrentColumn: TcxGridColumn;
+  ColumnAddOn: TColumnAddOn;
 begin
-  if (length(edFilter.Text) = 1) and (not CharInSet(edFilter.Text[1], ['0'..'9'])) then
-     vbValue := edFilter.Text + '%'
-  else
-     vbValue := '%' + edFilter.Text + '%';
+  CurrentColumn := View.VisibleColumns[TcxGridDBDataController(FView.DataController).Controller.FocusedItemIndex];
+  ColumnAddOn := GetColumnAddOn(CurrentColumn);
+
+  if Assigned(ColumnAddOn) and ColumnAddOn.FindByFullValue then
+  begin
+    if ShiftDown then
+       vbValue := '%' + edFilter.Text + '%'
+    else
+       vbValue := edFilter.Text;
+  end
+  else begin
+    if (length(edFilter.Text) = 1) and (not CharInSet(edFilter.Text[1], ['0'..'9'])) then
+       vbValue := edFilter.Text + '%'
+    else begin
+       if ShiftDown then
+          vbValue := edFilter.Text
+       else
+          vbValue := '%' + edFilter.Text + '%';
+    end;
+  end;
   edFilter.Visible := false;
   with TcxGridDBDataController(FView.DataController), Filter.Root do begin
-    FilterCriteriaItem := GetFilterItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index));
+    FilterCriteriaItem := GetFilterItem(GetItem(CurrentColumn.Index));
     if Assigned(FilterCriteriaItem) then begin
        FilterCriteriaItem.Value := vbValue;
        FilterCriteriaItem.DisplayValue := '"' + edFilter.Text + '"';
     end
     else
-       AddItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index), foLike, vbValue, '"' + edFilter.Text + '"');
+       AddItem(GetItem(CurrentColumn.Index), foLike, vbValue, '"' + edFilter.Text + '"');
   end;
   edFilter.Text := '';
   View.DataController.Filter.Active := True;
@@ -1861,6 +1893,7 @@ end;
 constructor TColumnAddOn.Create(Collection: TCollection);
 begin
   inherited;
+  FindByFullValue := false;
   onExitColumn := TColumnActionOptions.Create;
 end;
 

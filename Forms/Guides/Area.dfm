@@ -419,7 +419,13 @@ object AreaForm: TAreaForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
-    ColumnAddOnList = <>
+    ColumnAddOnList = <
+      item
+        Column = clCode
+        FindByFullValue = True
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
     ColumnEnterList = <>
     SummaryItemList = <>
     Left = 48
