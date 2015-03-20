@@ -13,6 +13,7 @@ AS
         , CASE WHEN Object.ObjectCode BETWEEN 111 AND 199 OR Object.ObjectCode BETWEEN 211 AND 299 THEN TRUE ELSE FALSE END AS isSumm
    FROM Object
    WHERE Object.DescId = zc_Object_AnalyzerId()
+     AND Object.Id NOT IN (zc_Enum_AnalyzerId_LossCount_20200(), zc_Enum_AnalyzerId_LossSumm_20200()) -- !!!списание!!!
   UNION ALL
    -- Сумма реализации + Разница с оптовыми ценами + Скидка дополнительная
    SELECT Object.Id AS AnalyzerId

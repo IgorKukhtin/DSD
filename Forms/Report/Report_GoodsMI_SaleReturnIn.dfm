@@ -1097,7 +1097,17 @@
           'TextValue')
       end
       item
+        Component = cbGoods
+        Properties.Strings = (
+          'Checked')
+      end
+      item
         Component = cbPartner
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbTradeMark
         Properties.Strings = (
           'Checked')
       end

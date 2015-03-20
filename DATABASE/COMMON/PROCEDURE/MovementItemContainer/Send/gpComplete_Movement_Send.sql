@@ -12,6 +12,9 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 
+  DECLARE vbFromWhereObjectId_Analyzer Integer;
+  DECLARE vbToWhereObjectId_Analyzer Integer;
+
   DECLARE vbMovementDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -304,6 +307,12 @@ BEGIN
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
      ;
 
+     -- определили
+     vbFromWhereObjectId_Analyzer:= CASE WHEN (SELECT UnitId_From   FROM _tmpItem GROUP BY UnitId_From)   <> 0 THEN (SELECT UnitId_From   FROM _tmpItem GROUP BY UnitId_From)
+                                         WHEN (SELECT MemberId_From FROM _tmpItem GROUP BY MemberId_From) <> 0 THEN (SELECT MemberId_From FROM _tmpItem GROUP BY MemberId_From) END;
+     vbToWhereObjectId_Analyzer:= CASE WHEN (SELECT UnitId_To   FROM _tmpItem GROUP BY UnitId_To)   <> 0 THEN (SELECT UnitId_To   FROM _tmpItem GROUP BY UnitId_To)
+                                       WHEN (SELECT MemberId_To FROM _tmpItem GROUP BY MemberId_To) <> 0 THEN (SELECT MemberId_To FROM _tmpItem GROUP BY MemberId_To) END;
+
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - ПРОВОДКИ !!!
@@ -342,21 +351,33 @@ BEGIN
      UPDATE _tmpItem SET MIContainerId_To = lpInsertUpdate_MovementItemContainer (ioId             := 0
                                                                                 , inDescId         := zc_MIContainer_Count()
                                                                                 , inMovementDescId := vbMovementDescId
-                                                                                , inMovementId     := MovementId
-                                                                                , inMovementItemId := MovementItemId
+                                                                                , inMovementId     := _tmpItem.MovementId
+                                                                                , inMovementItemId := _tmpItem.MovementItemId
                                                                                 , inParentId       := NULL
-                                                                                , inContainerId    := ContainerId_GoodsTo -- был опеределен выше
-                                                                                , inAccountId      := NULL
-                                                                                , inAnalyzerId     := NULL
-                                                                                , inObjectId_Analyzer       := NULL
-                                                                                , inWhereObjectId_Analyzer  := NULL
-                                                                                , inContainerId_Analyzer    := NULL
-                                                                                , inAmount         := OperCount
-                                                                                , inOperDate       := OperDate
+                                                                                , inContainerId    := _tmpItem.ContainerId_GoodsTo            -- был опеределен выше
+                                                                                , inAccountId      := 0                                       -- нет счета
+                                                                                , inAnalyzerId     := 0                                       -- нет аналитики
+                                                                                , inObjectId_Analyzer       := _tmpItem.GoodsId               -- Товар
+                                                                                , inWhereObjectId_Analyzer  := vbToWhereObjectId_Analyzer     -- Подраделение или...
+                                                                                , inContainerId_Analyzer    := _tmpItem.ContainerId_GoodsFrom -- количественный Контейнер-Корреспондент (т.е. из расхода)
+                                                                                , inAmount         := _tmpItem.OperCount
+                                                                                , inOperDate       := _tmpItem.OperDate
                                                                                 , inIsActive       := TRUE                                                                                 );
      -- 1.1.3. формируются Проводки для количественного учета - От кого
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, MovementId, MovementItemId, ContainerId_GoodsFrom, MIContainerId_To AS ParentId, -1 * OperCount, OperDate, FALSE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId --, ParentId, Amount, OperDate, IsActive)
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , ParentId, Amount, OperDate, isActive)
+       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, _tmpItem.MovementId, _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_GoodsFrom
+            , 0                                       AS AccountId  -- нет счета
+            , 0                                       AS AnalyzerId -- нет аналитики
+            , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
+            , vbFromWhereObjectId_Analyzer            AS WhereObjectId_Analyzer -- Подраделение или...
+            , _tmpItem.ContainerId_GoodsTo            AS ContainerId_Analyzer   -- количественный Контейнер-Корреспондент (т.е. из прихода)
+            , _tmpItem.MIContainerId_To               AS ParentId
+            , -1 * _tmpItem.OperCount
+            , _tmpItem.OperDate
+            , FALSE
        FROM _tmpItem;
 
 
@@ -481,11 +502,11 @@ BEGIN
                                                                                     , inMovementItemId := _tmpItem.MovementItemId 
                                                                                     , inParentId       := NULL
                                                                                     , inContainerId    := _tmpItemSumm.ContainerId_To
-                                                                                    , inAccountId      := NULL
-                                                                                    , inAnalyzerId     := NULL
-                                                                                    , inObjectId_Analyzer       := NULL
-                                                                                    , inWhereObjectId_Analyzer  := NULL
-                                                                                    , inContainerId_Analyzer    := NULL
+                                                                                    , inAccountId      := _tmpItemSumm.AccountId_To               -- счет есть всегда
+                                                                                    , inAnalyzerId     := 0                                       -- нет аналитики
+                                                                                    , inObjectId_Analyzer       := _tmpItem.GoodsId               -- Товар
+                                                                                    , inWhereObjectId_Analyzer  := vbToWhereObjectId_Analyzer     -- Подраделение или...
+                                                                                    , inContainerId_Analyzer    := _tmpItemSumm.ContainerId_From  -- суммовой Контейнер-Корреспондент (т.е. из расхода)
                                                                                     , inAmount         := OperSumm
                                                                                     , inOperDate       := OperDate
                                                                                     , inIsActive       := TRUE
@@ -494,8 +515,20 @@ BEGIN
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
      -- 1.3.4. формируются Проводки для суммового учета - От кого
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, MovementId, _tmpItem.MovementItemId, ContainerId_From, _tmpItemSumm.MIContainerId_To AS ParentId, -1 * OperSumm, OperDate, FALSE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, MovementId, _tmpItem.MovementItemId
+            , _tmpItemSumm.ContainerId_From
+            , _tmpItemSumm.AccountId_From             AS AccountId  -- счет есть всегда
+            , 0                                       AS AnalyzerId -- нет аналитики
+            , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
+            , vbFromWhereObjectId_Analyzer            AS WhereObjectId_Analyzer -- Подраделение или...
+            , _tmpItemSumm.ContainerId_To             AS ContainerId_Analyzer   -- суммовой Контейнер-Корреспондент (т.е. из прихода)
+            , _tmpItemSumm.MIContainerId_To           AS ParentId
+            , -1 * _tmpItemSumm.OperSumm
+            , _tmpItem.OperDate
+            , FALSE
        FROM _tmpItem
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 

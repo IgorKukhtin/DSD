@@ -24,9 +24,9 @@ BEGIN
            , Object_GoodsByGoodsKind_View.GoodsKindId
            , Object_GoodsByGoodsKind_View.GoodsKindName
            
-           , ObjectFloat_WeightPackage.ValueData AS WeightPackage
-           , ObjectFloat_WeightTotal.ValueData   AS WeightTotal
-           , ObjectBoolean_Order.ValueData       AS isOrder
+           , COALESCE (ObjectFloat_WeightPackage.ValueData,0)::TFloat  AS WeightPackage
+           , COALESCE (ObjectFloat_WeightTotal.ValueData,0)  ::TFloat  AS WeightTotal
+           , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            
        FROM Object_GoodsByGoodsKind_View
            LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage

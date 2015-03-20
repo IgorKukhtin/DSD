@@ -133,7 +133,8 @@ BEGIN
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , CASE WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                      AND _tmpItem.isActive = TRUE
-                     AND*/ _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                     AND*/ _tmpItem.isActive = TRUE
+                       AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
                     WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN -1 * _tmpItem.OperSumm
@@ -147,7 +148,8 @@ BEGIN
                END AS OperSumm_Currency
              , CASE WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                      AND _tmpItem.isActive = TRUE
-                     AND*/ _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                     AND*/ _tmpItem.isActive = TRUE
+                       AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN COALESCE (MovementFloat_Amount.ValueData, 0) - _tmpItem.OperSumm
                     WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN 0

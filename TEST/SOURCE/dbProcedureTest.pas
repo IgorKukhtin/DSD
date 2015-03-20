@@ -292,8 +292,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\PartionGoods\lpInsertFind_Object_PartionGoods - PartionString.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\PartionMovement\lpInsertFind_Object_PartionMovement.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\GoodsByGoodsKind\lfSelect_Object_GoodsByGoodsKind.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\GoodsByGoodsKind\lpInsert_Object_GoodsByGoodsKind.sql', ZQuery);
+  //ExecFile(ProcedurePath + 'OBJECTS\GoodsByGoodsKind\lfSelect_Object_GoodsByGoodsKind.sql', ZQuery);
+  //ExecFile(ProcedurePath + 'OBJECTS\GoodsByGoodsKind\lpInsert_Object_GoodsByGoodsKind.sql', ZQuery);
+  ScriptDirectory := ProcedurePath + 'OBJECTS\GoodsByGoodsKind\';
+  ProcedureLoad;
 
   ExecFile(ProcedurePath + 'OBJECTS\ReceiptCost\gpInsertUpdate_Object_ReceiptCost.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\ReceiptCost\gpSelect_Object_ReceiptCost.sql', ZQuery);
