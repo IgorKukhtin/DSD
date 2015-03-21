@@ -338,7 +338,8 @@ BEGIN
                                              , inGoodsKindId            := Object_GoodsKind.Id
                                              , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
                                              , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
-                                             , inWeightMain             := COALESCE (MIBoolean_WeightMain.ValueData, tmpMI_ReceiptChild.isWeightMain)
+                                             , inIsWeightMain           := COALESCE (MIBoolean_WeightMain.ValueData, tmpMI_ReceiptChild.isWeightMain)
+                                             , inIsTaxExit              := COALESCE (MIBoolean_WeightMain.ValueData, tmpMI_ReceiptChild.isWeightMain)
                                               ) AS GroupNumber
 
             , tmpMI_Child.isErased

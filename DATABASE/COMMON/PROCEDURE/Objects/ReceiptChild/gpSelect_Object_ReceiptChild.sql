@@ -34,7 +34,10 @@ BEGIN
          , CASE WHEN Object_InfoMoney_View.InfoMoneyId <> zc_Enum_InfoMoney_10202() -- Основное сырье + Прочее сырье + Оболочка
                  AND Object_InfoMoney_View.InfoMoneyId <> zc_Enum_InfoMoney_10203() -- Основное сырье + Прочее сырье + Упаковка
                  AND Object_InfoMoney_View.InfoMoneyId <> zc_Enum_InfoMoney_10204() -- Основное сырье + Прочее сырье + Прочее сырье
-                 -- AND COALESCE (ObjectBoolean_TaxExit.ValueData, FALSE) = FALSE
+                 AND (COALESCE (ObjectBoolean_TaxExit.ValueData, FALSE) = FALSE
+                   OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                   OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Продукция + Мясное сырье
+                     )
                      THEN TRUE
                  ELSE FALSE
            END :: Boolean AS isWeightTotal
@@ -60,7 +63,8 @@ BEGIN
                                           , inGoodsKindId            := Object_GoodsKind.Id
                                           , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
                                           , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
-                                          , inWeightMain             := ObjectBoolean_WeightMain.ValueData
+                                          , inIsWeightMain           := ObjectBoolean_WeightMain.ValueData
+                                          , inIsTaxExit              := ObjectBoolean_TaxExit.ValueData
                                            ) AS GroupNumber
 
          , CASE WHEN Object_Goods.Id = zc_Goods_WorkIce() THEN 0 ELSE Object_InfoMoney_View.InfoMoneyCode END :: Integer AS InfoMoneyCode

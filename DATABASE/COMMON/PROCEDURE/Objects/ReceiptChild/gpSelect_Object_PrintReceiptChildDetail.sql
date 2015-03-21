@@ -29,7 +29,10 @@ BEGIN
            , CASE WHEN DD.InfoMoneyId <> zc_Enum_InfoMoney_10202() -- Основное сырье + Прочее сырье + Оболочка
                    AND DD.InfoMoneyId <> zc_Enum_InfoMoney_10203() -- Основное сырье + Прочее сырье + Упаковка
                    AND DD.InfoMoneyId <> zc_Enum_InfoMoney_10204() -- Основное сырье + Прочее сырье + Прочее сырье
-                   -- AND DD.isTaxExit = FALSE
+                   AND (DD.isTaxExit = FALSE
+                     OR DD.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                     OR DD.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Продукция + Мясное сырье
+                       )
                        THEN TRUE
                    ELSE FALSE
              END :: Boolean AS isWeightTotal
@@ -53,7 +56,8 @@ BEGIN
                                           , inGoodsKindId            := D.GoodsKindId
                                           , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
                                           , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
-                                          , inWeightMain             := ObjectBoolean_WeightMain.ValueData
+                                          , inIsWeightMain           := ObjectBoolean_WeightMain.ValueData
+                                          , inIsTaxExit              := ObjectBoolean_TaxExit.ValueData
                                            ) AS GroupNumber
        FROM lpSelect_Object_ReceiptChildDetail(0) AS D 
           LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.GoodsId = D.GoodsId

@@ -1,13 +1,16 @@
 -- Function: zfCalc_ReceiptChild_GroupNumber
 
 DROP FUNCTION IF EXISTS zfCalc_ReceiptChild_GroupNumber (Integer, Integer, Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS zfCalc_ReceiptChild_GroupNumber (Integer, Integer, Integer, Integer, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION zfCalc_ReceiptChild_GroupNumber(
     IN inGoodsId                Integer, -- 
     IN inGoodsKindId            Integer, -- 
     IN inInfoMoneyDestinationId Integer, -- 
     IN inInfoMoneyId            Integer, -- 
-    IN inWeightMain             Boolean
+    IN inIsWeightMain           Boolean, -- 
+    IN inIsTaxExit              Boolean  -- 
+
 )
 RETURNS Integer AS
 $BODY$
@@ -25,10 +28,11 @@ BEGIN
                        THEN 2
 
                   WHEN inInfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
-                   AND inWeightMain = TRUE
+                   AND inIsWeightMain = TRUE
                        THEN 5
 
                   WHEN inInfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
+                   AND inIsTaxExit = FALSE
                        THEN 7
 
                   WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
@@ -46,7 +50,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfCalc_ReceiptChild_GroupNumber (Integer, Integer, Integer, Integer, Boolean) OWNER TO postgres;
+ALTER FUNCTION zfCalc_ReceiptChild_GroupNumber (Integer, Integer, Integer, Integer, Boolean, Boolean) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -60,6 +64,7 @@ SELECT * FROM zfCalc_ReceiptChild_GroupNumber (inGoodsId                := 100
                                              , inGoodsKindId            := 1
                                              , inInfoMoneyDestinationId := 17
                                              , inInfoMoneyId            := 100
-                                             , inWeightMain             := FALSE
+                                             , inIsWeightMain           := FALSE
+                                             , inIsTaxExit              := FALSE
                                               )
 */
