@@ -259,6 +259,37 @@ object ReceiptForm: TReceiptForm
         Options.Editing = False
         Width = 69
       end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clInfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clInfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clInfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 138
+      end
       object Code_Parent: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1087#1086#1080#1089#1082')'
         DataBinding.FieldName = 'Code_Parent'
@@ -493,12 +524,43 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentVert = vaCenter
         Width = 77
       end
+      object clInfoMoneyCodeChild: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clInfoMoneyGroupNameChild: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clInfoMoneyDestinationNameChild: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clInfoMoneyNameChild: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 138
+      end
       object clCommentChild: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 300
+        Width = 200
       end
       object clIsErasedChild: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -549,8 +611,8 @@ object ReceiptForm: TReceiptForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -617,18 +679,6 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintDetail'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -646,6 +696,22 @@ object ReceiptForm: TReceiptForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDetail'
         end
         item
           Visible = True
@@ -1019,7 +1085,7 @@ object ReceiptForm: TReceiptForm
       Category = 'Print'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1086#1073#1099#1095#1085#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
       ImageIndex = 16
       DataSets = <
         item
@@ -1044,7 +1110,7 @@ object ReceiptForm: TReceiptForm
         item
           StoredProc = spPrintReceiptChildDetail
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1072#1079#1074#1077#1088#1085#1091#1090#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ImageIndex = 15
       DataSets = <
         item

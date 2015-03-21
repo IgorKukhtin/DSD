@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
              , GoodsCode_Parent Integer, GoodsName_Parent TVarChar, MeasureName_Parent TVarChar
              , GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , isCheck_Parent Boolean
              , isErased Boolean
               )
@@ -99,6 +100,11 @@ BEGIN
          , Object_GoodsTag.ValueData                   AS GoodsTagName
          , Object_TradeMark.ValueData                  AS TradeMarkName
 
+         , Object_InfoMoney_View.InfoMoneyCode
+         , Object_InfoMoney_View.InfoMoneyGroupName
+         , Object_InfoMoney_View.InfoMoneyDestinationName
+         , Object_InfoMoney_View.InfoMoneyName
+
          , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
          , Object_Receipt.isErased AS isErased
 
@@ -144,6 +150,11 @@ BEGIN
                               AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Receipt_Goods.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -159,6 +170,7 @@ BEGIN
                               AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
           LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = ObjectLink_Receipt_GoodsKindComplete.ChildObjectId
           LEFT JOIN Object AS Object_GoodsKindComplete_basis ON Object_GoodsKindComplete_basis.Id = zc_GoodsKind_Basis()
+                                                            AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_ReceiptCost
                                ON ObjectLink_Receipt_ReceiptCost.ObjectId = Object_Receipt.Id

@@ -255,7 +255,7 @@
     Top = 218
   end
   inherited spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_MasterTech'
+    StoredProcName = 'gpInsertUpdate_MI_ProductionUnionTech'
     Params = <
       item
         Name = 'ioMovementItemId'

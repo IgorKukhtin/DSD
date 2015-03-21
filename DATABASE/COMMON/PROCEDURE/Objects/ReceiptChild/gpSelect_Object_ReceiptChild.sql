@@ -12,8 +12,9 @@ RETURNS TABLE (Id Integer, Value   TFloat, isWeightMain Boolean, isTaxExit Boole
                ReceiptId Integer, ReceiptName TVarChar, 
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar,
-               MeasureName TVarChar, InfoMoneyName TVarChar,
+               MeasureName TVarChar,
                GroupNumber Integer,
+               InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar,
                isErased Boolean) AS
 $BODY$
 BEGIN
@@ -45,13 +46,18 @@ BEGIN
          , Object_GoodsKind.ValueData  AS GoodsKindName
 
          , Object_Measure.ValueData     AS MeasureName
-         , Object_InfoMoney_View.InfoMoneyName AS InfoMoneyName
+
          , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := Object_Goods.Id
                                           , inGoodsKindId            := Object_GoodsKind.Id
                                           , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
                                           , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
                                           , inWeightMain             := ObjectBoolean_WeightMain.ValueData
                                            ) AS GroupNumber
+
+         , Object_InfoMoney_View.InfoMoneyCode
+         , Object_InfoMoney_View.InfoMoneyGroupName
+         , Object_InfoMoney_View.InfoMoneyDestinationName
+         , Object_InfoMoney_View.InfoMoneyName
 
          , Object_ReceiptChild.isErased AS isErased
          

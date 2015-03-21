@@ -1,7 +1,6 @@
 -- Function: gpSelect_Movement_ProductionUnionTech()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inStartDate      TDateTime,
