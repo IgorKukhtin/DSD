@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnionTech_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inAmountReceipt       TFloat    , -- Количество по рецептуре на 1 кутер 
     IN inPartionGoodsDate    TDateTime , -- Партия товара
-    IN inComment             TVarChar  , -- Комментарий
+    IN inComment             TVarChar  , -- Примечание
     IN inGoodsKindId         Integer   , -- Виды товаров            
     IN inUserId              Integer     -- пользователь
 )                              
@@ -19,6 +19,8 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 
 BEGIN
+   -- меняем параметр
+   IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 
    -- определяется признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -26,7 +28,7 @@ BEGIN
    -- сохранили <Элемент документа>
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
 
-   -- сохранили свойство <Комментарий>
+   -- сохранили свойство <Примечание>
    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
    -- сохранили свойство <Количество по рецептуре на 1 кутер>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReceipt(), ioId, inAmountReceipt);

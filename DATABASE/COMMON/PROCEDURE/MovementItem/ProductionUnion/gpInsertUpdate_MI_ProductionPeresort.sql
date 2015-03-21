@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
     IN inAmount                 TFloat    , -- Количество
     IN inPartionGoods           TVarChar  , -- Партия товара
     IN inPartionGoodsDate       TDateTime , -- Партия товара
-    IN inComment                TVarChar  , -- Комментарий	                   
+    IN inComment                TVarChar  , -- Примечание	                   
     IN inGoodsKindId            Integer   , -- Виды товаров 
  INOUT ioGoodsChildId           Integer   , -- Товары
     IN inPartionGoodsChild      TVarChar  , -- Партия товара  

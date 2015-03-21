@@ -429,7 +429,7 @@ object ReceiptForm: TReceiptForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clGroupNumber: TcxGridDBColumn
+      object clGroupNumberChild: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#8470
         DataBinding.FieldName = 'GroupNumber'
         HeaderAlignmentHorz = taCenter
@@ -494,14 +494,14 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentVert = vaCenter
         Width = 112
       end
-      object clIsTaxExit: TcxGridDBColumn
+      object clIsTaxExitChild: TcxGridDBColumn
         Caption = #1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093'.'
         DataBinding.FieldName = 'isTaxExit'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clIsWeightMain: TcxGridDBColumn
+      object clIsWeightMainChild: TcxGridDBColumn
         Caption = #1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)'
         DataBinding.FieldName = 'isWeightMain'
         HeaderAlignmentHorz = taCenter

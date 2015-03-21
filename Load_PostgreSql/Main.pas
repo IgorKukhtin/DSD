@@ -14274,13 +14274,14 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ProductionUnion_Master';
+        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ProductionUnion_Master_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inIsPartionClose',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inRealWeight',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCuterCount',ftFloat,ptInput, 0);
@@ -14300,6 +14301,9 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             if FieldByName('PartionClose').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then toStoredProc.Params.ParamByName('inIsPartionClose').Value:=true
+             else toStoredProc.Params.ParamByName('inIsPartionClose').Value:=false;
              toStoredProc.Params.ParamByName('inCount').Value:=FieldByName('shCount').AsFloat;
              toStoredProc.Params.ParamByName('inRealWeight').Value:=FieldByName('RealWeight').AsFloat;
              toStoredProc.Params.ParamByName('inCuterCount').Value:=FieldByName('CuterCount').AsFloat;
@@ -14314,9 +14318,6 @@ begin
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
              //
-             if FieldByName('PartionClose').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then fExecSqToQuery ('select lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionClose(), '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+', true)')
-             else fExecSqToQuery ('select lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionClose(), '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+', false)');
              //
              Next;
              Application.ProcessMessages;
@@ -14373,7 +14374,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ProductionUnion_Child';
+        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ProductionUnion_Child_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);

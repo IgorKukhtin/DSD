@@ -69,6 +69,8 @@ type
     PrintMasterCDS: TClientDataSet;
     PrintChildCDS: TClientDataSet;
     spReport_GoodsMI_ProductionUnion_Tax: TdsdStoredProc;
+    isTaxExit: TcxGridDBColumn;
+    isWeightMain: TcxGridDBColumn;
   private
     { Private declarations }
   public

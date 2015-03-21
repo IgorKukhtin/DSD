@@ -389,7 +389,24 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colChildPartionGoodsDate: TcxGridDBColumn [8]
+          object isTaxExit: TcxGridDBColumn [8]
+            Caption = #1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093'.'
+            DataBinding.FieldName = 'isTaxExit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isWeightMain: TcxGridDBColumn [9]
+            Caption = #1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)'
+            DataBinding.FieldName = 'isWeightMain'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colChildPartionGoodsDate: TcxGridDBColumn [10]
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'PartionGoodsDate'
             HeaderAlignmentHorz = taCenter
@@ -397,7 +414,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colChildPartionGoods: TcxGridDBColumn [9]
+          object colChildPartionGoods: TcxGridDBColumn [11]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -406,7 +423,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colChildComment: TcxGridDBColumn [10]
+          object colChildComment: TcxGridDBColumn [12]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

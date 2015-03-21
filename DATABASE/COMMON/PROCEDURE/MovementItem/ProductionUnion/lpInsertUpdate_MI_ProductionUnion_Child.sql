@@ -1,4 +1,4 @@
--- Function: lpInsertUpdate_MI_ProductionUnion_Child()
+ -- Function: lpInsertUpdate_MI_ProductionUnion_Child()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer);
 

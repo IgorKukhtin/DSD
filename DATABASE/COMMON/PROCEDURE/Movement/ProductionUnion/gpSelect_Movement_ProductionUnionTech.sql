@@ -324,8 +324,10 @@ BEGIN
 
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
             , MIString_PartionGoods.ValueData   AS PartionGoods
-
             , MIString_Comment.ValueData        AS Comment
+
+            , COALESCE (MIBoolean_TaxExit.ValueData, COALESCE (tmpMI_ReceiptChild.isTaxExit, FALSE))       AS isTaxExit
+            , COALESCE (MIBoolean_WeightMain.ValueData, COALESCE (tmpMI_ReceiptChild.isWeightMain, FALSE)) AS isWeightMain
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -348,9 +350,12 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpMI_ReceiptChild.GoodsId, tmpMI_Child.GoodsId)
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (tmpMI_ReceiptChild.GoodsKindId, tmpMI_Child.GoodsKindId)
 
+            LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
+                                          ON MIBoolean_TaxExit.MovementItemId =  tmpMI_Child.MovementItemId_Child
+                                         AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
             LEFT JOIN MovementItemBoolean AS MIBoolean_WeightMain
-                                          ON MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
-                                         AND MIBoolean_WeightMain.MovementItemId =  tmpMI_Child.MovementItemId_Child
+                                          ON MIBoolean_WeightMain.MovementItemId =  tmpMI_Child.MovementItemId_Child
+                                         AND MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
 
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                        ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
