@@ -1095,7 +1095,7 @@ object ReceiptForm: TReceiptForm
         item
           DataSet = ReceiptChildCDS
           UserName = 'Client'
-          IndexFieldNames = 'ReceiptId;GroupNumber'
+          IndexFieldNames = 'ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
         end>
       Params = <>
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
@@ -1120,7 +1120,7 @@ object ReceiptForm: TReceiptForm
         item
           DataSet = PrintReceiptChildDetailCDS
           UserName = 'Client'
-          IndexFieldNames = 'GroupNumber'
+          IndexFieldNames = 'GroupNumber;GoodsName'
         end>
       Params = <>
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
@@ -1136,6 +1136,11 @@ object ReceiptForm: TReceiptForm
         DataSet = ClientDataSet
       end>
     Params = <
+      item
+        Name = 'inReceiptId'
+        Value = 0
+        ParamType = ptInput
+      end
       item
         Name = 'inGoodsId'
         Value = 0
@@ -1317,6 +1322,11 @@ object ReceiptForm: TReceiptForm
         DataSet = ReceiptChildCDS
       end>
     Params = <
+      item
+        Name = 'inReceiptId'
+        Value = 0
+        ParamType = ptInput
+      end
       item
         Name = 'inShowAll'
         Value = Null

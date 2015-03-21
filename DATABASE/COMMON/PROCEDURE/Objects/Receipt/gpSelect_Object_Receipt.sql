@@ -1,11 +1,9 @@
 -- Function: gpSelect_Object_Receipt()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
+    IN inReceiptId    Integer,
     IN inGoodsId      Integer,
     IN inGoodsKindId  Integer,
     IN inShowAll      Boolean,
@@ -252,17 +250,19 @@ BEGIN
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
      WHERE Object_Receipt.DescId = zc_Object_Receipt()
+       AND (Object_Receipt.Id = inReceiptId OR inReceiptId = 0)
        AND (ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
        AND (ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId OR inGoodsKindId = 0);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Receipt (Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Receipt (Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.03.15                                       * add inReceiptId
  23.02.15        * add 
  14.02.15                                      *all
  19.07.13        * reName zc_ObjectDate_
@@ -270,4 +270,4 @@ ALTER FUNCTION gpSelect_Object_Receipt (Integer, Integer, Boolean, TVarChar) OWN
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Receipt (0, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Receipt (0, 0, 0, FALSE, zfCalc_UserAdmin())

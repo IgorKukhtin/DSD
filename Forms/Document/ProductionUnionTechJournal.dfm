@@ -173,7 +173,18 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colAmount: TcxGridDBColumn [8]
+          object colCuterCount: TcxGridDBColumn [8]
+            Caption = #1050#1091#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'CuterCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colAmount: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -184,20 +195,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colRealWeight: TcxGridDBColumn [9]
+          object colRealWeight: TcxGridDBColumn [10]
             Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
             DataBinding.FieldName = 'RealWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colCuterCount: TcxGridDBColumn [10]
-            Caption = #1050#1091#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
-            DataBinding.FieldName = 'CuterCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -617,6 +617,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           StoredProc = spReport_GoodsMI_ProductionUnion_Tax
         end>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')>'
       DataSets = <
         item
@@ -811,6 +812,48 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = True
     end
+    object actPrintReceipt: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_Object_Receipt
+      StoredProcList = <
+        item
+          StoredProc = spSelect_Object_Receipt
+        end
+        item
+          StoredProc = spSelect_Object_ReceiptChild
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintMasterCDS
+          UserName = 'Master'
+        end
+        item
+          DataSet = PrintChildCDS
+          UserName = 'Client'
+          IndexFieldNames = 'ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41791d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41791d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnionTech'
@@ -902,6 +945,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintReceipt'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -935,6 +986,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     end
     object bbInsert: TdxBarButton [19]
       Action = actInsert
+      Category = 0
+    end
+    object bbPrintReceipt: TdxBarButton
+      Action = actPrintReceipt
       Category = 0
     end
   end
@@ -1466,5 +1521,69 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     PackSize = 1
     Left = 608
     Top = 272
+  end
+  object spSelect_Object_Receipt: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Receipt'
+    DataSet = PrintMasterCDS
+    DataSets = <
+      item
+        DataSet = PrintMasterCDS
+      end>
+    Params = <
+      item
+        Name = 'inReceiptId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReceiptId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = 41791d
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inShowAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 233
+  end
+  object spSelect_Object_ReceiptChild: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ReceiptChild'
+    DataSet = PrintChildCDS
+    DataSets = <
+      item
+        DataSet = PrintChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inReceiptId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReceiptId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inShowAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 249
   end
 end

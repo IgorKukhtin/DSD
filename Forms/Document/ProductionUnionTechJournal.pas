@@ -71,6 +71,10 @@ type
     spReport_GoodsMI_ProductionUnion_Tax: TdsdStoredProc;
     isTaxExit: TcxGridDBColumn;
     isWeightMain: TcxGridDBColumn;
+    actPrintReceipt: TdsdPrintAction;
+    spSelect_Object_Receipt: TdsdStoredProc;
+    spSelect_Object_ReceiptChild: TdsdStoredProc;
+    bbPrintReceipt: TdxBarButton;
   private
     { Private declarations }
   public

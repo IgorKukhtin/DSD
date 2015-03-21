@@ -471,6 +471,13 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
       end>
     Params = <
       item
+        Name = 'inReceiptId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MasterReceiptId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = ReceiptGoodsGuides
@@ -547,6 +554,10 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
   end
   object FormParams: TdsdFormParams
     Params = <
+      item
+        Name = 'MasterReceiptId'
+        Value = Null
+      end
       item
         Name = 'MasterGoodsId'
         Value = ''

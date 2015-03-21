@@ -1,11 +1,11 @@
 -- Function: gpSelect_Object_ReceiptChild()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptChild(
-    IN inShowAll     Boolean,
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inReceiptId    Integer,
+    IN inShowAll      Boolean,
+    IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Value   TFloat, isWeightMain Boolean, isTaxExit Boolean,
                StartDate TDateTime, EndDate TDateTime, Comment TVarChar,
@@ -109,16 +109,18 @@ BEGIN
                                 ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id 
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
      
-     WHERE Object_ReceiptChild.DescId = zc_Object_ReceiptChild();
+     WHERE Object_ReceiptChild.DescId = zc_Object_ReceiptChild()
+       AND (ObjectLink_ReceiptChild_Receipt.ChildObjectId = inReceiptId OR inReceiptId = 0);
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ReceiptChild (Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_ReceiptChild (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.03.15                                       * add inReceiptId
  18.03.15                        * InfoMoneyName
  14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_
@@ -126,4 +128,4 @@ ALTER FUNCTION gpSelect_Object_ReceiptChild (Boolean, TVarChar) OWNER TO postgre
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptChild (FALSE, '2')
+-- SELECT * FROM gpSelect_Object_ReceiptChild (0, FALSE, '2')

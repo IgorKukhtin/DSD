@@ -600,6 +600,10 @@
         ParamType = ptInput
       end
       item
+        Name = 'MasterReceiptId'
+        Value = 0
+      end
+      item
         Name = 'MasterGoodsId'
         Value = 0
         Component = ReceiptGoodsGuides
