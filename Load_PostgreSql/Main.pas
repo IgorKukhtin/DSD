@@ -4796,6 +4796,7 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMaskId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inReceiptCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
@@ -4820,6 +4821,7 @@ begin
              if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMaskId').Value:=0;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inReceiptCode').Value:=FieldByName('inReceiptCode').AsString;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('inComment').AsString;
@@ -4903,7 +4905,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_Object_ReceiptChild';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_ReceiptChild_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);

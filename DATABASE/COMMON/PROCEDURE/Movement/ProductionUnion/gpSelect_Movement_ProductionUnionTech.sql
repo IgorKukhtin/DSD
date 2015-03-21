@@ -326,8 +326,8 @@ BEGIN
             , MIString_PartionGoods.ValueData   AS PartionGoods
             , MIString_Comment.ValueData        AS Comment
 
-            , COALESCE (MIBoolean_TaxExit.ValueData, COALESCE (tmpMI_ReceiptChild.isTaxExit, FALSE))       AS isTaxExit
-            , COALESCE (MIBoolean_WeightMain.ValueData, COALESCE (tmpMI_ReceiptChild.isWeightMain, FALSE)) AS isWeightMain
+            , CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN MIBoolean_TaxExit.ValueData    ELSE tmpMI_ReceiptChild.isTaxExit    END :: Boolean  AS isTaxExit
+            , CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN MIBoolean_WeightMain.ValueData ELSE tmpMI_ReceiptChild.isWeightMain END :: Boolean  AS isWeightMain
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode

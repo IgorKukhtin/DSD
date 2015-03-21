@@ -783,6 +783,45 @@ BEGIN
                 WHERE _tmpItem.GoodsKindId <> zc_GoodsKind_WorkProgress()
                ) AS tmp;
      END IF;
+     -- !!!5.0.2. формируются свойства "по рецептуре" в элементах документа, если ПФ-ГП и не пересортица!!!
+     IF vbIsPeresort = FALSE AND 1=0
+     THEN
+          PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_WeightMain(), tmp.MovementItemId, tmp.isWeightMain)
+                , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TaxExit(), tmp.MovementItemId, tmp.isTaxExit)
+          FROM (SELECT MovementItem.Id                      AS MovementItemId
+                     , COALESCE (tmpMI.isWeightMain, FALSE) AS isWeightMain
+                     , COALESCE (tmpMI.isTaxExit, FALSE)    AS isTaxExit
+                FROM _tmpItem
+                     INNER JOIN MovementItem ON MovementItem.ParentId = _tmpItem.MovementItemId
+                                            AND MovementItem.DescId   = zc_MI_Child()
+                                            AND MovementItem.isErased  = FALSE
+                     LEFT JOIN (SELECT _tmpItem.MovementItemId                              AS MovementItemId
+                                     , ObjectLink_ReceiptChild_Goods.ChildObjectId          AS GoodsId
+                                     , COALESCE (ObjectBoolean_WeightMain.ValueData, FALSE) AS isWeightMain
+                                     , COALESCE (ObjectBoolean_TaxExit.ValueData, FALSE)    AS isTaxExit
+                                FROM _tmpItem
+                                     INNER JOIN MovementItemLinkObject AS MILO_Receipt
+                                                                       ON MILO_Receipt.MovementItemId = _tmpItem.MovementItemId
+                                                                      AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
+                                     INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                           ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = MILO_Receipt.ObjectId
+                                                          AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                                     LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                          ON ObjectLink_ReceiptChild_Goods.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                         AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_WeightMain
+                                                             ON ObjectBoolean_WeightMain.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                            AND ObjectBoolean_WeightMain.DescId = zc_ObjectBoolean_ReceiptChild_WeightMain()
+                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
+                                                             ON ObjectBoolean_TaxExit.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                            AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
+                                WHERE _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress()
+                               ) AS tmpMI ON tmpMI.MovementItemId = _tmpItem.MovementItemId
+                                         AND tmpMI.GoodsId = MovementItem.ObjectId
+                WHERE _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress()
+               ) AS tmp;
+     END IF;
+
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();

@@ -258,6 +258,13 @@
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnionTech'
     Params = <
       item
+        Name = 'inMovementItemId_order'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementItemId_order'
+        ParamType = ptInput
+      end
+      item
         Name = 'ioMovementItemId'
         Value = '0'
         Component = FormParams

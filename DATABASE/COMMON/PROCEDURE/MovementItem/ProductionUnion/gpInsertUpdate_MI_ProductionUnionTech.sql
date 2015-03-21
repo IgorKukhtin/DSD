@@ -1,24 +1,25 @@
 -- Function: gpInsertUpdate_MI_ProductionUnionTech()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
- INOUT ioMovementItemId      Integer   , -- Ключ объекта <Элемент документа>
- INOUT ioMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
+    IN inMovementItemId_order Integer   , -- Ключ объекта <Элемент документа>
+ INOUT ioMovementItemId       Integer   , -- Ключ объекта <Элемент документа>
+ INOUT ioMovementId           Integer   , -- Ключ объекта <Документ>
+    IN inOperDate             TDateTime , -- Дата документа
+    IN inFromId               Integer   , -- От кого (в документе)
+    IN inToId                 Integer   , -- Кому (в документе)
 
-    IN inReceiptId           Integer   , -- Рецептуры
-    IN inGoodsId             Integer   , -- Товары
-    IN inCount	             TFloat    , -- Количество батонов или упаковок
-    IN inRealWeight          TFloat    , -- Фактический вес(информативно)
-    IN inCuterCount          TFloat    , -- Количество кутеров
+    IN inReceiptId            Integer   , -- Рецептуры
+    IN inGoodsId              Integer   , -- Товары
+    IN inCount	              TFloat    , -- Количество батонов или упаковок
+    IN inRealWeight           TFloat    , -- Фактический вес(информативно)
+    IN inCuterCount           TFloat    , -- Количество кутеров
 
-    IN inComment             TVarChar  , -- Комментарий
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inComment              TVarChar  , -- Комментарий
+    IN inGoodsKindId          Integer   , -- Виды товаров
+    IN inGoodsKindCompleteId  Integer   , -- Виды товаров  ГП
+    IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
@@ -28,6 +29,13 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech());
+
+
+   -- проверка
+   IF COALESCE (inReceiptId, 0) = 0 
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Название рецептуры> не установлено.';
+   END IF;
 
 
    -- сохранили <Документ>
@@ -148,10 +156,17 @@ BEGIN
                                                                                     , inGoodsKindId        := _tmpChild.GoodsKindId
                                                                                     , inUserId             := vbUserId
                                                                                      );
-   -- сохранили св-ва по рецептуре <Входит в общий вес сырья> and < Зависит от % выхода >
+   -- сохранили св-ва по рецептуре <Входит в общий вес сырья> + <Зависит от % выхода>
    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_WeightMain(), _tmpChild.MovementItemId, _tmpChild.isWeightMain)
          , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TaxExit(), _tmpChild.MovementItemId, _tmpChild.isTaxExit)
    FROM _tmpChild;
+
+
+   -- !!!сохранили св-ва <Рецептуры> у заявки!!!
+   IF inMovementItemId_order <> 0
+   THEN
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), inMovementItemId_order, inReceiptId);
+   END IF;
 
 
 END;

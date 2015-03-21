@@ -16,30 +16,31 @@ BEGIN
      RETURN (CASE WHEN inGoodsId = zc_Goods_WorkIce()
                      THEN 6
 
-                WHEN inGoodsKindId = zc_GoodsKind_WorkProgress()
-                  OR inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
-                     THEN 3
+                  WHEN inGoodsKindId <> 0
+                    -- OR inGoodsKindId = zc_GoodsKind_WorkProgress()
+                    OR inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+                       THEN 3
 
-                WHEN inInfoMoneyId = zc_Enum_InfoMoney_10105() -- Основное сырье + Мясное сырье + Прочее мясное сырье
-                     THEN 2
+                  WHEN inInfoMoneyId = zc_Enum_InfoMoney_10105() -- Основное сырье + Мясное сырье + Прочее мясное сырье
+                       THEN 2
 
-                WHEN inInfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
-                 AND inWeightMain = TRUE
-                     THEN 5
+                  WHEN inInfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
+                   AND inWeightMain = TRUE
+                       THEN 5
 
-                WHEN inInfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
-                     THEN 7
+                  WHEN inInfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
+                       THEN 7
 
-                WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-                     THEN 1
+                  WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                       THEN 1
 
-                WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье (осталось Оболочка + Упаковка + Прочее сырье)
-                     THEN 8
+                  WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье (осталось Оболочка + Упаковка + Прочее сырье)
+                       THEN 8
 
-                WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
-                     THEN 4
+                  WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
+                       THEN 4
 
-                ELSE 10
+                  ELSE 10
            END);
 
 END;

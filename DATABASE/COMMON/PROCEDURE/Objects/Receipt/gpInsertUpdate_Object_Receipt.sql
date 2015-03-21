@@ -1,8 +1,6 @@
 -- Function: gpInsertUpdate_Object_Receipt()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
  INOUT ioId                  Integer   , -- ключ объекта <Составляющие рецептур>
@@ -101,9 +99,6 @@ BEGIN
    -- сохранили свойство <Конечная дата>
    -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_End(), ioId, inEndDate);
  
-   -- !!!пересчитали итоговые кол-ва по рецепту!!!
-   PERFORM lpUpdate_Object_Receipt_Total (ioId, vbUserId);
-
    -- сохранили свойство <Признак главный>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Receipt_Main(), ioId, inIsMain);
 
@@ -127,6 +122,8 @@ BEGIN
       
    END IF;
    
+   -- !!!пересчитали итоговые кол-ва по рецепту!!!
+   PERFORM lpUpdate_Object_Receipt_Total (ioId, vbUserId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
