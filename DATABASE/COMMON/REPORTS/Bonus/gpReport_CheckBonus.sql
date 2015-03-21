@@ -265,12 +265,12 @@ BEGIN
 
             , CAST (tmpAll.Value AS TFloat)                 AS Value
 
-            , CAST (/*SUM*/ (tmpAll.Sum_CheckBonus) AS TFloat)     AS Sum_CheckBonus
-            , CAST (/*SUM*/ (tmpAll.Sum_CheckBonusFact) AS TFloat) AS Sum_CheckBonusFact
-            , CAST (/*SUM*/ (tmpAll.Sum_Bonus) AS TFloat)          AS Sum_Bonus
-            , CAST (/*SUM*/ (tmpAll.Sum_BonusFact)*(-1) AS TFloat) AS Sum_BonusFact
-            , CAST (/*SUM*/ (tmpAll.Sum_SaleFact)       AS TFloat) AS Sum_SaleFact
-            , tmpAll.Comment :: TVarChar                           AS Comment
+            , CAST (SUM (tmpAll.Sum_CheckBonus) AS TFloat)     AS Sum_CheckBonus
+            , CAST (SUM (tmpAll.Sum_CheckBonusFact) AS TFloat) AS Sum_CheckBonusFact
+            , CAST (SUM (tmpAll.Sum_Bonus) AS TFloat)          AS Sum_Bonus
+            , CAST (SUM (tmpAll.Sum_BonusFact)*(-1) AS TFloat) AS Sum_BonusFact
+            , CAST (SUM (tmpAll.Sum_SaleFact)       AS TFloat) AS Sum_SaleFact
+            , MAX (tmpAll.Comment) :: TVarChar                 AS Comment
       FROM  
           (SELECT tmpContract.InvNumber_master
                 , tmpContract.InvNumber_child
@@ -418,7 +418,7 @@ BEGIN
       WHERE tmpAll.Sum_CheckBonus > 0
          OR tmpAll.Sum_Bonus > 0
          OR tmpAll.Sum_BonusFact <> 0
-      /*GROUP BY  tmpAll.ContractId_master
+      GROUP BY  tmpAll.ContractId_master
               , tmpAll.ContractId_child
               , tmpAll.ContractId_find
               , tmpAll.InvNumber_master
@@ -448,7 +448,7 @@ BEGIN
               , Object_BonusKind.ValueData
 
               , tmpAll.Value
-              , tmpAll.Comment*/
+              -- , tmpAll.Comment
     ;
 
 END;

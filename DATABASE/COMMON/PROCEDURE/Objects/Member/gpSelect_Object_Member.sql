@@ -66,6 +66,7 @@ BEGIN
                      SELECT View_Personal.MemberId
                      FROM Object_Personal_View AS View_Personal
                      WHERE View_Personal.PositionId = 81178 -- экспедитор
+                        OR View_Personal.PositionId = 8466  -- водитель
                         OR View_Personal.UnitId = 8409 -- Отдел экспедиторов
                      GROUP BY View_Personal.MemberId
                     ) AS View_Personal_Branch ON View_Personal_Branch.MemberId = Object_Member.Id

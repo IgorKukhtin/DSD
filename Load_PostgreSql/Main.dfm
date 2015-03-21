@@ -227,6 +227,7 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '3.2.2. '#1070#1088'.'#1083#1080#1094#1072' '#1060#1080#1083#1080#1072#1083'-'#1053#1072#1083
+      Enabled = False
       TabOrder = 8
     end
     object cbPartnerBranchNal: TCheckBox
@@ -236,6 +237,7 @@ object MainForm: TMainForm
       Width = 194
       Height = 17
       Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1060#1080#1083#1072#1083'-'#1053#1072#1083
+      Enabled = False
       TabOrder = 9
     end
     object cbBusiness: TCheckBox
@@ -605,6 +607,7 @@ object MainForm: TMainForm
       Width = 290
       Height = 17
       Caption = '3.2.1. 1Find+2Insert : Partner1C_BranchNal'
+      Enabled = False
       TabOrder = 43
     end
     object cbJuridicalGroup: TCheckBox

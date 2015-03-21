@@ -756,30 +756,33 @@ BEGIN
              ) AS tmpMIReport
        ;
 
-     -- !!!5.0. формируются свойства в элементах документа - <Рецептуры>, если не ПФ-ГП!!!
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), tmp.MovementItemId, tmp.ReceiptId)
-     FROM (SELECT _tmpItem.MovementItemId
-                , tmpReceipt.ReceiptId
-           FROM _tmpItem
-                LEFT JOIN (SELECT COALESCE (ObjectLink_Receipt_Goods.ObjectId, 0) AS ReceiptId
-                                , tmpGoods.GoodsId
-                                , tmpGoods.GoodsKindId
-                           FROM (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId FROM _tmpItem WHERE _tmpItem.GoodsKindId <> zc_GoodsKind_WorkProgress() GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId) AS tmpGoods
-                                INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
-                                                      ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
-                                                     AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
-                                INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                         ON ObjectBoolean_Main.ObjectId = ObjectLink_Receipt_Goods.ObjectId
-                                                        AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
-                                                        AND ObjectBoolean_Main.ValueData = TRUE
-                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                     ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
-                                                    AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
-                           WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpGoods.GoodsKindId
-                          ) AS tmpReceipt ON tmpReceipt.GoodsId = _tmpItem.GoodsId
+     -- !!!5.0. формируются свойства в элементах документа - <Рецептуры>, если не ПФ-ГП и не пересортица!!!
+     IF vbIsPeresort = FALSE
+     THEN
+          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), tmp.MovementItemId, tmp.ReceiptId)
+          FROM (SELECT _tmpItem.MovementItemId
+                     , tmpReceipt.ReceiptId
+                FROM _tmpItem
+                     LEFT JOIN (SELECT COALESCE (ObjectLink_Receipt_Goods.ObjectId, 0) AS ReceiptId
+                                     , tmpGoods.GoodsId
+                                     , tmpGoods.GoodsKindId
+                                FROM (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId FROM _tmpItem WHERE _tmpItem.GoodsKindId <> zc_GoodsKind_WorkProgress() GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId) AS tmpGoods
+                                     INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                           ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                          AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                     INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                              ON ObjectBoolean_Main.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                             AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                             AND ObjectBoolean_Main.ValueData = TRUE
+                                     LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                          ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                         AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpGoods.GoodsKindId
+                               ) AS tmpReceipt ON tmpReceipt.GoodsId = _tmpItem.GoodsId
                                          AND tmpReceipt.GoodsKindId = _tmpItem.GoodsKindId
-           WHERE _tmpItem.GoodsKindId <> zc_GoodsKind_WorkProgress()
-          ) AS tmp;
+                WHERE _tmpItem.GoodsKindId <> zc_GoodsKind_WorkProgress()
+               ) AS tmp;
+     END IF;
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();

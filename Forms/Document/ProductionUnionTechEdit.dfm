@@ -187,7 +187,7 @@
     Top = 5
     Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
   end
-  object ceGooodsKindCompleateGuides: TcxButtonEdit [25]
+  object ceGooodsKindCompleteGuides: TcxButtonEdit [25]
     Left = 370
     Top = 25
     Properties.Buttons = <
@@ -202,11 +202,11 @@
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
-    Top = 228
+    Top = 218
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 104
-    Top = 228
+    Top = 218
   end
   inherited ActionList: TActionList
     Left = 111
@@ -221,48 +221,55 @@
   inherited FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'MovementId'
         Value = '0'
         ParamType = ptInput
       end
       item
-        Name = 'inOperDate'
+        Name = 'OperDate'
         Value = Null
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inMovementItemId'
+        Name = 'MovementItemId'
         Value = '0'
         ParamType = ptInput
       end
       item
-        Name = 'inMovementItemId_order'
+        Name = 'MovementItemId_order'
         Value = Null
         ParamType = ptInput
       end
       item
-        Name = 'inFromId'
+        Name = 'FromId'
         Value = '0'
         ParamType = ptInput
       end
       item
-        Name = 'inToId'
+        Name = 'ToId'
         Value = Null
         ParamType = ptInput
       end>
     Left = 56
-    Top = 228
+    Top = 218
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_MasterTech'
     Params = <
       item
-        Name = 'ioid'
+        Name = 'ioMovementItemId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementItemId'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioMovementId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptUnknown
       end
       item
         Name = 'inOperDate'
@@ -283,6 +290,13 @@
         Value = ''
         Component = FormParams
         ComponentItem = 'ToId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReceiptId'
+        Value = '0'
+        Component = ReceiptGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -328,36 +342,11 @@
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsKindCompleateId'
+        Name = 'inGoodsKindCompleteId'
         Value = ''
-        Component = GooodsKindCompleateGuides
+        Component = GooodsKindCompleteGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Name = 'inReceiptId'
-        Value = '0'
-        Component = ReceiptGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Value = ''
-        Component = ReceiptGoodsGuides
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end>
     Left = 480
     Top = 184
@@ -369,14 +358,14 @@
         Name = 'inMovementId'
         Value = ''
         Component = FormParams
-        ComponentItem = 'inMovementId'
+        ComponentItem = 'MovementId'
         ParamType = ptInput
       end
       item
         Name = 'inOperDate'
         Value = Null
         Component = FormParams
-        ComponentItem = 'inOperDate'
+        ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -384,28 +373,28 @@
         Name = 'inMovementItemId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'inMovementItemId'
+        ComponentItem = 'MovementItemId'
         ParamType = ptInput
       end
       item
         Name = 'inMovementItemId_order'
         Value = ''
         Component = FormParams
-        ComponentItem = 'inMovementItemId_order'
+        ComponentItem = 'MovementItemId_order'
         ParamType = ptInput
       end
       item
-        Name = 'FromId'
+        Name = 'inFromId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'inFromId'
+        ComponentItem = 'FromId'
         ParamType = ptInput
       end
       item
         Name = 'inToId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'inToId'
+        ComponentItem = 'ToId'
         ParamType = ptInput
       end
       item
@@ -465,15 +454,15 @@
         DataType = ftString
       end
       item
-        Name = 'GoodsKindCompleateId'
+        Name = 'GoodsKindCompleteId'
         Value = ''
-        Component = GooodsKindCompleateGuides
+        Component = GooodsKindCompleteGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'GoodsKindCompleateName'
+        Name = 'GoodsKindCompleteName'
         Value = ''
-        Component = GooodsKindCompleateGuides
+        Component = GooodsKindCompleteGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -598,14 +587,14 @@
       item
         Name = 'GoodsKindCompleteId_calc'
         Value = ''
-        Component = GooodsKindCompleateGuides
+        Component = GooodsKindCompleteGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'GoodsKindCompleteName_calc'
         Value = ''
-        Component = GooodsKindCompleateGuides
+        Component = GooodsKindCompleteGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -703,13 +692,13 @@
       item
         Name = 'GoodsKindCompleteId'
         Value = Null
-        Component = GooodsKindCompleateGuides
+        Component = GooodsKindCompleteGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'GoodsKindCompleteName'
         Value = Null
-        Component = GooodsKindCompleateGuides
+        Component = GooodsKindCompleteGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -770,9 +759,9 @@
     Left = 296
     Top = 20
   end
-  object GooodsKindCompleateGuides: TdsdGuides
+  object GooodsKindCompleteGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceGooodsKindCompleateGuides
+    LookupControl = ceGooodsKindCompleteGuides
     FormNameParam.Value = 'TGoodsKind_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TGoodsKind_ObjectForm'
@@ -781,14 +770,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = GooodsKindCompleateGuides
+        Component = GooodsKindCompleteGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GooodsKindCompleateGuides
+        Component = GooodsKindCompleteGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

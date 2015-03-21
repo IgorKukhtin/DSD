@@ -2,6 +2,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075
   ClientHeight = 685
   ClientWidth = 1097
+  ExplicitTop = 8
   ExplicitWidth = 1113
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -479,6 +480,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ExplicitLeft = 983
       ExplicitTop = 17
       ExplicitWidth = 100
+      ExplicitHeight = 22
       Width = 100
     end
     inherited cxLabel3: TcxLabel
@@ -684,14 +686,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'inMovementId'
+          Name = 'MovementId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId'
           ParamType = ptInput
         end
         item
-          Name = 'inOperDate'
+          Name = 'OperDate'
           Value = 41791d
           Component = MasterCDS
           ComponentItem = 'OperDate'
@@ -699,28 +701,28 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ParamType = ptInput
         end
         item
-          Name = 'inMovementItemId'
+          Name = 'MovementItemId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementItemId'
           ParamType = ptInput
         end
         item
-          Name = 'inMovementItemId_order'
+          Name = 'MovementItemId_order'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementItemId_order'
           ParamType = ptInput
         end
         item
-          Name = 'inFromId'
+          Name = 'FromId'
           Value = Null
           Component = GuidesFrom
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
-          Name = 'inToId'
+          Name = 'ToId'
           Value = Null
           Component = GuidesTo
           ComponentItem = 'Key'
@@ -744,16 +746,25 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'Id'
-          Value = Null
+          Name = 'MovementId'
+          Value = 0
           ParamType = ptInput
         end
         item
           Name = 'OperDate'
           Value = Null
-          Component = deStart
+          Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+        end
+        item
+          Name = 'MovementItemId'
+          Value = 0
+          ParamType = ptInput
+        end
+        item
+          Name = 'MovementItemId_order'
+          Value = 0
         end
         item
           Name = 'FromId'
@@ -767,13 +778,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           Value = Null
           Component = GuidesTo
           ComponentItem = 'Key'
-          ParamType = ptInput
-        end
-        item
-          Name = 'MIOrderId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MIOrderId'
           ParamType = ptInput
         end>
       isShowModal = True
