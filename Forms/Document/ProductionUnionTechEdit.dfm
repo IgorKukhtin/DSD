@@ -276,7 +276,7 @@
         Value = ''
         Component = FormParams
         ComponentItem = 'MovementId'
-        ParamType = ptUnknown
+        ParamType = ptInputOutput
       end
       item
         Name = 'inOperDate'
@@ -433,7 +433,7 @@
         Name = 'MovementItemId'
         Value = ''
         Component = FormParams
-        ComponentItem = 'inMovementItemId'
+        ComponentItem = 'MovementItemId'
       end
       item
         Name = 'GoodsId'

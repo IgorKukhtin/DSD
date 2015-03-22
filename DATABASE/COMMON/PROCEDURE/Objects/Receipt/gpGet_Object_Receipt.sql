@@ -1,7 +1,6 @@
--- Function: gpGet_Object_Receipt(integer, TVarChar)
+-- Function: gpGet_Object_Receipt(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Object_Receipt(integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Object_Receipt(integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Receipt (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Receipt(
     IN inId          Integer,       -- Составляющие рецептур 
@@ -193,7 +192,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpGet_Object_Receipt(integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Object_Receipt(Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

@@ -40,6 +40,7 @@ type
     colChildAmountReceipt: TcxGridDBColumn;
     colChildPartionGoods: TcxGridDBColumn;
     colChildComment: TcxGridDBColumn;
+    actGoodsChoiceChild1: TOpenChoiceForm;
   private
     { Private declarations }
   public

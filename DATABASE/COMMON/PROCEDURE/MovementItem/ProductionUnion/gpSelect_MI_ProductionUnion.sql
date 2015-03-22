@@ -42,7 +42,7 @@ BEGIN
             , CAST (NULL AS TVarchar)               AS GoodsKindCompleteName
 
             , CAST (NULL AS Integer)                AS ReceiptId
-            , CAST (NULL AS Integer)                AS ReceiptCode
+            , CAST (NULL AS TVarchar)               AS ReceiptCode
             , CAST (NULL AS TVarchar)               AS ReceiptName
 
            , FALSE                                  AS isErased

@@ -466,7 +466,7 @@ object ReceiptForm: TReceiptForm
         DataBinding.FieldName = 'GoodsCode'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 0
-        Properties.DisplayFormat = ',0.;-,0.; ;'
+        Properties.DisplayFormat = '0.;-0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
