@@ -1,25 +1,25 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitWidth = 1036
+  ClientWidth = 1139
+  ExplicitWidth = 1155
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1139
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1139
         Height = 518
         ExplicitWidth = 1020
         ExplicitHeight = 518
@@ -197,16 +197,15 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1020
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
+        Width = 1139
         Height = 518
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1020
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -564,7 +563,7 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1139
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1020
@@ -643,8 +642,8 @@ inherited ReturnInForm: TReturnInForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -778,8 +777,8 @@ inherited ReturnInForm: TReturnInForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -814,8 +813,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 63
     Properties.Buttons = <
       item
-        Action = actDisabled
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True

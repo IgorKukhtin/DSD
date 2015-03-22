@@ -19,7 +19,6 @@ type
     Bar: TdxBar;
     bbRefresh: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    actDisabled: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -1,25 +1,26 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitWidth = 1036
+  ClientWidth = 1084
+  ExplicitLeft = -119
+  ExplicitWidth = 1100
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1084
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1084
         Height = 518
         ExplicitWidth = 1020
         ExplicitHeight = 518
@@ -264,7 +265,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1084
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1020
@@ -387,8 +388,8 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -405,8 +406,8 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -423,8 +424,8 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -524,8 +525,8 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True

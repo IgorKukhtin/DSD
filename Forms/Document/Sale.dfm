@@ -1,27 +1,26 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
-  ClientWidth = 1063
+  ClientWidth = 1179
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1071
-  ExplicitHeight = 695
+  ExplicitWidth = 1195
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1063
+    Width = 1179
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1063
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1063
+    ClientRectRight = 1179
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1063
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1063
+        Width = 1179
         Height = 518
         ExplicitWidth = 1063
         ExplicitHeight = 518
@@ -295,7 +294,7 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1063
+    Width = 1179
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1063
@@ -374,8 +373,8 @@ inherited SaleForm: TSaleForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -397,8 +396,8 @@ inherited SaleForm: TSaleForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -456,8 +455,8 @@ inherited SaleForm: TSaleForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -571,8 +570,8 @@ inherited SaleForm: TSaleForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -589,8 +588,8 @@ inherited SaleForm: TSaleForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = False
@@ -623,8 +622,8 @@ inherited SaleForm: TSaleForm
     Top = 63
     Properties.Buttons = <
       item
-        Action = actDisabled
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True

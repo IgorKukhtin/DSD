@@ -1,26 +1,25 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitTop = -312
-  ExplicitWidth = 1028
-  ExplicitHeight = 695
+  ClientWidth = 1174
+  ExplicitWidth = 1190
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1174
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1174
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1174
         Height = 518
         ExplicitWidth = 1020
         ExplicitHeight = 518
@@ -265,7 +264,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1174
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1020
@@ -302,6 +301,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -343,8 +343,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -366,8 +366,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -425,8 +425,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -523,8 +523,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -579,8 +579,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -592,8 +592,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True

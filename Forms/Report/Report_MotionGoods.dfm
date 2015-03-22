@@ -1769,7 +1769,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -1778,7 +1778,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 4
@@ -1990,7 +1990,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbDialogForm'
         end
         item
           Visible = True
@@ -1998,7 +1998,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbDialogForm'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -2090,30 +2090,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actDisabled: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      Caption = 'actDisabled'
-      FormName = 'actDisabled'
-      FormNameParam.Value = 'actDisabled'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-        end>
-      isShowModal = True
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
