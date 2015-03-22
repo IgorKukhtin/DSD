@@ -2,7 +2,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075
   ClientHeight = 685
   ClientWidth = 1097
-  ExplicitTop = 8
   ExplicitWidth = 1113
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -497,7 +496,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ExplicitLeft = 983
       ExplicitTop = 17
       ExplicitWidth = 100
-      ExplicitHeight = 22
       Width = 100
     end
     inherited cxLabel3: TcxLabel
@@ -600,17 +598,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     inherited actShowAll: TBooleanStoredProcAction
       Enabled = False
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [9]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spInsertUpdateMIChild
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIChild
-        end>
-      Caption = 'actUpdateChildDS'
-      DataSource = ChildDS
-    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spReport_GoodsMI_ProductionUnion_Tax
       StoredProcList = <
@@ -642,6 +629,17 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
+    end
+    object actUpdateChildDS: TdsdUpdateDataSet [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIChild
+        end>
+      Caption = 'actUpdateChildDS'
+      DataSource = ChildDS
     end
     inherited actAddMask: TdsdExecStoredProc
       Enabled = False
@@ -692,6 +690,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       isShowModal = True
     end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Enabled = True
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Enabled = True
+    end
     object actUpdate: TdsdInsertUpdateAction [23]
       Category = 'DSDLib'
       MoveParams = <>
@@ -719,7 +723,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ParamType = ptInput
         end
         item
-          Name = 'MovementItemId'
+          Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementItemId'
@@ -750,7 +754,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ActionType = acUpdate
       DataSource = MasterDS
       DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
+      IdFieldName = 'MovementItemId'
     end
     object actInsert: TdsdInsertUpdateAction [24]
       Category = 'DSDLib'
@@ -776,7 +780,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ParamType = ptInput
         end
         item
-          Name = 'MovementItemId'
+          Name = 'Id'
           Value = 0
           ParamType = ptInput
         end
@@ -801,13 +805,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       isShowModal = True
       DataSource = MasterDS
       DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    inherited actUnComplete: TdsdChangeMovementStatus
-      Enabled = True
-    end
-    inherited actComplete: TdsdChangeMovementStatus
-      Enabled = True
+      IdFieldName = 'MovementItemId'
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = True

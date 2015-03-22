@@ -32,6 +32,8 @@ CREATE TABLE MovementItemContainer(
 +CREATE INDEX idx_MovementItemContainer_ContainerId_Analyzer_OperDate ON MovementItemContainer (ContainerId_Analyzer, OperDate);
 +CREATE INDEX idx_MovementItemContainer_AnalyzerId_OperDate ON MovementItemContainer (AnalyzerId, OperDate);
 +CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate ON MovementItemContainer (ContainerId, OperDate);
+-- "idx_movementitemcontainer_operdate_descid_movementdescid_whereo"
+CREATE INDEX idx_MovementItemContainer_OperDate_DescId_MovementDescId_WhereObjectId_Analyzer ON MovementItemContainer (OperDate,DescId,MovementDescId,WhereObjectId_Analyzer);
 -- !!! CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate_DescId ON MovementItemContainer (ContainerId, OperDate, DescId);
 -- !!! CREATE INDEX idx_MovementItemContainer_ContainerId_DescId_OperDate ON MovementItemContainer (ContainerId, DescId, OperDate);
 CREATE INDEX idx_MovementItemContainer_MovementItemId ON MovementItemContainer (MovementItemId);
@@ -57,6 +59,7 @@ $$;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.03.15                                        * add idx_MovementItemContainer_OperDate_DescId_MovementDescId_WhereObjectId_Analyzer
  20.12.14                                        * add idx_MovementItemContainer_ContainerId_Analyzer_OperDate
  18.12.14                                        * add idx_MovementItemContainer_AnalyzerId_OperDate
  18.12.14                                        * add idx_MovementItemContainer_ContainerId_OperDate + del idx_MovementItemContainer_ContainerId_OperDate_DescId + del idx_MovementItemContainer_ContainerId_DescId_OperDate

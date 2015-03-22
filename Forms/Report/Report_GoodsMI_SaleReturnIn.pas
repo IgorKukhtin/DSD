@@ -117,6 +117,8 @@ type
     clContractTagGroupName: TcxGridDBColumn;
     Address: TcxGridDBColumn;
     PartnerCode: TcxGridDBColumn;
+    cbGoodsKind: TcxCheckBox;
+    bbGoodsKind: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

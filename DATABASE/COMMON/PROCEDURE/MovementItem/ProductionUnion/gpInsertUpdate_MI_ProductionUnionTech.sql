@@ -94,10 +94,10 @@ BEGIN
                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                    AND ObjectFloat_Value.ValueData <> 0
                              LEFT JOIN ObjectBoolean AS ObjectBoolean_WeightMain
-                                                     ON ObjectBoolean_WeightMain.ObjectId = Object_ReceiptChild.Id 
+                                                     ON ObjectBoolean_WeightMain.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                     AND ObjectBoolean_WeightMain.DescId = zc_ObjectBoolean_ReceiptChild_WeightMain()
                              LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit
-                                                     ON ObjectBoolean_TaxExit.ObjectId = Object_ReceiptChild.Id 
+                                                     ON ObjectBoolean_TaxExit.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                     AND ObjectBoolean_TaxExit.DescId = zc_ObjectBoolean_ReceiptChild_TaxExit()
                         WHERE ObjectLink_ReceiptChild_Receipt.ChildObjectId = inReceiptId
                           AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
@@ -130,8 +130,8 @@ BEGIN
               );
 
    -- сохранили <Главный элемент документа>
-   ioMovementItemId:= lpInsertUpdate_MI_ProductionUnionTech_Master (ioId                 := ioId
-                                                                  , ioMovementId         := ioMovementId
+   ioMovementItemId:= lpInsertUpdate_MI_ProductionUnionTech_Master (ioId                 := ioMovementItemId
+                                                                  , inMovementId         := ioMovementId
                                                                   , inGoodsId            := inGoodsId
                                                                   , inAmount             := COALESCE (vbAmount, 0)
                                                                   , inCount              := inCount
@@ -146,7 +146,7 @@ BEGIN
 
    -- сохранили <Подчиненный элемент документа>
    UPDATE _tmpChild SET MovementItemId = lpInsertUpdate_MI_ProductionUnionTech_Child (ioId                 := _tmpChild.MovementItemId
-                                                                                    , ioMovementId         := ioMovementId
+                                                                                    , inMovementId         := ioMovementId
                                                                                     , inGoodsId            := _tmpChild.GoodsId
                                                                                     , inAmount             := _tmpChild.Amount
                                                                                     , inParentId           := ioMovementItemId

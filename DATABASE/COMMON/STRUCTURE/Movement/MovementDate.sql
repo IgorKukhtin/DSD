@@ -17,11 +17,15 @@ CREATE TABLE MovementDate(
 
 /*-------------------------------------------------------------------------------*/
 
+/*                                  Индексы                                      */
+CREATE UNIQUE INDEX idx_MovementDate_MovementId_DescId ON MovementDate (MovementId, DescId); 
+
 /*
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В. 
-14.06.02                                       
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+22.03.2015                                       * add idx_MovementBoolean_MovementId_DescId
+14.06.2013                                       
 */

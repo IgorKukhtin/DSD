@@ -16,10 +16,10 @@ CREATE TABLE MovementItemFloat(
    CONSTRAINT fk_MovementItemFloat_MovementItemId FOREIGN KEY(MovementItemId) REFERENCES MovementItem(Id) );
 
 /*-------------------------------------------------------------------------------*/
+
 /*                                  Индексы                                      */
-
-
-CREATE UNIQUE INDEX idx_MovementItemFloat_MovementItemId_DescId_ValueData ON MovementItemFloat(MovementItemId, DescId, ValueData); 
+-- CREATE UNIQUE INDEX idx_MovementItemFloat_MovementItemId_DescId_ValueData ON MovementItemFloat(MovementItemId, DescId, ValueData); 
+CREATE UNIQUE INDEX idx_MovementItemFloat_MovementItemId_DescId ON MovementItemFloat(MovementItemId, DescId); 
 
 /*
  ПРИМЕЧАНИЯ:
@@ -27,5 +27,7 @@ CREATE UNIQUE INDEX idx_MovementItemFloat_MovementItemId_DescId_ValueData ON Mov
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В. 
-14.06.02                                       
+22.03.2015                                       * add idx_MovementItemFloat_MovementItemId_DescId
+22.03.2015                                       * drop idx_MovementItemFloat_MovementItemId_DescId_ValueData
+14.06.2013                                       
 */

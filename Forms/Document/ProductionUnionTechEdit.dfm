@@ -232,7 +232,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'MovementItemId'
+        Name = 'Id'
         Value = '0'
         ParamType = ptInput
       end
@@ -268,7 +268,7 @@
         Name = 'ioMovementItemId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'MovementItemId'
+        ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
@@ -380,7 +380,7 @@
         Name = 'inMovementItemId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'MovementItemId'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
@@ -433,7 +433,7 @@
         Name = 'MovementItemId'
         Value = ''
         Component = FormParams
-        ComponentItem = 'MovementItemId'
+        ComponentItem = 'Id'
       end
       item
         Name = 'GoodsId'

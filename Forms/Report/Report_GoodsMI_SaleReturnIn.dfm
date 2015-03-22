@@ -1082,6 +1082,14 @@
     TabOrder = 8
     Width = 137
   end
+  object cbGoodsKind: TcxCheckBox [5]
+    Left = 445
+    Top = 87
+    Caption = #1087#1086' '#1042#1080#1076#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 9
+    Width = 78
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -1098,6 +1106,11 @@
       end
       item
         Component = cbGoods
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbGoodsKind
         Properties.Strings = (
           'Checked')
       end
@@ -1398,6 +1411,13 @@
         Component = cbGoods
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsGoodsKind'
+        Value = Null
+        Component = cbGoodsKind
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 176
     Top = 200
@@ -1435,6 +1455,10 @@
         item
           Visible = True
           ItemName = 'bbGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsKind'
         end
         item
           Visible = True
@@ -1512,11 +1536,18 @@
       Category = 0
     end
     object bbTradeMark: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
       Category = 0
-      Hint = 'New Item'
+      Hint = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
       Visible = ivAlways
       Control = cbTradeMark
+    end
+    object bbGoodsKind: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1042#1080#1076#1072#1084
+      Category = 0
+      Hint = #1087#1086' '#1042#1080#1076#1072#1084
+      Visible = ivAlways
+      Control = cbGoodsKind
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

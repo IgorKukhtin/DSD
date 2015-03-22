@@ -1,28 +1,32 @@
--- Function: lpInsertUpdate_MovementItem
+-- Function: lpInsertUpdate_MovementItemFloat
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemFloat (Integer, Integer, TFloat);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemFloat(
-    IN inDescId          Integer ,
-    IN inMovementItemId  Integer ,
-    IN inValueData       TFloat  
+    IN inDescId                Integer           , -- ключ класса свойства
+    IN inMovementItemId        Integer           , -- ключ 
+    IN inValueData             TFloat              -- свойство
 )
-  RETURNS BOOLEAN AS
+RETURNS Boolean
+AS
 $BODY$
 BEGIN
      -- проверка - inValueData
      IF inValueData IS NULL
      THEN
-         RAISE EXCEPTION 'Ошибка-1.Не определено числовое значение Id=<%> ParentId=<%> MovementId=<%> InvNumber=<%>.', inMovementItemId, (SELECT ParentId FROM MovementItem WHERE Id = inMovementItemId), (SELECT MovementId FROM MovementItem WHERE Id = inMovementItemId), (SELECT InvNumber FROM Movement WHERE Id = (SELECT MovementId FROM MovementItem WHERE Id = inMovementItemId);
+         RAISE EXCEPTION 'Ошибка-1.Не определено числовое значение Id=<%> ParentId=<%> MovementId=<%> InvNumber=<%>.', inMovementItemId
+                                                                                                                     , (SELECT MovementItem.ParentId   FROM MovementItem WHERE MovementItem.Id = inMovementItemId)
+                                                                                                                     , (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId)
+                                                                                                                     , (SELECT Movement.InvNumber      FROM Movement     WHERE Movement.Id = (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId));
      END IF;
 
-     --
+     -- изменить <свойство>
      UPDATE MovementItemFloat SET ValueData = inValueData WHERE MovementItemId = inMovementItemId AND DescId = inDescId;
 
-     --
-     IF NOT FOUND
+     -- если не нашли
+     IF NOT FOUND AND inValueData <> 0
      THEN
-         -- вставить <ключ свойства> , <ключ строки> и <значение>
+        -- вставить <свойство>
          INSERT INTO MovementItemFloat (DescId, MovementItemId, ValueData)
                                 VALUES (inDescId, inMovementItemId, inValueData);
      END IF;
@@ -32,11 +36,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemFloat(Integer, Integer, TFloat) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_MovementItemFloat (Integer, Integer, TFloat) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.03.15                                        * IF ... AND inValueData <> 0
  17.05.14                                        * add проверка - inValueData
 */

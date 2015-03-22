@@ -31,20 +31,22 @@ ALTER TABLE MovementItemLinkObject
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
-
-
 -- Index: "idx_MovementItemLinkObject_MovementItemId_DescId_ObjectId"
 
 -- DROP INDEX "idx_MovementItemLinkObject_MovementItemId_DescId_ObjectId";
 
-CREATE UNIQUE INDEX idx_MovementItemLinkObject_MovementItemId_DescId_ObjectId ON MovementItemLinkObject(MovementItemId, DescId, ObjectId);
+-- CREATE UNIQUE INDEX idx_MovementItemLinkObject_MovementItemId_DescId_ObjectId ON MovementItemLinkObject(MovementItemId, DescId, ObjectId);
 CREATE INDEX idx_MovementItemLinkObject_ObjectId ON MovementItemLinkObject(ObjectId); -- для констрейнта
+
+CREATE UNIQUE INDEX idx_MovementItemLinkObject_MovementItemId_DescId ON MovementItemLinkObject (MovementItemId, DescId);
 
 /*
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   
-18.06.02                                         
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+22.03.2015                                       * add idx_MovementItemLinkObject_MovementItemId_DescId
+22.03.2015                                       * drop idx_MovementItemLinkObject_MovementItemId_DescId_ObjectId
+18.06.2013                                         
 */

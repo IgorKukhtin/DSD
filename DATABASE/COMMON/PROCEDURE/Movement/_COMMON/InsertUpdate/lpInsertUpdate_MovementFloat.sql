@@ -1,20 +1,38 @@
-п»їCREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat(
- inDescId                    Integer           ,  /* РєРѕРґ РєР»Р°СЃСЃР° СЃРІРѕР№СЃС‚РІР°       */
- inMovementId                Integer           ,  /* РєР»СЋС‡ РіР»Р°РІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°     */
- inValueData                 TFloat               /* Р—РЅР°С‡РµРЅРёРµ */
-)
-  RETURNS boolean AS
-$BODY$BEGIN
+-- Function: lpInsertUpdate_MovementItemFloat
 
-    UPDATE MovementFloat SET ValueData = inValueData WHERE MovementId = inMovementId AND DescId = inDescId;
-    IF NOT found THEN            
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> , <РєР»СЋС‡ РіР»Р°РІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°> Рё <РєР»СЋС‡ РїРѕРґС‡РёРЅРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°> */
-       INSERT INTO MovementFloat (DescId, MovementId, ValueData)
-           VALUES (inDescId, inMovementId, inValueData);
-    END IF;             
-    RETURN true;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_MovementFloat(Integer, Integer, TFloat)
-  OWNER TO postgres;
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat (Integer, Integer, TFloat);
+
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat(
+    IN inDescId                Integer           , -- ключ класса свойства
+    IN inMovementId            Integer           , -- ключ 
+    IN inValueData             TFloat             -- свойство
+)
+RETURNS Boolean
+AS
+$BODY$
+BEGIN
+
+     -- изменить <свойство>
+     UPDATE MovementFloat SET ValueData = inValueData WHERE MovementId = inMovementId AND DescId = inDescId;
+
+     -- если не нашли
+     IF NOT FOUND AND inValueData <> 0
+     THEN
+        -- вставить <свойство>
+        INSERT INTO MovementFloat (DescId, MovementId, ValueData)
+                           VALUES (inDescId, inMovementId, inValueData);
+     END IF;
+
+     RETURN (TRUE);
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpInsertUpdate_MovementFloat (Integer, Integer, TFloat) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.03.15                                        * IF ... AND inValueData <> 0
+*/

@@ -115,6 +115,7 @@ BEGIN
                               AND MLO_From.ObjectId = inFromId
                               AND MLO_To.ObjectId = inToId
                            )
+    -- !!!!!!!!!!!!!!!!!!!!!!!
     INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, MovementItemId, MovementItemId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount)
        SELECT COALESCE (tmpMI_production.MovementId, 0)                                          AS MovementId
             , COALESCE (tmpMI_production.StatusId, 0)                                            AS StatusId
@@ -137,6 +138,9 @@ BEGIN
                                  AND tmpMI_order.ReceiptId = tmpMI_production.ReceiptId
                                  AND tmpMI_order.OperDate = tmpMI_production.OperDate
                                  AND tmpMI_order.ToId = tmpMI_production.FromId;
+
+    -- !!!!!!!!!!!!!!!!!!!!!!!
+    ANALYZE _tmpListMaster;
 
 
     OPEN Cursor1 FOR
@@ -181,7 +185,6 @@ BEGIN
             , FALSE                               AS isErased
 
        FROM _tmpListMaster
-
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = _tmpListMaster.MovementItemId
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()
@@ -199,7 +202,6 @@ BEGIN
                                           ON MIString_Comment.MovementItemId = _tmpListMaster.MovementItemId
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
                                          AND _tmpListMaster.MovementId <> 0
-
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpListMaster.GoodsId
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpListMaster.GoodsKindId
@@ -220,19 +222,34 @@ BEGIN
     RETURN NEXT Cursor1;
 
 
+    -- !!!оптимизация!!!
+    CREATE TEMP TABLE _tmpMI_Child_two (MovementItemId Integer, MovementItemId_Child Integer, GoodsId Integer, Amount TFloat, isErased Boolean) ON COMMIT DROP;
+    -- 
+    INSERT INTO _tmpMI_Child_two (MovementItemId, MovementItemId_Child, GoodsId, Amount, isErased)
+       SELECT _tmpListMaster.MovementItemId AS MovementItemId
+            , MovementItem.Id               AS MovementItemId_Child
+            , MovementItem.ObjectId         AS GoodsId
+            , MovementItem.Amount           AS Amount
+            , MovementItem.isErased         AS isErased
+       FROM _tmpListMaster
+            INNER JOIN MovementItem ON MovementItem.ParentId = _tmpListMaster.MovementItemId
+                                   AND MovementItem.DescId   = zc_MI_Child()
+       WHERE _tmpListMaster.MovementId <> 0;
+
+    -- !!!!!!!!!!!!!!!!!!!!!!!
+    ANALYZE _tmpMI_Child_two;
+
+
      OPEN Cursor2 FOR
-     WITH tmpMI_Child AS (SELECT _tmpListMaster.MovementItemId              AS MovementItemId
-                               , MovementItem.Id                            AS MovementItemId_Child
-                               , MovementItem.ObjectId                      AS GoodsId
+     WITH tmpMI_Child AS (SELECT tmpMI_Child_two.MovementItemId
+                               , tmpMI_Child_two.MovementItemId_Child
+                               , tmpMI_Child_two.GoodsId
                                , COALESCE (MILO_GoodsKind.ObjectId, 0)      AS GoodsKindId
-                               , MovementItem.Amount                        AS Amount
-                               , MovementItem.isErased                      AS isErased
-                          FROM _tmpListMaster
-                               INNER JOIN MovementItem ON MovementItem.ParentId = _tmpListMaster.MovementItemId
-                                                      AND MovementItem.DescId     = zc_MI_Child()
-                                                      AND _tmpListMaster.MovementId <> 0
+                               , tmpMI_Child_two.Amount
+                               , tmpMI_Child_two.isErased
+                          FROM _tmpMI_Child_two AS tmpMI_Child_two
                                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
-                                                                ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                                                ON MILO_GoodsKind.MovementItemId = tmpMI_Child_two.MovementItemId_Child
                                                                AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                          )
     , tmpReceiptChild AS (SELECT _tmpListMaster.MovementItemId                                  AS MovementItemId
@@ -401,4 +418,4 @@ ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Inte
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= ('01.06.2014')::TDateTime, inEndDate:= ('01.06.2014')::TDateTime, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= ('01.02.2015')::TDateTime, inEndDate:= ('01.02.2015')::TDateTime, inFromId:= 8447, inToId:= 8447, inSession:= zfCalc_UserAdmin());
