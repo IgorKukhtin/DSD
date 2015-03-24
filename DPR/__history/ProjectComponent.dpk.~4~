@@ -61,6 +61,8 @@ requires
   cxTreeListRS16,
   dxSkinsCoreRS16,
   cxVerticalGridRS16,
+  fs16,
+  frx16,
   zlibex,
   kbmMemRunDXE2Pro;
 

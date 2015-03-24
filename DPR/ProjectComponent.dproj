@@ -40,7 +40,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
-			<DCC_UsePackage>rtl;dsnap;dbrtl;IndyCore;IndySystem;IndyProtocols;soaprtl;inet;kbmMemRunDXE2Pro;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>rtl;dsnap;dbrtl;IndyCore;IndySystem;IndyProtocols;soaprtl;inet;kbmMemRunDXE2Pro;xmlrtl;$(DCC_UsePackage)</DCC_UsePackage>
 			<DCC_CBuilderOutput>All</DCC_CBuilderOutput>
 			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
 			<GenPackage>true</GenPackage>
@@ -49,10 +49,10 @@
 			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;ProjectDesignComponent;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -83,37 +83,40 @@
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
 			<DCCReference Include="rtl.dcp"/>
+			<DCCReference Include="vclimg.dcp"/>
+			<DCCReference Include="vcl.dcp"/>
+			<DCCReference Include="xmlrtl.dcp"/>
+			<DCCReference Include="vclx.dcp"/>
+			<DCCReference Include="soaprtl.dcp"/>
+			<DCCReference Include="inet.dcp"/>
 			<DCCReference Include="dsnap.dcp"/>
 			<DCCReference Include="dbrtl.dcp"/>
+			<DCCReference Include="VclSmp.dcp"/>
+			<DCCReference Include="vcldb.dcp"/>
+			<DCCReference Include="adortl.dcp"/>
 			<DCCReference Include="IndyCore.dcp"/>
 			<DCCReference Include="IndySystem.dcp"/>
 			<DCCReference Include="IndyProtocols.dcp"/>
-			<DCCReference Include="vclimg.dcp"/>
-			<DCCReference Include="vcldb.dcp"/>
 			<DCCReference Include="dxCoreRS16.dcp"/>
+			<DCCReference Include="cxDataRS16.dcp"/>
 			<DCCReference Include="cxLibraryRS16.dcp"/>
 			<DCCReference Include="dxGDIPlusRS16.dcp"/>
 			<DCCReference Include="dxThemeRS16.dcp"/>
-			<DCCReference Include="cxDataRS16.dcp"/>
+			<DCCReference Include="cxEditorsRS16.dcp"/>
+			<DCCReference Include="dxmdsRS16.dcp"/>
 			<DCCReference Include="dxBarRS16.dcp"/>
 			<DCCReference Include="dxComnRS16.dcp"/>
-			<DCCReference Include="cxEditorsRS16.dcp"/>
-			<DCCReference Include="cxPageControlRS16.dcp"/>
-			<DCCReference Include="cxGridRS16.dcp"/>
-			<DCCReference Include="cxTreeListRS16.dcp"/>
-			<DCCReference Include="soaprtl.dcp"/>
-			<DCCReference Include="inet.dcp"/>
-			<DCCReference Include="fs16.dcp"/>
-			<DCCReference Include="frx16.dcp"/>
-			<DCCReference Include="frxDB16.dcp"/>
 			<DCCReference Include="dxBarExtItemsRS16.dcp"/>
+			<DCCReference Include="cxPageControlRS16.dcp"/>
+			<DCCReference Include="dxLayoutControlRS16.dcp"/>
+			<DCCReference Include="cxGridRS16.dcp"/>
+			<DCCReference Include="cxExportRS16.dcp"/>
 			<DCCReference Include="cxPivotGridRS16.dcp"/>
-			<DCCReference Include="VclSmp.dcp"/>
-			<DCCReference Include="cxVerticalGridRS16.dcp"/>
+			<DCCReference Include="cxTreeListRS16.dcp"/>
 			<DCCReference Include="dxSkinsCoreRS16.dcp"/>
+			<DCCReference Include="cxVerticalGridRS16.dcp"/>
+			<DCCReference Include="zlibex.dcp"/>
 			<DCCReference Include="kbmMemRunDXE2Pro.dcp"/>
-			<DCCReference Include="adortl.dcp"/>
-			<DCCReference Include="ZLibEx.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -221,11 +224,8 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\VKDBF2009.bpl">VK DBF for Delphi 2009</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dclcxPivotGridOLAPRS16.bpl">ExpressPivotGrid OLAP by Developer Express Inc.</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2K160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
 				<Deployment/>
