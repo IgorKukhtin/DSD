@@ -1,9 +1,9 @@
 object UserForm: TUserForm
   Left = 0
   Top = 0
-  Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080'>'
   ClientHeight = 357
-  ClientWidth = 795
+  ClientWidth = 1006
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object UserForm: TUserForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 315
+    Width = 649
     Height = 331
     Align = alLeft
     TabOrder = 0
@@ -29,6 +29,7 @@ object UserForm: TUserForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -40,33 +41,70 @@ object UserForm: TUserForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 30
       end
       object clName: TcxGridDBColumn
         Caption = #1051#1086#1075#1080#1085
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 145
+        Width = 100
       end
       object clMemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 172
+        Width = 100
+      end
+      object BranchCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1092'.'
+        DataBinding.FieldName = 'BranchCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 30
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object UnitCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087'.'
+        DataBinding.FieldName = 'UnitCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object PositionName: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -77,23 +115,23 @@ object UserForm: TUserForm
     end
   end
   object cxSplitter: TcxSplitter
-    Left = 315
+    Left = 649
     Top = 26
     Width = 2
     Height = 331
     Control = cxGrid
   end
   object Panel: TPanel
-    Left = 317
+    Left = 651
     Top = 26
-    Width = 478
+    Width = 355
     Height = 331
     Align = alClient
     TabOrder = 2
     object RoleGrid: TcxGrid
       Left = 1
       Top = 1
-      Width = 476
+      Width = 353
       Height = 176
       Align = alTop
       TabOrder = 1
@@ -102,6 +140,7 @@ object UserForm: TUserForm
       object RoleGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = RoleDS
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -137,7 +176,7 @@ object UserForm: TUserForm
     object PeriodCloseGrid: TcxGrid
       Left = 1
       Top = 180
-      Width = 476
+      Width = 353
       Height = 150
       Align = alClient
       TabOrder = 0
@@ -146,6 +185,7 @@ object UserForm: TUserForm
       object PeriodCloseGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = PeriodCloseDS
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -196,7 +236,7 @@ object UserForm: TUserForm
     object HorSplitter: TcxSplitter
       Left = 1
       Top = 177
-      Width = 476
+      Width = 353
       Height = 3
       AlignSplitter = salTop
       Control = RoleGrid
@@ -209,7 +249,6 @@ object UserForm: TUserForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 40
     Top = 88
@@ -252,8 +291,8 @@ object UserForm: TUserForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -306,9 +345,20 @@ object UserForm: TUserForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -317,11 +367,6 @@ object UserForm: TUserForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -371,10 +416,10 @@ object UserForm: TUserForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end
         item
           StoredProc = spUserRole
@@ -582,7 +627,7 @@ object UserForm: TUserForm
       DataSource = PeriodCloseDS
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_User'
     DataSet = ClientDataSet
     DataSets = <
@@ -694,8 +739,8 @@ object UserForm: TUserForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 520
-    Top = 88
+    Left = 528
+    Top = 96
   end
   object RoleDS: TDataSource
     DataSet = RoleCDS
@@ -704,7 +749,6 @@ object UserForm: TUserForm
   end
   object RoleCDS: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'UserId'
     MasterFields = 'Id'
     MasterSource = DataSource
@@ -720,7 +764,6 @@ object UserForm: TUserForm
   end
   object PeriodCloseCDS: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'UserId'
     MasterFields = 'Id'
     MasterSource = DataSource

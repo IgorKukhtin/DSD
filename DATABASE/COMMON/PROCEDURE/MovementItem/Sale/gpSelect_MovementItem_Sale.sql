@@ -1,6 +1,6 @@
 -- Function: gpSelect_MovementItem_Sale()
 
- DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inMovementId  Integer      , -- ключ Документа
@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
+RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -31,6 +31,7 @@ BEGIN
      RETURN QUERY
        SELECT
              0                          AS Id
+           , 0 :: Integer               AS LineNum
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
@@ -93,6 +94,7 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id                        AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -185,6 +187,7 @@ BEGIN
      RETURN QUERY
        SELECT
              MovementItem.Id                        AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -245,7 +248,7 @@ BEGIN
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                       AND MIFloat_HeadCount.DescId = NULL -- zc_MIFloat_HeadCount()
             LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                         ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
@@ -266,8 +269,8 @@ BEGIN
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+                                            AND MILinkObject_Asset.DescId = NULL -- zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = NULL -- MILinkObject_Asset.ObjectId
             ;
 
      END IF;

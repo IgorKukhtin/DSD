@@ -93,12 +93,14 @@ BEGIN
                      );*/
          
      -- Сохранение Документа + Проведение/Распроведение
-     vbMovementId:= gpInsertUpdate_Movement_Cash (ioId          := vbMovementId      -- Ключ объекта <Документ>
+     SELECT tmp.ioId INTO vbMovementId
+     FROM gpInsertUpdate_Movement_Cash (ioId          := vbMovementId      -- Ключ объекта <Документ>
                                                 , inInvNumber   := vbInvNumber       -- Номер документа
                                                 , inOperDate    := vbOperDate        -- Дата документа
                                                 , inServiceDate := NULL              -- Дата начисления
                                                 , inAmountIn    := vbSummaIn         -- Сумма прихода
                                                 , inAmountOut   := vbSummaOut        -- Сумма расхода
+                                                , inAmountSumm  := NULL              -- Cумма грн, обмен
                                                 , inComment     := ''                -- Комментарий
                                                 , inCashId      := vbCashId          -- Касса
                                                 , inMoneyPlaceId:= vbPartnerId       -- Объекты работы с деньгами
@@ -107,8 +109,11 @@ BEGIN
                                                 , inContractId  := vbContractId      -- Договора
                                                 , inInfoMoneyId := vbInfoMoneyId     -- Управленческие статьи
                                                 , inUnitId      := NULL              -- Подразделения
+                                                , inCurrencyId           := NULL     -- Валюта 
+                                                , inCurrencyPartnerValue := NULL     -- Курс для расчета суммы операции
+                                                , inParPartnerValue      := NULL     -- Номинал для расчета суммы операции
                                                 , inSession     := inSession         -- сессия пользователя
-                                                 );
+                                                 ) AS tmp;
    
      -- сохранили свойство <Загружен из 1С>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);

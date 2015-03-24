@@ -27,6 +27,7 @@ object ActionForm: TActionForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -80,8 +81,8 @@ object ActionForm: TActionForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -152,6 +153,7 @@ object ActionForm: TActionForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -160,18 +162,22 @@ object ActionForm: TActionForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -188,6 +194,7 @@ object ActionForm: TActionForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 152
     Top = 152
   end
@@ -209,6 +216,10 @@ object ActionForm: TActionForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 152
     Top = 240
   end

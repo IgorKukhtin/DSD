@@ -656,16 +656,6 @@ inherited ProductionUnionForm: TProductionUnionForm
   inherited spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetUnErased'
   end
-  inherited GuidesTo: TdsdGuides
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-  end
-  inherited GuidesFrom: TdsdGuides
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-  end
   inherited spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Child'
     Params = <

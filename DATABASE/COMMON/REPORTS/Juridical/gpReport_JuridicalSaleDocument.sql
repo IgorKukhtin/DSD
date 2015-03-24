@@ -95,7 +95,7 @@ BEGIN
 
         WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
           AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-          AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
+          AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE)
           AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId 
     ORDER BY OperDate;
     

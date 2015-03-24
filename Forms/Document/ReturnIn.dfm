@@ -11,17 +11,17 @@ inherited ReturnInForm: TReturnInForm
     Width = 1139
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1139
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1139
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1139
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1139
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -82,7 +82,18 @@ inherited ReturnInForm: TReturnInForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object colLineNum: TcxGridDBColumn [0]
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -90,7 +101,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 58
           end
-          object colName: TcxGridDBColumn [1]
+          object colName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -98,7 +109,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 200
           end
-          object colGoodsKindName: TcxGridDBColumn [2]
+          object colGoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -113,7 +124,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn [3]
+          object colPartionGoods: TcxGridDBColumn [4]
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -121,14 +132,14 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colMeasureName: TcxGridDBColumn [4]
+          object colMeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [5]
+          object colAmount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -138,7 +149,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmountPartner: TcxGridDBColumn [6]
+          object colAmountPartner: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -148,7 +159,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colPrice: TcxGridDBColumn [7]
+          object colPrice: TcxGridDBColumn [8]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -158,14 +169,14 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn [8]
+          object colCountForPrice: TcxGridDBColumn [9]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAmountSumm: TcxGridDBColumn [9]
+          object colAmountSumm: TcxGridDBColumn [10]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -175,14 +186,14 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object colHeadCount: TcxGridDBColumn [10]
+          object colHeadCount: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAssetName: TcxGridDBColumn [11]
+          object colAssetName: TcxGridDBColumn [12]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -197,7 +208,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
       ExplicitWidth = 1020
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -566,7 +579,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 1139
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1139
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -992,6 +1005,37 @@ inherited ReturnInForm: TReturnInForm
       Status = mtComplete
       DataSource = TaxCorrectiveDS
     end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrint_TaxCorrective_Us: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <>
@@ -1062,36 +1106,13 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
+    inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
+          StoredProc = spChangeStatus
         end
         item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
         end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
-      ReportNameParam.ParamType = ptInput
     end
     object mactPrint: TMultiAction [16]
       Category = 'DSDLib'
@@ -1139,14 +1160,6 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
       ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
       ReportNameParam.DataType = ftString
-    end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <

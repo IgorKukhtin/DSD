@@ -22,6 +22,8 @@ BEGIN
 
    -- проверка уникальности для свойства <Наименование Пользователя>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_User(), inUserName);
+   -- проверка уникальности <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_User(), inCode);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_User(), inCode, inUserName);
@@ -43,6 +45,9 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  07.06.13                                        * lpCheckRight
 */
+
+-- select ObjectCode from Object where DescId = zc_Object_User() group by ObjectCode having count (*) > 1
+-- select ValueData from Object where DescId = zc_Object_User() group by ValueData having count (*) > 1
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_User ('2')

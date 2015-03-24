@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inIsShowAll   Boolean,    --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
+RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertificate TVarChar,
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
                PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
@@ -52,6 +52,8 @@ BEGIN
          , Object_Personal_View.PersonalCode AS MemberCode
          , Object_Personal_View.PersonalName AS MemberName
 
+         , ObjectString_DriverCertificate.ValueData AS DriverCertificate
+
          , Object_Personal_View.PositionId
          , Object_Personal_View.PositionCode
          , Object_Personal_View.PositionName
@@ -82,6 +84,11 @@ BEGIN
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
           LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
+
+          LEFT JOIN ObjectString AS ObjectString_DriverCertificate
+                                 ON ObjectString_DriverCertificate.ObjectId = Object_Personal_View.MemberId 
+                                AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
+
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.BranchId = vbObjectId_Constraint

@@ -145,7 +145,8 @@ BEGIN
 
     OPEN Cursor1 FOR
        SELECT
-              _tmpListMaster.MovementId
+              CASE WHEN _tmpListMaster.MovementId <> 0 THEN row_number() OVER (ORDER BY CASE WHEN _tmpListMaster.MovementId <> 0 THEN _tmpListMaster.MovementItemId ELSE NULL END) ELSE 0 END :: Integer AS LineNum
+            , _tmpListMaster.MovementId
             , _tmpListMaster.MovementItemId
             , _tmpListMaster.MovementItemId_order
             , _tmpListMaster.InvNumber

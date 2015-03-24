@@ -11,17 +11,17 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1174
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1174
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1174
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1174
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1174
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1174
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -102,7 +102,19 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object colLineNum: TcxGridDBColumn [0]
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -110,15 +122,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object colName: TcxGridDBColumn [1]
+          object colName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 300
+            Width = 200
           end
-          object colGoodsKindName: TcxGridDBColumn [2]
+          object colGoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -133,7 +145,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn [3]
+          object colPartionGoods: TcxGridDBColumn [4]
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -141,15 +153,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colMeasureName: TcxGridDBColumn [4]
+          object colMeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 65
+            Width = 45
           end
-          object colChangePercentAmount: TcxGridDBColumn [5]
+          object colChangePercentAmount: TcxGridDBColumn [6]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             Visible = False
@@ -158,7 +170,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [6]
+          object colAmount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -170,7 +182,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 60
           end
-          object colAmountChangePercent: TcxGridDBColumn [7]
+          object colAmountChangePercent: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'AmountChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -181,7 +193,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountPartner: TcxGridDBColumn [8]
+          object colAmountPartner: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -191,7 +203,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPrice: TcxGridDBColumn [9]
+          object colPrice: TcxGridDBColumn [10]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -201,14 +213,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colCountForPrice: TcxGridDBColumn [10]
+          object colCountForPrice: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAmountSumm: TcxGridDBColumn [11]
+          object colAmountSumm: TcxGridDBColumn [12]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -218,14 +230,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 100
           end
-          object colHeadCount: TcxGridDBColumn [12]
+          object colHeadCount: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAssetName: TcxGridDBColumn [13]
+          object colAssetName: TcxGridDBColumn [14]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -234,17 +246,18 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 65
           end
-          object BoxCount: TcxGridDBColumn [14]
+          object BoxCount: TcxGridDBColumn [15]
             Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object BoxName: TcxGridDBColumn [15]
+          object BoxName: TcxGridDBColumn [16]
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -255,6 +268,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -267,7 +281,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1174
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1174
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -639,6 +653,37 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrint_Invoice: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
@@ -935,36 +980,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
+    inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
+          StoredProc = spChangeStatus
         end
         item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
         end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.ParamType = ptInput
     end
     object actPrint_Bill: TdsdPrintAction [21]
       Category = 'DSDLib'
@@ -1001,14 +1023,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.ComponentItem = 'ReportNameSaleBill'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
-    end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <

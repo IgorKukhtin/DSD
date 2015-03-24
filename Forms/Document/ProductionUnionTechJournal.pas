@@ -75,6 +75,8 @@ type
     spSelect_Object_Receipt: TdsdStoredProc;
     spSelect_Object_ReceiptChild: TdsdStoredProc;
     bbPrintReceipt: TdxBarButton;
+    actReceiptChoice: TOpenChoiceForm;
+    colLineNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

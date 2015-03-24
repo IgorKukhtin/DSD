@@ -21,9 +21,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       ExplicitHeight = 532
       inherited cxGrid: TcxGrid
         Width = 903
-        Height = 174
+        Height = 224
         ExplicitWidth = 903
-        ExplicitHeight = 174
+        ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -86,9 +86,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 174
+        Top = 229
         Width = 903
-        ExplicitTop = 174
+        ExplicitTop = 229
         ExplicitWidth = 903
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -150,6 +150,12 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           end
         end
       end
+      inherited cxBottomSplitter: TcxSplitter
+        Top = 224
+        Width = 903
+        ExplicitTop = 224
+        ExplicitWidth = 903
+      end
     end
   end
   inherited DataPanel: TPanel
@@ -157,9 +163,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Height = 96
     ExplicitWidth = 903
     ExplicitHeight = 96
-    inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 22
-    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61

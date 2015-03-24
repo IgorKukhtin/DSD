@@ -29,6 +29,7 @@ object RoleUnionForm: TRoleUnionForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -93,7 +94,6 @@ object RoleUnionForm: TRoleUnionForm
     Width = 7
     Height = 605
     Control = cxGrid
-    ExplicitLeft = 459
   end
   object Panel1: TPanel
     Left = 472
@@ -103,8 +103,6 @@ object RoleUnionForm: TRoleUnionForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = 481
-    ExplicitWidth = 297
     object ActionGrid: TcxGrid
       Left = 0
       Top = 0
@@ -114,13 +112,10 @@ object RoleUnionForm: TRoleUnionForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = 104
-      ExplicitTop = 12
-      ExplicitWidth = 202
-      ExplicitHeight = 593
       object ActionGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ActionDS
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -154,7 +149,6 @@ object RoleUnionForm: TRoleUnionForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 40
     Top = 88
@@ -182,8 +176,8 @@ object RoleUnionForm: TRoleUnionForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -636,7 +630,6 @@ object RoleUnionForm: TRoleUnionForm
   end
   object ActionCDS: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'Id'
     MasterFields = 'Id'
     MasterSource = DataSource

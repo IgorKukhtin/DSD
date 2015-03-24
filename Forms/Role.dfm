@@ -26,10 +26,10 @@ object RoleForm: TRoleForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 2
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -51,7 +51,7 @@ object RoleForm: TRoleForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 95
+        Width = 55
       end
       object clName: TcxGridDBColumn
         Caption = #1056#1086#1083#1100
@@ -63,6 +63,7 @@ object RoleForm: TRoleForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 105
@@ -99,6 +100,7 @@ object RoleForm: TRoleForm
       object UserView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = UserDS
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -151,6 +153,7 @@ object RoleForm: TRoleForm
       object ActionGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ActionDS
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -195,6 +198,7 @@ object RoleForm: TRoleForm
       object ProcessView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProcessDS
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -260,6 +264,7 @@ object RoleForm: TRoleForm
       object AccessGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProcessAccessDS
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -305,7 +310,6 @@ object RoleForm: TRoleForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 40
     Top = 88
@@ -333,8 +337,8 @@ object RoleForm: TRoleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -815,7 +819,6 @@ object RoleForm: TRoleForm
   end
   object ProcessCDS: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'RoleId'
     MasterFields = 'Id'
     MasterSource = DataSource
@@ -857,7 +860,6 @@ object RoleForm: TRoleForm
   end
   object ActionCDS: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'RoleId'
     MasterFields = 'Id'
     MasterSource = DataSource
@@ -894,7 +896,6 @@ object RoleForm: TRoleForm
   end
   object UserCDS: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'RoleId'
     MasterFields = 'Id'
     MasterSource = DataSource
@@ -1040,7 +1041,6 @@ object RoleForm: TRoleForm
   end
   object ProcessAccessCDS: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'RoleId'
     MasterFields = 'Id'
     MasterSource = DataSource

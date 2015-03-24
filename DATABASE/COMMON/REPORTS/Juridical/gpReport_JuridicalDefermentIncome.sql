@@ -237,14 +237,19 @@ from (
               LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
 
               LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
-                              , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value :: Integer, inOperDate) :: Date AS ContractDate
-                              , ContractConditionKindId
-                              , Value :: Integer AS DayCount
-                           FROM Object_ContractCondition_View
-                                INNER JOIN Object_ContractCondition_DefermentPaymentView 
-                                        ON Object_ContractCondition_DefermentPaymentView.ConditionKindId = Object_ContractCondition_View.ContractConditionKindId
-                           WHERE Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
-                             AND Value <> 0
+                              , zfCalc_DetermentPaymentDate (COALESCE (Object_ContractCondition_View.ContractConditionKindId, 0), Object_ContractCondition_View.Value :: Integer, inOperDate) :: Date AS ContractDate
+                              , Object_ContractCondition_View.ContractConditionKindId
+                              , Object_ContractCondition_View.Value :: Integer AS DayCount
+                         FROM (SELECT Object_ContractCondition_View.ContractId
+                                    , Object_ContractCondition_View.ContractConditionKindId
+                                    , MAX (Object_ContractCondition_View.Value) AS Value
+                               FROM Object_ContractCondition_DefermentPaymentView
+                                    INNER JOIN Object_ContractCondition_View
+                                            ON Object_ContractCondition_View.ContractConditionKindId = Object_ContractCondition_DefermentPaymentView.ConditionKindId
+                               WHERE Object_ContractCondition_View.Value <> 0
+                               GROUP BY Object_ContractCondition_View.ContractId
+                                      , Object_ContractCondition_View.ContractConditionKindId
+                              ) AS Object_ContractCondition_View
                         ) AS ContractCondition_DefermentPayment
                           ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
 
@@ -387,6 +392,39 @@ ALTER FUNCTION gpReport_JuridicalDefermentIncome (TDateTime, TDateTime, Integer,
  06.02.14                          * 
 */
 
+/*
+!!!err!!!
+with Object_ContractCondition_View2 as (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+             , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
+             , ObjectFloat_Value.ValueData AS Value
+             , ObjectLink_ContractCondition_Contract.ObjectId
+         FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+              INNER JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+              INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                                     ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                    AND ObjectFloat_Value.ValueData <> 0
+              LEFT JOIN Object AS ContractCondition ON  ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.objectid 
+         WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+           AND ContractCondition.isErased = FALSE)
+
+SELECT * from Object_Contract_View where Contractid in (
+
+SELECT Object_ContractCondition_View.ContractId
+                                   --  , Object_ContractCondition_View.ContractConditionKindId
+                               FROM Object_ContractCondition_View2 as Object_ContractCondition_View
+left join ObjectLink on ObjectLink.ObjectId = Object_ContractCondition_View.ObjectId
+and ObjectLink.descId = zc_ObjectLink_ContractCondition_BonusKind()
+
+                               WHERE Object_ContractCondition_View.Value <> 0
+and ObjectLink.ChildObjectId  is null
+ and coalesce (ContractConditionKindId, 0)  not in (zc_Enum_ContractConditionKind_BonusPercentSale(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn())
+                               GROUP BY Object_ContractCondition_View.ContractId
+                                      , Object_ContractCondition_View.ContractConditionKindId
+having count (*) >1)
+*/
 -- тест
 -- SELECT * FROM gpReport_JuridicalDefermentIncome (inOperDate:= '01.06.2014', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpReport_JuridicalDefermentIncome (inOperDate:= '01.06.2014', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
