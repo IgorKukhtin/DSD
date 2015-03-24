@@ -28,41 +28,7 @@ package ProjectComponent;
 {$IMPLICITBUILD ON}
 
 requires
-  rtl,
-  vclimg,
-  vcl,
-  xmlrtl,
-  vclx,
-  soaprtl,
-  inet,
-  dsnap,
-  dbrtl,
-  VclSmp,
-  vcldb,
-  adortl,
-  IndyCore,
-  IndySystem,
-  IndyProtocols,
-  dxCoreRS16,
-  cxDataRS16,
-  cxLibraryRS16,
-  dxGDIPlusRS16,
-  dxThemeRS16,
-  cxEditorsRS16,
-  dxmdsRS16,
-  dxBarRS16,
-  dxComnRS16,
-  dxBarExtItemsRS16,
-  cxPageControlRS16,
-  dxLayoutControlRS16,
-  cxGridRS16,
-  cxExportRS16,
-  cxPivotGridRS16,
-  cxTreeListRS16,
-  dxSkinsCoreRS16,
-  cxVerticalGridRS16,
-  zlibex,
-  kbmMemRunDXE2Pro;
+  rtl;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
