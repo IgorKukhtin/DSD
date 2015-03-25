@@ -263,20 +263,6 @@ object AncestorMainForm: TAncestorMainForm
     Left = 112
     Top = 88
   end
-  object frxRTFExport: TfrxRTFExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    DataOnly = False
-    PictureType = gpPNG
-    Wysiwyg = True
-    Creator = 'FastReport'
-    SuppressPageHeadersFooters = False
-    HeaderFooterMode = hfText
-    AutoSize = False
-    Left = 224
-    Top = 104
-  end
   object frxXLSExport: TfrxXLSExport
     UseFileCache = True
     ShowProgress = True
