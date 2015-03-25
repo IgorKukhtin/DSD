@@ -638,7 +638,8 @@ uses
   JuridicalGLN in '..\..\Forms\Guides\JuridicalGLN.pas' {JuridicalGLNForm: TParentForm},
   PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm},
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
-  Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm};
+  Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm},
+  Report_GoodsMI_Defroster in '..\..\Forms\Report\Report_GoodsMI_Defroster.pas' {Report_GoodsMI_DefrosterForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
