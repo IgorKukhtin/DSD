@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inJuridicalGroupId Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, RetailName_main TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, RetailName_main TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -65,7 +65,7 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101()
-                   UNION SELECT AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_30000() -- Дебиторы
+                   UNION SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_30000() -- Дебиторы
                         )
         , tmpListBranch_Constraint AS (SELECT ObjectLink_Contract_Personal.ObjectId AS ContractId
                                        FROM ObjectLink AS ObjectLink_Unit_Branch
@@ -80,7 +80,7 @@ BEGIN
                                        GROUP BY ObjectLink_Contract_Personal.ObjectId
                                       )
 
-     SELECT a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
+     SELECT a.AccountId, a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
              , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
              , a.BranchId, a.BranchCode, a.BranchName
              , a.PaidKindId, a.PaidKindName
@@ -99,7 +99,8 @@ BEGIN
              , a.AreaName, a.AreaName_Partner
 from (
   SELECT 
-     Object_Account_View.AccountName_all AS AccountName
+     Object_Account_View.AccountId
+   , Object_Account_View.AccountName_all AS AccountName
    , Object_Juridical.Id        AS JuridicalId
    , Object_Juridical.Valuedata AS JuridicalName
    , COALESCE (Object_RetailReport.ValueData, 'прочие') :: TVarChar AS RetailName

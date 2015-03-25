@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentIncome(
     IN inJuridicalGroupId Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, RetailName_main TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, RetailName_main TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -63,8 +63,8 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH tmpAccount AS (SELECT inAccountId AS AccountId
-                   UNION SELECT AccountId FROM Object_Account_View WHERE InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20700() AND AccountDirectionId = zc_Enum_AccountDirection_70100() AND EXISTS (SELECT AccountId FROM Object_Account_View WHERE AccountId = inAccountId AND AccountDirectionId = zc_Enum_AccountDirection_70100() AND InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20700()) -- Кредиторы + поставщики AND <> Товары + Прочие товары
-                   UNION SELECT AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_70000() -- Кредиторы
+                   UNION SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20700() AND AccountDirectionId = zc_Enum_AccountDirection_70100() AND EXISTS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountId = inAccountId AND AccountDirectionId = zc_Enum_AccountDirection_70100() AND InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20700()) -- Кредиторы + поставщики AND <> Товары + Прочие товары
+                   UNION SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_70000() -- Кредиторы
                         )
         , tmpListBranch_Constraint AS (SELECT ObjectLink_Contract_Personal.ObjectId AS ContractId
                                        FROM ObjectLink AS ObjectLink_Unit_Branch
@@ -79,7 +79,7 @@ BEGIN
                                        GROUP BY ObjectLink_Contract_Personal.ObjectId
                                       )
 
-     SELECT a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
+     SELECT a.AccountId, a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
              , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
              , a.BranchId, a.BranchCode, a.BranchName
              , a.PaidKindId, a.PaidKindName
@@ -97,7 +97,8 @@ BEGIN
              , a.AreaName
 from (
   SELECT 
-     Object_Account_View.AccountName_all AS AccountName
+     Object_Account_View.AccountId
+   , Object_Account_View.AccountName_all AS AccountName
    , Object_Juridical.Id        AS JuridicalId
    , Object_Juridical.Valuedata AS JuridicalName
    , COALESCE (Object_RetailReport.ValueData, 'прочие') :: TVarChar AS RetailName

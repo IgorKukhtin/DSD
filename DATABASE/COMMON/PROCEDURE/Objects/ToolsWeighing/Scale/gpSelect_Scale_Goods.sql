@@ -38,7 +38,7 @@ BEGIN
     RETURN QUERY
        WITH tmpMI_Order AS (SELECT MovementItem.ObjectId                                                AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId
-                                 , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData)      AS Amount
+                                 , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                  , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                             FROM MovementItem

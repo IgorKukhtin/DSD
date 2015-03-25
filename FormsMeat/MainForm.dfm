@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitWidth = 1102
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2766,7 +2766,7 @@ inherited MainForm: TMainForm
       object miOrderInternal: TMenuItem
         Action = actOrderInternal
       end
-      object N41: TMenuItem
+      object miOrderType: TMenuItem
         Action = actOrderType
       end
       object N46: TMenuItem

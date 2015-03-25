@@ -494,7 +494,7 @@ type
     miOrderInternal: TMenuItem;
     actReport_ProductionOrder: TdsdOpenForm;
     actOrderType: TdsdOpenForm;
-    N41: TMenuItem;
+    miOrderType: TMenuItem;
     N42: TMenuItem;
     N43: TMenuItem;
     N44: TMenuItem;

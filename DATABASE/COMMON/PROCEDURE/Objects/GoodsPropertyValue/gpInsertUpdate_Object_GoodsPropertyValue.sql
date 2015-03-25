@@ -16,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
     IN inGoodsKindId         Integer   ,    -- Виды товара
     IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
  BEGIN
@@ -61,24 +62,24 @@ $BODY$
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsPropertyValue(), 0, inName);
 
-   -- сохранили связь
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat(zc_objectFloat_GoodsPropertyValue_Amount(), ioId, inAmount);
-   -- сохранили связь
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_BarCode(), ioId, inBarCode);
-   -- сохранили связь
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_Article(), ioId, inArticle);
-   -- сохранили связь
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_BarCodeGLN(), ioId, inBarCodeGLN);
-   -- сохранили связь
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_ArticleGLN(), ioId, inArticleGLN);
-   -- сохранили связь
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_GroupName(), ioId, inGroupName);
 
-   -- Вставляем ссылку
+   -- сохранили связь
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsProperty(), ioId, inGoodsPropertyId);
-   -- Вставляем ссылку
+   -- сохранили связь
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_Goods(), ioId, inGoodsId);
-   -- Вставляем ссылку
+   -- сохранили связь
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsKind(), ioId, inGoodsKindId);
 
    -- сохранили протокол
