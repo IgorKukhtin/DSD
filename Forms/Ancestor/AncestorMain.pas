@@ -19,7 +19,6 @@ type
     spUserProtocol: TdsdStoredProc;
     StoredProc: TdsdStoredProc;
     ClientDataSet: TClientDataSet;
-    frxRTFExport: TfrxRTFExport;
     frxXLSExport: TfrxXLSExport;
     frxXMLExport: TfrxXMLExport;
     ActionList: TActionList;

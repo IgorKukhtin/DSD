@@ -115,6 +115,9 @@
 			<DCCReference Include="cxTreeListRS16.dcp"/>
 			<DCCReference Include="dxSkinsCoreRS16.dcp"/>
 			<DCCReference Include="cxVerticalGridRS16.dcp"/>
+			<DCCReference Include="fs16.dcp"/>
+			<DCCReference Include="frx16.dcp"/>
+			<DCCReference Include="frxDB16.dcp"/>
 			<DCCReference Include="zlibex.dcp"/>
 			<DCCReference Include="kbmMemRunDXE2Pro.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
