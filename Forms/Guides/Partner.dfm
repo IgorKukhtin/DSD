@@ -304,17 +304,21 @@ object PartnerForm: TPartnerForm
       object PrepareDayCount: TcxGridDBColumn
         Caption = #1044#1085'. '#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'PrepareDayCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 45
       end
       object DocumentDayCount: TcxGridDBColumn
         Caption = #1044#1085'. '#1076#1086#1082'.'
         DataBinding.FieldName = 'DocumentDayCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 45
       end
       object clEdiOrdspr: TcxGridDBColumn
@@ -415,8 +419,8 @@ object PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1156,6 +1160,22 @@ object PartnerForm: TPartnerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrepareDayCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PrepareDayCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentDayCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DocumentDayCount'
+        DataType = ftFloat
         ParamType = ptInput
       end>
     PackSize = 1

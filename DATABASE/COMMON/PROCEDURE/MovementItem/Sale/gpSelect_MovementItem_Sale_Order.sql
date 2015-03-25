@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale_Order(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, AmountOrder TFloat, ChangePercentAmount TFloat
+RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, AmountOrder TFloat, ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -120,6 +120,7 @@ BEGIN
                          )
        SELECT
              0                          AS Id
+           , 0 :: Integer               AS LineNum
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
@@ -175,6 +176,7 @@ BEGIN
       UNION ALL
        SELECT
              tmpMI.MovementItemId :: Integer    AS Id
+           , CAST (row_number() OVER (ORDER BY tmpMI.MovementItemId) AS Integer) AS LineNum
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
@@ -332,6 +334,7 @@ BEGIN
                          )
        SELECT
              tmpMI.MovementItemId :: Integer    AS Id
+           , CAST (row_number() OVER (ORDER BY tmpMI.MovementItemId) AS Integer) AS LineNum
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName

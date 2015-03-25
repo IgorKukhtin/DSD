@@ -269,4 +269,4 @@ ALTER FUNCTION gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar) OWNER TO p
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_EDI (inStartDate:= '01.07.2014', inEndDate:= '31.07.2014', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_EDI (inStartDate:= '23.03.2015', inEndDate:= '23.03.2015', inSession:= '2')

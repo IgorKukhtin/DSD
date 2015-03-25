@@ -225,12 +225,16 @@ BEGIN
                               , SUM (MovementItem.Amount) AS Amount
                          FROM MovementLinkObject AS MLO_Partner
                               INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                               ON MovementLinkMovement_Master.MovementId = MLO_Partner.MovementId
-                                              AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                                                              ON MovementLinkMovement_Master.MovementId = MLO_Partner.MovementId
+                                                             AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                               INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Master.MovementChildId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                                  AND Movement.OperDate BETWEEN '01.08.2013' :: TDateTime AND vbOperDate - interval '1 day'
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                           AND MovementLinkObject_Contract.ObjectId = vbContractId
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.ObjectId = vbGoodsId
                                                      AND MovementItem.DescId = zc_MI_Master()

@@ -59,6 +59,7 @@ type
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     clIsMain: TcxGridDBColumn;
+    clDriverCertificate: TcxGridDBColumn;
   private
     { Private declarations }
   public

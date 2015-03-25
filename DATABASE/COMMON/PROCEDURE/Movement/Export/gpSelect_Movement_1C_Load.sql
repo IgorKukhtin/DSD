@@ -70,7 +70,8 @@ BEGIN
            , '0' :: TVarChar                                           AS Tax
 
              -- Ñóììà áåç ÍÄÑ
-           , CAST (
+           , (
+             CAST (
              CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
@@ -78,10 +79,13 @@ BEGIN
            * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
-             END AS NUMERIC (16, 2)) :: TVarChar                       AS Summa
+             END AS NUMERIC (16, 2)
+             )
+           * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
+             ) :: TVarChar                       AS Summa
 
              -- Ñóììà ÍÄÑ
-           , (
+           , ((
              CAST (
              CAST (
              CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
@@ -103,10 +107,12 @@ BEGIN
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2))
+             )
+           * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
              ) :: TVarChar                                             AS PDV
 
              -- Ñóììà ñ ÍÄÑ
-           , CAST (
+           , CAST ((
              CAST (
              CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -117,6 +123,8 @@ BEGIN
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2))
           * (1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100)
+             )
+           * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
              AS NUMERIC (16, 4)) :: TVarChar                           AS SummaPDV
 
            , ObjectHistory_JuridicalDetails_ViewByDate.INN             AS ClientINN

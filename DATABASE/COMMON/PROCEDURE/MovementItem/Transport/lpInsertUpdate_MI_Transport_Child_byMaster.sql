@@ -31,8 +31,8 @@ BEGIN
                                             , inIsCalculated       := MIBoolean_Calculated.ValueData
                                             , inIsMasterFuel       := CASE WHEN COALESCE (ObjectLink_Car_FuelAll.DescId, 0) = zc_ObjectLink_Car_FuelMaster() THEN TRUE ELSE FALSE END
                                             , ioAmount             := MovementItem.Amount
-                                            , inColdHour           := MIFloat_ColdHour.ValueData
-                                            , inColdDistance       := MIFloat_ColdDistance.ValueData
+                                            , inColdHour           := COALESCE (MIFloat_ColdHour.ValueData, 0)
+                                            , inColdDistance       := COALESCE (MIFloat_ColdDistance.ValueData, 0)
                                               -- Кол-во норма на 100 км, с учетом Коэффициента и % дополнительного расхода
                                             , inAmountFuel         := zfCalc_RateFuelValue_Distance (inDistance           := 100
                                                                                                    , inAmountFuel         := tmpRateFuel.AmountFuel

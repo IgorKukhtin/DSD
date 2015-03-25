@@ -52,21 +52,28 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 45
       end
       object clMemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 226
+        Width = 200
+      end
+      object clDriverCertificate: TcxGridDBColumn
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+        DataBinding.FieldName = 'DriverCertificate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 142
+        Width = 100
       end
       object clPositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
@@ -89,7 +96,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 239
+        Width = 150
       end
       object clDateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
@@ -253,6 +260,10 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -376,50 +387,59 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberCode'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberName'
           DataType = ftString
         end
         item
           Name = 'PositionId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionId'
         end
         item
           Name = 'PositionName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionName'
           DataType = ftString
         end
         item
           Name = 'UnitId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
         end
         item
           Name = 'UnitName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName_all'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
@@ -503,6 +523,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 48
     Top = 216
   end
@@ -543,6 +564,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     Top = 97
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

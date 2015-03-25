@@ -161,6 +161,7 @@ type
     spSelectPrintTTN: TdsdStoredProc;
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
+    colLineNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

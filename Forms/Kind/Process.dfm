@@ -27,6 +27,7 @@ inherited ProcessForm: TProcessForm
           OnKeyPress = nil
           OnCustomDrawCell = nil
           DataController.Filter.OnChanged = nil
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -66,7 +67,7 @@ inherited ProcessForm: TProcessForm
     end
   end
   inherited MasterCDS: TClientDataSet
-    FilterOptions = [foCaseInsensitive]
+    FilterOptions = []
     AfterInsert = nil
   end
   inherited spSelect: TdsdStoredProc
