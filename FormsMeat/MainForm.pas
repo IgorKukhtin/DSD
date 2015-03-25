@@ -511,6 +511,9 @@ type
     miPartnerGLN: TMenuItem;
     actGoodsByGoodsKind: TdsdOpenForm;
     N48: TMenuItem;
+    actReport_GoodsMI_Defroster: TdsdOpenForm;
+    N49: TMenuItem;
+    N51: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
