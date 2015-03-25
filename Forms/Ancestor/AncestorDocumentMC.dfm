@@ -159,6 +159,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object edOperDate: TcxDateEdit
       Left = 108
       Top = 23
+      EditValue = 42086d
       TabOrder = 2
       Width = 100
     end
@@ -256,12 +257,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           StoredProc = spGet
         end
         item
-          StoredProc = spGetTotalSumm
-        end
-        item
           StoredProc = spSelect
-        end
-        item
         end>
     end
     inherited actGridToExcel: TdsdGridToExcel
@@ -274,9 +270,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -293,9 +286,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -363,9 +353,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = 'actUpdateMainDS'
       DataSource = MasterDS
@@ -1164,29 +1151,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     Left = 392
     Top = 288
   end
-  object spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_TotalSumm'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
-    PackSize = 1
-    Left = 524
-    Top = 164
-  end
   object ChildCDS: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ParentId'
@@ -1286,9 +1250,9 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1312,9 +1276,9 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -1,8 +1,8 @@
--- Function: gpReport_GoodsMI_ProductionUnion_Tax () - <Производство и процент выхода (итоги)>
+-- Function: gpReport_GoodsMI_Defroster ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Defroster(TDateTime, TDateTime, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion_Tax (
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Defroster(
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
     IN inUnitId       Integer   , 
@@ -27,8 +27,8 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-         -- приходы п/ф ГП
-    WITH tmpMI_WorkProgress_in AS
+         -- расход
+    WITH tmpMI_Separate_оn AS
                      (SELECT MIContainer.MovementItemId              AS MovementItemId
                            , MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
@@ -44,12 +44,36 @@ BEGIN
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
-                        AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                        AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                        AND MIContainer.WhereObjectId_Analyzer = 8440--inUnitId
+                        AND MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
                       )
-         -- приходы п/ф ГП - сгруппировать
+       
+       , 
+        -- приход
+    WITH tmpMI_Separate_оn AS
+                     (SELECT MIContainer.MovementItemId              AS MovementItemId
+                           , MIContainer.ContainerId                 AS ContainerId
+                           , MIContainer.ObjectId_Analyzer           AS GoodsId
+                           , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                           , MIContainer.Amount                      AS Amount
+                      FROM MovementItemContainer AS MIContainer
+                           INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                          ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
+                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                         AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                           LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                         ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
+                                                        AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                      WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                        AND MIContainer.DescId = zc_MIContainer_Count()
+                        AND MIContainer.WhereObjectId_Analyzer = 8440--inUnitId
+                        AND MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
+                        AND MIContainer.IsActive = False
+                        AND MIContainer.Amount <> 0
+                      )
+       
        , tmpMI_WorkProgress_in_group AS (SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_WorkProgress_in GROUP BY ContainerId, GoodsId, PartionGoodsId)
          -- расходы п/ф ГП в разрезе ParentId
        , tmpMI_WorkProgress_out AS
@@ -221,7 +245,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_Defroster (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -230,4 +254,4 @@ ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integ
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionUnion_Tax (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inUnitId:= 8447, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_Defroster(inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inUnitId:= 8447, inSession:= zfCalc_UserAdmin()) ORDER BY 2;

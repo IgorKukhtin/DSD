@@ -16,12 +16,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inRealWeight           TFloat    , -- Фактический вес(информативно)
     IN inCuterCount           TFloat    , -- Количество кутеров
 
-    IN inComment              TVarChar  , -- Комментарий
+    IN inComment              TVarChar  , -- Примечание
     IN inGoodsKindId          Integer   , -- Виды товаров
     IN inGoodsKindCompleteId  Integer   , -- Виды товаров  ГП
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
 

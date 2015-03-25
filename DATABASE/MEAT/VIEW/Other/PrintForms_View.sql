@@ -92,7 +92,7 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
--- Omega+Varus_Tavr
+-- Omega+ÐÒÖ ÒÎÂ(Âàðóñ)
       SELECT
              zc_movement_sale()
            , CAST ('Sale' AS TVarChar)
@@ -103,7 +103,21 @@ AS
            , CAST ('PrintMovement_Sale30982361' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('30982361', '32334104', '19202597', '33184262')
+       AND OH_JuridicalDetails.OKPO IN ('30982361', '33184262')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+-- Òàâð³ÿ
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale31929492' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('31929492', '32334104', '19202597')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- Furshet

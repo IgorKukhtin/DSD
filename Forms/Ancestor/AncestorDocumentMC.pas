@@ -32,7 +32,6 @@ type
     actAddMask: TdsdExecStoredProc;
     spInsertMaskMIMaster: TdsdStoredProc;
     bbAddMask: TdxBarButton;
-    spGetTotalSumm: TdsdStoredProc;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     spErasedMIChild: TdsdStoredProc;

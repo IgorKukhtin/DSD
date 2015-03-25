@@ -1114,8 +1114,8 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       ImageIndex = 16
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frDataSet'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item

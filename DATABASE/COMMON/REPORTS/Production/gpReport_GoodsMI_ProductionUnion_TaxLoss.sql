@@ -1,11 +1,12 @@
--- Function: gpReport_GoodsMI_ProductionUnion_Tax () - <Производство и процент выхода (итоги)>
+-- Function: gpReport_GoodsMI_ProductionUnion_TaxLoss () - <Производство ГП и процент потерь (итоги)>
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_TaxLoss (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion_Tax (
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion_TaxLoss (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
-    IN inUnitId       Integer   , 
+    IN inFromId       Integer   , 
+    IN inToId         Integer   , 
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar
@@ -27,44 +28,42 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-         -- приходы п/ф ГП
-    WITH tmpMI_WorkProgress_in AS
+         -- приходы ГП с inFromId на inToId
+    WITH tmpMI_GP_in AS
                      (SELECT MIContainer.MovementItemId              AS MovementItemId
-                           , MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
-                           , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                            , MIContainer.Amount                      AS Amount
                       FROM MovementItemContainer AS MIContainer
+                           INNER JOIN MovementLinkObject AS MLO_From
+                                                         ON MLO_From.MovementId = MIContainer.MovementId
+                                                        AND MLO_From.DescId = zc_MovementLinkObject_To()
+                                                        AND MLO_From.ObjectId = inFromId
                            INNER JOIN ContainerLinkObject AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
                                                          AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                                         AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
-                           LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                         ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
-                                                        AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
-                        AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                        AND MIContainer.WhereObjectId_Analyzer = inToId
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
                       )
          -- приходы п/ф ГП - сгруппировать
-       , tmpMI_WorkProgress_in_group AS (SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_WorkProgress_in GROUP BY ContainerId, GoodsId, PartionGoodsId)
+       , tmpMI_GP_in_group AS (SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_GP_in GROUP BY ContainerId, GoodsId, PartionGoodsId)
          -- расходы п/ф ГП в разрезе ParentId
        , tmpMI_WorkProgress_out AS
                      (SELECT MIContainer.ParentId
-                           , tmpMI_WorkProgress_in_group.GoodsId
-                           , tmpMI_WorkProgress_in_group.PartionGoodsId
+                           , tmpMI_GP_in_group.GoodsId
+                           , tmpMI_GP_in_group.PartionGoodsId
                            , SUM (MIContainer.Amount) AS Amount
-                      FROM tmpMI_WorkProgress_in_group
+                      FROM tmpMI_GP_in_group
                            INNER JOIN MovementItemContainer AS MIContainer
-                                                            ON MIContainer.ContainerId = tmpMI_WorkProgress_in_group.ContainerId
+                                                            ON MIContainer.ContainerId = tmpMI_GP_in_group.ContainerId
                                                            AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                                                            AND MIContainer.IsActive = FALSE
                      GROUP BY MIContainer.ParentId
-                            , tmpMI_WorkProgress_in_group.GoodsId
-                            , tmpMI_WorkProgress_in_group.PartionGoodsId
+                            , tmpMI_GP_in_group.GoodsId
+                            , tmpMI_GP_in_group.PartionGoodsId
                      )
          -- приходы ГП в разрезе GoodsId (п/ф ГП) + GoodsKindId_Complete + !!!если "производство ГП"!!!
        , tmpMI_GP_in AS
@@ -99,14 +98,14 @@ BEGIN
                            , MAX (tmp.TaxExit)                AS TaxExit
                            , MAX (tmp.Comment)                AS Comment
                       FROM
-                     (SELECT tmpMI_WorkProgress_in.GoodsId
-                           , tmpMI_WorkProgress_in.PartionGoodsId
+                     (SELECT tmpMI_GP_in.GoodsId
+                           , tmpMI_GP_in.PartionGoodsId
                            , COALESCE (MILO_GoodsKindComplete.ObjectId, 0)      AS GoodsKindId_Complete
-                           , SUM (tmpMI_WorkProgress_in.Amount)                 AS Amount_WorkProgress_in
+                           , SUM (tmpMI_GP_in.Amount)                 AS Amount_WorkProgress_in
                            , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0))   AS CuterCount
                            , SUM (COALESCE (MIFloat_RealWeight.ValueData, 0))   AS RealWeight
                            , SUM (CASE WHEN ObjectFloat_TotalWeight.ValueData <> 0
-                                            THEN tmpMI_WorkProgress_in.Amount * COALESCE (ObjectFloat_TaxExit.ValueData, 0) / ObjectFloat_TotalWeight.ValueData
+                                            THEN tmpMI_GP_in.Amount * COALESCE (ObjectFloat_TaxExit.ValueData, 0) / ObjectFloat_TotalWeight.ValueData
                                        ELSE 0
                                   END)                                          AS Amount_GP_in_calc
                            , AVG (COALESCE (ObjectFloat_TaxExit.ValueData, 0))  AS TaxExit
@@ -114,21 +113,21 @@ BEGIN
                            , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0) * COALESCE (ObjectFloat_TotalWeight.ValueData, 0)) AS calcOut
                            , MAX (COALESCE (MIString_Comment.ValueData, ''))    AS Comment
                            , 0                                                  AS Amount_GP_in
-                      FROM tmpMI_WorkProgress_in
+                      FROM tmpMI_GP_in
                            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
-                                                       ON MIFloat_CuterCount.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
+                                                       ON MIFloat_CuterCount.MovementItemId = tmpMI_GP_in.MovementItemId
                                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
                            LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
-                                                       ON MIFloat_RealWeight.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
+                                                       ON MIFloat_RealWeight.MovementItemId = tmpMI_GP_in.MovementItemId
                                                       AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
                            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
-                                                            ON MILO_GoodsKindComplete.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
+                                                            ON MILO_GoodsKindComplete.MovementItemId = tmpMI_GP_in.MovementItemId
                                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                            LEFT JOIN MovementItemLinkObject AS MILO_Receipt
-                                                            ON MILO_Receipt.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
+                                                            ON MILO_Receipt.MovementItemId = tmpMI_GP_in.MovementItemId
                                                            AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
                            LEFT JOIN MovementItemString AS MIString_Comment
-                                                        ON MIString_Comment.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
+                                                        ON MIString_Comment.MovementItemId = tmpMI_GP_in.MovementItemId
                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
 
                            LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit
@@ -138,14 +137,14 @@ BEGIN
                                                  ON ObjectFloat_TotalWeight.ObjectId = MILO_Receipt.ObjectId
                                                 AND ObjectFloat_TotalWeight.DescId = zc_ObjectFloat_Receipt_TotalWeight()
 
-                           /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI_WorkProgress_in.GoodsId
+                           /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI_GP_in.GoodsId
                                                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight	
-                                                 ON ObjectFloat_Weight.ObjectId = tmpMI_WorkProgress_in.GoodsId
+                                                 ON ObjectFloat_Weight.ObjectId = tmpMI_GP_in.GoodsId
                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()*/
 
-                      GROUP BY tmpMI_WorkProgress_in.GoodsId
-                             , tmpMI_WorkProgress_in.PartionGoodsId
+                      GROUP BY tmpMI_GP_in.GoodsId
+                             , tmpMI_GP_in.PartionGoodsId
                              , MILO_GoodsKindComplete.ObjectId
                      UNION ALL
                       SELECT tmpMI_GP_in.GoodsId
@@ -221,7 +220,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_TaxLoss (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -230,4 +229,4 @@ ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integ
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionUnion_Tax (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inUnitId:= 8447, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_ProductionUnion_TaxLoss (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inUnitId:= 8447, inSession:= zfCalc_UserAdmin()) ORDER BY 2;

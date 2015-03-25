@@ -229,4 +229,4 @@ from
 
 end
 //
--- select * from dba._pgSelect_Bill_Sale_NAL ('2014-06-01', '2014-06-01') as a where InvNumber_my = 16576
+-- select * from dba._pgSelect_Bill_Sale_NAL ('2015-02-23', '2015-05-23') as a where InvNumber_my = 216378
