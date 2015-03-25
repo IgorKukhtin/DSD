@@ -10,12 +10,12 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Defroster(
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName_Complete TVarChar, MeasureName TVarChar
-             , PartionGoodsDate TDateTime
+             , PartionGoodsDate TVarChar
              , Amount_Separate_out TFloat
              , Amount_Separate_in TFloat
              , Amount_Send_out TFloat
              , Amount_Send_in TFloat
-             , Comment TVarChar
+             
               )
 AS
 $BODY$
@@ -70,7 +70,7 @@ BEGIN
                         AND MIContainer.Amount <> 0
                       )
        
-       , tmpMI_Union AS (SELECT GoodsId, PartionGoodsId, Sum(Amount_Separate_out), 0::TFloat AS Amount_Separate_in
+       , tmpMI_Union AS (SELECT GoodsId, PartionGoodsId, Sum(tmpMI_Separate_Out.Amount_Separate_out) as Amount_Separate_out, 0::TFloat AS Amount_Separate_in
                          FROM tmpMI_Separate_Out
                          GROUP BY GoodsId, PartionGoodsId
                         )
@@ -79,11 +79,17 @@ BEGIN
     SELECT ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.ObjectCode                AS GoodsCode
          , Object_Goods.ValueData                 AS GoodsName
-         , Object_GoodsKindComplete.ValueData     AS GoodsKindName_Complete
+        -- , Object_GoodsKindComplete.ValueData     AS GoodsKindName_Complete
+        ,   ''::TVarChar AS GoodsKindName_Complete
          , Object_Measure.ValueData               AS MeasureName
-         , ObjectDate_PartionGoods.ValueData      AS PartionGoodsDate
+         , MovementString_PartionGoods.ValueData      AS PartionGoodsDate
 
-     
+         , tmpMI_Union.Amount_Separate_out::TFloat 
+         , tmpMI_Union.Amount_Separate_in::TFloat 
+           
+         , 0::TFloat AS Amount_Send_out
+          
+         , 0::TFloat AS Amount_Send_in  
 
      FROM tmpMI_Union
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpMI_Union.GoodsId
@@ -97,9 +103,9 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-          LEFT JOIN ObjectString AS ObjectString_PartionGoods
-                                 ON ObjectString_PartionGoods.ObjectId = tmpMI_Union.PartionGoodsId
-                                AND ObjectString_PartionGoods.DescId = zc_ObjectString_PartionGoods()
+          LEFT JOIN MovementString AS MovementString_PartionGoods
+                                 ON MovementString_PartionGoods.MovementId = tmpMI_Union.PartionGoodsId
+                                AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
     ;
          
 END;
