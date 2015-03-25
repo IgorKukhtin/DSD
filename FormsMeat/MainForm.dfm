@@ -3,12 +3,13 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitWidth = 1102
+  ExplicitHeight = 265
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
-    Top = 48
+    Left = 160
+    Top = 32
     object actProductionUnionTech: TdsdOpenForm [0]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
@@ -1605,7 +1606,7 @@ inherited MainForm: TMainForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' ('#1089#1087#1080#1089#1086#1082')'
       Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       FormName = 'TUnitForm'
-      FormNameParam.Value = ''
+      FormNameParam.Value = 'TUnitForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

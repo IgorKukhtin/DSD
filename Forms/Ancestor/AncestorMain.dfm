@@ -263,21 +263,6 @@ object AncestorMainForm: TAncestorMainForm
     Left = 112
     Top = 88
   end
-  object frxXLSExport: TfrxXLSExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    DataOnly = False
-    ExportEMF = True
-    AsText = False
-    Background = True
-    FastExport = True
-    PageBreaks = True
-    EmptyLines = True
-    SuppressPageHeadersFooters = False
-    Left = 256
-    Top = 104
-  end
   object frxXMLExport: TfrxXMLExport
     UseFileCache = True
     ShowProgress = True

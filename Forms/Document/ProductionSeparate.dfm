@@ -3,7 +3,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   ClientHeight = 678
   ClientWidth = 903
   ExplicitWidth = 919
-  ExplicitHeight = 713
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -163,6 +163,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Height = 96
     ExplicitWidth = 903
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -405,6 +408,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   end
   inherited spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Child_SetUnErased'
+  end
+  inherited GuidesTo: TdsdGuides
+    PositionDataSet = 'MasterCDS'
+  end
+  inherited GuidesFrom: TdsdGuides
+    PositionDataSet = 'MasterCDS'
+    Left = 304
   end
   inherited spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Child'
