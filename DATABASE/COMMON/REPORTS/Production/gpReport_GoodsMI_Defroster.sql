@@ -11,14 +11,10 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Defroster(
 RETURNS TABLE (GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName_Complete TVarChar, MeasureName TVarChar
              , PartionGoodsDate TDateTime
-             , Amount_WorkProgress_in TFloat
-             , CuterCount TFloat
-             , RealWeight TFloat
-             , Amount_GP_in_calc TFloat
-             , Amount_GP_in TFloat
-             , TaxExit TFloat
-             , TaxExit_calc TFloat
-             , TaxExit_real TFloat
+             , Amount_Separate_out TFloat
+             , Amount_Separate_in TFloat
+             , Amount_Send_out TFloat
+             , Amount_Send_in TFloat
              , Comment TVarChar
               )
 AS
@@ -28,12 +24,12 @@ BEGIN
     -- Результат
     RETURN QUERY
          -- расход
-    WITH tmpMI_Separate_оn AS
+    WITH tmpMI_Separate_out AS
                      (SELECT MIContainer.MovementItemId              AS MovementItemId
                            , MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                           , MIContainer.Amount                      AS Amount
+                           , MIContainer.Amount                      AS Amount_Separate_out
                       FROM MovementItemContainer AS MIContainer
                            INNER JOIN ContainerLinkObject AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId

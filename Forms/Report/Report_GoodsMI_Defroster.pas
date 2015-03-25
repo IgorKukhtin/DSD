@@ -17,38 +17,29 @@ uses
 
 type
   TReport_GoodsMI_DefrosterForm = class(TAncestorReportForm)
-    clTradeMarkName: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSummPartner_calc: TcxGridDBColumn;
-    clAmount_Weight: TcxGridDBColumn;
+    clAmount_Separate_in: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
     clAmount_Sh: TcxGridDBColumn;
-    clAmountPartner_Weight: TcxGridDBColumn;
+    clAmount_Send_in: TcxGridDBColumn;
     clAmountPartner_Sh: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clSummPartner: TcxGridDBColumn;
     clAmountChangePercent_Sh: TcxGridDBColumn;
-    clAmountChangePercent_Weight: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
-    Amount_10500_Weight: TcxGridDBColumn;
+    clAmount_Separate_out: TcxGridDBColumn;
     Amount_10500_Sh: TcxGridDBColumn;
-    Amount_40200_Weight: TcxGridDBColumn;
-    Amount_40200_Sh: TcxGridDBColumn;
-    SummPartner_10200: TcxGridDBColumn;
-    SummPartner_10300: TcxGridDBColumn;
-    SummDiff: TcxGridDBColumn;
+    clAmount_Send_out: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     actPrintByGoods: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintByGoods: TdxBarButton;
+    clPartionGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public
