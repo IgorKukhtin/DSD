@@ -43,7 +43,7 @@ end;
 procedure TTaxMovementItemTest.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
 end;
 
 function TTaxMovementItem.InsertDefault: integer;
