@@ -39,6 +39,7 @@ type
     cbParentDetail: TcxCheckBox;
     Amount_Currency: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

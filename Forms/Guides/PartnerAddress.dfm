@@ -530,6 +530,22 @@ object PartnerAddressForm: TPartnerAddressForm
         Options.Editing = False
         Width = 100
       end
+      object clNameInteger: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' Integer'
+        DataBinding.FieldName = 'NameInteger'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Enabled = False
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -609,7 +625,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 8
     Width = 305
   end
   object cbPeriod: TcxCheckBox
@@ -1830,6 +1846,7 @@ object PartnerAddressForm: TPartnerAddressForm
     Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

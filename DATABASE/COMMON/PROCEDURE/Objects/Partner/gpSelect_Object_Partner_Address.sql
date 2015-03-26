@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
                InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
                PaidKindName TVarChar, DocBranchName TVarChar, LastDocName TVarChar,
+               NameInteger TVarChar,
                isErased Boolean
               )
 AS
@@ -161,6 +162,8 @@ BEGIN
            , Object_BranchDoc.ValueData       AS DocBranchName
            , MovementDesc_Doc.ItemName        AS LastDocName
 
+           , ObjectString_NameInteger.ValueData AS NameInteger
+
            , Object_Partner.isErased          AS isErased
 
      FROM Object AS Object_Partner
@@ -243,6 +246,10 @@ BEGIN
                               ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
          LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
+
+         LEFT JOIN ObjectString AS ObjectString_NameInteger
+                              ON ObjectString_NameInteger.ObjectId = Object_Partner.Id
+                             AND ObjectString_NameInteger.DescId = zc_ObjectString_Partner_NameInteger()
 
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail

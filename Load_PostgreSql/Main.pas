@@ -180,6 +180,7 @@ type
     cbContractConditionDocument: TCheckBox;
     cbGoodsByGoodsKind: TCheckBox;
     cbOrderType: TCheckBox;
+    cbPartnerIntUpdate: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -356,6 +357,7 @@ type
     procedure pLoadGuide_Juridical_Int (isBill:Boolean);
     procedure pLoadGuide_Juridical_Fl (isBill:Boolean);
     procedure pLoadGuide_Partner_Int (isBill:Boolean);
+    procedure pLoadGuide_Partner_Int_Update;
     procedure pLoadGuide_Partner_Fl (isBill:Boolean);
     procedure pLoadGuide_Partner1CLink_Fl;
     procedure pLoadGuide_Goods1CLink_Fl;
@@ -1525,6 +1527,7 @@ begin
      //if not fStop then pLoadGuide_JuridicalGroup;
      if not fStop then pLoadGuide_Juridical_Int(false);
      if not fStop then pLoadGuide_Partner_Int(false);
+     if not fStop then pLoadGuide_Partner_Int_Update;
      if not fStop then pLoadGuide_Contract_Int;
 
      if not fStop then pLoadGuide_Business;
@@ -4374,6 +4377,85 @@ begin
      end;
      //
      myDisabledCB(cbPartnerInt);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_Partner_Int_Update;
+var PartnerId_pg:Integer;
+begin
+     if (not cbPartnerIntUpdate.Checked)or(not cbPartnerIntUpdate.Enabled) then exit;
+     //
+     myEnabledCB(cbPartnerIntUpdate);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+                  Add('select UnitId, UnitName, PartnerId_pg');
+                  Add('from (select _pgPartner.UnitId'
+                    + '           , case when Unit.Id is not null then case when locate (Unit.UnitName, '+FormatToVarCharServer_notNULL('fl-')+') > 0 then _pgPartner.UnitName else Unit.UnitName end else _pgPartner.UnitName end as UnitName'
+                    + '           , _pgPartner.PartnerId_pg'
+                    + '      from dba._pgPartner'
+                    + '           left join dba.Unit on Unit.Id = _pgPartner.UnitId'
+                    + '      where _pgPartner.PartnerId_pg <> 0'
+                    + '        and trim(_pgPartner.UnitName)<>'+FormatToVarCharServer_notNULL('')
+                    + '        group by _pgPartner.OKPO,_pgPartner.Name,_pgPartner.main,_pgPartner.UnitId,_pgPartner.JuridicalId_pg,_pgPartner.JuridicalDetailsId_pg,_pgPartner.PartnerId_pg,_pgPartner.ContractId_pg,_pgPartner.MoneyKindID'
+                    + '                ,UnitName'
+                    + '     union'
+                    + '      select Unit.Id as UnitId'
+                    + '           , Unit.UnitName as UnitName'
+                    + '           , Id3_Postgres as PartnerId_pg'
+                    + '      from dba.Unit'
+                    + '      where Id3_Postgres <> 0'
+                    + '     ) as _pgPartner_find');
+
+                    if OKPOEdit.Text <> ''
+                    then
+                        Add('where PartnerId_pg = '+OKPOEdit.Text);
+
+                  Add('order by PartnerId_pg, UnitName, UnitId');
+
+        Open;
+        cbPartnerIntUpdate.Caption:='2.8.('+IntToStr(RecordCount)+') онтрагенты Udate';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        //!!!обнуление!!!
+        fExecSqToQuery (' update ObjectString set ValueData = '+FormatToVarCharServer_notNULL('')
+                       +' from Object'
+                       +' where ObjectString.ObjectId = Object.Id'
+                       +'   and ObjectString.DescId = zc_ObjectString_Partner_NameInteger()'
+                       +'   and Object.DescId = zc_Object_Partner()');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             //!!!
+             fOpenSqToQuery (' select lpInsertUpdate_ObjectString (zc_ObjectString_Partner_NameInteger()'
+                            +'                                 ,'+ IntToStr(FieldByName('PartnerId_pg').AsInteger)
+                            +'                                 ,cast (case when ObjectString.ValueData <> '+FormatToVarCharServer_notNULL('')
+                            +'                                            then ObjectString.ValueData || '+FormatToVarCharServer_notNULL(' *** ')
+                            +'                                       else '+FormatToVarCharServer_notNULL('')
+                            +'                                  end || ' +FormatToVarCharServer_notNULL(FieldByName('UnitName').AsString)
+                            +'                                   as TVarChar)  '
+                            +'                                  )'
+                            +' from Object'
+                            +'      left join ObjectString on ObjectString.ObjectId = Object.Id'
+                            +'                            and ObjectString.DescId = zc_ObjectString_Partner_NameInteger()'
+                            +' where Object.Id = '+IntToStr(FieldByName('PartnerId_pg').AsInteger));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbPartnerIntUpdate);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner1CLink_Fl;
@@ -8616,7 +8698,138 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_OrderType;
 begin
+     if (not cbOrderType.Checked)or(not cbOrderType.Enabled) then exit;
+     //
+     myEnabledCB(cbOrderType);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty.Id as ObjectId');
+        Add('     , GoodsProperty.GoodsCode');
+        Add('     , GoodsProperty.GoodsName');
+        Add('     , case when inNormInDays = 0 then zc_def_DayCount_Zapas() else (tmp.inNormInDays) end as inNormInDays');
+        Add('     , (tmp.inTermProduction) as inTermProduction');
+        Add('     , case when GoodsProperty.KindAnalitic in (zc_ka01_VarenkaK()'
+           +'                                               ,zc_ka02_VarenkaS()'
+           +'                                               ,zc_ka04_Delik()'
+           +'                                               ,zc_ka21_IrnaVarenkaK()'
+           +'                                               ,zc_ka22_IrnaVarenkaS()'
+           +'                                               )'
+           +'                 then 1'
+           +'                 else 0'
+           +'       end as inStartProductionInDays'); //  (копченка в тот же день что за€вка, варенка и делик - на след день
+        Add('     , GoodsProperty_KoeffSezon.Koeff1');
+        Add('     , GoodsProperty_KoeffSezon.Koeff2');
+        Add('     , GoodsProperty_KoeffSezon.Koeff3');
+        Add('     , GoodsProperty_KoeffSezon.Koeff4');
+        Add('     , GoodsProperty_KoeffSezon.Koeff5');
+        Add('     , GoodsProperty_KoeffSezon.Koeff6');
+        Add('     , GoodsProperty_KoeffSezon.Koeff7');
+        Add('     , GoodsProperty_KoeffSezon.Koeff8');
+        Add('     , GoodsProperty_KoeffSezon.Koeff9');
+        Add('     , GoodsProperty_KoeffSezon.Koeff10');
+        Add('     , GoodsProperty_KoeffSezon.Koeff11');
+        Add('     , GoodsProperty_KoeffSezon.Koeff12');
+        Add('     , GoodsProperty.Id_Postgres as inGoodsId');
+        Add('     , _pgUnit.Id_Postgres as inUnitId');
+        Add('     , GoodsProperty.Id_Pg_OrderType as Id_Postgres');
+        Add('from (select GoodsPropertyId'
+           +'           , max (tmp.inNormInDays) as inNormInDays'
+           +'           , max (tmp.inTermProduction) as inTermProduction'
+           +'      from'
+           +'      (select GoodsProperty.Id as GoodsPropertyId'
+           +'           , case when isnull(max(DayCountPrognoz),0)=0 then zc_def_DayCount_Zapas() else max(DayCountPrognoz) end as inNormInDays'
+           +'           , max(case when isnull(GoodsProperty_Detail.PeriodByProduction,0)>0'
+           +'                           then GoodsProperty_Detail.PeriodByProduction'
+           +'                      else 0'
+           +'                 end) as inTermProduction'
+           +'      from dba.GoodsProperty'
+           +'           join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId=GoodsProperty.Id and GoodsProperty_Detail.isProduction=zc_rvYes()'
+           +'      where GoodsProperty.KindAnalitic>zc_ka00_All() or GoodsProperty.Id_Pg_OrderType <> 0'
+           +'      group by GoodsProperty.Id'
+           +'     union'
+           +'     select GoodsPropertyId, 0 as inNormInDays, 0 as inTermProduction from dba.GoodsProperty_KoeffSezon'
+           +'     union'
+           +'     select GoodsProperty.Id, 0 as inNormInDays, 0 as inTermProduction from dba.GoodsProperty where GoodsProperty.Id_Pg_OrderType <> 0'
+           +'      ) as tmp'
+           +'     group by GoodsPropertyId'
+           +'      ) as tmp');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=tmp.GoodsPropertyId');
+        Add('     left outer join dba.GoodsProperty_KoeffSezon on GoodsProperty_KoeffSezon.GoodsPropertyId=tmp.GoodsPropertyId');
+        Add('     left outer join dba.Unit on Unit.Id= case when GoodsProperty.KindAnalitic = zc_ka04_Delik() then zc_UnitId_CexDelikatesy() else  zc_UnitId_Cex() end');
+        Add('     left outer join dba._pgUnit on _pgUnit.Id=Unit.pgUnitId');
+        Add('order by GoodsProperty.GoodsName');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_OrderType';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inTermProduction',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inNormInDays',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStartProductionInDays',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff1',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff2',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff3',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff4',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff5',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff6',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff7',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff8',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff9',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff10',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff11',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inKoeff12',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
 
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('inUnitId').AsInteger;
+             toStoredProc.Params.ParamByName('inTermProduction').Value:=FieldByName('inTermProduction').AsFloat;
+             toStoredProc.Params.ParamByName('inNormInDays').Value:=FieldByName('inNormInDays').AsFloat;
+             toStoredProc.Params.ParamByName('inStartProductionInDays').Value:=FieldByName('inStartProductionInDays').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff1').Value:=FieldByName('Koeff1').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff2').Value:=FieldByName('Koeff2').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff3').Value:=FieldByName('Koeff3').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff4').Value:=FieldByName('Koeff4').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff5').Value:=FieldByName('Koeff5').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff6').Value:=FieldByName('Koeff6').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff7').Value:=FieldByName('Koeff7').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff8').Value:=FieldByName('Koeff8').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff9').Value:=FieldByName('Koeff9').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff10').Value:=FieldByName('Koeff10').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff11').Value:=FieldByName('Koeff11').AsFloat;
+             toStoredProc.Params.ParamByName('inKoeff12').Value:=FieldByName('Koeff12').AsFloat;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_OrderType='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbOrderType);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_InfoMoneyGroup;
