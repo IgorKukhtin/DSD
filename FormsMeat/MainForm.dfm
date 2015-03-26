@@ -3,14 +3,24 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 262
+  ExplicitWidth = 1094
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
-    Left = 160
-    Top = 32
-    object actProductionUnionTech: TdsdOpenForm [0]
+    Top = 48
+    object actReport_ReceiptProductionAnalyzeForm: TdsdOpenForm [0]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1072#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+      FormName = 'TReport_ReceiptProductionAnalyzeForm'
+      FormNameParam.Value = 'TReport_ReceiptProductionAnalyzeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProductionUnionTech: TdsdOpenForm [1]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1050#1086#1083#1073#1072#1089#1085#1099#1081
@@ -39,7 +49,7 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actProductionUnionTechDelic: TdsdOpenForm [1]
+    object actProductionUnionTechDelic: TdsdOpenForm [2]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1044#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074
@@ -68,7 +78,7 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actPersonalCash: TdsdOpenForm [2]
+    object actPersonalCash: TdsdOpenForm [3]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1042#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
@@ -97,7 +107,7 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actReport_GoodsMI_ProductionUnionMD: TdsdOpenForm [3]
+    object actReport_GoodsMI_ProductionUnionMD: TdsdOpenForm [4]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077') ('#1084'/'#1076')'
@@ -114,7 +124,7 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actReport_GoodsMI_ProductionSeparate: TdsdOpenForm [4]
+    object actReport_GoodsMI_ProductionSeparate: TdsdOpenForm [5]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')'
@@ -131,7 +141,7 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actContractGoods: TdsdOpenForm [5]
+    object actContractGoods: TdsdOpenForm [6]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093
@@ -142,7 +152,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actCashOperation: TdsdOpenForm [6]
+    object actCashOperation: TdsdOpenForm [7]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1044#1085#1077#1087#1088')'
@@ -3077,6 +3087,9 @@ inherited MainForm: TMainForm
       object N50: TMenuItem
         Action = actReport_ProductionOrder
       end
+      object N49: TMenuItem
+        Action = actReport_ReceiptProductionAnalyzeForm
+      end
       object N27: TMenuItem
         Caption = '-'
       end
@@ -3104,7 +3117,7 @@ inherited MainForm: TMainForm
       object N51: TMenuItem
         Caption = '-'
       end
-      object N49: TMenuItem
+      object N52: TMenuItem
         Action = actReport_GoodsMI_Defroster
       end
     end

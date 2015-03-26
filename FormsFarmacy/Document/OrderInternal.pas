@@ -86,6 +86,8 @@ type
     GuidesOrderKind: TdsdGuides;
     colRemains: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
+    colisTopColor: TcxGridDBColumn;
+    colTop: TcxGridDBColumn;
   private
     { Private declarations }
   public

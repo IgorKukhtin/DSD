@@ -47,7 +47,7 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                  AND Movement.DescId = zc_Movement_OrderExternal() 
+--                                                  AND Movement.DescId = zc_Movement_OrderExternal() 
    LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                ON MovementLinkObject_Unit.MovementId = Movement.Id
                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -73,7 +73,7 @@ BEGIN
                                          ON MIString_Comment.DescId = zc_MIString_Comment()
                                         AND MIString_Comment.MovementItemId = MovementItem.id  
 
-   WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal())
+   WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income())
      AND ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
      AND Movement.OperDate BETWEEN inStartDate AND inEndDate AND Object.Id = inGoodsId;
 

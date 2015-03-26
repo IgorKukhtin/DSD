@@ -33,6 +33,8 @@ type
     UpdateDataSet: TdsdUpdateDataSet;
     spUpdate_Goods_MinimumLot: TdsdStoredProc;
     clIsClose: TcxGridDBColumn;
+    cbIsTop: TcxGridDBColumn;
+    cbPercentMarkup: TcxGridDBColumn;
   private
     { Private declarations }
   public

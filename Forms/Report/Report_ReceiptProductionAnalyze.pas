@@ -3,7 +3,8 @@ unit Report_ReceiptProductionAnalyze;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorReport, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
@@ -12,7 +13,7 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, Vcl.Grids, Vcl.DBGrids, cxCurrencyEdit;
 
 type
   TReport_ReceiptProductionAnalyzeForm = class(TAncestorReportForm)
@@ -20,44 +21,54 @@ type
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     cxLabel3: TcxLabel;
-    edFromGroup: TcxButtonEdit;
-    FromGroupGuides: TdsdGuides;
+    edFromUnit: TcxButtonEdit;
+    FromUnitGuides: TdsdGuides;
     cxLabel5: TcxLabel;
-    edToGroup: TcxButtonEdit;
-    ToGroupGuides: TdsdGuides;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
-    cxGridDBTableViewColumn3: TcxGridDBColumn;
-    cxGridDBTableViewColumn4: TcxGridDBColumn;
-    cxGridDBTableViewColumn5: TcxGridDBColumn;
-    cxGridDBTableViewColumn6: TcxGridDBColumn;
-    cxGridDBTableViewColumn7: TcxGridDBColumn;
-    cxGridDBTableViewColumn8: TcxGridDBColumn;
-    cxGridDBTableViewColumn9: TcxGridDBColumn;
-    cxGridDBTableViewColumn10: TcxGridDBColumn;
+    edToUnit: TcxButtonEdit;
+    ToUnitGuides: TdsdGuides;
+    colGoodsGroupNameFull: TcxGridDBColumn;
+    colReceiptCode: TcxGridDBColumn;
     cxLabel11: TcxLabel;
-    edPriceList: TcxButtonEdit;
-    PriceListGuides: TdsdGuides;
+    edPriceList_1: TcxButtonEdit;
+    PriceList_1_Guides: TdsdGuides;
     cxLabel6: TcxLabel;
-    cxButtonEdit1: TcxButtonEdit;
+    edPriceList_2: TcxButtonEdit;
     cxLabel7: TcxLabel;
-    cxButtonEdit2: TcxButtonEdit;
+    edPriceList_3: TcxButtonEdit;
     cxLabel8: TcxLabel;
-    cxButtonEdit3: TcxButtonEdit;
-    dsdGuides1: TdsdGuides;
-    dsdGuides2: TdsdGuides;
-    dsdGuides3: TdsdGuides;
+    edPriceList_sale: TcxButtonEdit;
+    PriceList_2_Guides: TdsdGuides;
+    PriceList_3_Guides: TdsdGuides;
+    PriceList_sale_Guides: TdsdGuides;
+    cxGridLevel1: TcxGridLevel;
+    ChildView: TcxGridDBTableView;
+    clMainReceiptid: TcxGridDBColumn;
+    clValue: TcxGridDBColumn;
+    clGoodsCode: TcxGridDBColumn;
+    clGoodsName: TcxGridDBColumn;
+    clPrice1: TcxGridDBColumn;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    ChildViewAddOn: TdsdDBViewAddOn;
+    clPrice2: TcxGridDBColumn;
+    clPrice3: TcxGridDBColumn;
+    clSum1: TcxGridDBColumn;
+    clSum2: TcxGridDBColumn;
+    clSum3: TcxGridDBColumn;
+    colAmountSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
-var
-  Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeForm;
 
 implementation
 
 {$R *.dfm}
+
+initialization
+  RegisterClass(TReport_ReceiptProductionAnalyzeForm)
+
 
 end.

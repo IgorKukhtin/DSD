@@ -98,6 +98,7 @@ type
     procedure LoadPersonalServiceListFormTest;
     procedure LoadQualityFormTest;
     procedure LoadReportFormTest;
+    procedure LoadReportReceiptFormTest;
     procedure LoadReportProductionFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
@@ -1130,6 +1131,12 @@ procedure TLoadFormTest.LoadReportProductionFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionOrderReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionOrderReportForm');
+end;
+
+procedure TLoadFormTest.LoadReportReceiptFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionAnalyzeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionAnalyzeForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

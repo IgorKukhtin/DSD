@@ -17,7 +17,8 @@ type
   public
     function InsertUpdateGoods(Id: Integer; Code, Name: String;
                                       GoodsGroupId, MeasureId, NDSKindId, ReferCode: Integer;
-                                      MinimumLot, ReferPrice: double): integer;
+                                      MinimumLot, ReferPrice: double;
+                                      isClose, isTop: boolean; PercentMarkup: double): integer;
     constructor Create; override;
   end;
 
@@ -41,14 +42,15 @@ begin
   MeasureId := TMeasure.Create.GetDefault;
   NDSKindId := TNDSKind.Create.GetDefault;
 
-  result := InsertUpdateGoods(0, '-1', 'Товар 1', 0, MeasureId, NDSKindId, 0, 0, 0);
+  result := InsertUpdateGoods(0, '-1', 'Товар 1', 0, MeasureId, NDSKindId, 0, 0, 0, true, true, 10);
   inherited;
 end;
 
 function TGoods.InsertUpdateGoods(Id: Integer; Code, Name: String;
                                       GoodsGroupId, MeasureId, NDSKindId,
                                       ReferCode: Integer;
-                                      MinimumLot, ReferPrice: double): integer;
+                                      MinimumLot, ReferPrice: double;
+                                      isClose, isTop: boolean; PercentMarkup: double): integer;
 
 begin
   FParams.Clear;
@@ -62,6 +64,11 @@ begin
   FParams.AddParam('inMinimumLot', ftFloat, ptInput, MinimumLot);
   FParams.AddParam('inReferCode', ftInteger, ptInput, ReferCode);
   FParams.AddParam('inReferPrice', ftFloat, ptInput, ReferPrice);
+
+  FParams.AddParam('inIsClose', ftBoolean, ptInput, IsClose);
+  FParams.AddParam('inTOP', ftBoolean, ptInput, isTOP);
+  FParams.AddParam('inPercentMarkup', ftFloat, ptInput, PercentMarkup);
+
   result := InsertUpdate(FParams);
 end;
 

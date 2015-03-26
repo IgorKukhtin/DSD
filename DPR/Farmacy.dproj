@@ -66,9 +66,9 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<VerInfo_Build>7</VerInfo_Build>
+			<VerInfo_Build>11</VerInfo_Build>
 			<VerInfo_Release>5</VerInfo_Release>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.5.7;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.5.11;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -210,13 +210,7 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
-					<Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\VKDBF2009.bpl">VK DBF for Delphi 2009</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dclcxPivotGridOLAPRS16.bpl">ExpressPivotGrid OLAP by Developer Express Inc.</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2K160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
-					</Excluded_Packages>
+					<Excluded_Packages/>
 					<Source>
 						<Source Name="MainSource">Farmacy.dpr</Source>
 					</Source>

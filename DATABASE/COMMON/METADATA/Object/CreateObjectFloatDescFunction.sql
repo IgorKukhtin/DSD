@@ -42,6 +42,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_MinimumLot() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_MinimumLot', 'Минимальная партия' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_MinimumLot');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_PercentMarkup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PercentMarkup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_PercentMarkup', '% наценки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_PercentMarkup');
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_ReferCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_ReferCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_ReferCode', 'Код референтной цены' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_ReferCode');

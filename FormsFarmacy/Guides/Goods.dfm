@@ -1,24 +1,24 @@
 inherited GoodsForm: TGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080
   ClientHeight = 423
-  ClientWidth = 852
+  ClientWidth = 962
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 860
+  ExplicitWidth = 970
   ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 852
+    Width = 962
     Height = 397
     ExplicitWidth = 852
     ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 852
+    ClientRectRight = 962
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 852
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
-        Width = 852
+        Width = 962
         Height = 397
         ExplicitWidth = 852
         ExplicitHeight = 397
@@ -84,6 +84,20 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
+          object cbIsTop: TcxGridDBColumn
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            HeaderAlignmentVert = vaCenter
+            Width = 37
+          end
+          object cbPercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'PercentMarkup'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##; ; '
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+          end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -96,6 +110,17 @@ inherited GoodsForm: TGoodsForm
         end
       end
     end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -330,6 +355,20 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'isClose'
         DataType = ftBoolean
+      end
+      item
+        Name = 'isTop'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTop'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'PercentMarkup'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PercentMarkup'
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 240

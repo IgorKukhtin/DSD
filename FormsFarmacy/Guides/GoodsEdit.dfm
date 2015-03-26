@@ -1,16 +1,20 @@
 ﻿inherited GoodsEditForm: TGoodsEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 307
-  ClientWidth = 349
-  ExplicitWidth = 355
-  ExplicitHeight = 332
+  ClientHeight = 356
+  ClientWidth = 351
+  ExplicitWidth = 357
+  ExplicitHeight = 381
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    TabOrder = 8
+    Top = 315
+    TabOrder = 11
+    ExplicitTop = 315
   end
   inherited bbCancel: TcxButton
-    TabOrder = 9
+    Top = 315
+    TabOrder = 12
+    ExplicitTop = 315
   end
   object edName: TcxTextEdit [2]
     Left = 9
@@ -130,7 +134,27 @@
     Left = 227
     Top = 232
     Caption = #1047#1072#1082#1088#1099#1090
-    TabOrder = 18
+    TabOrder = 8
+    Width = 96
+  end
+  object cxLabel8: TcxLabel [19]
+    Left = 128
+    Top = 257
+    Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+  end
+  object cePercentMarkup: TcxCurrencyEdit [20]
+    Left = 128
+    Top = 280
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 10
+    Width = 92
+  end
+  object cbIsTop: TcxCheckBox [21]
+    Left = 10
+    Top = 280
+    Caption = #1058#1054#1055
+    TabOrder = 9
     Width = 96
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -220,6 +244,19 @@
         Component = cbIsClose
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inTOP'
+        Value = Null
+        Component = cbIsTop
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPercentMarkup'
+        Value = Null
+        Component = cePercentMarkup
+        ParamType = ptInput
       end>
     Left = 280
     Top = 8
@@ -304,6 +341,18 @@
         Name = 'isClose'
         Value = Null
         Component = cbIsClose
+      end
+      item
+        Name = 'isTop'
+        Value = Null
+        Component = cbIsTop
+        DataType = ftBoolean
+      end
+      item
+        Name = 'PercentMarkup'
+        Value = Null
+        Component = cePercentMarkup
+        DataType = ftFloat
       end>
     Left = 304
     Top = 216

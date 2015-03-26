@@ -90,8 +90,6 @@ type
       write FQuestionBeforeExecute;
     property InfoAfterExecute: string read FInfoAfterExecute
       write FInfoAfterExecute;
-    property PostDataSetBeforeExecute: Boolean read FPostDataSetBeforeExecute
-      write FPostDataSetBeforeExecute;
     // Делаем Post всем датасетам на форме где стоит Action
     procedure PostDataSet;
     procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
@@ -114,6 +112,8 @@ type
     // действие вызывается если результат вызова основного действия false
     property CancelAction: TAction read FCancelAction write FCancelAction;
     property Enabled;
+    property PostDataSetBeforeExecute: Boolean read FPostDataSetBeforeExecute
+      write FPostDataSetBeforeExecute default true;
   end;
 
   TdsdCustomDataSetAction = class(TdsdCustomAction, IDataSetAction)

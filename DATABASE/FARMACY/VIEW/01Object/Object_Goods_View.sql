@@ -20,6 +20,8 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , ObjectString_Goods_Maker.ValueData               AS MakerName
            , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
            , COALESCE(ObjectBoolean_Goods_Close.ValueData, false)   AS isClose
+           , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)     AS isTOP
+           , ObjectFloat_Goods_PercentMarkup.ValueData        AS PercentMarkup
 
        FROM ObjectLink AS ObjectLink_Goods_Object
 
@@ -56,6 +58,14 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
                                 ON ObjectBoolean_Goods_Close.ObjectId = ObjectLink_Goods_Object.ObjectId 
                                AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()   
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                ON ObjectBoolean_Goods_TOP.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                               AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()   
+
+        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
+                               ON ObjectFloat_Goods_PercentMarkup.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
 
         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
                                ON ObjectFloat_Goods_MinimumLot.ObjectId = ObjectLink_Goods_Object.ObjectId 

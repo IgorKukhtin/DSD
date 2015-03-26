@@ -6,6 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods
     (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods
+    (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -18,7 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inReferCode           Integer   ,    -- Код для стыковки спецпроекта
     IN inReferPrice          TFloat    ,    -- Референтная цена упаковки
     IN inIsClose             Boolean   ,    -- Код закрыт
-
+    IN inTOP                 Boolean   ,    -- ТОП - позиция
+    IN inPercentMarkup	     TFloat    ,    -- % наценки
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS integer AS
@@ -62,6 +65,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferPrice(), ioId, inReferPrice);
 
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Close(), ioId, inIsClose);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), ioId, inTOP);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentMarkup(), ioId, inPercentMarkup);
 
    -- Кусок ниже реализован временно пока работает одна сеть
 
@@ -83,12 +88,13 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, boolean, boolean, TFloat, TVarChar) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.03.15                        *
  16.02.15                        *
  26.11.14                        *
  13.11.14                        *

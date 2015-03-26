@@ -31,6 +31,9 @@ type
     cxLabel7: TcxLabel;
     ceReferCode: TcxCurrencyEdit;
     cbIsClose: TcxCheckBox;
+    cxLabel8: TcxLabel;
+    cePercentMarkup: TcxCurrencyEdit;
+    cbIsTop: TcxCheckBox;
   private
     { Private declarations }
   public

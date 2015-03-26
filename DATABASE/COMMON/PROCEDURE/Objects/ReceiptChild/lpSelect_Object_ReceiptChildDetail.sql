@@ -119,7 +119,7 @@ SELECT
                                 ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId 
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
 
-WHERE ObjectFloat_Value.ValueData<>0 AND (ReceiptCount = 1 OR GoodsKindCompleteEqual) )
+WHERE ObjectFloat_Value.ValueData<>0 AND (ReceiptCount = 1 OR GoodsKindCompleteEqual)  AND DD.AmountReceiptParent <> 0 )
   ,
 
 ReceiptDetail AS (select * from temp1)
@@ -131,8 +131,8 @@ SELECT ReceiptDetail.MainParentId
      , ReceiptDetail.ReceiptChildId 
      , ReceiptDetail.goodsIdParent, ReceiptDetail.goodsKindIdParent
 FROM ReceiptDetail 
-  WHERE (ReceiptDetail.goodsId, ReceiptDetail.goodsKindId) NOT 
-     IN (SELECT ReceiptDetail.goodsIdParent, ReceiptDetail.goodsKindIdParent FROM  ReceiptDetail);
+  WHERE (ReceiptDetail.goodsId, ReceiptDetail.goodsKindId, MainParentId) NOT 
+     IN (SELECT ReceiptDetail.goodsIdParent, ReceiptDetail.goodsKindIdParent, MainParentId FROM  ReceiptDetail);
   
 END;
 $BODY$

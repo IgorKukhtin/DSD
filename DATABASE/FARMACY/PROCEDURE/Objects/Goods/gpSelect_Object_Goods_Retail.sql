@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
-               NDS TFloat, MinimumLot TFloat, isClose boolean
+               NDS TFloat, MinimumLot TFloat, isClose boolean, 
+               isTOP boolean, PercentMarkup TFloat
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -37,6 +38,9 @@ BEGIN
            , Object_Goods_View.NDS
            , Object_Goods_View.MinimumLot
            , Object_Goods_View.isClose
+           , Object_Goods_View.isTOP          
+           , Object_Goods_View.PercentMarkup  
+
 
     FROM Object_Goods_View 
    WHERE Object_Goods_View.ObjectId = vbObjectId;
