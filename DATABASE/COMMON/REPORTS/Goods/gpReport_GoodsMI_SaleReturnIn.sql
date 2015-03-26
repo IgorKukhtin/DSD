@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Int
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inStartDate    TDateTime ,
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inIsPartner    Boolean   , --
     IN inIsTradeMark  Boolean   , --
     IN inIsGoods      Boolean   , --
+    IN inIsGoodsKind  Boolean   , --
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -83,6 +85,7 @@ BEGIN
                                                       , inIsPartner
                                                       , inIsTradeMark
                                                       , inIsGoods
+                                                      , inIsGoodsKind
                                                       , inSession
                                                        );
        RETURN;
@@ -388,7 +391,7 @@ BEGIN
 
                               , _tmpGoods.TradeMarkId
                               , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
-                              , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
+                              , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
 
                               , SUM (tmpOperationGroup2.Sale_Summ) AS Sale_Summ
                               , SUM (tmpOperationGroup2.Return_Summ) AS Return_Summ
@@ -443,7 +446,7 @@ BEGIN
                                 , tmpOperationGroup2.ChildAccountId
                                 , _tmpGoods.TradeMarkId
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END    
-                                , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
+                                , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                         )
 
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -623,6 +626,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.03.15                                        * add inIsGoodsKind
  11.01.15                                        * all
  12.12.14                                        * all
  27.10.14                                        * add inIsPartner AND inIsGoods
@@ -634,4 +638,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.11.2014', inEndDate:= '30.11.2014', inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.11.2014', inEndDate:= '30.11.2014', inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());

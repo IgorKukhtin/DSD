@@ -28,11 +28,19 @@ WITH (
 ALTER TABLE MovementLinkMovement
   OWNER TO postgres;
 
+/*-------------------------------------------------------------------------------*/
+
+/*                                  Индексы                                      */
+CREATE UNIQUE INDEX idx_MovementLinkMovement_MovementId_DescId ON MovementLinkMovement (MovementId, DescId);
+CREATE INDEX idx_MovementLinkMovement_MovementChildId_DescId ON MovementLinkMovement (MovementChildId, DescId);
+CREATE INDEX idx_MovementLinkMovement_DescId ON MovementLinkMovement (DescId,MovementId);
+
 /*
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   
-12.02.14                              *           
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+22.03.2015                                       * add idx_MovementItemLinkObject_MovementItemId_DescId
+12.02.14                        *           
 */

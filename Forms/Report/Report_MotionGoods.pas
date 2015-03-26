@@ -169,7 +169,6 @@ type
     CountTotalOut_Weight: TcxGridDBColumn;
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
-    actDisabled: TOpenChoiceForm;
     LineNum: TcxGridDBColumn;
   private
   public

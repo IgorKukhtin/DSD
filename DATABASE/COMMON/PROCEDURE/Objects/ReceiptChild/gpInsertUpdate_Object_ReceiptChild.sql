@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boo
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
  INOUT ioId              Integer   , -- ключ объекта <Составляющие рецептур>
     IN inValue           TFloat    , -- Значение объекта 
+   OUT outValueWeight    TFloat    , -- Значение объекта 
     IN inIsWeightMain    Boolean   , -- Входит в общий вес сырья
     IN inIsTaxExit       Boolean   , -- Зависит от % выхода
     IN inStartDate       TDateTime , -- Начальная дата
@@ -15,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
     IN inGoodsKindId     Integer   , -- ссылка на Виды товаров
     IN inSession         TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -23,8 +25,19 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptChild());
 
 
+   -- расчет
+   outValueWeight:= (SELECT inValue * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                     FROM ObjectLink AS ObjectLink_Goods_Measure
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                               ON ObjectFloat_Weight.ObjectId = ObjectLink_Goods_Measure.ObjectId
+                                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                     WHERE ObjectLink_Goods_Measure.ObjectId = inGoodsId
+                       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                    );
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ReceiptChild(), 0, '');
+
    
    -- сохранили связь с <Рецептурой>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptChild_Receipt(), ioId, inReceiptId);
@@ -36,9 +49,9 @@ BEGIN
    -- сохранили свойство <Значение>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptChild_Value(), ioId, inValue);
    -- сохранили свойство <Входит в общий вес выхода>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_WeightMain(), ioId, inIsWeightMain);
+   -- PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_WeightMain(), ioId, inIsWeightMain);
    -- сохранили свойство <Зависит от % выхода>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inIsTaxExit);
+   -- PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inIsTaxExit);
    -- сохранили свойство <Начальная дата>
    -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_Start(), ioId, inStartDate);
    -- сохранили свойство <Конечная дата>

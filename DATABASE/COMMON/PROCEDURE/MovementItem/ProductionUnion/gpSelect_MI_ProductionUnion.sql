@@ -1,5 +1,6 @@
 -- Function: gpSelect_MI_ProductionUnion()
 
+DROP FUNCTION IF EXISTS gpSelect_MI_ProductionUnion_Master (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion(
@@ -41,7 +42,7 @@ BEGIN
             , CAST (NULL AS TVarchar)               AS GoodsKindCompleteName
 
             , CAST (NULL AS Integer)                AS ReceiptId
-            , CAST (NULL AS Integer)                AS ReceiptCode
+            , CAST (NULL AS TVarchar)               AS ReceiptCode
             , CAST (NULL AS TVarchar)               AS ReceiptName
 
            , FALSE                                  AS isErased
@@ -288,7 +289,8 @@ BEGIN
                                              , inGoodsKindId            := Object_GoodsKind.Id
                                              , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
                                              , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
-                                             , inWeightMain             := MIBoolean_WeightMain.ValueData
+                                             , inIsWeightMain           := MIBoolean_WeightMain.ValueData
+                                             , inIsTaxExit              := MIBoolean_TaxExit.ValueData
                                               ) AS GroupNumber
 
             , MovementItem.isErased             AS isErased
@@ -304,9 +306,12 @@ BEGIN
                                              AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
 
+            LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
+                                          ON MIBoolean_TaxExit.MovementItemId =  MovementItem.Id
+                                         AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
              LEFT JOIN MovementItemBoolean AS MIBoolean_WeightMain
-                                           ON MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
-                                          AND MIBoolean_WeightMain.MovementItemId =  MovementItem.Id
+                                           ON MIBoolean_WeightMain.MovementItemId =  MovementItem.Id
+                                          AND MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()

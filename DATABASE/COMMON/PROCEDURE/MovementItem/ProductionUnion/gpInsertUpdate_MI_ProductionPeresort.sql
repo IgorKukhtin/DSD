@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_MI_ProductionPeresort()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, TVarChar, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
@@ -11,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
     IN inAmount                 TFloat    , -- Количество
     IN inPartionGoods           TVarChar  , -- Партия товара
     IN inPartionGoodsDate       TDateTime , -- Партия товара
-    IN inComment                TVarChar  , -- Комментарий	                   
+    IN inComment                TVarChar  , -- Примечание	                   
     IN inGoodsKindId            Integer   , -- Виды товаров 
  INOUT ioGoodsChildId           Integer   , -- Товары
     IN inPartionGoodsChild      TVarChar  , -- Партия товара  
@@ -50,39 +48,30 @@ BEGIN
    END IF;
 
    -- сохранили <Master>
-   ioId :=lpInsertUpdate_MI_ProductionUnion_Master (ioId               := ioId
+   ioId:= lpInsertUpdate_MI_ProductionUnion_Master (ioId               := ioId
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
                                                   , inAmount           := inAmount
-                                                  , inPartionClose     := NULL-- ''::Boolean
-                                                  , inCount            := 0 ::TFloat
-                                                  , inRealWeight       := 0 ::TFloat
-                                                  , inCuterCount       := 0 ::TFloat
                                                   , inPartionGoods     := inPartionGoods
-                                                  , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
-                                                  , inGoodsKindCompleteId:= NULL--0 ::integer
-                                                  , inReceiptId        := NULL--0 ::integer
                                                   , inUserId           := vbUserId
-                                                  );
+                                                   );
 
 
    -- сохранили свойство <Партия товара> для мастера
    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
 
    -- сохранили <Child>
-   vbChildId := lpInsertUpdate_MI_ProductionUnion_Child(ioId          := vbChildId
-                                                 , inMovementId       := inMovementId
-                                                 , inGoodsId          := ioGoodsChildId
-                                                 , inAmount           := inAmount
-                                                 , inParentId         := ioId
-                                                 , inAmountReceipt    := 0 ::TFloat
-                                                 , inPartionGoodsDate := inPartionGoodsDateChild
-                                                 , inPartionGoods     := inPartionGoodsChild
-                                                 , inComment          := NULL--'' ::TVarChar
-                                                 , inGoodsKindId      := inGoodsKindChildId
-                                                 , inUserId           := vbUserId
-                                                 );
+   vbChildId := lpInsertUpdate_MI_ProductionUnion_Child (ioId               := vbChildId
+                                                       , inMovementId       := inMovementId
+                                                       , inGoodsId          := ioGoodsChildId
+                                                       , inAmount           := inAmount
+                                                       , inParentId         := ioId
+                                                       , inPartionGoodsDate := inPartionGoodsDateChild
+                                                       , inPartionGoods     := inPartionGoodsChild
+                                                       , inGoodsKindId      := inGoodsKindChildId
+                                                       , inUserId           := vbUserId
+                                                        );
 
 
 END;
@@ -92,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.03.15                                        * all
  26.12.14                                        *
  11.12.14         *
 */

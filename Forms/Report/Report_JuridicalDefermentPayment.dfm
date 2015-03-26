@@ -726,15 +726,15 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
           DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
@@ -817,15 +817,15 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
           DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
@@ -908,15 +908,15 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
           DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
@@ -999,15 +999,15 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
           DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
@@ -1090,15 +1090,15 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
           DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
@@ -1114,8 +1114,8 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       ImageIndex = 16
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frDataSet'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -1237,15 +1237,15 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
           DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
@@ -1532,8 +1532,8 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'AccountId'
         ParamType = ptInput
       end
       item
@@ -1629,8 +1629,8 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'AccountId'
         ParamType = ptInput
       end
       item

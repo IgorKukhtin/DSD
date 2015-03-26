@@ -1,4 +1,4 @@
--- Function: gpReport_GoodsMI_ProductionUnion_Tax ()
+-- Function: gpReport_GoodsMI_ProductionUnion_Tax () - <Производство и процент выхода (итоги)>
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integer, TVarChar);
 
@@ -47,6 +47,7 @@ BEGIN
                         AND MIContainer.WhereObjectId_Analyzer = inUnitId
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
+                        AND MIContainer.Amount <> 0
                       )
          -- приходы п/ф ГП - сгруппировать
        , tmpMI_WorkProgress_in_group AS (SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_WorkProgress_in GROUP BY ContainerId, GoodsId, PartionGoodsId)

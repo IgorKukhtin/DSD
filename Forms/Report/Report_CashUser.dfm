@@ -355,14 +355,14 @@ inherited Report_CashUserForm: TReport_CashUserForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -388,8 +388,8 @@ inherited Report_CashUserForm: TReport_CashUserForm
       Enabled = False
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True

@@ -98,7 +98,7 @@ type
     clWeightPackage: TcxGridDBColumn;
     clMeasureNameChild: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
-    clGroupNumber: TcxGridDBColumn;
+    clGroupNumberChild: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     Code_Parent: TcxGridDBColumn;
@@ -123,6 +123,15 @@ type
     bbPrintDetail: TdxBarButton;
     spPrintReceiptChildDetail: TdsdStoredProc;
     PrintReceiptChildDetailCDS: TClientDataSet;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
+    clInfoMoneyCodeChild: TcxGridDBColumn;
+    clInfoMoneyGroupNameChild: TcxGridDBColumn;
+    clInfoMoneyDestinationNameChild: TcxGridDBColumn;
+    clInfoMoneyNameChild: TcxGridDBColumn;
+    clValueWeightChild: TcxGridDBColumn;
   private
     { Private declarations }
   public

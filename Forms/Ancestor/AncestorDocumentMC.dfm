@@ -3,7 +3,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   ClientWidth = 935
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitTop = 7
   ExplicitWidth = 951
   ExplicitHeight = 709
   PixelsPerInch = 96
@@ -14,7 +13,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     Height = 554
     ExplicitTop = 120
     ExplicitWidth = 935
-    ExplicitHeight = 612
+    ExplicitHeight = 554
     ClientRectBottom = 554
     ClientRectRight = 935
     ClientRectTop = 24
@@ -23,12 +22,12 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 935
-      ExplicitHeight = 588
+      ExplicitHeight = 530
       inherited cxGrid: TcxGrid
         Width = 935
         Height = 222
         ExplicitWidth = 935
-        ExplicitHeight = 171
+        ExplicitHeight = 222
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -68,7 +67,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         Align = alBottom
         PopupMenu = PopupMenuChild
         TabOrder = 1
-        ExplicitTop = 226
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -93,6 +91,9 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           object colChildGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -101,9 +102,16 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           object colChildGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoiceChild
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 200
           end
           object colChildIsErased: TcxGridDBColumn
@@ -125,7 +133,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 221
       end
     end
   end
@@ -152,6 +159,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object edOperDate: TcxDateEdit
       Left = 108
       Top = 23
+      EditValue = 42086d
       TabOrder = 2
       Width = 100
     end
@@ -249,12 +257,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           StoredProc = spGet
         end
         item
-          StoredProc = spGetTotalSumm
-        end
-        item
           StoredProc = spSelect
-        end
-        item
         end>
     end
     inherited actGridToExcel: TdsdGridToExcel
@@ -267,9 +270,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -286,9 +286,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -356,9 +353,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
         end>
       Caption = 'actUpdateMainDS'
       DataSource = MasterDS
@@ -432,7 +426,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       TabSheet = tsMain
       MoveParams = <>
       View = cxGridDBTableViewChild
-      Action = actGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
@@ -470,36 +463,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
-    end
-    object actGoodsChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actGoodsChoiceForm'
-      FormName = 'TGoodsForm'
-      FormNameParam.Name = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'GoodsId'
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'GoodsCode'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-        end>
-      isShowModal = True
     end
     object actMIContainer: TdsdOpenForm
       Category = 'DSDLib'
@@ -583,6 +546,35 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ImageIndex = 13
       Status = mtDelete
       DataSource = MasterDS
+    end
+    object actGoodsChoiceChild: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actGoodsChoiceChild'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsCode'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1159,29 +1151,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     Left = 392
     Top = 288
   end
-  object spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_TotalSumm'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
-    PackSize = 1
-    Left = 524
-    Top = 164
-  end
   object ChildCDS: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ParentId'
@@ -1281,9 +1250,9 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1307,9 +1276,9 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

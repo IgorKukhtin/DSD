@@ -1,21 +1,14 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Master()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)
-    IN inCount	             TFloat    , -- Количество батонов или упаковок
-    IN inRealWeight          TFloat    , -- Фактический вес(информативно)
-    IN inCuterCount          TFloat    , -- Количество кутеров
     IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inComment             TVarChar  , -- Комментарий
     IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
-    IN inReceiptId           Integer   , -- Рецептуры
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -30,17 +23,10 @@ BEGIN
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
                                                   , inAmount           := inAmount
-                                                  , inPartionClose     := inPartionClose
-                                                  , inCount            := inCount
-                                                  , inRealWeight       := inRealWeight
-                                                  , inCuterCount       := inCuterCount
                                                   , inPartionGoods     := inPartionGoods
-                                                  , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
-                                                  , inGoodsKindCompleteId := inGoodsKindCompleteId
-                                                  , inReceiptId        := inReceiptId
                                                   , inUserId           := vbUserId
-                                                  );
+                                                   );
 
 END;
 $BODY$
@@ -49,6 +35,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.03.15                                        * all
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  11.12.14         * add lpInsertUpdate_MI_ProductionUnion_Master
 

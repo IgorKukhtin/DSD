@@ -1,8 +1,5 @@
 -- Function: gpGet_Movement_ProductionUnionTech()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, Integer, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnionTech(

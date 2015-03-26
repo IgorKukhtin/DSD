@@ -3,7 +3,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   ClientHeight = 678
   ClientWidth = 903
   ExplicitWidth = 919
-  ExplicitHeight = 713
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,9 +21,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       ExplicitHeight = 532
       inherited cxGrid: TcxGrid
         Width = 903
-        Height = 174
+        Height = 224
         ExplicitWidth = 903
-        ExplicitHeight = 174
+        ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -86,9 +86,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 174
+        Top = 229
         Width = 903
-        ExplicitTop = 174
+        ExplicitTop = 229
         ExplicitWidth = 903
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -149,6 +149,12 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
           end
         end
+      end
+      inherited cxBottomSplitter: TcxSplitter
+        Top = 224
+        Width = 903
+        ExplicitTop = 224
+        ExplicitWidth = 903
       end
     end
   end
@@ -402,6 +408,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   end
   inherited spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Child_SetUnErased'
+  end
+  inherited GuidesTo: TdsdGuides
+    PositionDataSet = 'MasterCDS'
+  end
+  inherited GuidesFrom: TdsdGuides
+    PositionDataSet = 'MasterCDS'
+    Left = 304
   end
   inherited spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Child'

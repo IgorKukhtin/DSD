@@ -3,7 +3,7 @@ object BranchForm: TBranchForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1083#1080#1072#1083#1099'>'
   ClientHeight = 374
-  ClientWidth = 458
+  ClientWidth = 624
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,12 @@ object BranchForm: TBranchForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 458
+    Width = 624
     Height = 348
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 363
+    ExplicitWidth = 458
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,33 +51,38 @@ object BranchForm: TBranchForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 81
+        Width = 45
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 199
+        Width = 150
+      end
+      object clInvNumber: TcxGridDBColumn
+        Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1082#1086#1076
+        DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clPersonalBookkeeperName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088')'
+        DataBinding.FieldName = 'PersonalBookkeeperName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 57
-      end
-      object clInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
-        DataBinding.FieldName = 'InvNumber'
-        HeaderAlignmentVert = vaCenter
-        Width = 75
-      end
-      object clPersonalBookkeeperName: TcxGridDBColumn
-        Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088
-        DataBinding.FieldName = 'PersonalBookkeeperName'
-        HeaderAlignmentVert = vaCenter
-        Width = 89
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -118,8 +123,8 @@ object BranchForm: TBranchForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -190,7 +195,7 @@ object BranchForm: TBranchForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
@@ -198,7 +203,7 @@ object BranchForm: TBranchForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True

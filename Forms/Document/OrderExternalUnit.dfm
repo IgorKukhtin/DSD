@@ -2,6 +2,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
   ClientWidth = 1280
+  ExplicitLeft = -315
   ExplicitWidth = 1296
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -470,8 +471,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -489,8 +490,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -508,8 +509,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -609,8 +610,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Top = 23
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True

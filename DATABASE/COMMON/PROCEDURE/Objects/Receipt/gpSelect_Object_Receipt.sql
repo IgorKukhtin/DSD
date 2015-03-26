@@ -1,11 +1,9 @@
 -- Function: gpSelect_Object_Receipt()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
+    IN inReceiptId    Integer,
     IN inGoodsId      Integer,
     IN inGoodsKindId  Integer,
     IN inShowAll      Boolean,
@@ -26,6 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
              , GoodsCode_Parent Integer, GoodsName_Parent TVarChar, MeasureName_Parent TVarChar
              , GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , isCheck_Parent Boolean
              , isErased Boolean
               )
@@ -99,6 +98,11 @@ BEGIN
          , Object_GoodsTag.ValueData                   AS GoodsTagName
          , Object_TradeMark.ValueData                  AS TradeMarkName
 
+         , Object_InfoMoney_View.InfoMoneyCode
+         , Object_InfoMoney_View.InfoMoneyGroupName
+         , Object_InfoMoney_View.InfoMoneyDestinationName
+         , Object_InfoMoney_View.InfoMoneyName
+
          , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
          , Object_Receipt.isErased AS isErased
 
@@ -144,6 +148,11 @@ BEGIN
                               AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Receipt_Goods.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -159,6 +168,7 @@ BEGIN
                               AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
           LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = ObjectLink_Receipt_GoodsKindComplete.ChildObjectId
           LEFT JOIN Object AS Object_GoodsKindComplete_basis ON Object_GoodsKindComplete_basis.Id = zc_GoodsKind_Basis()
+                                                            AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_ReceiptCost
                                ON ObjectLink_Receipt_ReceiptCost.ObjectId = Object_Receipt.Id
@@ -240,17 +250,19 @@ BEGIN
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
      WHERE Object_Receipt.DescId = zc_Object_Receipt()
+       AND (Object_Receipt.Id = inReceiptId OR inReceiptId = 0)
        AND (ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
        AND (ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId OR inGoodsKindId = 0);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Receipt (Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Receipt (Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.03.15                                       * add inReceiptId
  23.02.15        * add 
  14.02.15                                      *all
  19.07.13        * reName zc_ObjectDate_
@@ -258,4 +270,4 @@ ALTER FUNCTION gpSelect_Object_Receipt (Integer, Integer, Boolean, TVarChar) OWN
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Receipt (0, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Receipt (0, 0, 0, FALSE, zfCalc_UserAdmin())

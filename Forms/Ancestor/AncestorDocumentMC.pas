@@ -32,7 +32,6 @@ type
     actAddMask: TdsdExecStoredProc;
     spInsertMaskMIMaster: TdsdStoredProc;
     bbAddMask: TdxBarButton;
-    spGetTotalSumm: TdsdStoredProc;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     spErasedMIChild: TdsdStoredProc;
@@ -75,7 +74,6 @@ type
     colChildGoodsCode: TcxGridDBColumn;
     colChildIsErased: TcxGridDBColumn;
     cxGridLevelChild: TcxGridLevel;
-    actGoodsChoiceForm: TOpenChoiceForm;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
@@ -91,6 +89,7 @@ type
     spMovementComplete: TdsdStoredProc;
     colChildGoodsName: TcxGridDBColumn;
     cxBottomSplitter: TcxSplitter;
+    actGoodsChoiceChild: TOpenChoiceForm;
   private
     { Private declarations }
   public

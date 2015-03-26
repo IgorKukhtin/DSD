@@ -16,11 +16,17 @@ CREATE TABLE MovementBoolean(
    CONSTRAINT pk_MovementBoolean_DescId   FOREIGN KEY(DescId) REFERENCES MovementBooleanDesc(Id),
    CONSTRAINT pk_MovementBoolean_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id) );
 
+/*-------------------------------------------------------------------------------*/
+
+/*                                  Индексы                                      */
+CREATE UNIQUE INDEX idx_MovementBoolean_MovementId_DescId ON MovementBoolean (MovementId, DescId); 
+
+
 /*
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.
-14.06.02
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+22.03.2015                                       * add idx_MovementBoolean_MovementId_DescId
 */

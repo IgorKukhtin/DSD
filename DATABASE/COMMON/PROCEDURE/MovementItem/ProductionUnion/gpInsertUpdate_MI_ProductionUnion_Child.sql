@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Child()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TFloat, TDateTime, TVarChar,TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,10 +8,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inParentId            Integer   , -- Главный элемент документа
-    IN inAmountReceipt       TFloat    , -- Количество по рецептуре на 1 кутер 
     IN inPartionGoodsDate    TDateTime , -- Партия товара	
     IN inPartionGoods        TVarChar  , -- Партия товара        
-    IN inComment             TVarChar  , -- Комментарий
     IN inGoodsKindId         Integer   , -- Виды товаров            
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -22,19 +20,14 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
 
-   -- меняем параметр
-   IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
-
    -- сохранили 
    ioId := lpInsertUpdate_MI_ProductionUnion_Child(ioId               := ioId
                                                  , inMovementId       := inMovementId
                                                  , inGoodsId          := inGoodsId
                                                  , inAmount           := inAmount
                                                  , inParentId         := inParentId
-                                                 , inAmountReceipt    := inAmountReceipt
                                                  , inPartionGoodsDate := inPartionGoodsDate
                                                  , inPartionGoods     := inPartionGoods
-                                                 , inComment          := inComment
                                                  , inGoodsKindId      := inGoodsKindId
                                                  , inUserId           := vbUserId
                                                  );
@@ -46,6 +39,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.03.15                                        * all
  11.12.14         * add lpInsertUpdate_MI_ProductionUnion_Child
  24.07.13                                        * Важен порядок полей
  15.07.13         *     

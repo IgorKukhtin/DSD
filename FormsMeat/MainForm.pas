@@ -494,7 +494,7 @@ type
     miOrderInternal: TMenuItem;
     actReport_ProductionOrder: TdsdOpenForm;
     actOrderType: TdsdOpenForm;
-    N41: TMenuItem;
+    miOrderType: TMenuItem;
     N42: TMenuItem;
     N43: TMenuItem;
     N44: TMenuItem;
@@ -513,6 +513,9 @@ type
     N48: TMenuItem;
     actReport_ReceiptProductionAnalyzeForm: TdsdOpenForm;
     N49: TMenuItem;
+    actReport_GoodsMI_Defroster: TdsdOpenForm;
+    N51: TMenuItem;
+    N52: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

@@ -27,6 +27,6 @@ CREATE UNIQUE INDEX idx_MovementString_MovementId_DescId ON MovementString (Move
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.
-14.06.02
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+14.06.2013
 */

@@ -172,6 +172,24 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actReport_GoodsMI_Defroster: TdsdOpenForm [7]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1044#1077#1092#1088#1086#1089#1090#1077#1088
+      Hint = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1044#1077#1092#1088#1086#1089#1090#1077#1088
+      FormName = 'TReport_GoodsMI_DefrosterForm'
+      FormNameParam.Value = 'TReport_GoodsMI_DefrosterForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'InDescName'
+          Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+          DataType = ftString
+          ParamType = ptUnknown
+        end>
+      isShowModal = False
+    end
     object actCashOperationDneprOfficial: TdsdOpenForm [8]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
@@ -1598,7 +1616,7 @@ inherited MainForm: TMainForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' ('#1089#1087#1080#1089#1086#1082')'
       Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       FormName = 'TUnitForm'
-      FormNameParam.Value = ''
+      FormNameParam.Value = 'TUnitForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2777,7 +2795,7 @@ inherited MainForm: TMainForm
       object miOrderInternal: TMenuItem
         Action = actOrderInternal
       end
-      object N41: TMenuItem
+      object miOrderType: TMenuItem
         Action = actOrderType
       end
       object N46: TMenuItem
@@ -3095,6 +3113,12 @@ inherited MainForm: TMainForm
       end
       object miReport_GoodsMI_ProductionUnionMD: TMenuItem
         Action = actReport_GoodsMI_ProductionUnionMD
+      end
+      object N51: TMenuItem
+        Caption = '-'
+      end
+      object N52: TMenuItem
+        Action = actReport_GoodsMI_Defroster
       end
     end
     object miReportsGoods: TMenuItem [9]

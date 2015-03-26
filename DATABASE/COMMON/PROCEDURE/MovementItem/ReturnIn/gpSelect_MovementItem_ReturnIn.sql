@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
+RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -34,6 +34,7 @@ BEGIN
      RETURN QUERY
        SELECT
              0                          AS Id
+           , 0 :: Integer               AS LineNum
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
@@ -89,23 +90,24 @@ BEGIN
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
        SELECT
-             MovementItem.Id					AS Id
-           , Object_Goods.Id          			AS GoodsId
-           , Object_Goods.ObjectCode  			AS GoodsCode
-           , Object_Goods.ValueData   			AS GoodsName
-           , MovementItem.Amount				AS Amount
+             MovementItem.Id			AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
+           , Object_Goods.Id          		AS GoodsId
+           , Object_Goods.ObjectCode  		AS GoodsCode
+           , Object_Goods.ValueData   		AS GoodsName
+           , MovementItem.Amount		AS Amount
            , MIFloat_AmountPartner.ValueData    AS AmountPartner
-           , MIFloat_Price.ValueData 			AS Price
+           , MIFloat_Price.ValueData 		AS Price
            , MIFloat_CountForPrice.ValueData 	AS CountForPrice
-           , MIFloat_HeadCount.ValueData 		AS HeadCount
+           , MIFloat_HeadCount.ValueData 	AS HeadCount
 
            , MIString_PartionGoods.ValueData 	AS PartionGoods
-           , Object_GoodsKind.Id        		AS GoodsKindId
-           , Object_GoodsKind.ValueData 		AS GoodsKindName
-           , Object_Measure.ValueData   AS MeasureName
+           , Object_GoodsKind.Id        	AS GoodsKindId
+           , Object_GoodsKind.ValueData 	AS GoodsKindName
+           , Object_Measure.ValueData           AS MeasureName
 
-           , Object_Asset.Id         			AS AssetId
-           , Object_Asset.ValueData  			AS AssetName
+           , Object_Asset.Id         		AS AssetId
+           , Object_Asset.ValueData  		AS AssetName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                         THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -135,11 +137,11 @@ BEGIN
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                       AND MIFloat_HeadCount.DescId = NULL -- zc_MIFloat_HeadCount()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
-                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                        AND MIString_PartionGoods.DescId = NULL -- zc_MIString_PartionGoods()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -148,29 +150,30 @@ BEGIN
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+                                            AND MILinkObject_Asset.DescId = NULL -- zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = NULL -- MILinkObject_Asset.ObjectId
             ;
 
      ELSE
 
      RETURN QUERY
        SELECT
-             MovementItem.Id					AS Id
-           , Object_Goods.Id          			AS GoodsId
-           , Object_Goods.ObjectCode  			AS GoodsCode
-           , Object_Goods.ValueData   			AS GoodsName
-           , MovementItem.Amount				AS Amount
+             MovementItem.Id			AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
+           , Object_Goods.Id          		AS GoodsId
+           , Object_Goods.ObjectCode  		AS GoodsCode
+           , Object_Goods.ValueData   		AS GoodsName
+           , MovementItem.Amount		AS Amount
            , MIFloat_AmountPartner.ValueData   	AS AmountPartner
-           , MIFloat_Price.ValueData 			AS Price
+           , MIFloat_Price.ValueData 		AS Price
            , MIFloat_CountForPrice.ValueData 	AS CountForPrice
-           , MIFloat_HeadCount.ValueData 		AS HeadCount
+           , MIFloat_HeadCount.ValueData 	AS HeadCount
            , MIString_PartionGoods.ValueData 	AS PartionGoods
-           , Object_GoodsKind.Id        		AS GoodsKindId
-           , Object_GoodsKind.ValueData 		AS GoodsKindName
-           , Object_Measure.ValueData   AS MeasureName
-           , Object_Asset.Id         			AS AssetId
-           , Object_Asset.ValueData  			AS AssetName
+           , Object_GoodsKind.Id        	AS GoodsKindId
+           , Object_GoodsKind.ValueData 	AS GoodsKindName
+           , Object_Measure.ValueData           AS MeasureName
+           , Object_Asset.Id         		AS AssetId
+           , Object_Asset.ValueData  		AS AssetName
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
@@ -201,11 +204,11 @@ BEGIN
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                       AND MIFloat_HeadCount.DescId = NULL -- zc_MIFloat_HeadCount()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
-                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                        AND MIString_PartionGoods.DescId = NULL -- zc_MIString_PartionGoods()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -214,8 +217,8 @@ BEGIN
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+                                            AND MILinkObject_Asset.DescId = NULL -- zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = NULL -- MILinkObject_Asset.ObjectId
             ;
      END IF;
 

@@ -1,24 +1,45 @@
+-- Function: lpInsertUpdate_MovementItemLinkObject
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemLinkObject (Integer, Integer, Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementLinkObject(
- inDescId                Integer           ,  /* код класса свойства       */
- inMovementId            Integer           ,  /* ключ главного объекта     */
- inObjectId              Integer              /* ключ подчиненного объекта */
+    IN inDescId                Integer           , -- код класса свойства
+    IN inMovementId            Integer           , -- ключ 
+    IN inObjectId              Integer             -- ключ объекта
 )
-  RETURNS boolean AS
-$BODY$BEGIN
-    IF inObjectId = 0 THEN
-       inObjectId := NULL;
+RETURNS Boolean
+AS
+$BODY$
+BEGIN
+    -- меняется значение
+    IF inObjectId = 0
+    THEN
+        inObjectId := NULL;
     END IF;
 
-    /* изменить данные по значению <ключ объекта> */
+    -- изменить <свойство>
     UPDATE MovementLinkObject SET ObjectId = inObjectId WHERE MovementId = inMovementId AND DescId = inDescId;
-    IF NOT found THEN            
-       /* вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта> */
-       INSERT INTO MovementLinkObject (DescId, MovementId, ObjectId)
-           VALUES (inDescId, inMovementId, inObjectId);
-    END IF;             
-    RETURN true;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_MovementLinkObject(Integer, Integer, Integer)
-  OWNER TO postgres;
+
+    -- если не нашли
+    IF NOT FOUND AND inObjectId IS NOT NULL
+    THEN
+        -- вставить <свойство>
+        INSERT INTO MovementLinkObject (DescId, MovementId, ObjectId)
+                                VALUES (inDescId, inMovementId, inObjectId);
+    END IF;
+  
+    RETURN TRUE;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpInsertUpdate_MovementLinkObject (Integer, Integer, Integer) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.03.15                                        * IF ... AND inObjectId IS NOT NULL
+*/
+
+-- тест

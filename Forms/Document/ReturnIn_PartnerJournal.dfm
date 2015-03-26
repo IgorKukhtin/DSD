@@ -644,8 +644,6 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     end
     inherited actInsertMask: TdsdInsertUpdateAction [16]
     end
-    inherited actDisabled: TOpenChoiceForm [17]
-    end
     inherited actReCompleteList: TMultiAction [18]
     end
     inherited MovementProtocolOpenForm: TdsdOpenForm [19]

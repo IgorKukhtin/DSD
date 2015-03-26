@@ -10,7 +10,8 @@ uses
   dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore,
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit, cxSplitter,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TUserForm = class(TParentForm)
@@ -41,7 +42,7 @@ type
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dsdChoiceGuides: TdsdChoiceGuides;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     spErasedUnErased: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -71,6 +72,11 @@ type
     HorSplitter: TcxSplitter;
     ChoiceUnit: TOpenChoiceForm;
     UpdatePeriodClose: TdsdUpdateDataSet;
+    BranchCode: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -178,6 +178,8 @@ type
     cbReceiptChild: TCheckBox;
     cbReceipt: TCheckBox;
     cbContractConditionDocument: TCheckBox;
+    cbGoodsByGoodsKind: TCheckBox;
+    cbOrderType: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -403,6 +405,8 @@ type
     procedure pLoadGuide_PriceListItems;
     procedure pLoadGuide_GoodsProperty;
     procedure pLoadGuide_GoodsPropertyValue;
+    procedure pLoadGuide_GoodsByGoodsKind;
+    procedure pLoadGuide_OrderType;
 
     procedure pLoadGuide_InfoMoneyGroup;
     procedure pLoadGuide_InfoMoneyDestination;
@@ -1559,6 +1563,9 @@ begin
      if not fStop then pLoadGuide_PriceListItems;
      if not fStop then pLoadGuide_GoodsProperty;
      if not fStop then pLoadGuide_GoodsPropertyValue;
+     if not fStop then pLoadGuide_GoodsByGoodsKind;
+     if not fStop then pLoadGuide_OrderType;
+
 
      if not fStop then pLoadGuide_InfoMoneyGroup;
      if not fStop then pLoadGuide_InfoMoneyDestination;
@@ -2393,7 +2400,8 @@ begin
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , GoodsProperty.Erased as Erased');
         Add('     , 0 AS TradeMarkId_PG');
-        Add('     , case when Goods.ParentId in (5874)'
+        //Add('     , case when Goods.ParentId in (5874)'
+        Add('     , case when GoodsProperty.InfoMoneyCode in (30102)' // “Û¯ÂÌÍ‡
            +'                 then Unit_Alan.Id_Postgres_Business_Chapli'
            +'            when fCheckGoodsParentID(3251,Goods.ParentId) =zc_rvYes()'
            +'                 then Unit_Alan.Id_Postgres_Business_TWO'
@@ -4609,7 +4617,8 @@ begin
         Add('     join dba.GoodsProperty_i as GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail_byServer.GoodsPropertyId');
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
-        Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                                       and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('     left outer join dba._pgUnit as _pgUnitKiev       on _pgUnitKiev.ObjectCode      = 22020');
         Add('     left outer join dba._pgUnit as _pgUnitKrRog      on _pgUnitKrRog.ObjectCode     = 22030');
         Add('     left outer join dba._pgUnit as _pgUnitCherkassi  on _pgUnitCherkassi.ObjectCode = 22040');
@@ -4704,7 +4713,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = GoodsProperty_Detail.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where KindPackage.Id_Postgres is not null');
         Add('order by ObjectId');
         Open;
@@ -4796,6 +4806,7 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMaskId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inReceiptCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
@@ -4820,6 +4831,7 @@ begin
              if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMaskId').Value:=0;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inReceiptCode').Value:=FieldByName('inReceiptCode').AsString;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('inComment').AsString;
@@ -4903,7 +4915,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_Object_ReceiptChild';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_ReceiptChild_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -8454,7 +8466,8 @@ begin
         //Add('     left outer join dba.KindPackage on KindPackage.Id=GoodsProperty_Detail.KindPackageId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = GoodsProperty_Detail.KindPackageId');
-        Add('                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
 
         //        Add('where is4=zc_rvYes()'
         Add('where (KindPackage.Id_Postgres is not null or trim (GoodsProperty_Detail.GoodsName_Client)<> '+FormatToVarCharServer_notNULL('')+' or trim (GoodsProperty_Detail.GoodsName_GD)<> '+FormatToVarCharServer_notNULL('')
@@ -8523,6 +8536,87 @@ begin
      end;
      //
      myDisabledCB(cbGoodsPropertyValue);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_GoodsByGoodsKind;
+begin
+     if (not cbGoodsByGoodsKind.Checked)or(not cbGoodsByGoodsKind.Enabled) then exit;
+     //
+     myEnabledCB(cbGoodsByGoodsKind);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty_Detail.Id as ObjectId');
+        Add('     , GoodsProperty.GoodsCode');
+        Add('     , GoodsProperty.GoodsName');
+        Add('     , KindPackage.KindPackageName');
+        Add('     , Ves_Upakovka as inWeightPackage');
+        Add('     , Ves_onUpakovka as inWeightTotal');
+        Add('     , isSale as inisOrder');
+        Add('     , GoodsProperty.Id_Postgres as inGoodsId');
+        Add('     , KindPackage.Id_Postgres as inGoodsKindId');
+        Add('     , GoodsProperty_Detail.Id_Postgres as Id_Postgres');
+        Add('from dba.GoodsProperty_Detail');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=GoodsProperty_Detail.GoodsPropertyId');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = GoodsProperty_Detail.KindPackageId');
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
+        Add('where Id_Postgres <> 0 or Ves_onUpakovka <> 0 or Ves_Upakovka <> 0 or isSale = zc_rvYes()');
+        Add('order by GoodsProperty.GoodsName, KindPackage.KindPackageName');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_GoodsByGoodsKind';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inWeightPackage',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inWeightTotal',ftfloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inisOrder',ftBoolean,ptInput, false);
+
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('inGoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inWeightPackage').Value:=FieldByName('inWeightPackage').AsFloat;
+             toStoredProc.Params.ParamByName('inWeightTotal').Value:=FieldByName('inWeightTotal').AsFloat;
+             if FieldByName('inisOrder').AsInteger = zc_rvYes
+             then toStoredProc.Params.ParamByName('inisOrder').Value:=true
+             else toStoredProc.Params.ParamByName('inisOrder').Value:=false;
+             ;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbGoodsByGoodsKind);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_OrderType;
+begin
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_InfoMoneyGroup;
@@ -10040,7 +10134,8 @@ begin
         Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG on _toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG.GoodsPropertyId = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and BillItems.Id is not null'
@@ -11145,7 +11240,8 @@ begin
         Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG on _toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG.GoodsPropertyId = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and BillItems.Id is not null'
@@ -11412,7 +11508,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and UnitFrom.PersonalId_Postgres is not null'
@@ -11696,7 +11793,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
            +'  and (isUnitFrom.UnitId is not null or (UnitFrom.PersonalId_Postgres is not null and Bill.ToId not in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())) or UnitFrom.ParentId in (4137, 8217))' // ÃŒ À»÷¿-¬—≈ + ¿¬“ŒÃŒ¡»À»
@@ -12086,7 +12184,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
 
         Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
            +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId'
@@ -13158,7 +13257,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = GoodsProperty.Id'
            +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = KindPackage.Id'
            +'                                                                           and Bill.BillDate between tmpBI_byDiscountWeight.StartDate and tmpBI_byDiscountWeight.EndDate'
@@ -13615,7 +13715,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = GoodsProperty.Id'
            +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = KindPackage.Id'
            +'                                                                           and Bill.BillDate between tmpBI_byDiscountWeight.StartDate and tmpBI_byDiscountWeight.EndDate'
@@ -13943,7 +14044,8 @@ begin
         Add('     left outer join dba.GoodsProperty_i as GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail_byServer.GoodsPropertyId');
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
-        Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('     left outer join dba.BillItems_i as BillItems_find on BillItems_find.Id = BillItems.BillItemsId_byLoad'
            +'                                                      and BillItems_find.GoodsPropertyId=GoodsProperty.Id'
            +'                                                      and BillItems_find.KindPackageId=GoodsProperty_Detail_byServer.KindPackageId'
@@ -14252,9 +14354,11 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('     left outer join dba.KindPackage as KindPackage_zakaz on KindPackage_zakaz.Id = BillItems.KindPackageId_zakaz');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and (Bill.BillKind in (zc_bkProductionInFromReceipt())'
            +'    or (Bill.BillKind=zc_bkIncomeToUnit() and (Bill.FromId in (5347)' //»«À»ÿ » œŒ œ–»’Œƒ” —Œ
@@ -14274,14 +14378,14 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ProductionUnion_Master';
+        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ProductionUnion_Master_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPartionClose',ftBoolean,ptInput,false);
+        toStoredProc.Params.AddParam ('inIsPartionClose',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inRealWeight',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCuterCount',ftFloat,ptInput, 0);
@@ -14301,11 +14405,9 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
-
              if FieldByName('PartionClose').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then toStoredProc.Params.ParamByName('inPartionClose').Value:=true
-             else toStoredProc.Params.ParamByName('inPartionClose').Value:=false;
-
+             then toStoredProc.Params.ParamByName('inIsPartionClose').Value:=true
+             else toStoredProc.Params.ParamByName('inIsPartionClose').Value:=false;
              toStoredProc.Params.ParamByName('inCount').Value:=FieldByName('shCount').AsFloat;
              toStoredProc.Params.ParamByName('inRealWeight').Value:=FieldByName('RealWeight').AsFloat;
              toStoredProc.Params.ParamByName('inCuterCount').Value:=FieldByName('CuterCount').AsFloat;
@@ -14319,6 +14421,7 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             //
              //
              Next;
              Application.ProcessMessages;
@@ -14359,7 +14462,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItemsReceipt.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItemsReceipt.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkProductionInFromReceipt())'
            +'  and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()'
@@ -14375,7 +14479,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ProductionUnion_Child';
+        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ProductionUnion_Child_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -14620,7 +14724,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkProduction())'
            +'  and BillItems.Id is not null'
@@ -14698,7 +14803,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkProduction())'
            +'  and BillItems.Id is not null'
@@ -15104,7 +15210,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkReturnToClient()'
            +'  and BillItems.Id is not null'
@@ -15522,7 +15629,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkReturnToClient()'
            +'  and BillItems.Id is not null'
@@ -15830,7 +15938,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
 
         if cbOnlyInsertDocument.Checked
         then Add('where isnull(BillItems.Id_Postgres,0)=0');
@@ -16162,7 +16271,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
            +'  and Bill.Id_Postgres>0'
@@ -16512,7 +16622,8 @@ begin
         Add('     left outer join dba.GoodsProperty_i as GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail_byServer.GoodsPropertyId');
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
-        Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                                       and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
            +'  and Bill.Id_Postgres>0'
@@ -17017,7 +17128,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and Bill.NalogId_PG>0'
@@ -17541,7 +17653,8 @@ begin
         Add('     left outer join dba.GoodsProperty_i as GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail_byServer.GoodsPropertyId');
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
-        Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and Bill.NalogId_PG>0'
@@ -18262,7 +18375,8 @@ begin
         Add('     left outer join dba.GoodsProperty_i as GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail_byServer.GoodsPropertyId');
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
-        Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
            +'  and Bill.NalogId_PG>0'
@@ -18303,8 +18417,9 @@ begin
         Add('     left outer join dba.GoodsProperty_Detail_byServer on GoodsProperty_Detail_byServer.Id = GoodsProperty_Detail_byLoad.Id_byLoad');
         Add('     left outer join dba.GoodsProperty_i as GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail_byServer.GoodsPropertyId');
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
-        Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
+        //Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
         Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
            +'  and BillItems_byParent.NalogId_PG>0'
@@ -19255,7 +19370,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where BillItems.Id > 0');
 
         Add('order by 2,3,1');
@@ -20071,7 +20187,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('     LEFT JOIN dba.PriceListItems_byHistory on PriceListItems_byHistory.GoodsPropertyId=BillItems.GoodsPropertyId'
            +'                                           and PriceListItems_byHistory.PriceListID = 2' // Œœ“Œ¬€≈ ÷≈Õ€
            +'                                           and Bill.BillDate between PriceListItems_byHistory.StartDate and PriceListItems_byHistory.EndDate');
@@ -20284,7 +20401,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind = zc_bkProductionInZakaz()'
            +'  and (isUnitFrom.UnitId is not null and isUnitTo.UnitId is not null)'
@@ -20699,7 +20817,8 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = ScaleHistory.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = ScaleHistory.KindPackageId');
-        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('     left join dba.PriceList_byHistory on PriceList_byHistory.Id=ScaleHistory.PriceListID');
         Add('     LEFT JOIN dba.PriceListItems_byHistory on PriceListItems_byHistory.GoodsPropertyId=ScaleHistory.GoodsPropertyId'
            +'                                           and PriceListItems_byHistory.PriceListID = ScaleHistory.PriceListID' // Œœ“Œ¬€≈ ÷≈Õ€
