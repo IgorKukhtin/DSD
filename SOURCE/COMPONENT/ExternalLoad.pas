@@ -321,7 +321,7 @@ begin
           Price := gfStrToFloat(ElementList[20]) / gfStrToFloat(ElementList[15]);
           ElementList[13] := trim(ElementList[13]);
           if (ElementList[13] = '') or (ElementList[13] = '.  .') then
-             ExpirationDate := OperDate
+             ExpirationDate := OperDate + 365
           else
              ExpirationDate := VarToDateTime(ElementList[13]);    // Срок годности
           // Проверяем задвоенные позиции

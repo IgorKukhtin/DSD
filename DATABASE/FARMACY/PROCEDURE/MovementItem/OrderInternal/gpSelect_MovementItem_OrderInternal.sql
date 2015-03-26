@@ -33,6 +33,11 @@ BEGIN
            , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)     AS GoodsId
            , COALESCE(tmpMI.GoodsCode, tmpGoods.GoodsCode) AS GoodsCode
            , COALESCE(tmpMI.GoodsName, tmpGoods.GoodsName) AS GoodsName
+           , COALESCE(tmpMI.isTOP, tmpGoods.isTOP)     AS isTOP
+           , CASE 
+               WHEN COALESCE(tmpMI.isTOP, tmpGoods.isTOP) THEN 12615935
+               ELSE 0
+             END                                           AS isTopColor
            , COALESCE(tmpMI.Multiplicity, tmpGoods.Multiplicity) AS Multiplicity
            , tmpMI.CalcAmount
            , tmpMI.Amount               AS Amount
@@ -57,6 +62,7 @@ BEGIN
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
                   , Object_Goods.MinimumLot                      AS Multiplicity
+                  , Object_Goods.isTOP                           AS isTOP
              FROM Object_Goods_View AS Object_Goods
              WHERE Object_Goods.ObjectId = vbObjectId AND Object_Goods.isErased = FALSE
                    AND inShowAll = true       
@@ -83,7 +89,7 @@ BEGIN
                             , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName) AS JuridicalName
                             , COALESCE(PriceList.ContractName, MinPrice.ContractName)   AS ContractName
                             , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice) AS SuperFinalPrice
-
+                            , Object_Goods.isTOP                           AS isTOP
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -162,6 +168,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 23.03.15                         * 
  05.02.15                         * 
  12.11.14                         * add MinimumLot
  05.11.14                         * add MakerName

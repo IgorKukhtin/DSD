@@ -5,29 +5,27 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
   Position = poDesigned
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1228
-  ExplicitHeight = 518
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 125
+    Top = 123
     Width = 1220
-    Height = 359
+    Height = 361
     TabOrder = 3
-    ExplicitTop = 82
-    ExplicitWidth = 1164
-    ExplicitHeight = 402
-    ClientRectBottom = 355
-    ClientRectRight = 1216
+    ExplicitTop = 123
+    ExplicitWidth = 1220
+    ExplicitHeight = 361
+    ClientRectBottom = 361
+    ClientRectRight = 1220
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1158
-      ExplicitHeight = 396
+      ExplicitWidth = 1220
+      ExplicitHeight = 361
       inherited cxGrid: TcxGrid
-        Width = 1214
-        Height = 353
-        ExplicitWidth = 1158
-        ExplicitHeight = 396
+        Width = 1220
+        Height = 361
+        ExplicitWidth = 1220
+        ExplicitHeight = 361
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -609,7 +607,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -696,6 +694,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
       end
       item
       end>
+    Top = 128
   end
   inherited spMovementComplete: TdsdStoredProc
     Left = 416

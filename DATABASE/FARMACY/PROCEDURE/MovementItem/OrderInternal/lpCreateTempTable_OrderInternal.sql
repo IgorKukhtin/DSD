@@ -76,7 +76,10 @@ BEGIN
               END::TFloat AS Percent
             , CASE ddd.Deferment 
                    WHEN 0 THEN FinalPrice
-                   ELSE FinalPrice * (100 - PriceSettings.PERCENt)/100
+                   ELSE CASE 
+                          WHEN ddd.isTOP  THEN FinalPrice
+                          ELSE FinalPrice * (100 - PriceSettings.PERCENt)/100
+                        END  
               END::TFloat AS SuperFinalPrice   
          FROM 
 
@@ -85,8 +88,10 @@ BEGIN
           , PriceList.Id AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
           , min(PriceList.amount) OVER (PARTITION BY MovementItemOrder.Id) AS MinPrice
-          , (PriceList.amount * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat AS FinalPrice
-          
+          , CASE 
+              WHEN Goods.isTOP THEN PriceList.amount
+              ELSE (PriceList.amount * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat 
+            END AS FinalPrice          
           , COALESCE(JuridicalSettings.Bonus, 0)::TFloat AS Bonus
 
           , Object_JuridicalGoods.Id AS GoodsId         
@@ -99,7 +104,7 @@ BEGIN
           , Contract.Id AS ContractId
           , Contract.ValueData AS ContractName
           , COALESCE(ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
-
+          , Goods.isTOP
     
        FROM MovementItemOrder 
               
@@ -135,7 +140,7 @@ BEGIN
 
   LEFT JOIN OBJECT AS MainGoods ON MainGoods.Id = MovementItemOrder.GoodsMainId 
   
-   LEFT JOIN OBJECT AS Goods-- Элемент документа заявка
+   LEFT JOIN Object_Goods_View AS Goods  -- Элемент документа заявка
      ON Goods.Id = MovementItemOrder.ObjectId
          
    WHERE  COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE 
@@ -152,6 +157,7 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.03.15                         *  
  17.02.15                         *  JuridicalSettings с бонусом и закрытием прайсов
  21.01.15                         *  учитываем наше юрлицо в закрытии прайсов
  05.12.14                         *  чуть оптимизировал

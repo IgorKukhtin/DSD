@@ -754,7 +754,10 @@ begin
              end;
         end
         else begin
-          FStyle.Color := ARecord.Values[ValueColumn.Index];
+          if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
+             FStyle.TextColor := ARecord.Values[ValueColumn.Index];
+             AStyle := FStyle
+          end;
         end;
       end;
 end;

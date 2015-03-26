@@ -1,7 +1,6 @@
 inherited ReportOrderGoodsForm: TReportOrderGoodsForm
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1079#1072#1103#1074#1082#1072#1093
   ClientWidth = 806
-  ExplicitLeft = -8
   ExplicitWidth = 814
   ExplicitHeight = 335
   PixelsPerInch = 96
@@ -53,10 +52,8 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
-            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 72
           end
           object colAmount: TcxGridDBColumn

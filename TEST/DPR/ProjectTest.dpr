@@ -648,7 +648,6 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TReport_ReceiptProductionAnalyzeForm, Report_ReceiptProductionAnalyzeForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

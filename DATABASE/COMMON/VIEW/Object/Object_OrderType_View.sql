@@ -3,7 +3,6 @@
 -- DROP VIEW IF EXISTS Object_OrderType_View;
 
 CREATE OR REPLACE VIEW Object_OrderType_View AS
-   SELECT 
        SELECT 
              Object_OrderType.Id          AS Id
            , Object_OrderType.ObjectCode  AS Code
