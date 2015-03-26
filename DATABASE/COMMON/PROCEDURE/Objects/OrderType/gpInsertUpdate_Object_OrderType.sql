@@ -55,7 +55,7 @@ $BODY$
                 AND ObjectLink_OrderType_Goods.ChildObjectId = inGoodsId
                 AND ObjectLink_OrderType_Goods.ObjectId <> COALESCE (ioId, 0))
    THEN 
-       RAISE EXCEPTION 'Ошибка.Значение Товар = <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId);
+       RAISE EXCEPTION 'Ошибка.Значение <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId);
    END IF;   
 
 

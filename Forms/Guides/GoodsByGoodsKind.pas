@@ -10,7 +10,7 @@ uses
   dxBar, cxClasses, cxPropertiesStore, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, Vcl.Controls, cxGrid,
   cxPCdxBarPopupMenu, Vcl.Menus, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit, cxCurrencyEdit;
 
 type
   TGoodsByGoodsKindForm = class(TAncestorEnumForm)

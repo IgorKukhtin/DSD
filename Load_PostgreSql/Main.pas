@@ -1566,9 +1566,6 @@ begin
      if not fStop then pLoadGuide_PriceListItems;
      if not fStop then pLoadGuide_GoodsProperty;
      if not fStop then pLoadGuide_GoodsPropertyValue;
-     if not fStop then pLoadGuide_GoodsByGoodsKind;
-     if not fStop then pLoadGuide_OrderType;
-
 
      if not fStop then pLoadGuide_InfoMoneyGroup;
      if not fStop then pLoadGuide_InfoMoneyDestination;
@@ -1581,6 +1578,8 @@ begin
      if not fStop then pLoadGuide_ProfitLoss;
 
      if not fStop then pLoadGuide_GoodsProperty_Detail;
+     if not fStop then pLoadGuide_GoodsByGoodsKind;
+     if not fStop then pLoadGuide_OrderType;
      //
      if not fStop then pLoadGuide_Receipt;
      if not fStop then pLoadGuide_ReceiptChild;
@@ -8673,7 +8672,7 @@ begin
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
-             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('inGoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('inGoodsKindId').AsInteger;
              toStoredProc.Params.ParamByName('inWeightPackage').Value:=FieldByName('inWeightPackage').AsFloat;
              toStoredProc.Params.ParamByName('inWeightTotal').Value:=FieldByName('inWeightTotal').AsFloat;
              if FieldByName('inisOrder').AsInteger = zc_rvYes
