@@ -29,20 +29,21 @@ BEGIN
                            , MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                           , MIContainer.Amount                      AS Amount_Separate_out
+                           , MIContainer.Amount *(-1)                AS Amount_Separate_out
                       FROM MovementItemContainer AS MIContainer
-                           INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                       /*    INNER JOIN ContainerLinkObject AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
                                                          AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                                                          AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                                                         */
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                          ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
-                        AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                        AND (MIContainer.WhereObjectId_Analyzer = inUnitId or inUnitId = 0)
                         AND MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
-                        AND MIContainer.IsActive = TRUE
+                        AND MIContainer.IsActive = False
                         AND MIContainer.Amount <> 0
                       )
        
@@ -55,25 +56,90 @@ BEGIN
                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                            , MIContainer.Amount                      AS Amount_Separate_in
                       FROM MovementItemContainer AS MIContainer
-                           INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                          /* INNER JOIN ContainerLinkObject AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
                                                          AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                                                          AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                                                         */
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                          ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
-                        AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                        AND (MIContainer.WhereObjectId_Analyzer = inUnitId or inUnitId = 0)
                         AND MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
-                        AND MIContainer.IsActive = False
+                        AND MIContainer.IsActive = True
                         AND MIContainer.Amount <> 0
                       )
-       
-       , tmpMI_Union AS (SELECT GoodsId, PartionGoodsId, Sum(tmpMI_Separate_Out.Amount_Separate_out) as Amount_Separate_out, 0::TFloat AS Amount_Separate_in
-                         FROM tmpMI_Separate_Out
-                         GROUP BY GoodsId, PartionGoodsId
-                        )
+       ,
+              -- приход
+        tmpMI_Send_in AS
+                     (SELECT MIContainer.MovementItemId              AS MovementItemId
+                           , MIContainer.ContainerId                 AS ContainerId
+                           , MIContainer.ObjectId_Analyzer           AS GoodsId
+                           , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                           , MIContainer.Amount                      AS Amount_Send_in
+                      FROM MovementItemContainer AS MIContainer
+                          /* INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                          ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
+                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                         AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                                                         */
+                           LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                         ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
+                                                        AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                      WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                        AND MIContainer.DescId = zc_MIContainer_Count()
+                        AND (MIContainer.WhereObjectId_Analyzer = inUnitId or inUnitId = 0)
+                        AND MIContainer.MovementDescId = zc_Movement_Send()
+                        AND MIContainer.IsActive = TRUE
+                        AND MIContainer.Amount <> 0
+                      )
+             , 
+        -- приход
+        tmpMI_Send_out AS
+                     (SELECT MIContainer.MovementItemId              AS MovementItemId
+                           , MIContainer.ContainerId                 AS ContainerId
+                           , MIContainer.ObjectId_Analyzer           AS GoodsId
+                           , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                           , MIContainer.Amount *(-1)                AS Amount_Send_out
+                      FROM MovementItemContainer AS MIContainer
+                          /* INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                          ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
+                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                         AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                                                         */
+                           LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                         ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
+                                                        AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                      WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                        AND MIContainer.DescId = zc_MIContainer_Count()
+                        AND (MIContainer.WhereObjectId_Analyzer = inUnitId or inUnitId = 0)
+                        AND MIContainer.MovementDescId = zc_Movement_Send()
+                        AND MIContainer.IsActive = FALSE
+                        AND MIContainer.Amount <> 0
+                      )
+      
+       , tmpMI_Union AS (SELECT tmp.GoodsId, tmp.PartionGoodsId
+                             , SUM(COALESCE(tmp.Amount_Separate_out,0))::tfloat as Amount_Separate_out
+                             , SUM(COALESCE(tmp.Amount_Separate_in,0))::tfloat as Amount_Separate_in
+                             , SUM(COALESCE(tmp.Amount_Send_in,0))::tfloat as Amount_Send_in
+                             , SUM(COALESCE(tmp.Amount_Send_out,0))::tfloat as Amount_Send_out
+                         From (
+                               SELECT tmp_Out.GoodsId, tmp_Out.PartionGoodsId,  tmp_Out.Amount_Separate_out,  0::TFloat AS Amount_Separate_in, 0::TFloat AS Amount_Send_in, 0::TFloat AS Amount_Send_out
+                               FROM tmpMI_Separate_Out tmp_Out
+                             union all
+                               SELECT tmp_In.GoodsId, tmp_In.PartionGoodsId,   0::TFloat AS Amount_Separate_out, tmp_In.Amount_Separate_in, 0::TFloat AS Amount_Send_in, 0::TFloat AS Amount_Send_out
+                               FROM tmpMI_Separate_in tmp_In
+                             union all
+                               SELECT Send_in.GoodsId, Send_in.PartionGoodsId,   0::TFloat AS Amount_Separate_out, 0::TFloat AS Amount_Separate_in, Send_in.Amount_Send_in, 0::TFloat AS Amount_Send_out
+                               FROM tmpMI_Send_in Send_in
+                             union all
+                               SELECT Send_out.GoodsId, Send_out.PartionGoodsId, 0::TFloat AS Amount_Separate_out, 0::TFloat AS Amount_Separate_in, 0::TFloat AS Amount_Send_out, Send_out.Amount_Send_out
+                               FROM tmpMI_Send_out Send_out
+                               ) as tmp
+                          GROUP BY tmp.GoodsId, tmp.PartionGoodsId
+                         )
 
        
     SELECT ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -84,12 +150,11 @@ BEGIN
          , Object_Measure.ValueData               AS MeasureName
          , MovementString_PartionGoods.ValueData      AS PartionGoodsDate
 
-         , tmpMI_Union.Amount_Separate_out::TFloat 
-         , tmpMI_Union.Amount_Separate_in::TFloat 
+         , tmpMI_Union.Amount_Separate_out
+         , tmpMI_Union.Amount_Separate_in
            
-         , 0::TFloat AS Amount_Send_out
-          
-         , 0::TFloat AS Amount_Send_in  
+         , tmpMI_Union.Amount_Send_out::TFloat AS Amount_Send_out
+         , tmpMI_Union.Amount_Send_in::TFloat  AS Amount_Send_in   
 
      FROM tmpMI_Union
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpMI_Union.GoodsId
@@ -121,3 +186,5 @@ ALTER FUNCTION gpReport_GoodsMI_Defroster (TDateTime, TDateTime, Integer, TVarCh
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_Defroster(inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inUnitId:= 8447, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+--select * from gpReport_GoodsMI_Defroster(inStartDate := ('30.12.2014')::TDateTime , inEndDate := ('01.01.2015')::TDateTime , inUnitId := 0 ,  inSession := '5');
+

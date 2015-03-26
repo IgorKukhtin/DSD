@@ -211,7 +211,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             Width = 80
           end
           object clAmount_Separate_in: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Amount_Separate_in'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -221,7 +221,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             Width = 80
           end
           object clAmount_Send_in: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Amount_Send_in'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -231,7 +231,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             Width = 80
           end
           object clAmount_Separate_out: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'Amount_Separate_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -241,7 +241,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             Width = 60
           end
           object clAmount_Send_out: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'Amount_Send_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
