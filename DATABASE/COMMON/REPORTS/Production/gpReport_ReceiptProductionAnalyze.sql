@@ -76,7 +76,7 @@ BEGIN
      OPEN Cursor1 FOR
      
      WITH GoodsMIContainer AS 
-        ( SELECT MIContainer.Id, MIContainer.Amount, MIReceipt.ObjectId AS ReceiptId 
+        ( SELECT MIContainer.MovementItemId, MIContainer.Amount, MIReceipt.ObjectId AS ReceiptId 
             FROM MovementItemContainer AS MIContainer
                   INNER JOIN MovementLinkObject AS MLO_From
                           ON MLO_From.MovementId = MIContainer.MovementId
@@ -99,7 +99,8 @@ BEGIN
    , SummMIReceiptAmount  AS (SELECT SUM(MIContainer.Amount) AS AmountSumm, GoodsMIContainer.ReceiptId 
                                FROM GoodsMIContainer
                                JOIN MovementItemContainer AS MIContainer 
-                                 ON MIContainer.ParentId = GoodsMIContainer.Id
+                                 ON MIContainer.MovementItemId = GoodsMIContainer.MovementItemId
+                                AND MIContainer.DescId = zc_MIContainer_Summ()
                            GROUP BY GoodsMIContainer.ReceiptId)
 
      SELECT  DD.MainReceiptid, ObjectFloat_Value.valuedata AS VALUE, ObjectString_Goods_GoodsGroupFull.valuedata AS GoodsGroupNameFull,
