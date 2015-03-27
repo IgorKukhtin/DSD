@@ -26,8 +26,8 @@ type
     FormParams: TdsdFormParams;
     clAmount_Sh: TcxGridDBColumn;
     clAmount_Send_in: TcxGridDBColumn;
-    clAmountPartner_Sh: TcxGridDBColumn;
-    clAmountChangePercent_Sh: TcxGridDBColumn;
+    cAmount_Loss: TcxGridDBColumn;
+    clAmount_ProdUnion: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
