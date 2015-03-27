@@ -1,9 +1,10 @@
 inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1092#1088#1086#1089#1090#1077#1088' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084'>'
   ClientHeight = 534
   ClientWidth = 1058
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -285
   ExplicitWidth = 1074
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -50,7 +51,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Sh
+              Column = cAmount_Loss
             end
             item
               Format = ',0.####'
@@ -63,7 +64,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountChangePercent_Sh
+              Column = clAmount_ProdUnion
             end
             item
               Format = ',0.####'
@@ -119,7 +120,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Sh
+              Column = cAmount_Loss
             end
             item
               Format = ',0.####'
@@ -132,7 +133,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountChangePercent_Sh
+              Column = clAmount_ProdUnion
             end
             item
               Format = ',0.####'
@@ -260,9 +261,9 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clAmountChangePercent_Sh: TcxGridDBColumn
+          object clAmount_ProdUnion: TcxGridDBColumn
             Caption = #1092#1072#1082#1090' '#1087#1088#1086#1080#1079'-'#1074#1086' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'AmountChangePercent_Sh'
+            DataBinding.FieldName = 'Amount_ProdUnion'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -270,9 +271,9 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clAmountPartner_Sh: TcxGridDBColumn
+          object cAmount_Loss: TcxGridDBColumn
             Caption = #1092#1072#1082#1090' '#1089#1087#1080#1089#1072#1085#1080#1077' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'AmountPartner_Sh'
+            DataBinding.FieldName = 'Amount_Loss'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -301,14 +302,14 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -417,14 +418,14 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
           ToParam.ParamType = ptInputOutput
         end>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1092#1088#1086#1089#1090#1077#1088' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1092#1088#1086#1089#1090#1077#1088' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084'>'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;GoodsGroupName'
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -443,26 +444,15 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
           ParamType = ptInput
         end
         item
-          Name = 'GoodsGroupName'
+          Name = 'UnitName'
           Value = ''
-          Component = GoodsGroupGuides
+          Component = UnitGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
-        end
-        item
-          Name = 'JuridicalName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-        end
-        item
-          Name = 'ReportType'
-          Value = '2'
-          ParamType = ptInput
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+      ReportName = #1044#1077#1092#1088#1086#1089#1090#1077#1088' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
+      ReportNameParam.Value = #1044#1077#1092#1088#1086#1089#1090#1077#1088' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -631,10 +621,6 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintByGoods'
         end
         item
           Visible = True
