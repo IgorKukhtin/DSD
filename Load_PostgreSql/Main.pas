@@ -10041,7 +10041,7 @@ begin
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_Income()'
                                  );
-                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)or(FieldByName('findId').AsInteger=0)
+                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)//or(FieldByName('findId').AsInteger=0)
                   then begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
@@ -10534,7 +10534,7 @@ begin
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_Income()'
                                  );
-                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)or(FieldByName('findId').AsInteger=0)
+                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)//or(FieldByName('findId').AsInteger=0)
                   then begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
@@ -12931,7 +12931,7 @@ begin
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_ReturnIn()'
                                  );
-                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)or(FieldByName('findId').AsInteger=0)
+                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)//or(FieldByName('findId').AsInteger=0)
                   then begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
@@ -13050,7 +13050,7 @@ begin
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_ReturnIn()'
                                  );
-                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)or(FieldByName('findId').AsInteger=0)
+                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)//or(FieldByName('findId').AsInteger=0)
                   then begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
@@ -15165,7 +15165,7 @@ begin
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_ReturnOut()'
                                  );
-                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)or(FieldByName('findId').AsInteger=0)
+                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)//or(FieldByName('findId').AsInteger=0)
                   then begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
@@ -15582,7 +15582,7 @@ begin
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_ReturnOut()'
                                  );
-                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)or(FieldByName('findId').AsInteger=0)
+                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)//or(FieldByName('findId').AsInteger=0)
                   then begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;

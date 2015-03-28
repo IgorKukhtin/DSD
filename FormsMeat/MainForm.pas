@@ -488,7 +488,7 @@ type
     N39: TMenuItem;
     actOrderInternal: TdsdOpenForm;
     actOrderExternalUnit: TdsdOpenForm;
-    N40: TMenuItem;
+    miOrderExternalUnit: TMenuItem;
     miReport_JuridicalDefermentIncome: TMenuItem;
     actReport_JuridicalDefermentIncome: TdsdOpenForm;
     miOrderInternal: TMenuItem;
@@ -516,6 +516,11 @@ type
     actReport_GoodsMI_Defroster: TdsdOpenForm;
     N51: TMenuItem;
     N52: TMenuItem;
+    actMemberExternal: TdsdOpenForm;
+    miMemberExternal: TMenuItem;
+    actTransportGoods: TdsdOpenForm;
+    N41: TMenuItem;
+    miTransportGoods: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

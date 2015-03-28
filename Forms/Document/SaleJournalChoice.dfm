@@ -1,4 +1,4 @@
-inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
+inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
@@ -340,35 +340,11 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     inherited deEnd: TcxDateEdit
       EditValue = 42005d
     end
-    object edIsRegisterDate: TcxCheckBox
-      Left = 427
-      Top = 5
-      Action = actRefresh
-      Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080'>'
-      TabOrder = 4
-      Width = 262
-    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = deEnd
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = deStart
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = edIsRegisterDate
-        Properties.Strings = (
-          'Checked')
-      end>
     Left = 40
     Top = 243
   end
@@ -457,7 +433,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Tax_Choice'
+    StoredProcName = 'gpSelect_Movement_Sale'
     Params = <
       item
         Name = 'instartdate'
@@ -474,9 +450,8 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         ParamType = ptInput
       end
       item
-        Name = 'inIsRegisterDate'
+        Name = 'inIsPartnerDate'
         Value = 'False'
-        Component = edIsRegisterDate
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -622,7 +597,6 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = PeriodChoice
       end
       item
-        Component = edIsRegisterDate
       end>
     Left = 408
     Top = 344

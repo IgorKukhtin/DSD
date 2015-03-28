@@ -538,8 +538,8 @@
 				<Form>ModelServiceEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\StoragePlace_Object.pas">
-				<Form>StoragePlace_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MemberPlace_Object.pas">
+				<Form>MemberPlace_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_TransportHoursWork.pas">
@@ -1018,12 +1018,12 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\ServiceTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\CityKind.pas">
-				<Form>CityKindForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MemberExternal.pas">
+				<Form>MemberExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\CityKindEdit.pas">
-				<Form>CityKindEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MemberExternalEdit.pas">
+				<Form>MemberExternalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\ContractConditionKind.pas">
@@ -1560,12 +1560,12 @@
 			<DCCReference Include="..\SOURCE\Movement\All\InventoryTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\ZakazExternalTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\ZakazInternalTest.pas"/>
-			<DCCReference Include="..\..\Forms\Document\FounderService.pas">
-				<Form>FounderServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\TransportGoods.pas">
+				<Form>TransportGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\FounderServiceJournal.pas">
-				<Form>FounderServiceJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\TransportGoodsJournal.pas">
+				<Form>TransportGoodsJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\PeriodClose.pas">
@@ -1609,8 +1609,8 @@
 				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TaxJournalChoice.pas">
-				<Form>TaxJournalChoiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\SaleJournalChoice.pas">
+				<Form>SaleJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_OrderJournal.pas">
@@ -1919,6 +1919,30 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Defroster.pas">
 				<Form>Report_GoodsMI_DefrosterForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CityKind.pas">
+				<Form>CityKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CityKindEdit.pas">
+				<Form>CityKindEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\FounderService.pas">
+				<Form>FounderServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\FounderServiceJournal.pas">
+				<Form>FounderServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StoragePlace_Object.pas">
+				<Form>StoragePlace_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TaxJournalChoice.pas">
+				<Form>TaxJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

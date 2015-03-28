@@ -171,7 +171,7 @@ inherited SaleJournalForm: TSaleJournalForm
             Width = 55
           end
           object colOperDatePartner: TcxGridDBColumn [3]
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -197,7 +197,7 @@ inherited SaleJournalForm: TSaleJournalForm
             Width = 60
           end
           object colInvNumberPartner: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -639,6 +639,7 @@ inherited SaleJournalForm: TSaleJournalForm
     object actChecked: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spChecked
       StoredProcList = <
         item
@@ -692,6 +693,7 @@ inherited SaleJournalForm: TSaleJournalForm
     object actTax: TdsdExecStoredProc [22]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTax
       StoredProcList = <
         item
@@ -952,6 +954,7 @@ inherited SaleJournalForm: TSaleJournalForm
     object actSPPrintSaleProcName: TdsdExecStoredProc [31]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -962,6 +965,7 @@ inherited SaleJournalForm: TSaleJournalForm
     object actSPPrintSaleTaxProcName: TdsdExecStoredProc [32]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
@@ -972,6 +976,7 @@ inherited SaleJournalForm: TSaleJournalForm
     object actSPPrintSaleBillProcName: TdsdExecStoredProc [33]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameBill
       StoredProcList = <
         item

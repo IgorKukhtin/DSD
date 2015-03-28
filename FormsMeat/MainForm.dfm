@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1070,6 +1070,17 @@ inherited MainForm: TMainForm
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')'
       FormName = 'TSendTicketFuelJournalForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actMemberExternal: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077')'
+      Hint = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077')'
+      FormName = 'TMemberExternalForm'
+      FormNameParam.Value = 'TMemberExternalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2675,6 +2686,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actTransportGoods: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1086'-'#1090#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1058#1086#1074#1072#1088#1086'-'#1090#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      FormName = 'TTransportGoodsJournalForm'
+      FormNameParam.Value = 'TTransportGoodsJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited cxLocalizer: TcxLocalizer
     Top = 32
@@ -2768,8 +2790,14 @@ inherited MainForm: TMainForm
       object miOrderExternal: TMenuItem
         Action = actOrderExternal
       end
-      object N40: TMenuItem
+      object miOrderExternalUnit: TMenuItem
         Action = actOrderExternalUnit
+      end
+      object N41: TMenuItem
+        Caption = '-'
+      end
+      object miTransportGoods: TMenuItem
+        Action = actTransportGoods
       end
     end
     object N42: TMenuItem [1]
@@ -3047,6 +3075,9 @@ inherited MainForm: TMainForm
       end
       object miMember: TMenuItem
         Action = actMember
+      end
+      object miMemberExternal: TMenuItem
+        Action = actMemberExternal
       end
       object miWorkTimeKind: TMenuItem
         Action = actWorkTimeKind

@@ -163,19 +163,23 @@ CREATE OR REPLACE FUNCTION zc_Movement_GoodsQuality() RETURNS Integer AS $BODY$B
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_GoodsQuality', 'Качественное удостоверение' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_GoodsQuality');
 
+CREATE OR REPLACE FUNCTION zc_Movement_GoodsTransport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_GoodsTransport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_GoodsTransport', 'Товаро-транспортная накладная' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_GoodsTransport');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
- 09.02.15         												*    add zc_Movement_GoodsQuality
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.03.15         				 * add zc_Movement_GoodsTransport
+ 09.02.15         						* add zc_Movement_GoodsQuality
  03.09.14         * add zc_Movement_FounderService
- 04.07.14                      	                 		        *  + zc_Movement_PriceList
- 06.06.14                                                       *    change Zakaz to Order  zc_Movement_OrderInternal, zc_Movement_OrderExternal
+ 04.07.14                      	                 		* + zc_Movement_PriceList
+ 06.06.14                                                       * change Zakaz to Order  zc_Movement_OrderInternal, zc_Movement_OrderExternal
  29.05.14         * add zc_Movement_PriceCorrective
  22.04.14         * add TransferDebtOut, TransferDebtIn
  11.03.14         * add zc_Movement_WeighingPartner
- 17.02.14         												*    add zc_Movement_ProfitLossService
- 08.02.14         												*    add zc_Movement_Tax, zc_Movement_TaxCorrective
+ 17.02.14         						* add zc_Movement_ProfitLossService
+ 08.02.14         						* add zc_Movement_Tax, zc_Movement_TaxCorrective
  24.01.14         *
  14.01.14                                        * add zc_Movement_LossDebt
  22.12.13         * add  zc_Movement_PersonalAccount, zc_Movement_TrasportService

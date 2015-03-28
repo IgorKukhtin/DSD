@@ -1,7 +1,7 @@
-object CityKindForm: TCityKindForm
+object MemberExternalForm: TMemberExternalForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077')>'
   ClientHeight = 332
   ClientWidth = 440
   Color = clBtnFace
@@ -29,7 +29,7 @@ object CityKindForm: TCityKindForm
     LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -57,16 +57,10 @@ object CityKindForm: TCityKindForm
         Width = 69
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 212
-      end
-      object clShortName: TcxGridDBColumn
-        Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
-        DataBinding.FieldName = 'ShortName'
-        HeaderAlignmentVert = vaCenter
-        Width = 88
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -82,12 +76,12 @@ object CityKindForm: TCityKindForm
       GridView = cxGridDBTableView
     end
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
     Left = 48
     Top = 96
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 40
@@ -167,6 +161,14 @@ object CityKindForm: TCityKindForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -241,6 +243,10 @@ object CityKindForm: TCityKindForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -249,10 +255,10 @@ object CityKindForm: TCityKindForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -266,8 +272,8 @@ object CityKindForm: TCityKindForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCityKindEditForm'
-      FormNameParam.Value = 'TCityKindEditForm'
+      FormName = 'TMemberExternalEditForm'
+      FormNameParam.Value = 'TMemberExternalEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -275,7 +281,7 @@ object CityKindForm: TCityKindForm
           Value = Null
         end>
       isShowModal = True
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -285,20 +291,20 @@ object CityKindForm: TCityKindForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TCityKindEditForm'
-      FormNameParam.Value = 'TCityKindEditForm'
+      FormName = 'TMemberExternalEditForm'
+      FormNameParam.Value = 'TMemberExternalEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
       isShowModal = True
       ActionType = acUpdate
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -315,7 +321,7 @@ object CityKindForm: TCityKindForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -331,7 +337,7 @@ object CityKindForm: TCityKindForm
       ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -340,14 +346,14 @@ object CityKindForm: TCityKindForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -377,29 +383,55 @@ object CityKindForm: TCityKindForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
         end>
       isShowModal = False
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_CityKind'
-    DataSet = ClientDataSet
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_MemberExternal'
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 40
     Top = 208
@@ -416,7 +448,7 @@ object CityKindForm: TCityKindForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>

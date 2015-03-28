@@ -168,7 +168,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Width = 55
           end
           object colOperDatePartner: TcxGridDBColumn [3]
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -194,7 +194,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Width = 60
           end
           object colInvNumberPartner: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -644,6 +644,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actChecked: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spChecked
       StoredProcList = <
         item
@@ -656,6 +657,25 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSale_OrderForm'
       FormNameParam.Value = 'TSale_OrderForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actMovementCheck: TdsdOpenForm [13]
       Category = 'DSDLib'
@@ -679,6 +699,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTax
       StoredProcList = <
         item
@@ -939,6 +960,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actSPPrintSaleProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -949,6 +971,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actSPPrintSaleTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
@@ -959,6 +982,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actSPPrintSaleBillProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameBill
       StoredProcList = <
         item

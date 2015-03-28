@@ -221,7 +221,7 @@ uses
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UnilWin in '..\..\SOURCE\UnilWin.pas',
   ModelServiceEdit in '..\..\Forms\ModelServiceEdit.pas' {ModelServiceEditForm: TParentForm},
-  StoragePlace_Object in '..\..\Forms\Guides\StoragePlace_Object.pas' {StoragePlace_ObjectForm: TParentForm},
+  MemberPlace_Object in '..\..\Forms\Guides\MemberPlace_Object.pas' {MemberPlace_ObjectForm: TParentForm},
   Report_TransportHoursWork in '..\..\Forms\Report\Report_TransportHoursWork.pas' {Report_TransportHoursWorkForm: TParentForm},
   StaffListChoice in '..\..\Forms\StaffListChoice.pas' {StaffListChoiceForm: TParentForm},
   StaffList in '..\..\Forms\StaffList.pas' {StaffListForm: TParentForm},
@@ -360,8 +360,8 @@ uses
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
   PersonalReport in '..\..\Forms\Document\PersonalReport.pas' {PersonalReportForm: TParentForm},
   ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
-  CityKind in '..\..\Forms\Guides\CityKind.pas' {CityKindForm: TParentForm},
-  CityKindEdit in '..\..\Forms\Guides\CityKindEdit.pas' {CityKindEditForm: TParentForm},
+  MemberExternal in '..\..\Forms\Guides\MemberExternal.pas' {MemberExternalForm: TParentForm},
+  MemberExternalEdit in '..\..\Forms\Guides\MemberExternalEdit.pas' {MemberExternalEditForm: TParentForm},
   ContractConditionKind in '..\..\Forms\Kind\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
   PeriodClose_User in '..\..\Forms\System\PeriodClose_User.pas' {PeriodClose_UserForm: TParentForm},
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
@@ -533,8 +533,8 @@ uses
   InventoryTest in '..\SOURCE\Movement\All\InventoryTest.pas',
   ZakazExternalTest in '..\SOURCE\Movement\All\ZakazExternalTest.pas',
   ZakazInternalTest in '..\SOURCE\Movement\All\ZakazInternalTest.pas',
-  FounderService in '..\..\Forms\Document\FounderService.pas' {FounderServiceForm: TParentForm},
-  FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm},
+  TransportGoods in '..\..\Forms\Document\TransportGoods.pas' {TransportGoodsForm: TParentForm},
+  TransportGoodsJournal in '..\..\Forms\Document\TransportGoodsJournal.pas' {TransportGoodsJournalForm: TParentForm},
   PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
   CorrespondentAccount in '..\..\Forms\Guides\CorrespondentAccount.pas' {CorrespondentAccountForm: TParentForm},
   ProfitLossDirection_Object in '..\..\Forms\Guides\ProfitLossDirection_Object.pas' {ProfitLossDirection_ObjectForm: TParentForm},
@@ -546,7 +546,7 @@ uses
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
   ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  TaxJournalChoice in '..\..\Forms\Document\TaxJournalChoice.pas' {TaxJournalChoiceForm: TParentForm},
+  SaleJournalChoice in '..\..\Forms\Document\SaleJournalChoice.pas' {SaleJournalChoiceForm: TParentForm},
   Sale_OrderJournal in '..\..\Forms\Document\Sale_OrderJournal.pas' {Sale_OrderJournalForm: TParentForm},
   Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
   Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm},
@@ -639,7 +639,13 @@ uses
   PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm},
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm},
-  Report_GoodsMI_Defroster in '..\..\Forms\Report\Report_GoodsMI_Defroster.pas' {Report_GoodsMI_DefrosterForm: TParentForm};
+  Report_GoodsMI_Defroster in '..\..\Forms\Report\Report_GoodsMI_Defroster.pas' {Report_GoodsMI_DefrosterForm: TParentForm},
+  CityKind in '..\..\Forms\Guides\CityKind.pas' {CityKindForm: TParentForm},
+  CityKindEdit in '..\..\Forms\Guides\CityKindEdit.pas' {CityKindEditForm: TParentForm},
+  FounderService in '..\..\Forms\Document\FounderService.pas' {FounderServiceForm: TParentForm},
+  FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm},
+  StoragePlace_Object in '..\..\Forms\Guides\StoragePlace_Object.pas' {StoragePlace_ObjectForm: TParentForm},
+  TaxJournalChoice in '..\..\Forms\Document\TaxJournalChoice.pas' {TaxJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -649,6 +655,7 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TTaxJournalChoiceForm, TaxJournalChoiceForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.
