@@ -75,7 +75,7 @@ BEGIN
                                    , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
                                                -- MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
                                                THEN tmpMovement.AccountId
-                                          ELSE 0
+                                          ELSE tmpMovement.AccountId -- 0
                                      END AS AccountId
                                    , tmpMovement.AccountId AS AccountId_main
                                      -- Группы ОПиУ
@@ -380,7 +380,7 @@ BEGIN
                              , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
                                          -- tmpContainerSumm.InfoMoneyId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
                                          THEN tmpMovement.AccountId
-                                    ELSE 0
+                                    ELSE tmpMovement.AccountId -- 0
                                END AS AccountId 
 
                                -- Группы ОПиУ

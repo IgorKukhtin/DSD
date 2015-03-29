@@ -655,7 +655,6 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TTaxJournalChoiceForm, TaxJournalChoiceForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

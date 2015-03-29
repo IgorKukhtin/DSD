@@ -23,6 +23,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberName5 TVarChar
              , MemberName6 TVarChar
              , MemberName7 TVarChar
+             , FromName TVarChar, ToName TVarChar
+             , PaidKindName TVarChar
+             , TotalCountSh TFloat, TotalCountKg TFloat, TotalSumm TFloat
               )
 AS
 $BODY$
@@ -78,6 +81,13 @@ BEGIN
            , Object_Member6.ValueData AS MemberName6
            , Object_Member7.ValueData AS MemberName7
  
+           , Object_From.ValueData                AS FromName
+           , Object_To.ValueData                  AS ToName
+           , Object_PaidKind.ValueData            AS PaidKindName
+           , MovementFloat_TotalCountSh.ValueData AS TotalCountSh
+           , MovementFloat_TotalCountKg.ValueData AS TotalCountKg
+           , MovementFloat_TotalSumm.ValueData    AS TotalSumm
+
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_TransportGoods()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -99,6 +109,9 @@ BEGIN
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
                                          ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
@@ -148,11 +161,36 @@ BEGIN
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = Movement.ParentId
                                                AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Sale
-                                     ON MovementString_InvNumberPartner_Sale.MovementId =  Movement_Sale.Id
+                                     ON MovementString_InvNumberPartner_Sale.MovementId =  Movement.ParentId
                                     AND MovementString_InvNumberPartner_Sale.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Sale
-                                   ON MovementDate_OperDatePartner_Sale.MovementId =  Movement_Sale.Id
+                                   ON MovementDate_OperDatePartner_Sale.MovementId =  Movement.ParentId
                                   AND MovementDate_OperDatePartner_Sale.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.ParentId
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.ParentId
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement.ParentId
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId =  Movement_Sale.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  Movement_Sale.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement_Sale.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
       ;
   
 END;
@@ -167,4 +205,4 @@ ALTER FUNCTION gpSelect_Movement_TransportGoods (TDateTime, TDateTime, Boolean, 
 */
 
 -- тест
---  SELECT * FROM gpSelect_Movement_TransportGoods (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransportGoods (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())

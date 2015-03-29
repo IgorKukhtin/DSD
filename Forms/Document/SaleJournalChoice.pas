@@ -27,7 +27,6 @@ uses
 
 type
   TSaleJournalChoiceForm = class(TAncestorJournalForm)
-    colDateRegistered: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
@@ -37,7 +36,6 @@ type
     colTotalSummVAT: TcxGridDBColumn;
     colTotalSummMVAT: TcxGridDBColumn;
     colTotalSummPVAT: TcxGridDBColumn;
-    colTaxKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
     colChecked: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
@@ -45,13 +43,8 @@ type
     colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colPartnerCode: TcxGridDBColumn;
-    colPartnerName: TcxGridDBColumn;
-    colDocument: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
-    ContractTagName: TcxGridDBColumn;
     colContractCode: TcxGridDBColumn;
   private
     { Private declarations }

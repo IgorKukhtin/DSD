@@ -10,17 +10,17 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Width = 975
     Height = 480
     TabOrder = 3
-    ExplicitWidth = 841
+    ExplicitWidth = 975
     ExplicitHeight = 480
     ClientRectBottom = 480
     ClientRectRight = 975
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 841
+      ExplicitWidth = 975
       ExplicitHeight = 480
       inherited cxGrid: TcxGrid
         Width = 975
         Height = 480
-        ExplicitWidth = 841
+        ExplicitWidth = 975
         ExplicitHeight = 480
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -148,7 +148,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
             Width = 80
           end
           object PersonalDriverName: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+            Caption = #1060#1048#1054' '#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'PersonalDriverName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -247,7 +247,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   end
   inherited Panel: TPanel
     Width = 975
-    ExplicitWidth = 841
+    ExplicitWidth = 975
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -265,13 +265,49 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TFounderServiceForm'
+      FormName = 'TTransportGoodsForm'
       FormNameParam.Name = 'TFounderServiceForm'
-      FormNameParam.Value = 'TFounderServiceForm'
+      FormNameParam.Value = 'TTransportGoodsForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = 0
+          DataType = ftBoolean
+        end
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TFounderServiceForm'
-      FormNameParam.Value = 'TFounderServiceForm'
+      FormName = 'TTransportGoodsForm'
+      FormNameParam.Value = 'TTransportGoodsForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = False
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Sale'
+        end
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+        end>
     end
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False

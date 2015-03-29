@@ -860,6 +860,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
+
 end;
 
 procedure TLoadFormTest.LoadTransferDebtOutFormTest;
