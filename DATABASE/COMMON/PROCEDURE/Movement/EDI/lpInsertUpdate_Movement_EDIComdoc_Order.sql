@@ -177,11 +177,25 @@ BEGIN
                                WHERE MovementString_InvNumberPartner.ValueData = vbInvNumber
                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                               );
-         -- 
          IF vbMovementId_Order <> 0 
          THEN
+             -- взяли параметры у найденной заявки
              vbContractId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order ANd DescId = zc_MovementLinkObject_Contract());
              vbUnitId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order ANd DescId = zc_MovementLinkObject_To());
+         ELSE
+             -- проверка
+             IF EXISTS (SELECT Movement.Id
+                        FROM MovementString AS MovementString_InvNumberPartner
+                             INNER JOIN Movement ON Movement.Id = MovementString_InvNumberPartner.MovementId
+                                                AND Movement.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
+                                                AND Movement.DescId = zc_Movement_OrderExternal()
+                                                AND Movement.OperDate BETWEEN (vbOperDate - (INTERVAL '1 DAY')) AND (vbOperDate + (INTERVAL '1 DAY'))
+                        WHERE MovementString_InvNumberPartner.ValueData = vbInvNumber
+                          AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                       )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Найдена заявка № <%> с другим значением Контрагент <%>.', vbInvNumber, lfGet_Object_ValueData (vbPartnerId);
+             END IF;
          END IF;
          -- 
          vbIsFind_InvNumberPartner:= COALESCE (vbMovementId_Order, 0) > 0;

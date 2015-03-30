@@ -584,8 +584,8 @@ object MainForm: TMainForm
     end
     object cbPartnerInt: TCheckBox
       Tag = 10
-      Left = 151
-      Top = 148
+      Left = 156
+      Top = 145
       Width = 146
       Height = 17
       Caption = '2.6. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Int'
@@ -687,6 +687,15 @@ object MainForm: TMainForm
       Height = 17
       Caption = '6.4. '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       TabOrder = 51
+    end
+    object cbPartnerIntUpdate: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 167
+      Width = 135
+      Height = 17
+      Caption = '2.8. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Udate'
+      TabOrder = 52
     end
   end
   object DocumentPanel: TPanel

@@ -32,9 +32,9 @@
   object ceInvNumber: TcxCurrencyEdit [4]
     Left = 8
     Top = 34
-    Enabled = False
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 2
     Width = 129
   end
@@ -72,12 +72,13 @@
   object cePaidKind: TcxButtonEdit [10]
     Left = 312
     Top = 228
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 129
   end
@@ -89,18 +90,20 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 273
   end
   object ceInfoMoney: TcxButtonEdit [12]
     Left = 312
     Top = 179
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 273
   end
@@ -120,6 +123,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 10
     Width = 273
   end
@@ -136,6 +140,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end
@@ -147,12 +152,13 @@
   object ceContract: TcxButtonEdit [18]
     Left = 456
     Top = 228
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 129
   end
@@ -232,12 +238,13 @@
   object ceUnit: TcxButtonEdit [31]
     Left = 312
     Top = 129
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 31
     Width = 273
   end
@@ -400,8 +407,8 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 280
-    Top = 52
+    Left = 248
+    Top = 60
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TransportService'

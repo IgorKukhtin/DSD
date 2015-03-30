@@ -17,9 +17,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                Koeff9 TFloat, Koeff10 TFloat,
                Koeff11 TFloat, Koeff12 TFloat,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
-               GoodsGroupName TVarChar,
+               GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar
-               )
+             , GoodsGroupAnalystName TVarChar
+             , TradeMarkName TVarChar
+             , GoodsTagName TVarChar
+             , MeasureName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -60,11 +65,22 @@ BEGIN
            , Object_Goods.ObjectCode      AS GoodsCode
            , Object_Goods.ValueData       AS GoodsName 
            , Object_GoodsGroup.ValueData  AS GoodsGroupName 
-                     
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+
            , Object_Unit.Id           AS UnitId
            , Object_Unit.ObjectCode   AS UnitCode
            , Object_Unit.ValueData    AS UnitName 
-                                
+
+           , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName             
+           , Object_TradeMark.ValueData  AS TradeMarkName
+           , Object_GoodsTag.ValueData   AS GoodsTagName
+           , Object_Measure.ValueData    AS MeasureName
+
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+
        FROM Object AS Object_OrderType
            LEFT JOIN ObjectLink AS OrderType_Unit
                                 ON OrderType_Unit.ObjectId = Object_OrderType.Id
@@ -127,6 +143,33 @@ BEGIN
                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId    
 
+           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                  ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                 AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                  ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+             LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId             
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                  ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                  ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+             LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
        WHERE Object_OrderType.DescId = zc_Object_OrderType()
          AND (OrderType_Unit.ChildObjectId = inUnitId OR inUnitId = 0);
 
@@ -137,19 +180,18 @@ BEGIN
                           , Object_Goods.ObjectCode    AS GoodsCode 
                           , Object_Goods.ValueData     AS GoodsName
 
-                          , Object_GoodsGroup.Id        AS GoodsGroupId
-                          , Object_GoodsGroup.ValueData AS GoodsGroupName 
+                          , Object_InfoMoney_View.InfoMoneyCode
+                          , Object_InfoMoney_View.InfoMoneyGroupName
+                          , Object_InfoMoney_View.InfoMoneyDestinationName
+                          , Object_InfoMoney_View.InfoMoneyName
+
                      FROM Object_InfoMoney_View
                           INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                 ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                           INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                                            AND Object_Goods.isErased = FALSE
-                          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-                          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId    
-                     WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
+                     WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
                     )
          SELECT 
              COALESCE (Object_OrderType.Id, 0)::Integer           AS Id
@@ -177,11 +219,22 @@ BEGIN
            , Object_Goods.GoodsId        AS GoodsId
            , Object_Goods.GoodsCode      AS GoodsCode
            , Object_Goods.GoodsName      AS GoodsName 
-           , Object_Goods.GoodsGroupName AS GoodsGroupName 
+           , Object_GoodsGroup.ValueData AS GoodsGroupName 
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , Object_Unit.Id           AS UnitId
            , Object_Unit.ObjectCode   AS UnitCode
            , Object_Unit.ValueData    AS UnitName 
+
+           , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName             
+           , Object_TradeMark.ValueData  AS TradeMarkName
+           , Object_GoodsTag.ValueData   AS GoodsTagName
+           , Object_Measure.ValueData    AS MeasureName
+
+           , Object_Goods.InfoMoneyCode
+           , Object_Goods.InfoMoneyGroupName
+           , Object_Goods.InfoMoneyDestinationName
+           , Object_Goods.InfoMoneyName
 
          FROM tmpGoods AS Object_Goods
 
@@ -243,6 +296,32 @@ BEGIN
                                AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (OrderType_Unit.ChildObjectId, inUnitId)
                        
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.GoodsId
+                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId    
+           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                  ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.GoodsId
+                                 AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.GoodsId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                  ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.GoodsId
+                                 AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+             LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId             
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                  ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.GoodsId
+                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                  ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.GoodsId
+                                 AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+             LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+
       WHERE (OrderType_Unit.ChildObjectId = inUnitId OR inUnitId = 0 OR OrderType_Goods.ObjectId IS NULL)
      ;
      END IF;

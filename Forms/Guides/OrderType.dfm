@@ -1,8 +1,8 @@
 object OrderTypeForm: TOrderTypeForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072' '#1079#1072#1103#1074#1082#1080' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'>'
-  ClientHeight = 347
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084'>'
+  ClientHeight = 725
   ClientWidth = 1039
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,12 +21,13 @@ object OrderTypeForm: TOrderTypeForm
     Left = 0
     Top = 26
     Width = 1039
-    Height = 321
+    Height = 699
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 321
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,25 +48,17 @@ object OrderTypeForm: TOrderTypeForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 37
-      end
       object clUnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
+        Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
         DataBinding.FieldName = 'UnitCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 48
       end
       object clUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
         DataBinding.FieldName = 'UnitName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -77,7 +70,31 @@ object OrderTypeForm: TOrderTypeForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object clGoodsGroupAnalystName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+        DataBinding.FieldName = 'GoodsGroupAnalystName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
+      end
+      object clGoodsTagName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsTagName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clTradeMarkName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+        DataBinding.FieldName = 'TradeMarkName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
@@ -94,6 +111,15 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object clGoodsGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        DataBinding.FieldName = 'GoodsGroupNameFull'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
       end
       object clGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'
@@ -117,25 +143,62 @@ object OrderTypeForm: TOrderTypeForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 150
       end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1080#1087#1072' '#1088#1072#1089#1095#1077#1090#1072
-        DataBinding.FieldName = 'Name'
+      object clMeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Options.Editing = False
+        Width = 45
+      end
+      object clTermProduction: TcxGridDBColumn
+        Caption = #1057#1088#1086#1082' '#1087#1088#1086#1080#1079#1074'. '#1074' '#1076#1085#1103#1093
+        DataBinding.FieldName = 'TermProduction'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object clNormInDays: TcxGridDBColumn
+        Caption = #1053#1086#1088#1084#1072' '#1079#1072#1087#1072#1089' '#1074' '#1076#1085#1103#1093
+        DataBinding.FieldName = 'NormInDays'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object clStartProductionInDays: TcxGridDBColumn
+        Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1085#1072#1095#1072#1083#1086' '#1087#1088#1086#1080#1079#1074'.'
+        DataBinding.FieldName = 'StartProductionInDays'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DecimalPlaces = 4
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 140
       end
       object clValue1: TcxGridDBColumn
         Caption = #1071#1085#1074#1072#1088#1100
         DataBinding.FieldName = 'Koeff1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
       end
       object clValue2: TcxGridDBColumn
         Caption = #1060#1077#1074#1088#1072#1083#1100
         DataBinding.FieldName = 'Koeff2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 65
@@ -143,48 +206,69 @@ object OrderTypeForm: TOrderTypeForm
       object clValue3: TcxGridDBColumn
         Caption = #1052#1072#1088#1090
         DataBinding.FieldName = 'Koeff3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
       end
       object clValue4: TcxGridDBColumn
         Caption = #1040#1087#1088#1077#1083#1100
         DataBinding.FieldName = 'Koeff4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
       end
       object clValue5: TcxGridDBColumn
         Caption = #1052#1072#1081' '
         DataBinding.FieldName = 'Koeff5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
       end
       object clValue6: TcxGridDBColumn
         Caption = #1048#1102#1085#1100
         DataBinding.FieldName = 'Koeff6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
       end
       object clValue7: TcxGridDBColumn
         Caption = #1048#1102#1083#1100
         DataBinding.FieldName = 'Koeff7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
       end
       object clValue8: TcxGridDBColumn
         Caption = #1040#1074#1075#1091#1089#1090
         DataBinding.FieldName = 'Koeff8'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
       end
       object clValue9: TcxGridDBColumn
         Caption = #1057#1077#1085#1090#1103#1073#1088#1100
         DataBinding.FieldName = 'Koeff9'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 65
@@ -192,23 +276,68 @@ object OrderTypeForm: TOrderTypeForm
       object clValue10: TcxGridDBColumn
         Caption = #1054#1082#1090#1103#1073#1088#1100
         DataBinding.FieldName = 'Koeff10'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
       end
       object clValue11: TcxGridDBColumn
         Caption = #1053#1086#1103#1073#1088#1100
         DataBinding.FieldName = 'Koeff11'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
       end
       object clValue12: TcxGridDBColumn
         Caption = #1044#1077#1082#1072#1073#1088#1100
         DataBinding.FieldName = 'Koeff12'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 60
+      end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clInfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object clInfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clInfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -219,28 +348,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 58
-      end
-      object clTermProduction: TcxGridDBColumn
-        Caption = #1057#1088#1086#1082' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
-        DataBinding.FieldName = 'TermProduction'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object clNormInDays: TcxGridDBColumn
-        Caption = #1053#1086#1088#1084#1072' '#1074' '#1076#1085#1103#1093
-        DataBinding.FieldName = 'NormInDays'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object clStartProductionInDays: TcxGridDBColumn
-        Caption = #1044#1085#1077#1081' '#1076#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
-        DataBinding.FieldName = 'StartProductionInDays'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 45
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -298,8 +406,8 @@ object OrderTypeForm: TOrderTypeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -365,7 +473,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
@@ -373,7 +481,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -433,10 +541,10 @@ object OrderTypeForm: TOrderTypeForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -447,10 +555,11 @@ object OrderTypeForm: TOrderTypeForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spInsertUpdateObject
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateObject
+          StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -489,6 +598,7 @@ object OrderTypeForm: TOrderTypeForm
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Goods_ObjectForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
@@ -519,25 +629,26 @@ object OrderTypeForm: TOrderTypeForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
     object UnitChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Unit_ObjectForm'
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'
@@ -592,7 +703,7 @@ object OrderTypeForm: TOrderTypeForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_OrderType'
     DataSet = ClientDataSet
     DataSets = <
@@ -650,7 +761,7 @@ object OrderTypeForm: TOrderTypeForm
     Left = 168
     Top = 216
   end
-  object spInsertUpdateObject: TdsdStoredProc
+  object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_OrderType'
     DataSets = <>
     OutputType = otResult
@@ -664,16 +775,12 @@ object OrderTypeForm: TOrderTypeForm
       end
       item
         Name = 'inCode'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'code'
+        Value = 0
         ParamType = ptInput
       end
       item
         Name = 'inName'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Name'
+        Value = ''
         DataType = ftString
         ParamType = ptInput
       end
@@ -840,6 +947,7 @@ object OrderTypeForm: TOrderTypeForm
     Top = 155
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

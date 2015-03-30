@@ -2,8 +2,8 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084'>'
   ClientHeight = 537
   ClientWidth = 841
-  ExplicitWidth = 849
-  ExplicitHeight = 571
+  ExplicitWidth = 857
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -151,10 +151,36 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
       FormName = 'TFounderServiceForm'
       FormNameParam.Name = 'TFounderServiceForm'
       FormNameParam.Value = 'TFounderServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TFounderServiceForm'
       FormNameParam.Value = 'TFounderServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+        end>
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -419,36 +445,6 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Top = 376
   end
   inherited FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'ReportNameLoss'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ReportNameLossTax'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end>
     Left = 400
     Top = 200
   end

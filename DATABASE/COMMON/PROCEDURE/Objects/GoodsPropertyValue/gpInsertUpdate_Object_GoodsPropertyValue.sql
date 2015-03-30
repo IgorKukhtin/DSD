@@ -40,8 +40,17 @@ $BODY$
        RAISE EXCEPTION 'Ошибка.Не установлено значение <Вид товара>.';
    END IF;
 
+   IF ioId IN (327114 -- КОТЛЕТА СТОЛИЧНАЯ. (отбивная с/к)
+             , 327115 -- Котлетне  мясо (св2+св3)
+             , 126856 -- КОТЛЕТНОЕ МЯСО(св2+св3)
+              )
+   THEN 
+        PERFORM lpDelete_Object (ioId, inSession);
+        RETURN;
+   END IF;
+
    -- проверка уникальности
-   IF EXISTS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+   IF inGoodsKindId <> 0 AND EXISTS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
               FROM ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                    INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                          ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
@@ -55,7 +64,7 @@ $BODY$
                 AND COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) = COALESCE (inGoodsKindId, 0)
                 AND ObjectLink_GoodsPropertyValue_Goods.ObjectId <> COALESCE (ioId, 0))
    THEN 
-       RAISE EXCEPTION 'Ошибка.Значение Классификатор = <%> + Товар = <%> + Вид товара = <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsPropertyId), lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
+       RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsPropertyId), lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
    END IF;   
 
 

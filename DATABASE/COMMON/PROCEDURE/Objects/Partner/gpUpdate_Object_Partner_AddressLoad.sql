@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_Partner_Address()
+-- Function: gpUpdate_Object_Partner_AddressLoad()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_AddressLoad (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
@@ -418,6 +418,21 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Juridical_Retail(), (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical()), vbRetailId);
    END IF;
 
+   -- Контактные лица 
+   PERFORM lpUpdate_Object_Partner_ContactPerson (inId        := inId
+                                                , inOrderName := inOrderName
+                                                , inOrderPhone:= inOrderPhone
+                                                , inOrderMail := inOrderMail
+                                                , inDocName   := inDocName
+                                                , inDocPhone  := inDocPhone
+                                                , inDocMail   := inDocMail
+                                                , inActName   := inActName
+                                                , inActPhone  := inActPhone
+                                                , inActMail   := inActMail
+                                                , inSession   := inSession
+                                                 );
+
+
    -- сохранили связь с <Сотрудник (супервайзер)>
    IF vbPersonalId <> 0
    THEN
@@ -446,4 +461,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Object_Partner_Address()
+-- SELECT * FROM gpUpdate_Object_Partner_AddressLoad()

@@ -22,13 +22,12 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxLabel, dsdGuides, cxTextEdit,
-  cxMaskEdit;
+  cxMaskEdit, cxCurrencyEdit;
 
 type
   TOrderTypeForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
     clValue1: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
@@ -44,7 +43,7 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clValue2: TcxGridDBColumn;
@@ -54,9 +53,8 @@ type
     clValue4: TcxGridDBColumn;
     clValue5: TcxGridDBColumn;
     clValue6: TcxGridDBColumn;
-    spInsertUpdateObject: TdsdStoredProc;
+    spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    clName: TcxGridDBColumn;
     clValue7: TcxGridDBColumn;
     clValue8: TcxGridDBColumn;
     clValue9: TcxGridDBColumn;
@@ -82,6 +80,19 @@ type
     clTermProduction: TcxGridDBColumn;
     clNormInDays: TcxGridDBColumn;
     clStartProductionInDays: TcxGridDBColumn;
+
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
+
+    clTradeMarkName: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
+    clGoodsTagName: TcxGridDBColumn;
+    clGoodsGroupAnalystName: TcxGridDBColumn;
+
+    clMeasureName: TcxGridDBColumn;
+
   private
     { Private declarations }
   public

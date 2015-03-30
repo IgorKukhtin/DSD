@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderType (Integer, Integer, TVarChar, TFloat, TFloat,TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderType(
- INOUT ioId	                   Integer   ,    -- ключ объекта <> 
+ INOUT ioId	               Integer   ,    -- ключ объекта <> 
     IN inCode                  Integer   ,    -- код объекта <> 
     IN inName                  TVarChar  ,    -- Название объекта  
 
@@ -27,25 +27,37 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderType(
     IN inUnitId           Integer   ,    -- Качественное удостоверение
     IN inSession          TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbGoodsId Integer;
  BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_OrderType());
-   vbUserId:= lpGetUserBySession (inSession);
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_OrderType());
 
-   -- проверка уникальности товара
-     IF COALESCE (inGoodsId, 0) = 0 
-     THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено значение <Товар>.';
-     ELSE
-         IF exists (SELECT ChildObjectId FROM ObjectLink where DescId = zc_ObjectLink_OrderType_Goods() and ChildObjectId = inGoodsId AND coalesce (ObjectId,0) <> coalesce (ioId,0))
-         THEN 
-             RAISE EXCEPTION 'Ошибка. Значение <%> уже есть в справочнике.', lfGet_Object_ValueData (vbGoodsId);
-         END IF;   
-     END IF;   
+
+   -- проверка
+   IF COALESCE (inGoodsId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
+   END IF;
+
+   -- проверка
+   IF COALESCE (inUnitId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не установлено значение <Подразделение (производство)>.';
+   END IF;
+
+   -- проверка уникальности
+   IF EXISTS (SELECT ObjectLink_OrderType_Goods.ChildObjectId
+              FROM ObjectLink AS ObjectLink_OrderType_Goods
+              WHERE ObjectLink_OrderType_Goods.DescId = zc_ObjectLink_OrderType_Goods()
+                AND ObjectLink_OrderType_Goods.ChildObjectId = inGoodsId
+                AND ObjectLink_OrderType_Goods.ObjectId <> COALESCE (ioId, 0))
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Значение <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId);
+   END IF;   
+
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -58,7 +70,6 @@ $BODY$
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_OrderType(), inCode, inName);
-                                --, inAccessKeyId:= (SELECT Object_Branch.AccessKeyId FROM Object AS Object_Branch WHERE Object_Branch.Id = inBranchId));
    
    
       -- сохранили св-во <>

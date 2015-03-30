@@ -232,6 +232,9 @@ BEGIN
                        , ObjectId = CASE WHEN _tmpItem.ObjectId <> 0 
                                               THEN _tmpItem.ObjectId -- если уже был определен
 
+                                         WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()) -- Общефирменные + Товары
+                                              THEN zc_Enum_ProfitLoss_70201() -- Дополнительная прибыль + Прочее + Товары
+
                                          -- WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                          WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Продукция OR Доходы + Мясное сырье
                                               THEN zc_Enum_ProfitLoss_10301() -- Результат основной деятельности + Скидка дополнительная + Продукция

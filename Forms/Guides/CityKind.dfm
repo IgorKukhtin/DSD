@@ -62,7 +62,7 @@ object CityKindForm: TCityKindForm
         HeaderAlignmentVert = vaCenter
         Width = 212
       end
-      object clShotName: TcxGridDBColumn
+      object clShortName: TcxGridDBColumn
         Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentVert = vaCenter
@@ -111,8 +111,8 @@ object CityKindForm: TCityKindForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -183,7 +183,7 @@ object CityKindForm: TCityKindForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
@@ -191,7 +191,7 @@ object CityKindForm: TCityKindForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True

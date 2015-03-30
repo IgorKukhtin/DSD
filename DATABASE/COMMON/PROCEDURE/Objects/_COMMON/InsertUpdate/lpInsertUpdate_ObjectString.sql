@@ -1,19 +1,19 @@
-п»ї-- Function: lpinsertupdate_objectstring()
+-- Function: lpinsertupdate_objectstring()
 
 -- DROP FUNCTION lpinsertupdate_objectstring();
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectString(
- inDescId                    Integer           ,  /* РєРѕРґ РєР»Р°СЃСЃР° СЃРІРѕР№СЃС‚РІР°  */
- inObjectId                  Integer           ,  /* РєР»СЋС‡ РѕР±СЉРµРєС‚Р°         */
- inValueData                 TVarChar             /* РґР°РЅРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°      */
+ inDescId                    Integer           ,  /* код класса свойства  */
+ inObjectId                  Integer           ,  /* ключ объекта         */
+ inValueData                 TVarChar             /* данные свойства      */
 )
   RETURNS boolean AS
 $BODY$BEGIN
 
-    /* РёР·РјРµРЅРёС‚СЊ РґР°РЅРЅС‹Рµ РїРѕ Р·РЅР°С‡РµРЅРёСЋ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> Рё <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> */
+    /* изменить данные по значению <ключ свойства> и <ключ объекта> */
     UPDATE ObjectString SET ValueData = inValueData WHERE ObjectId = inObjectId AND DescId = inDescId;
     IF NOT found THEN            
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> , <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> Рё <РґР°РЅРЅС‹Рµ> */
+       /* вставить <ключ свойства> , <ключ объекта> и <данные> */
        INSERT INTO ObjectString (DescId, ObjectId, ValueData)
            VALUES (inDescId, inObjectId, inValueData);
     END IF;             

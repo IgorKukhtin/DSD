@@ -57,4 +57,4 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsByGoodsKind(zfCalc_UerAdmin())
+-- SELECT * FROM gpSelect_Object_GoodsByGoodsKind (zfCalc_UserAdmin())

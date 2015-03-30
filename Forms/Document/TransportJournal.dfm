@@ -541,6 +541,7 @@ object TransportJournalForm: TTransportJournalForm
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
@@ -693,6 +694,7 @@ object TransportJournalForm: TTransportJournalForm
     Top = 32
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

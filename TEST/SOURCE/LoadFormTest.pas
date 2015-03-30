@@ -72,6 +72,7 @@ type
     procedure LoadLossDebtFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
+    procedure LoadMemberExternalFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
     procedure LoadOrderInternalFormTest;
@@ -121,6 +122,7 @@ type
     procedure LoadTaxCorrectiveTest;
     procedure LoadTransportFormTest;
     procedure LoadTransportServiceFormTest;
+    procedure LoadTransportGoodsFormTest;
     procedure LoadTransferDebtOutFormTest;
     procedure LoadTransferDebtInFormTest;
     procedure LoadTradeMarkFormTest;
@@ -852,6 +854,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransportServiceJournalForm');
 end;
 
+procedure TLoadFormTest.LoadTransportGoodsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoodsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
+
+end;
+
 procedure TLoadFormTest.LoadTransferDebtOutFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtOutForm'));
@@ -1155,6 +1168,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsFuel_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsFuel_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPlace_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberPlace_ObjectForm');
+
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
@@ -1454,6 +1471,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
 end;
+
+procedure TLoadFormTest.LoadMemberExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberExternalForm');
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberExternal_ObjectForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TMemberExternal_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberExternalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberExternalEditForm');
+end;
+
 
 procedure TLoadFormTest.LoadWorkTimeKindFormTest;
 begin

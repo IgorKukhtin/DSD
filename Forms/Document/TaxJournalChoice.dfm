@@ -334,6 +334,12 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
   inherited Panel: TPanel
     Width = 1110
     ExplicitWidth = 1110
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
     object edIsRegisterDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -347,6 +353,22 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = edIsRegisterDate
+        Properties.Strings = (
+          'Checked')
+      end>
     Left = 40
     Top = 243
   end
@@ -364,6 +386,25 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
       Enabled = False
       FormName = 'TTaxForm'
       FormNameParam.Value = nil
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
@@ -483,6 +524,10 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -583,7 +628,6 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Tax'
     Params = <
       item
         Name = 'inmovementid'
@@ -602,7 +646,6 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Tax'
     Params = <
       item
         Name = 'inmovementid'
@@ -615,7 +658,6 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Tax'
     Params = <
       item
         Name = 'inmovementid'

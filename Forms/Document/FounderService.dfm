@@ -5,7 +5,7 @@
   ClientWidth = 311
   AddOnFormData.isSingle = False
   ExplicitWidth = 317
-  ExplicitHeight = 236
+  ExplicitHeight = 229
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -118,11 +118,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'OperDate'
         Value = '0'
+        DataType = ftDateTime
         ParamType = ptUnknown
       end>
-    Left = 96
-    Top = 170
+    Left = 80
+    Top = 162
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_FounderService'
@@ -223,8 +225,9 @@
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
-        ComponentItem = 'inOperDate'
+        ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -268,80 +271,6 @@
         Value = ''
         Component = ceComment
         DataType = ftString
-      end
-      item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        Component = ceComment
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = '0'
-        ParamType = ptUnknown
       end>
     Left = 200
     Top = 112

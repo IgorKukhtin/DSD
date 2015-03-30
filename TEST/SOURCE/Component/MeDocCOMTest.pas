@@ -16,11 +16,12 @@ type
     // запускаем КОМ объект
     procedure CreateMedocApplication;
     procedure GetMedocDocument;
+    procedure GetOneMedocDocument;
   end;
 
 implementation
 
-uses MedocCOM, SysUtils;
+uses MedocCOM, SysUtils, MEDOC_TLB, dialogs;
 
 { TMedocCOMTest }
 
@@ -35,7 +36,7 @@ var
   MedocCom: TMedocCOM;
   res: OleVariant;
   i: integer;
-  rr: string;
+  rr, rrr: string;
   val: OleVariant;
 begin
   MedocCom := TMedocCOM.Create;
@@ -43,11 +44,32 @@ begin
   while not res.Eof do begin
     for I := 0 to res.Fields.Count - 1 do begin
         val := res.Fields.Item[i].Value;
-        rr := rr + ';  ' + res.Fields.Item[i].Name + ' = ' + val
+        rrr := val;
+        rr := rr + ';  ' + res.Fields.Item[i].Name + ' = ' + rrr
     end;
     rr := rr + ' #$#$#$ ';
     res.Next;
   end;
+end;
+
+procedure TMedocCOMTest.GetOneMedocDocument;
+var
+  MedocCom: TMedocCOM;
+  Code: integer;
+  res: OleVariant;
+  Params: TParams;
+  i: integer;
+  s: string;
+begin
+  MedocCom := TMedocCOM.Create;
+  res := MedocCom.GetDocumentList(Date - 360, Date);
+  if not res.Eof then begin
+     Code := res.Fields.Item['CODE'].Value;
+     Params := MedocCom.GetDocumentByCode(Code);
+  end;
+  for I := 0 to Params.Count - 1 do
+      s := s + Params[i].Name + ' = ' + Params[i].AsString + ';';
+  ShowMessage(s);
 end;
 
 procedure TMedocCOMTest.SetUp;

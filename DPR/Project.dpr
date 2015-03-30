@@ -73,7 +73,8 @@ uses
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
-  MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas';
+  MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas',
+  MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

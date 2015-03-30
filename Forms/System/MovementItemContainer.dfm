@@ -10,7 +10,6 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
   inherited PageControl: TcxPageControl
     Width = 982
     Height = 342
-    ExplicitTop = 26
     ExplicitWidth = 982
     ExplicitHeight = 342
     ClientRectBottom = 342
@@ -250,14 +249,13 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             Options.Editing = False
             Width = 80
           end
-          object colAccountOnComplete: TcxGridDBColumn
-            Caption = '***'
-            DataBinding.FieldName = 'AccountOnComplete'
-            Visible = False
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 32
+            Width = 60
           end
           object colDebetAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
@@ -344,6 +342,15 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object colAccountOnComplete: TcxGridDBColumn
+            Caption = '***'
+            DataBinding.FieldName = 'AccountOnComplete'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 32
           end
           object ObjectCostId: TcxGridDBColumn
             DataBinding.FieldName = 'ObjectCostId'
@@ -548,6 +555,7 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
     Top = 264
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

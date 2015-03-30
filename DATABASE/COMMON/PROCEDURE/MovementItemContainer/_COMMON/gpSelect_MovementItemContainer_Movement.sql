@@ -23,6 +23,7 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
              , DirectionObjectCode Integer, DirectionObjectName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , BusinessCode Integer, BusinessName TVarChar
+             , PaidKindName TVarChar
              , GoodsGroupCode Integer, GoodsGroupName TVarChar
              , DestinationObjectCode Integer, DestinationObjectName TVarChar
              , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
@@ -389,6 +390,8 @@ BEGIN
            , tmpMovementItemContainer.BranchName
            , tmpMovementItemContainer.BusinessCode
            , tmpMovementItemContainer.BusinessName
+           , tmpMovementItemContainer.PaidKindName
+
            , tmpMovementItemContainer.GoodsGroupCode
            , tmpMovementItemContainer.GoodsGroupName
            , tmpMovementItemContainer.DestinationObjectCode
@@ -426,6 +429,8 @@ BEGIN
                 , Object_Business.ValueData   AS BusinessName
                 , Object_Branch.ObjectCode    AS BranchCode
                 , Object_Branch.ValueData     AS BranchName
+                , Object_PaidKind.ObjectCode  AS PaidKindCode
+                , Object_PaidKind.ValueData   AS PaidKindName
 
                 , CASE WHEN Object_ProfitLoss_View.ProfitLossName_all IS NOT NULL
                             THEN Object_ProfitLoss_View.ProfitLossCode
@@ -515,6 +520,7 @@ BEGIN
                 , ContainerLO_JuridicalBasis.ObjectId     AS JuridicalBasisId
                 , ContainerLinkObject_Business.ObjectId   AS BusinessId
                 , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
+                , ContainerLinkObject_PaidKind.ObjectId   AS PaidKindId
                 , COALESCE (ContainerLO_Branch.ObjectId,  COALESCE (MILinkObject_Branch.ObjectId, MovementLinkObject_Branch.ObjectId)) AS BranchId
 
 
@@ -580,6 +586,10 @@ BEGIN
                                                ON ContainerLinkObject_Currency.ContainerId = tmpMIContainer_Summ.ContainerId
                                               AND ContainerLinkObject_Currency.DescId = zc_ContainerLinkObject_Currency()
 
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
+                                               ON ContainerLinkObject_PaidKind.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -600,6 +610,7 @@ BEGIN
                  LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpMIContainer_Summ.JuridicalBasisId
                  LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpMIContainer_Summ.BusinessId
                  LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMIContainer_Summ.BranchId
+                 LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMIContainer_Summ.PaidKindId
 
                  LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpMIContainer_Summ.InfoMoneyId
                  LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpMIContainer_Summ.InfoMoneyId_Detail
@@ -627,6 +638,8 @@ BEGIN
 
                    , tmpMIContainer_Summ.CurrencyId
 
+                   , Object_PaidKind.ObjectCode
+                   , Object_PaidKind.ValueData
                    , Object_Branch.ObjectCode
                    , Object_Branch.ValueData
                    , Object_Business.ObjectCode

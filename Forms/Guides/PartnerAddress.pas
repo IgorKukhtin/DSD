@@ -138,6 +138,7 @@ type
     InfoMoneyGuides: TdsdGuides;
     actRefreshPeriod: TdsdDataSetRefresh;
     cbPeriod: TcxCheckBox;
+    clNameInteger: TcxGridDBColumn;
   private
     { Private declarations }
   public

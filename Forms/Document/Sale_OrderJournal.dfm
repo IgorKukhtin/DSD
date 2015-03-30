@@ -168,7 +168,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Width = 55
           end
           object colOperDatePartner: TcxGridDBColumn [3]
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -177,6 +177,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
+            Width = 55
+          end
+          object colInvNumberOrder: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'InvNumberOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object colInvNumberPartner_Master: TcxGridDBColumn
@@ -194,16 +201,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Width = 60
           end
           object colInvNumberPartner: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colInvNumberOrder: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'#1079#1072#1103#1074#1082#1072
-            DataBinding.FieldName = 'InvNumberOrder'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -297,7 +296,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             DataBinding.FieldName = 'TotalSummChange'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
@@ -327,6 +326,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           object colChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
             DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -341,6 +343,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           object colVATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
@@ -473,6 +478,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           object CurrencyPartnerValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -481,6 +489,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           object ParPartnerValue: TcxGridDBColumn
             Caption = #1053#1086#1084#1080#1085#1072#1083
             DataBinding.FieldName = 'ParPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -489,6 +500,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           object CurrencyValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089' '#1059#1055
             DataBinding.FieldName = 'CurrencyValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -497,6 +511,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           object ParValue: TcxGridDBColumn
             Caption = #1053#1086#1084#1080#1085#1072#1083' '#1082#1091#1088#1089' '#1059#1055
             DataBinding.FieldName = 'ParValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -644,6 +661,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actChecked: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spChecked
       StoredProcList = <
         item
@@ -656,6 +674,25 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSale_OrderForm'
       FormNameParam.Value = 'TSale_OrderForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actMovementCheck: TdsdOpenForm [13]
       Category = 'DSDLib'
@@ -679,6 +716,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTax
       StoredProcList = <
         item
@@ -939,6 +977,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actSPPrintSaleProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -949,6 +988,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actSPPrintSaleTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
@@ -959,6 +999,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actSPPrintSaleBillProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameBill
       StoredProcList = <
         item
@@ -1197,7 +1238,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           StoredProc = spSelectPrintTTN
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      Hint = #1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       ImageIndex = 15
       ShortCut = 16464
       DataSets = <
@@ -1239,8 +1280,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           StoredProc = spSelectPrintQuality
         end>
-      Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1081' '#1083#1080#1089#1090
-      Hint = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1081' '#1083#1080#1089#1090
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
       ShortCut = 16464
       DataSets = <
@@ -1446,7 +1487,15 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_TTN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
