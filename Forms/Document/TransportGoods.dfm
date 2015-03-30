@@ -609,6 +609,18 @@
         Name = 'ToName'
         Value = Null
         Component = edTo
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
       end>
     Left = 344
     Top = 23

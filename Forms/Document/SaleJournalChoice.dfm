@@ -908,30 +908,13 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
   inherited FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'StartDate'
+        Name = 'inStartDate'
         Value = Null
         Component = deStart
         DataType = ftDateTime
       end
       item
-        Name = 'EndDate'
+        Name = 'inEndDate'
         Value = Null
         Component = deEnd
         DataType = ftDateTime

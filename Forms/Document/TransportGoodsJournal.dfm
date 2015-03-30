@@ -365,7 +365,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_FounderService'
+    StoredProcName = 'gpSelect_Movement_TransportGoods'
     Params = <
       item
         Name = 'instartdate'
@@ -387,11 +387,6 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
       end>
     Left = 136
     Top = 163
