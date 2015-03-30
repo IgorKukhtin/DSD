@@ -208,6 +208,22 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object InvNumber_TransportGoods: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1058#1058#1053
+            DataBinding.FieldName = 'InvNumber_TransportGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_TransportGoods: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1058#1058#1053
+            DataBinding.FieldName = 'OperDate_TransportGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
@@ -653,7 +669,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 31
+    Top = 186
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSale_OrderForm'
       FormNameParam.Value = 'TSale_OrderForm'
@@ -1219,49 +1236,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_TTN: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintTTN
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintTTN
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      ImageIndex = 15
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_TTN'
-      ReportNameParam.Value = 'PrintMovement_TTN'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
     object actPrint_Quality: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1304,6 +1278,117 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       ReportName = 'PrintMovement_Quality'
       ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_TTN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actDialog_TTN
+        end
+        item
+          Action = actGet_TTN
+        end
+        item
+          Action = actPrint_TTN
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 15
+    end
+    object actDialog_TTN: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDialog_TTN'
+      Hint = 'actDialog_TTN'
+      FormName = 'TTransportGoodsForm'
+      FormNameParam.Value = 'TTransportGoodsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_TransportGoods'
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_TransportGoods_calc'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actGet_TTN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_TTN
+      StoredProcList = <
+        item
+          StoredProc = spGet_TTN
+        end>
+      Caption = 'actGet_TTN'
+      Hint = 'actGet_TTN'
+    end
+    object actPrint_TTN: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrintTTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTTN
+        end>
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = 'PrintMovement_TTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -1572,7 +1657,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Category = 0
     end
     object bbPrint_TTN: TdxBarButton
-      Action = actPrint_TTN
+      Action = mactPrint_TTN
       Category = 0
     end
     object bbPrint_Quality: TdxBarButton
@@ -1620,7 +1705,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         ParamType = ptInput
       end>
     Left = 80
-    Top = 320
+    Top = 346
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_Sale'
@@ -1633,7 +1718,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         ParamType = ptInput
       end>
     Left = 80
-    Top = 384
+    Top = 410
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Sale'
@@ -1646,7 +1731,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         ParamType = ptInput
       end>
     Left = 208
-    Top = 376
+    Top = 402
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1698,6 +1783,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    Left = 168
+    Top = 368
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
@@ -2101,5 +2188,49 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PackSize = 1
     Left = 615
     Top = 432
+  end
+  object spGet_TTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Sale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'MovementId_TransportGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_TransportGoods'
+      end
+      item
+        Name = 'InvNumber_TransportGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_TransportGoods'
+        DataType = ftString
+      end
+      item
+        Name = 'OperDate_TransportGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_TransportGoods'
+        DataType = ftDateTime
+      end>
+    PackSize = 1
+    Left = 208
+    Top = 288
   end
 end

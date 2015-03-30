@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransportGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inParentId            Integer   , -- 
+    IN inMovementId_Sale     Integer   , -- 
     IN inInvNumberMark       TVarChar  , -- 
     IN inCarId               Integer   , -- Автомобиль
     IN inCarTrailerId        Integer   , -- Автомобиль (прицеп)
@@ -27,16 +27,25 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
 BEGIN
      -- определяем ключ доступа
-     IF inParentId <> 0
+     IF inMovementId_Sale <> 0
      THEN
-         vbAccessKeyId:= (SELECT AccessKeyId FROM Movement WHERE Id = inParentId);
+         vbAccessKeyId:= (SELECT AccessKeyId FROM Movement WHERE Id = inMovementId_Sale);
      ELSE
-         vbAccessKeyId:= zc_Enum_Process_AccessKey_GuideDnepr(); -- lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TransportGoods());
+         IF ioId <> 0
+         THEN vbAccessKeyId:= (SELECT AccessKeyId FROM Movement WHERE Id = ioId);
+         ELSE vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TransportGoods());
+         END IF;
      END IF;
 
 
      -- проверка
-     IF 1=0 AND COALESCE (inParentId, 0) = 0
+     IF inOperDate IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлена <Дата документа>.';
+     END IF;
+
+     -- проверка
+     IF 1=0 AND COALESCE (inMovementId_Sale, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлен <№ док. (склад)>.';
      END IF;
@@ -51,7 +60,7 @@ BEGIN
 
 
       -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TransportGoods(), inInvNumber, inOperDate, inParentId, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TransportGoods(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
      -- сохранили свойство <номер пломби>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberMark(), ioId, inInvNumberMark);
@@ -73,6 +82,20 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member5(), ioId, inMemberId5);
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member6(), ioId, inMemberId6);
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member7(), ioId, inMemberId7);
+
+
+     -- установили связь у <Продажа покупателю> на этот документ <Товаро-транспортная накладная>
+     IF inMovementId_Sale <> 0 
+     THEN PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_TransportGoods(), inMovementId_Sale, ioId);
+     END IF;
+
+     -- удалили связь у "других" <Продажа покупателю> на этот документ <Товаро-транспортная накладная>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_TransportGoods(), MovementLinkMovement.MovementId, NULL)
+     FROM MovementLinkMovement
+     WHERE MovementLinkMovement.MovementChildId = ioId
+       AND MovementLinkMovement.DescId = zc_MovementLinkMovement_TransportGoods()
+       AND MovementLinkMovement.MovementId <> inMovementId_Sale
+    ;
 
      -- 5.2. проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := ioId

@@ -216,6 +216,23 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object InvNumber_TransportGoods: TcxGridDBColumn
+            DataBinding.FieldName = 'InvNumber_TransportGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_TransportGoods: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1058#1058#1053
+            DataBinding.FieldName = 'OperDate_TransportGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
@@ -663,14 +680,14 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
       MoveParams = <>
       Params = <
         item
-          Name = 'Id'
+          Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
-          Name = 'InvNumber'
+          Name = 'TextValue'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumber'

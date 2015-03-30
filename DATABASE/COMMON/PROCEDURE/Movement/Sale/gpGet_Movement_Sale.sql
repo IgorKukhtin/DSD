@@ -24,6 +24,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
              , MovementId_Order Integer
+             , MovementId_TransportGoods Integer
+             , InvNumber_TransportGoods TVarChar
+             , OperDate_TransportGoods TDateTime
              , isCOMDOC Boolean
               )
 AS
@@ -78,10 +81,13 @@ BEGIN
              , 0                     			    AS MovementId_Master
              , CAST ('' AS TVarChar) 			    AS InvNumberPartner_Master
              , 0                     			    AS MovementId_Order
+             , 0                   			    AS MovementId_TransportGoods 
+             , '' :: TVarChar                     	    AS InvNumber_TransportGoods 
+             , inOperDate                                   AS OperDate_TransportGoods
              , FALSE                                        AS isCOMDOC
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-              LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
+               LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
      ELSE
 
      RETURN QUERY
@@ -138,6 +144,10 @@ BEGIN
            , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
            , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
+
+           , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
+           , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
+           , Movement_TransportGoods.OperDate               AS OperDate_TransportGoods
 
            , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
 
@@ -224,11 +234,16 @@ BEGIN
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
---add Tax
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement.Id
+                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+            LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
+
+--add Tax
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
