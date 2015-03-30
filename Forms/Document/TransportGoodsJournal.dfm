@@ -518,28 +518,23 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_FounderService'
+    StoredProcName = 'gpComplete_Movement_TransportGoods'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-      end
-      item
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptUnknown
       end>
     Left = 80
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_FounderService'
+    StoredProcName = 'gpUnComplete_Movement_TransportGoods'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -549,10 +544,10 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_FounderService'
+    StoredProcName = 'gpSetErased_Movement_TransportGoods'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -594,6 +589,11 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_TransportGoods'
+    Left = 176
+    Top = 304
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

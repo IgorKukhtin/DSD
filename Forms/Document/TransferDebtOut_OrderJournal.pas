@@ -72,6 +72,15 @@ type
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
     colInvNumberOrder: TcxGridDBColumn;
+    InvNumber_TransportGoods: TcxGridDBColumn;
+    OperDate_TransportGoods: TcxGridDBColumn;
+    spGet_TTN: TdsdStoredProc;
+    spSelectPrintTTN: TdsdStoredProc;
+    actPrint_TTN: TdsdPrintAction;
+    actDialog_TTN: TdsdOpenForm;
+    actGet_TTN: TdsdExecStoredProc;
+    mactPrint_TTN: TMultiAction;
+    bbPrint_TTN: TdxBarButton;
   private
     { Private declarations }
   public

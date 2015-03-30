@@ -89,6 +89,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                      ELSE NULL
                                 END AS isMovement
                               , CASE WHEN Id IN (zc_Enum_Process_InsertUpdate_Movement_Transport()
+                                               , zc_Enum_Process_Get_Movement_Transport()
                                                , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                , zc_Enum_Process_Get_Movement_TransportService()
                                                 )

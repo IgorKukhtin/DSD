@@ -20,6 +20,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
              , MovementId_Order Integer
+             , MovementId_TransportGoods Integer
+             , InvNumber_TransportGoods TVarChar
+             , OperDate_TransportGoods TDateTime
               )
 AS
 $BODY$
@@ -83,6 +86,9 @@ BEGIN
              , CAST ('' AS TVarChar) 		    AS InvNumberPartner_Master
              , 0                     		    AS MovementId_Order
 
+             , 0                   			    AS MovementId_TransportGoods 
+             , '' :: TVarChar                     	    AS InvNumber_TransportGoods 
+             , inOperDate                                   AS OperDate_TransportGoods
 
           FROM (SELECT CAST (NEXTVAL ('movement_transferdebtout_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
                LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1 = 1
@@ -148,6 +154,10 @@ BEGIN
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
 
            , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
+
+           , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
+           , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
+           , Movement_TransportGoods.OperDate               AS OperDate_TransportGoods
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -235,6 +245,11 @@ BEGIN
                                          ON MovementLinkObject_PaidKindTo.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
             LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement.Id
+                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+            LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id

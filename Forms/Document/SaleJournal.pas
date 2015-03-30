@@ -117,6 +117,12 @@ type
     actPrint_Quality: TdsdPrintAction;
     spSelectPrintQuality: TdsdStoredProc;
     bbPrint_Quality: TdxBarButton;
+    InvNumber_TransportGoods: TcxGridDBColumn;
+    OperDate_TransportGoods: TcxGridDBColumn;
+    actDialog_TTN: TdsdOpenForm;
+    spGet_TTN: TdsdStoredProc;
+    actGet_TTN: TdsdExecStoredProc;
+    mactPrint_TTN: TMultiAction;
   private
     { Private declarations }
   public

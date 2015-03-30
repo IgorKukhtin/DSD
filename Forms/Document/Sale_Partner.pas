@@ -148,6 +148,8 @@ type
     actPrint_Quality: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;
     colLineNum: TcxGridDBColumn;
+    mactPrint_TTN: TMultiAction;
+    actDialog_TTN: TdsdOpenForm;
   private
     { Private declarations }
   public

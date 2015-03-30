@@ -16,7 +16,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
-     SELECT 
+     /*SELECT 
            Object_Member.Id
          , Object_Member.Code
          , Object_Member.Name
@@ -28,7 +28,7 @@ BEGIN
      FROM gpSelect_Object_Member (inIsShowAll, inSession) AS Object_Member
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_Member()
                                 
-   UNION ALL
+   UNION ALL*/
      SELECT 
            Object_MemberExternal.Id         AS Id
          , Object_MemberExternal.ObjectCode AS Code

@@ -1,32 +1,32 @@
 ﻿inherited TransportGoodsForm: TTransportGoodsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1086#1074#1072#1088#1086'-'#1090#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-  ClientHeight = 409
-  ClientWidth = 525
+  ClientHeight = 358
+  ClientWidth = 547
   AddOnFormData.isSingle = False
-  ExplicitWidth = 531
-  ExplicitHeight = 434
+  ExplicitWidth = 553
+  ExplicitHeight = 383
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 146
-    Top = 340
+    Left = 154
+    Top = 317
     Height = 26
-    ExplicitLeft = 146
-    ExplicitTop = 340
+    ExplicitLeft = 154
+    ExplicitTop = 317
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 287
-    Top = 340
+    Left = 295
+    Top = 317
     Height = 26
-    ExplicitLeft = 287
-    ExplicitTop = 340
+    ExplicitLeft = 295
+    ExplicitTop = 317
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
-    Left = 90
+    Left = 88
     Top = 7
-    Caption = #1044#1072#1090#1072
+    Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object Код: TcxLabel [3]
     Left = 8
@@ -34,13 +34,13 @@
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edOperDate: TcxDateEdit [4]
-    Left = 90
+    Left = 88
     Top = 27
     EditValue = 42092d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 85
+    Width = 88
   end
   object edInvNumber_Sale: TcxButtonEdit [5]
     Left = 270
@@ -52,7 +52,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 3
-    Width = 120
+    Width = 130
   end
   object cxLabel6: TcxLabel [6]
     Left = 270
@@ -68,18 +68,18 @@
     Width = 75
   end
   object edOperDate_Sale: TcxDateEdit [8]
-    Left = 397
+    Left = 407
     Top = 27
     EditValue = 42092d
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 8
-    Width = 120
+    Width = 130
   end
   object edRoute: TcxButtonEdit [9]
     Left = 8
-    Top = 127
+    Top = 177
     Properties.Buttons = <
       item
         Default = True
@@ -91,11 +91,11 @@
   end
   object cxLabel67: TcxLabel [10]
     Left = 8
-    Top = 107
+    Top = 157
     Caption = #1052#1072#1088#1096#1088#1091#1090
   end
   object cxLabel2: TcxLabel [11]
-    Left = 397
+    Left = 407
     Top = 7
     Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
   end
@@ -119,12 +119,12 @@
   end
   object cxLabel9: TcxLabel [14]
     Left = 135
-    Top = 157
+    Top = 107
     Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
   end
   object edCar: TcxButtonEdit [15]
     Left = 135
-    Top = 177
+    Top = 127
     Properties.Buttons = <
       item
         Default = True
@@ -136,29 +136,29 @@
   end
   object cxLabel5: TcxLabel [16]
     Left = 270
-    Top = 104
+    Top = 157
     Caption = #1060#1048#1054' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
   end
-  object edMemberPlace: TcxButtonEdit [17]
+  object edPersonalDriver: TcxButtonEdit [17]
     Left = 270
-    Top = 127
+    Top = 177
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 17
-    Width = 247
+    Width = 267
   end
   object cxLabel7: TcxLabel [18]
-    Left = 396
-    Top = 157
+    Left = 407
+    Top = 107
     Caption = #1055#1088#1080#1094#1077#1087
   end
   object edCarTrailer: TcxButtonEdit [19]
-    Left = 397
-    Top = 177
+    Left = 407
+    Top = 125
     Properties.Buttons = <
       item
         Default = True
@@ -166,16 +166,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 19
-    Width = 120
+    Width = 130
   end
   object cxLabel4: TcxLabel [20]
     Left = 8
-    Top = 157
+    Top = 107
     Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
   end
   object edCarModel: TcxButtonEdit [21]
     Left = 8
-    Top = 177
+    Top = 125
     Properties.Buttons = <
       item
         Default = True
@@ -187,12 +187,12 @@
   end
   object cxLabel8: TcxLabel [22]
     Left = 270
-    Top = 157
+    Top = 107
     Caption = #1052#1072#1088#1082#1072' '#1087#1088#1080#1094#1077#1087#1072
   end
   object edCarTrailerModel: TcxButtonEdit [23]
     Left = 270
-    Top = 177
+    Top = 127
     Properties.Buttons = <
       item
         Default = True
@@ -200,7 +200,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 23
-    Width = 120
+    Width = 130
   end
   object cxLabel10: TcxLabel [24]
     Left = 270
@@ -218,7 +218,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 25
-    Width = 247
+    Width = 267
   end
   object cxLabel14: TcxLabel [26]
     Left = 8
@@ -227,7 +227,7 @@
   end
   object edMember1: TcxButtonEdit [27]
     Left = 8
-    Top = 227
+    Top = 230
     Properties.Buttons = <
       item
         Default = True
@@ -238,8 +238,8 @@
   end
   object cxLabel11: TcxLabel [28]
     Left = 270
-    Top = 204
-    Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1074#1110#1076#1087#1086#1074#1110#1076#1072#1083#1100#1085#1072' '#1086#1089#1086#1073#1072')'
+    Top = 207
+    Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1074#1110#1076#1087#1086#1074#1110#1076#1072#1083#1100#1085#1072' '#1086#1089#1086#1073#1072' '#1074#1072#1085#1090#1072#1078#1086#1074#1110#1076#1087#1088#1072#1074'.)'
   end
   object edMember2: TcxButtonEdit [29]
     Left = 270
@@ -250,7 +250,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 29
-    Width = 247
+    Width = 267
   end
   object edInvNumberMark: TcxTextEdit [30]
     Left = 183
@@ -263,17 +263,49 @@
     Top = 7
     Caption = #8470' '#1087#1083#1086#1084#1073#1099
   end
+  object cxLabel13: TcxLabel [32]
+    Left = 8
+    Top = 257
+    Caption = #1042#1110#1076#1087#1091#1089#1082' '#1076#1086#1079#1074#1086#1083#1080#1074
+  end
+  object edMember3: TcxButtonEdit [33]
+    Left = 8
+    Top = 277
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 33
+    Width = 247
+  end
+  object edMember4: TcxButtonEdit [34]
+    Left = 270
+    Top = 277
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 34
+    Width = 267
+  end
+  object cxLabel15: TcxLabel [35]
+    Left = 270
+    Top = 257
+    Caption = #1047#1076#1072#1074' ('#1074#1110#1076#1087#1086#1074#1110#1076#1072#1083#1100#1085#1072' '#1086#1089#1086#1073#1072' '#1074#1072#1085#1090#1072#1078#1086#1074#1110#1076#1087#1088#1072#1074#1085#1080#1082#1072') '
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 59
-    Top = 314
+    Left = 67
+    Top = 298
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 104
-    Top = 362
+    Top = 312
   end
   inherited ActionList: TActionList
     Left = 239
-    Top = 361
+    Top = 316
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -299,93 +331,179 @@
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 40
-    Top = 362
+    Left = 20
+    Top = 313
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TransportGoods'
     Params = <
       item
-        Name = 'ioid'
+        Name = 'ioId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
-        Name = 'ininvnumber'
+        Name = 'inInvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inFounderId'
+        Name = 'inMovementId_Sale'
         Value = ''
         Component = GuideSaleJournalChoice
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'inInvNumberMark'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inComment'
-        Value = ''
+        Component = edInvNumberMark
         DataType = ftString
         ParamType = ptInput
       end
       item
+        Name = 'inCarId'
         Value = ''
-        ParamType = ptUnknown
+        Component = GuideCar
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Name = 'inCarTrailerId'
+        Value = ''
+        Component = GuideCarTrailer
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
+        Name = 'inPersonalDriverId'
         Value = ''
+        Component = GuidePersonalDriver
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalDriverName'
+        Value = ''
+        Component = edPersonalDriver
         DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
+        Name = 'inRouteId'
         Value = ''
-        ParamType = ptUnknown
+        Component = GuideRoute
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
-        Value = ''
-        ParamType = ptUnknown
+        Name = 'inMemberId1'
+        Value = '0'
+        Component = GuideMember1
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
-        Value = ''
-        ParamType = ptUnknown
+        Name = 'inMemberName1'
+        Value = Null
+        Component = edMember1
+        DataType = ftString
+        ParamType = ptInput
       end
       item
-        Value = ''
-        ParamType = ptUnknown
+        Name = 'inMemberId2'
+        Value = Null
+        Component = GuideMember2
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
-        Value = ''
-        ParamType = ptUnknown
+        Name = 'inMemberName2'
+        Value = Null
+        Component = edMember2
+        DataType = ftString
+        ParamType = ptInput
       end
       item
+        Name = 'inMemberId3'
+        Value = Null
+        Component = GuideMember3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberName3'
+        Value = Null
+        Component = edMember3
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId4'
+        Value = Null
+        Component = GuideMember4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberName4'
+        Value = Null
+        Component = edMember4
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId5'
         Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = GuideMember1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberName5'
+        Value = ''
+        Component = edMember1
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId6'
+        Value = ''
+        Component = GuideMember1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberName6'
+        Value = Null
+        Component = edMember1
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId7'
+        Value = 0
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberName7'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 384
-    Top = 352
+    Top = 307
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TransportGoods'
@@ -422,6 +540,7 @@
         Name = 'InvNumber'
         Value = '0'
         Component = edInvNumber
+        DataType = ftString
       end
       item
         Name = 'OperDate'
@@ -433,7 +552,7 @@
         Name = 'InvNumberMark'
         Value = 0.000000000000000000
         Component = edInvNumberMark
-        DataType = ftFloat
+        DataType = ftString
       end
       item
         Name = 'MovementId_Sale'
@@ -446,6 +565,7 @@
         Value = ''
         Component = GuideSaleJournalChoice
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'OperDate_Sale'
@@ -470,7 +590,6 @@
         Value = ''
         Component = GuideRoute
         ComponentItem = 'Key'
-        DataType = ftString
       end
       item
         Name = 'RouteName'
@@ -569,9 +688,35 @@
         Component = GuideMember2
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MemberId3'
+        Value = Null
+        Component = GuideMember3
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MemberName3'
+        Value = Null
+        Component = GuideMember4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'MemberId4'
+        Value = Null
+        Component = GuideMember4
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MemberName4'
+        Value = Null
+        Component = GuideMember4
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 312
-    Top = 360
+    Top = 315
   end
   object GuideSaleJournalChoice: TdsdGuides
     KeyField = 'Id'
@@ -582,13 +727,13 @@
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'Id'
+        Name = 'Key'
         Value = ''
         Component = GuideSaleJournalChoice
         ComponentItem = 'Key'
       end
       item
-        Name = 'InvNumber'
+        Name = 'TextValue'
         Value = ''
         Component = GuideSaleJournalChoice
         ComponentItem = 'TextValue'
@@ -632,17 +777,20 @@
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
-      end
-      item
         Guides = GuideSaleJournalChoice
       end
       item
+        Guides = GuideCar
       end
       item
+        Guides = GuidePersonalDriver
+      end
+      item
+        Guides = GuideMember1
       end>
     ActionItemList = <>
     Left = 464
-    Top = 352
+    Top = 307
   end
   object GuideRoute: TdsdGuides
     KeyField = 'Id'
@@ -665,8 +813,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 140
-    Top = 98
+    Left = 132
+    Top = 154
   end
   object GuideCar: TdsdGuides
     KeyField = 'Id'
@@ -696,12 +844,12 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 184
-    Top = 170
+    Left = 200
+    Top = 106
   end
   object GuidePersonalDriver: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edMemberPlace
+    LookupControl = edPersonalDriver
     FormNameParam.Value = 'TMemberPlace_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TMemberPlace_ObjectForm'
@@ -722,8 +870,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 426
-    Top = 99
+    Left = 434
+    Top = 147
   end
   object GuideCarTrailer: TdsdGuides
     KeyField = 'Id'
@@ -755,8 +903,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 442
-    Top = 147
+    Left = 466
+    Top = 99
   end
   object GuideMember1: TdsdGuides
     KeyField = 'Id'
@@ -782,7 +930,7 @@
         ParamType = ptInput
       end>
     Left = 176
-    Top = 211
+    Top = 203
   end
   object GuideMember2: TdsdGuides
     KeyField = 'Id'
@@ -838,8 +986,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 56
-    Top = 154
+    Left = 72
+    Top = 98
   end
   object GuideCarTrailerModel: TdsdGuides
     KeyField = 'Id'
@@ -869,7 +1017,59 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 336
-    Top = 146
+    Left = 344
+    Top = 98
+  end
+  object GuideMember3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember3
+    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TMemberPlace_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuideMember3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuideMember3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 168
+    Top = 254
+  end
+  object GuideMember4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember4
+    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TMemberPlace_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuideMember4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuideMember4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 422
+    Top = 253
   end
 end

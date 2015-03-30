@@ -131,6 +131,7 @@ BEGIN
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
 
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Transport()
+                                                                                                 , zc_Enum_Process_Get_Movement_Transport()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                  , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                   )
@@ -161,6 +162,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
 
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Transport()
+                                                                                                         , zc_Enum_Process_Get_Movement_Transport()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                          , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                           )
@@ -223,6 +225,7 @@ BEGIN
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
 
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Transport()
+                                                                                                 , zc_Enum_Process_Get_Movement_Transport()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                  , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                    )
@@ -253,6 +256,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
 
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Transport()
+                                                                                                         , zc_Enum_Process_Get_Movement_Transport()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                          , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                           )

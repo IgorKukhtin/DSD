@@ -31,7 +31,7 @@ type
     edCar: TcxButtonEdit;
     GuideCar: TdsdGuides;
     cxLabel5: TcxLabel;
-    edMemberPlace: TcxButtonEdit;
+    edPersonalDriver: TcxButtonEdit;
     GuidePersonalDriver: TdsdGuides;
     cxLabel7: TcxLabel;
     edCarTrailer: TcxButtonEdit;
@@ -52,6 +52,12 @@ type
     GuideCarTrailerModel: TdsdGuides;
     edInvNumberMark: TcxTextEdit;
     cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    edMember3: TcxButtonEdit;
+    GuideMember3: TdsdGuides;
+    edMember4: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    GuideMember4: TdsdGuides;
   private
     { Private declarations }
   public

@@ -128,6 +128,12 @@ type
     actPrint_Quality: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;
     PersonalName: TcxGridDBColumn;
+    mactPrint_TTN: TMultiAction;
+    actDialog_TTN: TdsdOpenForm;
+    actGet_TTN: TdsdExecStoredProc;
+    spGet_TTN: TdsdStoredProc;
+    InvNumber_TransportGoods: TcxGridDBColumn;
+    OperDate_TransportGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

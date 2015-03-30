@@ -85,6 +85,12 @@ type
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
     spSelectPrintTTN: TdsdStoredProc;
+    InvNumber_TransportGoods: TcxGridDBColumn;
+    OperDate_TransportGoods: TcxGridDBColumn;
+    spGet_TTN: TdsdStoredProc;
+    actDialog_TTN: TdsdOpenForm;
+    actGet_TTN: TdsdExecStoredProc;
+    mactPrint_TTN: TMultiAction;
   private
     { Private declarations }
   public

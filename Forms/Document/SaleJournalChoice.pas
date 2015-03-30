@@ -46,6 +46,8 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
     colContractCode: TcxGridDBColumn;
+    InvNumber_TransportGoods: TcxGridDBColumn;
+    OperDate_TransportGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

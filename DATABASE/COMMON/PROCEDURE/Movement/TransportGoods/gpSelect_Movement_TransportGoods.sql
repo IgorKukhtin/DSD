@@ -50,7 +50,7 @@ BEGIN
                                         )
         , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT Object_RoleAccessKeyDocument_View.AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY Object_RoleAccessKeyDocument_View.AccessKeyId
-                         UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
+                         -- UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                               )
        SELECT
              Movement.Id
@@ -158,27 +158,31 @@ BEGIN
                                         AND MovementLinkObject_Member7.DescId = zc_MovementLinkObject_Member7()
             LEFT JOIN Object AS Object_Member7 ON Object_Member7.Id = MovementLinkObject_Member7.ObjectId
 
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = Movement.ParentId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                           ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_TransportGoods.MovementId
                                                AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Sale
-                                     ON MovementString_InvNumberPartner_Sale.MovementId =  Movement.ParentId
+                                     ON MovementString_InvNumberPartner_Sale.MovementId =  MovementLinkMovement_TransportGoods.MovementId
                                     AND MovementString_InvNumberPartner_Sale.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Sale
-                                   ON MovementDate_OperDatePartner_Sale.MovementId =  Movement.ParentId
+                                   ON MovementDate_OperDatePartner_Sale.MovementId =  MovementLinkMovement_TransportGoods.MovementId
                                   AND MovementDate_OperDatePartner_Sale.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.ParentId
+                                         ON MovementLinkObject_From.MovementId = MovementLinkMovement_TransportGoods.MovementId
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.ParentId
+                                         ON MovementLinkObject_To.MovementId = MovementLinkMovement_TransportGoods.MovementId
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.ParentId
+                                         ON MovementLinkObject_PaidKind.MovementId = MovementLinkMovement_TransportGoods.MovementId
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 

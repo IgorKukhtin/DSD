@@ -23,6 +23,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberId6 Integer, MemberName6 TVarChar
              , MemberId7 Integer, MemberName7 TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , TotalCountBox TFloat
+             , TotalWeightBox TFloat
               )
 AS
 $BODY$
@@ -37,7 +39,7 @@ BEGIN
      THEN inMovementId:= lpInsertUpdate_Movement_TransportGoods (ioId              := inMovementId
                                                                , inInvNumber       := NEXTVAL ('Movement_TransportGoods_seq') :: TVarChar
                                                                , inOperDate        := inOperDate
-                                                               , inParentId        := inMovementId_Sale
+                                                               , inMovementId_Sale := inMovementId_Sale
                                                                , inInvNumberMark   := NULL
                                                                , inCarId           := NULL
                                                                , inCarTrailerId    := NULL
@@ -100,6 +102,9 @@ BEGIN
            , Object_From.ValueData    AS FromName
            , Object_To.Id             AS ToId
            , Object_To.ValueData      AS ToName
+
+           , 0 :: TFloat AS TotalCountBox
+           , 0 :: TFloat AS TotalWeightBox
 
        FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberMark
@@ -167,15 +172,19 @@ BEGIN
                                         AND MovementLinkObject_Member7.DescId = zc_MovementLinkObject_Member7()
             LEFT JOIN Object AS Object_Member7 ON Object_Member7.Id = MovementLinkObject_Member7.ObjectId
 
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = Movement.ParentId
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                           ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_TransportGoods.MovementId
                                                AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.ParentId
+                                         ON MovementLinkObject_From.MovementId = MovementLinkMovement_TransportGoods.MovementId
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.ParentId
+                                         ON MovementLinkObject_To.MovementId = MovementLinkMovement_TransportGoods.MovementId
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
