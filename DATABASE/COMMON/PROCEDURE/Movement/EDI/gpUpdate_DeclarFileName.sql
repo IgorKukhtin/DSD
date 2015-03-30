@@ -15,7 +15,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
    vbUserId := lpGetUserBySession(inSession);
 
-   PERFORM lpInsertUpdate_MovementString(zc_MovementString_FileName(), inMovementId, inFileName);
+   PERFORM lpInsertUpdate_MovementString(zc_MovementString_DeclarFileName(), inMovementId, inFileName);
 
 END;
 $BODY$
@@ -25,6 +25,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.03.15                         * 
  14.10.14                         * 
 
 */

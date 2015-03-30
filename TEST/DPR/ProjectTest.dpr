@@ -639,7 +639,10 @@ uses
   PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm},
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm},
-  Report_GoodsMI_Defroster in '..\..\Forms\Report\Report_GoodsMI_Defroster.pas' {Report_GoodsMI_DefrosterForm: TParentForm};
+  Report_GoodsMI_Defroster in '..\..\Forms\Report\Report_GoodsMI_Defroster.pas' {Report_GoodsMI_DefrosterForm: TParentForm},
+  MeDocCOMTest in '..\SOURCE\Component\MeDocCOMTest.pas',
+  StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
+  MeDocCOM in '..\..\SOURCE\MeDOC\MeDocCOM.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
