@@ -2,29 +2,26 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'>'
   ClientHeight = 649
   ClientWidth = 1014
-  ExplicitWidth = 1022
-  ExplicitHeight = 683
+  ExplicitWidth = 1030
+  ExplicitHeight = 684
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1014
-    Height = 590
+    Height = 592
     TabOrder = 3
-    ExplicitTop = 59
-    ExplicitWidth = 1020
-    ExplicitHeight = 590
-    ClientRectBottom = 586
-    ClientRectRight = 1010
+    ExplicitWidth = 1014
+    ExplicitHeight = 592
+    ClientRectBottom = 592
+    ClientRectRight = 1014
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
       ExplicitWidth = 1014
-      ExplicitHeight = 584
+      ExplicitHeight = 592
       inherited cxGrid: TcxGrid
-        Width = 1008
-        Height = 584
+        Width = 1014
+        Height = 592
         ExplicitWidth = 1014
-        ExplicitHeight = 584
+        ExplicitHeight = 592
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -123,7 +120,13 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
   end
   inherited Panel: TPanel
     Width = 1014
-    ExplicitWidth = 1020
+    ExplicitWidth = 1014
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -190,20 +193,6 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
           DataType = ftDateTime
         end>
     end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
-    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -224,7 +213,7 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -258,11 +247,6 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
           ItemName = 'bbDelete'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbReCompleteAll'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -272,15 +256,11 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -302,10 +282,6 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
-      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -343,28 +319,5 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
   inherited FormParams: TdsdFormParams
     Left = 384
     Top = 208
-  end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_GoodsQuality'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 272
-    Top = 224
   end
 end

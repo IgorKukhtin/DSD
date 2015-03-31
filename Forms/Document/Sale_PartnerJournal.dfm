@@ -1257,12 +1257,12 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
       Params = <
         item

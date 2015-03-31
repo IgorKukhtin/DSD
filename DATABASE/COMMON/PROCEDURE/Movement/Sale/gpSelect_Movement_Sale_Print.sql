@@ -854,5 +854,5 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 135428, inSession:= '2');
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 377284, inSession:= '2');
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 135428, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 377284, inSession:= zfCalc_UserAdmin());

@@ -25,8 +25,17 @@ BEGIN
 
      vbMovementId := NULL;
 
-     -- находим документ (по идее один товар - один GLN-код)
-     vbMovementId:= (SELECT Id FROM Movement WHERE DescId = zc_Movement_EDI() AND OperDate = inOrderOperDate AND InvNumber = inOrderInvNumber);
+     -- находим документ (по идее один товар - один GLN-код) + !!!по точке доставки!!!
+     vbMovementId:= (SELECT Movement.Id
+                     FROM Movement
+                          INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                                    ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                                   AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                                   AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                     WHERE Movement.DescId = zc_Movement_EDI()
+                       AND Movement.OperDate = inOrderOperDate
+                       AND Movement.InvNumber = inOrderInvNumber
+                    );
 
      -- определяется параметр
      vbDescCode:= (SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_OrderExternal());
