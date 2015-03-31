@@ -41,7 +41,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clLoss_Calc
+              Column = clAmount_Sh
             end
             item
               Format = ',0.####'
@@ -110,7 +110,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clLoss_Calc
+              Column = clAmount_Sh
             end
             item
               Format = ',0.####'
@@ -251,9 +251,9 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object clLoss_Calc: TcxGridDBColumn
+          object clAmount_Sh: TcxGridDBColumn
             Caption = #1055#1086#1090#1077#1088#1080' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'Loss_Calc'
+            DataBinding.FieldName = 'Amount_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
