@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , PartionGoodsDate TDateTime
              , Amount TFloat, Count TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
@@ -38,6 +39,9 @@ BEGIN
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                    AS MeasureName
+
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS Count
@@ -98,6 +102,15 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -106,6 +119,9 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                    AS MeasureName
+
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MovementItem.Amount                AS Amount
            , MIFloat_Count.ValueData            AS Count
@@ -191,6 +207,15 @@ BEGIN
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId 
             LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
                                                     AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()  
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
             ;
 
 
@@ -202,6 +227,9 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                    AS MeasureName
+
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MovementItem.Amount                AS Amount
            , MIFloat_Count.ValueData            AS Count
@@ -289,6 +317,15 @@ BEGIN
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId      
             LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
                                                     AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
+           
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             ;
 

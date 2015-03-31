@@ -9,8 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionPeresort(
     IN inSession             TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, LineNum Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsChildId Integer, GoodsChildCode Integer, GoodsChildName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar, MeasureName TVarChar
+             , GoodsChildId Integer, GoodsChildCode Integer, GoodsChildName TVarChar, GoodsChildGroupNameFull TVarChar, MeasureChildName TVarChar
              , Amount TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , PartionGoodsChild TVarChar, PartionGoodsDateChild TDateTime
@@ -33,10 +33,14 @@ BEGIN
             , tmpGoods.GoodsId                      AS GoodsId
             , tmpGoods.GoodsCode                    AS GoodsCode
             , tmpGoods.GoodsName                    AS GoodsName
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_Measure.ValueData                    AS MeasureName
 
             , CAST (NULL AS Integer)                AS GoodsChildId
             , CAST (NULL AS Integer)                AS GoodsChildCode
             , CAST (NULL AS TVarchar)               AS GoodsChildName
+            , CAST (NULL AS TVarchar)               AS GoodsChildGroupNameFull
+            , CAST (NULL AS TVarchar)               AS MeasureChildName
 
             , CAST (NULL AS TFloat)                 AS Amount
 
@@ -72,6 +76,15 @@ BEGIN
                                              AND MovementItem.isErased   = tmpIsErased.isErased
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
        SELECT
@@ -81,10 +94,15 @@ BEGIN
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_Measure.ValueData                    AS MeasureName
 
             , Object_GoodsChild.Id                   AS GoodsChildId
             , Object_GoodsChild.ObjectCode           AS GoodsChildCode
             , Object_GoodsChild.ValueData            AS GoodsChildName
+            , ObjectString_GoodsChild_GoodsGroupFull.ValueData AS GoodsChildGroupNameFull
+            , Object_MeasureChild.ValueData                    AS MeasureChildName
+
             , MovementItem.Amount               AS Amount
 
             , MIString_PartionGoods.ValueData   AS PartionGoods
@@ -133,6 +151,16 @@ BEGIN
                               AND MovementItemChild.ParentId   = MovementItem.Id
                               AND MovementItemChild.DescId     = zc_MI_Child()
                               AND MovementItemChild.isErased   = tmpIsErased.isErased
+
+             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
                        
              LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = MovementItemChild.ObjectId
 
@@ -148,6 +176,16 @@ BEGIN
                                               ON MILinkObject_GoodsKindChild.MovementItemId = MovementItemChild.Id
                                              AND MILinkObject_GoodsKindChild.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = MILinkObject_GoodsKindChild.ObjectId
+
+             LEFT JOIN ObjectString AS ObjectString_GoodsChild_GoodsGroupFull
+                                    ON ObjectString_GoodsChild_GoodsGroupFull.ObjectId = Object_GoodsChild.Id
+                                   AND ObjectString_GoodsChild_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsChild_Measure
+                                  ON ObjectLink_GoodsChild_Measure.ObjectId = Object_GoodsChild.Id
+                                 AND ObjectLink_GoodsChild_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_MeasureChild ON Object_MeasureChild.Id = ObjectLink_Goods_Measure.ChildObjectId
+
         --ORDER BY 2   --MovementItem.Id 
             ;
    ELSE
@@ -158,10 +196,14 @@ BEGIN
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_Measure.ValueData                    AS MeasureName
 
             , Object_GoodsChild.Id                   AS GoodsChildId
             , Object_GoodsChild.ObjectCode           AS GoodsChildCode
             , Object_GoodsChild.ValueData            AS GoodsChildName
+            , ObjectString_GoodsChild_GoodsGroupFull.ValueData AS GoodsChildGroupNameFull
+            , Object_MeasureChild.ValueData                    AS MeasureChildName
 
             , MovementItem.Amount               AS Amount
 
@@ -206,11 +248,21 @@ BEGIN
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                        AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
               
-            JOIN MovementItem AS MovementItemChild ON MovementItemChild.MovementId = inMovementId
-                              AND MovementItemChild.ParentId   = MovementItem.Id
-                              AND MovementItemChild.DescId     = zc_MI_Child()
-                              AND MovementItemChild.isErased   = tmpIsErased.isErased
+             JOIN MovementItem AS MovementItemChild ON MovementItemChild.MovementId = inMovementId
+                               AND MovementItemChild.ParentId   = MovementItem.Id
+                               AND MovementItemChild.DescId     = zc_MI_Child()
+                               AND MovementItemChild.isErased   = tmpIsErased.isErased
+
+             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
                        
+    
              LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = MovementItemChild.ObjectId
 
              LEFT JOIN MovementItemString AS MIString_PartionGoodsChild
@@ -225,6 +277,15 @@ BEGIN
                                               ON MILinkObject_GoodsKindChild.MovementItemId = MovementItemChild.Id
                                              AND MILinkObject_GoodsKindChild.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = MILinkObject_GoodsKindChild.ObjectId
+
+             LEFT JOIN ObjectString AS ObjectString_GoodsChild_GoodsGroupFull
+                                    ON ObjectString_GoodsChild_GoodsGroupFull.ObjectId = Object_GoodsChild.Id
+                                   AND ObjectString_GoodsChild_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsChild_Measure
+                                  ON ObjectLink_GoodsChild_Measure.ObjectId = Object_GoodsChild.Id
+                                 AND ObjectLink_GoodsChild_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_MeasureChild ON Object_MeasureChild.Id = ObjectLink_Goods_Measure.ChildObjectId
             ;
 
    END IF;
@@ -236,6 +297,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 31.03.15         * 
  11.12.14         *
 
 */

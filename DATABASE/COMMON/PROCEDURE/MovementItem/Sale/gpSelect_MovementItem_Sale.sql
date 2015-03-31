@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
+RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupNameFull TVarChar
+             , Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -35,6 +37,8 @@ BEGIN
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountChangePercent
            , CAST (NULL AS TFloat)      AS AmountPartner
@@ -89,6 +93,10 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -98,6 +106,7 @@ BEGIN
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , MovementItem.Amount
            , MIFloat_AmountChangePercent.ValueData  AS AmountChangePercent
@@ -181,6 +190,9 @@ BEGIN
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
             ;
      ELSE
 
@@ -191,6 +203,7 @@ BEGIN
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , MovementItem.Amount                    AS Amount
            , MIFloat_AmountChangePercent.ValueData  AS AmountChangePercent
@@ -271,6 +284,10 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = NULL -- zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = NULL -- MILinkObject_Asset.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
             ;
 
      END IF;

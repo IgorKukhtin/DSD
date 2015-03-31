@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnOut(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupNameFull TVarChar, MeasureName TVarChar             
+             , Amount TFloat, AmountPartner TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -30,6 +32,9 @@ BEGIN
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData     AS MeasureName
+
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
            , CAST (NULL AS TFloat)      AS Price
@@ -80,14 +85,26 @@ BEGIN
             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()/*inPriceListId*/, inOperDate:= vbOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
 */
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+  
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
        SELECT
-             MovementItem.Id					AS Id
-           , Object_Goods.Id          			AS GoodsId
-           , Object_Goods.ObjectCode  			AS GoodsCode
-           , Object_Goods.ValueData   			AS GoodsName
+             MovementItem.Id				 AS Id
+           , Object_Goods.Id          		 	 AS GoodsId
+           , Object_Goods.ObjectCode  		 	 AS GoodsCode
+           , Object_Goods.ValueData   		 	 AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                    AS MeasureName
+
            , MovementItem.Amount				AS Amount
            , MIFloat_AmountPartner.ValueData    AS AmountPartner
            , MIFloat_Price.ValueData 			AS Price
@@ -140,6 +157,15 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                  
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
             ;
 
      ELSE
@@ -147,9 +173,12 @@ BEGIN
      RETURN QUERY
        SELECT
              MovementItem.Id					AS Id
-           , Object_Goods.Id          			AS GoodsId
-           , Object_Goods.ObjectCode  			AS GoodsCode
-           , Object_Goods.ValueData   			AS GoodsName
+           , Object_Goods.Id          			 AS GoodsId
+           , Object_Goods.ObjectCode  			 AS GoodsCode
+           , Object_Goods.ValueData   			 AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                    AS MeasureName
+
            , MovementItem.Amount				AS Amount
            , MIFloat_AmountPartner.ValueData   	AS AmountPartner
            , MIFloat_Price.ValueData 			AS Price
@@ -202,6 +231,15 @@ BEGIN
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                  
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
             ;
 
      END IF;
@@ -215,6 +253,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.03.15         * add GoodsGroupNameFull
  14.02.14                                                       *
  10.02.14                                                       *
 */

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WeighingPartner(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupNameFull TVarChar
              , Amount TFloat, Amount_mi TFloat, AmountPartner TFloat, AmountPartner_mi TFloat
              , RealWeight TFloat, CountTare TFloat, WeightTare TFloat
              , Count TFloat, Count_mi TFloat, HeadCount TFloat, HeadCount_mi TFloat, BoxCount TFloat, BoxCount_mi TFloat
@@ -35,6 +36,7 @@ BEGIN
              tmpMI.MovementItemId :: Integer  AS Id
            , Object_Goods.ObjectCode          AS GoodsCode
            , Object_Goods.ValueData           AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , tmpMI.Amount :: TFloat           AS Amount
            , tmpMI.Amount_mi :: TFloat        AS Amount_mi
@@ -219,6 +221,7 @@ BEGIN
             UNION ALL
              SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END :: Integer AS MovementItemId
                   , MovementItem.ObjectId AS GoodsId
+
                   , 0 AS Amount
                   , MovementItem.Amount AS Amount_mi
 
@@ -330,6 +333,10 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
      ;
 

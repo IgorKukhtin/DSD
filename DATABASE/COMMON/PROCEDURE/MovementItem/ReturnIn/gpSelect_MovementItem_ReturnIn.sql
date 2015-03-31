@@ -15,7 +15,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
+RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupNameFull TVarChar             
+             , Amount TFloat, AmountPartner TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -38,6 +40,8 @@ BEGIN
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
            , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
@@ -87,6 +91,10 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
        SELECT
@@ -95,6 +103,8 @@ BEGIN
            , Object_Goods.Id          		AS GoodsId
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+
            , MovementItem.Amount		AS Amount
            , MIFloat_AmountPartner.ValueData    AS AmountPartner
            , MIFloat_Price.ValueData 		AS Price
@@ -152,6 +162,11 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = NULL -- zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = NULL -- MILinkObject_Asset.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                  
             ;
 
      ELSE
@@ -163,6 +178,8 @@ BEGIN
            , Object_Goods.Id          		AS GoodsId
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+
            , MovementItem.Amount		AS Amount
            , MIFloat_AmountPartner.ValueData   	AS AmountPartner
            , MIFloat_Price.ValueData 		AS Price
@@ -219,7 +236,12 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = NULL -- zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = NULL -- MILinkObject_Asset.ObjectId
-            ;
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                  
+           ;
      END IF;
 
 END;
@@ -230,6 +252,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Integer, TDateTime, Bool
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.03.15         * add GoodsGroupNameFull
  14.04.14                                                        * inOperDate
  08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100
  12.02.14                                                       * inPriceListId

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion_Master(
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat, PartionClose Boolean, PartionGoods TVarChar
              , Comment TVarChar
              , Count TFloat, RealWeight TFloat, CuterCount TFloat
@@ -28,6 +29,8 @@ BEGIN
             , MovementItem.ObjectId
             , Object_Goods.ObjectCode  AS GoodsCode
             , Object_Goods.ValueData   AS GoodsName
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_Measure.ValueData                    AS MeasureName
           
             , MovementItem.Amount          AS Amount
             
@@ -83,6 +86,15 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartionGoods
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id 
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
                                            
        WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
     
