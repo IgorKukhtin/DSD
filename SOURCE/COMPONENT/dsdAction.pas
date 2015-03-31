@@ -1586,7 +1586,10 @@ begin
     raise;
   end;
   result := true;
-  TParentForm(Owner).Close(Self);
+  if fsModal in TParentForm(Owner).FormState then
+     TParentForm(Owner).ModalResult := mrOk
+  else
+     TParentForm(Owner).Close(Self);
 end;
 
 procedure TdsdInsertUpdateGuides.Notification(AComponent: TComponent;
