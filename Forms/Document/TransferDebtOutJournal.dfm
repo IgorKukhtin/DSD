@@ -902,7 +902,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataType = ftDateTime
           ParamType = ptInput
         end>
-      isShowModal = False
+      isShowModal = True
     end
     object actGet_TTN: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -918,17 +918,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     end
     object actPrint_TTN: TdsdPrintAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
+      MoveParams = <>
       StoredProc = spSelectPrintTTN
       StoredProcList = <
         item

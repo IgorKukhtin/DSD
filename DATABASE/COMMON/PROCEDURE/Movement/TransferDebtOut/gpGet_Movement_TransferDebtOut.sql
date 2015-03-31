@@ -157,7 +157,7 @@ BEGIN
 
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
-           , Movement_TransportGoods.OperDate               AS OperDate_TransportGoods
+           , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

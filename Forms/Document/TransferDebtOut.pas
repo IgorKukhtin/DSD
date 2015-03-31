@@ -137,6 +137,8 @@ type
     colIsEDI: TcxGridDBColumn;
     colIsElectron: TcxGridDBColumn;
     colIsMedoc: TcxGridDBColumn;
+    actDialog_TTN: TdsdOpenForm;
+    mactPrint_TTN: TMultiAction;
   private
     { Private declarations }
   public

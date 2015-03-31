@@ -111,6 +111,11 @@ type
     cxLabel17: TcxLabel;
     GuidesInvNumberOrder: TdsdGuides;
     edInvNumberOrder: TcxButtonEdit;
+    actDialog_TTN: TdsdOpenForm;
+    spSelectPrintTTN: TdsdStoredProc;
+    actPrint_TTN: TdsdPrintAction;
+    mactPrint_TTN: TMultiAction;
+    bbPrint_TTN: TdxBarButton;
   private
     { Private declarations }
   public

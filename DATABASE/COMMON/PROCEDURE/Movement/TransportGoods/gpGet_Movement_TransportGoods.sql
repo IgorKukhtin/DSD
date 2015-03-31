@@ -35,6 +35,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- пытаемся еайти по продаже
+     IF inMovementId_Sale <> 0 AND COALESCE (inMovementId, 0) = 0
+     THEN
+         inMovementId:= (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId_Sale AND DescId = zc_MovementLinkMovement_TransportGoods());
+     END IF;
+
+     -- если надо - создаем
      IF COALESCE (inMovementId, 0) = 0
      THEN inMovementId:= lpInsertUpdate_Movement_TransportGoods (ioId              := inMovementId
                                                                , inInvNumber       := NEXTVAL ('Movement_TransportGoods_seq') :: TVarChar

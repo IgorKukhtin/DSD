@@ -2,6 +2,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 668
   ClientWidth = 1179
+  ExplicitLeft = -281
   ExplicitWidth = 1195
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -683,8 +684,8 @@ inherited Sale_OrderForm: TSale_OrderForm
     Top = 456
   end
   inherited ActionList: TActionList
-    Left = 55
-    Top = 303
+    Left = 47
+    Top = 279
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
@@ -1237,17 +1238,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object mactPrint_TTN: TMultiAction
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
+      MoveParams = <>
       ActionList = <
         item
           Action = actDialog_TTN
@@ -1281,24 +1272,26 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Name = 'Id'
           Value = Null
-          Component = MasterCDS
+          Component = FormParams
           ComponentItem = 'MovementId_TransportGoods'
+          ParamType = ptInput
         end
         item
           Name = 'MovementId_Sale'
           Value = Null
-          Component = MasterCDS
+          Component = FormParams
           ComponentItem = 'Id'
+          ParamType = ptInput
         end
         item
           Name = 'OperDate'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate_TransportGoods_calc'
+          Component = FormParams
+          ComponentItem = 'OperDate_TransportGoods'
           DataType = ftDateTime
           ParamType = ptInput
         end>
-      isShowModal = False
+      isShowModal = True
     end
     object actPrint_TTN: TdsdPrintAction
       Category = 'DSDLib'
@@ -1463,6 +1456,18 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbIsCalcAmountPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChangePercentAmount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1528,18 +1533,6 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Visible = True
           ItemName = 'bbPrint_Quality'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbIsCalcAmountPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChangePercentAmount'
         end
         item
           Visible = True
@@ -1693,8 +1686,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 280
-    Top = 552
+    Left = 40
+    Top = 328
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -1950,6 +1943,19 @@ inherited Sale_OrderForm: TSale_OrderForm
         Value = 'False'
         Component = cbCOMDOC
         DataType = ftBoolean
+      end
+      item
+        Name = 'MovementId_TransportGoods'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_TransportGoods'
+      end
+      item
+        Name = 'OperDate_TransportGoods'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDate_TransportGoods'
+        DataType = ftDateTime
       end>
     Left = 216
     Top = 248
