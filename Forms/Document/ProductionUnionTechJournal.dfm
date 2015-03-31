@@ -513,7 +513,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ExplicitLeft = 983
       ExplicitTop = 17
       ExplicitWidth = 100
-      ExplicitHeight = 21
+      ExplicitHeight = 22
       Width = 100
     end
     inherited cxLabel3: TcxLabel
@@ -651,6 +651,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object actUpdateChildDS: TdsdUpdateDataSet [9]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIChild
       StoredProcList = <
         item
@@ -665,6 +666,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object actGoodsKindChoiceChild: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -688,6 +690,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object actGoodsKindChoiceMaster: TOpenChoiceForm [19]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -873,6 +876,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object actReceiptChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actReceiptChoice'
       FormName = 'TReceipt_ObjectForm'
       FormNameParam.Value = 'TReceipt_ObjectForm'
@@ -1243,6 +1247,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   end
   inherited spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetUnErased'
+  end
+  inherited GuidesTo: TdsdGuides
+    PositionDataSet = 'MasterCDS'
+  end
+  inherited GuidesFrom: TdsdGuides
+    PositionDataSet = 'MasterCDS'
   end
   inherited spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_ProductionUnionTech_Child'
