@@ -640,12 +640,16 @@ uses
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm},
   Report_GoodsMI_Defroster in '..\..\Forms\Report\Report_GoodsMI_Defroster.pas' {Report_GoodsMI_DefrosterForm: TParentForm},
+  MeDocCOMTest in '..\SOURCE\Component\MeDocCOMTest.pas',
+  StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
+  MeDocCOM in '..\..\SOURCE\MeDOC\MeDocCOM.pas',
   CityKind in '..\..\Forms\Guides\CityKind.pas' {CityKindForm: TParentForm},
   CityKindEdit in '..\..\Forms\Guides\CityKindEdit.pas' {CityKindEditForm: TParentForm},
   FounderService in '..\..\Forms\Document\FounderService.pas' {FounderServiceForm: TParentForm},
   FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm},
   StoragePlace_Object in '..\..\Forms\Guides\StoragePlace_Object.pas' {StoragePlace_ObjectForm: TParentForm},
-  TaxJournalChoice in '..\..\Forms\Document\TaxJournalChoice.pas' {TaxJournalChoiceForm: TParentForm};
+  TaxJournalChoice in '..\..\Forms\Document\TaxJournalChoice.pas' {TaxJournalChoiceForm: TParentForm},
+  MEDOC_TLB in '..\..\SOURCE\MeDOC\MEDOC_TLB.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

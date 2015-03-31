@@ -64,7 +64,6 @@ requires
   fs16,
   frx16,
   frxDB16,
-  zlibex,
   kbmMemRunDXE2Pro;
 
 contains
@@ -118,6 +117,7 @@ contains
   Scales in '..\SOURCE\Scale\Scales.pas',
   SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
-  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas';
+  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
+  StatusXML in '..\SOURCE\EDI\StatusXML.pas';
 
 end.

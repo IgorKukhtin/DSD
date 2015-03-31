@@ -113,7 +113,7 @@ implementation
 
 uses Windows, VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
-  FormStorage, UnilWin, OrdrspXML, StrUtils;
+  FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML;
 
 procedure Register;
 begin
@@ -1747,6 +1747,7 @@ var
   i, j: integer;
   Stream: TStringStream;
   g, FileName: string;
+  Status: IXMLStatusType;
 begin
   FTPSetConnection;
   // загружаем файлы с FTP
@@ -1764,6 +1765,30 @@ begin
           Start;
           for i := 0 to List.Count - 1 do
           begin
+            if (AnsiLowerCase(copy(List[i], Length(List[i]) - 3, 4)) = '.xml')
+               and (AnsiLowerCase(copy(List[i], 1, 6)) = 'status') then
+            begin
+            (*
+              // тянем файл к нам
+              Stream.Clear;
+              FIdFTP.Get(List[i], Stream);
+              Status := LoadStatus(Stream.DataString);
+              spProtocol.ParamByName('inisOk').Value := Status.Status = '3';
+              spProtocol.ParamByName('inTaxNumber').Value := Status.DocNumber;
+              spProtocol.ParamByName('inEDIEvent').Value := Status.Description;
+              spProtocol.ParamByName('inOperMonth').Value :=
+                EncodeDate(StrToInt(copy(List[i], 36, 4)),
+                StrToInt(copy(List[i], 34, 2)), 1);
+              spProtocol.ParamByName('inFileName').Value :='';
+              spProtocol.Execute;
+              try
+                FIdFTP.ChangeDir('/archive');
+                FIdFTP.Put(Stream, List[i]);
+              finally
+                FIdFTP.ChangeDir(Directory);
+                FIdFTP.Delete(List[i]);
+              end;*)
+            end;
             // последние .rpl.
             if AnsiLowerCase(copy(List[i], Length(List[i]) - 3, 4)) = '.rpl'
             then

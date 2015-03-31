@@ -2,8 +2,8 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 641
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 676
+  ExplicitWidth = 1028
+  ExplicitHeight = 668
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1279,7 +1279,7 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.ParamType = ptInput
     end
     object mactPrint_TTN: TMultiAction
-      Category = 'DSDLib'
+      Category = 'TTN'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1306,7 +1306,7 @@ inherited SaleJournalForm: TSaleJournalForm
       ImageIndex = 15
     end
     object actDialog_TTN: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'TTN'
       MoveParams = <>
       Caption = 'actDialog_TTN'
       Hint = 'actDialog_TTN'
@@ -1334,10 +1334,10 @@ inherited SaleJournalForm: TSaleJournalForm
           DataType = ftDateTime
           ParamType = ptInput
         end>
-      isShowModal = False
+      isShowModal = True
     end
     object actGet_TTN: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'TTN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGet_TTN
@@ -1349,7 +1349,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = 'actGet_TTN'
     end
     object actPrint_TTN: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'TTN'
       MoveParams = <
         item
           FromParam.Name = 'id'
