@@ -24,10 +24,10 @@ type
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmount_Sh: TcxGridDBColumn;
+    clLoss_Calc: TcxGridDBColumn;
     clAmount_Send_in: TcxGridDBColumn;
     cAmount_Loss: TcxGridDBColumn;
-    clAmount_ProdUnion: TcxGridDBColumn;
+    clAmount_ProductionUnion: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;

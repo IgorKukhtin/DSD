@@ -4,7 +4,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
   ClientWidth = 1058
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -285
+  ExplicitLeft = -223
   ExplicitWidth = 1074
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -41,7 +41,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Sh
+              Column = clLoss_Calc
             end
             item
               Format = ',0.####'
@@ -64,7 +64,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_ProdUnion
+              Column = clAmount_ProductionUnion
             end
             item
               Format = ',0.####'
@@ -110,7 +110,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Sh
+              Column = clLoss_Calc
             end
             item
               Format = ',0.####'
@@ -133,7 +133,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_ProdUnion
+              Column = clAmount_ProductionUnion
             end
             item
               Format = ',0.####'
@@ -251,9 +251,9 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object clAmount_Sh: TcxGridDBColumn
+          object clLoss_Calc: TcxGridDBColumn
             Caption = #1055#1086#1090#1077#1088#1080' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'Amount_Sh'
+            DataBinding.FieldName = 'Loss_Calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -261,9 +261,9 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clAmount_ProdUnion: TcxGridDBColumn
+          object clAmount_ProductionUnion: TcxGridDBColumn
             Caption = #1092#1072#1082#1090' '#1087#1088#1086#1080#1079'-'#1074#1086' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'Amount_ProdUnion'
+            DataBinding.FieldName = 'Amount_ProductionUnion'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
