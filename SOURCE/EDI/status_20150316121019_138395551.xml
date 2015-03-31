@@ -1,0 +1,12 @@
+<Status>
+  <CustomerICID>366</CustomerICID>
+  <From>4823058711089</From>
+  <To>4823036500001</To>
+  <Date>2015-03-07</Date>
+  <Status>3</Status>
+  <DocNumber>366</DocNumber>
+  <Description>Накладная проверена покупателем</Description>
+  <DateIn>2015-03-07</DateIn>
+  <SizeInBytes>0</SizeInBytes>
+  <MessageClass>DECLAR</MessageClass>
+</Status>

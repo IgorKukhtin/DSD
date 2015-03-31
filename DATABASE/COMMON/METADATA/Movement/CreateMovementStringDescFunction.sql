@@ -34,6 +34,10 @@ CREATE OR REPLACE FUNCTION zc_MovementString_FileName() RETURNS Integer AS $BODY
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_FileName', 'Имя файла' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_FileName');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_DeclarFileName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_DeclarFileName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_DeclarFileName', 'Имя файла DECLAR' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_DeclarFileName');
+
 CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberBranch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberBranch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_InvNumberBranch', 'Номер филиала' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberBranch');
