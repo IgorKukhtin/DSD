@@ -32,7 +32,11 @@ BEGIN
                                                       ON MovementLinkObject_To.MovementId = Movement.Id
                                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                          LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
-              WHERE Movement.InvNumber = inInvNumber AND JuridicalFrom.OKPO = inOurOKPO  
+
+                         LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                  ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                 AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+              WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.OKPO = inOurOKPO  
                 AND JuridicalTo.OKPO = inFirmOKPO AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Tax();
         WHEN 'TaxCorrective' THEN
              SELECT Movement.Id INTO vbMovementId 
@@ -46,8 +50,12 @@ BEGIN
                                                       ON MovementLinkObject_To.MovementId = Movement.Id
                                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                          LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
-              WHERE Movement.InvNumber = inInvNumber AND JuridicalFrom.OKPO = inFirmOKPO  
-                AND JuridicalTo.OKPO = inOurOKPO AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective();
+                         LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                  ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                 AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+              WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.OKPO = inFirmOKPO  
+                AND JuridicalTo.OKPO = inOurOKPO 
+                AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective();
    END CASE;
    IF COALESCE(vbMovementId, 0) <> 0 THEN
       PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, true);
@@ -66,4 +74,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpUpdate_IsMedoc (ioId:= 0, inSession:= '2')
+-- select * from gpUpdate_IsElectronFromMedoc('24447183', '25288083', '3813', '05.01.2015'::TDateTime, 'TaxCorrective', '2');

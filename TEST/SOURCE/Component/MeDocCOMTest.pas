@@ -15,8 +15,8 @@ type
   published
     // запускаем КОМ объект
     procedure CreateMedocApplication;
-    procedure GetMedocDocument;
-    procedure GetOneMedocDocument;
+    procedure GetOneTaxMedocDocument;
+    procedure GetOneTaxCorrectiveMedocDocument;
   end;
 
 implementation
@@ -31,28 +31,7 @@ begin
   MedocCom := TMedocCOM.Create;
 end;
 
-procedure TMedocCOMTest.GetMedocDocument;
-var
-  MedocCom: TMedocCOM;
-  res: OleVariant;
-  i: integer;
-  rr, rrr: string;
-  val: OleVariant;
-begin
-  MedocCom := TMedocCOM.Create;
-  res := MedocCom.GetDocumentList(Date - 360, Date);
-  while not res.Eof do begin
-    for I := 0 to res.Fields.Count - 1 do begin
-        val := res.Fields.Item[i].Value;
-        rrr := val;
-        rr := rr + ';  ' + res.Fields.Item[i].Name + ' = ' + rrr
-    end;
-    rr := rr + ' #$#$#$ ';
-    res.Next;
-  end;
-end;
-
-procedure TMedocCOMTest.GetOneMedocDocument;
+procedure TMedocCOMTest.GetOneTaxMedocDocument;
 var
   MedocCom: TMedocCOM;
   Code: integer;
@@ -62,14 +41,35 @@ var
   s: string;
 begin
   MedocCom := TMedocCOM.Create;
-  res := MedocCom.GetDocumentList(Date - 360, Date);
+  res := MedocCom.GetDocumentList('F1201007', StrToDate('01.03.2015'));
   if not res.Eof then begin
      Code := res.Fields.Item['CODE'].Value;
      Params := MedocCom.GetDocumentByCode(Code);
   end;
   for I := 0 to Params.Count - 1 do
       s := s + Params[i].Name + ' = ' + Params[i].AsString + ';';
-  ShowMessage(s);
+  Check(false, s);
+end;
+
+procedure TMedocCOMTest.GetOneTaxCorrectiveMedocDocument;
+var
+  MedocCom: TMedocCOM;
+  Code: integer;
+  res: OleVariant;
+  Params: TParams;
+  i: integer;
+  s: string;
+begin
+  MedocCom := TMedocCOM.Create;
+  res := MedocCom.GetDocumentList('F1201207', StrToDate('01.03.2015'));
+  if not res.Eof then begin
+     Code := res.Fields.Item['CODE'].Value;
+     Params := MedocCom.GetDocumentByCode(Code);
+  end;
+  if Assigned(Params) then
+     for I := 0 to Params.Count - 1 do
+         s := s + Params[i].Name + ' = ' + Params[i].AsString + ';';
+  Check(false, s);
 end;
 
 procedure TMedocCOMTest.SetUp;
