@@ -48,6 +48,8 @@ type
     actStorageChoice: TOpenChoiceForm;
     actAssetChoice: TOpenChoiceForm;
     colPartionGoodsDate: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public

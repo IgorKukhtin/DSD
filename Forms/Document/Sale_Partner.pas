@@ -150,6 +150,7 @@ type
     colLineNum: TcxGridDBColumn;
     mactPrint_TTN: TMultiAction;
     actDialog_TTN: TdsdOpenForm;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

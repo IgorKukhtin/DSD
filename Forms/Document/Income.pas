@@ -138,6 +138,7 @@ type
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
   public
   end;

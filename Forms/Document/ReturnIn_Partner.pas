@@ -132,6 +132,7 @@ type
     mactPrint_TaxCorrective_Client: TMultiAction;
     mactPrint_TaxCorrective_Us: TMultiAction;
     colLineNum: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

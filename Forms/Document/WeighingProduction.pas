@@ -115,6 +115,8 @@ type
     cxLabel8: TcxLabel;
     edUser: TcxButtonEdit;
     UserGuides: TdsdGuides;
+    clGoodsGroupNameFull: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
   private
   public
   end;

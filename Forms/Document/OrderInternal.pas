@@ -71,6 +71,7 @@ type
     MeasureName: TcxGridDBColumn;
     ReceiptCode: TcxGridDBColumn;
     ReceiptName: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

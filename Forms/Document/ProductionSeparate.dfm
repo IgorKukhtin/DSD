@@ -60,7 +60,21 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colAmount: TcxGridDBColumn [2]
+          object colGoodsGroupNameFull: TcxGridDBColumn [0]
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object clMeasureName: TcxGridDBColumn [3]
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colAmount: TcxGridDBColumn [4]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -70,7 +84,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colHeadCount: TcxGridDBColumn [3]
+          object colHeadCount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -114,7 +128,21 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Column = colChildHeadCount
             end>
           Styles.Content = nil
-          object colChildAmount: TcxGridDBColumn [2]
+          object colCholdGoodsGroupNameFull: TcxGridDBColumn [0]
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object colCholdMeasureName: TcxGridDBColumn [3]
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colChildAmount: TcxGridDBColumn [4]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -125,7 +153,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 70
           end
-          object colChildHeadCount: TcxGridDBColumn [3]
+          object colChildHeadCount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -136,7 +164,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 60
           end
-          object colChildPartionGoods: TcxGridDBColumn [4]
+          object colChildPartionGoods: TcxGridDBColumn [6]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
@@ -185,6 +213,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     object actUpdateChildDS: TdsdUpdateDataSet [9]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIChild
       StoredProcList = <
         item

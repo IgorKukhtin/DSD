@@ -45,6 +45,10 @@ type
     colPartionGoodsDate: TcxGridDBColumn;
     colPartionGoodsDateChild: TcxGridDBColumn;
     colGoodsChildCode: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
+    clMeasureChildName: TcxGridDBColumn;
+    colGoodsChildGroupNameFull: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

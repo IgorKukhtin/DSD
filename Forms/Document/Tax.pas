@@ -81,6 +81,8 @@ type
     actInsertMaskDoc: TdsdInsertUpdateAction;
     actInsertMaskMulti: TMultiAction;
     bb: TdxBarButton;
+    clGoodsGroupNameFull: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public
