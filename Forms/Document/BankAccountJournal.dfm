@@ -3,7 +3,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientHeight = 377
   ClientWidth = 1028
   ExplicitWidth = 1044
-  ExplicitHeight = 412
+  ExplicitHeight = 415
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -491,6 +491,46 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
+      Hint = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
+      ImageIndex = 16
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
+      ReportNameParam.Value = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccount'
@@ -575,6 +615,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -597,6 +645,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object bbPrint1: TdxBarButton
+      Action = actPrint1
+      Category = 0
+      ShortCut = 16465
     end
   end
   inherited spMovementComplete: TdsdStoredProc
