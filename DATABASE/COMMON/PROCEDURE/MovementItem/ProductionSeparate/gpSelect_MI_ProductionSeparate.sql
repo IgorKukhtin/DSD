@@ -25,6 +25,9 @@ BEGIN
            , tmpGoods.GoodsId                       AS GoodsId
            , tmpGoods.GoodsCode                     AS GoodsCode
            , tmpGoods.GoodsName                     AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                    AS MeasureName
+
            , CAST (NULL AS TFloat)                  AS Amount
            , CAST (NULL AS TFloat)                  AS HeadCount
            , FALSE                                  AS isErased
@@ -42,6 +45,15 @@ BEGIN
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
+            
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
@@ -52,6 +64,9 @@ BEGIN
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                    AS MeasureName
+
            , MovementItem.Amount                    AS Amount
            , MIFloat_HeadCount.ValueData            AS HeadCount
            , MovementItem.isErased                  AS isErased
@@ -65,6 +80,16 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+           
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
        ORDER BY 2--MovementItem.Id
             ;
     RETURN NEXT Cursor1;
@@ -76,7 +101,10 @@ BEGIN
            , Object_Goods.Id          			AS GoodsId
            , Object_Goods.ObjectCode  			AS GoodsCode
            , Object_Goods.ValueData   			AS GoodsName
-           , MovementItem.Amount				AS Amount
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                    AS MeasureName
+
+           , MovementItem.Amount			 AS Amount
            , MIFloat_HeadCount.ValueData 		AS HeadCount
            , MovementItem.isErased              AS isErased
 
@@ -89,6 +117,16 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor1;
@@ -103,7 +141,10 @@ BEGIN
            , Object_Goods.Id          			AS GoodsId
            , Object_Goods.ObjectCode  			AS GoodsCode
            , Object_Goods.ValueData   			AS GoodsName
-           , MovementItem.Amount				AS Amount
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData                    AS MeasureName
+
+           , MovementItem.Amount			AS Amount
            , MIFloat_HeadCount.ValueData 		AS HeadCount
            , MovementItem.isErased              AS isErased
 
@@ -116,6 +157,16 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId 
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;
@@ -128,6 +179,7 @@ ALTER FUNCTION gpSelect_MI_ProductionSeparate (Integer, Boolean, Boolean, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 31.03.15         * 
  02.06.14                                                       *
  27.05.14                                                       * ÔÓÏÂÌˇÎ ‚ÒÂ
  16.07.13         *

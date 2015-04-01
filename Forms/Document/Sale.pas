@@ -167,6 +167,7 @@ type
     actPrint_Quality: TdsdPrintAction;
     mactPrint_TTN: TMultiAction;
     actDialog_TTN: TdsdOpenForm;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

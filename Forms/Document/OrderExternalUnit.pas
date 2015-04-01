@@ -109,6 +109,7 @@ type
     edOperDateEnd: TcxDateEdit;
     AmountForecastOrder: TcxGridDBColumn;
     AmountCalcOrder: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

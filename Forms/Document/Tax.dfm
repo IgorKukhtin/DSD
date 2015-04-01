@@ -2,9 +2,9 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitLeft = -102
+  ExplicitLeft = -246
   ExplicitWidth = 1083
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -63,6 +63,13 @@ inherited TaxForm: TTaxForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clGoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -93,6 +100,13 @@ inherited TaxForm: TTaxForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object clMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -357,6 +371,28 @@ inherited TaxForm: TTaxForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.ParamType = ptInput
+    end
     object mactPrint_Tax: TMultiAction [9]
       Category = 'DSDLib'
       MoveParams = <>
@@ -397,28 +433,6 @@ inherited TaxForm: TTaxForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.ParamType = ptInput
-    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -435,9 +449,13 @@ inherited TaxForm: TTaxForm
         item
         end>
     end
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
     object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -457,9 +475,6 @@ inherited TaxForm: TTaxForm
           DataType = ftString
         end>
       isShowModal = True
-    end
-    inherited actMovementItemContainer: TdsdOpenForm
-      Enabled = False
     end
     object actPrintTax_Us: TdsdPrintAction [18]
       Category = 'DSDLib'
@@ -591,6 +606,7 @@ inherited TaxForm: TTaxForm
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTax
       StoredProcList = <
         item
@@ -633,6 +649,7 @@ inherited TaxForm: TTaxForm
     object actSPPrintTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
@@ -667,6 +684,7 @@ inherited TaxForm: TTaxForm
     object actMedocProcedure: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectTax_Client
       StoredProcList = <
         item
@@ -677,6 +695,7 @@ inherited TaxForm: TTaxForm
     object actUpdateIsMedoc: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMedoc
       StoredProcList = <
         item
@@ -1420,6 +1439,10 @@ inherited TaxForm: TTaxForm
     Left = 160
     Top = 424
   end
+  inherited spGetTotalSumm: TdsdStoredProc
+    Left = 428
+    Top = 188
+  end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
@@ -1597,6 +1620,7 @@ inherited TaxForm: TTaxForm
     Top = 392
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     ComponentList = <>
     Left = 608
     Top = 96

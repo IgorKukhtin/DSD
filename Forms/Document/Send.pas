@@ -50,6 +50,8 @@ type
     colStorageName_Partion: TcxGridDBColumn;
     colPartionGoodsDate: TcxGridDBColumn;
     colPartionGoodsOperDate: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public

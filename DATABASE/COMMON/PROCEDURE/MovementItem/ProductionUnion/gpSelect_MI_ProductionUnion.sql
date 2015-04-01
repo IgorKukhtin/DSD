@@ -24,6 +24,7 @@ BEGIN
             , tmpGoods.GoodsId                      AS GoodsId
             , tmpGoods.GoodsCode                    AS GoodsCode
             , tmpGoods.GoodsName                    AS GoodsName
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Measure.ValueData              AS MeasureName
             , CAST (NULL AS TFloat)                 AS Amount
 
@@ -66,6 +67,10 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
        SELECT
@@ -75,6 +80,7 @@ BEGIN
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Measure.ValueData          AS MeasureName
 
             , MovementItem.Amount               AS Amount
@@ -155,6 +161,9 @@ BEGIN
                                     ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
                                    AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
             ;
 
     RETURN NEXT Cursor1;
@@ -168,6 +177,7 @@ BEGIN
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
             , MovementItem.Amount               AS Amount
 
@@ -247,6 +257,9 @@ BEGIN
                                     ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
                                    AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
             ;
     RETURN NEXT Cursor1;
    END IF;
@@ -259,7 +272,8 @@ BEGIN
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
-
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+  
             , MovementItem.Amount               AS Amount
             , MovementItem.ParentId             AS ParentId
 
@@ -353,6 +367,10 @@ BEGIN
                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;
@@ -365,6 +383,7 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 31.03.15         * add GoodsGroupNameFull
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  02.06.14                                                       *
  27.05.14                                                       * ÔÓÏÂÌˇÎ ‚ÒÂ

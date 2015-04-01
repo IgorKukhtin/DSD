@@ -49,6 +49,8 @@ type
     ParPartnerValue: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
     colAmountSumm: TcxGridDBColumn;
+    actPrint1: TdsdPrintAction;
+    bbPrint1: TdxBarButton;
   private
     { Private declarations }
   public

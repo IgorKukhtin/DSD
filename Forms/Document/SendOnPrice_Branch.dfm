@@ -3,7 +3,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 740
   ExplicitWidth = 756
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -81,7 +81,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object clGoodsGroupNameFull: TcxGridDBColumn [0]
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object colCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -89,7 +96,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 45
           end
-          object colName: TcxGridDBColumn [1]
+          object colName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -97,7 +104,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 200
           end
-          object colGoodsKindName: TcxGridDBColumn [2]
+          object colGoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -113,7 +120,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn [3]
+          object colPartionGoods: TcxGridDBColumn [4]
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -122,7 +129,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 120
           end
-          object colMeasureName: TcxGridDBColumn [4]
+          object colMeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -130,7 +137,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 41
           end
-          object colChangePercentAmount: TcxGridDBColumn [5]
+          object colChangePercentAmount: TcxGridDBColumn [6]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             Visible = False
@@ -139,7 +146,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 55
           end
-          object colAmount: TcxGridDBColumn [6]
+          object colAmount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -149,7 +156,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colAmountChangePercent: TcxGridDBColumn [7]
+          object colAmountChangePercent: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'AmountChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -161,7 +168,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountPartner: TcxGridDBColumn [8]
+          object colAmountPartner: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -171,7 +178,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colPrice: TcxGridDBColumn [9]
+          object colPrice: TcxGridDBColumn [10]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -181,7 +188,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn [10]
+          object colCountForPrice: TcxGridDBColumn [11]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -189,7 +196,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object colAmountSumm: TcxGridDBColumn [11]
+          object colAmountSumm: TcxGridDBColumn [12]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -378,6 +385,34 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1088#1080#1093#1086#1076')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1088#1080#1093#1086#1076')'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrintOut: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
@@ -411,34 +446,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1088#1080#1093#1086#1076')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1088#1080#1093#1086#1076')'
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_SendOnPrice'
-      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
-      ReportNameParam.ParamType = ptInput
-    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -458,6 +465,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''

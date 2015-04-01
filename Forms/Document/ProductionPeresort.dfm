@@ -2,8 +2,9 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
   ClientHeight = 674
   ClientWidth = 1128
-  ExplicitWidth = 1136
-  ExplicitHeight = 708
+  ExplicitLeft = -271
+  ExplicitWidth = 1144
+  ExplicitHeight = 712
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -98,7 +99,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object clGoodsGroupNameFull: TcxGridDBColumn [0]
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object colCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -106,7 +114,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 75
           end
-          object colName: TcxGridDBColumn [1]
+          object colName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -114,7 +122,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 150
           end
-          object colGoodsKindName: TcxGridDBColumn [2]
+          object colGoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -129,7 +137,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn [3]
+          object clMeasureName: TcxGridDBColumn [4]
+            Caption = #1045#1076'. '#1080#1079#1084'. ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 59
+          end
+          object colPartionGoods: TcxGridDBColumn [5]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088'('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -137,7 +152,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 121
           end
-          object colPartionGoodsDate: TcxGridDBColumn [4]
+          object colPartionGoodsDate: TcxGridDBColumn [6]
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoodsDate'
             Visible = False
@@ -145,7 +160,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colGoodsChildCode: TcxGridDBColumn [5]
+          object colGoodsChildGroupNameFull: TcxGridDBColumn [7]
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsChildGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object colGoodsChildCode: TcxGridDBColumn [8]
             Caption = #1050#1086#1076' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsChildCode'
             HeaderAlignmentHorz = taCenter
@@ -153,7 +175,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 55
           end
-          object colGoodsChildName: TcxGridDBColumn [6]
+          object colGoodsChildName: TcxGridDBColumn [9]
             Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsChildName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -168,7 +190,12 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 133
           end
-          object colGoodsKindChildName: TcxGridDBColumn [7]
+          object clMeasureChildName: TcxGridDBColumn [10]
+            Caption = #1045#1076'. '#1080#1079#1084'. ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'MeasureChildName'
+            Width = 59
+          end
+          object colGoodsKindChildName: TcxGridDBColumn [11]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsKindChildName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -183,7 +210,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPartionGoodsChild: TcxGridDBColumn [8]
+          object colPartionGoodsChild: TcxGridDBColumn [12]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoodsChild'
             Visible = False
@@ -191,7 +218,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 166
           end
-          object colPartionGoodsDateChild: TcxGridDBColumn [9]
+          object colPartionGoodsDateChild: TcxGridDBColumn [13]
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoodsDateChild'
             Visible = False
@@ -199,7 +226,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colAmount: TcxGridDBColumn [10]
+          object colAmount: TcxGridDBColumn [14]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -209,7 +236,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
-          object colComment: TcxGridDBColumn [11]
+          object colComment: TcxGridDBColumn [15]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -350,6 +377,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     object actGoodsKindChildChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindChildForm'
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
@@ -373,6 +401,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
@@ -396,6 +425,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     object actGoodsChildChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsChildForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
@@ -425,6 +455,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     object actPartionGoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PartionGoodsForm'
       FormName = 'TPartionGoodsChoiceForm'
       FormNameParam.Value = 'TPartionGoodsChoiceForm'
@@ -1180,6 +1211,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     ComponentList = <
       item
       end>
