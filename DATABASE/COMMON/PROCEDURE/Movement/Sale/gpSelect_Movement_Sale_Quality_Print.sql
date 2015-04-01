@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_GoodsQuality_Print()
+-- Function: gpSelect_Movement_Sale_Quality_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_GoodsQuality_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Quality_Print (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_GoodsQuality_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Quality_Print(
     IN inMovementId         Integer  , -- ключ Документа
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -122,7 +122,7 @@ BEGIN
                                                 ON MLO_Quality.ObjectId = tmp.QualityId
                                                AND MLO_Quality.DescId = zc_MovementLinkObject_Quality()
                   INNER JOIN Movement ON Movement.Id = MLO_Quality.MovementId
-                                     AND Movement.DescId = zc_Movement_GoodsQuality()
+                                     AND Movement.DescId = zc_Movement_QualityParams()
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
                                      AND Movement.OperDate <= vbOperDate
             )
@@ -182,6 +182,7 @@ BEGIN
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
            , OH_JuridicalDetails_From.FullName                                        AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress                                AS JuridicalAddress_From
+           , Object_To.ValueData                                                      AS PartnerName
 
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName
            , Object_Measure.ValueData                                                 AS MeasureName
@@ -250,6 +251,14 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = tmpMI.MovementId
                                         AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_To.ObjectId)
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  tmpMI.MovementId
@@ -368,7 +377,7 @@ BEGIN
                                                 ON MLO_Quality.ObjectId = tmp.QualityId
                                                AND MLO_Quality.DescId = zc_MovementLinkObject_Quality()
                   INNER JOIN Movement ON Movement.Id = MLO_Quality.MovementId
-                                     AND Movement.DescId = zc_Movement_GoodsQuality()
+                                     AND Movement.DescId = zc_Movement_QualityParams()
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
                                      AND Movement.OperDate <= vbOperDate
             )
@@ -428,6 +437,7 @@ BEGIN
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
            , OH_JuridicalDetails_From.FullName                                        AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress                                AS JuridicalAddress_From
+           , Object_To.ValueData                                                      AS PartnerName
 
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName
            , Object_Measure.ValueData                                                 AS MeasureName
@@ -497,6 +507,14 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_To.ObjectId)
+
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  tmpMI.MovementId
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -520,7 +538,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_GoodsQuality_Print (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Sale_Quality_Print (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -530,4 +548,4 @@ ALTER FUNCTION gpSelect_Movement_GoodsQuality_Print (Integer, TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_GoodsQuality_Print (inMovementId:= 130359, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Sale_Quality_Print (inMovementId:= 130359, inSession:= zfCalc_UserAdmin());

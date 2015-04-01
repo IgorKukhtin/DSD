@@ -1,4 +1,4 @@
-unit GoodsQualityMovement;
+unit QualityParams;
 
 interface
 
@@ -21,13 +21,13 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TGoodsQualityMovementForm = class(TAncestorEditDialogForm)
+  TQualityParamsForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
     Код: TcxLabel;
     cxLabel4: TcxLabel;
-    ceGoodsQualityForm: TcxButtonEdit;
+    edGoodsQualityForm: TcxButtonEdit;
     ceOperDate: TcxDateEdit;
-    GoodsQualityFormGuides: TdsdGuides;
+    GuidesGoodsQuality: TdsdGuides;
     GuidesFiller: TGuidesFiller;
     cxLabel9: TcxLabel;
     ceOperDateCertificate: TcxDateEdit;
@@ -56,6 +56,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TGoodsQualityMovementForm);
+  RegisterClass(TQualityParamsForm);
 
 end.

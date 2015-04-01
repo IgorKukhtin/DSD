@@ -50,7 +50,8 @@ uses
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
-  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas';
+  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
+  StatusXML in '..\SOURCE\EDI\StatusXML.pas';
 
 {$R *.res}
 

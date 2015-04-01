@@ -8683,7 +8683,7 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id_Postgres= case when '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' = 0 then null else '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' end where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;

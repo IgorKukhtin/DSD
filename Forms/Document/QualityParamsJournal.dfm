@@ -1,4 +1,4 @@
-inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
+inherited QualityParamsJournalForm: TQualityParamsJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'>'
   ClientHeight = 649
   ClientWidth = 1014
@@ -131,7 +131,8 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      FormName = 'TGoodsQualityMovementForm'
+      FormName = 'TQualityParamsForm'
+      FormNameParam.Value = 'TQualityParamsForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -149,8 +150,8 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
-      FormName = 'TGoodsQualityMovementForm'
-      FormNameParam.Value = 'TGoodsQualityMovementForm'
+      FormName = 'TQualityParamsForm'
+      FormNameParam.Value = 'TQualityParamsForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -171,7 +172,8 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      FormName = 'TGoodsQualityMovementForm'
+      FormName = 'TQualityParamsForm'
+      FormNameParam.Value = 'TQualityParamsForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -203,7 +205,7 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
     Top = 104
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_GoodsQuality'
+    StoredProcName = 'gpSelect_Movement_QualityParams'
     Left = 280
     Top = 384
   end
@@ -297,17 +299,17 @@ inherited GoodsQualityMovementJournalForm: TGoodsQualityMovementJournalForm
     Top = 120
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_GoodsQuality'
+    StoredProcName = 'gpComplete_Movement_QualityParams'
     Left = 816
     Top = 176
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_GoodsQuality'
+    StoredProcName = 'gpUnComplete_Movement_QualityParams'
     Left = 776
     Top = 296
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_GoodsQuality'
+    StoredProcName = 'gpSetErased_Movement_QualityParams'
     DataSet = MasterCDS
     DataSets = <
       item

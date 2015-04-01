@@ -1,10 +1,10 @@
-﻿inherited GoodsQualityMovementForm: TGoodsQualityMovementForm
+﻿inherited QualityParamsForm: TQualityParamsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'>'
   ClientHeight = 436
   ClientWidth = 777
   AddOnFormData.isSingle = False
   ExplicitWidth = 783
-  ExplicitHeight = 468
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -38,7 +38,7 @@
     Top = 100
     Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
   end
-  object ceGoodsQualityForm: TcxButtonEdit [5]
+  object edGoodsQualityForm: TcxButtonEdit [5]
     Left = 8
     Top = 119
     Properties.Buttons = <
@@ -191,7 +191,7 @@
     Top = 316
   end
   inherited spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_GoodsQuality'
+    StoredProcName = 'gpInsertUpdate_Movement_QualityParams'
     Params = <
       item
         Name = 'ioid'
@@ -273,7 +273,7 @@
       item
         Name = 'inQualityId'
         Value = ''
-        Component = GoodsQualityFormGuides
+        Component = GuidesGoodsQuality
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -291,7 +291,7 @@
       end
       item
         Value = ''
-        Component = GoodsQualityFormGuides
+        Component = GuidesGoodsQuality
         ComponentItem = 'Key'
         ParamType = ptUnknown
       end>
@@ -299,7 +299,7 @@
     Top = 224
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_GoodsQuality'
+    StoredProcName = 'gpGet_Movement_QualityParams'
     Params = <
       item
         Name = 'inMovementId'
@@ -384,13 +384,13 @@
       item
         Name = 'QualityId'
         Value = ''
-        Component = GoodsQualityFormGuides
+        Component = GuidesGoodsQuality
         ComponentItem = 'Key'
       end
       item
         Name = 'QualityName'
         Value = ''
-        Component = GoodsQualityFormGuides
+        Component = GuidesGoodsQuality
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -405,13 +405,13 @@
       end
       item
         Value = ''
-        Component = GoodsQualityFormGuides
+        Component = GuidesGoodsQuality
         ComponentItem = 'Key'
         ParamType = ptUnknown
       end
       item
         Value = ''
-        Component = GoodsQualityFormGuides
+        Component = GuidesGoodsQuality
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptUnknown
@@ -455,9 +455,9 @@
     Left = 544
     Top = 216
   end
-  object GoodsQualityFormGuides: TdsdGuides
+  object GuidesGoodsQuality: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceGoodsQualityForm
+    LookupControl = edGoodsQualityForm
     FormNameParam.Value = 'TGoodsQualityForm'
     FormNameParam.DataType = ftString
     FormName = 'TGoodsQualityForm'
@@ -466,13 +466,13 @@
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsQualityFormGuides
+        Component = GuidesGoodsQuality
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsQualityFormGuides
+        Component = GuidesGoodsQuality
         ComponentItem = 'TextValue'
         DataType = ftString
       end>

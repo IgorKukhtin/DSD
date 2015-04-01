@@ -1530,8 +1530,8 @@
 				<Form>Partner1CLinkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\GoodsQualityMovementJournal.pas">
-				<Form>GoodsQualityMovementJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\QualityParamsJournal.pas">
+				<Form>QualityParamsJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionUnionTechEdit.pas">
@@ -1767,8 +1767,8 @@
 				<Form>ProductionPeresortForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\GoodsQualityMovement.pas">
-				<Form>GoodsQualityMovementForm</Form>
+			<DCCReference Include="..\..\Forms\Document\QualityParams.pas">
+				<Form>QualityParamsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
