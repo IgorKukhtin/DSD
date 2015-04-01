@@ -2153,7 +2153,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Top = 432
   end
   object spSelectPrintQuality: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_GoodsQuality_Print'
+    StoredProcName = 'gpSelect_Movement_Quality_Print'
     DataSet = PrintItemsCDS
     DataSets = <
       item

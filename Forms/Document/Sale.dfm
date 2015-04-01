@@ -3,8 +3,9 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1179
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -197
   ExplicitWidth = 1195
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -3619,7 +3620,7 @@ inherited SaleForm: TSaleForm
     Top = 328
   end
   object spSelectPrintQuality: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_GoodsQuality_Print'
+    StoredProcName = 'gpSelect_Movement_Quality_Print'
     DataSet = PrintItemsCDS
     DataSets = <
       item

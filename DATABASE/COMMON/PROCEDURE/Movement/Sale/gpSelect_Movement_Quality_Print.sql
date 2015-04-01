@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_Sale_Quality_Print()
+-- Function: gpSelect_Movement_Quality_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Quality_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Quality_Print (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Quality_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Quality_Print(
     IN inMovementId         Integer  , -- ключ Документа
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -538,7 +538,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Sale_Quality_Print (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Quality_Print (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -548,4 +548,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Quality_Print (Integer, TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Quality_Print (inMovementId:= 130359, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Quality_Print (inMovementId:= 130359, inSession:= zfCalc_UserAdmin());

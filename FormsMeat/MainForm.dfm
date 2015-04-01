@@ -367,7 +367,7 @@ inherited MainForm: TMainForm
     object actGoodsQuality: TdsdOpenForm [23]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
+      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1090#1086#1074#1072#1088#1072' '#1076#1083#1103' '#1050'.'#1059'.'
       Hint = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
       FormName = 'TGoodsQualityForm'
       FormNameParam.Value = 'TGoodsQualityForm'
@@ -1697,13 +1697,13 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsQualityMovement: TdsdOpenForm
+    object actQualityParams: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1046#1091#1088#1085#1072#1083' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
-      Hint = #1046#1091#1088#1085#1072#1083' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
-      FormName = 'TGoodsQualityMovementJournalForm'
-      FormNameParam.Value = 'TGoodsQualityMovementJournalForm'
+      Caption = #1046#1091#1088#1085#1072#1083' '#1050'.'#1059'. - '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      Hint = #1046#1091#1088#1085#1072#1083' '#1050'.'#1059'. - '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      FormName = 'TQualityParamsJournalForm'
+      FormNameParam.Value = 'TQualityParamsJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2697,6 +2697,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actQualityDoc: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1046#1091#1088#1085#1072#1083' '#1074#1099#1087#1080#1089#1072#1085#1085#1099#1093' '#1050'.'#1059'. '
+      Hint = #1046#1091#1088#1085#1072#1083' '#1074#1099#1087#1080#1089#1072#1085#1085#1099#1093' '#1050'.'#1059'. '
+      FormName = 'TQualityDocJournalForm'
+      FormNameParam.Value = 'TQualityDocJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited cxLocalizer: TcxLocalizer
     Top = 32
@@ -2835,8 +2846,11 @@ inherited MainForm: TMainForm
       object miGoodsQuality: TMenuItem
         Action = actGoodsQuality
       end
-      object miGoodsQualityMovement: TMenuItem
-        Action = actGoodsQualityMovement
+      object miQualityParams: TMenuItem
+        Action = actQualityParams
+      end
+      object miQualityDoc: TMenuItem
+        Action = actQualityDoc
       end
       object N47: TMenuItem
         Caption = '-'
