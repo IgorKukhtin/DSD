@@ -117,6 +117,29 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     WITH tmpPersonal AS (SELECT tmp.PersonalId                             AS PersonalId
+                               , tmp.MemberId                               AS MemberId
+                               , ObjectLink_Personal_Position.ChildObjectId AS PositionId
+                               , ObjectLink_Personal_Unit.ChildObjectId     AS UnitId
+                          FROM (SELECT MAX (ObjectLink_Personal_Member.ObjectId) AS PersonalId
+                                     , MILinkObject_MoneyPlace.ObjectId          AS MemberId
+                                FROM _tmpItem
+                                     INNER JOIN  MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                        ON MILinkObject_MoneyPlace.MovementItemId = _tmpItem.MovementItemId
+                                                                       AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                     INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                           ON ObjectLink_Personal_Member.ChildObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                          AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                WHERE _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата + Заработная плата
+                                GROUP BY MILinkObject_MoneyPlace.ObjectId
+                               ) AS tmp
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                    ON ObjectLink_Personal_Position.ObjectId = tmp.PersonalId
+                                                   AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                    ON ObjectLink_Personal_Unit.ObjectId = tmp.PersonalId
+                                                   AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                         )
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency, OperSumm_Diff
                          , MovementItemId, ContainerId, ContainerId_Currency, ContainerId_Diff, ProfitLossId_Diff
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -129,7 +152,7 @@ BEGIN
                           )
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
-             , COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)) AS ObjectId
+             , COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , CASE WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                      AND _tmpItem.isActive = TRUE
@@ -198,8 +221,8 @@ BEGIN
                -- Главное Юр.лицо всегда из р/сч.
              , _tmpItem.JuridicalId_Basis
 
-             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
-             , 0 AS PositionId -- не используется
+             , COALESCE (tmpPersonal.UnitId, COALESCE (MILinkObject_Unit.ObjectId, 0)) AS UnitId
+             , COALESCE (tmpPersonal.PositionId, 0) AS PositionId -- не используется
 
                -- Филиал Баланс: всегда из р/сч. (а значение кстати=0)
              , _tmpItem.BranchId_Balance
@@ -207,7 +230,7 @@ BEGIN
              , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss
 
                -- Месяц начислений: пока нет
-             , 0 AS ServiceDateId
+             , CASE WHEN tmpPersonal.MemberId > 0 THEN lpInsertFind_Object_ServiceDate (inOperDate:= _tmpItem.OperDate) ELSE 0 END AS ServiceDateId
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , zc_Enum_PaidKind_FirstForm() AS PaidKindId -- Всегда БН
@@ -239,6 +262,8 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                               ON MILinkObject_MoneyPlace.MovementItemId = _tmpItem.MovementItemId
                                              AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = MILinkObject_MoneyPlace.ObjectId
+
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                               ON MILinkObject_Unit.MovementItemId = _tmpItem.MovementItemId
                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -250,12 +275,12 @@ BEGIN
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId
                                  AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
 
-             LEFT JOIN Object ON Object.Id = COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
+             LEFT JOIN Object ON Object.Id = COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId))
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = COALESCE (tmpPersonal.UnitId, MILinkObject_Unit.ObjectId)
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = COALESCE (tmpPersonal.UnitId, MILinkObject_Unit.ObjectId)
                                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
+             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = COALESCE (tmpPersonal.UnitId, MILinkObject_Unit.ObjectId)
                                                                                                           AND Object.Id IS NULL -- !!!нужен только для затрат!!!
        ;
 

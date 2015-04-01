@@ -185,6 +185,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -830,6 +833,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object actGoodsBoxChoice: TOpenChoiceForm [8]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'BoxForm'
       FormName = 'TBoxForm'
       FormNameParam.Value = 'TBoxForm'
@@ -849,6 +853,37 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataType = ftString
         end>
       isShowModal = True
+    end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.ParamType = ptInput
     end
     object mactPrint_Sale: TMultiAction [11]
       Category = 'DSDLib'
@@ -1017,36 +1052,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
+    inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
+          StoredProc = spChangeStatus
         end
         item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
         end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.ParamType = ptInput
     end
     object actPrint_Bill: TdsdPrintAction [19]
       Category = 'DSDLib'
@@ -1084,14 +1096,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end>
-    end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -1103,6 +1107,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object actGoodsKindChoice: TOpenChoiceForm [23]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -1129,6 +1134,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object actSPPrintSaleBillProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameBill
       StoredProcList = <
         item
@@ -1139,6 +1145,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object actSPPrintSaleProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -1149,6 +1156,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object actSPPrintSaleTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
@@ -1172,6 +1180,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTax
       StoredProcList = <
         item
@@ -1241,6 +1250,50 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Status = mtComplete
       DataSource = TaxDS
     end
+    object mactPrint_TTN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDialog_TTN
+        end
+        item
+          Action = actPrint_TTN
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 15
+    end
+    object actDialog_TTN: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDialog_TTN'
+      Hint = 'actDialog_TTN'
+      FormName = 'TTransportGoodsForm'
+      FormNameParam.Value = 'TTransportGoodsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_TransportGoods'
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OperDate_TransportGoods'
+          DataType = ftDateTime
+        end>
+      isShowModal = True
+    end
     object actPrint_TTN: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1249,9 +1302,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         item
           StoredProc = spSelectPrintTTN
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      Hint = #1058#1058#1053
-      ImageIndex = 15
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
       ShortCut = 16464
       DataSets = <
         item
@@ -1277,6 +1329,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object actMedocProcedure: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectTax_Client
       StoredProcList = <
         item
@@ -1287,6 +1340,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object actUpdateIsMedoc: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMedoc
       StoredProcList = <
         item
@@ -1509,6 +1563,10 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1553,7 +1611,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Category = 0
     end
     object bbPrint_TTN: TdxBarButton
-      Action = actPrint_TTN
+      Action = mactPrint_TTN
       Category = 0
     end
     object bbMeDoc: TdxBarButton
@@ -1621,8 +1679,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 280
-    Top = 552
+    Left = 56
+    Top = 352
   end
   inherited StatusGuides: TdsdGuides
     Left = 64
@@ -1836,6 +1894,19 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Value = ''
         Component = edTax
         DataType = ftString
+      end
+      item
+        Name = 'MovementId_TransportGoods'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_TransportGoods'
+      end
+      item
+        Name = 'OperDate_TransportGoods'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDate_TransportGoods'
+        DataType = ftDateTime
       end>
     Left = 216
     Top = 248

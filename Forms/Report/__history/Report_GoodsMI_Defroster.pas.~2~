@@ -24,7 +24,7 @@ type
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clLoss_Calc: TcxGridDBColumn;
+    clAmount_Sh: TcxGridDBColumn;
     clAmount_Send_in: TcxGridDBColumn;
     cAmount_Loss: TcxGridDBColumn;
     clAmount_ProductionUnion: TcxGridDBColumn;

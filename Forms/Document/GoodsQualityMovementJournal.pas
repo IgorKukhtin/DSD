@@ -21,9 +21,6 @@ type
     CertificateSeriesNumber: TcxGridDBColumn;
     ExpertPrior: TcxGridDBColumn;
     N13: TMenuItem;
-    actReCompleteAll: TdsdExecStoredProc;
-    spMovementReCompleteAll: TdsdStoredProc;
-    bbReCompleteAll: TdxBarButton;
   private
     { Private declarations }
   public
