@@ -3,7 +3,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 850
   AddOnFormData.isSingle = False
   ExplicitWidth = 858
-  ExplicitHeight = 709
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -129,6 +129,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
       ShortCut = 45
       ImageIndex = 0
       FormNameParam.Value = ''
@@ -177,6 +178,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
       ShortCut = 115
       ImageIndex = 1
       FormNameParam.Value = ''
@@ -380,6 +382,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     object spReCompete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementReComplete
       StoredProcList = <
         item
@@ -390,6 +393,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     object spCompete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -400,6 +404,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     object spUncomplete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -410,6 +415,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     object spErased: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -666,6 +672,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 136
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

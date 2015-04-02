@@ -1453,6 +1453,7 @@ function TEDI.InsertUpdateComDoc(ЕлектроннийДокумент
 var
   MovementId, GoodsPropertyId: integer;
   i: integer;
+  Param: IXMLПараметрType;
 begin
   with spHeader, ЕлектроннийДокумент do
   begin
@@ -1465,6 +1466,14 @@ begin
         VarToDateTime(Заголовок.ДатаДокументу);
     ParamByName('inPartnerInvNumber').Value := Заголовок.НомерДокументу;
     if Заголовок.КодТипуДокументу = '007' then begin
+
+       ParamByName('inGLNPlace').Value := '';
+       for i := 0 to Параметри.Count - 1 do
+           if Параметри.Параметр[i].назва = 'Точка доставки' then begin
+              ParamByName('inGLNPlace').Value := Параметри.Параметр[i].NodeValue;
+              break;
+           end;
+
        if Заголовок.ДокПідстава.ДатаДокументу = '' then
           ParamByName('inPartnerOperDate').Value :=
             VarToDateTime(Заголовок.ДатаДокументу)
@@ -1477,6 +1486,7 @@ begin
          VarToDateTime(Заголовок.ДатаДокументу);
     if Заголовок.КодТипуДокументу = '012' then
     begin
+      ParamByName('inGLNPlace').Value := '';
       ParamByName('inDesc').Value := 'Return';
       ParamByName('inInvNumberTax').Value :=
         Параметри.ParamByName('Номер податкової накладної').NodeValue;

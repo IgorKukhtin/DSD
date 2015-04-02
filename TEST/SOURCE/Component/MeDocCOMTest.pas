@@ -46,8 +46,9 @@ begin
      Code := res.Fields.Item['CODE'].Value;
      Params := MedocCom.GetDocumentByCode(Code);
   end;
-  for I := 0 to Params.Count - 1 do
-      s := s + Params[i].Name + ' = ' + Params[i].AsString + ';';
+  if Assigned(Params) then
+     for I := 0 to Params.Count - 1 do
+         s := s + Params[i].Name + ' = ' + Params[i].AsString + ';';
   Check(false, s);
 end;
 

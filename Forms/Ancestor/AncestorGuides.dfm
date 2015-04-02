@@ -1,9 +1,13 @@
 inherited AncestorGuidesForm: TAncestorGuidesForm
   AddOnFormData.isAlwaysRefresh = False
+  ExplicitWidth = 583
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 575
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -20,6 +24,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
       ShortCut = 45
       ImageIndex = 0
       FormNameParam.Value = ''
@@ -38,6 +43,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
       ShortCut = 115
       ImageIndex = 1
       FormNameParam.Value = ''

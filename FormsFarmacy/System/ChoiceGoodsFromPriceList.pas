@@ -40,6 +40,8 @@ type
     colGoodsNDS: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
     Panel1: TPanel;
+    actDeleteLink: TdsdExecStoredProc;
+    spDeleteLink: TdsdStoredProc;
   private
     { Private declarations }
   public

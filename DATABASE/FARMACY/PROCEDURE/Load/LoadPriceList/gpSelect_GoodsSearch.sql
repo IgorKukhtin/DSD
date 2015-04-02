@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar,
                GoodsId Integer, Code Integer, Name TVarChar, 
                Price TFloat, ProducerName TVarChar, JuridicalName TVarChar,
                ContractName TVarChar, ExpirationDate TDateTime, 
-               MinimumLot TFloat, NDS TFloat
+               MinimumLot TFloat, NDS TFloat, LinkGoodsId Integer
 )
 
 AS
@@ -42,7 +42,8 @@ BEGIN
          Object_Contract.ValueData  AS ContractName,
          LoadPriceListItem.ExpirationDate,
          PartnerGoods.MinimumLot,
-         Object_Goods.NDS
+         Object_Goods.NDS,
+         LinkGoods.Id AS LinkGoodsId
 
        FROM LoadPriceListItem 
 
@@ -57,8 +58,10 @@ BEGIN
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
             LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId = LoadPriceList.JuridicalId 
                                        AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
+            LEFT JOIN Object_LinkGoods_View AS LinkGoods ON LinkGoods.GoodsMainId = Object_Goods.Id 
+                                                        AND LinkGoods.GoodsId = PartnerGoods.Id
       WHERE upper(LoadPriceListItem.GoodsName) LIKE UPPER('%'||inGoodsSearch||'%') AND inGoodsSearch <> ''
-        AND COALESCE(JuridicalSettingsPriceList.isPriceClose, FALSE) <> TRUE; 
+        AND COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE; 
 
 END;
 $BODY$
@@ -69,6 +72,7 @@ ALTER FUNCTION gpSelect_GoodsSearch (TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.04.15                        *
  29.10.14                        *
 
 */

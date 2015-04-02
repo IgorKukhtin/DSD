@@ -169,7 +169,14 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     end
     object actDeleteLink: TdsdExecStoredProc
       Category = 'Delete'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'GoodsId'
+        end>
+      PostDataSetBeforeExecute = False
       StoredProc = spDeleteLink
       StoredProcList = <
         item
@@ -212,6 +219,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     object OpenChoiceForm: TOpenChoiceForm
       Category = 'Insert'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'OpenChoiceForm'
       FormName = 'TGoodsMainLiteForm'
       FormNameParam.Value = 'TGoodsMainLiteForm'
@@ -240,6 +248,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     object actSetLink: TdsdExecStoredProc
       Category = 'Insert'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInserUpdateGoodsLink
       StoredProcList = <
         item
@@ -250,6 +259,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     object dsdUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInserUpdateGoodsLink
       StoredProcList = <
         item
@@ -419,6 +429,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     Top = 108
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

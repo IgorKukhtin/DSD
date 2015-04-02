@@ -64,8 +64,7 @@ requires
   fs16,
   frx16,
   frxDB16,
-  kbmMemRunDXE2Pro,
-  ZLibEx;
+  kbmMemRunDXE2Pro;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -119,6 +118,8 @@ contains
   SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  StatusXML in '..\SOURCE\EDI\StatusXML.pas';
+  StatusXML in '..\SOURCE\EDI\StatusXML.pas',
+  MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas',
+  MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas';
 
 end.

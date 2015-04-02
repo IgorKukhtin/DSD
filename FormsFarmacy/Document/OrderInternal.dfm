@@ -500,7 +500,6 @@ inherited OrderInternalForm: TOrderInternalForm
       ExplicitLeft = 5
       ExplicitTop = 22
       ExplicitWidth = 142
-      ExplicitHeight = 22
       Width = 142
     end
     object edUnit: TcxButtonEdit
@@ -672,6 +671,7 @@ inherited OrderInternalForm: TOrderInternalForm
     object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -708,6 +708,7 @@ inherited OrderInternalForm: TOrderInternalForm
     object actUpdatePrioritetPartner: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdatePrioritetPartner
       StoredProcList = <
         item
@@ -746,6 +747,7 @@ inherited OrderInternalForm: TOrderInternalForm
     object actDeleteLink: TdsdExecStoredProc
       Category = 'DeleteLink'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spDelete_Object_LinkGoodsByGoods
       StoredProcList = <
         item

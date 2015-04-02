@@ -504,6 +504,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportGroupForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadFlagFromMedocForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoadFlagFromMedocForm');
+
 end;
 
 procedure TLoadFormTest.LoadImportTypeFormTest;

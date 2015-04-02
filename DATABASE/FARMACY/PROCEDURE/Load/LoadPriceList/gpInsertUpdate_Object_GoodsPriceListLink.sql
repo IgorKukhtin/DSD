@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPriceListLink(Integer, TVarChar);
-
+                        
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPriceListLink(
     IN inPriceListItemId     Integer   ,    -- ключ объекта <Строка загрузки Прайс-Листа>
     IN inSession             TVarChar       -- текущий пользователь

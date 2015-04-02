@@ -278,7 +278,8 @@ uses
   BankStatementTest in '..\SOURCE\Movement\All\BankStatementTest.pas',
   BankStatementItemTest in '..\SOURCE\Movement\All\BankStatementItemTest.pas',
   Report_JuridicalCollation in '..\..\FormsFarmacy\Report\Report_JuridicalCollation.pas' {Report_JuridicalCollationForm: TParentForm},
-  Report_JuridicalSold in '..\..\FormsFarmacy\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm};
+  Report_JuridicalSold in '..\..\FormsFarmacy\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm},
+  StatusXML in '..\..\SOURCE\EDI\StatusXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

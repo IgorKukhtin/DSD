@@ -649,7 +649,8 @@ uses
   FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm},
   StoragePlace_Object in '..\..\Forms\Guides\StoragePlace_Object.pas' {StoragePlace_ObjectForm: TParentForm},
   TaxJournalChoice in '..\..\Forms\Document\TaxJournalChoice.pas' {TaxJournalChoiceForm: TParentForm},
-  MEDOC_TLB in '..\..\SOURCE\MeDOC\MEDOC_TLB.pas';
+  MEDOC_TLB in '..\..\SOURCE\MeDOC\MEDOC_TLB.pas',
+  LoadFlagFromMedoc in '..\..\Forms\Import\LoadFlagFromMedoc.pas' {LoadFlagFromMedocForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

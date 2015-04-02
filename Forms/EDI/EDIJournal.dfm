@@ -928,6 +928,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actStoredProcTaxCorrectivePrint: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectTaxCorrective_Client
       StoredProcList = <
         item
@@ -1035,6 +1036,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actStoredProcTaxPrint: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectTax_Client
       StoredProcList = <
         item
@@ -1045,6 +1047,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actSetDefaults: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetDefaultEDI
       StoredProcList = <
         item
@@ -1083,6 +1086,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actUpdate_EDIComdoc_Params: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdate_EDIComdoc_Params
       StoredProcList = <
         item
@@ -1096,6 +1100,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actUpdateMI_EDIComdoc: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -1151,6 +1156,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actExecPrintStoredProc: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -1193,6 +1199,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actUpdateEdiDesadvTrue: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateEdiDesadv
       StoredProcList = <
         item
@@ -1203,6 +1210,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actUpdateEdiInvoiceTrue: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateEdiInvoice
       StoredProcList = <
         item
@@ -1293,6 +1301,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -1304,6 +1313,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actChoiceContract: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ContractChoiceForm'
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = 'TContractChoiceForm'
@@ -1357,6 +1367,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actChoiceUnit: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Unit_ObjectForm'
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'
@@ -1382,6 +1393,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object actUpdateEdiOrdsprTrue: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateEdiOrdspr
       StoredProcList = <
         item
@@ -1858,6 +1870,11 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'inDesc'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGLNPlace'
+        Value = Null
         ParamType = ptInput
       end
       item
