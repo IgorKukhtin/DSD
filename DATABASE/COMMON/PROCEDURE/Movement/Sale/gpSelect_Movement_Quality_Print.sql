@@ -66,16 +66,21 @@ BEGIN
                    INNER JOIN ObjectLink AS ObjectLink_GoodsQuality_Goods
                                          ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
                                         AND ObjectLink_GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
+
+                   LEFT JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id = ObjectLink_GoodsQuality_Goods.ObjectId
+
                    LEFT JOIN ObjectLink AS ObjectLink_GoodsQuality_Quality
                                         ON ObjectLink_GoodsQuality_Quality.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                        AND ObjectLink_GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
-
-                   LEFT JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id = ObjectLink_GoodsQuality_Quality.ObjectId
 
                    LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = ObjectLink_GoodsQuality_Quality.ChildObjectId
                    LEFT JOIN ObjectString AS OS_QualityComment
                                           ON OS_QualityComment.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                          AND OS_QualityComment.DescId = zc_ObjectString_Quality_Comment()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_Quality_NumberPrint
+                                         ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
+                                        AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
+                                        AND ObjectFloat_Quality_NumberPrint.ValueData = 2 -- !!!так захардкодил!!!
 
                    LEFT JOIN ObjectString AS ObjectString_Value1
                                           ON ObjectString_Value1.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
@@ -113,6 +118,7 @@ BEGIN
                                        AND ObjectLink_Quality_Juridical.DescId = zc_ObjectLink_Quality_Juridical()
                    LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Quality_Juridical.ChildObjectId
 */
+              WHERE ObjectFloat_Quality_NumberPrint.ObjectId IS NULL
             )
 
           , tmpMovement_list AS
@@ -133,7 +139,7 @@ BEGIN
                                              AND tmpMovement_list.OperDate = tmp.OperDate
              GROUP BY tmp.QualityId
             )
-          , tmpMovement_Quality AS
+          , tmpMovement_QualityParams AS
             (SELECT tmpMovement_find.QualityId
                   , Movement.Id                                        AS Id
                   , Movement.InvNumber                                 AS InvNumber
@@ -195,6 +201,12 @@ BEGIN
            , 0                                                                                                  AS Amount9
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END AS TFloat) AS Amount13
 
+           , Movement.OperDate AS OperDateIn
+           , Movement.OperDate AS OperDateOut
+           , '' :: TVarChar AS CarModelName
+           , '' :: TVarChar AS CarName
+           , TRUE :: Boolean AS isJuridicalBasis
+
            , tmpGoodsQuality.QualityCode
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
@@ -210,24 +222,24 @@ BEGIN
            , tmpGoodsQuality.Value9
            , tmpGoodsQuality.Value10
 
-           , tmpMovement_Quality.InvNumber AS InvNumber_Quality
-           , tmpMovement_Quality.OperDate AS OperDate_Quality
-           , tmpMovement_Quality.OperDateCertificate
-           , tmpMovement_Quality.CertificateNumber
-           , tmpMovement_Quality.CertificateSeries
-           , tmpMovement_Quality.CertificateSeriesNumber
-           , tmpMovement_Quality.ExpertPrior
-           , tmpMovement_Quality.ExpertLast
-           , tmpMovement_Quality.QualityNumber
-           , tmpMovement_Quality.Comment AS QualityComment_Movement
-           , tmpMovement_Quality.ReportType
+           , tmpMovement_QualityParams.InvNumber AS InvNumber_Quality
+           , tmpMovement_QualityParams.OperDate AS OperDate_Quality
+           , tmpMovement_QualityParams.OperDateCertificate
+           , tmpMovement_QualityParams.CertificateNumber
+           , tmpMovement_QualityParams.CertificateSeries
+           , tmpMovement_QualityParams.CertificateSeriesNumber
+           , tmpMovement_QualityParams.ExpertPrior
+           , tmpMovement_QualityParams.ExpertLast
+           , tmpMovement_QualityParams.QualityNumber
+           , tmpMovement_QualityParams.Comment AS QualityComment_Movement
+           , tmpMovement_QualityParams.ReportType
 
        FROM tmpMI
             INNER JOIN Movement ON Movement.Id =  tmpMI.MovementId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.ObjectId
 
-            LEFT JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.ObjectId
-            LEFT JOIN tmpMovement_Quality ON tmpMovement_Quality.QualityId = tmpGoodsQuality.QualityId
+            INNER JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.ObjectId
+            LEFT JOIN tmpMovement_QualityParams ON tmpMovement_QualityParams.QualityId = tmpGoodsQuality.QualityId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.ObjectId
@@ -321,16 +333,21 @@ BEGIN
                    INNER JOIN ObjectLink AS ObjectLink_GoodsQuality_Goods
                                          ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
                                         AND ObjectLink_GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
+
+                   LEFT JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id = ObjectLink_GoodsQuality_Goods.ObjectId
+
                    LEFT JOIN ObjectLink AS ObjectLink_GoodsQuality_Quality
                                         ON ObjectLink_GoodsQuality_Quality.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                        AND ObjectLink_GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
-
-                   LEFT JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id = ObjectLink_GoodsQuality_Quality.ObjectId
 
                    LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = ObjectLink_GoodsQuality_Quality.ChildObjectId
                    LEFT JOIN ObjectString AS OS_QualityComment
                                           ON OS_QualityComment.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                          AND OS_QualityComment.DescId = zc_ObjectString_Quality_Comment()
+                   INNER JOIN ObjectFloat AS ObjectFloat_Quality_NumberPrint
+                                          ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
+                                         AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
+                                         AND ObjectFloat_Quality_NumberPrint.ValueData = 2 -- !!!так захардкодил!!!
 
                    LEFT JOIN ObjectString AS ObjectString_Value1
                                           ON ObjectString_Value1.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
@@ -388,7 +405,7 @@ BEGIN
                                              AND tmpMovement_list.OperDate = tmp.OperDate
              GROUP BY tmp.QualityId
             )
-          , tmpMovement_Quality AS
+          , tmpMovement_QualityParams AS
             (SELECT tmpMovement_find.QualityId
                   , Movement.Id                                        AS Id
                   , Movement.InvNumber                                 AS InvNumber
@@ -450,6 +467,12 @@ BEGIN
            , 0                                                                                                  AS Amount9
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END AS TFloat) AS Amount13
 
+           , Movement.OperDate AS OperDateIn
+           , Movement.OperDate AS OperDateOut
+           , '' :: TVarChar    AS CarModelName
+           , '' :: TVarChar    AS CarName
+           , TRUE :: Boolean   AS isJuridicalBasis
+
            , tmpGoodsQuality.QualityCode
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
@@ -465,24 +488,24 @@ BEGIN
            , tmpGoodsQuality.Value9
            , tmpGoodsQuality.Value10
 
-           , tmpMovement_Quality.InvNumber AS InvNumber_Quality
-           , tmpMovement_Quality.OperDate AS OperDate_Quality
-           , tmpMovement_Quality.OperDateCertificate
-           , tmpMovement_Quality.CertificateNumber
-           , tmpMovement_Quality.CertificateSeries
-           , tmpMovement_Quality.CertificateSeriesNumber
-           , tmpMovement_Quality.ExpertPrior
-           , tmpMovement_Quality.ExpertLast
-           , tmpMovement_Quality.QualityNumber
-           , tmpMovement_Quality.Comment AS QualityComment_Movement
-           , tmpMovement_Quality.ReportType
+           , tmpMovement_QualityParams.InvNumber AS InvNumber_Quality
+           , tmpMovement_QualityParams.OperDate AS OperDate_Quality
+           , tmpMovement_QualityParams.OperDateCertificate
+           , tmpMovement_QualityParams.CertificateNumber
+           , tmpMovement_QualityParams.CertificateSeries
+           , tmpMovement_QualityParams.CertificateSeriesNumber
+           , tmpMovement_QualityParams.ExpertPrior
+           , tmpMovement_QualityParams.ExpertLast
+           , tmpMovement_QualityParams.QualityNumber
+           , tmpMovement_QualityParams.Comment AS QualityComment_Movement
+           , tmpMovement_QualityParams.ReportType
 
        FROM tmpMI
             INNER JOIN Movement ON Movement.Id =  tmpMI.MovementId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.ObjectId
 
-            LEFT JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.ObjectId
-            LEFT JOIN tmpMovement_Quality ON tmpMovement_Quality.QualityId = tmpGoodsQuality.QualityId
+            INNER JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.ObjectId
+            LEFT JOIN tmpMovement_QualityParams ON tmpMovement_QualityParams.QualityId = tmpGoodsQuality.QualityId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.ObjectId

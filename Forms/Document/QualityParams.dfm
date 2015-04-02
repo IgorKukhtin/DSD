@@ -38,7 +38,7 @@
     Top = 100
     Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
   end
-  object edGoodsQualityForm: TcxButtonEdit [5]
+  object edQuality: TcxButtonEdit [5]
     Left = 8
     Top = 119
     Properties.Buttons = <
@@ -273,7 +273,7 @@
       item
         Name = 'inQualityId'
         Value = ''
-        Component = GuidesGoodsQuality
+        Component = GuidesQuality
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -291,7 +291,7 @@
       end
       item
         Value = ''
-        Component = GuidesGoodsQuality
+        Component = GuidesQuality
         ComponentItem = 'Key'
         ParamType = ptUnknown
       end>
@@ -384,13 +384,13 @@
       item
         Name = 'QualityId'
         Value = ''
-        Component = GuidesGoodsQuality
+        Component = GuidesQuality
         ComponentItem = 'Key'
       end
       item
         Name = 'QualityName'
         Value = ''
-        Component = GuidesGoodsQuality
+        Component = GuidesQuality
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -405,13 +405,13 @@
       end
       item
         Value = ''
-        Component = GuidesGoodsQuality
+        Component = GuidesQuality
         ComponentItem = 'Key'
         ParamType = ptUnknown
       end
       item
         Value = ''
-        Component = GuidesGoodsQuality
+        Component = GuidesQuality
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptUnknown
@@ -455,24 +455,24 @@
     Left = 544
     Top = 216
   end
-  object GuidesGoodsQuality: TdsdGuides
+  object GuidesQuality: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edGoodsQualityForm
-    FormNameParam.Value = 'TGoodsQualityForm'
+    LookupControl = edQuality
+    FormNameParam.Value = 'TQualityForm'
     FormNameParam.DataType = ftString
-    FormName = 'TGoodsQualityForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TQualityForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesGoodsQuality
+        Component = GuidesQuality
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesGoodsQuality
+        Component = GuidesQuality
         ComponentItem = 'TextValue'
         DataType = ftString
       end>

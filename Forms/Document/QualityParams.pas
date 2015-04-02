@@ -25,9 +25,9 @@ type
     cxLabel1: TcxLabel;
     Код: TcxLabel;
     cxLabel4: TcxLabel;
-    edGoodsQualityForm: TcxButtonEdit;
+    edQuality: TcxButtonEdit;
     ceOperDate: TcxDateEdit;
-    GuidesGoodsQuality: TdsdGuides;
+    GuidesQuality: TdsdGuides;
     GuidesFiller: TGuidesFiller;
     cxLabel9: TcxLabel;
     ceOperDateCertificate: TcxDateEdit;

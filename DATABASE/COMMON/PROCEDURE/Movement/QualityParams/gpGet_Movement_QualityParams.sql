@@ -1,8 +1,5 @@
 -- Function: gpGet_Movement_QualityParams()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_GoodsQuality (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_GoodsQuality (Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_QualityParams (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_QualityParams (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_QualityParams(
