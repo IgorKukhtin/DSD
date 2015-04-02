@@ -1,14 +1,20 @@
 -- Function: gpInsertUpdate_Object_Quality  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Quality (Integer,Integer,TVarChar,TVarChar,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Quality (Integer,Integer,TVarChar,TFloat,TVarChar,TVarChar, TVarChar,Integer,Integer,Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Quality(
  INOUT ioId                Integer   ,    -- ключ объекта < Улица/проспект> 
     IN inCode              Integer   ,    -- Код объекта <>
     IN inName              TVarChar  ,
-    IN inComment           TVarChar    ,
+    IN inNumberPrint       TFloat    ,
+    IN inComment           TVarChar  ,
+    IN inMemberMain        TVarChar  ,
+    IN inMemberTech        TVarChar  ,
     IN inJuridicalId       Integer   ,    -- 
+    IN inRetailId          Integer   ,    -- 
+    IN inTradeMarkId       Integer   ,    -- 
     IN inSession           TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -33,8 +39,20 @@ BEGIN
                                 --, inAccessKeyId:= COALESCE ((SELECT Object_Branch.AccessKeyId FROM ObjectLink LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink.ChildObjectId WHERE ObjectLink.ObjectId = inUnitId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch()), zc_Enum_Process_AccessKey_TrasportDnepr()));
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Quality_Juridical(), ioId, inJuridicalId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Quality_Retail(), ioId, inRetailId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Quality_TradeMark(), ioId, inTradeMarkId);
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Quality_Comment(), ioId, inComment);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Quality_MemberMain(), ioId, inMemberMain);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Quality_MemberTech(), ioId, inMemberTech);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Quality_NumberPrint(), ioId, inNumberPrint);
  
 
    -- сохранили протокол
@@ -48,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.04.15         * add
  09.02.15         *
 
 */

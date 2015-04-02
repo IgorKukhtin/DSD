@@ -8,7 +8,8 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
   Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit, dsdAddOn,
-  dxSkinsCore, dxSkinsDefaultPainters, dsdGuides, cxMaskEdit, cxButtonEdit;
+  dxSkinsCore, dxSkinsDefaultPainters, dsdGuides, cxMaskEdit, cxButtonEdit,
+  cxCheckBox;
 
 type
   TRetailEditForm = class(TParentForm)
@@ -34,6 +35,7 @@ type
     GoodsPropertyGuides: TdsdGuides;
     cxLabel5: TcxLabel;
     edGLNCodeCorporate: TcxTextEdit;
+    cbOperDateOrder: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -44,6 +44,18 @@ type
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     dsdJuridicalGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    cxLabel3: TcxLabel;
+    ceMemberMain: TcxTextEdit;
+    ceMemberTech: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edRetail: TcxButtonEdit;
+    RetailGuides: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edTradeMark: TcxButtonEdit;
+    TradeMarkGuides: TdsdGuides;
+    ceNumberPrint: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public
