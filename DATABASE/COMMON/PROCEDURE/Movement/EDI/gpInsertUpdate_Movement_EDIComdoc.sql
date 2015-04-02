@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_EDI()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc 
-   (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOrderInvNumber      TVarChar  , -- Номер заявки контрагента
@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOKPO                TVarChar  , -- 
     IN inJurIdicalName       TVarChar  , --
     IN inDesc                TVarChar  , -- тип документа
+    IN inGLNPlace            TVarChar  , -- Код GLN - место доставки
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (MovementId Integer, GoodsPropertyId Integer) -- Классификатор товаров
@@ -97,6 +98,9 @@ BEGIN
 
      END IF;
 
+     -- сохранили Код GLN - место доставки
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNPlaceCode(), vbMovementId, inGLNPlace);
+
      -- сохранили
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), vbMovementId, inPartnerOperDate);
      -- сохранили
@@ -146,6 +150,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.04.15                                        * add inGLNPlace
  07.08.14                                        * add calc inDesc
  07.08.14                                        * add inPartnerInvNumber := inPartnerInvNumber
  20.07.14                                        * ALL

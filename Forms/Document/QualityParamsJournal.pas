@@ -1,4 +1,4 @@
-unit GoodsQualityMovementJournal;
+unit QualityParamsJournal;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit;
 
 type
-  TGoodsQualityMovementJournalForm = class(TAncestorJournalForm)
+  TQualityParamsJournalForm = class(TAncestorJournalForm)
     CertificateSeries: TcxGridDBColumn;
     CertificateSeriesNumber: TcxGridDBColumn;
     ExpertPrior: TcxGridDBColumn;
@@ -32,6 +32,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsQualityMovementJournalForm);
+  RegisterClass(TQualityParamsJournalForm);
 
 end.

@@ -1,13 +1,12 @@
--- Function: gpGet_Movement_GoodsQuality()
+-- Function: gpSelect_Movement_QualityParams()
 
--- DROP FUNCTION gpGet_Movement_GoodsQuality (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_GoodsQuality (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_QualityParams (TDateTime, TDateTime, Boolean, TVarChar);
 
-
-CREATE OR REPLACE FUNCTION gpGet_Movement_GoodsQuality(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
-    IN inSession           TVarChar   -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_Movement_QualityParams(
+    IN inStartDate     TDateTime , --
+    IN inEndDate       TDateTime , --
+    IN inIsErased      Boolean ,
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar,
                OperDateCertificate TDateTime, CertificateNumber TVarChar, CertificateSeries TVarChar, CertificateSeriesNumber TVarChar,
@@ -15,38 +14,17 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_GoodsQuality());
-     vbUserId := inSession;
-
-     IF COALESCE (inMovementId, 0) = 0
-     THEN
-     RETURN QUERY
-         SELECT
-               0 AS Id
-             , CAST (NEXTVAL ('movement_goodsquality_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
-             , Object_Status.Code                               AS StatusCode
-             , Object_Status.Name                               AS StatusName
-             , inOperDate                                       AS OperDateCertificate
-             , CAST ('' as TVarChar)                            AS CertificateNumber
-             , CAST ('' AS TVarChar) 				            AS CertificateSeries
-             , CAST ('' AS TVarChar) 				            AS CertificateSeriesNumber
-             , CAST ('' AS TVarChar) 				            AS ExpertPrior
-             , CAST ('' AS TVarChar) 				            AS ExpertLast
-             , CAST ('' AS TVarChar) 				            AS QualityNumber
-             , CAST ('' AS TBlob) 				                AS Comment
-             , CAST (0  AS Integer)                             AS QualityId
-             , CAST ('' AS TVarChar) 				            AS QualityName
-
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
-
-     ELSE
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                       )
        SELECT
              Movement.Id                                        AS Id
            , Movement.InvNumber                                 AS InvNumber
@@ -65,7 +43,13 @@ BEGIN
            , Object_Quality.ValueData   		                AS QualityName
 
 
-       FROM Movement
+       FROM (SELECT Movement.Id
+             FROM tmpStatus
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_QualityParams() AND Movement.StatusId = tmpStatus.StatusId
+            ) AS tmpMovement
+
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MD_OperDateCertificate
@@ -92,24 +76,15 @@ BEGIN
             LEFT JOIN MovementBlob AS MB_Comment
                                    ON MB_Comment.MovementId =  Movement.Id
                                   AND MB_Comment.DescId = zc_MovementBlob_Comment()
-
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Quality
                                          ON MovementLinkObject_Quality.MovementId = Movement.Id
                                         AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
             LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = MovementLinkObject_Quality.ObjectId
-
-
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_GoodsQuality();
-
-       END IF;
-
+           ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_GoodsQuality (Integer, TDateTime, TVarChar) OWNER TO postgres;
-
+ALTER FUNCTION gpSelect_Movement_QualityParams (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -118,4 +93,4 @@ ALTER FUNCTION gpGet_Movement_GoodsQuality (Integer, TDateTime, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_GoodsQuality (inMovementId:= 1, inOperDate:= null, inSession:= '9818')
+-- SELECT * FROM gpSelect_Movement_QualityParams (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')

@@ -2273,7 +2273,9 @@ begin
 
                      +'        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601' // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
 
-                     +'        when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701' // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
+                     +'        when fCheckGoodsParentID(2555,Goods.ParentId) =zc_rvYes() then 20701' // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
+                     +'        when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701' // ЦАРИЧАНКА  - 20701	Общефирменные Товары	Прочие товары
+
                      +'        when fCheckGoodsParentID(338, Goods.ParentId) =zc_rvYes() then 20901' // ц.ИРНА      - 20901	Общефирменные	Ирна Ирна
                      +'        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes() then 30101' // ГП            - 30101	Доходы	Продукция	Готовая продукция
                      +'        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30101' // ПЕРЕПАК       - 30101	Доходы	Продукция	Готовая продукция
@@ -8683,7 +8685,7 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id_Postgres= case when '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' = 0 then null else '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' end where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
