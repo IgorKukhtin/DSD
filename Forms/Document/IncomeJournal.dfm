@@ -26,7 +26,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -36,7 +36,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -160,7 +160,6 @@ object IncomeJournalForm: TIncomeJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -203,7 +202,7 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 70
       end
       object colInvNumberPartner: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
@@ -217,7 +216,7 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 70
       end
       object colOKPO_From: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
@@ -232,7 +231,7 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'JuridicalName_From'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 100
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
@@ -263,12 +262,19 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 97
       end
+      object colContractCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object colContractName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 59
+        Width = 70
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
@@ -278,7 +284,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 70
       end
       object colTotalCountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1089#1090'.)'
@@ -288,7 +294,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 70
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
@@ -298,7 +304,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 80
       end
       object colTotalSummPacker: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072#1075#1086#1090#1086#1074'.'
@@ -326,7 +332,9 @@ object IncomeJournalForm: TIncomeJournalForm
         Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
         DataBinding.FieldName = 'ChangePercent'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'#39
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 51
@@ -336,11 +344,14 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'PriceWithVAT'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 80
       end
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 42
@@ -406,23 +417,29 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 100
       end
       object colCurrencyValue: TcxGridDBColumn
         Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
         DataBinding.FieldName = 'CurrencyValue'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
       object colCurrencyDocumentName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
         DataBinding.FieldName = 'CurrencyDocumentName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
       object colCurrencyPartnerName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
         DataBinding.FieldName = 'CurrencyPartnerName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
@@ -470,8 +487,8 @@ object IncomeJournalForm: TIncomeJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -768,6 +785,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
@@ -827,6 +845,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object spCompete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -837,6 +856,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object spUncomplete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -847,6 +867,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object spErased: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -1061,6 +1082,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

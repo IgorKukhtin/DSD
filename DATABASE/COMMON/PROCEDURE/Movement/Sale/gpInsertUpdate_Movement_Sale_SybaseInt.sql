@@ -28,6 +28,8 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
+
+   DECLARE vbContractId_pav Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
@@ -36,7 +38,31 @@ BEGIN
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
 
 
-     IF ioId <> 0 AND (EXISTS (SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked() AND ValueData = TRUE)
+     -- для павильонов меняется договор на ГП
+     IF EXISTS (SELECT ObjectId FROM ObjectLink WHERE ObjectId = inToId AND DescId = zc_ObjectLink_Partner_Unit() AND ChildObjectId > 0)
+     THEN
+         IF NOT EXISTS (SELECT ContractId FROM Object_Contract_View WHERE ContractId = inContractId AND InfoMoneyId = zc_Enum_InfoMoney_30101()) -- Готовая продукция
+         THEN
+              vbContractId_pav:= (SELECT View_Contract_f.ContractId
+                                  FROM Object_Contract_View AS View_Contract
+                                       INNER JOIN Object_Contract_View AS View_Contract_f
+                                                                       ON View_Contract_f.JuridicalId = View_Contract.JuridicalId
+                                                                      AND View_Contract_f.InfoMoneyId = zc_Enum_InfoMoney_30101()
+                                                                      AND View_Contract_f.isErased = FALSE  -- Готовая продукция
+                                                                      AND View_Contract_f.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                  WHERE View_Contract.ContractId = inContractId);
+              -- 
+              IF vbContractId_pav <> 0
+              THEN
+                  inContractId:= vbContractId_pav;
+              END IF;
+         END IF;
+     END IF;
+
+
+     -- для проверен или зарегистрирован
+     IF ioId <> 0 AND inPaidKindId = zc_Enum_PaidKind_FirstForm()
+                  AND (EXISTS (SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked() AND ValueData = TRUE)
                     OR EXISTS (SELECT MovementLinkMovement.MovementId
                                FROM MovementLinkMovement
                                     INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId

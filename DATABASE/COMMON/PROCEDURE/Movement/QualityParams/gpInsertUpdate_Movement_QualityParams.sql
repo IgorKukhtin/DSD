@@ -25,6 +25,25 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_QualityParams());
 
 
+     -- Проверка
+     IF COALESCE (inQualityId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Качественное удостоверение>.';
+     END IF;
+
+     -- Проверка - в один день может быть только один документ для одного <Качественное удостоверение>
+     IF EXISTS (SELECT Movement.OperDate FROM Movement INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality() AND MovementLinkObject.ObjectId = inQualityId WHERE Movement.DescId = zc_Movement_QualityParams() AND Movement.OperDate = inOperDate)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Такое качественное удостоверение <%> за <%> уже существует.Дублирование запрещено.', lfGet_Object_ValueData (inQualityId), DATE (inOperDate);
+     END IF;
+
+     -- Проверка - новый документ должен быть датой вперед для одного <Качественное удостоверение>
+     IF COALESCE (ioId, 0) = 0 AND inOperDate <= (SELECT Movement.OperDate FROM Movement INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality() AND MovementLinkObject.ObjectId = inQualityId WHERE Movement.DescId = zc_Movement_QualityParams() ORDER BY Movement.OperDate DESC LIMIT 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Новое качественное удостоверение <%> должно быть позже <%>.', lfGet_Object_ValueData (inQualityId), DATE ((SELECT Movement.OperDate FROM Movement INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality() AND MovementLinkObject.ObjectId = inQualityId WHERE Movement.DescId = zc_Movement_QualityParams() ORDER BY Movement.OperDate DESC LIMIT 1));
+     END IF;
+
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_QualityParams(), inInvNumber, inOperDate, NULL);
 

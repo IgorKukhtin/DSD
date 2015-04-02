@@ -339,7 +339,7 @@ from
         , _tmpList.ClientId as ClientId
         , _tmpList.MoneyKindId as MoneyKindId
         , isnull(_tmpList2.PaidKindId_Postgres, _tmpList.PaidKindId_Postgres)as PaidKindId_Postgres
-        , isnull(_tmpList2.CodeIM, _tmpList.CodeIM)as CodeIM
+        , case when _tmpList.FromId = zc_UnitId_StorePav() then 30101 else isnull(_tmpList2.CodeIM, _tmpList.CodeIM) end as CodeIM
         , isnull (_tmpList.ContractNumber, '') as ContractNumber
         , isnull(_tmpList2.CarId, _tmpList.CarId)as CarId
         , isnull(_tmpList2.PersonalDriverId, _tmpList.PersonalDriverId) as PersonalDriverId
