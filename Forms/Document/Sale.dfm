@@ -3,7 +3,6 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1179
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -197
   ExplicitWidth = 1195
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -360,8 +359,8 @@ inherited SaleForm: TSaleForm
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 314
-      Top = 36
+      Left = 360
+      Top = 23
       Properties.Buttons = <
         item
           Default = True

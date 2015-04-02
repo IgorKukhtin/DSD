@@ -253,16 +253,10 @@ inherited ProductionUnionForm: TProductionUnionForm
           object colChildGoodsGroupNameFull: TcxGridDBColumn [1]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
-          end
-          inherited colChildGoodsName: TcxGridDBColumn
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
           end
           object colChildMeasureName: TcxGridDBColumn [4]
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -350,9 +344,6 @@ inherited ProductionUnionForm: TProductionUnionForm
     Height = 96
     ExplicitWidth = 1020
     ExplicitHeight = 96
-    inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 22
-    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 763
@@ -418,36 +409,6 @@ inherited ProductionUnionForm: TProductionUnionForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object actGoodsChoiceChild1: TOpenChoiceForm [22]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actGoodsChoiceChild1'
-      FormName = 'TGoods_ObjectForm'
-      FormNameParam.Value = 'TGoods_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'GoodsId'
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'GoodsCode'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ChildCDS
-          ComponentItem = 'GoodsName'
           DataType = ftString
         end>
       isShowModal = True
