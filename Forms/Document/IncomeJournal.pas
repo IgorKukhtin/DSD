@@ -104,6 +104,7 @@ type
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
+    colContractCode: TcxGridDBColumn;
   private
   public
   end;

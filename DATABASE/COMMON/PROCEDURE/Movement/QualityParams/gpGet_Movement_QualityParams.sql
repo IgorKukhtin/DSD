@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_QualityParams()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_QualityParams (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_QualityParams (Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_QualityParams(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inMovementId_Value  Integer  ,
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -20,7 +22,7 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_QualityParams());
      vbUserId := inSession;
 
-     IF COALESCE (inMovementId, 0) = 0
+     IF COALESCE (inMovementId_Value, 0) = 0
      THEN
      RETURN QUERY
          SELECT
@@ -31,14 +33,14 @@ BEGIN
              , Object_Status.Name                               AS StatusName
              , inOperDate                                       AS OperDateCertificate
              , CAST ('' as TVarChar)                            AS CertificateNumber
-             , CAST ('' AS TVarChar) 				            AS CertificateSeries
-             , CAST ('' AS TVarChar) 				            AS CertificateSeriesNumber
-             , CAST ('' AS TVarChar) 				            AS ExpertPrior
-             , CAST ('' AS TVarChar) 				            AS ExpertLast
-             , CAST ('' AS TVarChar) 				            AS QualityNumber
-             , CAST ('' AS TBlob) 				                AS Comment
+             , CAST ('' AS TVarChar) 				AS CertificateSeries
+             , CAST ('' AS TVarChar) 				AS CertificateSeriesNumber
+             , CAST ('' AS TVarChar) 				AS ExpertPrior
+             , CAST ('' AS TVarChar) 				AS ExpertLast
+             , CAST ('' AS TVarChar) 				AS QualityNumber
+             , CAST ('' AS TBlob) 				AS Comment
              , CAST (0  AS Integer)                             AS QualityId
-             , CAST ('' AS TVarChar) 				            AS QualityName
+             , CAST ('' AS TVarChar) 				AS QualityName
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -46,9 +48,9 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             Movement.Id                                        AS Id
-           , Movement.InvNumber                                 AS InvNumber
-           , Movement.OperDate                                  AS OperDate
+             inMovementId                                       AS Id
+           , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_QualityParams_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
+           , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END AS OperDate
            , Object_Status.ObjectCode                           AS StatusCode
            , Object_Status.ValueData                            AS StatusName
            , MD_OperDateCertificate.ValueData                   AS OperDateCertificate
@@ -60,8 +62,7 @@ BEGIN
            , MS_QualityNumber.ValueData                         AS QualityNumber
            , MB_Comment.ValueData                               AS Comment
            , Object_Quality.Id                                  AS QualityId
-           , Object_Quality.ValueData   		                AS QualityName
-
+           , Object_Quality.ValueData   		        AS QualityName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -91,14 +92,13 @@ BEGIN
                                    ON MB_Comment.MovementId =  Movement.Id
                                   AND MB_Comment.DescId = zc_MovementBlob_Comment()
 
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Quality
                                          ON MovementLinkObject_Quality.MovementId = Movement.Id
                                         AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
             LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = MovementLinkObject_Quality.ObjectId
 
 
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id =  inMovementId_Value
          AND Movement.DescId = zc_Movement_QualityParams();
 
        END IF;
@@ -106,13 +106,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_QualityParams (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_QualityParams (Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.04.15                                        * all
  09.02.15                                                        *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_QualityParams (inMovementId:= 1, inOperDate:= null, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_QualityParams (inMovementId:= 1, inMovementId_Value:= 1, inOperDate:= null, inSession:= '9818')

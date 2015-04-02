@@ -38,7 +38,6 @@ type
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;
     edCertificateSeries: TcxTextEdit;
-    cxLabel5: TcxLabel;
     edCertificateSeriesNumber: TcxTextEdit;
     cxLabel6: TcxLabel;
     edExpertPrior: TcxTextEdit;
@@ -46,6 +45,7 @@ type
     edExpertLast: TcxTextEdit;
     cxLabel8: TcxLabel;
     edQualityNumber: TcxTextEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

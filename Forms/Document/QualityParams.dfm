@@ -1,46 +1,46 @@
 ﻿inherited QualityParamsForm: TQualityParamsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077' - '#1087#1072#1088#1072#1084#1077#1090#1088#1099'>'
-  ClientHeight = 436
-  ClientWidth = 777
+  ClientHeight = 616
+  ClientWidth = 1004
   AddOnFormData.isSingle = False
-  ExplicitWidth = 783
-  ExplicitHeight = 461
+  ExplicitWidth = 1010
+  ExplicitHeight = 641
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 264
-    Top = 402
+    Left = 384
+    Top = 573
     Height = 26
-    ExplicitLeft = 264
-    ExplicitTop = 402
+    ExplicitLeft = 384
+    ExplicitTop = 573
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 408
-    Top = 402
+    Left = 528
+    Top = 573
     Height = 26
-    ExplicitLeft = 408
-    ExplicitTop = 402
+    ExplicitLeft = 528
+    ExplicitTop = 573
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
-    Left = 184
-    Top = 5
+    Left = 104
+    Top = 7
     Caption = #1044#1072#1090#1072
   end
   object Код: TcxLabel [3]
     Left = 8
-    Top = 5
+    Top = 7
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object cxLabel4: TcxLabel [4]
-    Left = 9
-    Top = 100
+    Left = 397
+    Top = 7
     Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
   end
   object edQuality: TcxButtonEdit [5]
-    Left = 8
-    Top = 119
+    Left = 397
+    Top = 27
     Properties.Buttons = <
       item
         Default = True
@@ -48,126 +48,128 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 3
-    Width = 273
+    Width = 206
   end
   object ceOperDate: TcxDateEdit [6]
-    Left = 184
-    Top = 24
+    Left = 104
+    Top = 27
+    EditValue = 42096d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
     Width = 97
   end
   object cxLabel9: TcxLabel [7]
-    Left = 287
-    Top = 5
-    Caption = #1042#1077#1090#1077#1088#1080#1085#1072#1088#1085#1077' '#1089#1074#1110#1076#1086#1094#1090#1074#1086' '#1076#1072#1090#1072
+    Left = 214
+    Top = 57
+    Caption = #1042#1077#1090#1077#1088#1080#1085#1072#1088#1085#1077' '#1089#1074#1110#1076#1086#1094#1090#1074#1086' <'#1044#1072#1090#1072'>'
   end
   object ceOperDateCertificate: TcxDateEdit [8]
-    Left = 287
-    Top = 24
+    Left = 214
+    Top = 77
+    EditValue = 42096d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 8
-    Width = 151
+    Width = 168
   end
   object edCertificateNumber: TcxTextEdit [9]
-    Left = 444
-    Top = 24
+    Left = 8
+    Top = 77
     TabOrder = 9
-    Width = 152
+    Width = 193
   end
   object cxLabel11: TcxLabel [10]
-    Left = 444
-    Top = 5
+    Left = 8
+    Top = 57
     Caption = #1042#1077#1090#1077#1088#1080#1085#1072#1088#1085#1077' '#1089#1074#1110#1076#1086#1094#1090#1074#1086' '#8470
   end
   object edInvNumber: TcxTextEdit [11]
     Left = 8
-    Top = 24
+    Top = 27
     Properties.ReadOnly = True
     TabOrder = 11
     Text = '0'
-    Width = 156
+    Width = 75
   end
   object ceComment: TcxMemo [12]
     Left = 8
-    Top = 168
+    Top = 227
     TabOrder = 12
-    Height = 217
-    Width = 760
+    Height = 327
+    Width = 984
   end
   object cxLabel2: TcxLabel [13]
     Left = 8
-    Top = 145
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    Top = 207
+    Caption = #1054#1089#1086#1073#1083#1080#1074#1110' '#1074#1110#1076#1084#1110#1090#1082#1080
   end
   object cxLabel3: TcxLabel [14]
-    Left = 602
-    Top = 5
-    Caption = #1042#1077#1090#1077#1088#1080#1085#1072#1088#1085#1077' '#1089#1074#1110#1076#1086#1094#1090#1074#1086' '#1057#1077#1088#1110#1103
+    Left = 397
+    Top = 57
+    Caption = #1042#1077#1090#1077#1088#1080#1085#1072#1088#1085#1077' '#1089#1074#1110#1076#1086#1094#1090#1074#1086' <'#1057#1077#1088#1110#1103'> '#1110' <'#8470'>'
   end
   object edCertificateSeries: TcxTextEdit [15]
-    Left = 602
-    Top = 24
+    Left = 397
+    Top = 77
     TabOrder = 15
-    Width = 166
+    Width = 72
   end
-  object cxLabel5: TcxLabel [16]
+  object edCertificateSeriesNumber: TcxTextEdit [16]
+    Left = 503
+    Top = 77
+    TabOrder = 16
+    Width = 100
+  end
+  object cxLabel6: TcxLabel [17]
     Left = 8
-    Top = 53
-    Caption = #1042#1077#1090#1077#1088#1080#1085#1072#1088#1085#1077' '#1089#1074#1110#1076#1086#1094#1090#1074#1086' '#1057#1077#1088#1110#1103' '#8470
+    Top = 107
+    Caption = #1057#1090#1088#1086#1082#1072' <'#1045#1082#1089#1087#1077#1088#1090#1085#1080#1081' '#1074#1080#1089#1085#1086#1074#1086#1082'>'
   end
-  object edCertificateSeriesNumber: TcxTextEdit [17]
+  object edExpertPrior: TcxTextEdit [18]
     Left = 8
-    Top = 72
-    TabOrder = 17
-    Width = 169
+    Top = 127
+    TabOrder = 18
+    Width = 984
   end
-  object cxLabel6: TcxLabel [18]
-    Left = 183
-    Top = 53
-    Caption = #1045#1082#1089#1087#1077#1088#1090#1085#1080#1081' '#1074#1080#1089#1085#1086#1074#1086#1082
+  object cxLabel7: TcxLabel [19]
+    Left = 8
+    Top = 157
+    Caption = #1057#1090#1088#1086#1082#1072' <'#1045#1082#1089#1087#1077#1088#1090#1085#1080#1081' '#1074#1080#1089#1085#1086#1074#1086#1082' - '#1087#1086#1082#1072#1079#1085#1080#1082#1080'>'
   end
-  object edExpertPrior: TcxTextEdit [19]
-    Left = 183
-    Top = 72
-    TabOrder = 19
-    Width = 169
+  object edExpertLast: TcxTextEdit [20]
+    Left = 8
+    Top = 177
+    TabOrder = 20
+    Width = 984
   end
-  object cxLabel7: TcxLabel [20]
-    Left = 358
-    Top = 53
-    Caption = #1045#1082#1089#1087#1077#1088#1090#1085#1080#1081' '#1074#1080#1089#1085#1086#1074#1086#1082' ('#1087#1072#1088#1072#1084#1077#1090#1088#1099')'
-  end
-  object edExpertLast: TcxTextEdit [21]
-    Left = 358
-    Top = 72
-    TabOrder = 21
-    Width = 180
-  end
-  object cxLabel8: TcxLabel [22]
-    Left = 544
-    Top = 53
+  object cxLabel8: TcxLabel [21]
+    Left = 214
+    Top = 7
     Caption = #1044#1077#1082#1083#1072#1088#1072#1094#1110#1103' '#1074#1080#1088#1086#1073#1085#1080#1082#1072' '#8470
   end
-  object edQualityNumber: TcxTextEdit [23]
-    Left = 544
-    Top = 72
-    TabOrder = 23
-    Width = 180
+  object edQualityNumber: TcxTextEdit [22]
+    Left = 214
+    Top = 27
+    TabOrder = 22
+    Width = 168
+  end
+  object cxLabel5: TcxLabel [23]
+    Left = 482
+    Top = 77
+    Caption = '-'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 379
-    Top = 324
+    Top = 440
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 512
-    Top = 316
+    Top = 432
   end
   inherited ActionList: TActionList
     Left = 423
-    Top = 217
+    Top = 333
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -187,8 +189,8 @@
         Value = '0'
         ParamType = ptInput
       end>
-    Left = 488
-    Top = 316
+    Left = 464
+    Top = 392
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_QualityParams'
@@ -201,14 +203,14 @@
         ParamType = ptInputOutput
       end
       item
-        Name = 'ininvnumber'
+        Name = 'inInvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
@@ -276,27 +278,9 @@
         Component = GuidesQuality
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        Component = GuidesQuality
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
       end>
     Left = 488
-    Top = 224
+    Top = 340
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_QualityParams'
@@ -306,6 +290,13 @@
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Value'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inMovementId_Value'
         ParamType = ptInput
       end
       item
@@ -334,16 +325,35 @@
         DataType = ftDateTime
       end
       item
-        Name = 'OperDateCertificate'
-        Value = 0d
-        Component = ceOperDateCertificate
-        DataType = ftDateTime
+        Name = 'QualityNumber'
+        Value = ''
+        Component = edQualityNumber
+        DataType = ftString
+      end
+      item
+        Name = 'QualityId'
+        Value = ''
+        Component = GuidesQuality
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'QualityName'
+        Value = ''
+        Component = GuidesQuality
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'CertificateNumber'
         Value = ''
         Component = edCertificateNumber
         DataType = ftString
+      end
+      item
+        Name = 'OperDateCertificate'
+        Value = 0d
+        Component = ceOperDateCertificate
+        DataType = ftDateTime
       end
       item
         Name = 'CertificateSeries'
@@ -370,90 +380,13 @@
         DataType = ftString
       end
       item
-        Name = 'QualityNumber'
-        Value = ''
-        Component = edQualityNumber
-        DataType = ftString
-      end
-      item
         Name = 'Comment'
         Value = Null
         Component = ceComment
         DataType = ftWideString
-      end
-      item
-        Name = 'QualityId'
-        Value = ''
-        Component = GuidesQuality
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'QualityName'
-        Value = ''
-        Component = GuidesQuality
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        Component = GuidesQuality
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        Component = GuidesQuality
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = '0'
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 544
-    Top = 216
+    Top = 332
   end
   object GuidesQuality: TdsdGuides
     KeyField = 'Id'
@@ -476,7 +409,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 192
+    Left = 296
     Top = 113
   end
   object GuidesFiller: TGuidesFiller
@@ -486,15 +419,10 @@
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
-      end
-      item
-      end
-      item
-      end
-      item
+        Guides = GuidesQuality
       end>
     ActionItemList = <>
     Left = 248
-    Top = 226
+    Top = 342
   end
 end

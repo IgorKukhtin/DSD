@@ -15975,7 +15975,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from (select Bill.Id as BillId'
-           +'           , min(case when Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())'
+           +'           , min(case when Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil(), zc_UnitId_StorePav())'
            +'                           then 30101' // Готовая продукция
            +'                      when Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())'
            +'                           then 30201' // Мясное сырье
@@ -16324,7 +16324,7 @@ begin
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillDate >=zc_def_StartDate_PG()'
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
-           +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())'
+           +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil(),zc_UnitId_StorePav())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
            +'      group by Bill.Id'
            +'      ) as Bill_find');
