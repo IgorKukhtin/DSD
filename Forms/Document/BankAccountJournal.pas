@@ -51,6 +51,8 @@ type
     colAmountSumm: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
+    clJuridicalName: TcxGridDBColumn;
+    clMFO: TcxGridDBColumn;
   private
     { Private declarations }
   public

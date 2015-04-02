@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, Parent
              , AmountSumm TFloat 
              , AmountCurrency TFloat
              , Comment TVarChar
-             , BankAccountName TVarChar, BankName TVarChar
+             , BankAccountName TVarChar, BankName TVarChar, MFO TVarChar
+             , JuridicalName TVarChar
              , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
@@ -67,6 +68,9 @@ BEGIN
            , MIString_Comment.ValueData        AS Comment
            , Object_BankAccount_View.Name      AS BankAccountName
            , Object_BankAccount_View.BankName  AS BankName
+           , Object_BankAccount_View.MFO    AS MFO
+           , Object_BankAccount_View.JuridicalName  AS JuridicalName
+
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , (Object_MoneyPlace.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS MoneyPlaceName
            , ObjectDesc.ItemName
@@ -162,6 +166,7 @@ BEGIN
                                          ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
                                         AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
             LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId;
+
   
 END;
 $BODY$
