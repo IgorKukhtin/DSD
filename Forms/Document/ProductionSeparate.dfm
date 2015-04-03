@@ -191,9 +191,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Height = 96
     ExplicitWidth = 903
     ExplicitHeight = 96
-    inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 22
-    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -210,7 +207,41 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [9]
+    object actPrint_Obval: TdsdPrintAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actUpdateChildDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -232,8 +263,117 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_obval'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
     inherited bbPrint: TdxBarButton
       Visible = ivNever
+    end
+    object bbPrint_obval: TdxBarButton
+      Action = actPrint_Obval
+      Category = 0
     end
   end
   inherited PopupMenu: TPopupMenu
@@ -491,5 +631,28 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'HeadCount'
         ParamType = ptInput
       end>
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 751
+    Top = 96
   end
 end
