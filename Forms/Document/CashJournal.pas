@@ -41,6 +41,8 @@ type
     clCurrencyValue: TcxGridDBColumn;
     clParValue: TcxGridDBColumn;
     isLoad: TcxGridDBColumn;
+    actReport_Cash: TdsdOpenForm;
+    bbReport_Cash: TdxBarButton;
   private
     { Private declarations }
   public

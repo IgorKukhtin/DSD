@@ -34,17 +34,17 @@ type
     dsdPrintAction: TdsdPrintAction;
     bbPrint: TdxBarButton;
     cxLabel3: TcxLabel;
-    ceInfoMoneyGroup: TcxButtonEdit;
-    InfoMoneyGroupGuides: TdsdGuides;
-    InfoMoneyDestinationGuides: TdsdGuides;
-    ceInfoMoneyDestination: TcxButtonEdit;
+    edInfoMoneyGroup: TcxButtonEdit;
+    GuidesInfoMoneyGroup: TdsdGuides;
+    GuidesInfoMoneyDestination: TdsdGuides;
+    edInfoMoneyDestination: TcxButtonEdit;
     cxLabel4: TcxLabel;
-    InfoMoneyGuides: TdsdGuides;
-    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
+    edInfoMoney: TcxButtonEdit;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     edAccount: TcxButtonEdit;
-    AccountGuides: TdsdGuides;
+    GuidesAccount: TdsdGuides;
     colInfoMoneyCode: TcxGridDBColumn;
     colStartAmount_P: TcxGridDBColumn;
     colStartAmountD: TcxGridDBColumn;
@@ -74,7 +74,7 @@ type
     colAreaName: TcxGridDBColumn;
     cxLabel7: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     clJuridicalGroupName: TcxGridDBColumn;
     clPartnerCode: TcxGridDBColumn;
     clPartnerName: TcxGridDBColumn;
@@ -88,7 +88,7 @@ type
     bbPrintReal: TdxBarButton;
     cxLabel8: TcxLabel;
     edBranch: TcxButtonEdit;
-    BranchGuides: TdsdGuides;
+    GuidesBranch: TdsdGuides;
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
     dsdPrintReal_byJuridicalPersonal: TdsdPrintAction;
@@ -96,12 +96,12 @@ type
     cxLabel9: TcxLabel;
     edJuridicalGroup: TcxButtonEdit;
     clPersonalTradeName: TcxGridDBColumn;
-    JuridicalGroupGuides: TdsdGuides;
+    GuidesJuridicalGroup: TdsdGuides;
     colContractConditionKindName: TcxGridDBColumn;
     colContractConditionValue: TcxGridDBColumn;
     cxLabel10: TcxLabel;
     edCurrency: TcxButtonEdit;
-    CurrencyGuides: TdsdGuides;
+    GuidesCurrency: TdsdGuides;
     InfoMoneyName_all: TcxGridDBColumn;
     SaleSumm_10300: TcxGridDBColumn;
     ReturnInSumm_10300: TcxGridDBColumn;
@@ -116,6 +116,7 @@ type
     clContractTagGroupName: TcxGridDBColumn;
     colPersonalTradeName_Partner: TcxGridDBColumn;
     colAreaName_Partner: TcxGridDBColumn;
+    JuridicalPartnerlName: TcxGridDBColumn;
   private
     { Private declarations }
   public

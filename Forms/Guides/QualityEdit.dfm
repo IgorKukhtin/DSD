@@ -48,7 +48,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 0
-    Width = 193
+    Width = 120
   end
   object cxLabel5: TcxLabel
     Left = 40
@@ -68,6 +68,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 273
   end
@@ -123,6 +124,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 15
     Width = 273
   end
@@ -139,19 +141,20 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 17
     Width = 273
   end
   object ceNumberPrint: TcxCurrencyEdit
-    Left = 239
+    Left = 184
     Top = 26
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 18
-    Width = 74
+    Width = 129
   end
   object cxLabel8: TcxLabel
-    Left = 239
+    Left = 184
     Top = 7
     Caption = #1053#1086#1084#1077#1088' '#1087#1077#1095#1072#1090#1080
   end

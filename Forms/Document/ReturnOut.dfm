@@ -3,7 +3,7 @@ inherited ReturnOutForm: TReturnOutForm
   ClientHeight = 668
   ClientWidth = 838
   ExplicitWidth = 854
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -304,12 +304,13 @@ inherited ReturnOutForm: TReturnOutForm
     object edContract: TcxButtonEdit
       Left = 558
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 121
     end
@@ -326,12 +327,12 @@ inherited ReturnOutForm: TReturnOutForm
     object edPaidKind: TcxButtonEdit
       Left = 558
       Top = 63
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 13
       Width = 121
     end
@@ -358,9 +359,9 @@ inherited ReturnOutForm: TReturnOutForm
     object edChangePercent: TcxCurrencyEdit
       Left = 405
       Top = 63
-      Enabled = False
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
       TabOrder = 17
       Width = 144
     end
@@ -407,12 +408,13 @@ inherited ReturnOutForm: TReturnOutForm
   object edCurrencyDocument: TcxButtonEdit [3]
     Left = 689
     Top = 63
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 78
   end
@@ -424,11 +426,11 @@ inherited ReturnOutForm: TReturnOutForm
   object edCurrencyValue: TcxCurrencyEdit [5]
     Left = 772
     Top = 63
-    Enabled = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 44
   end

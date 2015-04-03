@@ -77,10 +77,10 @@ BEGIN
                    LEFT JOIN ObjectString AS OS_QualityComment
                                           ON OS_QualityComment.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                          AND OS_QualityComment.DescId = zc_ObjectString_Quality_Comment()
-                   LEFT JOIN ObjectFloat AS ObjectFloat_Quality_NumberPrint
-                                         ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
-                                        AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
-                                        AND ObjectFloat_Quality_NumberPrint.ValueData = 2 -- !!!так захардкодил!!!
+                   INNER JOIN ObjectFloat AS ObjectFloat_Quality_NumberPrint
+                                          ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
+                                         AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
+                                         AND ObjectFloat_Quality_NumberPrint.ValueData = 1 -- !!!так захардкодил!!!
 
                    LEFT JOIN ObjectString AS ObjectString_Value1
                                           ON ObjectString_Value1.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
@@ -118,7 +118,6 @@ BEGIN
                                        AND ObjectLink_Quality_Juridical.DescId = zc_ObjectLink_Quality_Juridical()
                    LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Quality_Juridical.ChildObjectId
 */
-              WHERE ObjectFloat_Quality_NumberPrint.ObjectId IS NULL
             )
 
           , tmpMovement_list AS

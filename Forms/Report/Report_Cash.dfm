@@ -2085,12 +2085,29 @@ inherited Report_CashForm: TReport_CashForm
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
+        ParamType = ptInput
       end
       item
         Name = 'EndDate'
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'CashId'
+        Value = Null
+        Component = CashGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CashName'
+        Value = Null
+        Component = CashGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 240
     Top = 232

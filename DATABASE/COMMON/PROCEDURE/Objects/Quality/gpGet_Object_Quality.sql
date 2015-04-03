@@ -1,4 +1,3 @@
---select * from gpGet_Object_Quality(Id := 348596 ,  inSession := '5');
 -- Function: gpGet_Object_Quality (Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_Quality (Integer, TVarChar);

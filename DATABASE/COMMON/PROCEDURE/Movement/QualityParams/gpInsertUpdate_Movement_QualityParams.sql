@@ -32,7 +32,7 @@ BEGIN
      END IF;
 
      -- Проверка - в один день может быть только один документ для одного <Качественное удостоверение>
-     IF EXISTS (SELECT Movement.OperDate FROM Movement INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality() AND MovementLinkObject.ObjectId = inQualityId WHERE Movement.DescId = zc_Movement_QualityParams() AND Movement.OperDate = inOperDate)
+     IF EXISTS (SELECT Movement.OperDate FROM Movement INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality() AND MovementLinkObject.ObjectId = inQualityId WHERE Movement.DescId = zc_Movement_QualityParams() AND Movement.OperDate = inOperDate AND Movement.Id <> COALESCE (ioId, 0))
      THEN
          RAISE EXCEPTION 'Ошибка.Такое качественное удостоверение <%> за <%> уже существует.Дублирование запрещено.', lfGet_Object_ValueData (inQualityId), DATE (inOperDate);
      END IF;
@@ -43,6 +43,13 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Новое качественное удостоверение <%> должно быть позже <%>.', lfGet_Object_ValueData (inQualityId), DATE ((SELECT Movement.OperDate FROM Movement INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality() AND MovementLinkObject.ObjectId = inQualityId WHERE Movement.DescId = zc_Movement_QualityParams() ORDER BY Movement.OperDate DESC LIMIT 1));
      END IF;
 
+
+     -- 1. Распроводим Документ
+     IF ioId > 0 -- AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_TransportGoods())
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := ioId
+                                      , inUserId     := vbUserId);
+     END IF;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_QualityParams(), inInvNumber, inOperDate, NULL);
@@ -61,8 +68,11 @@ BEGIN
      -- сохранили связь с Quality
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Quality(), ioId, inQualityId);
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     -- 5.2. проводим Документ + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := ioId
+                                , inDescId     := zc_Movement_QualityParams()
+                                , inUserId     := vbUserId
+                                 );
 
 END;
 $BODY$

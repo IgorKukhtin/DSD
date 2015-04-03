@@ -28,8 +28,7 @@ object IncomeForm: TIncomeForm
     TabOrder = 0
     object edInvNumber: TcxTextEdit
       Left = 5
-      Top = 28
-      Enabled = False
+      Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 74
@@ -37,7 +36,7 @@ object IncomeForm: TIncomeForm
     object cxLabel1: TcxLabel
       Left = 8
       Top = 5
-      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
       Left = 171
@@ -128,11 +127,11 @@ object IncomeForm: TIncomeForm
     object edChangePercent: TcxCurrencyEdit
       Left = 451
       Top = 63
-      Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 144
     end
@@ -154,12 +153,13 @@ object IncomeForm: TIncomeForm
     object edContract: TcxButtonEdit
       Left = 688
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 4
       Width = 113
     end
@@ -171,12 +171,12 @@ object IncomeForm: TIncomeForm
     object edPaidKind: TcxButtonEdit
       Left = 603
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 77
     end
@@ -231,11 +231,11 @@ object IncomeForm: TIncomeForm
     object edCurrencyValue: TcxCurrencyEdit
       Left = 891
       Top = 64
-      Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
       TabOrder = 26
       Width = 44
     end
@@ -247,12 +247,13 @@ object IncomeForm: TIncomeForm
     object edCurrencyDocument: TcxButtonEdit
       Left = 808
       Top = 64
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 28
       Width = 77
     end
@@ -1656,7 +1657,7 @@ object IncomeForm: TIncomeForm
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

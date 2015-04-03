@@ -1,26 +1,27 @@
 inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymentForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081'>'
   ClientHeight = 394
-  ClientWidth = 1115
+  ClientWidth = 1123
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1131
+  ExplicitLeft = -133
+  ExplicitWidth = 1139
   ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1115
+    Width = 1123
     Height = 337
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 1115
     ExplicitHeight = 337
     ClientRectBottom = 337
-    ClientRectRight = 1115
+    ClientRectRight = 1123
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1115
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
-        Width = 1115
+        Width = 1123
         Height = 337
         ExplicitWidth = 1115
         ExplicitHeight = 337
@@ -517,7 +518,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     end
   end
   inherited Panel: TPanel
-    Width = 1115
+    Width = 1123
     ExplicitWidth = 1115
     inherited deStart: TcxDateEdit
       Left = 59
@@ -615,13 +616,13 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AccountGuides
+        Component = GuidesAccount
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = BranchGuides
+        Component = GuidesBranch
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -637,13 +638,13 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           'Date')
       end
       item
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1125,50 +1126,54 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           DataType = ftDateTime
         end
         item
-          Name = 'JuridicalName'
+          Name = 'AccountId'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'StartContractDate'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'StartContractDate'
-          DataType = ftDateTime
-        end
-        item
-          Name = 'PeriodNumber'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'PeriodNumber'
-        end
-        item
-          Name = 'Summ'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SaleSumm1'
-          DataType = ftFloat
-        end
-        item
-          Name = 'ContractNumber'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
+          Component = GuidesAccount
+          ComponentItem = 'Key'
         end
         item
           Name = 'AccountName'
-          Value = ''
-          Component = AccountGuides
+          Value = Null
+          Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
         end
         item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+        end
+        item
           Name = 'PaidKindName'
-          Value = ''
-          Component = PaidKindGuides
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = Null
+          Component = GuidesJuridicalGroup
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
@@ -1275,6 +1280,58 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
@@ -1309,28 +1366,28 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inBranchId'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalGroupId'
         Value = ''
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -1461,19 +1518,19 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = deStart
       end
       item
-        Component = AccountGuides
+        Component = GuidesAccount
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
       end
       item
-        Component = BranchGuides
+        Component = GuidesBranch
       end
       item
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
       end>
   end
-  object AccountGuides: TdsdGuides
+  object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectForm'
@@ -1484,14 +1541,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'Key'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValueAll'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1658,7 +1715,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     Left = 200
     Top = 248
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -1669,7 +1726,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1677,15 +1734,15 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 800
-    Top = 56
+    Left = 664
+    Top = 8
   end
-  object BranchGuides: TdsdGuides
+  object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
@@ -1696,7 +1753,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'Key'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1704,15 +1761,15 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 888
-    Top = 40
+    Left = 800
+    Top = 8
   end
-  object JuridicalGroupGuides: TdsdGuides
+  object GuidesJuridicalGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalGroup
     FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
@@ -1723,7 +1780,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1731,12 +1788,12 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 960
-    Top = 64
+    Left = 1000
+    Top = 8
   end
 end

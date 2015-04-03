@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDate_Order TDateTime, InvNumber_Order TVarChar
 
              , DescName TVarChar
+             , FileName TVarChar
              , isCheck Boolean
              , isElectron Boolean
              , isError Boolean
@@ -99,6 +100,7 @@ BEGIN
            , Movement_Order.InvNumber                       AS InvNumber_Order
 
            , MovementDesc.ItemName AS DescName
+           , MovementString_FileName.ValueData              AS FileName
 
            , CASE WHEN (MovementLinkMovement_Sale.MovementId IS NOT NULL OR MovementLinkMovement_MasterEDI.MovementId IS NOT NULL)
                    AND (COALESCE (MovementFloat_TotalCountPartner.ValueData, 0) <> COALESCE (MovementFloat_TotalCountPartner_Sale.ValueData, 0)
@@ -119,6 +121,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Error
                                       ON MovementBoolean_Error.MovementId =  Movement.Id
                                      AND MovementBoolean_Error.DescId = zc_MovementBoolean_Error()
+
+            LEFT JOIN MovementString AS MovementString_FileName
+                                     ON MovementString_FileName.MovementId =  Movement.Id
+                                    AND MovementString_FileName.DescId = zc_MovementString_FileName()
 
             LEFT JOIN MovementString AS MovementString_Desc
                                      ON MovementString_Desc.MovementId =  Movement.Id
