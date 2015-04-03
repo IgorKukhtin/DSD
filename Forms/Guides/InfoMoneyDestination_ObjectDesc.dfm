@@ -1,9 +1,9 @@
-object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
+object InfoMoneyDestination_ObjectDescForm: TInfoMoneyDestination_ObjectDescForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081'>'
-  ClientHeight = 365
-  ClientWidth = 464
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'>'
+  ClientHeight = 363
+  ClientWidth = 418
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 464
-    Height = 339
+    Width = 418
+    Height = 337
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -52,19 +52,21 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 45
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 305
+        Width = 241
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 60
       end
     end
@@ -75,13 +77,13 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 56
-    Top = 88
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 64
-    Top = 152
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -100,8 +102,8 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 360
-    Top = 96
+    Left = 248
+    Top = 72
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -121,7 +123,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 152
-    Top = 80
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -194,7 +196,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
+    Left = 248
     Top = 136
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -209,14 +211,6 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -241,9 +235,18 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       ImageIndex = 7
       DataSource = DataSource
     end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoneyGroup'
+    StoredProcName = 'gpSelect_Object_InfoMoneyDestination'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -251,12 +254,12 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       end>
     Params = <>
     PackSize = 1
-    Left = 240
-    Top = 232
+    Left = 216
+    Top = 224
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 232
+    Left = 104
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

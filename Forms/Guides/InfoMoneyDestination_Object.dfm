@@ -143,11 +143,11 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -156,6 +156,18 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -188,6 +200,7 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
     Top = 136
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -201,15 +214,18 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -221,6 +237,7 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -236,6 +253,7 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 216
     Top = 224
   end
@@ -264,6 +282,8 @@ object InfoMoneyDestination_ObjectForm: TInfoMoneyDestination_ObjectForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 360
     Top = 192
   end

@@ -1,4 +1,4 @@
-object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
+object InfoMoneyGroup_ObjectDescForm: TInfoMoneyGroup_ObjectDescForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081'>'

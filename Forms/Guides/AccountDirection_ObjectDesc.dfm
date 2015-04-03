@@ -1,9 +1,9 @@
-object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
+object AccountDirection_ObjectDescForm: TAccountDirection_ObjectDescForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081'>'
-  ClientHeight = 365
-  ClientWidth = 464
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'>'
+  ClientHeight = 450
+  ClientWidth = 468
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,13 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 464
-    Height = 339
+    Width = 468
+    Height = 424
     Align = alClient
     TabOrder = 0
+    LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,30 +44,49 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.CellAutoHeight = True
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object AccountGroupCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' c'#1095'. '#1075#1088'.'
+        DataBinding.FieldName = 'AccountGroupCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 35
+      end
+      object AccountGroupName: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'AccountGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 35
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 305
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
-        Width = 60
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -74,22 +95,17 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 88
+    Left = 48
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
+    Left = 40
     Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = clName
-        Properties.Strings = (
-          'Width')
-      end
       item
         Component = Owner
         Properties.Strings = (
@@ -100,7 +116,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 360
+    Left = 280
     Top = 96
   end
   object dxBarManager: TdxBarManager
@@ -120,8 +136,8 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 80
+    Left = 160
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -141,7 +157,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -149,7 +165,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -157,7 +173,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -165,7 +181,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -181,10 +197,10 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       Action = dsdGridToExcel
       Category = 0
     end
-    object dxBarStatic1: TdxBarStatic
-      Caption = '    '
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
       Category = 0
-      Hint = '    '
+      Hint = '     '
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
@@ -194,8 +210,8 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
-    Top = 136
+    Left = 280
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -213,6 +229,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -234,16 +251,36 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountId'
+          Value = 0
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoneyGroup'
+    StoredProcName = 'gpSelect_Object_AccountDirection'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -251,12 +288,12 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
       end>
     Params = <>
     PackSize = 1
-    Left = 240
-    Top = 232
+    Left = 40
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 232
+    Left = 160
+    Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -281,7 +318,7 @@ object InfoMoneyGroup_ObjectForm: TInfoMoneyGroup_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 360
-    Top = 192
+    Left = 160
+    Top = 208
   end
 end
