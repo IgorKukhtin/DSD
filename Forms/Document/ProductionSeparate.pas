@@ -25,6 +25,10 @@ type
     colAmount: TcxGridDBColumn;
     colChildAmount: TcxGridDBColumn;
     colChildPartionGoods: TcxGridDBColumn;
+    colGoodsGroupNameFull: TcxGridDBColumn;
+    colCholdGoodsGroupNameFull: TcxGridDBColumn;
+    colCholdMeasureName: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public

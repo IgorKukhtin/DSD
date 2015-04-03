@@ -62,7 +62,7 @@ type
     actContract: TdsdOpenForm;
     actPriceListItem: TdsdOpenForm;
     actOrderExternal: TdsdOpenForm;
-    actGoodsQualityMovement: TdsdOpenForm;
+    actQualityParams: TdsdOpenForm;
     actCashOperation: TdsdOpenForm;
     actReport_MotionGoods: TdsdOpenForm;
     actRole: TdsdOpenForm;
@@ -241,7 +241,7 @@ type
     miInventory: TMenuItem;
     N9: TMenuItem;
     miOrderExternal: TMenuItem;
-    miGoodsQualityMovement: TMenuItem;
+    miQualityParams: TMenuItem;
     miFinanceDocuments: TMenuItem;
     miIncomeCashOld: TMenuItem;
     miIncomeCash: TMenuItem;
@@ -523,6 +523,8 @@ type
     miTransportGoods: TMenuItem;
     actLoadStatusFromMedoc: TdsdOpenForm;
     MEDOC1: TMenuItem;
+    actQualityDoc: TdsdOpenForm;
+    miQualityDoc: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

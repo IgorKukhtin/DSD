@@ -57,7 +57,7 @@ object RetailEditForm: TRetailEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 311
+    Width = 184
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -98,6 +98,13 @@ object RetailEditForm: TRetailEditForm
     TabOrder = 11
     Width = 311
   end
+  object cbOperDateOrder: TcxCheckBox
+    Left = 200
+    Top = 30
+    Caption = #1094#1077#1085#1072' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1103#1074#1082#1080
+    TabOrder = 12
+    Width = 129
+  end
   object ActionList: TActionList
     Left = 152
     Top = 56
@@ -117,6 +124,7 @@ object RetailEditForm: TRetailEditForm
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -126,6 +134,7 @@ object RetailEditForm: TRetailEditForm
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -151,6 +160,13 @@ object RetailEditForm: TRetailEditForm
         Value = ''
         Component = edName
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDateOrder'
+        Value = Null
+        Component = cbOperDateOrder
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -212,6 +228,12 @@ object RetailEditForm: TRetailEditForm
         DataType = ftString
       end
       item
+        Name = 'OperDateOrder'
+        Value = Null
+        Component = cbOperDateOrder
+        DataType = ftBoolean
+      end
+      item
         Name = 'GLNCode'
         Value = ''
         Component = edGLNCode
@@ -237,8 +259,8 @@ object RetailEditForm: TRetailEditForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 184
-    Top = 16
+    Left = 224
+    Top = 128
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -252,8 +274,8 @@ object RetailEditForm: TRetailEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 88
+    Left = 200
+    Top = 72
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 256

@@ -1,26 +1,26 @@
 inherited QualityForm: TQualityForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'>'
   ClientHeight = 374
-  ClientWidth = 773
+  ClientWidth = 885
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 781
-  ExplicitHeight = 408
+  ExplicitWidth = 901
+  ExplicitHeight = 412
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 773
+    Width = 885
     Height = 348
     ExplicitWidth = 773
     ExplicitHeight = 348
     ClientRectBottom = 348
-    ClientRectRight = 773
+    ClientRectRight = 885
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 773
       ExplicitHeight = 348
       inherited cxGrid: TcxGrid
-        Width = 773
+        Width = 885
         Height = 348
         PopupMenu = nil
         ExplicitWidth = 773
@@ -95,6 +95,46 @@ inherited QualityForm: TQualityForm
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 92
+          end
+          object clTradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1052#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object clRetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object clNumberPrint: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1087#1077#1095#1072#1090#1080
+            DataBinding.FieldName = 'NumberPrint'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
+          object clMemberMain: TcxGridDBColumn
+            Caption = #1047#1072#1089#1090#1091#1087#1085#1080#1082' '#1076#1080#1088#1077#1082#1090#1086#1088#1072' '#1087#1110#1076#1087#1088#1080#1108#1084#1089#1090#1074#1072
+            DataBinding.FieldName = 'MemberMain'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 119
+          end
+          object clMemberTech: TcxGridDBColumn
+            Caption = #1058#1077#1093#1085#1086#1083#1086#1075' '#1074#1080#1088#1086#1073#1085#1080#1094#1090#1074#1072
+            DataBinding.FieldName = 'MemberTech'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
         end
       end

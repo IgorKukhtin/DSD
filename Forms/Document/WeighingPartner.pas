@@ -149,6 +149,7 @@ type
     cxLabel20: TcxLabel;
     edVATPercent: TcxCurrencyEdit;
     MeasureName: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
   public
   end;

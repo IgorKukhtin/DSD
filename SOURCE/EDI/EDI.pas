@@ -1466,7 +1466,12 @@ begin
         VarToDateTime(Заголовок.ДатаДокументу);
     ParamByName('inPartnerInvNumber').Value := Заголовок.НомерДокументу;
     if Заголовок.КодТипуДокументу = '007' then begin
+       if Заголовок.ДокПідстава.ДатаДокументу <> '' then
+          ParamByName('inOperDateSaleLink').Value :=
+               VarToDateTime(Заголовок.ДокПідстава.ДатаДокументу);
 
+       ParamByName('inInvNumberSaleLink').Value :=
+           Заголовок.ДокПідстава.НомерДокументу;
        ParamByName('inGLNPlace').Value := '';
        for i := 0 to Параметри.Count - 1 do
            if Параметри.Параметр[i].назва = 'Точка доставки' then begin

@@ -1875,6 +1875,7 @@ inherited EDIJournalForm: TEDIJournalForm
       item
         Name = 'inGLNPlace'
         Value = Null
+        DataType = ftString
         ParamType = ptInput
       end
       item

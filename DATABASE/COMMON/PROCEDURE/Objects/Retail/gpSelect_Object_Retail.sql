@@ -1,30 +1,50 @@
--- Function: gpSelect_Object_Retail()
+-- Function: gpGet_Object_Retail()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Retail(TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Retail(integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Retail(
+CREATE OR REPLACE FUNCTION gpGet_Object_Retail(
+    IN inId          Integer,       -- ключ объекта <Торговая сеть>
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , OperDateOrder Boolean
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
-             , GoodsPropertyId Integer, GoodsPropertyName TVarChar             
+             , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , isErased boolean) AS
-$BODY$BEGIN
-   
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Retail()());
+$BODY$
+BEGIN
 
-   RETURN QUERY 
-   SELECT 
-     Object_Retail.Id         AS Id 
-   , Object_Retail.ObjectCode AS Code
-   , Object_Retail.ValueData  AS NAME
-   , GLNCode.ValueData               AS GLNCode
-   , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
-   , Object_GoodsProperty.Id         AS GoodsPropertyId
-   , Object_GoodsProperty.ValueData  AS GoodsPropertyName           
-   , Object_Retail.isErased   AS isErased
-   FROM Object AS Object_Retail
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY 
+       SELECT
+             CAST (0 as Integer)    AS Id
+           , lfGet_ObjectCode(0, zc_Object_Retail()) AS Code
+           , CAST ('' as TVarChar)  AS NAME
+           , CAST (NULL AS Boolean) AS OperDateOrder
+           , CAST ('' as TVarChar)  AS GLNCode
+           , CAST ('' as TVarChar)  AS GLNCodeCorporate
+           , CAST (0 as Integer)    AS GoodsPropertyId 
+           , CAST ('' as TVarChar)  AS GoodsPropertyName           
+           , CAST (NULL AS Boolean) AS isErased;
+   ELSE
+       RETURN QUERY 
+       SELECT 
+             Object_Retail.Id         AS Id
+           , Object_Retail.ObjectCode AS Code
+           , Object_Retail.ValueData  AS NAME
+
+           , COALESCE (ObjectBoolean_OperDateOrder.ValueData, CAST (False AS Boolean)) AS OperDateOrder
+ 
+           , GLNCode.ValueData               AS GLNCode
+           , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
+           , Object_GoodsProperty.Id         AS GoodsPropertyId
+           , Object_GoodsProperty.ValueData  AS GoodsPropertyName           
+           , Object_Retail.isErased   AS isErased
+       FROM OBJECT AS Object_Retail
         LEFT JOIN ObjectString AS GLNCode
                                ON GLNCode.ObjectId = Object_Retail.Id 
                               AND GLNCode.DescId = zc_ObjectString_Retail_GLNCode()
@@ -32,29 +52,34 @@ $BODY$BEGIN
                                ON GLNCodeCorporate.ObjectId = Object_Retail.Id 
                               AND GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
 
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                 ON ObjectBoolean_OperDateOrder.ObjectId = Object_Retail.Id 
+                                AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder() 
+    
         LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
         LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Retail_GoodsProperty.ChildObjectId
                               
-   WHERE Object_Retail.DescId = zc_Object_Retail();
+       WHERE Object_Retail.Id = inId;
+   END IF; 
   
-END;$BODY$
-
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Retail(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Retail(integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 19.02.15         * add GoodsProperty 
+ 02.04.15         * add OperDateOrder
+ 19.02.15         * add GoodsProperty               
  10.11.14         * add GLNCode
  23.05.14         *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Retail('2')
+-- SELECT * FROM gpGet_Object_Retail (0, '2')

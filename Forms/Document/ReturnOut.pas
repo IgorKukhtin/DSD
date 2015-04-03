@@ -76,6 +76,7 @@ type
     cxLabel5: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
     CurrencyPartnerGuides: TdsdGuides;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -84,6 +84,7 @@ type
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
     cbPrinted: TcxCheckBox;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

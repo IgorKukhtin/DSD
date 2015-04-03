@@ -2273,7 +2273,9 @@ begin
 
                      +'        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601' // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
 
-                     +'        when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701' // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
+                     +'        when fCheckGoodsParentID(2555,Goods.ParentId) =zc_rvYes() then 20701' // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
+                     +'        when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701' // ЦАРИЧАНКА  - 20701	Общефирменные Товары	Прочие товары
+
                      +'        when fCheckGoodsParentID(338, Goods.ParentId) =zc_rvYes() then 20901' // ц.ИРНА      - 20901	Общефирменные	Ирна Ирна
                      +'        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes() then 30101' // ГП            - 30101	Доходы	Продукция	Готовая продукция
                      +'        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30101' // ПЕРЕПАК       - 30101	Доходы	Продукция	Готовая продукция
@@ -8683,7 +8685,7 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id_Postgres= case when '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' = 0 then null else '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' end where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -15973,7 +15975,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from (select Bill.Id as BillId'
-           +'           , min(case when Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())'
+           +'           , min(case when Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil(), zc_UnitId_StorePav())'
            +'                           then 30101' // Готовая продукция
            +'                      when Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())'
            +'                           then 30201' // Мясное сырье
@@ -16322,7 +16324,7 @@ begin
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillDate >=zc_def_StartDate_PG()'
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
-           +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())'
+           +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil(),zc_UnitId_StorePav())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
            +'      group by Bill.Id'
            +'      ) as Bill_find');

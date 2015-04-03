@@ -52,6 +52,7 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     GLNCodeCorporate: TcxGridDBColumn;
     actChoiceGoodsProperty: TOpenChoiceForm;
+    clOperDateOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public
