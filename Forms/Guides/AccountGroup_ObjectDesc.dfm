@@ -15,6 +15,7 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -26,7 +27,7 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -70,12 +71,12 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
       GridView = cxGridDBTableView
     end
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
     Left = 32
     Top = 112
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 136
@@ -192,10 +193,10 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -210,14 +211,14 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
         end
         item
@@ -252,14 +253,22 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
       ShortCut = 16472
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_AccountGroup'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inDescCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inDescCode'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 112
     Top = 152
@@ -293,5 +302,15 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
     SummaryItemList = <>
     Left = 168
     Top = 240
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inDescCode'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 56
+    Top = 72
   end
 end

@@ -15,6 +15,7 @@ object InfoMoneyGroup_ObjectDescForm: TInfoMoneyGroup_ObjectDescForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -27,7 +28,7 @@ object InfoMoneyGroup_ObjectDescForm: TInfoMoneyGroup_ObjectDescForm
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -72,12 +73,12 @@ object InfoMoneyGroup_ObjectDescForm: TInfoMoneyGroup_ObjectDescForm
       GridView = cxGridDBTableView
     end
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
     Left = 56
     Top = 88
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 64
@@ -199,10 +200,10 @@ object InfoMoneyGroup_ObjectDescForm: TInfoMoneyGroup_ObjectDescForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -225,31 +226,39 @@ object InfoMoneyGroup_ObjectDescForm: TInfoMoneyGroup_ObjectDescForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-      DataSource = DataSource
+      DataSource = MasterDS
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoneyGroup'
-    DataSet = ClientDataSet
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_InfoMoneyGroup_Desc'
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inDescCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inDescCode'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 240
     Top = 232
@@ -283,5 +292,15 @@ object InfoMoneyGroup_ObjectDescForm: TInfoMoneyGroup_ObjectDescForm
     SummaryItemList = <>
     Left = 360
     Top = 192
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inDescCode'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 168
+    Top = 144
   end
 end

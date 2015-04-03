@@ -3548,10 +3548,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesInfoMoneyGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoneyGroup
-    FormNameParam.Value = 'TInfoMoneyGroupForm'
+    FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoneyGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoneyGroup_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -3568,6 +3568,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
     Left = 352
     Top = 21
@@ -3575,10 +3580,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoneyDestination
-    FormNameParam.Value = 'TInfoMoneyDestinationForm'
+    FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoneyDestinationForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoneyDestination_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -3595,6 +3600,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
     Left = 480
     Top = 29
@@ -3602,10 +3612,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoney_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -3618,6 +3628,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
         DataType = ftString
       end>
     Left = 624
@@ -3626,10 +3641,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
-    FormNameParam.Value = 'TAccount_ObjectForm'
+    FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccount_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TAccount_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -3645,6 +3660,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
     Left = 248
   end

@@ -29,8 +29,8 @@ type
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -41,11 +41,14 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    FormParams: TdsdFormParams;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyGroupCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

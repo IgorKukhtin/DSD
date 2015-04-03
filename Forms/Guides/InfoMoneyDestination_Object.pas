@@ -46,6 +46,8 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    InfoMoneyGroupCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,15 +1,16 @@
-п»ї-- Function: gpSelect_Object_InfoMoneyGroup (TVarChar)
+-- Function: gpSelect_Object_InfoMoneyGroup (TVarChar)
 
---DROP FUNCTION gpSelect_Object_InfoMoneyGroup (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoneyGroup (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoneyGroup(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
-$BODY$BEGIN
-
-   --РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_InfoMoneyGroup());
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean)
+AS
+$BODY$
+BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_InfoMoneyGroup());
 
    RETURN QUERY 
    SELECT 
@@ -17,22 +18,19 @@ $BODY$BEGIN
        , Object_InfoMoneyGroup.ObjectCode AS Code
        , Object_InfoMoneyGroup.ValueData  AS Name
        , Object_InfoMoneyGroup.isErased   AS isErased
-   FROM OBJECT AS Object_InfoMoneyGroup
+   FROM Object AS Object_InfoMoneyGroup
    WHERE Object_InfoMoneyGroup.DescId = zc_Object_InfoMoneyGroup();
   
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_InfoMoneyGroup (TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  21.06.13          *                             
-
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpSelect_Object_InfoMoneyGroup('2')
+-- тест
+-- SELECT * FROM gpSelect_Object_InfoMoneyGroup (zfCalc_UserAdmin()) ORDER BY Code

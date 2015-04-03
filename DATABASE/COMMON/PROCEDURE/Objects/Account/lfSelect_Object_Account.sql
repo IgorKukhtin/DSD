@@ -1,6 +1,6 @@
 -- Function: lfSelect_Object_Account ()
 
- DROP FUNCTION IF EXISTS lfSelect_Object_Account ();
+DROP FUNCTION IF EXISTS lfSelect_Object_Account ();
 
 CREATE OR REPLACE FUNCTION lfSelect_Object_Account()
 
