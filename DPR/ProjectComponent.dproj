@@ -119,7 +119,6 @@
 			<DCCReference Include="frx16.dcp"/>
 			<DCCReference Include="frxDB16.dcp"/>
 			<DCCReference Include="kbmMemRunDXE2Pro.dcp"/>
-			<DCCReference Include="ZLibEx.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -180,6 +179,8 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MEDOC_TLB.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocCOM.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -12,6 +12,10 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
+   IF COLAESCE(inId, 0) = 0 THEN
+      RETURN;
+   END IF;
+
    vbUserId := lpGetUserBySession (inSession);
 
    IF inMinimumLot = 0 THEN 

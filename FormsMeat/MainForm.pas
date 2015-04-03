@@ -521,6 +521,8 @@ type
     actTransportGoods: TdsdOpenForm;
     N41: TMenuItem;
     miTransportGoods: TMenuItem;
+    actLoadStatusFromMedoc: TdsdOpenForm;
+    MEDOC1: TMenuItem;
     actQualityDoc: TdsdOpenForm;
     miQualityDoc: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);

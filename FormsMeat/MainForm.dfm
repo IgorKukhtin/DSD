@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 262
+  ExplicitWidth = 1094
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2697,6 +2697,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actLoadStatusFromMedoc: TdsdOpenForm
+      Category = #1047#1072#1075#1088#1091#1079#1082#1080
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089#1090#1072#1090#1091#1089#1072' '#1080#1079' M.E.DOC'
+      FormName = 'TLoadFlagFromMedocForm'
+      FormNameParam.Value = 'TLoadFlagFromMedocForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actQualityDoc: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
@@ -2957,6 +2967,9 @@ inherited MainForm: TMainForm
       end
       object miSaveTaxDocument: TMenuItem
         Action = actSaveTaxDocument
+      end
+      object MEDOC1: TMenuItem
+        Action = actLoadStatusFromMedoc
       end
       object N15: TMenuItem
         Caption = '-'

@@ -71,6 +71,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1082#1088#1099#1090#1100
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1079#1072#1075#1088#1091#1078#1077#1085#1085#1086#1075#1086' '#1087#1088#1072#1081#1089#1072
       ShortCut = 13
       ImageIndex = 1
       FormName = 'TPriceListItemsLoadForm'
@@ -90,6 +91,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
     object actOneLoadPriceList: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateGoods
       StoredProcList = <
         item
@@ -103,6 +105,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
     object actLoadPriceList: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateGoods
       StoredProcList = <
         item
@@ -115,6 +118,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
       ImageIndex = 27
       InfoAfterExecute = #1055#1088#1072#1081#1089' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1077#1085
     end
@@ -141,11 +145,13 @@ inherited PriceListLoadForm: TPriceListLoadForm
         end>
       InfoAfterExecute = #1055#1088#1072#1081#1089#1099' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
       ImageIndex = 27
     end
     object actDeletePriceListLoad: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spDelete
       StoredProcList = <
         item

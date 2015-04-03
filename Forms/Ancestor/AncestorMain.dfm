@@ -323,4 +323,19 @@ object AncestorMainForm: TAncestorMainForm
       Action = actExit
     end
   end
+  object frxXLSExport: TfrxXLSExport
+    UseFileCache = True
+    ShowProgress = True
+    OverwritePrompt = False
+    DataOnly = False
+    ExportEMF = True
+    AsText = False
+    Background = True
+    FastExport = True
+    PageBreaks = True
+    EmptyLines = True
+    SuppressPageHeadersFooters = False
+    Left = 344
+    Top = 104
+  end
 end

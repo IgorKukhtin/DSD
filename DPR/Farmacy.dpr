@@ -59,7 +59,8 @@ uses
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
-  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas';
+  dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
+  StatusXML in '..\SOURCE\EDI\StatusXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

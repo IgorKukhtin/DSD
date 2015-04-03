@@ -8,14 +8,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
     IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, ParentId Integer, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSInvNumber_Parent TVarChar, ParentId Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
              , AmountOut TFloat
              , AmountSumm TFloat 
              , AmountCurrency TFloat
              , Comment TVarChar
-             , BankAccountName TVarChar, BankName TVarChar
+             , BankAccountName TVarChar, BankName TVarChar, MFO TVarChar
+             , JuridicalName TVarChar
              , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
@@ -47,6 +48,7 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , (Movement_BankStatementItem.InvNumber || ' от ' || Movement_BankStatement.OperDate :: Date :: TVarChar || ' (' ||  Movement_BankStatement.InvNumber :: TVarChar || ')' ) :: TVarChar AS InvNumber_Parent
+           , Movement_BankStatementItem.InvNumber AS BankSInvNumber_Parent
            , Movement.ParentId
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
@@ -67,6 +69,9 @@ BEGIN
            , MIString_Comment.ValueData        AS Comment
            , Object_BankAccount_View.Name      AS BankAccountName
            , Object_BankAccount_View.BankName  AS BankName
+           , Object_BankAccount_View.MFO    AS MFO
+           , Object_BankAccount_View.JuridicalName  AS JuridicalName
+
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , (Object_MoneyPlace.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS MoneyPlaceName
            , ObjectDesc.ItemName
@@ -162,6 +167,7 @@ BEGIN
                                          ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
                                         AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
             LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId;
+
   
 END;
 $BODY$

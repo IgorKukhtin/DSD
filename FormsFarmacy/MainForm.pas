@@ -129,6 +129,9 @@ type
     N39: TMenuItem;
     N40: TMenuItem;
     N41: TMenuItem;
+    actSendOnPrice: TdsdOpenForm;
+    N42: TMenuItem;
+    N43: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

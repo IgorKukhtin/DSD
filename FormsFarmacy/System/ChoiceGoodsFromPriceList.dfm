@@ -11,7 +11,6 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     ClientRectRight = 798
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 798
-      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Top = 27
         Width = 798
@@ -162,7 +161,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   end
   inherited ActionList: TActionList
     object mactGoodsLinkDelete: TMultiAction
-      Category = 'GoodsLinkDelete'
+      Category = 'Delete'
       MoveParams = <
         item
           FromParam.Value = '0'
@@ -186,6 +185,9 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         end>
       ActionList = <
         item
+          Action = actDeleteLink
+        end
+        item
           Action = DataSetPost
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
@@ -193,7 +195,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       ImageIndex = 2
     end
     object DataSetPost: TDataSetPost
-      Category = 'GoodsLinkDelete'
+      Category = 'Delete'
       Caption = 'P&ost'
       Hint = 'Post'
       DataSource = MasterDS
@@ -201,6 +203,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     object ChoiceGoodsForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ChoiceGoodsForm'
       FormName = 'TGoodsMainLiteForm'
       FormNameParam.Value = 'TGoodsMainLiteForm'
@@ -230,6 +233,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSetPriceListLink
       StoredProcList = <
         item
@@ -241,12 +245,14 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     object actSetGoodsLink: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGoodsPriceListLink
       StoredProcList = <
         item
           StoredProc = spGoodsPriceListLink
         end>
       Caption = 'actSetGoodsLink'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1090#1086#1074#1072#1088#1072
       ImageIndex = 27
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1089#1090#1072#1085#1086#1074#1082#1077' '#1089#1074#1103#1079#1077#1081'?'
     end
@@ -266,6 +272,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       Category = 'DSDLib'
       ActiveControl = edGoodsSearch
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelect
       StoredProcList = <
         item
@@ -273,6 +280,23 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         end>
       Caption = 'actRefreshSearch'
       ShortCut = 13
+    end
+    object actDeleteLink: TdsdExecStoredProc
+      Category = 'Delete'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'GoodsId'
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDeleteLink
+      StoredProcList = <
+        item
+          StoredProc = spDeleteLink
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
     end
   end
   inherited MasterDS: TDataSource
@@ -382,5 +406,21 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     PackSize = 1
     Left = 272
     Top = 152
+  end
+  object spDeleteLink: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_LinkGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'LinkGoodsId'
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 160
   end
 end

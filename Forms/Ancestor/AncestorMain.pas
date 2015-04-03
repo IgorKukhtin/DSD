@@ -19,7 +19,6 @@ type
     spUserProtocol: TdsdStoredProc;
     StoredProc: TdsdStoredProc;
     ClientDataSet: TClientDataSet;
-    frxXLSExport: TfrxXLSExport;
     frxXMLExport: TfrxXMLExport;
     ActionList: TActionList;
     actAbout: TAction;
@@ -39,6 +38,7 @@ type
     miLookAndFillSettings: TMenuItem;
     miAbout: TMenuItem;
     miUpdateProgramm: TMenuItem;
+    frxXLSExport: TfrxXLSExport;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
