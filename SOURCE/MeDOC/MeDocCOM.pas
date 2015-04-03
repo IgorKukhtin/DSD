@@ -94,12 +94,14 @@ begin
        result.CreateParam(ftVariant, 'InvNumber', ptInput).Value := DocDataSet.Fields.Item['N2_11'].Value;
        result.CreateParam(ftVariant, 'OperDate', ptInput).Value := DocDataSet.Fields.Item['N11'].Value;
        result.CreateParam(ftVariant, 'BranchNumber', ptInput).Value := DocDataSet.Fields.Item['N2_13'].Value;
+       result.CreateParam(ftVariant, 'DocKind', ptInput).Value := 'Tax';
      end
      else
      begin
        result.CreateParam(ftVariant, 'InvNumber', ptInput).Value := DocDataSet.Fields.Item['N1_11'].Value;
        result.CreateParam(ftVariant, 'OperDate', ptInput).Value := DocDataSet.Fields.Item['N15'].Value;
        result.CreateParam(ftVariant, 'BranchNumber', ptInput).Value := DocDataSet.Fields.Item['N1_13'].Value;
+       result.CreateParam(ftVariant, 'DocKind', ptInput).Value := 'TaxCorrective';
      end;
   end;
 end;
@@ -156,24 +158,16 @@ begin
              for I := 0 to DocumentParam.Count - 1 do
                   s := s + DocumentParam[i].Name + ' = ' + DocumentParam[i].AsString + ';';
              Logger.AddToLog(s);
-//             showMessage(s);
              try
                if (DocumentParam.ParamByName('SEND_DPA').asString = '12') and (DocumentParam.ParamByName('SEND_DPA_RN').asString <> '') then begin
-
                   FspUpdate_IsElectronFromMedoc.ParamByName('inFromINN').Value := DocumentParam.ParamByName('FIRM_INN').asString;
                   FspUpdate_IsElectronFromMedoc.ParamByName('inToINN').Value := DocumentParam.ParamByName('N4').asString;
                   FspUpdate_IsElectronFromMedoc.ParamByName('inInvNumber').Value := DocumentParam.ParamByName('InvNumber').asString;
                   FspUpdate_IsElectronFromMedoc.ParamByName('inOperDate').Value := VarToDateTime(DocumentParam.ParamByName('OperDate').asString);
-
-                  if (DocumentParam.ParamByName('FORM').asString = '11530') or (DocumentParam.ParamByName('FORM').asString = '11518') then
-                  begin
-                     FspUpdate_IsElectronFromMedoc.ParamByName('inDocKind').Value := 'Tax';
-                  end
-                  else
-                  begin
-                     FspUpdate_IsElectronFromMedoc.ParamByName('inDocKind').Value := 'TaxCorrective';
-                  end;
-
+                  FspUpdate_IsElectronFromMedoc.ParamByName('inBranchNumber').Value := DocumentParam.ParamByName('BranchNumber').asString;
+                  FspUpdate_IsElectronFromMedoc.ParamByName('inInvNumberRegistered').Value := DocumentParam.ParamByName('SEND_DPA_RN').asString;
+                  FspUpdate_IsElectronFromMedoc.ParamByName('inDateRegistered').Value := VarToDateTime(DocumentParam.ParamByName('SEND_DPA_DATE').asString);
+                  FspUpdate_IsElectronFromMedoc.ParamByName('inDocKind').Value := DocumentParam.ParamByName('DocKind').asString;
                   FspUpdate_IsElectronFromMedoc.Execute;
                   Application.ProcessMessages;
                end;

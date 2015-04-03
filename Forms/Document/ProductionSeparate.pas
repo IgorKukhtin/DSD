@@ -29,6 +29,9 @@ type
     colCholdGoodsGroupNameFull: TcxGridDBColumn;
     colCholdMeasureName: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
+    actPrint_Obval: TdsdPrintAction;
+    spSelectPrint: TdsdStoredProc;
+    bbPrint_obval: TdxBarButton;
   private
     { Private declarations }
   public

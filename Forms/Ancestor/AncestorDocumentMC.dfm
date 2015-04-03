@@ -4,7 +4,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 951
-  ExplicitHeight = 709
+  ExplicitHeight = 712
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -298,6 +298,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -349,6 +350,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -405,10 +407,12 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object actFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster
       StoredProcList = <
         item
@@ -425,6 +429,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableViewChild
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
@@ -550,6 +555,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object actGoodsChoiceChild: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actGoodsChoiceChild'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
@@ -1414,5 +1420,17 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     PackSize = 1
     Left = 151
     Top = 299
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 652
+    Top = 241
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 652
+    Top = 294
   end
 end

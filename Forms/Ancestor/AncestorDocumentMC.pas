@@ -90,6 +90,8 @@ type
     colChildGoodsName: TcxGridDBColumn;
     cxBottomSplitter: TcxSplitter;
     actGoodsChoiceChild: TOpenChoiceForm;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
   private
     { Private declarations }
   public
