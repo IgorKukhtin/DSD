@@ -23,18 +23,10 @@ type
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     colTotalCountPartner: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
     colTotalSummVAT: TcxGridDBColumn;
     colTotalSummMVAT: TcxGridDBColumn;
     colTotalSummPVAT: TcxGridDBColumn;
-    colRouteSortingName: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
-    colTotalCountTare: TcxGridDBColumn;
-    colTotalCountSh: TcxGridDBColumn;
-    colTotalCountKg: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;

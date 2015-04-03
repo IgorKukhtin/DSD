@@ -1,12 +1,16 @@
 -- Function: gpInsert_EDIFiles()
 
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_IsElectronFromMedoc(
     IN inFromINN             TVarChar   , -- ИНН от кого
     IN inToINN               TVarChar   , -- ИНН кому
     IN inInvNumber           TVarChar   , -- Номер
     IN inOperDate            TDateTime  , -- Дата
+    IN inBranchNumber        TVarChar   , -- Филиал
+    IN inInvNumberRegistered TVarChar   , -- Номер
+    IN inDateRegistered      TDateTime  , -- Дата
     IN inDocKind             TVarChar   , -- Тип документа
     IN inSession             TVarChar     -- Пользователь
 )                              
@@ -59,6 +63,9 @@ BEGIN
    END CASE;
    IF COALESCE(vbMovementId, 0) <> 0 THEN
       PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, true);
+      PERFORM lpInsertUpdate_MovementString(zc_MovementString_InvNumberRegistered(), vbMovementId, inInvNumberRegistered);
+      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_DateRegistered(), vbMovementId, inDateRegistered);
+
       -- сохранили протокол
       PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, FALSE);      
    END IF;

@@ -820,6 +820,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\StatusXML.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendOnPrice.pas">
+				<Form>SendOnPriceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendOnPriceJournal.pas">
+				<Form>SendOnPriceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

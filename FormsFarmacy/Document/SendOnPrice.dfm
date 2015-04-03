@@ -1,25 +1,25 @@
 inherited SendOnPriceForm: TSendOnPriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 668
-  ClientWidth = 878
-  ExplicitWidth = 894
-  ExplicitHeight = 706
+  ClientWidth = 819
+  ExplicitWidth = 827
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 878
+    Width = 819
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 878
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 878
+    ClientRectRight = 819
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 878
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 878
+        Width = 819
         Height = 518
         ExplicitWidth = 878
         ExplicitHeight = 518
@@ -33,7 +33,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountChangePercent
             end
             item
               Format = ',0.####'
@@ -58,7 +57,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountChangePercent
             end
             item
               Format = ',0.####'
@@ -106,23 +104,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
-          end
-          object colGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsKindChoice
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
+            Width = 310
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
@@ -139,13 +121,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 41
           end
-          object colChangePercentAmount: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
-            DataBinding.FieldName = 'ChangePercentAmount'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
@@ -156,16 +131,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmountChangePercent: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'AmountChangePercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
           object colAmountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'AmountPartner'
@@ -174,7 +139,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 61
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -208,7 +173,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 878
+    Width = 819
     Height = 100
     TabOrder = 3
     ExplicitWidth = 878
@@ -290,40 +255,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
       TabOrder = 10
       Width = 128
     end
-    object edVATPercent: TcxCurrencyEdit
-      Left = 404
-      Top = 63
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
-      Properties.ReadOnly = True
-      TabOrder = 11
-      Width = 40
-    end
-    object cxLabel7: TcxLabel
-      Left = 404
-      Top = 45
-      Caption = '% '#1053#1044#1057
-    end
-    object edChangePercent: TcxCurrencyEdit
-      Left = 454
-      Top = 63
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
-      Properties.ReadOnly = True
-      TabOrder = 13
-      Width = 144
-    end
-    object cxLabel8: TcxLabel
-      Left = 454
-      Top = 45
-      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
-    end
     object edOperDatePartner: TcxDateEdit
       Left = 180
       Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 15
+      TabOrder = 11
       Width = 85
     end
     object cxLabel10: TcxLabel
@@ -332,12 +269,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Caption = #1044#1072#1090#1072' ('#1087#1088#1080#1093#1086#1076')'
     end
     object cxLabel11: TcxLabel
-      Left = 606
+      Left = 452
       Top = 45
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
     object edPriceList: TcxButtonEdit
-      Left = 606
+      Left = 452
       Top = 63
       Properties.Buttons = <
         item
@@ -345,8 +282,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 18
-      Width = 111
+      TabOrder = 14
+      Width = 265
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -770,13 +707,11 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
-        Component = edVATPercent
         DataType = ftFloat
       end
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
-        Component = edChangePercent
         DataType = ftFloat
       end
       item
@@ -862,14 +797,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'inVATPercent'
         Value = 0.000000000000000000
-        Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inChangePercent'
         Value = 0.000000000000000000
-        Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -964,7 +897,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Control = edPriceWithVAT
       end
       item
-        Control = edVATPercent
       end
       item
         Control = edPriceList
@@ -1164,7 +1096,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'VATPercent'
         Value = Null
-        Component = edVATPercent
         DataType = ftFloat
       end>
     Left = 652

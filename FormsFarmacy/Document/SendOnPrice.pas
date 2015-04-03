@@ -3,27 +3,15 @@ unit SendOnPrice;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDocument, cxGraphics,
-  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
+  Winapi.Windows, DataModul, AncestorDocument, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, dxSkinsdxBarPainter, dsdAddOn,
-  dsdGuides, dsdDB, Vcl.Menus, dxBarExtItems, dxBar, cxClasses,
-  Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
-  cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
-  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinBlack,
-  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
-  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
-  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
-  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  cxButtonEdit, cxCurrencyEdit, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
+  dsdAddOn, dsdAction, cxCheckBox, dsdGuides, dsdDB, Vcl.Menus, dxBarExtItems,
+  dxBar, cxClasses, Datasnap.DBClient, System.Classes, Vcl.ActnList,
+  cxPropertiesStore, cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel,
+  cxTextEdit, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, Vcl.Controls;
 
 type
   TSendOnPriceForm = class(TAncestorDocumentForm)
@@ -32,22 +20,15 @@ type
     edTo: TcxButtonEdit;
     cxLabel4: TcxLabel;
     edPriceWithVAT: TcxCheckBox;
-    edVATPercent: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    edChangePercent: TcxCurrencyEdit;
-    cxLabel8: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
     cxLabel10: TcxLabel;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    colAmountChangePercent: TcxGridDBColumn;
     colAmountPartner: TcxGridDBColumn;
-    colChangePercentAmount: TcxGridDBColumn;
     colPrice: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
     colAmountSumm: TcxGridDBColumn;
