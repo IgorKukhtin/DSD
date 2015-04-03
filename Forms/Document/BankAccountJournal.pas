@@ -53,6 +53,7 @@ type
     bbPrint1: TdxBarButton;
     clJuridicalName: TcxGridDBColumn;
     clMFO: TcxGridDBColumn;
+    clBankSInvNumber_Parent: TcxGridDBColumn;
   private
     { Private declarations }
   public

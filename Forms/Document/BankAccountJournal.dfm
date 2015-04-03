@@ -343,6 +343,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object clBankSInvNumber_Parent: TcxGridDBColumn
+            Caption = #8470' '#1087#1083#1072#1090'.'
+            DataBinding.FieldName = 'BankSInvNumber_Parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 30
+          end
         end
       end
     end
@@ -552,6 +560,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     StoredProcName = 'gpSelect_Movement_BankAccount'
   end
   inherited BarManager: TdxBarManager
+    Left = 128
+    Top = 131
     DockControlHeights = (
       0
       0

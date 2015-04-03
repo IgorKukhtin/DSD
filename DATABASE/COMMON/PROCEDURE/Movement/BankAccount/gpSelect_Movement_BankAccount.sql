@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
     IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, ParentId Integer, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSInvNumber_Parent TVarChar, ParentId Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
              , AmountOut TFloat
@@ -48,6 +48,7 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , (Movement_BankStatementItem.InvNumber || ' от ' || Movement_BankStatement.OperDate :: Date :: TVarChar || ' (' ||  Movement_BankStatement.InvNumber :: TVarChar || ')' ) :: TVarChar AS InvNumber_Parent
+           , Movement_BankStatementItem.InvNumber AS BankSInvNumber_Parent
            , Movement.ParentId
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
