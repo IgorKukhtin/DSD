@@ -227,7 +227,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsName'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
         end>
       Params = <
         item
