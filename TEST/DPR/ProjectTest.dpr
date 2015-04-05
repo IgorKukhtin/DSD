@@ -590,7 +590,6 @@ uses
   FileTypeKindTest in '..\SOURCE\Objects\All\FileTypeKindTest.pas',
   IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas',
   Report_GoodsMI_ProductionUnionMD in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas' {Report_GoodsMI_ProductionUnionMDForm: TParentForm},
-  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas',
   GoodsQuality in '..\..\Forms\Guides\GoodsQuality.pas' {GoodsQualityForm: TParentForm},
   ImportExportLink in '..\..\Forms\System\ImportExportLink.pas' {ImportExportLinkForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
@@ -656,7 +655,9 @@ uses
   AccountGroup_Object in '..\..\Forms\Guides\AccountGroup_Object.pas' {AccountGroup_ObjectForm: TParentForm},
   InfoMoney_Object in '..\..\Forms\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   InfoMoneyDestination_Object in '..\..\Forms\Guides\InfoMoneyDestination_Object.pas' {InfoMoneyDestination_ObjectForm: TParentForm},
-  InfoMoneyGroup_Object in '..\..\Forms\Guides\InfoMoneyGroup_Object.pas' {InfoMoneyGroup_ObjectForm: TParentForm};
+  InfoMoneyGroup_Object in '..\..\Forms\Guides\InfoMoneyGroup_Object.pas' {InfoMoneyGroup_ObjectForm: TParentForm},
+  Report_GoodsMI_Package in '..\..\Forms\Report\Report_GoodsMI_Package.pas' {Report_GoodsMI_PackageForm: TParentForm},
+  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
