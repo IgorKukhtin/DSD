@@ -17,9 +17,15 @@ RETURNS TABLE (OperDate TDateTime, ProtocolData Text, UserName TVarChar,
 AS
 $BODY$
 BEGIN
+  -- проверка прав пользователя на вызов процедуры
+  -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+
+  -- проверка
+  IF COALESCE (inMovementId, 0) = 0 THEN
+     RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
+  END IF;
+
 
   IF inMovementId <> 0 AND EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_ProfitLossService(), zc_Movement_Service()))
   THEN
