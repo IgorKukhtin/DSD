@@ -485,8 +485,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalSelectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalSelectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalServiceListFormTest;

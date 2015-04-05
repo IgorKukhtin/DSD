@@ -3,7 +3,6 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
   ClientHeight = 394
   ClientWidth = 1123
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -133
   ExplicitWidth = 1139
   ExplicitHeight = 429
   PixelsPerInch = 96
@@ -13,17 +12,17 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     Height = 337
     TabOrder = 3
     ExplicitTop = 57
-    ExplicitWidth = 1115
+    ExplicitWidth = 1123
     ExplicitHeight = 337
     ClientRectBottom = 337
     ClientRectRight = 1123
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1115
+      ExplicitWidth = 1123
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
         Width = 1123
         Height = 337
-        ExplicitWidth = 1115
+        ExplicitWidth = 1123
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -519,7 +518,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
   end
   inherited Panel: TPanel
     Width = 1123
-    ExplicitWidth = 1115
+    ExplicitWidth = 1123
     inherited deStart: TcxDateEdit
       Left = 59
       EditValue = 42005d
@@ -1176,6 +1175,11 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesJuridicalGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'DescName'
+          Value = 'zc_Movement_Sale'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
@@ -1331,6 +1335,11 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = Null
           Component = GuidesJuridicalGroup
           ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'DescName'
+          Value = 'zc_Movement_Sale'
           DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
@@ -1533,10 +1542,10 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
-    FormNameParam.Value = 'TAccount_ObjectForm'
+    FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccount_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TAccount_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1552,6 +1561,11 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
     Left = 456
     Top = 8

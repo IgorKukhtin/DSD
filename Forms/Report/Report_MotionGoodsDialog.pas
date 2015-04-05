@@ -9,7 +9,7 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, cxCheckBox;
 
 type
   TReport_MotionGoodsDialogForm = class(TParentForm)
@@ -24,15 +24,21 @@ type
     edGoods: TcxButtonEdit;
     edGoodsGroup: TcxButtonEdit;
     edLocation: TcxButtonEdit;
-    GoodsGuides: TdsdGuides;
-    GoodsGroupGuides: TdsdGuides;
-    LocationGuides: TdsdGuides;
+    GuidesGoods: TdsdGuides;
+    GuidesGoodsGroup: TdsdGuides;
+    GuidesLocation: TdsdGuides;
     edUnitGroup: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    UnitGroupGuides: TdsdGuides;
+    GuidesUnitGroup: TdsdGuides;
+    ceAccountGroup: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    cbInfoMoney: TcxCheckBox;
+    GuidesAccountGroup: TdsdGuides;
   private
     { Private declarations }
   public

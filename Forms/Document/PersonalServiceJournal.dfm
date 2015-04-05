@@ -1,5 +1,5 @@
 inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 534
   ClientWidth = 1070
   ExplicitWidth = 1086
@@ -148,6 +148,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -177,11 +178,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Width = 80
           end
           object colPersonalServiceListName: TcxGridDBColumn
-            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
             DataBinding.FieldName = 'PersonalServiceListName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 120
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
@@ -310,6 +311,12 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   inherited Panel: TPanel
     Width = 1070
     ExplicitWidth = 1070
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -328,6 +335,25 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TPersonalServiceForm'
       FormNameParam.Value = 'TPersonalServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -347,8 +373,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
-      Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -476,6 +502,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True

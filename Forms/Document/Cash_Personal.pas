@@ -17,11 +17,11 @@ uses
 
 type
   TCash_PersonalForm = class(TAncestorDocumentForm)
-    colINN: TcxGridDBColumn;
-    colPersonalName: TcxGridDBColumn;
-    colPositionName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    INN: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -34,37 +34,42 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colComment: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
     deServiceDate: TcxDateEdit;
     cxLabel6: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel12: TcxLabel;
-    colAmountCash: TcxGridDBColumn;
+    Amount_avance: TcxGridDBColumn;
     cePersonalServiceList: TcxButtonEdit;
-    PersonalServiceListGuides: TdsdGuides;
+    GuidesPersonalServiceList: TdsdGuides;
     cxLabel3: TcxLabel;
-    colUnitCode: TcxGridDBColumn;
-    colPersonalCode: TcxGridDBColumn;
-    colIsMain: TcxGridDBColumn;
-    colIsOfficial: TcxGridDBColumn;
-    colSummCash: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    PersonalCode: TcxGridDBColumn;
+    isMain: TcxGridDBColumn;
+    isOfficial: TcxGridDBColumn;
+    SummToPay_cash: TcxGridDBColumn;
     edDocumentPersonalService: TcxButtonEdit;
-    DocumentPersonalServiceGuides: TdsdGuides;
+    GuidesPersonalServiceJournal: TdsdGuides;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     ceCash: TcxButtonEdit;
-    CashGuides: TdsdGuides;
+    GuidesCash: TdsdGuides;
     cxLabel9: TcxLabel;
     ceMember: TcxButtonEdit;
-    MemberGuides: TdsdGuides;
-    colAmountService: TcxGridDBColumn;
-    colSummRemains: TcxGridDBColumn;
+    GuidesMember: TdsdGuides;
+    SummService: TcxGridDBColumn;
+    SummRemains: TcxGridDBColumn;
     spUpdateAmountParam: TdsdStoredProc;
     actUpdateAmountParam: TdsdExecStoredProc;
     bbUpdateAmountParam: TdxBarButton;
     MultiAction1: TMultiAction;
     bbMultiAction1: TdxBarButton;
+    SummToPay: TcxGridDBColumn;
+    SummCard: TcxGridDBColumn;
+    Amount_service: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

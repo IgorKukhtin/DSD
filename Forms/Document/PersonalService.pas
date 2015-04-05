@@ -60,16 +60,16 @@ type
     colSummSocialAdd: TcxGridDBColumn;
     colSummChild: TcxGridDBColumn;
     colMemberName: TcxGridDBColumn;
-    MemberChoiceForm: TOpenChoiceForm;
+    actMemberChoice: TOpenChoiceForm;
     colAmountToPay: TcxGridDBColumn;
     spUpdateIsMain: TdsdStoredProc;
     actUpdateIsMain: TdsdExecStoredProc;
     bbUpdateIsMain: TdxBarButton;
     bbPersonalServiceList: TdxBarButton;
-    actCopyData: TMultiAction;
-    spUpdateMIIsMaskExecStoredProc: TdsdExecStoredProc;
-    spUpdateMIIsMask: TdsdStoredProc;
-    PersonalServiceJournalChoiceForm: TOpenChoiceForm;
+    mactUpdateMask: TMultiAction;
+    actUpdateMask: TdsdExecStoredProc;
+    spUpdateMask: TdsdStoredProc;
+    actPersonalServiceJournalChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

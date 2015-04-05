@@ -1,9 +1,9 @@
 inherited PersonalServiceForm: TPersonalServiceForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 709
   ClientWidth = 1112
-  ExplicitWidth = 1120
-  ExplicitHeight = 743
+  ExplicitWidth = 1128
+  ExplicitHeight = 744
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -271,7 +271,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 80
           end
           object colSummAdd: TcxGridDBColumn [13]
             Caption = #1055#1088#1077#1084#1080#1103
@@ -336,7 +336,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = MemberChoiceForm
+                Action = actMemberChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -430,13 +430,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 218
     end
     object cxLabel3: TcxLabel
       Left = 463
       Top = 5
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
     end
     object cxLabel4: TcxLabel
       Left = 697
@@ -480,6 +481,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object actUpdateIsMain: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMain
       StoredProcList = <
         item
@@ -501,8 +503,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
-      Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -556,9 +558,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object MemberChoiceForm: TOpenChoiceForm
+    object actMemberChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Member_ObjectForm'
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
@@ -579,39 +582,41 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actCopyData: TMultiAction
+    object mactUpdateMask: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = PersonalServiceJournalChoiceForm
+          Action = actPersonalServiceJournalChoice
         end
         item
-          Action = spUpdateMIIsMaskExecStoredProc
+          Action = actUpdateMask
         end
         item
           Action = actRefresh
         end>
-      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
-      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
       ImageIndex = 59
     end
-    object spUpdateMIIsMaskExecStoredProc: TdsdExecStoredProc
+    object actUpdateMask: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spUpdateMIIsMask
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMask
       StoredProcList = <
         item
-          StoredProc = spUpdateMIIsMask
+          StoredProc = spUpdateMask
         end>
-      Caption = 'spUpdateMIIsMaskExecStoredProc'
+      Caption = 'actUpdateMask'
     end
-    object PersonalServiceJournalChoiceForm: TOpenChoiceForm
+    object actPersonalServiceJournalChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'PersonalServiceJournalChoiceForm'
-      FormName = 'TPersonalServiceJournalSelectForm'
-      FormNameParam.Value = 'TPersonalServiceJournalSelectForm'
+      PostDataSetBeforeExecute = False
+      Caption = 'actPersonalServiceJournalChoice'
+      FormName = 'TPersonalServiceJournalChoiceForm'
+      FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -799,7 +804,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Visible = ivNever
     end
     object bbPersonalServiceList: TdxBarButton [15]
-      Action = actCopyData
+      Action = mactUpdateMask
       Category = 0
     end
     object bbTax: TdxBarButton
@@ -1402,6 +1407,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -1545,7 +1551,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 320
     Top = 403
   end
-  object spUpdateMIIsMask: TdsdStoredProc
+  object spUpdateMask: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_isMask'
     DataSets = <>
     OutputType = otResult
