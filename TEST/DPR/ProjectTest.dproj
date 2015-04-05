@@ -1551,8 +1551,8 @@
 				<Form>Cash_PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournalSelect.pas">
-				<Form>PersonalServiceJournalSelectForm</Form>
+			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournalChoice.pas">
+				<Form>PersonalServiceJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SendTest.pas"/>

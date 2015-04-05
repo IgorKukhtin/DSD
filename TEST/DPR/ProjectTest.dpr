@@ -527,7 +527,7 @@ uses
   SendOnPriceTest in '..\SOURCE\Movement\All\SendOnPriceTest.pas',
   Cash_PersonalJournal in '..\..\Forms\Document\Cash_PersonalJournal.pas' {Cash_PersonalJournalForm: TParentForm},
   Cash_Personal in '..\..\Forms\Document\Cash_Personal.pas' {Cash_PersonalForm: TParentForm},
-  PersonalServiceJournalSelect in '..\..\Forms\Document\PersonalServiceJournalSelect.pas' {PersonalServiceJournalSelectForm: TParentForm},
+  PersonalServiceJournalChoice in '..\..\Forms\Document\PersonalServiceJournalChoice.pas' {PersonalServiceJournalChoiceForm: TParentForm},
   SendTest in '..\SOURCE\Movement\All\SendTest.pas',
   LossTest in '..\SOURCE\Movement\All\LossTest.pas',
   InventoryTest in '..\SOURCE\Movement\All\InventoryTest.pas',

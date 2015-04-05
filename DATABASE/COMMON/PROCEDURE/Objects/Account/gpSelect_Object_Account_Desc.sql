@@ -28,6 +28,8 @@ BEGIN
        WITH tmpDesc AS (SELECT ObjectDesc.Id
                              , CASE WHEN ObjectDesc.Id = zc_Object_Juridical()
                                          THEN zc_ContainerLinkObject_Juridical()
+                                    WHEN ObjectDesc.Id = zc_Object_Goods()
+                                         THEN zc_ContainerLinkObject_Goods()
                                     ELSE 0
                                END AS DescId
                         FROM ObjectDesc

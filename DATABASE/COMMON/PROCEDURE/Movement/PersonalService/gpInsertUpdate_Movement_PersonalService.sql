@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber              TVarChar  , -- Номер документа
     IN inOperDate               TDateTime , -- Дата документа
-    IN inServiceDate            TDateTime , -- Дата начисления
+    IN inServiceDate            TDateTime , -- Месяц начислений
     IN inComment                TVarChar  , -- Комментерий
     IN inPersonalServiceListId  Integer   , -- 
     IN inJuridicalId            Integer   , -- 

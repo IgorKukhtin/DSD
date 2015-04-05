@@ -1,34 +1,34 @@
 inherited Cash_PersonalForm: TCash_PersonalForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1099#1087#1083#1072#1090#1072' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072' '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientHeight = 623
-  ClientWidth = 885
-  ExplicitWidth = 901
+  ClientWidth = 982
+  ExplicitWidth = 998
   ExplicitHeight = 658
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 885
+    Width = 982
     Height = 508
     ExplicitTop = 115
-    ExplicitWidth = 1104
+    ExplicitWidth = 885
     ExplicitHeight = 508
     ClientRectBottom = 508
-    ClientRectRight = 885
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1104
+      ExplicitWidth = 885
       ExplicitHeight = 484
       inherited cxGrid: TcxGrid
-        Width = 885
+        Width = 982
         Height = 484
-        ExplicitWidth = 1104
+        ExplicitWidth = 885
         ExplicitHeight = 484
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -43,25 +43,45 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colAmountCash
+              Column = Amount_avance
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colSummCash
+              Column = SummToPay_cash
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colSummRemains
+              Column = SummRemains
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummService
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummToPay
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummCard
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_service
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -76,19 +96,39 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colAmountCash
+              Column = Amount_avance
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colSummCash
+              Column = SummToPay_cash
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colSummRemains
+              Column = SummRemains
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummService
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummToPay
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummCard
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_service
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -101,7 +141,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colUnitCode: TcxGridDBColumn [0]
+          object UnitCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
             DataBinding.FieldName = 'UnitCode'
             Visible = False
@@ -110,7 +150,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 55
           end
-          object colUnitName: TcxGridDBColumn [1]
+          object UnitName: TcxGridDBColumn [1]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -118,24 +158,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 120
           end
-          object colPersonalCode: TcxGridDBColumn [2]
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'PersonalCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colPersonalName: TcxGridDBColumn [3]
-            Caption = #1060#1048#1054' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
-            DataBinding.FieldName = 'PersonalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object colINN: TcxGridDBColumn [4]
+          object INN: TcxGridDBColumn [2]
             Caption = #1048#1053#1053
             DataBinding.FieldName = 'INN'
             Visible = False
@@ -144,7 +167,24 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object colPositionName: TcxGridDBColumn [5]
+          object PersonalCode: TcxGridDBColumn [3]
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'PersonalCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PersonalName: TcxGridDBColumn [4]
+            Caption = #1060#1048#1054' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object PositionName: TcxGridDBColumn [5]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -160,7 +200,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colIsMain: TcxGridDBColumn [6]
+          object isMain: TcxGridDBColumn [6]
             Caption = #1054#1089#1085#1086#1074'. '#1084#1077#1089#1090#1086' '#1088'.'
             DataBinding.FieldName = 'isMain'
             Visible = False
@@ -169,56 +209,118 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 60
           end
-          object colIsOfficial: TcxGridDBColumn [7]
+          object isOfficial: TcxGridDBColumn [7]
             Caption = #1054#1092#1086#1088#1084#1083'. '#1086#1092#1080#1094'.'
             DataBinding.FieldName = 'isOfficial'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object colAmountService: TcxGridDBColumn [8]
-            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1090#1086#1075#1086')'
-            DataBinding.FieldName = 'SummPersonalService'
+          object SummService: TcxGridDBColumn [8]
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'SummService'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 73
+            Width = 80
           end
-          object colSummCash: TcxGridDBColumn [9]
-            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
-            DataBinding.FieldName = 'SummCash'
+          object SummToPay: TcxGridDBColumn [9]
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'SummToPay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object colAmountCash: TcxGridDBColumn [10]
-            Caption = #1042#1099#1087#1083#1072#1090#1099' '#1076#1088#1091#1075#1080#1077
-            DataBinding.FieldName = 'AmountCash'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object colAmount: TcxGridDBColumn [11]
-            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1090#1077#1082#1091#1097#1072#1103
+          object SummCard: TcxGridDBColumn [10]
+            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053')'
+            DataBinding.FieldName = 'SummCard'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummToPay_cash: TcxGridDBColumn [11]
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
+            DataBinding.FieldName = 'SummToPay_cash'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_avance: TcxGridDBColumn [12]
+            Caption = #1040#1074#1072#1085#1089' ('#1074#1099#1087#1083#1072#1095#1077#1085#1086')'
+            DataBinding.FieldName = 'Amount_avance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Amount_service: TcxGridDBColumn [13]
+            Caption = #1044#1088#1091#1075#1080#1077' ('#1074#1099#1087#1083#1072#1095#1077#1085#1086')'
+            DataBinding.FieldName = 'Amount_service'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Amount: TcxGridDBColumn [14]
+            Caption = #1042#1099#1087#1083#1072#1090#1072' '#1092#1072#1082#1090
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn [12]
+          object SummRemains: TcxGridDBColumn [15]
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077
+            DataBinding.FieldName = 'SummRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Comment: TcxGridDBColumn [16]
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object InfoMoneyCode: TcxGridDBColumn [17]
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object InfoMoneyName: TcxGridDBColumn [18]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -227,33 +329,24 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colSummRemains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077
-            DataBinding.FieldName = 'SummRemains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object InfoMoneyName_all: TcxGridDBColumn [19]
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 72
-          end
-          object colComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 194
+            Width = 80
           end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 885
+    Width = 982
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 1104
+    ExplicitWidth = 885
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -321,18 +414,19 @@ inherited Cash_PersonalForm: TCash_PersonalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 240
     end
     object cxLabel3: TcxLabel
       Left = 217
       Top = 5
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100':'
     end
     object cxLabel4: TcxLabel
       Left = 320
       Top = 45
-      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      Caption = #8470' '#1076#1086#1082'. ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
     end
     object ceCash: TcxButtonEdit
       Left = 470
@@ -342,6 +436,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 13
       Width = 140
     end
@@ -412,7 +507,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074#1099#1087#1083#1072#1090#1099' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
       Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
       DataSets = <
         item
@@ -470,6 +565,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     object actUpdateAmountParam: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateAmountParam
       StoredProcList = <
         item
@@ -511,7 +607,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Name = 'inParentId'
         Value = 'NULL'
-        Component = DocumentPersonalServiceGuides
+        Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -703,14 +799,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Name = 'CashId_top'
         Value = Null
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInputOutput
       end
       item
         Name = 'CashName_top'
         Value = Null
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
@@ -780,13 +876,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Name = 'ParentId'
         Value = 'NULL'
-        Component = DocumentPersonalServiceGuides
+        Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
       end
       item
         Name = 'ParentName'
         Value = ''
-        Component = DocumentPersonalServiceGuides
+        Component = GuidesPersonalServiceJournal
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -805,33 +901,33 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Name = 'CashId'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
       end
       item
         Name = 'CashName'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PersonalServiceListName'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'MemberId'
         Value = ''
-        Component = MemberGuides
+        Component = GuidesMember
         ComponentItem = 'Key'
       end
       item
         Name = 'MemberName'
         Value = ''
-        Component = MemberGuides
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -934,14 +1030,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Name = 'inParentId'
         Value = 'NULL'
-        Component = DocumentPersonalServiceGuides
+        Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inCashId'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -962,7 +1058,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Name = 'inMemberId'
         Value = 'False'
-        Component = MemberGuides
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1013,10 +1109,10 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-        Guides = PersonalServiceListGuides
+        Guides = GuidesPersonalServiceList
       end
       item
-        Guides = CashGuides
+        Guides = GuidesCash
       end>
     Left = 160
     Top = 192
@@ -1195,10 +1291,10 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = edComment
       end
       item
-        Component = DocumentPersonalServiceGuides
+        Component = GuidesPersonalServiceJournal
       end
       item
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
       end>
     Left = 512
     Top = 328
@@ -1244,40 +1340,36 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Left = 319
     Top = 208
   end
-  object PersonalServiceListGuides: TdsdGuides
+  object GuidesPersonalServiceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalServiceList
     isShowModal = True
-    FormNameParam.Value = 'TPersonalServiceJournalSelectForm'
+    FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPersonalServiceJournalSelectForm'
+    FormName = 'TPersonalServiceJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = 'NULL'
-        Component = DocumentPersonalServiceGuides
+        Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = DocumentPersonalServiceGuides
+        Component = GuidesPersonalServiceJournal
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PersonalServiceListId'
-        Value = ''
-        Component = PersonalServiceListGuides
-        ComponentItem = 'Key'
+        Value = 0
         ParamType = ptInput
       end
       item
         Name = 'PersonalServiceListName'
         Value = ''
-        Component = PersonalServiceListGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
@@ -1291,39 +1383,39 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Left = 384
     Top = 65533
   end
-  object DocumentPersonalServiceGuides: TdsdGuides
+  object GuidesPersonalServiceJournal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDocumentPersonalService
-    Key = 'NULL'
-    FormNameParam.Value = 'TPersonalServiceJournalSelectForm'
+    Key = '0'
+    FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPersonalServiceJournalSelectForm'
+    FormName = 'TPersonalServiceJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = 'NULL'
-        Component = DocumentPersonalServiceGuides
+        Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = DocumentPersonalServiceGuides
+        Component = GuidesPersonalServiceJournal
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PersonalServiceListId'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'PersonalServiceListName'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         ParamType = ptInput
       end
@@ -1334,10 +1426,10 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 360
-    Top = 48
+    Left = 448
+    Top = 64
   end
-  object CashGuides: TdsdGuides
+  object GuidesCash: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
     FormNameParam.Value = 'TCash_ObjectForm'
@@ -1348,20 +1440,20 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Name = 'Key'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 528
     Top = 65533
   end
-  object MemberGuides: TdsdGuides
+  object GuidesMember: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember
     FormNameParam.Value = 'TMember_ObjectForm'
@@ -1372,13 +1464,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Name = 'Key'
         Value = ''
-        Component = MemberGuides
+        Component = GuidesMember
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = MemberGuides
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
       end>

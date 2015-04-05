@@ -15,9 +15,15 @@ RETURNS TABLE (OperDate TDateTime, ProtocolData Text, UserName TVarChar, Movemen
 AS
 $BODY$
 BEGIN
+  -- проверка прав пользователя на вызов процедуры
+  -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+
+  -- проверка
+  IF COALESCE (inMovementItemId, 0) = 0 THEN
+     RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
+  END IF;
+
 
   IF inMovementItemId <> 0 
   THEN

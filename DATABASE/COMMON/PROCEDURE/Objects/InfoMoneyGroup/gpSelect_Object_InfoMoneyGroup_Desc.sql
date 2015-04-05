@@ -11,8 +11,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_InfoMoneyGroup());
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_InfoMoneyGroup());
      vbUserId:= lpGetUserBySession (inSession);
 
 
@@ -30,6 +30,7 @@ BEGIN
             , tmp.InfoMoneyGroupCode
             , tmp.InfoMoneyGroupName
             , Object_InfoMoneyGroup.isErased
+    ;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

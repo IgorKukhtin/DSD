@@ -1,4 +1,4 @@
-unit PersonalServiceJournalSelect;
+unit PersonalServiceJournalChoice;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TPersonalServiceJournalSelectForm = class(TAncestorJournalForm)
+  TPersonalServiceJournalChoiceForm = class(TAncestorJournalForm)
     colServiceDate: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
@@ -51,9 +51,7 @@ type
     bbChoiceGuides: TdxBarButton;
     cxLabel6: TcxLabel;
     edPersonalServiceList: TcxButtonEdit;
-    PersonalServiceListGuides: TdsdGuides;
-    bbPSList: TdxBarControlContainerItem;
-    bbPersonalServiceList: TdxBarControlContainerItem;
+    GuidesPersonalServiceList: TdsdGuides;
   private
     { Private declarations }
   public
@@ -64,5 +62,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TPersonalServiceJournalSelectForm);
+  RegisterClass(TPersonalServiceJournalChoiceForm);
 end.

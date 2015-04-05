@@ -281,7 +281,7 @@ object AccountDirection_ObjectDescForm: TAccountDirection_ObjectDescForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_AccountDirection'
+    StoredProcName = 'gpSelect_Object_AccountDirection_Desc'
     DataSet = MasterCDS
     DataSets = <
       item

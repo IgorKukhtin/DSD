@@ -21,6 +21,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , CashId Integer, CashName TVarChar
              , MemberId Integer, MemberName TVarChar
+             , InvNumber_Service TVarChar, OperDate_Service TDateTime
+             , ServiceDate_Service TDateTime
+             , Comment_Service TVarChar
+             , PersonalServiceListName TVarChar
+             , TotalSummToPay_Service TFloat
 )
 AS
 $BODY$
@@ -32,13 +37,39 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
+                         UNION
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
+                         UNION
+                          SELECT zc_Enum_Status_Erased() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate WHERE inIsErased = TRUE
+                         )
+          , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
+          , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
+          , tmpAccessKey_isCashAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
+                                 UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_CashAll()
+                                      )
+          , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_isCashAll.Id FROM tmpAccessKey_isCashAll)
+                           UNION SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = zc_Enum_Process_InsertUpdate_Movement_Cash() AND EXISTS (SELECT tmpAccessKey_isCashAll.Id FROM tmpAccessKey_isCashAll) GROUP BY AccessKeyId
+                                )
+          , tmpAll AS (SELECT tmpStatus.StatusId, tmpStatus.StartDate, tmpStatus.EndDate, tmpRoleAccessKey.AccessKeyId FROM tmpStatus, tmpRoleAccessKey)
+          , Movement AS (SELECT Movement.*
+                              , Object_Status.ObjectCode AS StatusCode
+                              , Object_Status.ValueData  AS StatusName
+                         FROM tmpAll
+                              INNER JOIN Movement ON Movement.DescId = zc_Movement_Cash()
+                                                 AND Movement.OperDate BETWEEN tmpAll.StartDate AND tmpAll.EndDate -- inStartDate AND inEndDate
+                                                 AND Movement.StatusId = tmpAll.StatusId
+                                                 AND Movement.AccessKeyId = tmpAll.AccessKeyId
+                                                 AND Movement.ParentId > 0
+                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
+                        )
        SELECT
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
-           , MovementItem.Amount 
+           , Movement.StatusCode
+           , Movement.StatusName
+           , (-1 * MovementItem.Amount) :: TFloat AS Amount
   
            , MIDate_ServiceDate.ValueData      AS ServiceDate
            , MIString_Comment.ValueData        AS Comment
@@ -48,13 +79,17 @@ BEGIN
            , Object_Member.Id                  AS MemberId
            , Object_Member.ValueData           AS MemberName
 
-       FROM Movement
-           -- INNER JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+           , Movement_PersonalService.InvNumber         AS InvNumber_Service
+           , Movement_PersonalService.OperDate          AS OperDate_Service
+           , MovementDate_ServiceDate_Service.ValueData AS ServiceDate_Service
+           , MovementString_Comment_Service.ValueData   AS Comment_Service
+           , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
+           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummToPay_Service
 
+       FROM Movement
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
                                    AND MovementItem.DescId = zc_MI_Master()
-                                   AND MovementItem.ObjectId = inCashId
+                                   AND (MovementItem.ObjectId = inCashId OR COALESCE (inCashId, 0) = 0)
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
@@ -65,31 +100,54 @@ BEGIN
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
         
-    LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
                                              ON MILinkObject_Member.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MILinkObject_Member.ObjectId
 
+            LEFT JOIN Movement AS Movement_PersonalService
+                               ON Movement_PersonalService.Id = Movement.Id
+                              AND Movement_PersonalService.StatusId = zc_Enum_Status_Complete()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                         ON MovementLinkObject_PersonalServiceList.MovementId = Movement_PersonalService.Id
+                                        AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummToPay
+                                    ON MovementFloat_TotalSummToPay.MovementId =  Movement_PersonalService.Id
+                                   AND MovementFloat_TotalSummToPay.DescId = zc_MovementFloat_TotalSummToPay()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
+                                    ON MovementFloat_TotalSummCard.MovementId =  Movement_PersonalService.Id
+                                   AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChild
+                                    ON MovementFloat_TotalSummChild.MovementId =  Movement_PersonalService.Id
+                                   AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
+
+            LEFT JOIN MovementDate AS MovementDate_ServiceDate_Service
+                                   ON MovementDate_ServiceDate_Service.MovementId = Movement_PersonalService.Id
+                                  AND MovementDate_ServiceDate_Service.DescId = zc_MovementDate_ServiceDate()
+            LEFT JOIN MovementString AS MovementString_Comment_Service
+                                     ON MovementString_Comment_Service.MovementId = Movement_PersonalService.Id
+                                    AND MovementString_Comment_Service.DescId = zc_MovementString_Comment()
+
        WHERE Movement.DescId = zc_Movement_Cash()
-         AND Movement.ParentId is NOT NULL 
+         AND Movement.ParentId > 0
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-         --AND (MILinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
-         --AND (CASE WHEN inisServiceDate = True THEN MIDate_ServiceDate.ValueData = inServiceDate else 0 = 0 END)
-         ;
+      ;
    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.04.15                                        * all
  18.01.15         * add member
  17.01.15         * add inCashId
  16.09.14         *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '30.01.2012', inEndDate:= '01.01.2016', inCashId:= 14462, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '30.01.2015', inEndDate:= '01.01.2015', inCashId:= 14462, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

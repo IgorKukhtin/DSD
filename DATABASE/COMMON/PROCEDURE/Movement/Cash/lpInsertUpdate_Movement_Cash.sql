@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inParentId            Integer   , -- Ключ объекта
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inServiceDate         TDateTime , -- Дата начисления
+    IN inServiceDate         TDateTime , -- Месяц начислений
     IN inAmountIn            TFloat    , -- Сумма прихода
     IN inAmountOut           TFloat    , -- Сумма расхода
     IN inAmountSumm          TFloat    , -- Cумма грн, обмен
@@ -43,7 +43,7 @@ BEGIN
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
-     -- проверка
+     -- проверка, только если это не выпалата по ведомости
      IF (COALESCE (inAmountIn, 0) = 0) AND (COALESCE (inAmountOut, 0) = 0) AND COALESCE (inParentId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Введите сумму.';
      END IF;

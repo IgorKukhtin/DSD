@@ -15,9 +15,15 @@ RETURNS TABLE (OperDate TDateTime, ProtocolData TBlob, UserName TVarChar, Object
 AS
 $BODY$
 BEGIN
+  -- проверка прав пользователя на вызов процедуры
+  -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+
+  -- проверка
+  IF COALESCE (inObjectId, 0) = 0 THEN
+     RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
+  END IF;
+
 
   IF inObjectId <> 0 
   THEN

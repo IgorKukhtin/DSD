@@ -3,7 +3,7 @@ object InfoMoney_ObjectDescForm: TInfoMoney_ObjectDescForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'>'
   ClientHeight = 376
-  ClientWidth = 597
+  ClientWidth = 694
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object InfoMoney_ObjectDescForm: TInfoMoney_ObjectDescForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 597
+    Width = 694
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 597
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -51,7 +52,7 @@ object InfoMoney_ObjectDescForm: TInfoMoney_ObjectDescForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 55
       end
       object clInfoMoneyGroup: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103

@@ -38,7 +38,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    dsdStoredProc: TdsdStoredProc;
+    spReport: TdsdStoredProc;
     CountStart: TcxGridDBColumn;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
@@ -71,8 +71,8 @@ type
     CountInventory: TcxGridDBColumn;
     SummInventory: TcxGridDBColumn;
     PriceStart: TcxGridDBColumn;
-    GoodsGroupGuides: TdsdGuides;
-    LocationGuides: TdsdGuides;
+    GuidesGoodsGroup: TdsdGuides;
+    GuidesLocation: TdsdGuides;
     edGoodsGroup: TcxButtonEdit;
     edUnitGroup: TcxButtonEdit;
     PeriodChoice: TPeriodChoice;
@@ -91,9 +91,9 @@ type
     PriceInventory: TcxGridDBColumn;
     PriceEnd: TcxGridDBColumn;
     cxLabel3: TcxLabel;
-    UnitGroupGuides: TdsdGuides;
+    GuidesUnitGroup: TdsdGuides;
     cxLabel1: TcxLabel;
-    GoodsGuides: TdsdGuides;
+    GuidesGoods: TdsdGuides;
     edLocation: TcxButtonEdit;
     cxLabel4: TcxLabel;
     MeasureName: TcxGridDBColumn;
@@ -134,7 +134,7 @@ type
     cxLabel7: TcxLabel;
     ceAccountGroup: TcxButtonEdit;
     cxLabel2: TcxLabel;
-    AccountGroupGuides: TdsdGuides;
+    GuidesAccountGroup: TdsdGuides;
     cbInfoMoney: TcxCheckBox;
     InfoMoneyName_all_Detail: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
@@ -170,6 +170,7 @@ type
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
     LineNum: TcxGridDBColumn;
+    actIsInfoMoney: TdsdDataSetRefresh;
   private
   public
   end;
