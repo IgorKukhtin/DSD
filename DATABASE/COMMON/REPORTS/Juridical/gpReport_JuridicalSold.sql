@@ -387,4 +387,4 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inSession:= zfCalc_UserAdmin()); 
+-- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.06.2015', inEndDate:= '30.06.2015', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inSession:= zfCalc_UserAdmin()); 

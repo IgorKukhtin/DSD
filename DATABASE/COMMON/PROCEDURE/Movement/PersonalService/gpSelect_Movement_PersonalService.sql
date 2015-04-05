@@ -1,10 +1,11 @@
 -- Function: gpSelect_Movement_PersonalService()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
+    IN inIsServiceDate Boolean ,
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -16,7 +17,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
               )
-
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -31,7 +31,7 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUserAll AS (SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 293449) AND UserId = vbUserId AND UserId <> 9464) -- Документы-меню (управленцы) AND <> Рудик Н.В.
+        , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId AND UserId <> 9464) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
         , tmpRoleAccessKey AS (SELECT AccessKeyId_PersonalService AS AccessKeyId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId GROUP BY AccessKeyId_PersonalService
                               UNION
                                -- Админ и другие видят ВСЕХ
@@ -71,6 +71,16 @@ BEGIN
              FROM tmpStatus
                   INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalService() AND Movement.StatusId = tmpStatus.StatusId
                   INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsServiceDate = FALSE
+            UNION ALL
+             SELECT MovementDate_ServiceDate.MovementId  AS Id
+             FROM MovementDate AS MovementDate_ServiceDate
+                  JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId AND Movement.DescId = zc_Movement_PersonalService()
+                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsServiceDate = TRUE
+               AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+               AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
             ) AS tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
 
@@ -130,15 +140,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
-
+ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.04.15                                        * all
  01.10.14         * add Juridical
  11.09.14         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2014', inEndDate:= '01.02.2015', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2014', inEndDate:= '01.02.2015', inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')

@@ -1,26 +1,26 @@
 inherited PersonalServiceForm: TPersonalServiceForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-  ClientHeight = 709
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+  ClientHeight = 662
   ClientWidth = 1112
-  ExplicitWidth = 1120
-  ExplicitHeight = 743
+  ExplicitWidth = 1128
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1112
-    Height = 623
+    Height = 576
     ExplicitWidth = 1112
-    ExplicitHeight = 623
-    ClientRectBottom = 623
+    ExplicitHeight = 576
+    ClientRectBottom = 576
     ClientRectRight = 1112
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1112
-      ExplicitHeight = 599
+      ExplicitHeight = 552
       inherited cxGrid: TcxGrid
         Width = 1112
-        Height = 599
+        Height = 552
         ExplicitWidth = 1112
-        ExplicitHeight = 599
+        ExplicitHeight = 552
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -77,11 +77,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountToPay
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clInfoMoneyName
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -138,11 +133,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountToPay
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clInfoMoneyName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -271,7 +261,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 80
           end
           object colSummAdd: TcxGridDBColumn [13]
             Caption = #1055#1088#1077#1084#1080#1103
@@ -336,7 +326,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = MemberChoiceForm
+                Action = actMemberChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -345,18 +335,34 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object clInfoMoneyName: TcxGridDBColumn [20]
+          object InfoMoneyCode: TcxGridDBColumn [20]
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clInfoMoneyName: TcxGridDBColumn [21]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object colComment: TcxGridDBColumn [21]
+          object InfoMoneyName_all: TcxGridDBColumn [22]
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colComment: TcxGridDBColumn [23]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -393,10 +399,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 121
-      ExplicitHeight = 22
       Width = 121
     end
-    object deServiceDate: TcxDateEdit
+    object edServiceDate: TcxDateEdit
       Left = 349
       Top = 23
       EditValue = 41640d
@@ -422,7 +427,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Top = 5
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
     end
-    object cePersonalServiceList: TcxButtonEdit
+    object edPersonalServiceList: TcxButtonEdit
       Left = 463
       Top = 23
       Properties.Buttons = <
@@ -430,20 +435,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 218
     end
     object cxLabel3: TcxLabel
       Left = 463
       Top = 5
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
     end
     object cxLabel4: TcxLabel
       Left = 697
       Top = 5
       Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1089#1086#1094'.'#1074#1099#1087#1083#1072#1090#1099')'
     end
-    object ceJuridical: TcxButtonEdit
+    object edJuridical: TcxButtonEdit
       Left = 697
       Top = 23
       Enabled = False
@@ -462,7 +468,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
-    Top = 640
+    Top = 392
   end
   inherited ActionList: TActionList
     Left = 55
@@ -480,6 +486,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object actUpdateIsMain: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMain
       StoredProcList = <
         item
@@ -501,8 +508,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
-      Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -543,22 +550,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     inherited actAddMask: TdsdExecStoredProc
       Enabled = False
     end
-    object actRefreshPrice: TdsdDataSetRefresh
+    object actMemberChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object MemberChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Member_ObjectForm'
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
@@ -579,39 +574,41 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actCopyData: TMultiAction
+    object mactUpdateMask: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = PersonalServiceJournalChoiceForm
+          Action = actPersonalServiceJournalChoice
         end
         item
-          Action = spUpdateMIIsMaskExecStoredProc
+          Action = actUpdateMask
         end
         item
           Action = actRefresh
         end>
-      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
-      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
       ImageIndex = 59
     end
-    object spUpdateMIIsMaskExecStoredProc: TdsdExecStoredProc
+    object actUpdateMask: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spUpdateMIIsMask
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMask
       StoredProcList = <
         item
-          StoredProc = spUpdateMIIsMask
+          StoredProc = spUpdateMask
         end>
-      Caption = 'spUpdateMIIsMaskExecStoredProc'
+      Caption = 'actUpdateMask'
     end
-    object PersonalServiceJournalChoiceForm: TOpenChoiceForm
+    object actPersonalServiceJournalChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'PersonalServiceJournalChoiceForm'
-      FormName = 'TPersonalServiceJournalSelectForm'
-      FormNameParam.Value = 'TPersonalServiceJournalSelectForm'
+      PostDataSetBeforeExecute = False
+      Caption = 'actPersonalServiceJournalChoice'
+      FormName = 'TPersonalServiceJournalChoiceForm'
+      FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -622,15 +619,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
           ParamType = ptInput
         end
         item
-          Name = 'PersonalServiceListId'
+          Name = 'TopPersonalServiceListId'
           Value = ''
-          Component = PersonalServiceListGuides
+          Component = GuidesPersonalServiceList
           ComponentItem = 'Key'
         end
         item
-          Name = 'PersonalServiceListName'
+          Name = 'TopPersonalServiceListName'
           Value = ''
-          Component = PersonalServiceListGuides
+          Component = GuidesPersonalServiceList
           ComponentItem = 'TextValue'
           DataType = ftString
         end
@@ -671,20 +668,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inIsErased'
-        Value = False
+        Value = Null
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 248
@@ -799,7 +786,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Visible = ivNever
     end
     object bbPersonalServiceList: TdxBarButton [15]
-      Action = actCopyData
+      Action = mactUpdateMask
       Category = 0
     end
     object bbTax: TdxBarButton
@@ -927,7 +914,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'ServiceDate'
         Value = 41640d
-        Component = deServiceDate
+        Component = edServiceDate
         DataType = ftDateTime
       end
       item
@@ -939,110 +926,28 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'PersonalServiceListId'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
       end
       item
         Name = 'PersonalServiceListName'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
       end>
     Left = 216
     Top = 248
@@ -1074,7 +979,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'inServiceDate'
         Value = 41640d
-        Component = deServiceDate
+        Component = edServiceDate
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -1088,14 +993,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'inPersonalServiceListId'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1152,9 +1057,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     IdParam.Value = nil
     GuidesList = <
       item
-        Guides = PersonalServiceListGuides
-      end
-      item
+        Guides = GuidesPersonalServiceList
       end>
     Left = 160
     Top = 192
@@ -1169,35 +1072,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Control = edOperDate
       end
       item
-        Control = deServiceDate
+        Control = edServiceDate
       end
       item
-        Control = cePersonalServiceList
+        Control = edPersonalServiceList
+      end
+      item
+        Control = edJuridical
       end
       item
         Control = edComment
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     Left = 232
     Top = 193
@@ -1402,17 +1286,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
-    RefreshAction = actRefreshPrice
-    ComponentList = <
-      item
-        Component = deServiceDate
-      end
-      item
-        Component = edComment
-      end
-      item
-        Component = StatusGuides
-      end>
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <>
     Left = 512
     Top = 328
   end
@@ -1427,12 +1303,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Params = <>
     Left = 508
     Top = 246
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_Print'
@@ -1457,9 +1327,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 319
     Top = 208
   end
-  object PersonalServiceListGuides: TdsdGuides
+  object GuidesPersonalServiceList: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePersonalServiceList
+    LookupControl = edPersonalServiceList
     isShowModal = True
     FormNameParam.Value = 'TPersonalServiceListForm'
     FormNameParam.DataType = ftString
@@ -1469,35 +1339,35 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 568
     Top = 13
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceJuridical
+    LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
@@ -1506,7 +1376,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1514,7 +1384,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1545,7 +1415,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 320
     Top = 403
   end
-  object spUpdateMIIsMask: TdsdStoredProc
+  object spUpdateMask: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_isMask'
     DataSets = <>
     OutputType = otResult

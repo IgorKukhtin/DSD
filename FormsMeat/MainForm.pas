@@ -525,6 +525,8 @@ type
     MEDOC1: TMenuItem;
     actQualityDoc: TdsdOpenForm;
     miQualityDoc: TMenuItem;
+    actReport_GoodsMI_Package: TdsdOpenForm;
+    N53: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

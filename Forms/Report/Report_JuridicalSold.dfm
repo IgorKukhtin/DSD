@@ -1,28 +1,28 @@
 inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 556
-  ClientWidth = 1020
-  ExplicitWidth = 1036
+  ClientWidth = 1084
+  ExplicitWidth = 1100
   ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1020
+    Width = 1084
     Height = 473
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1020
+    ExplicitWidth = 1084
     ExplicitHeight = 473
     ClientRectBottom = 473
-    ClientRectRight = 1020
+    ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1084
       ExplicitHeight = 473
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1084
         Height = 473
-        ExplicitWidth = 1020
+        ExplicitWidth = 1084
         ExplicitHeight = 473
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -934,14 +934,22 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
+          object JuridicalPartnerlName: TcxGridDBColumn
+            DataBinding.FieldName = 'JuridicalPartnerlName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 90
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1084
     Height = 57
-    ExplicitWidth = 1020
+    ExplicitWidth = 1084
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 60
@@ -976,7 +984,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Top = 6
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
-    object ceInfoMoneyGroup: TcxButtonEdit
+    object edInfoMoneyGroup: TcxButtonEdit
       Left = 305
       Top = 30
       Properties.Buttons = <
@@ -988,7 +996,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       TabOrder = 5
       Width = 125
     end
-    object ceInfoMoneyDestination: TcxButtonEdit
+    object edInfoMoneyDestination: TcxButtonEdit
       Left = 435
       Top = 30
       Properties.Buttons = <
@@ -1005,7 +1013,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Top = 6
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
     end
-    object ceInfoMoney: TcxButtonEdit
+    object edInfoMoney: TcxButtonEdit
       Left = 560
       Top = 30
       Properties.Buttons = <
@@ -1111,13 +1119,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AccountGuides
+        Component = GuidesAccount
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = BranchGuides
+        Component = GuidesBranch
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1133,31 +1141,31 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           'Date')
       end
       item
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1184,9 +1192,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       ImageIndex = 3
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDataset'
-          IndexFieldNames = 'JuridicalName'
+          IndexFieldNames = 
+            'JuridicalGroupName;RetailName;JuridicalName;PartnerName;Contract' +
+            'TagGroupName;ContractTagName;ContractNumber'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -1200,6 +1210,110 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyGroupId'
+          Value = Null
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Value = Null
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyDestinationId'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyDestinationName'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
@@ -1214,9 +1328,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       ImageIndex = 3
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDataset'
-          IndexFieldNames = 'JuridicalPartnerlName'
+          IndexFieldNames = 
+            'JuridicalGroupName;RetailName;JuridicalName;PartnerName;Contract' +
+            'TagGroupName;ContractTagName;ContractNumber'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -1230,6 +1346,110 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyGroupId'
+          Value = Null
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Value = Null
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyDestinationId'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyDestinationName'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
@@ -1245,9 +1465,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDataset'
-          IndexFieldNames = 'JuridicalName'
+          IndexFieldNames = 
+            'JuridicalGroupName;RetailName;JuridicalName;PartnerName;Contract' +
+            'TagGroupName;ContractTagName;ContractNumber'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -1261,6 +1483,110 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyGroupId'
+          Value = Null
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Value = Null
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyDestinationId'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyDestinationName'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
@@ -2973,56 +3299,56 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyGroupId'
         Value = ''
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Value = ''
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inBranchId'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalGroupId'
         Value = ''
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inCurrencyId'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -3194,40 +3520,43 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Component = PeriodChoice
       end
       item
-        Component = AccountGuides
+        Component = GuidesAccount
       end
       item
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
       end
       item
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
       end
       item
-        Component = BranchGuides
+        Component = GuidesBranch
       end
       item
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
+      end
+      item
+        Component = GuidesCurrency
       end>
     Top = 228
   end
-  object InfoMoneyGroupGuides: TdsdGuides
+  object GuidesInfoMoneyGroup: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceInfoMoneyGroup
-    FormNameParam.Value = 'TInfoMoneyGroupForm'
+    LookupControl = edInfoMoneyGroup
+    FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoneyGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoneyGroup_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3235,26 +3564,31 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
-    Left = 704
-    Top = 53
+    Left = 352
+    Top = 21
   end
-  object InfoMoneyDestinationGuides: TdsdGuides
+  object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceInfoMoneyDestination
-    FormNameParam.Value = 'TInfoMoneyDestinationForm'
+    LookupControl = edInfoMoneyDestination
+    FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoneyDestinationForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoneyDestination_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3262,63 +3596,77 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
-    Left = 584
-    Top = 53
+    Left = 480
+    Top = 29
   end
-  object InfoMoneyGuides: TdsdGuides
+  object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    LookupControl = edInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoney_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
-    Left = 440
-    Top = 61
+    Left = 624
+    Top = 29
   end
-  object AccountGuides: TdsdGuides
+  object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
-    FormNameParam.Value = 'TAccount_ObjectForm'
+    FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccount_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TAccount_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValueAll'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
-    Left = 312
-    Top = 48
+    Left = 248
   end
   object spGetDescSets: TdsdStoredProc
     StoredProcName = 'gpGetDescSets'
@@ -3497,7 +3845,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Left = 240
     Top = 232
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -3508,7 +3856,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3516,15 +3864,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 800
-    Top = 56
+    Left = 720
+    Top = 32
   end
-  object BranchGuides: TdsdGuides
+  object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
@@ -3535,7 +3883,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'Key'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3543,15 +3891,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 864
-    Top = 72
+    Left = 824
+    Top = 32
   end
-  object JuridicalGroupGuides: TdsdGuides
+  object GuidesJuridicalGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalGroup
     FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
@@ -3562,7 +3910,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3570,15 +3918,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGroupGuides
+        Component = GuidesJuridicalGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 960
-    Top = 64
+    Left = 936
+    Top = 40
   end
-  object CurrencyGuides: TdsdGuides
+  object GuidesCurrency: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrency
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -3589,7 +3937,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3597,12 +3945,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1048
-    Top = 24
+    Left = 1040
+    Top = 40
   end
 end

@@ -64,8 +64,7 @@ uses
   SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
   FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm},
-  Unit1 in '..\TEMP\Unit1.pas' {Form1};
+  GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm};
 
 {$R *.res}
 
@@ -82,7 +81,6 @@ begin
          //
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TForm1, Form1);
   // !!!важно первым!!!
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);

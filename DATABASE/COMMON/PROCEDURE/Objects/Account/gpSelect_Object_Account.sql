@@ -19,6 +19,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Account());
    
+     -- Результат
      RETURN QUERY 
        SELECT
              View_Account.AccountId   AS Id

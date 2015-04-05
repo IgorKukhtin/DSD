@@ -435,7 +435,20 @@ uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fFindIncome_ContractId_pg(JuridicalId,IMCode,InfoMoneyId,PaidKindId:Integer;OperDate:TdateTime):Integer;
 begin
-             Result:=0;
+            // !!!Меняется параметр InfoMoneyId!!!
+            fOpenSqToQuery (' select InfoMoneyId'
+                           +' from Object_InfoMoney_View'
+                           +' where InfoMoneyId='+IntToStr(InfoMoneyId)
+                           +'   and InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400()' // Общефирменные + услуги полученные
+                           +'                                      , zc_Enum_InfoMoneyDestination_21500()' // Общефирменные + Маркетинг
+                           +'                                      , zc_Enum_InfoMoneyDestination_21600()' // Общефирменные + Коммунальные услуги
+                           +'                                       )'
+                           +'  and InfoMoneyDestinationCode < 30000' // Доходы
+                           );
+            // !!!Меняется параметр InfoMoneyId!!!
+            InfoMoneyId:=toSqlQuery.FieldByName('InfoMoneyId').AsInteger;
+
+
              //1.1. находим договор: статья + по дате + не "закрыт" + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)then
              begin
@@ -748,7 +761,7 @@ begin
              end;
 
              //4. если не нашли, находим хоть один договор !!!у поставщика и если это не услуги!!! + не "удален"
-             if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
+             if (JuridicalId<>0)and(IMCode<>0)and(Result=0)
              then
              begin
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
@@ -773,8 +786,13 @@ begin
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
+                                 //+'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
+                                 //+'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400()' // Общефирменные + услуги полученные
+                                 +'                                                                                         , zc_Enum_InfoMoneyDestination_21500()' // Общефирменные + Маркетинг
+                                 +'                                                                                         , zc_Enum_InfoMoneyDestination_21600()' // Общефирменные + Коммунальные услуги
+                                 +'                                                                                          )'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 30000' // Доходы
                                  +' where JuridicalId='+IntToStr(JuridicalId)
                                  +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_FirstForm)
                                  +'   and Object_Contract_View.isErased = FALSE'
@@ -785,8 +803,13 @@ begin
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
+                                 //+'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
+                                 //+'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400()' // Общефирменные + услуги полученные
+                                 +'                                                                                         , zc_Enum_InfoMoneyDestination_21500()' // Общефирменные + Маркетинг
+                                 +'                                                                                         , zc_Enum_InfoMoneyDestination_21600()' // Общефирменные + Коммунальные услуги
+                                 +'                                                                                          )'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 30000' // Доходы
                                  +' where JuridicalId='+IntToStr(JuridicalId)
                                  +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
                                  +'   and Object_Contract_View.isErased = FALSE'
@@ -5080,8 +5103,13 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inNumberPrint',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inMemberMain',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inMemberTech',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inTradeMarkId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -9971,7 +9999,7 @@ begin
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                            ,max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'                      from dba.Bill'
-           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id  and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
@@ -10114,7 +10142,7 @@ begin
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                            ,max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'                      from dba.Bill'
-           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
@@ -10470,7 +10498,7 @@ begin
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                            ,max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'                      from dba.Bill'
-           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id  and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
@@ -11165,7 +11193,7 @@ begin
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                            ,max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'                      from dba.Bill'
-           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
@@ -12884,7 +12912,7 @@ begin
         Add('     left join (select Bill.Id as BillId'
            +'                     , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'                from dba.Bill'
-           +'                     left join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                     left join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'                where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                  and Bill.Id_Postgres > 0'
            +'                  and Bill.BillKind=zc_bkReturnToUnit()'
@@ -13001,7 +13029,7 @@ begin
            +'      from dba.Bill'
            +'           left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId'
            +'           left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId'
-           +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'           left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
            +'                                                                and Information1.OKPO <> '+FormatToVarCharServer_notNULL('')
            +'           left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id'
@@ -15117,7 +15145,7 @@ begin
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                            ,max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'                      from dba.Bill'
-           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
            +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
@@ -15255,7 +15283,7 @@ begin
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                            ,max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'                      from dba.Bill'
-           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
            +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
@@ -15534,7 +15562,7 @@ begin
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                            ,max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'                      from dba.Bill'
-           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
            +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
@@ -15675,7 +15703,7 @@ begin
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                            ,max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'                      from dba.Bill'
-           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
            +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
@@ -15988,7 +16016,7 @@ begin
            +'      from dba.Bill'
            +'           left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId'
            +'           left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId'
-           +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'           left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
            +'                                                                and Information1.OKPO <> '+FormatToVarCharServer_notNULL('')
            +'           left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id'
@@ -16145,7 +16173,7 @@ begin
            +'      from dba.Bill'
            +'           left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId'
            +'           left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId'
-           +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'           left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
            +'                                                                and Information1.OKPO <> '+FormatToVarCharServer_notNULL('')
            +'           left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id'
@@ -16290,7 +16318,7 @@ begin
            +'           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find'
            +'           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'      from dba.Bill'
-           +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'                           left outer join dba.Unit on Unit.Id = Bill.FromId'
            +'                           left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -16311,7 +16339,7 @@ begin
            +'           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find'
            +'           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'      from dba.Bill'
-           +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'                           left outer join dba.Unit on Unit.Id = Bill.FromId'
            +'                           left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'

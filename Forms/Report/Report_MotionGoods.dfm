@@ -1870,7 +1870,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object cbInfoMoney: TcxCheckBox
       Left = 243
       Top = 30
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
+      Action = actIsInfoMoney
       Properties.ReadOnly = False
       TabOrder = 14
       Width = 166
@@ -1891,12 +1891,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AccountGroupGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
         Component = cbInfoMoney
         Properties.Strings = (
           'Checked')
@@ -1912,19 +1906,31 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           'Date')
       end
       item
-        Component = GoodsGroupGuides
+        Component = GuidesAccountGroup
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = GoodsGuides
+        Component = GuidesGoods
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = LocationGuides
+        Component = GuidesGoodsGroup
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesLocation
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnitGroup
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1936,12 +1942,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           'Left'
           'Top'
           'Width')
-      end
-      item
-        Component = UnitGroupGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -2080,10 +2080,10 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spReport
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spReport
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2103,8 +2103,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
-      Hint = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
       FormName = 'TReport_MotionGoodsDialogForm'
       FormNameParam.Value = ''
@@ -2127,7 +2127,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Name = 'GoodsId'
           Value = ''
-          Component = GoodsGuides
+          Component = GuidesGoods
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
@@ -2135,7 +2135,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Name = 'GoodsName'
           Value = ''
-          Component = GoodsGuides
+          Component = GuidesGoods
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2143,14 +2143,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Name = 'GoodsGroupId'
           Value = ''
-          Component = GoodsGroupGuides
+          Component = GuidesGoodsGroup
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
           Name = 'GoodsGroupName'
           Value = ''
-          Component = GoodsGroupGuides
+          Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2158,31 +2158,52 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Name = 'UnitGroupId'
           Value = ''
-          Component = UnitGroupGuides
+          Component = GuidesUnitGroup
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
           Name = 'UnitGroupName'
           Value = ''
-          Component = UnitGroupGuides
+          Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
         end
         item
-          Name = 'UnitId'
+          Name = 'LocationId'
           Value = ''
-          Component = LocationGuides
+          Component = GuidesLocation
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
-          Name = 'UnitName'
+          Name = 'LocationName'
           Value = ''
-          Component = LocationGuides
-          ComponentItem = 'Key'
+          Component = GuidesLocation
+          ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = GuidesAccountGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = GuidesAccountGroup
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+        end
+        item
+          Name = 'isInfoMoney'
+          Value = Null
+          Component = cbInfoMoney
+          DataType = ftBoolean
           ParamType = ptInput
         end>
       isShowModal = True
@@ -2227,7 +2248,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Name = 'UnitName'
           Value = ''
-          Component = UnitGroupGuides
+          Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2275,7 +2296,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Name = 'UnitName'
           Value = ''
-          Component = UnitGroupGuides
+          Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2324,7 +2345,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Name = 'UnitName'
           Value = ''
-          Component = UnitGroupGuides
+          Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2408,13 +2429,13 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Name = 'AccountGroupId'
           Value = Null
-          Component = AccountGroupGuides
+          Component = GuidesAccountGroup
           ComponentItem = 'Key'
         end
         item
           Name = 'AccountGroupName'
           Value = Null
-          Component = AccountGroupGuides
+          Component = GuidesAccountGroup
           ComponentItem = 'TextValue'
           DataType = ftString
         end
@@ -2434,13 +2455,13 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Name = 'UnitGroupId'
           Value = Null
-          Component = UnitGroupGuides
+          Component = GuidesUnitGroup
           ComponentItem = 'Key'
         end
         item
           Name = 'UnitGroupName'
           Value = Null
-          Component = UnitGroupGuides
+          Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
         end
@@ -2453,8 +2474,20 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end>
       isShowModal = False
     end
+    object actIsInfoMoney: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
+      RefreshOnTabSetChanges = False
+    end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spReport: TdsdStoredProc
     StoredProcName = 'gpReport_MotionGoods'
     DataSet = MasterCDS
     DataSets = <
@@ -2479,35 +2512,35 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Name = 'inAccountGroupId'
         Value = Null
-        Component = AccountGroupGuides
+        Component = GuidesAccountGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inUnitGroupId'
         Value = ''
-        Component = UnitGroupGuides
+        Component = GuidesUnitGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inLocationId'
         Value = ''
-        Component = LocationGuides
+        Component = GuidesLocation
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsGroupId'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -2546,7 +2579,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Left = 344
     Top = 288
   end
-  object GoodsGroupGuides: TdsdGuides
+  object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
@@ -2557,7 +2590,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2565,14 +2598,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
     Left = 968
   end
-  object LocationGuides: TdsdGuides
+  object GuidesLocation: TdsdGuides
     KeyField = 'Id'
     LookupControl = edLocation
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
@@ -2583,7 +2616,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Name = 'Key'
         Value = ''
-        Component = LocationGuides
+        Component = GuidesLocation
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2591,7 +2624,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = LocationGuides
+        Component = GuidesLocation
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2605,7 +2638,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Left = 176
     Top = 176
   end
-  object UnitGroupGuides: TdsdGuides
+  object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnitGroup
     FormNameParam.Value = 'TUnitTreeForm'
@@ -2617,7 +2650,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGroupGuides
+        Component = GuidesUnitGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2625,14 +2658,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGroupGuides
+        Component = GuidesUnitGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
     Left = 600
   end
-  object GoodsGuides: TdsdGuides
+  object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
@@ -2643,7 +2676,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2651,7 +2684,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2668,77 +2701,53 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Component = PeriodChoice
       end
       item
-        Component = AccountGroupGuides
+        Component = GuidesAccountGroup
       end
       item
-        Component = UnitGroupGuides
+        Component = GuidesUnitGroup
       end
       item
-        Component = LocationGuides
+        Component = GuidesLocation
       end
       item
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
       end
       item
-        Component = GoodsGuides
-      end
-      item
-        Component = cbInfoMoney
+        Component = GuidesGoods
       end>
     Left = 144
     Top = 344
   end
-  object AccountGroupGuides: TdsdGuides
+  object GuidesAccountGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAccountGroup
-    FormNameParam.Value = 'TAccountGroup_ObjectForm'
+    FormNameParam.Value = 'TAccountGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccountGroup_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TAccountGroup_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = AccountGroupGuides
+        Component = GuidesAccountGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = AccountGroupGuides
+        Component = GuidesAccountGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'AccountDirectionId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'AccountDirectionName'
-        Value = ''
-        ComponentItem = 'TextValue'
+        Name = 'inDescCode'
+        Value = 'zc_Object_Goods'
         DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'AccountId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'AccountName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
       end>
-    Left = 320
-    Top = 65533
+    Left = 392
+    Top = 5
   end
   object FormParams: TdsdFormParams
     Params = <

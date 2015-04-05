@@ -217,32 +217,32 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\LoadReportTest.pas"/>
 			<DCCReference Include="..\SOURCE\ObjectHistory\All\PriceListItemTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup_Object.pas">
-				<Form>InfoMoneyGroup_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup_ObjectDesc.pas">
+				<Form>InfoMoneyGroup_ObjectDescForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroupEdit.pas">
 				<Form>InfoMoneyGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestination_Object.pas">
-				<Form>InfoMoneyDestination_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestination_ObjectDesc.pas">
+				<Form>InfoMoneyDestination_ObjectDescForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestinationEdit.pas">
 				<Form>InfoMoneyDestinationEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\InfoMoney_Object.pas">
-				<Form>InfoMoney_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoney_ObjectDesc.pas">
+				<Form>InfoMoney_ObjectDescForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\InfoMoneyEdit.pas">
 				<Form>InfoMoneyEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\AccountGroup_Object.pas">
-				<Form>AccountGroup_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\AccountGroup_ObjectDesc.pas">
+				<Form>AccountGroup_ObjectDescForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\AccountGroupEdit.pas">
 				<Form>AccountGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\AccountDirection_Object.pas">
-				<Form>AccountDirection_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\AccountDirection_ObjectDesc.pas">
+				<Form>AccountDirection_ObjectDescForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\AccountDirectionEdit.pas">
 				<Form>AccountDirectionEditForm</Form>
@@ -253,8 +253,8 @@
 			<DCCReference Include="..\..\Forms\Guides\ProfitLossGroupEdit.pas">
 				<Form>ProfitLossGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Account_Object.pas">
-				<Form>Account_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Account_ObjectDesc.pas">
+				<Form>Account_ObjectDescForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\AccountEdit.pas">
 				<Form>AccountEditForm</Form>
@@ -1551,8 +1551,8 @@
 				<Form>Cash_PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournalSelect.pas">
-				<Form>PersonalServiceJournalSelectForm</Form>
+			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournalChoice.pas">
+				<Form>PersonalServiceJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SendTest.pas"/>
@@ -1740,7 +1740,6 @@
 				<Form>Report_GoodsMI_ProductionUnionMDForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\GoodsQuality.pas">
 				<Form>GoodsQualityForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1952,6 +1951,38 @@
 			<DCCReference Include="..\..\Forms\Import\LoadFlagFromMedoc.pas">
 				<Form>LoadFlagFromMedocForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Account_Object.pas">
+				<Form>Account_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountDirection_Object.pas">
+				<Form>AccountDirection_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AccountGroup_Object.pas">
+				<Form>AccountGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoney_Object.pas">
+				<Form>InfoMoney_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestination_Object.pas">
+				<Form>InfoMoneyDestination_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup_Object.pas">
+				<Form>InfoMoneyGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Package.pas">
+				<Form>Report_GoodsMI_PackageForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas">
+				<Form>Report_GoodsMI_ProductionUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

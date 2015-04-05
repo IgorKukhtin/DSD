@@ -1,17 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Cash_Personal()
 
-
-DROP FUNCTION IF EXISTS 
-   gpInsertUpdate_Movement_Cash_Personal (integer, tvarchar, tdatetime, Integer, Integer, tfloat, TVarChar, integer, integer, integer, TDateTime, tvarchar);
-
-DROP FUNCTION IF EXISTS 
-   gpInsertUpdate_Movement_PersonalCash (integer, tvarchar, tdatetime, Integer, TVarChar, TDateTime, tvarchar);
-   
-DROP FUNCTION IF EXISTS 
-   gpInsertUpdate_Movement_Cash_Personal (integer, tvarchar, tdatetime, Integer, TVarChar, TDateTime, tvarchar);
-
-DROP FUNCTION IF EXISTS 
-   gpInsertUpdate_Movement_Cash_Personal (integer, tvarchar, tdatetime, Integer, TVarChar, TDateTime, Integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Personal (Integer, TVarChar, tdatetime, Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Personal(
  INOUT ioMovementId          Integer   , -- 
@@ -20,47 +9,54 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Personal(
     IN inParentId            Integer   , -- документ наче=исления зп
     IN inCashId              Integer   , -- Касса
     IN inComment             TVarChar  , -- Комментерий
-    IN inServiceDate         TDateTime , -- Дата начисления
     IN inMemberId            Integer   , -- Физ лицо (через кого)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMIMasterId Integer;
-   
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash_Personal());
 
      -- проверка
      IF COALESCE (inParentId, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Не выбрана <Ведомость начислений>.';
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Ведомость>.';
      END IF;
-
-     -- расчет - 1-ое число месяца
-     inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
      -- сохранили <Документ>
      ioMovementId := (SELECT lpInsertUpdate_Movement_Cash (ioId          := ioMovementId
                                                          , inParentId    := inParentId
                                                          , inInvNumber   := inInvNumber
                                                          , inOperDate    := inOperDate
-                                                         , inServiceDate := inServiceDate
+                                                         , inServiceDate := MovementDate_ServiceDate.ValueData
                                                          , inAmountIn    := CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 0 END
                                                          , inAmountOut   := CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END
+                                                         , inAmountSumm     := NULL
+                                                         , inAmountCurrency := NULL
                                                          , inComment     := inComment
                                                          , inCashId      := inCashId
-                                                         , inMoneyPlaceId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inParentId AND DescId = zc_MovementLinkObject_PersonalServiceList())
-                                                         , inPositionId  := 0::Integer
-                                                         , inContractId  := 0::Integer
+                                                         , inMoneyPlaceId:= MovementLinkObject_PersonalServiceList.ObjectId
+                                                         , inPositionId  := NULL
+                                                         , inContractId  := NULL
                                                          , inInfoMoneyId := (SELECT MovementItemLinkObject.ObjectId FROM MovementItem INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id AND MovementItemLinkObject.DescId = zc_MILinkObject_InfoMoney() WHERE MovementItem.MovementId = inParentId AND MovementItem.isErased = FALSE AND MovementItem.DescId = zc_MI_Master() GROUP BY MovementItemLinkObject.ObjectId)
                                                          , inMemberId    := inMemberId
-                                                         , inUnitId      := 0::Integer
+                                                         , inUnitId      := NULL
+                                                         , inCurrencyId          := NULL
+                                                         , inCurrencyValue       := NULL
+                                                         , inParValue            := NULL
+                                                         , inCurrencyPartnerValue:= NULL
+                                                         , inParPartnerValue     := NULL
                                                          , inUserId      := vbUserId
                                                           )
                       FROM (SELECT ioMovementId AS MovementId) AS tmp
                            LEFT JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId AND MovementItem.DescId = zc_MI_Master()
+                           LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                                  ON MovementDate_ServiceDate.MovementId = inParentId
+                                                 AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                        ON MovementLinkObject_PersonalServiceList.MovementId = inParentId
+                                                       AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
                      );
 
 END;
@@ -70,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.04.15                                        * all
  16.02.15                                        * all
  16.09.14         *
 */

@@ -18,10 +18,19 @@ uses
 
 type
   TCash_PersonalJournalForm = class(TAncestorJournalForm)
-    clComment: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     ceCash: TcxButtonEdit;
     cxLabel3: TcxLabel;
     CashGuides: TdsdGuides;
+    MemberName: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
+    Comment_Service: TcxGridDBColumn;
+    InvNumber_Service: TcxGridDBColumn;
+    OperDate_Service: TcxGridDBColumn;
+    ServiceDate_Service: TcxGridDBColumn;
+    TotalSummToPay_Service: TcxGridDBColumn;
+    cbIsServiceDate: TcxCheckBox;
+    actIsServiceDate: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

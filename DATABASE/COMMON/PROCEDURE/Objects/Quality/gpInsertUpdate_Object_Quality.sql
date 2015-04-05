@@ -1,17 +1,15 @@
 -- Function: gpInsertUpdate_Object_Quality  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Quality (Integer,Integer,TVarChar,TVarChar,Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Quality (Integer,Integer,TVarChar,TFloat,TVarChar,TVarChar, TVarChar,Integer,Integer,Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Quality (Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar, TVarChar,Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Quality(
  INOUT ioId                Integer   ,    -- ключ объекта < Улица/проспект> 
     IN inCode              Integer   ,    -- Код объекта <>
     IN inName              TVarChar  ,
     IN inNumberPrint       TFloat    ,
-    IN inComment           TVarChar  ,
     IN inMemberMain        TVarChar  ,
     IN inMemberTech        TVarChar  ,
+    IN inComment           TVarChar  ,
     IN inJuridicalId       Integer   ,    -- 
     IN inRetailId          Integer   ,    -- 
     IN inTradeMarkId       Integer   ,    -- 
@@ -34,9 +32,10 @@ BEGIN
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Quality(), vbCode_calc);
 
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Quality(), vbCode_calc, inName);
-                                --, inAccessKeyId:= COALESCE ((SELECT Object_Branch.AccessKeyId FROM ObjectLink LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink.ChildObjectId WHERE ObjectLink.ObjectId = inUnitId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch()), zc_Enum_Process_AccessKey_TrasportDnepr()));
+
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Quality_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <>
