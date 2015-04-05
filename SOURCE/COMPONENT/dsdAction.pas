@@ -5,7 +5,7 @@ interface
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
   cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
   cxGridDBTableView, frxClass, cxGridCustomView, Dialogs, Controls,
-  dsdDataSetDataLink;
+  dsdDataSetDataLink, ExtCtrls;
 
 type
 
@@ -84,7 +84,11 @@ type
     FMoveParams: TCollection;
     FCancelAction: TAction;
     FActiveControl: TWinControl;
+    FTimer: TTimer;
+    FEnabledTimer: boolean;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
+    procedure SetEnabledTimer(const Value: boolean);
+    procedure OnTimer(Sender: TObject);
   protected
     property QuestionBeforeExecute: string read FQuestionBeforeExecute
       write FQuestionBeforeExecute;
@@ -99,6 +103,7 @@ type
     function LocalExecute: Boolean; virtual; abstract;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     function Execute: Boolean; override;
   published
     // Если свойство установлено, то действие вызывается ТОЛЬКО если фокус на этом контроле
@@ -114,6 +119,8 @@ type
     property Enabled;
     property PostDataSetBeforeExecute: Boolean read FPostDataSetBeforeExecute
       write FPostDataSetBeforeExecute default true;
+    property EnabledTimer: boolean read FEnabledTimer write SetEnabledTimer default false;
+    property Timer: TTimer read FTimer write FTimer;
   end;
 
   TdsdCustomDataSetAction = class(TdsdCustomAction, IDataSetAction)
@@ -1473,6 +1480,9 @@ begin
             else
               Variables[Params[i].Name] := Params[i].Value
           end;
+          for i := 0 to Self.DataSets.Count - 1 do
+              if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
+                 FReport.Variables[TAddOnDataSet(Self.DataSets[i]).UserName + '_Filter'] := TAddOnDataSet(Self.DataSets[i]).GridView.DataController.Filter.FilterCaption;
           DesignReport;
           Stream.Clear;
           SaveToStream(Stream);
@@ -1501,6 +1511,9 @@ begin
               Variables[Params[i].Name] := Params[i].Value
             end;
           end;
+          for i := 0 to Self.DataSets.Count - 1 do
+              if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
+                 FReport.Variables[TAddOnDataSet(Self.DataSets[i]).UserName + '_Filter'] := TAddOnDataSet(Self.DataSets[i]).GridView.DataController.Filter.FilterCaption;
 
           if Assigned(Self.Owner) then
             for i := 0 to Self.Owner.ComponentCount - 1 do
@@ -1682,6 +1695,13 @@ begin
   inherited;
   FPostDataSetBeforeExecute := true;
   FMoveParams := TCollection.Create(TParamMoveItem);
+  FEnabledTimer := false;
+end;
+
+destructor TdsdCustomAction.Destroy;
+begin
+  EnabledTimer := false;
+  inherited;
 end;
 
 function TdsdCustomAction.Execute: Boolean;
@@ -1734,6 +1754,16 @@ begin
   Visible := Enabled;
 end;
 
+procedure TdsdCustomAction.OnTimer(Sender: TObject);
+begin
+  Timer.Enabled := false;
+  try
+    LocalExecute;
+  finally
+    Timer.Enabled := true;
+  end;
+end;
+
 procedure TdsdCustomAction.PostDataSet;
 var
   i: Integer;
@@ -1743,6 +1773,20 @@ begin
       if Owner.Components[i] is TDataSet then
         if TDataSet(Owner.Components[i]).State in dsEditModes then
           TDataSet(Owner.Components[i]).Post;
+end;
+
+procedure TdsdCustomAction.SetEnabledTimer(const Value: boolean);
+begin
+  if FEnabledTimer <> Value then begin
+     FEnabledTimer := Value;
+     if FEnabledTimer then begin
+        FTimer := TTimer.Create(Self);
+        FTimer.Name := 'Timer';
+        FTimer.OnTimer := Self.OnTimer;
+     end
+     else
+        FreeAndNil(FTimer)
+  end;
 end;
 
 procedure TdsdCustomAction.SetTabSheet(const Value: TcxTabSheet);
