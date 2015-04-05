@@ -1,28 +1,28 @@
 inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 534
-  ClientWidth = 868
+  ClientWidth = 913
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 884
+  ExplicitWidth = 929
   ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 868
+    Width = 913
     Height = 477
     TabOrder = 3
-    ExplicitWidth = 1070
+    ExplicitWidth = 868
     ExplicitHeight = 477
     ClientRectBottom = 477
-    ClientRectRight = 868
+    ClientRectRight = 913
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1070
+      ExplicitWidth = 868
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
-        Width = 868
+        Width = 913
         Height = 477
-        ExplicitWidth = 1070
+        ExplicitWidth = 868
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -134,7 +134,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             DataBinding.FieldName = 'PersonalServiceListName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 200
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
@@ -211,8 +211,8 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     end
   end
   inherited Panel: TPanel
-    Width = 868
-    ExplicitWidth = 1070
+    Width = 913
+    ExplicitWidth = 868
     inherited deStart: TcxDateEdit
       Left = 103
       EditValue = 42005d
@@ -225,14 +225,21 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
       Left = 198
       ExplicitLeft = 198
     end
+    object cbIsServiceDate: TcxCheckBox
+      Left = 405
+      Top = 5
+      Action = actIsServiceDate
+      TabOrder = 4
+      Width = 200
+    end
   end
   object cxLabel6: TcxLabel [2]
-    Left = 424
+    Left = 610
     Top = 7
     Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100':'
   end
   object edPersonalServiceList: TcxButtonEdit [3]
-    Left = 488
+    Left = 674
     Top = 5
     Properties.Buttons = <
       item
@@ -240,7 +247,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 271
+    Width = 200
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -263,6 +270,25 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
       Enabled = False
       FormName = 'TPersonalServiceForm'
       FormNameParam.Value = 'TPersonalServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
@@ -372,6 +398,18 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object actIsServiceDate: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
+      Hint = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -384,24 +422,17 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     StoredProcName = 'gpSelect_Movement_PersonalServiceChoice'
     Params = <
       item
-        Name = 'instartdate'
+        Name = 'inStartDate'
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inenddate'
+        Name = 'inEndDate'
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -409,6 +440,20 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Value = ''
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsServiceDate'
+        Value = Null
+        Component = cbIsServiceDate
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 136
@@ -430,7 +475,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
@@ -442,15 +487,11 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -523,6 +564,11 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
       item
         Action = dsdChoiceGuides
       end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end>
     Left = 320
     Top = 224
   end
@@ -546,7 +592,6 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_PersonalService'
     Params = <
       item
         Name = 'inmovementid'
@@ -564,7 +609,6 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_PersonalService'
     Params = <
       item
         Name = 'inmovementid'
@@ -577,7 +621,6 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_PersonalService'
     Params = <
       item
         Name = 'inmovementid'
@@ -609,13 +652,13 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'PersonalServiceListId'
+        Name = 'TopPersonalServiceListId'
         Value = ''
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
       end
       item
-        Name = 'PersonalServiceListName'
+        Name = 'TopPersonalServiceListName'
         Value = ''
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
@@ -623,6 +666,10 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 184
+    Top = 312
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -637,7 +684,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_PersonalService_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -658,12 +705,6 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     PackSize = 1
     Left = 535
     Top = 248
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 628
-    Top = 294
   end
   object GuidesPersonalServiceList: TdsdGuides
     KeyField = 'Id'
@@ -688,6 +729,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 592
+    Left = 616
+    Top = 64
   end
 end

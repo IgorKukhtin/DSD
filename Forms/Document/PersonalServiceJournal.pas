@@ -40,7 +40,6 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     colTotalSummService: TcxGridDBColumn;
     colTotalSummCard: TcxGridDBColumn;
     colTotalSummMinus: TcxGridDBColumn;
@@ -53,6 +52,8 @@ type
     colTotalSummChild: TcxGridDBColumn;
     colTotalSummToPay: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
+    cbIsServiceDate: TcxCheckBox;
+    actIsServiceDate: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

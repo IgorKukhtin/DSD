@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalService()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
@@ -31,9 +30,30 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
-     -- 
-     IF COALESCE (inMovementId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка.В документе не определено значение <Ведомость начислений>.';
+     -- проверка
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не заполнено значение <Ведомость>.';
+     END IF;
+     -- проверка
+     IF COALESCE (inPersonalId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <ФИО (сотрудник)>.';
+     END IF;
+     -- проверка
+     IF COALESCE (inInfoMoneyId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <УП статья>.';
+     END IF;
+     -- проверка
+     IF COALESCE (inUnitId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Подразделение>.';
+     END IF;
+     -- проверка
+     IF COALESCE (inPositionId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Должность>.';
      END IF;
 
 

@@ -1,10 +1,6 @@
 -- Function: lpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat,Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat,Integer);
-
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -32,8 +28,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inParPartnerValue       TFloat    , -- Номинал для расчета суммы операции
     
     IN inUserId              Integer     -- Пользователь
-)                              
-RETURNS Integer AS
+)                 
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbMovementItemId Integer;
@@ -43,7 +40,7 @@ BEGIN
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
-     -- проверка, только если это не выпалата по ведомости
+     -- проверка, !!!только если это не выпалата по ведомости!!!
      IF (COALESCE (inAmountIn, 0) = 0) AND (COALESCE (inAmountOut, 0) = 0) AND COALESCE (inParentId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Введите сумму.';
      END IF;

@@ -2,13 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalCash (Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Cash_Personal (Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Cash_Personal (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Cash_Personal(
-    IN inMovementId  Integer      , -- ключ Документа
-    IN inParentId    Integer      ,
-    IN inShowAll     Boolean      , --
-    IN inIsErased    Boolean      , --
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inMovementId     Integer      , -- ключ Документа
+    IN inParentId       Integer      , -- ключ Документа
+    IN inMovementItemId Integer      , --
+    IN inShowAll        Boolean      , --
+    IN inIsErased       Boolean      , --
+    IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar, INN TVarChar, isMain Boolean, isOfficial Boolean
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -53,6 +55,7 @@ BEGIN
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                   AND MovementItem.DescId = zc_MI_Child()
                                                   AND MovementItem.isErased = tmpIsErased.isErased
+                                                  AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -96,8 +99,20 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummChild
                                                                ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+                                   -- ограничение, если нужна только 1 запись
+                                   LEFT JOIN (SELECT tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId
+                                              FROM tmpMI
+                                              LIMIT 1
+                                             ) AS tmp ON tmp.PersonalId   = MovementItem.ObjectId
+                                                     AND tmp.UnitId       = MILinkObject_Unit.ObjectId
+                                                     AND tmp.PositionId   = MILinkObject_Position.ObjectId
+                                                     AND tmp.InfoMoneyId  = MILinkObject_InfoMoney.ObjectId
+                                                     AND inMovementItemId > 0
+
                               WHERE Movement.Id = inParentId
                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND (tmp.PersonalId IS NOT NULL OR COALESCE (inMovementItemId, 0) = 0) -- ограничение, если нужна только 1 запись
+
                               GROUP BY MovementItem.ObjectId
                                      , MILinkObject_Unit.ObjectId
                                      , MILinkObject_Position.ObjectId
@@ -250,4 +265,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Cash_Personal (inMovementId:= 25173, inParentId:=0, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItem_Cash_Personal (inMovementId:= 25173, inParentId:=0, inMovementItemId:= 0, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

@@ -1,16 +1,12 @@
 -- Function: gpSelect_Movement_Cash_Personal()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalCash (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Integer, Boolean, TVarChar);
-
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash_Personal(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inCashId        Integer , --
+    IN inIsServiceDate Boolean ,
     IN inIsErased      Boolean   ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -26,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment_Service TVarChar
              , PersonalServiceListName TVarChar
              , TotalSummToPay_Service TFloat
-)
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -37,11 +33,17 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
+         WITH tmpDate AS (SELECT inStartDate AS StartDate, inEndDate AS EndDate WHERE inIsServiceDate = FALSE
                          UNION
-                          SELECT zc_Enum_Status_UnComplete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
+                          SELECT DATE_TRUNC ('MONTH', inStartDate)                                       AS StartDate
+                               , DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
+                          WHERE inIsServiceDate = TRUE
+                         )
+          , tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId, tmpDate.StartDate, tmpDate.EndDate FROM tmpDate
                          UNION
-                          SELECT zc_Enum_Status_Erased() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate WHERE inIsErased = TRUE
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId, tmpDate.StartDate, tmpDate.EndDate FROM tmpDate
+                         UNION
+                          SELECT zc_Enum_Status_Erased() AS StatusId, tmpDate.StartDate, tmpDate.EndDate FROM tmpDate WHERE inIsErased = TRUE
                          )
           , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
           , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
@@ -52,23 +54,39 @@ BEGIN
                            UNION SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = zc_Enum_Process_InsertUpdate_Movement_Cash() AND EXISTS (SELECT tmpAccessKey_isCashAll.Id FROM tmpAccessKey_isCashAll) GROUP BY AccessKeyId
                                 )
           , tmpAll AS (SELECT tmpStatus.StatusId, tmpStatus.StartDate, tmpStatus.EndDate, tmpRoleAccessKey.AccessKeyId FROM tmpStatus, tmpRoleAccessKey)
-          , Movement AS (SELECT Movement.*
-                              , Object_Status.ObjectCode AS StatusCode
-                              , Object_Status.ValueData  AS StatusName
-                         FROM tmpAll
-                              INNER JOIN Movement ON Movement.DescId = zc_Movement_Cash()
-                                                 AND Movement.OperDate BETWEEN tmpAll.StartDate AND tmpAll.EndDate -- inStartDate AND inEndDate
-                                                 AND Movement.StatusId = tmpAll.StatusId
-                                                 AND Movement.AccessKeyId = tmpAll.AccessKeyId
-                                                 AND Movement.ParentId > 0
-                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
-                        )
+          , tmpMovement AS (SELECT Movement.*
+                                 , Object_Status.ObjectCode AS StatusCode
+                                 , Object_Status.ValueData  AS StatusName
+                            FROM tmpAll
+                                 INNER JOIN Movement ON Movement.DescId = zc_Movement_Cash()
+                                                    AND Movement.OperDate BETWEEN tmpAll.StartDate AND tmpAll.EndDate -- inStartDate AND inEndDate
+                                                    AND Movement.StatusId = tmpAll.StatusId
+                                                    AND Movement.AccessKeyId = tmpAll.AccessKeyId
+                                                    AND Movement.ParentId > 0
+                                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
+                            WHERE inIsServiceDate = FALSE
+                           UNION ALL
+                            SELECT Movement.*
+                                 , Object_Status.ObjectCode AS StatusCode
+                                 , Object_Status.ValueData  AS StatusName
+                            FROM tmpAll
+                                 INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                                         ON MovementDate_ServiceDate.ValueData BETWEEN tmpAll.StartDate AND tmpAll.EndDate
+                                                        AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                                 INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+                                                    AND Movement.DescId = zc_Movement_Cash()
+                                                    AND Movement.StatusId = tmpAll.StatusId
+                                                    AND Movement.AccessKeyId = tmpAll.AccessKeyId
+                                                    AND Movement.ParentId > 0
+                                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
+                            WHERE inIsServiceDate = TRUE
+                           )
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Movement.StatusCode
-           , Movement.StatusName
+             tmpMovement.Id
+           , tmpMovement.InvNumber
+           , tmpMovement.OperDate
+           , tmpMovement.StatusCode
+           , tmpMovement.StatusName
            , (-1 * MovementItem.Amount) :: TFloat AS Amount
   
            , MIDate_ServiceDate.ValueData      AS ServiceDate
@@ -86,8 +104,8 @@ BEGIN
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummToPay_Service
 
-       FROM Movement
-            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+       FROM tmpMovement
+            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id 
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.ObjectId = inCashId OR COALESCE (inCashId, 0) = 0)
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
@@ -106,7 +124,7 @@ BEGIN
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MILinkObject_Member.ObjectId
 
             LEFT JOIN Movement AS Movement_PersonalService
-                               ON Movement_PersonalService.Id = Movement.Id
+                               ON Movement_PersonalService.Id = tmpMovement.ParentId
                               AND Movement_PersonalService.StatusId = zc_Enum_Status_Complete()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
@@ -130,10 +148,6 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment_Service
                                      ON MovementString_Comment_Service.MovementId = Movement_PersonalService.Id
                                     AND MovementString_Comment_Service.DescId = zc_MovementString_Comment()
-
-       WHERE Movement.DescId = zc_Movement_Cash()
-         AND Movement.ParentId > 0
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
       ;
    
 END;
@@ -150,4 +164,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '30.01.2015', inEndDate:= '01.01.2015', inCashId:= 14462, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inCashId:= 14462, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

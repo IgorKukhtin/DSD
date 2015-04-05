@@ -29,6 +29,8 @@ type
     OperDate_Service: TcxGridDBColumn;
     ServiceDate_Service: TcxGridDBColumn;
     TotalSummToPay_Service: TcxGridDBColumn;
+    cbIsServiceDate: TcxCheckBox;
+    actIsServiceDate: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

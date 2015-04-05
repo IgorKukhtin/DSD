@@ -1,14 +1,14 @@
--- Function: gpInsertUpdate_MovementItem_Cash_Personal()
+-- Function: gpInsertUpdate_MovementItem_Cash_Personal_Amount()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Cash_Personal_Amount (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Cash_Personal(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Cash_Personal_Amount (
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inMovementId_Parent   Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
-    IN inAmount              TFloat    , -- Сумма
-   OUT outSummRemains        TFloat    , -- Остаток к выплате 
+ INOUT ioAmount              TFloat    , -- Сумма
+ INOUT ioSummRemains        TFloat    , -- Остаток к выплате 
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
@@ -24,28 +24,22 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
 
+     -- установили новые значения
+     ioAmount:= COALESCE (ioAmount, 0) + COALESCE (ioSummRemains, 0);
+     ioSummRemains:= 0;
+
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Cash_Personal (ioId                 := ioId
                                                      , inMovementId         := inMovementId
                                                      , inPersonalId         := inPersonalId
-                                                     , inAmount             := inAmount
+                                                     , inAmount             := ioAmount
                                                      , inComment            := inComment
                                                      , inInfoMoneyId        := inInfoMoneyId
                                                      , inUnitId             := inUnitId
                                                      , inPositionId         := inPositionId
                                                      , inUserId             := vbUserId
                                                       );
-     -- вернули <Остаток к выплате>
-     outSummRemains:= (SELECT tmp.SummRemains
-                       FROM gpSelect_MovementItem_Cash_Personal (inMovementId     := inMovementId
-                                                               , inParentId       := inMovementId_Parent
-                                                               , inMovementItemId := ioId
-                                                               , inShowAll        := FALSE
-                                                               , inIsErased       := FALSE
-                                                               , inSession        := inSession
-                                                                )  AS tmp
-                      );
-
+ 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -58,4 +52,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Cash_Personal (ioId:= 0, inMovementId:= 258038 , inPersonalId:= 8473, inAmount:= 44, inSummService:= 20, inComment:= 'inComment', inInfoMoneyId:= 8994, inUnitId:= 8426, inPositionId:=12431, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Cash_Personal_Amount(ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+
+--select * from gpInsertUpdate_MovementItem_Cash_Personal_Amount(ioId := 11967866 , inMovementId := 1015917 , inPersonalId := 280263 , ioAmount := 8 , ioSummRemains := 450 ,  inSession := '5');
