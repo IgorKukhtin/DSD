@@ -82,6 +82,11 @@ BEGIN
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Cash_Currency.ChildObjectId
       ;
      ELSE
+          -- проверка
+          IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = inMovementId AND Movement.ParentId >0)
+          THEN
+              RAISE EXCEPTION 'Ошибка.Документ может быть изменен только через <Касса, выплата по ведомости>.';
+          END IF;
      
      RETURN QUERY 
        SELECT
@@ -97,7 +102,7 @@ BEGIN
                       0
                   END::TFloat AS AmountIn
            , CASE WHEN MovementItem.Amount < 0 THEN
-                       - MovementItem.Amount
+                       -1 * MovementItem.Amount
                   ELSE
                       0
                   END::TFloat AS AmountOut

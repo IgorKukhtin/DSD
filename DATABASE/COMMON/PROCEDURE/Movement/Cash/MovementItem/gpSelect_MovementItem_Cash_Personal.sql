@@ -1,7 +1,5 @@
 -- Function: gpSelect_MovementItem_Cash_Personal()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalCash (Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Cash_Personal (Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Cash_Personal (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Cash_Personal(
@@ -34,7 +32,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- определ€ем <ћес€ца начислений>
+     -- определ€ем <ћес€ц начислений>
      IF inParentId <> 0
      THEN
          vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inParentId AND MovementDate.DescId = zc_MIDate_ServiceDate()));

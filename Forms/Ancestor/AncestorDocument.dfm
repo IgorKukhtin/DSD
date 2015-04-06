@@ -4,8 +4,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   ClientWidth = 829
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 837
-  ExplicitHeight = 450
+  ExplicitWidth = 845
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -164,6 +164,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -215,6 +216,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -359,10 +361,12 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     object actFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster
       StoredProcList = <
         item
