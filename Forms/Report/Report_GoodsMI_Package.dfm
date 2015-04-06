@@ -4,6 +4,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
   ClientWidth = 1058
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -201
   ExplicitWidth = 1074
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -92,6 +93,26 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clWeightPackage
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clCountPackage
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clWeight_Send_out
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clWeight_Send_in
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -158,6 +179,26 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clWeightPackage
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clCountPackage
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clWeight_Send_out
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clWeight_Send_in
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -191,21 +232,28 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             Width = 151
           end
           object clMeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
+            Caption = #1042#1080#1076
+            DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 35
+            Width = 48
           end
-          object clPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
+          object clCountPackage: TcxGridDBColumn
+            Caption = #1055#1072#1082#1077#1090#1099' ('#1096#1090')'
+            DataBinding.FieldName = 'CountPackage'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 88
+          end
+          object clWeightPackage: TcxGridDBColumn
+            Caption = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089')'
+            DataBinding.FieldName = 'WeightPackage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
           end
           object clAmount_Send_in: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
+            Caption = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1091#1087#1072#1082'. ('#1096#1090')'
             DataBinding.FieldName = 'Amount_Send_in'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -214,8 +262,15 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object clWeight_Send_in: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1091#1087#1072#1082'. ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Weight_Send_in'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object clAmount_Send_out: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
+            Caption = #1056#1072#1089#1093#1086#1076' '#1089' '#1091#1087#1072#1082'. ('#1096#1090')'
             DataBinding.FieldName = 'Amount_Send_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -224,8 +279,15 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
+          object clWeight_Send_out: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1089' '#1091#1087#1072#1082'. ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Weight_Send_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object clAmount_ProductionUnion: TcxGridDBColumn
-            Caption = #1092#1072#1082#1090' '#1087#1088#1086#1080#1079'-'#1074#1086' ('#1088#1072#1089#1095#1077#1090')'
+            Caption = #1054#1073#1088#1077#1079#1082#1080
             DataBinding.FieldName = 'Amount_ProductionUnion'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -235,7 +297,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             Width = 70
           end
           object clCalc: TcxGridDBColumn
-            Caption = #1055#1086#1090#1077#1088#1080' ('#1088#1072#1089#1095#1077#1090')'
+            Caption = #1055#1086#1090#1077#1088#1080
             DataBinding.FieldName = 'Calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -245,7 +307,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             Width = 70
           end
           object Amount_10500_Sh: TcxGridDBColumn
-            Caption = '%'
+            Caption = #1042#1077#1089' '#1087#1072#1082'.'
             DataBinding.FieldName = 'Amount_10500_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
