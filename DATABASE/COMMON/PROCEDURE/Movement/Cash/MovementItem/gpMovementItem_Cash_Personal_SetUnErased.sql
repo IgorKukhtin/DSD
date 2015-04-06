@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_Cash());
+  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_Cash_Personal());
 
   -- устанавливаем новое значение
   outIsErased := FALSE;
@@ -34,8 +34,8 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
 
-  -- пересчитали Итоговые суммы по накладной
-  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+  -- в мастере всегда Итоговая сумма
+  PERFORM lpUpdate_MovementItem_Cash_Personal_TotalSumm (vbMovementId, vbUserId);
 
 END;
 $BODY$

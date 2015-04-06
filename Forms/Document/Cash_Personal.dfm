@@ -2,8 +2,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072' '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientHeight = 623
   ClientWidth = 982
-  ExplicitWidth = 990
-  ExplicitHeight = 650
+  ExplicitWidth = 998
+  ExplicitHeight = 658
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -513,6 +513,12 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
     end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end>
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -561,6 +567,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     object mactInsertUpdateMIAmount_AllGrid: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       ActionList = <
         item
           Action = actGetMIAmount
@@ -780,7 +787,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       Category = 0
     end
     object bbInsertUpdateMIAmount_All: TdxBarButton
-      Action = actInsertUpdateMIAmount_All
+      Action = mactInsertUpdateMIAmount_AllGrid
       Category = 0
     end
   end
@@ -847,7 +854,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_PersonalService'
+    StoredProcName = 'gpUpdate_Status_Cash'
     Left = 160
     Top = 8
   end
@@ -940,17 +947,17 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftString
       end
       item
+        Name = 'PersonalServiceListId'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+      end
+      item
         Name = 'PersonalServiceListName'
         Value = ''
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'PersonalServiceListId'
-        Value = Null
-        Component = GuidesPersonalServiceList
-        ComponentItem = 'Key'
       end
       item
         Name = 'MemberId'
@@ -1071,13 +1078,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PersonalService_SetErased'
-    Left = 718
-    Top = 512
+    Left = 430
+    Top = 472
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PersonalService_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 438
+    Top = 416
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Cash_Personal'

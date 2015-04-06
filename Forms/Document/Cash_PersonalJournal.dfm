@@ -3,7 +3,6 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   ClientWidth = 982
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
-  ExplicitHeight = 710
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -368,15 +367,19 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
     Top = 144
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Cash_Personal'
+    StoredProcName = 'gpComplete_Movement_Cash'
+    Left = 80
+    Top = 384
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Cash_Personal'
+    StoredProcName = 'gpUnComplete_Movement_Cash'
+    Left = 72
+    Top = 448
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Cash'
-    Left = 144
-    Top = 144
+    Left = 72
+    Top = 328
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -412,6 +415,11 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
         DataType = ftString
         ParamType = ptInputOutput
       end>
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Cash'
+    Left = 200
+    Top = 312
   end
   object CashGuides: TdsdGuides
     KeyField = 'Id'
