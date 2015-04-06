@@ -1,6 +1,5 @@
 -- Function: lpInsert_MovementItemProtocol (Integer, Integer)
 
-DROP FUNCTION IF EXISTS lpInsert_MovementItemProtocol (Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpInsert_MovementItemProtocol (Integer, Integer, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsert_MovementItemProtocol
@@ -22,6 +21,7 @@ BEGIN
    (SELECT '<Field FieldName = "ObjectId" FieldValue = "' || MovementItem.ObjectId || '"/>'
         || '<Field FieldName = "ValueData" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>'
         || '<Field FieldName = "Amount" FieldValue = "' || MovementItem.Amount || '"/>'
+        || CASE WHEN MovementItem.ParentId <> 0 THEN '<Field FieldName = "ParentId" FieldValue = "' || MovementItem.ParentId || '"/>' ELSE '' END
         || '<Field FieldName = "isErased" FieldValue = "' || MovementItem.isErased || '"/>'
            AS FieldXML
          , 1 AS GroupId

@@ -143,6 +143,33 @@ BEGIN
      -- 
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), vbMovementItemId, inBankAccountPartnerId);
      
+
+     -- данные по ЗП
+     IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_PersonalServiceList())
+     THEN
+         -- сохранили свойство <Месяц начислений> - 1-ое число месяца
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, DATE_TRUNC ('MONTH', inOperDate));
+
+     ELSE
+          -- обнулили связь с документом <Начисление зарплаты>
+          PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), ioId, NULL);
+          -- обнулили свойство <Месяц начислений>
+          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, NULL);
+          --
+          IF EXISTS (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+          THEN
+              -- удаление т.к. это теперь не ЗП
+              PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id
+                                              , inUserId        := inUserId
+                                               )
+              FROM MovementItem
+              WHERE MovementItem.MovementId = inMovementId
+                AND MovementItem.DescId = zc_MI_Child()
+                AND MovementItem.isErased = FALSE;
+
+          END IF;
+     END IF;
+
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 

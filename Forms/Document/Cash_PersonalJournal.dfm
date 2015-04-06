@@ -1,5 +1,5 @@
 inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072' '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
@@ -116,6 +116,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080')'
             DataBinding.FieldName = 'TotalSummToPay_Service'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -187,7 +188,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
       ExplicitTop = 7
     end
     object ceCash: TcxButtonEdit
-      Left = 462
+      Left = 649
       Top = 5
       Properties.Buttons = <
         item
@@ -198,9 +199,16 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 424
+      Left = 610
       Top = 7
       Caption = #1050#1072#1089#1089#1072':'
+    end
+    object cbIsServiceDate: TcxCheckBox
+      Left = 405
+      Top = 5
+      Action = actIsServiceDate
+      TabOrder = 6
+      Width = 200
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -267,6 +275,19 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
           ParamType = ptUnknown
         end>
     end
+    object actIsServiceDate: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
+      Hint = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -298,6 +319,13 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
         Value = Null
         Component = CashGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsServiceDate'
+        Value = Null
+        Component = cbIsServiceDate
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -339,15 +367,19 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
     Top = 144
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Cash_Personal'
+    StoredProcName = 'gpComplete_Movement_Cash'
+    Left = 80
+    Top = 384
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Cash_Personal'
+    StoredProcName = 'gpUnComplete_Movement_Cash'
+    Left = 72
+    Top = 448
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Cash'
-    Left = 144
-    Top = 144
+    Left = 72
+    Top = 328
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -383,6 +415,11 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
         DataType = ftString
         ParamType = ptInputOutput
       end>
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Cash'
+    Left = 200
+    Top = 312
   end
   object CashGuides: TdsdGuides
     KeyField = 'Id'

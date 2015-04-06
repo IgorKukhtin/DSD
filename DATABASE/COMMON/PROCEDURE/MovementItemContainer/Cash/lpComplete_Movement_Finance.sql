@@ -10,14 +10,16 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
-     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     -- !!! Ну а теперь - ПРОВОДКИ !!!
-     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-     IF EXISTS (SELECT SUM (OperSumm) FROM _tmpItem WHERE MovementDescId = zc_Movement_ProfitLossService() HAVING SUM (OperSumm) <> 0)
+     -- Проверка
+     IF EXISTS (SELECT SUM (OperSumm) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm) <> 0)
      THEN
          RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%)', (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = TRUE), (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = FALSE);
      END IF;
+
+
+     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     -- !!! Ну а теперь - ПРОВОДКИ !!!
+     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
      -- 1.1.1 определяется AccountDirectionId для проводок суммового учета
      UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.AccountId <> 0
@@ -678,7 +680,8 @@ BEGIN
                                               , inAmount   := _tmpItem.OperSumm
                                               , inOperDate := _tmpItem.OperDate
                                                )
-     FROM (SELECT _tmpItem.MovementDescId
+     FROM  -- для zc_Movement_ProfitLossService + zc_Object_Personal, т.к.может быть 1:N
+          (SELECT _tmpItem.MovementDescId
                 , _tmpItem.MovementItemId
                 , _tmpItem.OperSumm
                 , _tmpItem.OperDate
@@ -688,7 +691,10 @@ BEGIN
                 , _tmpItem.PassiveAccountId
            FROM (SELECT _tmpItem_Child.MovementDescId
                       , _tmpItem_Child.MovementItemId
-                      , ABS (_tmpItem_Child.OperSumm) AS OperSumm
+                      , ABS (_tmpItem_Child.OperSumm
+                            + CASE WHEN _tmpItem_Master.ObjectDescId = zc_Object_BankAccount() AND _tmpItem_Master.isActive = TRUE THEN COALESCE (_tmpItem_Child.OperSumm_Diff, 0) ELSE 0 END
+                            + CASE WHEN _tmpItem_Child.ObjectDescId = zc_Object_BankAccount() AND _tmpItem_Child.isActive = TRUE THEN COALESCE (_tmpItem_Master.OperSumm_Diff, 0) ELSE 0 END
+                            ) AS OperSumm
                       , _tmpItem_Child.OperDate
                       , CASE WHEN _tmpItem_Child.OperSumm >=0 THEN _tmpItem_Child.ContainerId  ELSE _tmpItem_Master.ContainerId END AS ActiveContainerId
                       , CASE WHEN _tmpItem_Child.OperSumm >=0 THEN _tmpItem_Child.AccountId    ELSE _tmpItem_Master.AccountId   END AS ActiveAccountId
@@ -697,9 +703,12 @@ BEGIN
                  FROM _tmpItem AS _tmpItem_Master
                       LEFT JOIN _tmpItem AS _tmpItem_Child ON _tmpItem_Child.IsMaster = FALSE
                  WHERE _tmpItem_Master.IsMaster = TRUE
-                   AND _tmpItem_Master.MovementDescId = zc_Movement_ProfitLossService()
+                   -- AND (_tmpItem_Master.MovementDescId = zc_Movement_ProfitLossService())
+                   --      OR _tmpItem_Child.ObjectDescId = zc_Object_Personal())
+                   AND _tmpItem_Master.MovementDescId <>  zc_Movement_SendDebt()
                 ) AS _tmpItem
           UNION ALL
+           -- для остальных, т.к. 1:1 + если zc_Object_BankAccount тогда OperSumm_Diff
            SELECT _tmpItem_Active.MovementDescId
                 , _tmpItem_Active.MovementItemId
                 , _tmpItem_Active.OperSumm + CASE WHEN _tmpItem_Active.ObjectDescId = zc_Object_BankAccount() THEN COALESCE (_tmpItem_Passive.OperSumm_Diff, 0) ELSE 0 END AS OperSumm
@@ -712,8 +721,10 @@ BEGIN
                 LEFT JOIN _tmpItem AS _tmpItem_Passive ON _tmpItem_Passive.OperSumm < 0 AND _tmpItem_Passive.MovementItemId = _tmpItem_Active.MovementItemId
                 LEFT JOIN _tmpItem AS _tmpItem_Passive_SendDebt ON _tmpItem_Passive_SendDebt.OperSumm < 0 AND _tmpItem_Passive_SendDebt.MovementDescId = zc_Movement_SendDebt()
            WHERE _tmpItem_Active.OperSumm > 0
-             AND _tmpItem_Active.MovementDescId <> zc_Movement_ProfitLossService()
+             -- AND _tmpItem_Active.MovementDescId <> zc_Movement_ProfitLossService()
+             AND _tmpItem_Active.MovementDescId =  zc_Movement_SendDebt()
           UNION ALL
+           -- для zc_Object_BankAccount, только курсовая разница
            SELECT _tmpItem_BankAccount.MovementDescId
                 , _tmpItem_BankAccount.MovementItemId
                 , ABS (_tmpItem_Diff.OperSumm_Diff) AS OperSumm

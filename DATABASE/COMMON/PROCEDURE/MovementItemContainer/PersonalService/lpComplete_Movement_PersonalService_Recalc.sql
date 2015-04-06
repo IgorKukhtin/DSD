@@ -10,17 +10,13 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
-
      -- таблица - по документам
      CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer) ON COMMIT DROP;
      -- таблица - по элементам
      CREATE TEMP TABLE _tmpMI_Recalc (MovementItemId Integer, SummCardRecalc TFloat, MovementItemId_find Integer) ON COMMIT DROP;
 
-     -- 
-     WITH tmpMovement AS (SELECT Movement.Id AS MovementId
-                               , MovementDate_ServiceDate.ValueData AS ServiceDate
-                               , Movement.OperDate AS StartDate
-                               , Movement.OperDate AS EndDate
+     -- Все документа за соответствующий <Месяц начислений>
+     WITH tmpMovement AS (SELECT MovementDate_ServiceDate.ValueData AS ServiceDate
                           FROM Movement
                                LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                                       ON MovementDate_ServiceDate.MovementId = Movement.Id
@@ -34,15 +30,21 @@ BEGIN
                                       INNER JOIN MovementDate AS MovementDate_ServiceDate
                                                               ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
                                                              AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-                                                             AND MovementDate_ServiceDate.MovementId <> tmpMovement.MovementId
+                                                             -- AND MovementDate_ServiceDate.MovementId <> tmpMovement.MovementId
                                       INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
-                                                         AND Movement.OperDate BETWEEN tmpMovement.StartDate AND tmpMovement.EndDate
-	                                                         AND Movement.DescId = zc_Movement_PersonalService()
+                                                         -- AND Movement.OperDate BETWEEN tmpMovement.StartDate AND tmpMovement.EndDate
+	                                                 AND Movement.DescId = zc_Movement_PersonalService()
                                                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                                    ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                                                   AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                                                   AND MovementLinkObject_PersonalServiceList.ObjectId NOT IN (293716 -- Ведомость карточки БН Фидо
+                                                                                                                             , 413454 -- Ведомость карточки БН Пиреус
+                                                                                                                              )
                                 )
      -- данные по документам
      INSERT INTO _tmpMovement_Recalc (MovementId)
-       SELECT MovementId FROM tmpMovement_Recalc;
+       SELECT MovementId FROM tmpMovement_Recalc WHERE MovementId <> inMovementId;
 
      --
      WITH tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
@@ -163,4 +165,3 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM lpComplete_Movement_PersonalService_Recalc (inMovementId:= 429713, inUserId:= zfCalc_UserAdmin() :: Integer)
-

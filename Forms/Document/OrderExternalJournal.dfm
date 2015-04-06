@@ -2,18 +2,18 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 661
   ClientWidth = 1064
-  ExplicitWidth = 1072
-  ExplicitHeight = 688
+  ExplicitWidth = 1080
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
+    Width = 1064
     Height = 604
     TabOrder = 3
     ExplicitWidth = 1064
     ExplicitHeight = 604
     ClientRectBottom = 604
-    ClientRectRight = 1020
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1064
       ExplicitHeight = 604
@@ -391,7 +391,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1064
     ExplicitWidth = 1064
     inherited deStart: TcxDateEdit
       EditValue = 42005d
@@ -503,6 +503,25 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TOrderExternalForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actPrint: TdsdPrintAction [22]
       Category = 'Print'
@@ -549,6 +568,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     object actSPSavePrintState: TdsdExecStoredProc
       Category = 'Print'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSavePrintState
       StoredProcList = <
         item

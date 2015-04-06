@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, Vcl.DBActns;
 
 type
   TCash_PersonalForm = class(TAncestorDocumentForm)
@@ -26,7 +26,6 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
@@ -36,12 +35,12 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     Comment: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
-    deServiceDate: TcxDateEdit;
+    edServiceDate: TcxDateEdit;
     cxLabel6: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel12: TcxLabel;
     Amount_avance: TcxGridDBColumn;
-    cePersonalServiceList: TcxButtonEdit;
+    edPersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
     cxLabel3: TcxLabel;
     UnitCode: TcxGridDBColumn;
@@ -53,23 +52,29 @@ type
     GuidesPersonalServiceJournal: TdsdGuides;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
-    ceCash: TcxButtonEdit;
+    edCash: TcxButtonEdit;
     GuidesCash: TdsdGuides;
     cxLabel9: TcxLabel;
-    ceMember: TcxButtonEdit;
+    edMember: TcxButtonEdit;
     GuidesMember: TdsdGuides;
     SummService: TcxGridDBColumn;
     SummRemains: TcxGridDBColumn;
-    spUpdateAmountParam: TdsdStoredProc;
-    actUpdateAmountParam: TdsdExecStoredProc;
-    bbUpdateAmountParam: TdxBarButton;
-    MultiAction1: TMultiAction;
-    bbMultiAction1: TdxBarButton;
+    spInsertUpdateMIAmount: TdsdStoredProc;
+    bbInsertUpdateMIAmount_One: TdxBarButton;
+    bbInsertUpdateMIAmount_All: TdxBarButton;
     SummToPay: TcxGridDBColumn;
     SummCard: TcxGridDBColumn;
     Amount_service: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
+    spGetMIAmount: TdsdStoredProc;
+    actRefreshMaster: TdsdDataSetRefresh;
+    mactInsertUpdateMIAmount_AllGrid: TMultiAction;
+    actGetMIAmount: TdsdExecStoredProc;
+    actInsertUpdateMIAmount_One: TdsdExecStoredProc;
+    actInsertUpdateMIAmount_All: TdsdExecStoredProc;
+    actMasterPost: TDataSetPost;
+    mactInsertUpdateMIAmount_One: TMultiAction;
   private
     { Private declarations }
   public

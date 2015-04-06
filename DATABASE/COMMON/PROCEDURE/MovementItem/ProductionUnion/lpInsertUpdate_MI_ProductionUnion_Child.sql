@@ -18,6 +18,12 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+   -- проверка
+   IF COALESCE (inParentId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не определён элемент прихода.';
+   END IF;
+
    -- меняем параметр
    IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 

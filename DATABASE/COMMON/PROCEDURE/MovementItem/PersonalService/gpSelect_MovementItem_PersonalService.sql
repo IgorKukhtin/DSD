@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar, INN TVarChar, isMain Boolean, isOfficial Boolean
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
-             , InfoMoneyId Integer, InfoMoneyName  TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , MemberId Integer, MemberName  TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
@@ -106,8 +106,10 @@ BEGIN
             , Object_Unit.ValueData                   AS UnitName
             , Object_Position.Id                      AS PositionId
             , Object_Position.ValueData               AS PositionName
-            , View_InfoMoney.InfoMoneyId              AS InfoMoneyId
-            , View_InfoMoney.InfoMoneyName_all        AS InfoMoneyName
+            , View_InfoMoney.InfoMoneyId
+            , View_InfoMoney.InfoMoneyCode
+            , View_InfoMoney.InfoMoneyName
+            , View_InfoMoney.InfoMoneyName_all
 
             , COALESCE (Object_Member.Id, 0)          AS MemberId
             , COALESCE (Object_Member.ValueData, ''::TVarChar) AS MemberName
@@ -199,5 +201,3 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_PersonalService (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_PersonalService (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
-
-

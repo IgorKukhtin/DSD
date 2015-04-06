@@ -2484,7 +2484,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end>
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
       Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end

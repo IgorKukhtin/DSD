@@ -32,6 +32,8 @@ BEGIN
                                                          , inServiceDate := MovementDate_ServiceDate.ValueData
                                                          , inAmountIn    := CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 0 END
                                                          , inAmountOut   := CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END
+                                                         , inAmountSumm     := NULL
+                                                         , inAmountCurrency := NULL
                                                          , inComment     := inComment
                                                          , inCashId      := inCashId
                                                          , inMoneyPlaceId:= MovementLinkObject_PersonalServiceList.ObjectId

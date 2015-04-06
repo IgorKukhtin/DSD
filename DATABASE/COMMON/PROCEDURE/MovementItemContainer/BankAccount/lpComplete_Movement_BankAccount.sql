@@ -6,11 +6,18 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_BankAccount(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )                              
-RETURNS void
---  RETURNS TABLE (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, ContainerId Integer, AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer, ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, JuridicalId_Basis Integer, UnitId Integer, ContractId Integer, PaidKindId Integer, IsActive Boolean)
+RETURNS VOID
 AS
 $BODY$
 BEGIN
+     -- если данные по ЗП
+     IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = (SELECT MI_LO.ObjectId FROM MovementItem AS MI INNER JOIN MovementItemLinkObject AS MI_LO ON MI_LO.MovementItemId = MI.Id AND MI_LO.DescId = zc_MILinkObject_MoneyPlace() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master()) AND Object.DescId = zc_Object_PersonalServiceList())
+     THEN
+         -- формирование данных <Расчетный счет, выплата по ведомости>
+         PERFORM lpComplete_Movement_BankAccount_Recalc (inMovementId := inMovementId
+                                                       , inUserId     := inUserId);
+     END IF;
+
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -152,7 +159,7 @@ BEGIN
                           )
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
-             , COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)) AS ObjectId
+             , COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId))) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , CASE WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                      AND _tmpItem.isActive = TRUE
@@ -160,7 +167,7 @@ BEGIN
                        AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
                     WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
-                         THEN -1 * _tmpItem.OperSumm
+                         THEN COALESCE (MI_Child.Amount, -1 * _tmpItem.OperSumm)
                     ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm
              , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
@@ -179,7 +186,7 @@ BEGIN
                     ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm_Diff
  
-             , _tmpItem.MovementItemId
+             , COALESCE (MI_Child.Id, _tmpItem.MovementItemId) AS MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
              , 0 AS ContainerId_Currency                                      -- сформируем позже
@@ -222,15 +229,26 @@ BEGIN
              , _tmpItem.JuridicalId_Basis
 
              , COALESCE (tmpPersonal.UnitId, COALESCE (MILinkObject_Unit.ObjectId, 0)) AS UnitId
-             , COALESCE (tmpPersonal.PositionId, 0) AS PositionId -- не используется
+             , COALESCE (tmpPersonal.PositionId, COALESCE (MILinkObject_Position.ObjectId, 0)) AS PositionId -- используется
 
-               -- Филиал Баланс: всегда из р/сч. (а значение кстати=0)
-             , _tmpItem.BranchId_Balance
-               -- Филиал ОПиУ: всегда по подразделению
-             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss
+               -- Филиал Баланс: всегда из р/сч. (а значение кстати=0) !!!но для ЗП - как в начислениях!!!
+             , CASE WHEN MI_Child.Id > 0
+                         THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                    ELSE _tmpItem.BranchId_Balance
+               END AS BranchId_Balance
+               -- Филиал ОПиУ: всегда по подразделению !!!но для ЗП - не используется!!!
+             , CASE WHEN MI_Child.Id > 0
+                         THEN 0
+                    ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0)
+               END AS BranchId_ProfitLoss
 
-               -- Месяц начислений: пока нет
-             , CASE WHEN tmpPersonal.MemberId > 0 THEN lpInsertFind_Object_ServiceDate (inOperDate:= _tmpItem.OperDate) ELSE 0 END AS ServiceDateId
+               -- Месяц начислений: есть
+             , CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
+                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= MIDate_ServiceDate.ValueData)
+                    WHEN tmpPersonal.MemberId > 0
+                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= _tmpItem.OperDate) -- !!!т.е. по дате документа!!!
+                    ELSE 0
+               END AS ServiceDateId
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , zc_Enum_PaidKind_FirstForm() AS PaidKindId -- Всегда БН
@@ -250,6 +268,13 @@ BEGIN
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
+             LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = inMovementId
+                                               AND MI_Child.DescId = zc_MI_Child()
+                                               AND MI_Child.isErased = FALSE
+             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
+                                        ON MIDate_ServiceDate.MovementItemId = MI_Child.Id
+                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+
              LEFT JOIN MovementFloat AS MovementFloat_Amount
                                      ON MovementFloat_Amount.MovementId = inMovementId
                                     AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
@@ -265,17 +290,20 @@ BEGIN
              LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = MILinkObject_MoneyPlace.ObjectId
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                              ON MILinkObject_Unit.MovementItemId = _tmpItem.MovementItemId
+                                              ON MILinkObject_Unit.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                               ON MILinkObject_Contract.MovementItemId = _tmpItem.MovementItemId
                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                              ON MILinkObject_Position.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
+                                             AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
 
              LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId
                                  AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
 
-             LEFT JOIN Object ON Object.Id = COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId))
+             LEFT JOIN Object ON Object.Id = COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)))
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = COALESCE (tmpPersonal.UnitId, MILinkObject_Unit.ObjectId)
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = COALESCE (tmpPersonal.UnitId, MILinkObject_Unit.ObjectId)

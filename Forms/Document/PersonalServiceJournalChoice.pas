@@ -40,7 +40,6 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     colTotalSummService: TcxGridDBColumn;
     colTotalSummCard: TcxGridDBColumn;
     colTotalSummMinus: TcxGridDBColumn;
@@ -52,6 +51,8 @@ type
     cxLabel6: TcxLabel;
     edPersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
+    actIsServiceDate: TdsdDataSetRefresh;
+    cbIsServiceDate: TcxCheckBox;
   private
     { Private declarations }
   public

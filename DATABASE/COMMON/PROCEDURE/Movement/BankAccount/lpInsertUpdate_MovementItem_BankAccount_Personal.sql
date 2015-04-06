@@ -1,12 +1,13 @@
--- Function: lpInsertUpdate_MovementItem_Cash_Personal()
+-- Function: lpInsertUpdate_MovementItem_BankAccount_Personal()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_BankAccount_Personal (Integer, Integer, Integer, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Cash_Personal(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_BankAccount_Personal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
     IN inAmount              TFloat    , -- Сумма к выплате
+    IN inServiceDate         TDateTime , -- Месяц начислений
     IN inComment             TVarChar  , -- Примечание
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
@@ -45,6 +46,9 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId:= lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inPersonalId, inMovementId, inAmount, NULL);
 
+     -- формируются свойство <Месяц начислений>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), ioId, inServiceDate);
+
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
@@ -54,9 +58,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), ioId, inPositionId);
-
-     -- в мастере всегда Итоговая сумма
-     PERFORM lpUpdate_MovementItem_Cash_Personal_TotalSumm (inMovementId, inUserId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
@@ -68,9 +69,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 05.04.15                                        * all
- 16.09.14         *
+ 06.04.15                                        *
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_Cash_Personal (ioId:= 0, inMovementId:= 10, inPersonalId:= 1, inAmount:=1, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM lpInsertUpdate_MovementItem_BankAccount_Personal (ioId:= 0, inMovementId:= 10, inPersonalId:= 1, inAmount:=1, inUserId:= zfCalc_UserAdmin() :: Integer)

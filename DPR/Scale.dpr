@@ -80,7 +80,8 @@ begin
          //TUpdater.AutomaticUpdateProgram;
          //
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-         Application.CreateForm(TMainForm, MainForm);// !!!важно первым!!!
+  Application.CreateForm(TMainForm, MainForm);
+  // !!!важно первым!!!
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
          Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
