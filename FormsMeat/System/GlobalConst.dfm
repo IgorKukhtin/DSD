@@ -59,7 +59,9 @@ inherited GlobalConstForm: TGlobalConstForm
       0)
   end
   object spUpdateGlobalConst: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GlobalConst'
     DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'inId'
@@ -73,6 +75,7 @@ inherited GlobalConstForm: TGlobalConstForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ActualBankStatementDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end>
     PackSize = 1

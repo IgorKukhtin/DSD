@@ -75,6 +75,7 @@ type
     actInsertUpdateMIAmount_All: TdsdExecStoredProc;
     actMasterPost: TDataSetPost;
     mactInsertUpdateMIAmount_One: TMultiAction;
+    mactList: TMultiAction;
   private
     { Private declarations }
   public

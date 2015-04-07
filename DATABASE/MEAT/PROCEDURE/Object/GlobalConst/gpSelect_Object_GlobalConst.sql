@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConst(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_GlobalConst(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, ActualBankStatementDate TDateTime) AS
+RETURNS TABLE (Id Integer, ActualBankStatementDate TDateTime, ActualBankStatementText TVarChar) AS
 $BODY$
 BEGIN
 
@@ -16,7 +16,8 @@ BEGIN
        SELECT 
              GlobalConst.Id
            , ActualBankStatement.ValueData AS ActualBankStatementDate
-       FROM Object AS GlobalConst 
+           , ('Банковская выписка актуальна на: '||To_Char(ActualBankStatement.ValueData, 'dd.mm.yyyy'))::TVarChar AS ActualBankStatementText
+      FROM Object AS GlobalConst 
               LEFT JOIN ObjectDate AS ActualBankStatement 
                      ON ActualBankStatement.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()
                     AND ActualBankStatement.ObjectId = GlobalConst.Id

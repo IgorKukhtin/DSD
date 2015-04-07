@@ -2,8 +2,9 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientHeight = 623
   ClientWidth = 982
-  ExplicitWidth = 998
-  ExplicitHeight = 658
+  ExplicitTop = -105
+  ExplicitWidth = 990
+  ExplicitHeight = 650
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -488,6 +489,17 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
+    object mactList: TMultiAction [0]
+      Category = 'actAllGrid'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      ActionList = <
+        item
+          Action = actGetMIAmount
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -565,17 +577,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       RefreshOnTabSetChanges = False
     end
     object mactInsertUpdateMIAmount_AllGrid: TMultiAction
-      Category = 'DSDLib'
+      Category = 'actAllGrid'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
       ActionList = <
         item
-          Action = actGetMIAmount
-        end
-        item
-          Action = actMasterPost
+          Action = mactList
         end>
-      View = cxGridDBTableView
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> ?'
       InfoAfterExecute = '<'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
@@ -597,7 +606,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> ?'
     end
     object actGetMIAmount: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'actAllGrid'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGetMIAmount
@@ -626,7 +635,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       InfoAfterExecute = '<'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
     end
     object actMasterPost: TDataSetPost
-      Category = 'DSDLib'
+      Category = 'actAllGrid'
       Caption = 'actMasterPost'
       Hint = 'Post'
       ImageIndex = 74

@@ -11,7 +11,7 @@ uses
   Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
   dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter, Vcl.Menus,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
-  cxEdit, cxLabel, frxBarcode;
+  cxEdit, cxLabel, frxBarcode, cxTextEdit;
 
 const
   WM_ChangeKeyboard = WM_USER + 1;
@@ -529,6 +529,9 @@ type
     actGlobalConst: TdsdOpenForm;
     N31: TMenuItem;
     N40: TMenuItem;
+    spRefresh: TdsdExecStoredProc;
+    spGetInfo: TdsdStoredProc;
+    TextEdit: TcxTextEdit;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -562,9 +565,15 @@ begin
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
+var Item: TContainedAction;
 begin
   inherited;
   PostMessage(Handle, WM_ChangeKeyboard, 0, 0);
+  // Выполняем сразу то что в таймере
+  for Item in ActionList do
+      if Item is TdsdCustomAction then
+         if TdsdCustomAction(Item).EnabledTimer then
+            TdsdCustomAction(Item).Execute;
 end;
 
 end.

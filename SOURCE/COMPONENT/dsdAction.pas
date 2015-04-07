@@ -86,6 +86,8 @@ type
     FActiveControl: TWinControl;
     FTimer: TTimer;
     FEnabledTimer: boolean;
+    FTimerInterval: integer;
+    FPostDataSetAfterExecute: Boolean;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
     procedure SetEnabledTimer(const Value: boolean);
     procedure OnTimer(Sender: TObject);
@@ -119,6 +121,8 @@ type
     property Enabled;
     property PostDataSetBeforeExecute: Boolean read FPostDataSetBeforeExecute
       write FPostDataSetBeforeExecute default true;
+    property PostDataSetAfterExecute: Boolean read FPostDataSetAfterExecute
+      write FPostDataSetAfterExecute default false;
     property EnabledTimer: boolean read FEnabledTimer write SetEnabledTimer default false;
     property Timer: TTimer read FTimer write FTimer;
   end;
@@ -1694,6 +1698,7 @@ constructor TdsdCustomAction.Create(AOwner: TComponent);
 begin
   inherited;
   FPostDataSetBeforeExecute := true;
+  FPostDataSetAfterExecute := false;
   FMoveParams := TCollection.Create(TParamMoveItem);
   FEnabledTimer := false;
 end;
@@ -1723,6 +1728,8 @@ begin
         TParamMoveItem(MoveParams.Items[i]).ToParam.Value :=
            TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
   result := LocalExecute;
+  if PostDataSetAfterExecute then
+     PostDataSet;
   if not result then
     if Assigned(CancelAction) then
       CancelAction.Execute;
@@ -1756,6 +1763,8 @@ end;
 
 procedure TdsdCustomAction.OnTimer(Sender: TObject);
 begin
+  if csDesigning in Self.ComponentState then
+     exit;
   Timer.Enabled := false;
   try
     LocalExecute;
@@ -1782,7 +1791,9 @@ begin
      if FEnabledTimer then begin
         FTimer := TTimer.Create(Self);
         FTimer.Name := 'Timer';
+        FTimer.Interval := 300000;
         FTimer.OnTimer := Self.OnTimer;
+        FTimer.OnTimer(Self);
      end
      else
         FreeAndNil(FTimer)
