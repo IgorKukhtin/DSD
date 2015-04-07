@@ -79,9 +79,11 @@ BEGIN
          , Object_Measure.ValueData               AS MeasureName
          , MovementString_PartionGoods.ValueData  AS PartionGoods
 
-         , tmpMI_Union.Amount_Send_out::TFloat AS Amount_Send_out
+         --, tmpMI_Union.Amount_Send_out::TFloat AS Amount_Send_out
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI_Union.Amount_Send_out  ELSE 0 END ::TFloat Amount_Send_out
          , CAST (tmpMI_Union.Amount_Send_out * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS TFloat) AS Weight_Send_out
-         , tmpMI_Union.Amount_Send_in::TFloat  AS Amount_Send_in   
+         --, tmpMI_Union.Amount_Send_in::TFloat  AS Amount_Send_in   
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI_Union.Amount_Send_in  ELSE 0 END ::TFloat Amount_Send_in
          , CAST (tmpMI_Union.Amount_Send_in * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS TFloat) AS Weight_Send_in
          
          , tmpMI_Union.Amount_ProductionUnion::TFloat  AS Amount_ProductionUnion 
@@ -129,7 +131,7 @@ ALTER FUNCTION gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, TVarChar
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inUnitId:= 8447, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
---select * from gpReport_GoodsMI_Package(inStartDate := ('30.05.2014')::TDateTime , inEndDate := ('01.06.2015')::TDateTime , inUnitId := 0 ,  inSession := '5');
+-- select * from gpReport_GoodsMI_Package(inStartDate := ('30.05.2014')::TDateTime , inEndDate := ('01.06.2015')::TDateTime , inUnitId := 0 ,  inSession := '5');
 
---select * from gpReport_GoodsMI_Package(inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('02.06.2015')::TDateTime , inUnitId := 0 ,  inSession := '5');
+-- select * from gpReport_GoodsMI_Package(inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('02.06.2015')::TDateTime , inUnitId := 0 ,  inSession := '5');
 
