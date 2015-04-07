@@ -1340,6 +1340,20 @@ begin
   // Установка сетификатов
   try
     FileName := ExtractFilePath(ParamStr(0)) +
+      'tsp_acsk_062220.cer';
+    ComSigner.SaveCert(FileName);
+  except
+    on E: Exception do
+    begin
+      ComSigner := null;
+      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SaveCert ' +
+        FileName + #10#13 + E.Message);
+    end;
+  end;
+
+  // Установка сетификатов
+  try
+    FileName := ExtractFilePath(ParamStr(0)) +
       'Товариство з обмеженою відповідальністю АЛАН.cer';
     ComSigner.SaveCert(FileName);
   except

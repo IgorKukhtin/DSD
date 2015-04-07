@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, DocumentValue TVarChar, Registered Boolean, DateRegistered TDateTime
+             , Checked Boolean, Document Boolean, DocumentValue TVarChar, Registered Boolean, DateRegistered TDateTime, InvNumberRegistered TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -63,6 +63,7 @@ BEGIN
            , CASE WHEN MovementBoolean_Document.ValueData = TRUE THEN 'V' ELSE '-' END :: TVarChar AS DocumentValue
            , MovementBoolean_Registered.ValueData       AS Registered
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
+           , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -157,6 +158,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                     ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                    AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Medoc
                                       ON MovementBoolean_Medoc.MovementId =  Movement.Id
@@ -286,6 +291,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.04.15                        * add InvNumberRegistered, DateRegistered
  12.08.14                                        * add isEDI and isElectron
  30.07.14                                        * add DocumentValue
  03.05.14                                        * add ContractTagName

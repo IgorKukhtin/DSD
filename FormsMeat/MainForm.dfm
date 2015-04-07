@@ -3,10 +3,29 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 262
+  ExplicitWidth = 1094
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
+  object TextEdit: TcxTextEdit [0]
+    Left = 0
+    Top = 0
+    Align = alClient
+    Enabled = False
+    ParentFont = False
+    Properties.Alignment.Horz = taCenter
+    Properties.Alignment.Vert = taVCenter
+    Style.BorderStyle = ebsNone
+    Style.Color = clBtnFace
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    TabOrder = 0
+    Width = 1086
+  end
   inherited ActionList: TActionList
     Top = 48
     object actReport_ReceiptProductionAnalyzeForm: TdsdOpenForm [0]
@@ -2736,6 +2755,29 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actGlobalConst: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1089#1080#1089#1090#1077#1084#1099
+      FormName = 'TGlobalConstForm'
+      FormNameParam.Value = 'TGlobalConstForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object spRefresh: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      EnabledTimer = True
+      Timer = spRefresh.Timer
+      StoredProc = spGetInfo
+      StoredProcList = <
+        item
+          StoredProc = spGetInfo
+        end>
+      Caption = 'spRefresh'
+    end
   end
   inherited cxLocalizer: TcxLocalizer
     Top = 32
@@ -3622,21 +3664,39 @@ inherited MainForm: TMainForm
       object miToolsWeighingTree: TMenuItem [16]
         Action = actToolsWeighingTree
       end
-      object N31: TMenuItem [17]
+      object N40: TMenuItem [17]
+        Action = actGlobalConst
+      end
+      object N31: TMenuItem [18]
         Caption = '-'
       end
-      object miImportGroup: TMenuItem [18]
+      object miImportGroup: TMenuItem [19]
         Action = actImportGroup
       end
-      object miImportType: TMenuItem [19]
+      object miImportType: TMenuItem [20]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [20]
+      object miImportSettings: TMenuItem [21]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [21]
+      object miImportExportLink: TMenuItem [22]
         Action = actImportExportLink
       end
     end
+  end
+  object spGetInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GlobalConst'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ActualBankStatementText'
+        Value = Null
+        Component = TextEdit
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 128
   end
 end

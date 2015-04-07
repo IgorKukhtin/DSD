@@ -657,7 +657,8 @@ uses
   InfoMoneyDestination_Object in '..\..\Forms\Guides\InfoMoneyDestination_Object.pas' {InfoMoneyDestination_ObjectForm: TParentForm},
   InfoMoneyGroup_Object in '..\..\Forms\Guides\InfoMoneyGroup_Object.pas' {InfoMoneyGroup_ObjectForm: TParentForm},
   Report_GoodsMI_Package in '..\..\Forms\Report\Report_GoodsMI_Package.pas' {Report_GoodsMI_PackageForm: TParentForm},
-  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm};
+  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm},
+  GlobalConst in '..\..\FormsMeat\System\GlobalConst.pas' {GlobalConstForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

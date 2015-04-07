@@ -33,7 +33,10 @@ type
     actPrintByGoods: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintByGoods: TdxBarButton;
-    clPartionGoods: TcxGridDBColumn;
+    clCountPackage: TcxGridDBColumn;
+    clWeightPackage: TcxGridDBColumn;
+    clWeight_Send_out: TcxGridDBColumn;
+    clWeight_Send_in: TcxGridDBColumn;
   private
     { Private declarations }
   public

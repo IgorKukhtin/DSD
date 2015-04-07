@@ -2,8 +2,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
+  ExplicitLeft = -288
   ExplicitWidth = 1126
-  ExplicitHeight = 569
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -338,6 +339,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
           end
           object colRegistered: TcxGridDBColumn
@@ -380,13 +382,20 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Caption = #1052#1077#1076#1086#1082
             DataBinding.FieldName = 'IsMedoc'
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 46
           end
           object DocumentValue: TcxGridDBColumn
             DataBinding.FieldName = 'DocumentValue'
             Visible = False
             VisibleForCustomization = False
             Width = 55
+          end
+          object colInvNumberRegistered: TcxGridDBColumn
+            Caption = #8470' '#1074' '#1044#1055#1040
+            DataBinding.FieldName = 'InvNumberRegistered'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
           end
         end
       end
@@ -424,6 +433,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actMedocFalse: TdsdExecStoredProc [2]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMedoc_False
       StoredProcList = <
         item
@@ -436,6 +446,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actElectron: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spElectron
       StoredProcList = <
         item
@@ -448,6 +459,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actChecked: TdsdExecStoredProc [5]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spChecked
       StoredProcList = <
         item
@@ -460,6 +472,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actDocument: TdsdExecStoredProc [6]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spDocument
       StoredProcList = <
         item
@@ -472,7 +485,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1076#1087#1080#1089#1072#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 33
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [8]
+    inherited actInsertMask: TdsdInsertUpdateAction [7]
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
       GuiParams = <
@@ -499,7 +512,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           DataType = ftDateTime
         end>
     end
-    object actInsertMaskMulti: TMultiAction [9]
+    object actInsertMaskMulti: TMultiAction [8]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -512,12 +525,12 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
-    inherited actInsert: TdsdInsertUpdateAction [10]
+    inherited actUpdate: TdsdInsertUpdateAction [9]
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
     end
-    inherited actUpdate: TdsdInsertUpdateAction
+    inherited actInsert: TdsdInsertUpdateAction [10]
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
@@ -607,6 +620,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actMedocProcedure: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectPrintTaxCorrective_Client
       StoredProcList = <
         item
@@ -617,6 +631,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportNameTaxCorrective
       StoredProcList = <
         item
@@ -764,6 +779,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actGetDirectory: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetDirectoryName
       StoredProcList = <
         item
@@ -799,6 +815,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object spTaxPrint: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectPrintTaxCorrective_Client
       StoredProcList = <
         item
@@ -809,6 +826,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actUpdateIsMedoc: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMedoc
       StoredProcList = <
         item

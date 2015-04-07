@@ -317,6 +317,8 @@ begin
     for I := 3 to StringList.Count - 1 do
         // разбираем строки
         with FDataSet do begin
+          if StringList[i] = '' then
+             break;
           ElementList := SplitString(StringList[i], #9);
           Price := gfStrToFloat(ElementList[20]) / gfStrToFloat(ElementList[15]);
           ElementList[13] := trim(ElementList[13]);

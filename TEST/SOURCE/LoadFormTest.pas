@@ -649,6 +649,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkTypeForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGlobalConstForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGlobalConstForm');
+
 end;
 
 
