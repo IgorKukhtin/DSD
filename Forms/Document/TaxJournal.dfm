@@ -2,8 +2,9 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitLeft = -221
+  ExplicitWidth = 1118
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -326,14 +327,6 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colDateRegistered: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
-            DataBinding.FieldName = 'DateRegistered'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 65
-          end
           object colRegistered: TcxGridDBColumn
             Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088'.'
             DataBinding.FieldName = 'Registered'
@@ -376,6 +369,19 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 30
+          end
+          object colRegisteredNumber: TcxGridDBColumn
+            Caption = #8470' '#1074' '#1044#1055#1040
+            DataBinding.FieldName = 'InvNumberRegistered'
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
+          object colDateRegistered: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
+            DataBinding.FieldName = 'DateRegistered'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
           end
         end
       end
@@ -430,6 +436,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object actMedocFalse: TdsdExecStoredProc [2]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMedoc_False
       StoredProcList = <
         item
@@ -442,6 +449,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object actChecked: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spChecked
       StoredProcList = <
         item
@@ -454,6 +462,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object actElectron: TdsdExecStoredProc [5]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spElectron
       StoredProcList = <
         item
@@ -466,6 +475,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object actDocument: TdsdExecStoredProc [6]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spDocument
       StoredProcList = <
         item
@@ -501,19 +511,6 @@ inherited TaxJournalForm: TTaxJournalForm
           DataType = ftDateTime
         end>
     end
-    object actInsertMaskMulti: TMultiAction [9]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertMask
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
-      ImageIndex = 54
-    end
     inherited actInsertMask: TdsdInsertUpdateAction
       ImageIndex = -1
       FormName = 'TTaxForm'
@@ -537,24 +534,18 @@ inherited TaxJournalForm: TTaxJournalForm
           DataType = ftDateTime
         end>
     end
-    object actMovementCheck: TdsdOpenForm [11]
+    object actInsertMaskMulti: TMultiAction [9]
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1096#1080#1073#1082#1080
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
-      ImageIndex = 30
-      FormName = 'TMovementCheckForm'
-      FormNameParam.Value = 'TMovementCheckForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
+      ActionList = <
         item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
+          Action = actInsertMask
         end>
-      isShowModal = False
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTaxForm'
@@ -584,12 +575,32 @@ inherited TaxJournalForm: TTaxJournalForm
           DataType = ftDateTime
         end>
     end
+    object actMovementCheck: TdsdOpenForm [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1096#1080#1073#1082#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      ImageIndex = 30
+      FormName = 'TMovementCheckForm'
+      FormNameParam.Value = 'TMovementCheckForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTax
       StoredProcList = <
         item
@@ -682,6 +693,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object actSPPrintTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
@@ -767,6 +779,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object actMedocProcedure: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectTax_Client
       StoredProcList = <
         item
@@ -796,6 +809,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object actGetDirectory: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetDirectoryName
       StoredProcList = <
         item
@@ -832,6 +846,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object spTaxPrint: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectTax_Client
       StoredProcList = <
         item
@@ -842,6 +857,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object actUpdateIsMedoc: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMedoc
       StoredProcList = <
         item

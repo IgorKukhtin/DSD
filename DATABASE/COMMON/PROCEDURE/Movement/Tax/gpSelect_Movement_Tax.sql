@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, Registered Boolean, DateRegistered TDateTime
+             , Checked Boolean, Document Boolean, Registered Boolean, DateRegistered TDateTime, InvNumberRegistered TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -60,6 +60,7 @@ BEGIN
            , MovementBoolean_Document.ValueData         AS Document
            , MovementBoolean_Registered.ValueData       AS Registered
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
+           , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -231,10 +232,14 @@ BEGIN
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
+            LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                     ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                    AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
+
            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                            ON MovementLinkMovement_Tax.MovementId = Movement.Id 
                                           AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
-           ;
+          ;
 
 END;
 $BODY$
@@ -244,6 +249,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.04.15                        * add InvNumberRegistered, DateRegistered
  15.12.14                        * add isMedoc
  08.10.14         *  dell MovementBoolean_Electron было 2 раза
  12.08.14                                        * add isEDI and isElectron

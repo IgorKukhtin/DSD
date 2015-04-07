@@ -96,6 +96,7 @@ type
     actMedocFalse: TdsdExecStoredProc;
     spMedoc_False: TdsdStoredProc;
     bbMedocFalse: TdxBarButton;
+    colRegisteredNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

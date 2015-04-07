@@ -394,7 +394,6 @@ type
     miLoad1CSale: TMenuItem;
     miLoad1CMoney: TMenuItem;
     miToolsWeighingTree: TMenuItem;
-    N31: TMenuItem;
     miImportGroup: TMenuItem;
     miImportType: TMenuItem;
     miImportSettings: TMenuItem;
@@ -527,6 +526,9 @@ type
     miQualityDoc: TMenuItem;
     actReport_GoodsMI_Package: TdsdOpenForm;
     N53: TMenuItem;
+    actGlobalConst: TdsdOpenForm;
+    N31: TMenuItem;
+    N40: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

@@ -40,6 +40,17 @@ BEGIN
    END IF;
 
 END $$;
+
+DO $$
+BEGIN
+
+   IF NOT EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_GlobalConst())
+   THEN
+       PERFORM lpInsertUpdate_Object (0, zc_Object_GlobalConst(), 1, 'Константа');
+   END IF;
+
+END $$;
+
 /*
 DO $$
 DECLARE ioId integer;

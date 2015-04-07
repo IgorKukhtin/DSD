@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ServiceDate TDateTime
              , Comment TVarChar
              , CashId Integer, CashName TVarChar
-             , PersonalServiceListName TVarChar
+             , PersonalServiceListName TVarChar, PersonalServiceListId Integer
              , MemberId Integer, MemberName TVarChar
              )
 AS
@@ -50,6 +50,7 @@ BEGIN
            , COALESCE (Object_Cash.Id, 0)                      AS CashId
            , COALESCE (Object_Cash.ValueData, '') :: TVarChar  AS CashName
            , '' :: TVarChar         AS PersonalServiceListName
+           , 0                      AS PersonalServiceListId
            , 0                                                 AS MemberId
            , CAST ('' as TVarChar)                             AS MemberName
 
@@ -79,6 +80,7 @@ BEGIN
            , Object_Cash.Id                    AS CashId
            , Object_Cash.ValueData             AS CashName
            , Object_PersonalServiceList.ValueData AS PersonalServiceListName
+           , Object_PersonalServiceList.Id     AS PersonalServiceListId
 
            , Object_Member.Id                  AS MemberId
            , Object_Member.ValueData           AS MemberName

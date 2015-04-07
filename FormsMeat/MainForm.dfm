@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitWidth = 1094
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2736,6 +2736,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actGlobalConst: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1089#1080#1089#1090#1077#1084#1099
+      FormName = 'TGlobalConstForm'
+      FormNameParam.Value = 'TGlobalConstForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited cxLocalizer: TcxLocalizer
     Top = 32
@@ -3622,19 +3632,22 @@ inherited MainForm: TMainForm
       object miToolsWeighingTree: TMenuItem [16]
         Action = actToolsWeighingTree
       end
-      object N31: TMenuItem [17]
+      object N40: TMenuItem [17]
+        Action = actGlobalConst
+      end
+      object N31: TMenuItem [18]
         Caption = '-'
       end
-      object miImportGroup: TMenuItem [18]
+      object miImportGroup: TMenuItem [19]
         Action = actImportGroup
       end
-      object miImportType: TMenuItem [19]
+      object miImportType: TMenuItem [20]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [20]
+      object miImportSettings: TMenuItem [21]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [21]
+      object miImportExportLink: TMenuItem [22]
         Action = actImportExportLink
       end
     end

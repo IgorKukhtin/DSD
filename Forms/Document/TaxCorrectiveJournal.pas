@@ -86,6 +86,7 @@ type
     actMedocFalse: TdsdExecStoredProc;
     bbMedocFalse: TdxBarButton;
     actInsertMaskMulti: TMultiAction;
+    colInvNumberRegistered: TcxGridDBColumn;
   private
     { Private declarations }
   public
