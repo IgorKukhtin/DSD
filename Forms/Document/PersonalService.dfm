@@ -14,6 +14,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     ClientRectBottom = 576
     ClientRectRight = 1112
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1112
       ExplicitHeight = 552
       inherited cxGrid: TcxGrid

@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
 
     IN inBankAccountId        Integer   , -- Расчетный счет 	
     IN inComment              TVarChar  , -- Комментарий 
-    IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса  	
+    IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса, Ведомости начисления
     IN inContractId           Integer   , -- Договора
     IN inInfoMoneyId          Integer   , -- Статьи назначения 
     -- IN inUnitId               Integer   , -- Подразделение

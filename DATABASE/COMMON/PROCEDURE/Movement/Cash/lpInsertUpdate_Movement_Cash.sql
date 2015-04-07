@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inAmountOut           TFloat    , -- Сумма расхода
     IN inAmountSumm          TFloat    , -- Cумма грн, обмен
     IN inAmountCurrency      TFloat    , -- Сумма в валюте
-    IN inComment             TVarChar  , -- Комментарий
+    IN inComment             TVarChar  , -- Примечание
     IN inCashId              Integer   , -- Касса
     IN inMoneyPlaceId        Integer   , -- Объекты работы с деньгами
     IN inPositionId          Integer   , -- Должность
@@ -145,9 +145,9 @@ BEGIN
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
     
-     -- сохранили связь с <Дата начисления>
+     -- сохранили свойство <Дата начисления>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, inServiceDate);
-     -- Комментарий
+     -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
      -- сохранили связь с <Физ лицо (через кого)>

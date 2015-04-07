@@ -45,7 +45,7 @@ BEGIN
 
      --  омментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-     -- сохранили св€зь с <ћес€ц начислений>
+     -- сохранили свойство <ћес€ц начислений>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, inServiceDate);
 
      -- сохранили св€зь с <>

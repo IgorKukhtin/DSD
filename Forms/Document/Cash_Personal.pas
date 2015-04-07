@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, Vcl.DBActns;
 
 type
   TCash_PersonalForm = class(TAncestorDocumentForm)
@@ -73,6 +73,8 @@ type
     actGetMIAmount: TdsdExecStoredProc;
     actInsertUpdateMIAmount_One: TdsdExecStoredProc;
     actInsertUpdateMIAmount_All: TdsdExecStoredProc;
+    actMasterPost: TDataSetPost;
+    mactInsertUpdateMIAmount_One: TMultiAction;
   private
     { Private declarations }
   public

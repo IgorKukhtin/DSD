@@ -1,9 +1,9 @@
 inherited Cash_PersonalForm: TCash_PersonalForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072' '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientHeight = 623
   ClientWidth = 982
-  ExplicitWidth = 990
-  ExplicitHeight = 650
+  ExplicitWidth = 998
+  ExplicitHeight = 658
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -479,7 +479,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
-    Top = 552
+    Top = 512
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
@@ -512,6 +512,12 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     end
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -561,9 +567,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     object mactInsertUpdateMIAmount_AllGrid: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       ActionList = <
         item
           Action = actGetMIAmount
+        end
+        item
+          Action = actMasterPost
         end>
       View = cxGridDBTableView
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> ?'
@@ -614,6 +624,29 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       ImageIndex = 50
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> ?'
       InfoAfterExecute = '<'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
+    end
+    object actMasterPost: TDataSetPost
+      Category = 'DSDLib'
+      Caption = 'actMasterPost'
+      Hint = 'Post'
+      ImageIndex = 74
+      DataSource = MasterDS
+    end
+    object mactInsertUpdateMIAmount_One: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      ActionList = <
+        item
+          Action = actGetMIAmount
+        end
+        item
+          Action = actMasterPost
+        end>
+      QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      ImageIndex = 47
     end
   end
   inherited MasterDS: TDataSource
@@ -776,11 +809,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       ImageIndex = 41
     end
     object bbInsertUpdateMIAmount_One: TdxBarButton
-      Action = actInsertUpdateMIAmount_One
+      Action = mactInsertUpdateMIAmount_One
       Category = 0
     end
     object bbInsertUpdateMIAmount_All: TdxBarButton
-      Action = actInsertUpdateMIAmount_All
+      Action = mactInsertUpdateMIAmount_AllGrid
       Category = 0
     end
   end
@@ -840,14 +873,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ParamType = ptInputOutput
       end>
     Left = 280
-    Top = 552
+    Top = 512
   end
   inherited StatusGuides: TdsdGuides
     Left = 88
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_PersonalService'
+    StoredProcName = 'gpUpdate_Status_Cash'
     Left = 160
     Top = 8
   end
@@ -940,17 +973,17 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftString
       end
       item
+        Name = 'PersonalServiceListId'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+      end
+      item
         Name = 'PersonalServiceListName'
         Value = ''
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'PersonalServiceListId'
-        Value = Null
-        Component = GuidesPersonalServiceList
-        ComponentItem = 'Key'
       end
       item
         Name = 'MemberId'
@@ -1070,14 +1103,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Top = 344
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_PersonalService_SetErased'
-    Left = 718
-    Top = 512
+    StoredProcName = 'gpMovementItem_Cash_Personal_SetErased'
+    Left = 430
+    Top = 472
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_PersonalService_SetUnErased'
-    Left = 718
-    Top = 464
+    StoredProcName = 'gpMovementItem_Cash_Personal_SetUnErased'
+    Left = 438
+    Top = 416
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Cash_Personal'
