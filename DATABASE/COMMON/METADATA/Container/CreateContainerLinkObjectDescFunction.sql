@@ -114,6 +114,10 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_ServiceDate() RETURNS Integer 
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_ServiceDate', 'Месяц начислений', zc_Object_ServiceDate() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ServiceDate');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_PersonalServiceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PersonalServiceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_PersonalServiceList', 'Ведомости начисления', zc_Object_PersonalServiceList() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PersonalServiceList');
+
 CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Currency() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Currency'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_Currency', 'Валюта', zc_Object_Currency() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Currency');

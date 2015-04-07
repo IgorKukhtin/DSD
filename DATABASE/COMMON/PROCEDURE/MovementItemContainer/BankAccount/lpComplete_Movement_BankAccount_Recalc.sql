@@ -46,11 +46,11 @@ BEGIN
      END IF;
 
      -- проверка - суммы должны соответствовать
-     IF COALESCE ((SELECT SUM (COALESCE (MIFloat_SummCard.ValueData, 0)) 
+     IF COALESCE ((SELECT SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0)) 
                    FROM MovementItem
-                        INNER JOIN MovementItemFloat AS MIFloat_SummCard
-                                                     ON MIFloat_SummCard.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+                        INNER JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                                                     ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
                    WHERE MovementItem.MovementId = vbMovementId_PersonalService
                      AND MovementItem.DescId = zc_MI_Master()
                   ) , 0)
@@ -58,11 +58,11 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Сумма бо банку <%> не соответствует сумме в начислениях <%>.'
                 , -1 * (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master())
-                , (SELECT SUM (COALESCE (MIFloat_SummCard.ValueData, 0)) 
+                , (SELECT SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0)) 
                    FROM MovementItem
-                        INNER JOIN MovementItemFloat AS MIFloat_SummCard
-                                                     ON MIFloat_SummCard.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+                        INNER JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                                                     ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
                    WHERE MovementItem.MovementId = vbMovementId_PersonalService
                      AND MovementItem.DescId = zc_MI_Master()
                   )
@@ -92,11 +92,11 @@ BEGIN
                                                              , inPositionId         := tmp.PositionId
                                                              , inUserId             := inUserId
                                                               )
-     FROM (SELECT MovementItem.ObjectId           AS PersonalId
-                , MILinkObject_Unit.ObjectId      AS UnitId
-                , MILinkObject_Position.ObjectId  AS PositionId
-                , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
-                , MIFloat_SummCard.ValueData      AS Amount
+     FROM (SELECT MovementItem.ObjectId            AS PersonalId
+                , MILinkObject_Unit.ObjectId       AS UnitId
+                , MILinkObject_Position.ObjectId   AS PositionId
+                , MILinkObject_InfoMoney.ObjectId  AS InfoMoneyId
+                , MIFloat_SummCardRecalc.ValueData AS Amount
            FROM MovementItem
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                  ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -107,9 +107,9 @@ BEGIN
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                  ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
-                LEFT JOIN MovementItemFloat AS MIFloat_SummCard
-                                            ON MIFloat_SummCard.MovementItemId = MovementItem.Id
-                                           AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+                LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                                            ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
+                                           AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
            WHERE MovementItem.MovementId = vbMovementId_PersonalService
              AND MovementItem.DescId = zc_MI_Master()
              AND MovementItem.isErased = FALSE

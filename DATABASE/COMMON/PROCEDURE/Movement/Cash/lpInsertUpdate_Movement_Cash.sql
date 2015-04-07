@@ -36,6 +36,7 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbPersonalServiceListId Integer;
 BEGIN
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
@@ -120,6 +121,65 @@ BEGIN
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, inParentId, vbAccessKeyId);
+
+
+     IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Personal())
+     THEN
+         -- пока определяется "как повезет", надо вывести на форму
+         vbPersonalServiceListId:= (SELECT MLO_PersonalServiceList.ObjectId
+                                    FROM (SELECT inServiceDate AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '1 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '2 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '3 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '4 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '5 MONTH' AS ServiceDate
+                                         ) AS tmpDate
+                                         INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                                                 ON MovementDate_ServiceDate.ValueData = tmpDate.ServiceDate
+                                                                AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                                         INNER JOIN MovementItem ON MovementItem.MovementId = MovementDate_ServiceDate.MovementId
+                                                                AND MovementItem.DescId = zc_MI_Master()
+                                                                AND MovementItem.ObjectId = inMoneyPlaceId
+                                                                AND MovementItem.isErased = FALSE
+                                                                AND MovementItem.Amount <> 0
+                                         INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                           ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                                          AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                                          AND MILinkObject_InfoMoney.ObjectId = inInfoMoneyId
+                                         INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                           ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                                          AND MILinkObject_Unit.ObjectId = inUnitId
+                                         INNER JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                                           ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                                          AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+                                                                          AND MILinkObject_Position.ObjectId = inPositionId
+
+                                         INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+                                                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                                         INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                                       ON MLO_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                                                      AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                    ORDER BY MovementDate_ServiceDate.ValueData DESC, MovementItem.Amount DESC
+                                    LIMIT 1
+                                   );
+         -- проверка
+         IF COALESCE (vbPersonalServiceListId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена <Ведомость начисления зарплаты>.';
+         END IF;
+         -- сохранили связь с <Ведомости начисления>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), ioId, vbPersonalServiceListId);
+     ELSE
+         -- обнулили связь с <Ведомости начисления>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), ioId, NULL);
+     END IF;
+
 
      -- Cумма грн, обмен
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmountSumm);
