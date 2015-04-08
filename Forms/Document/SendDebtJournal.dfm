@@ -393,6 +393,11 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object clisCopy: TcxGridDBColumn
+        Caption = #1050#1086#1087#1080#1103' '#1087#1086' '#1084#1072#1089#1082#1077
+        DataBinding.FieldName = 'isCopy'
+        Width = 65
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -437,8 +442,8 @@ object SendDebtJournalForm: TSendDebtJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -526,6 +531,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbisCopy'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -598,6 +611,10 @@ object SendDebtJournalForm: TSendDebtJournalForm
     end
     object bbMovementProtocol: TdxBarButton
       Action = MovementProtocolOpenForm
+      Category = 0
+    end
+    object bbisCopy: TdxBarButton
+      Action = actisCopy
       Category = 0
     end
   end
@@ -700,6 +717,19 @@ object SendDebtJournalForm: TSendDebtJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actisCopy: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isCopy
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isCopy
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1086#1087#1080#1103' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1086#1087#1080#1103' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 50
+    end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
@@ -754,6 +784,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -918,6 +949,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1080,5 +1112,29 @@ object SendDebtJournalForm: TSendDebtJournalForm
     PackSize = 1
     Left = 526
     Top = 168
+  end
+  object spUpdate_isCopy: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isCopy'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisCopy'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isCopy'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 243
   end
 end

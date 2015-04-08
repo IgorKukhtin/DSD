@@ -54,6 +54,10 @@ type
     clJuridicalName: TcxGridDBColumn;
     clMFO: TcxGridDBColumn;
     clBankSInvNumber_Parent: TcxGridDBColumn;
+    spUpdate_isCopy: TdsdStoredProc;
+    actisCopy: TdsdExecStoredProc;
+    bbisCopy: TdxBarButton;
+    clisCopy: TcxGridDBColumn;
   private
     { Private declarations }
   public

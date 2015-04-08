@@ -88,6 +88,10 @@ type
     BranchToName: TcxGridDBColumn;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
+    spUpdate_isCopy: TdsdStoredProc;
+    actisCopy: TdsdExecStoredProc;
+    clisCopy: TcxGridDBColumn;
+    bbisCopy: TdxBarButton;
   private
   public
   end;
