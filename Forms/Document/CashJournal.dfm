@@ -159,6 +159,14 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 150
           end
+          object clItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
@@ -295,14 +303,6 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
-          end
-          object clItemName: TcxGridDBColumn
-            Caption = #1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'ItemName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
           end
           object clAmountCurrency: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077

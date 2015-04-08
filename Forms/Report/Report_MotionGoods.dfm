@@ -621,7 +621,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       OptionsCustomize.DataRowSizing = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -1233,6 +1232,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Properties.DisplayFormat = ',0.####;-,0.####; '
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 75
       end
       object SummSale_10500: TcxGridDBColumn
@@ -1324,6 +1324,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Properties.DisplayFormat = ',0.####;-,0.####; '
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 75
       end
       object SummReturnIn_40208: TcxGridDBColumn
@@ -1350,7 +1351,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 60
       end
       object CountLoss_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1074#1077#1089
         DataBinding.FieldName = 'CountLoss_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1537,7 +1537,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 75
       end
       object CountTotalIn: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1048#1090#1086#1075#1086' '#1087#1088#1080#1093#1086#1076' '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountTotalIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1685,6 +1684,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Properties.Buttons = <
           item
             Default = True
+            Enabled = False
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
@@ -1740,6 +1740,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       object LineNum: TcxGridDBColumn
         DataBinding.FieldName = 'LineNum'
         Visible = False
+        Options.Editing = False
         Width = 60
       end
     end
@@ -2484,6 +2485,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end>
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
       Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end

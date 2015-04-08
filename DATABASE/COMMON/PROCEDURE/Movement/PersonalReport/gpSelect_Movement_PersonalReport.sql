@@ -2,23 +2,25 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalReport (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalReport(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
+    IN inMemberId    Integer,    --
     IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , MovementDescName TVarChar
              , AmountIn TFloat, AmountOut TFloat
              , Comment TVarChar
              , MemberCode Integer, MemberName TVarChar
-             , InfoMoneyGroupName TVarChar
-             , InfoMoneyDestinationName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , UnitName TVarChar
-             , MoneyPlaceName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
+             , BranchCode Integer, BranchName TVarChar
              , CarName TVarChar
              )
 AS
@@ -38,11 +40,12 @@ BEGIN
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
        SELECT
-             tmpMovement.MovementId AS Id
+             tmpMovement.MovementId   AS Id
            , tmpMovement.InvNumber
            , tmpMovement.OperDate
-           , Object_Status.ObjectCode           AS StatusCode
-           , Object_Status.ValueData            AS StatusName
+           , Object_Status.ObjectCode AS StatusCode
+           , Object_Status.ValueData  AS StatusName
+           , MovementDesc.ItemName    AS MovementDescName
 
            , CASE WHEN tmpMovement.Amount > 0
                        THEN tmpMovement.Amount
@@ -57,13 +60,19 @@ BEGIN
 
            , Object_Member.ObjectCode           AS MemberCode
            , Object_Member.ValueData            AS MemberName
-           , Object_InfoMoney_View.InfoMoneyGroupName
-           , Object_InfoMoney_View.InfoMoneyDestinationName
-           , Object_InfoMoney_View.InfoMoneyCode
-           , Object_InfoMoney_View.InfoMoneyName
+           , View_InfoMoney.InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
+           , View_InfoMoney.InfoMoneyName_all
+           , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
+           , Object_MoneyPlace.ObjectCode       AS MoneyPlaceCode
            , Object_MoneyPlace.ValueData        AS MoneyPlaceName
-           , Object_Car.ValueData               AS CarName
+           , ObjectDesc.ItemName
+           , Object_Branch.ObjectCode           AS BranchCode
+           , Object_Branch.ValueData            AS BranchName
+           , (COALESCE (Object_CarModel.ValueData, '') || '' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
        FROM (SELECT CLO_Member.ContainerId     AS ContainerId
                   , CLO_Member.ObjectId        AS MemberId
@@ -75,6 +84,7 @@ BEGIN
                   , MIContainer.MovementItemId
                   , MIContainer.Amount
                   , CLO_InfoMoney.ObjectId AS InfoMoneyId
+                  , CLO_Branch.ObjectId    AS BranchId
                   , 0 AS UnitId
                   , 0 AS MoneyPlaceId
                   , CLO_Car.ObjectId       AS CarId
@@ -82,7 +92,7 @@ BEGIN
              FROM ContainerLinkObject AS CLO_Member
                   INNER JOIN MovementItemContainer AS MIContainer
                                                    ON MIContainer.ContainerId = CLO_Member.ContainerId
-                                                  AND MIContainer.ContainerId = zc_MIContainer_Summ()
+                                                  AND MIContainer.DescId = zc_MIContainer_Summ()
                                                   AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                   LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                   LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
@@ -91,6 +101,11 @@ BEGIN
                   LEFT JOIN ContainerLinkObject AS CLO_Car
                                                 ON CLO_Car.ContainerId = CLO_Member.ContainerId
                                                AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
+                  LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                                ON CLO_Branch.ContainerId = CLO_Member.ContainerId
+                                               AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+             WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
+               AND (CLO_Member.ObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
 
             UNION
              SELECT 0 AS ContainerId
@@ -103,6 +118,7 @@ BEGIN
                   , MovementItem.Id AS MovementItemId
                   , MovementItem.Amount
                   , MILinkObject_InfoMoney.ObjectId  AS InfoMoneyId
+                  , 0                                AS BranchId
                   , MILinkObject_Unit.ObjectId       AS UnitId
                   , MILinkObject_MoneyPlace.ObjectId AS MoneyPlaceId
                   , MILinkObject_Car.ObjectId        AS CarId
@@ -123,27 +139,34 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
                                                    ON MILinkObject_Car.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
+              WHERE (MovementItem.ObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
             ) AS tmpMovement
 
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
+            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMovement.MovementDescId
 
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpMovement.MovementItemId
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMovement.MemberId
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpMovement.InfoMoneyId
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMovement.BranchId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpMovement.InfoMoneyId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovement.UnitId
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = tmpMovement.MoneyPlaceId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpMovement.CarId
+            LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
+                                                AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
 
       ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -153,4 +176,4 @@ ALTER FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Boolean, 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_PersonalReport (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_PersonalReport (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inMemberId:= 0, inIsErased:=false , inSession:= zfCalc_UserAdmin())

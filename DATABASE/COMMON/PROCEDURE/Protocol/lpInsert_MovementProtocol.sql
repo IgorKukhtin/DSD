@@ -13,9 +13,9 @@ BEGIN
   FROM
    (SELECT D.FieldXML
     FROM
-   (SELECT '<Field FieldName = "InvNumber" FieldValue = "' || zfStrToXmlStr(Movement.InvNumber) || '"/>'
-        || '<Field FieldName = "OperDate" FieldValue = "' || Movement.OperDate || '"/>'
-        || '<Field FieldName = "Status" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>'
+   (SELECT '<Field FieldName = "№ документа" FieldValue = "' || zfStrToXmlStr(Movement.InvNumber) || '"/>'
+        || '<Field FieldName = "Дата документа" FieldValue = "' || Movement.OperDate || '"/>'
+        || '<Field FieldName = "Статус" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>'
            AS FieldXML 
          , 1 AS GroupId
          , Movement.DescId
