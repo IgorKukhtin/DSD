@@ -1128,7 +1128,6 @@ object SendDebtJournalForm: TSendDebtJournalForm
       item
         Name = 'inisCopy'
         Value = Null
-        Component = ClientDataSet
         ComponentItem = 'isCopy'
         DataType = ftBoolean
         ParamType = ptInputOutput

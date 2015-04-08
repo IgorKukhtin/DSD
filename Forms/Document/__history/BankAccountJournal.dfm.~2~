@@ -11,17 +11,17 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Height = 299
     TabOrder = 3
     ExplicitWidth = 1028
-    ExplicitHeight = 299
+    ExplicitHeight = 320
     ClientRectBottom = 299
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
-      ExplicitHeight = 299
+      ExplicitHeight = 320
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 299
         ExplicitWidth = 1028
-        ExplicitHeight = 299
+        ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -354,9 +354,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object clisCopy: TcxGridDBColumn
             Caption = #1050#1086#1087#1080#1103' '#1087#1086' '#1084#1072#1089#1082#1077
             DataBinding.FieldName = 'isCopy'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 65
           end
         end
       end
@@ -791,7 +788,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Name = 'inisCopy'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'isCopy'
+        ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>

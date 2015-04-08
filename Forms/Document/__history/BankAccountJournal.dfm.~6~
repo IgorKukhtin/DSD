@@ -653,11 +653,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbisCopy'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbisCopy'
         end
         item
           Visible = True
@@ -791,7 +791,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Name = 'inisCopy'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'isCopy'
+        ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>
