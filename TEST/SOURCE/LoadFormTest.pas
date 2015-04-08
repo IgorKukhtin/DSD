@@ -1474,12 +1474,14 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectDescForm');
 end;
 
 procedure TLoadFormTest.LoadMemberExternalFormTest;

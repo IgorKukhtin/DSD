@@ -532,7 +532,7 @@
     FormNameParam.Value = 'TMember_ObjectDescForm'
     FormNameParam.DataType = ftString
     FormName = 'TMember_ObjectDescForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

@@ -287,8 +287,8 @@
 			<DCCReference Include="..\..\Forms\Guides\RouteSortingEdit.pas">
 				<Form>RouteSortingEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Member_Object.pas">
-				<Form>Member_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Member_ObjectDesc.pas">
+				<Form>Member_ObjectDescForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MemberEdit.pas">
 				<Form>MemberEditForm</Form>
@@ -1996,6 +1996,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\BankAccount_PersonalJournal.pas">
 				<Form>BankAccount_PersonalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Member_Object.pas">
+				<Form>Member_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
