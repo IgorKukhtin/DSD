@@ -26,7 +26,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
      END IF;
-     IF COALESCE (inContractId, 0) = 0 AND inPaidKindId <> zc_Enum_PaidKind_SecondForm()
+     IF COALESCE (inContractId, 0) = 0 -- AND inPaidKindId <> zc_Enum_PaidKind_SecondForm()
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлен <№ дог.>.';
      END IF;

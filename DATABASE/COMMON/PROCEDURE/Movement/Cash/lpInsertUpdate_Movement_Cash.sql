@@ -66,6 +66,13 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Значении <УП статья назначения> должно соответсвовать значению <От Кого, Кому>.';
          END IF;
      END IF;
+
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0 AND EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId IN (zc_Object_Partner(), zc_Object_Juridical()))
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значении <Догово> должно быть заполнено.';
+     END IF;
+
      -- проверка
      /*IF EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000()) -- Заработная плата
      THEN

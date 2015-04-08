@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 180
   Caption = 'MainForm'
   ClientHeight = 720
-  ClientWidth = 1240
+  ClientWidth = 1020
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 469
+    Width = 249
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -33,11 +33,12 @@ object MainForm: TMainForm
   object ButtonPanel: TPanel
     Left = 0
     Top = 664
-    Width = 1240
+    Width = 1020
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 1240
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -119,13 +120,14 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 469
+    Left = 249
     Top = 0
     Width = 321
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 469
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -699,13 +701,14 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 790
+    Left = 570
     Top = 0
     Width = 238
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitLeft = 790
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -1385,13 +1388,14 @@ object MainForm: TMainForm
     end
   end
   object CompleteDocumentPanel: TPanel
-    Left = 1028
+    Left = 808
     Top = 0
     Width = 212
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitLeft = 1028
     object Label3: TLabel
       Left = 6
       Top = 22

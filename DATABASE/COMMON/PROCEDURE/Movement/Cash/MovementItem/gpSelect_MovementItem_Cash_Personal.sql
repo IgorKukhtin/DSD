@@ -149,7 +149,7 @@ BEGIN
                                                                  AND CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
                                    INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
                                                                   ON CLO_PersonalServiceList.ObjectId = tmpParent.PersonalServiceListId
-                                                                 AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_Position()
+                                                                 AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
                                                                  AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
                              )
                 , tmpCash AS (SELECT SUM (CASE WHEN MIContainer.MovementId =  inMovementId THEN MIContainer.Amount ELSE 0 END) AS Amount_current

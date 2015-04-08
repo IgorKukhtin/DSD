@@ -404,7 +404,7 @@ BEGIN
                              JOIN ContainerLinkObject AS ContainerLO_Contract
                                                       ON ContainerLO_Contract.ContainerId = tmpContainerSumm.ContainerId
                                                      AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-                                                     AND ContainerLO_Contract.ObjectId > 0
+                                                     -- AND ContainerLO_Contract.ObjectId > 0
                              LEFT JOIN tmpMovement ON 1 = 1
                              LEFT JOIN tmpMovementItem
                                     ON tmpMovementItem.ObjectId = tmpContainerSumm.JuridicalId
@@ -531,7 +531,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определено <Юридическое лицо>.Проведение невозможно.';
      END IF;
-     IF EXISTS (SELECT _tmpItem.ContractId FROM _tmpItem WHERE _tmpItem.ContractId = 0 AND _tmpItem.IsMaster = TRUE)
+     IF EXISTS (SELECT _tmpItem.ContractId FROM _tmpItem WHERE _tmpItem.ContractId = 0 AND _tmpItem.IsMaster = TRUE AND 1=0)
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определен <№ дог.>.Проведение невозможно.';
      END IF;

@@ -12946,14 +12946,6 @@ begin
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_Sale()'
                                  );
-                  fOpenSqToQuery (' select COALESCE (MLO_Contract.ObjectId, 0) AS ContractId'
-                                 +' from Movement'
-                                 +'      LEFT JOIN MovementLinkObject AS MLO_Contract'
-                                 +'                                   ON MLO_Contract.MovementId = Movement.Id'
-                                 +'                                  AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()'
-                                 +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
-                                 +'   AND Movement.DescId = zc_Movement_Sale()'
-                                 );
                   if (FieldByName('isTare').AsInteger=zc_rvYes)
                     or ((toSqlQuery.FieldByName('ToId').AsInteger>0)
                      and(toSqlQuery.FieldByName('ContractId').AsInteger>0)
