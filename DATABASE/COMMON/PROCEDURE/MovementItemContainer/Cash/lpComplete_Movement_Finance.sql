@@ -435,6 +435,8 @@ BEGIN
                                                                             , inObjectId_5        := _tmpItem.PositionId
                                                                             , inDescId_6          := zc_ContainerLinkObject_ServiceDate()
                                                                             , inObjectId_6        := _tmpItem.ServiceDateId
+                                                                            , inDescId_7          := zc_ContainerLinkObject_PersonalServiceList()
+                                                                            , inObjectId_7        := _tmpItem.PersonalServiceListId
                                                                              )
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                              AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
@@ -680,7 +682,7 @@ BEGIN
                                               , inAmount   := _tmpItem.OperSumm
                                               , inOperDate := _tmpItem.OperDate
                                                )
-     FROM  -- для zc_Movement_ProfitLossService + zc_Object_Personal, т.к.может быть 1:N
+     FROM  -- для всех,  т.к.может быть 1:N, !!!сумма берется из _tmpItem_Child!!!
           (SELECT _tmpItem.MovementDescId
                 , _tmpItem.MovementItemId
                 , _tmpItem.OperSumm
@@ -708,7 +710,7 @@ BEGIN
                    AND _tmpItem_Master.MovementDescId <>  zc_Movement_SendDebt()
                 ) AS _tmpItem
           UNION ALL
-           -- для остальных, т.к. 1:1 + если zc_Object_BankAccount тогда OperSumm_Diff
+           -- для zc_Movement_SendDebt, т.к. всегда 1:1 но используется _tmpItem_Passive_SendDebt
            SELECT _tmpItem_Active.MovementDescId
                 , _tmpItem_Active.MovementItemId
                 , _tmpItem_Active.OperSumm + CASE WHEN _tmpItem_Active.ObjectDescId = zc_Object_BankAccount() THEN COALESCE (_tmpItem_Passive.OperSumm_Diff, 0) ELSE 0 END AS OperSumm

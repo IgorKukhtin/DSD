@@ -5,7 +5,7 @@
   ClientWidth = 605
   AddOnFormData.isSingle = False
   ExplicitWidth = 611
-  ExplicitHeight = 319
+  ExplicitHeight = 312
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -326,6 +326,7 @@
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -594,9 +595,9 @@
   object MoneyPlaceGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMoneyPlace
-    FormNameParam.Value = 'TMoneyPlace_ObjectForm'
+    FormNameParam.Value = 'TMoneyPlaceCash_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMoneyPlace_ObjectForm'
+    FormName = 'TMoneyPlaceCash_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

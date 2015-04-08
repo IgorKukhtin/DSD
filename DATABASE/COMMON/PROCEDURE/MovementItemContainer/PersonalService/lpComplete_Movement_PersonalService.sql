@@ -62,7 +62,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
-                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
         SELECT Movement.DescId
@@ -91,8 +91,9 @@ BEGIN
                -- Главное Юр.лицо: из какой кассы будет выплачено
              , zc_Juridical_Basis() AS JuridicalId_Basis
 
-             , COALESCE (MILinkObject_Unit.ObjectId, 0)     AS UnitId
-             , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
+             , COALESCE (MILinkObject_Unit.ObjectId, 0)                      AS UnitId
+             , COALESCE (MILinkObject_Position.ObjectId, 0)                  AS PositionId
+             , COALESCE (MovementLinkObject_PersonalServiceList.ObjectId, 0) AS PersonalServiceListId
 
                -- Филиал Баланс: всегда по подразделению !!!в кассе и р/счете - делать аналогично!!!
              , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
@@ -127,6 +128,10 @@ BEGIN
                                               ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
                                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
@@ -158,7 +163,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
-                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
         SELECT _tmpItem.MovementDescId
@@ -191,8 +196,9 @@ BEGIN
                -- Главное Юр.лицо: из какой кассы будет выплачено
              , _tmpItem.JuridicalId_Basis
 
-             , 0 AS UnitId     -- не используется
-             , 0 AS PositionId -- не используется
+             , 0 AS UnitId                -- не используется
+             , 0 AS PositionId            -- не используется
+             , 0 AS PersonalServiceListId -- не используется
 
                -- Филиал Баланс: не используется
              , 0 AS BranchId_Balance

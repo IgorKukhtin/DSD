@@ -75,6 +75,8 @@ type
     UnitName: TcxGridDBColumn;
     PositionCode: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
+    PersonalServiceListCode: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

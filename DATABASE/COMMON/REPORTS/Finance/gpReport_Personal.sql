@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_Personal(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (PersonalCode Integer, PersonalName TVarChar
+             , PersonalServiceListCode Integer, PersonalServiceListName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , PositionCode Integer, PositionName TVarChar
              , BranchName TVarChar
@@ -39,6 +40,8 @@ BEGIN
      SELECT
         Object_Personal.ObjectCode                                                                  AS PersonalCode,
         Object_Personal.ValueData                                                                   AS PersonalName,
+        Object_PersonalServiceList.ObjectCode                                                       AS PersonalServiceListCode,
+        Object_PersonalServiceList.ValueData                                                        AS PersonalServiceListName,
         Object_Unit.ObjectCode                                                                      AS UnitCode,
         Object_Unit.ValueData                                                                       AS UnitName,
         Object_Position.ObjectCode                                                                  AS PositionCode,
@@ -63,7 +66,7 @@ BEGIN
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
 
      FROM
-         (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId
+         (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId, Operation_all.PersonalServiceListId
                , Operation_all.BranchId, Operation_all.ServiceDate
                , SUM (Operation_all.StartAmount) AS StartAmount
                , SUM (Operation_all.DebetSumm)   AS DebetSumm
@@ -78,6 +81,7 @@ BEGIN
                 , tmpContainer.InfoMoneyId
                 , tmpContainer.UnitId
                 , tmpContainer.PositionId
+                , tmpContainer.PersonalServiceListId
                 , tmpContainer.BranchId
                 , tmpContainer.ServiceDate
                 , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)                                                                                   AS StartAmount
@@ -86,15 +90,16 @@ BEGIN
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)     AS ServiceSumm
                 , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                        AS EndAmount
-            FROM (SELECT CLO_Personal.ContainerId AS ContainerId
-                       , Container.ObjectId       AS AccountId
+            FROM (SELECT CLO_Personal.ContainerId         AS ContainerId
+                       , Container.ObjectId               AS AccountId
                        , Container.Amount
-                       , CLO_Personal.ObjectId    AS PersonalId
-                       , CLO_InfoMoney.ObjectId   AS InfoMoneyId
-                       , CLO_Unit.ObjectId        AS UnitId
-                       , CLO_Position.ObjectId    AS PositionId
-                       , CLO_Branch.ObjectId      AS BranchId
-                       , ObjectDate_Service.ValueData AS ServiceDate
+                       , CLO_Personal.ObjectId            AS PersonalId
+                       , CLO_InfoMoney.ObjectId           AS InfoMoneyId
+                       , CLO_Unit.ObjectId                AS UnitId
+                       , CLO_Position.ObjectId            AS PositionId
+                       , CLO_PersonalServiceList.ObjectId AS PersonalServiceListId
+                       , CLO_Branch.ObjectId              AS BranchId
+                       , ObjectDate_Service.ValueData     AS ServiceDate
                   FROM ContainerLinkObject AS CLO_Personal
                        INNER JOIN Container ON Container.Id = CLO_Personal.ContainerId AND Container.DescId = zc_Container_Summ()
                        INNER JOIN ContainerLinkObject AS CLO_InfoMoney
@@ -105,6 +110,8 @@ BEGIN
                                                      ON CLO_Position.ContainerId = Container.Id AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
                        LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                      ON CLO_Branch.ContainerId = Container.Id AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                       LEFT JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                     ON CLO_PersonalServiceList.ContainerId = Container.Id AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
                        LEFT JOIN ContainerLinkObject AS CLO_ServiceDate
                                                      ON CLO_ServiceDate.ContainerId = CLO_Personal.ContainerId
                                                     AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate()
@@ -124,15 +131,16 @@ BEGIN
                                                   ON MIContainer.Containerid = tmpContainer.ContainerId
                                                  AND MIContainer.OperDate >= inStartDate
                   LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
-            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.PersonalId, tmpContainer.InfoMoneyId, tmpContainer.UnitId, tmpContainer.PositionId, tmpContainer.BranchId, tmpContainer.ServiceDate, tmpContainer.Amount
+            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.PersonalId, tmpContainer.InfoMoneyId, tmpContainer.UnitId, tmpContainer.PositionId, tmpContainer.PersonalServiceListId, tmpContainer.BranchId, tmpContainer.ServiceDate, tmpContainer.Amount
 
            ) AS Operation_all
 
-          GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId, Operation_all.BranchId, Operation_all.ServiceDate
+          GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId, Operation_all.BranchId, Operation_all.ServiceDate, Operation_all.PersonalServiceListId
          ) AS Operation
 
 
      LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
+     LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = Operation.PersonalServiceListId
      LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = Operation.PersonalId
      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Operation.UnitId
      LEFT JOIN Object AS Object_Position ON Object_Position.Id = Operation.PositionId
@@ -146,14 +154,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.04.15                                        * all
  04.09.14                                                        *
-
-
 */
 
 -- тест

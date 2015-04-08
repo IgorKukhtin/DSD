@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 180
   Caption = 'MainForm'
   ClientHeight = 720
-  ClientWidth = 1240
+  ClientWidth = 1020
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 469
+    Width = 249
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -33,11 +33,12 @@ object MainForm: TMainForm
   object ButtonPanel: TPanel
     Left = 0
     Top = 664
-    Width = 1240
+    Width = 1020
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 1240
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -119,13 +120,14 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 469
+    Left = 249
     Top = 0
     Width = 321
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 469
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -699,13 +701,14 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 790
+    Left = 570
     Top = 0
     Width = 238
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitLeft = 790
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -1385,13 +1388,14 @@ object MainForm: TMainForm
     end
   end
   object CompleteDocumentPanel: TPanel
-    Left = 1028
+    Left = 808
     Top = 0
     Width = 212
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitLeft = 1028
     object Label3: TLabel
       Left = 6
       Top = 22
@@ -1497,7 +1501,7 @@ object MainForm: TMainForm
     object cbCompleteSend: TCheckBox
       Tag = 30
       Left = 15
-      Top = 190
+      Top = 206
       Width = 194
       Height = 17
       Caption = '2.1. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -1513,7 +1517,7 @@ object MainForm: TMainForm
     object cbCompleteSendOnPrice: TCheckBox
       Tag = 30
       Left = 15
-      Top = 210
+      Top = 224
       Width = 194
       Height = 17
       Caption = '2.2. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1092#1080#1083#1080#1072#1083#1072#1084#1080
@@ -1593,7 +1597,7 @@ object MainForm: TMainForm
     object cbCompleteInventory: TCheckBox
       Tag = 30
       Left = 15
-      Top = 365
+      Top = 370
       Width = 194
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -1609,7 +1613,7 @@ object MainForm: TMainForm
     object cbCompleteSaleIntNal: TCheckBox
       Tag = 30
       Left = 15
-      Top = 240
+      Top = 251
       Width = 200
       Height = 17
       Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'. - '#1053#1040#1051
@@ -1625,7 +1629,7 @@ object MainForm: TMainForm
     object cbCompleteReturnInIntNal: TCheckBox
       Tag = 30
       Left = 15
-      Top = 258
+      Top = 269
       Width = 200
       Height = 17
       Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'. - '#1053#1040#1051
@@ -1865,7 +1869,7 @@ object MainForm: TMainForm
     object cbCompleteOrderExternal: TCheckBox
       Tag = 30
       Left = 15
-      Top = 391
+      Top = 393
       Width = 194
       Height = 17
       Caption = '7.1. '#1047#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
@@ -1881,7 +1885,7 @@ object MainForm: TMainForm
     object cbCompleteOrderInternal: TCheckBox
       Tag = 30
       Left = 15
-      Top = 411
+      Top = 410
       Width = 194
       Height = 17
       Caption = '7.2. '#1047#1072#1103#1074#1082#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
@@ -1896,8 +1900,8 @@ object MainForm: TMainForm
     end
     object cbCompleteCash: TCheckBox
       Tag = 30
-      Left = 15
-      Top = 436
+      Left = 151
+      Top = 438
       Width = 194
       Height = 17
       Caption = '8. '#1050#1072#1089#1089#1072' Int - '#1053#1040#1051
@@ -1909,12 +1913,13 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 32
+      Visible = False
       OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteLoss: TCheckBox
       Tag = 30
       Left = 15
-      Top = 344
+      Top = 350
       Width = 106
       Height = 17
       Caption = '5. '#1057#1087#1080#1089#1072#1085#1080#1077
@@ -1929,7 +1934,7 @@ object MainForm: TMainForm
     end
     object cbCompleteLossNotError: TCheckBox
       Left = 137
-      Top = 344
+      Top = 350
       Width = 72
       Height = 17
       Caption = 'Not Error'
@@ -1955,6 +1960,38 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 35
+      OnClick = cbCompleteIncomeBNClick
+    end
+    object cbCompleteIncome_UpdateConrtact: TCheckBox
+      Tag = 30
+      Left = 16
+      Top = 178
+      Width = 194
+      Height = 17
+      Caption = '1.6. '#1048#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1088#1080#1093#1086#1076
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 36
+      OnClick = cbCompleteIncomeBNClick
+    end
+    object cbInsertHistoryCost_andReComplete: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 433
+      Width = 200
+      Height = 17
+      Caption = '10. !!!'#1057'/'#1057' + '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077'!!!'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 37
       OnClick = cbCompleteIncomeBNClick
     end
   end
@@ -2074,5 +2111,14 @@ object MainForm: TMainForm
       'select * from Object order by 1 desc')
     Left = 168
     Top = 464
+  end
+  object fromQueryDate: TADOQuery
+    Connection = fromADOConnection
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'select * from Goods where HasChildren<>-1 order by 1 desc')
+    Left = 320
+    Top = 504
   end
 end

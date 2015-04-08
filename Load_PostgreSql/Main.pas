@@ -181,6 +181,9 @@ type
     cbGoodsByGoodsKind: TCheckBox;
     cbOrderType: TCheckBox;
     cbPartnerIntUpdate: TCheckBox;
+    cbCompleteIncome_UpdateConrtact: TCheckBox;
+    cbInsertHistoryCost_andReComplete: TCheckBox;
+    fromQueryDate: TADOQuery;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -236,6 +239,7 @@ type
 
     procedure pCompleteDocument_Income(isLastComplete:Boolean);
     procedure pCompleteDocument_IncomeNal(isLastComplete:Boolean);
+    procedure pCompleteDocument_UpdateConrtact;
     procedure pCompleteDocument_ReturnOut(isLastComplete:Boolean);
     procedure pCompleteDocument_ReturnOutNal(isLastComplete:Boolean);
     procedure pCompleteDocument_Send(isLastComplete:Boolean);
@@ -2004,6 +2008,7 @@ begin
      else pCompleteDocument_List(FALSE);
      //
      if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then begin pCompleteDocument_Income(cbLastComplete.Checked);pCompleteDocument_IncomeNal(cbLastComplete.Checked);end;
+     if not fStop then pCompleteDocument_UpdateConrtact;
      if not fStop then pCompleteDocument_ReturnOut(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ReturnOutNal(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_Send(cbLastComplete.Checked);
@@ -3065,6 +3070,7 @@ begin
                   Add('     , case when trim(isnull(ClientInformation.KodSvid,NSvid)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.KodSvid,NSvid)) else trim(NSvid) end as inNumberVAT');
                   Add('     , case when trim(isnull(ClientInformation.FioBuh,FioB)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.FioBuh,FioB)) else trim(FioB) end as inAccounterName');
                   Add('     , null as inBankAccount');
+                  Add('     , _pgPartner.Main');
                   Add('     , _pgPartner_find.Id as pgPartnerId, _pgPartner_find_two.Id as pgPartnerId_two');
                   Add('     , _pgPartner_find.OKPO as inOKPO');
                   Add('     , _pgPartner_find.JuridicalDetailsId_pg as JuridicalDetailsId_Postgres');
@@ -9405,12 +9411,18 @@ end;
 procedure TMainForm.pInsertHistoryCost;
 var calcStartDate,calcEndDate:TDateTime;
     Year, Month, Day: Word;
+    myComponent:TADOQuery;
 begin
      if (not cbInsertHistoryCost.Checked)or(not cbInsertHistoryCost.Enabled) then exit;
      //
      myEnabledCB(cbInsertHistoryCost);
      //
-     with fromQuery,Sql do begin
+     //
+     if cbInsertHistoryCost_andReComplete.Checked
+     then myComponent:=fromQueryDate
+     else myComponent:=fromQuery;
+     //
+     with myComponent,Sql do begin
         Close;
         Clear;
         //
@@ -9456,12 +9468,39 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             StartDateCompleteEdit.Text:=DateToStr(FieldByName('StartDate').AsDateTime);
+             EndDateCompleteEdit.Text:=DateToStr(FieldByName('EndDate').AsDateTime);
+             //
+             //
+             //
+             if cbInsertHistoryCost_andReComplete.Checked
+             then begin
+                       cbComplete_List.Checked:=true;
+                       pCompleteDocument_List(true);
+                      //ShowMessage('pCompleteDocument_List-1');
+                  end;
+             //
+             //
+             //
+             //
              toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
              toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
              toStoredProc.Params.ParamByName('inItearationCount').Value:=800;
              toStoredProc.Params.ParamByName('inInsert').Value:=12345;//захардкодил
              toStoredProc.Params.ParamByName('inDiffSumm').Value:=0.009;
-             if not myExecToStoredProc then ;//exit;
+             //ShowMessage('pInsertHistoryCost');
+             if not myExecToStoredProc then exit;
+             //
+             //
+             //
+             if cbInsertHistoryCost_andReComplete.Checked
+             then begin
+                       cbComplete_List.Checked:=true;
+                       pCompleteDocument_List(false);
+                       //ShowMessage('pCompleteDocument_List-2');
+                  end;
+             //
+             //
              //
              Next;
              Application.ProcessMessages;
@@ -10470,6 +10509,120 @@ begin
      end;
      //
      myDisabledCB(cbIncomeBN);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_UpdateConrtact;
+begin
+     if (not cbCompleteIncome_UpdateConrtact.Checked)or(not cbCompleteIncome_UpdateConrtact.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteIncome_UpdateConrtact);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , cast (Bill.BillNumber as integer) as InvNumber');
+        Add('     , Bill.MoneyKindId');
+        Add('     , zc_mkBN() as zc_mkBN');
+        Add('     , UnitFrom.UnitName, UnitTo.UnitName');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromID');
+        Add('     left join dba.Unit as UnitTo on UnitTo.Id = Bill.ToID');
+
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
+        begin
+             Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
+                +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+             Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id');
+        end;
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind=zc_bkIncomeToUnit()'
+           +'  and Id_Postgres >0'
+           +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
+           +'  and Bill.FromId not in (5347)' //ИЗЛИШКИ ПО ПРИХОДУ СО
+           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and isUnitFrom.UnitId is null'
+           +'  and UnitFrom.PersonalId_Postgres is null'
+           //!!!!!!+'  and Bill.MoneyKindId = zc_mkNal()'
+           );
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
+        begin
+             Add(' and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
+        end;
+
+        Add('order by OperDate,ObjectId');
+        Open;
+
+
+        cbCompleteIncome_UpdateConrtact.Caption:='1.6. ('+IntToStr(RecordCount)+') Исправление договора приход';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpReComplete_Movement_Income_Sybase';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             // !!!договор!!!
+                  fOpenSqToQuery (' select ObjectLink.ChildObjectId as JuridicalId'
+                                 +'      , Object_Contract_View.JuridicalId as JuridicalId_Contract'
+                                 +'      , Object_Contract_View.InfoMoneyId'
+                                 +'      , Object_InfoMoney.ObjectCode as CodeIM'
+                                 +' from MovementLinkObject'
+                                 +'      left join Object_Contract_View on Object_Contract_View.ContractId = MovementLinkObject.ObjectId'
+                                 +'      left join Object as Object_InfoMoney on Object_InfoMoney.Id = Object_Contract_View.InfoMoneyId'
+                                 +'      left join MovementLinkObject as MLO_From on MLO_From.MovementId = MovementLinkObject.MovementId'
+                                 +'                                              and MLO_From.DescId = zc_MovementLinkObject_From()'
+                                 +'      left join ObjectLink on ObjectLink.ObjectId = MLO_From.ObjectId'
+                                 +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where MovementLinkObject.MovementId='+IntToStr(FieldByName('Id_Postgres').AsInteger)
+                                 +'   and MovementLinkObject.DescId=zc_MovementLinkObject_Contract()'
+                                 );
+
+           if toSqlQuery.FieldByName('JuridicalId').AsInteger<>toSqlQuery.FieldByName('JuridicalId_Contract').AsInteger
+           then begin
+               toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+               //находим договор БН
+               if FieldByName('MoneyKindId').AsInteger = FieldByName('zc_mkBN').AsInteger
+               then toStoredProc.Params.ParamByName('inContractId').Value:=fFindIncome_ContractId_pg(toSqlQuery.FieldByName('JuridicalId').AsInteger
+                                                                                                    ,toSqlQuery.FieldByName('CodeIM').AsInteger
+                                                                                                    ,toSqlQuery.FieldByName('InfoMoneyId').AsInteger
+                                                                                                    ,zc_Enum_PaidKind_FirstForm
+                                                                                                    ,FieldByName('OperDate').AsDateTime)
+               else toStoredProc.Params.ParamByName('inContractId').Value:=fFindIncome_ContractId_pg(toSqlQuery.FieldByName('JuridicalId').AsInteger
+                                                                                                    ,toSqlQuery.FieldByName('CodeIM').AsInteger
+                                                                                                    ,toSqlQuery.FieldByName('InfoMoneyId').AsInteger
+                                                                                                    ,zc_Enum_PaidKind_SecondForm
+                                                                                                    ,FieldByName('OperDate').AsDateTime);
+
+               if not myExecToStoredProc then ;//exit;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteIncome_UpdateConrtact);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_IncomeNal(isLastComplete:Boolean);
@@ -12636,14 +12789,22 @@ begin
              end;
                   // проверка что он проведется
                   fOpenSqToQuery (' select COALESCE (MLO_To.ObjectId, 0) AS ToId'
+                                 +'       ,COALESCE (MLO_Contract.ObjectId, 0) AS ContractId'
                                  +' from Movement'
                                  +'      LEFT JOIN MovementLinkObject AS MLO_To'
                                  +'                                   ON MLO_To.MovementId = Movement.Id'
                                  +'                                  AND MLO_To.DescId = zc_MovementLinkObject_To()'
+                                 +'      LEFT JOIN MovementLinkObject AS MLO_Contract'
+                                 +'                                   ON MLO_Contract.MovementId = Movement.Id'
+                                 +'                                  AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()'
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_Sale()'
                                  );
-             if (cbComplete.Checked)and(toSqlQuery.FieldByName('ToId').AsInteger>0)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger) then
+             if (cbComplete.Checked)
+                and(toSqlQuery.FieldByName('ToId').AsInteger>0)
+                and(toSqlQuery.FieldByName('ContractId').AsInteger>0)
+                and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger)
+             then
              begin
                   toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                   toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
@@ -12773,15 +12934,22 @@ begin
              if (cbComplete.Checked)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkNal').AsInteger) then
              begin
                   // проверка что он проведется
-                  fOpenSqToQuery (' select COALESCE (MLO_Contract.ObjectId, 0) AS ContractId'
+                  fOpenSqToQuery (' select COALESCE (MLO_To.ObjectId, 0) AS ToId'
+                                 +'       ,COALESCE (MLO_Contract.ObjectId, 0) AS ContractId'
                                  +' from Movement'
+                                 +'      LEFT JOIN MovementLinkObject AS MLO_To'
+                                 +'                                   ON MLO_To.MovementId = Movement.Id'
+                                 +'                                  AND MLO_To.DescId = zc_MovementLinkObject_To()'
                                  +'      LEFT JOIN MovementLinkObject AS MLO_Contract'
                                  +'                                   ON MLO_Contract.MovementId = Movement.Id'
                                  +'                                  AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()'
                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
                                  +'   AND Movement.DescId = zc_Movement_Sale()'
                                  );
-                  if (toSqlQuery.FieldByName('ContractId').AsInteger>0)or(FieldByName('isTare').AsInteger=zc_rvYes)
+                  if (FieldByName('isTare').AsInteger=zc_rvYes)
+                    or ((toSqlQuery.FieldByName('ToId').AsInteger>0)
+                     and(toSqlQuery.FieldByName('ContractId').AsInteger>0)
+                       )
                   then begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
@@ -19261,6 +19429,13 @@ begin
      if (ParamStr(2)='autoReComplete') and (isBefoHistoryCost = FALSE)
      then fOpenSqToQuery ('select * from gpComplete_SelectAllBranch_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)')
      else
+
+     if (isBefoHistoryCost = TRUE)and(cbInsertHistoryCost_andReComplete.Checked)
+     then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
+     else if (isBefoHistoryCost = FALSE)and(cbInsertHistoryCost_andReComplete.Checked)
+          then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)')
+          else
+
      if isBefoHistoryCost = TRUE
      then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
      else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)');
@@ -19317,10 +19492,10 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='';//gpUnComplete_Movement
+        {toStoredProc.StoredProcName:='';//gpUnComplete_Movement
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);}
         //
         toStoredProc_two.StoredProcName:='gpComplete_All_Sybase';
         toStoredProc_two.OutputType := otResult;

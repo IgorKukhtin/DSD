@@ -72,10 +72,15 @@ BEGIN
                                    , MILinkObject_Unit.ObjectId                             AS UnitId
                                    , MILinkObject_Position.ObjectId                         AS PositionId
                                    , MILinkObject_InfoMoney.ObjectId                        AS InfoMoneyId
+                                   , MLO_PersonalServiceList.ObjectId                       AS PersonalServiceListId
                               FROM Movement
                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                           AND MovementItem.DescId = zc_MI_Master()
                                                           AND MovementItem.isErased = FALSE
+                                                          AND MovementItem.Amount <> 0
+                                   LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                                ON MLO_PersonalServiceList.MovementId = Movement.Id
+                                                               AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                     ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -115,6 +120,7 @@ BEGIN
                                      , MILinkObject_Unit.ObjectId
                                      , MILinkObject_Position.ObjectId
                                      , MILinkObject_InfoMoney.ObjectId
+                                     , MLO_PersonalServiceList.ObjectId
                              )
            , tmpContainer AS (SELECT CLO_ServiceDate.ContainerId
                                    , tmpParent.PersonalId
@@ -141,6 +147,10 @@ BEGIN
                                                                   ON CLO_Position.ObjectId = tmpParent.PositionId
                                                                  AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
                                                                  AND CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
+                                   INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                                  ON CLO_PersonalServiceList.ObjectId = tmpParent.PersonalServiceListId
+                                                                 AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
+                                                                 AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
                              )
                 , tmpCash AS (SELECT SUM (CASE WHEN MIContainer.MovementId =  inMovementId THEN MIContainer.Amount ELSE 0 END) AS Amount_current
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalAvance()  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
