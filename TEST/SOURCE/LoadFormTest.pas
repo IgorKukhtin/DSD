@@ -154,6 +154,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementForm');
+//
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_PersonalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccount_PersonalJournalForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountFormTest;
