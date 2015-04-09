@@ -282,7 +282,7 @@ object Member_ObjectDescForm: TMember_ObjectDescForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Member'
+    StoredProcName = 'gpSelect_Object_Member_Desc'
     DataSet = MasterCDS
     DataSets = <
       item

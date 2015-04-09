@@ -172,6 +172,7 @@ BEGIN
                                          INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
                                                                        ON MLO_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
                                                                       AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                                                      -- AND MLO_PersonalServiceList.ObjectId <> 298695 
                                     ORDER BY MovementDate_ServiceDate.ValueData DESC, MovementItem.Amount DESC
                                     LIMIT 1
                                    );

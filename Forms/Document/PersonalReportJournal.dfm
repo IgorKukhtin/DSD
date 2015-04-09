@@ -1,5 +1,5 @@
 inherited PersonalReportJournalForm: TPersonalReportJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' ('#1072#1074#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1095#1077#1090')>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1074#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1095#1077#1090'>'
   ClientHeight = 649
   ClientWidth = 1151
   ExplicitWidth = 1167
@@ -479,6 +479,15 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
   inherited PeriodChoice: TPeriodChoice
     Left = 232
     Top = 232
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesMember
+      end>
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_PersonalReport'

@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpGet_Movement_PersonalReport (Integer, Integer, Integer
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalReport(
     IN inMovementId        Integer   , -- ключ Документа
     IN inMovementId_Value  Integer   ,
-    IN inPersonalId        Integer   ,
+    IN inMemberId          Integer   ,
     IN inOperDate          TDateTime , --
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -31,10 +31,11 @@ BEGIN
      --новый
      IF (COALESCE (inMovementId, 0) = 0) AND (COALESCE (inMovementId_Value, 0) = 0)
      THEN
-         IF COALESCE (inMemberId, 0) = 0
-         THEN 
-             RAISE EXCEPTION 'Ошибка. Не установлено значение <Подотчет (ФИО)>.';
-         END IF;
+          -- проверка
+          IF COALESCE (inMemberId, 0) = 0
+          THEN 
+              RAISE EXCEPTION 'Ошибка. Не установлено значение <Подотчет (ФИО)>.';
+          END IF;
 
      RETURN QUERY
        SELECT
@@ -87,7 +88,7 @@ BEGIN
            , Object_MoneyPlace.Id               AS MoneyPlaceId
            , Object_MoneyPlace.ValueData        AS MoneyPlaceName
            , Object_Car.Id                      AS CarId
-           , (COALESCE (Object_CarModel.ValueData, '') || '' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
+           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = zc_Enum_Status_UnComplete()
@@ -127,9 +128,14 @@ BEGIN
 
    END IF;
 
-   --существующий
+   -- существующий
    IF (COALESCE (inMovementId, 0) <> 0)
    THEN
+
+          -- проверка
+          PERFORM lpCheck_Movement_PersonalReport (inMovementId:= inMovementId, inComment:= 'изменен', inUserId:= vbUserId);
+
+
    RETURN QUERY
        SELECT
              Movement.Id                        AS Id
@@ -158,7 +164,7 @@ BEGIN
            , Object_MoneyPlace.Id               AS MoneyPlaceId
            , Object_MoneyPlace.ValueData        AS MoneyPlaceName
            , Object_Car.Id                      AS CarId
-           , (COALESCE (Object_CarModel.ValueData, '') || '' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
+           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
        FROM Movement
 
@@ -211,4 +217,4 @@ ALTER FUNCTION gpGet_Movement_PersonalReport (Integer, Integer, Integer, TDateTi
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PersonalReport (inMovementId:= 1, inMovementId_Value:=0,  inPersonalId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_PersonalReport (inMovementId:= 1, inMovementId_Value:=0,  inMemberId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin());

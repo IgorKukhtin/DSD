@@ -72,29 +72,33 @@ BEGIN
            , ObjectDesc.ItemName
            , Object_Branch.ObjectCode           AS BranchCode
            , Object_Branch.ValueData            AS BranchName
-           , (COALESCE (Object_CarModel.ValueData, '') || '' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
+           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
        FROM (SELECT CLO_Member.ContainerId     AS ContainerId
                   , CLO_Member.ObjectId        AS MemberId
-                  , MIContainer.MovementDescId AS MovementDescId
+                  , Movement.DescId            AS MovementDescId
                   , Movement.InvNumber
                   , Movement.StatusId
-                  , MIContainer.MovementId
-                  , MIContainer.OperDate
-                  , MIContainer.MovementItemId
-                  , MIContainer.Amount
+                  , MIReport.MovementId
+                  , MIReport.OperDate
+                  , MIReport.MovementItemId
+                  , MIReport.Amount * CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN -1 ELSE 1 END AS Amount
                   , CLO_InfoMoney.ObjectId AS InfoMoneyId
                   , CLO_Branch.ObjectId    AS BranchId
-                  , 0 AS UnitId
-                  , 0 AS MoneyPlaceId
+                  -- , 0 AS UnitId
+                  , COALESCE (ContainerLO_Member_inf.ObjectId, COALESCE (ContainerLO_Cash_inf.ObjectId, COALESCE (ContainerLO_BankAccount_inf.ObjectId, ContainerLO_Juridical_inf.ObjectId))) AS MoneyPlaceId
                   , CLO_Car.ObjectId       AS CarId
 
              FROM ContainerLinkObject AS CLO_Member
-                  INNER JOIN MovementItemContainer AS MIContainer
-                                                   ON MIContainer.ContainerId = CLO_Member.ContainerId
-                                                  AND MIContainer.DescId = zc_MIContainer_Summ()
-                                                  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                  LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                  INNER JOIN ReportContainerLink ON ReportContainerLink.ContainerId = CLO_Member.ContainerId
+                  INNER JOIN MovementItemReport AS MIReport 
+                                                ON MIReport.ReportContainerId = ReportContainerLink.ReportContainerId
+                                               AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
+                                               AND MIReport.Amount <> 0
+                  LEFT JOIN Movement ON Movement.Id = MIReport.MovementId
+                  LEFT JOIN ContainerLinkObject AS CLO_Goods
+                                                ON CLO_Goods.ContainerId = CLO_Member.ContainerId
+                                               AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
                   LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                                 ON CLO_InfoMoney.ContainerId = CLO_Member.ContainerId
                                                AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -104,8 +108,21 @@ BEGIN
                   LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                 ON CLO_Branch.ContainerId = CLO_Member.ContainerId
                                                AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                  LEFT JOIN ContainerLinkObject AS ContainerLO_Member_inf ON ContainerLO_Member_inf.ContainerId = CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN MIReport.ActiveContainerId ELSE MIReport.PassiveContainerId END
+                                                                         AND ContainerLO_Member_inf.DescId = zc_ContainerLinkObject_Member()
+                                                                         AND ContainerLO_Member_inf.ObjectId > 0
+                  LEFT JOIN ContainerLinkObject AS ContainerLO_Cash_inf ON ContainerLO_Cash_inf.ContainerId = CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN MIReport.ActiveContainerId ELSE MIReport.PassiveContainerId END
+                                                                       AND ContainerLO_Cash_inf.DescId = zc_ContainerLinkObject_Cash()
+                                                                       AND ContainerLO_Cash_inf.ObjectId > 0
+                  LEFT JOIN ContainerLinkObject AS ContainerLO_BankAccount_inf ON ContainerLO_BankAccount_inf.ContainerId = CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN MIReport.ActiveContainerId ELSE MIReport.PassiveContainerId END
+                                                                              AND ContainerLO_BankAccount_inf.DescId = zc_ContainerLinkObject_BankAccount()
+                                                                              AND ContainerLO_BankAccount_inf.ObjectId > 0
+                  LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical_inf ON ContainerLO_Juridical_inf.ContainerId = CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN MIReport.ActiveContainerId ELSE MIReport.PassiveContainerId END
+                                                                            AND ContainerLO_Juridical_inf.DescId = zc_ContainerLinkObject_Juridical()
+                                                                            AND ContainerLO_Juridical_inf.ObjectId > 0
              WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
                AND (CLO_Member.ObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
+               AND CLO_Goods.ContainerId IS NULL
 
             UNION
              SELECT 0 AS ContainerId
@@ -119,7 +136,7 @@ BEGIN
                   , MovementItem.Amount
                   , MILinkObject_InfoMoney.ObjectId  AS InfoMoneyId
                   , 0                                AS BranchId
-                  , MILinkObject_Unit.ObjectId       AS UnitId
+                  -- , MILinkObject_Unit.ObjectId       AS UnitId
                   , MILinkObject_MoneyPlace.ObjectId AS MoneyPlaceId
                   , MILinkObject_Car.ObjectId        AS CarId
              FROM tmpStatus
@@ -130,9 +147,6 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                    ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                                    ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
@@ -146,6 +160,9 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMovement.MovementDescId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = tmpMovement.MovementItemId
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpMovement.MovementItemId
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -153,7 +170,7 @@ BEGIN
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMovement.MemberId
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMovement.BranchId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpMovement.InfoMoneyId
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovement.UnitId
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId -- tmpMovement.UnitId
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = tmpMovement.MoneyPlaceId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpMovement.CarId

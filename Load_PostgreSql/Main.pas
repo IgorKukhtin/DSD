@@ -15328,7 +15328,6 @@ begin
 
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
-             Add('     left outer join dba.Unit as UnitTo on UnitTo.ID = Bill.ToID');
              Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitTo.InformationFromUnitID'
                 +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
              Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitTo.Id');
@@ -15745,7 +15744,6 @@ begin
 
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
-             Add('     left outer join dba.Unit as UnitTo on UnitTo.ID = Bill.ToID');
              Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitTo.InformationFromUnitID'
                 +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
              Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitTo.Id');

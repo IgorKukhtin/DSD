@@ -29,28 +29,38 @@ BEGIN
      -- таблица - расходы для Master
      CREATE TEMP TABLE _tmpChild (MasterContainerId Integer, ContainerId Integer, MasterContainerId_Count Integer, ContainerId_Count Integer, OperCount TFloat) ON COMMIT DROP;
 
+     -- таблица - расходы для Master
+     CREATE TEMP TABLE _tmpUnit_only (UnitId Integer) ON COMMIT DROP;
+     INSERT INTO _tmpUnit_only (UnitId)
+        SELECT 345023 -- Кротон хранение
+       UNION ALL
+        SELECT 403933 -- Дюков хранение
+       UNION ALL
+        SELECT 8455   -- Склад специй
+       ;
+
 
      -- таблица
      CREATE TEMP TABLE _tmpContainer_only (ContainerId Integer) ON COMMIT DROP;
 
-        with tmp as (select MIContainer.MovementId
+        WITH tmp AS (SELECT MIContainer.MovementId
                      FROM Container
-                          inner JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                          INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                   ON ContainerLinkObject_Unit.ContainerId = Container.Id
                                  AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                 AND ContainerLinkObject_Unit.ObjectId in (345023 -- Кротон хранение
-                                                                         , 403933 )-- Дюков хранение
+                          INNER JOIN _tmpUnit_only ON _tmpUnit_only.UnitId = ContainerLinkObject_Unit.ObjectId
+
                           LEFT JOIN MovementItemContainer AS MIContainer
                                                           ON MIContainer.ContainerId = Container.Id
                                                          AND MIContainer.OperDate between  inStartDate and inEndDate
-                     group by MIContainer.MovementId
-                     )
-     insert into _tmpContainer_only (ContainerId) 
-         select MIContainer.ContainerId
-         from tmp
+                     GROUP BY MIContainer.MovementId
+                    )
+     INSERT INTO _tmpContainer_only (ContainerId) 
+         SELECT MIContainer.ContainerId
+         FROM tmp
               LEFT JOIN MovementItemContainer AS MIContainer
                                               ON MIContainer.MovementId = tmp.MovementId
-         group by MIContainer.ContainerId;
+         GROUP BY MIContainer.ContainerId;
 
 
      -- заполняем таблицу Количество и Сумма - ост, приход, расход
@@ -480,10 +490,11 @@ BEGIN
 
      -- Удаляем предыдущую с/с
      DELETE FROM HistoryCost WHERE ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))
-and HistoryCost.ContainerId in (select ContainerLinkObject.ContainerId from ContainerLinkObject  where ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
-                                          AND ContainerLinkObject.ObjectId in ( 345023 -- Кротон хранение
-                                              , 403933 )-- Дюков хранение
-);
+                               AND HistoryCost.ContainerId IN (SELECT ContainerLinkObject.ContainerId
+                                                               FROM ContainerLinkObject
+                                                               WHERE ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+                                                                 AND ContainerLinkObject.ObjectId IN (SELECT _tmpUnit_only.UnitId FROM _tmpUnit_only)
+                                                              );
 
      -- Сохраняем что насчитали
      INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, OutCount, OutSumm)
@@ -501,9 +512,10 @@ and HistoryCost.ContainerId in (select ContainerLinkObject.ContainerId from Cont
              , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.OutCount, _tmpMaster.OutSumm
         FROM _tmpMaster
         WHERE ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) <> 0)
-           and _tmpMaster.ContainerId in (select ContainerLinkObject.ContainerId from ContainerLinkObject  where ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
-                                                                         AND ContainerLinkObject.ObjectId in ( 345023 -- Кротон хранение
-                                              , 403933 )-- Дюков хранение
+           AND _tmpMaster.ContainerId IN (SELECT ContainerLinkObject.ContainerId
+                                          FROM ContainerLinkObject
+                                          WHERE ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+                                            AND ContainerLinkObject.ObjectId IN (SELECT _tmpUnit_only.UnitId FROM _tmpUnit_only)
                                          )
         ;                  
 
@@ -658,4 +670,3 @@ LANGUAGE PLPGSQL VOLATILE;
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inItearationCount:= 500, inInsert:= 12345, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
-

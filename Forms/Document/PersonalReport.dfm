@@ -1,6 +1,6 @@
 ﻿inherited PersonalReportForm: TPersonalReportForm
   ActiveControl = ceAmountDebet
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' ('#1072#1074#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1095#1077#1090')>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1074#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1095#1077#1090'>'
   ClientHeight = 313
   ClientWidth = 605
   AddOnFormData.isSingle = False
@@ -455,7 +455,7 @@
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -479,7 +479,7 @@
     FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectDescForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -510,15 +510,6 @@
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
-      item
-        Guides = GuidesMember
-      end
-      item
-        Guides = GuidesMoneyPlace
-      end
-      item
-        Guides = GuidesUnit
-      end
       item
         Guides = GuidesInfoMoney
       end>
@@ -577,7 +568,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'TextValue'
+        Name = 'NameAll'
         Value = ''
         Component = GuidesCar
         ComponentItem = 'TextValue'
