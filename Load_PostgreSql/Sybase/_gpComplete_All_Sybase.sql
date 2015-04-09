@@ -164,7 +164,20 @@ BEGIN
              PERFORM gpComplete_Movement_ProfitLossService (inMovementId     := inMovementId
                                                           , inSession        := zfCalc_UserAdmin());
      ELSE
+
+
+     -- !!!14. - Income!!!
+     IF vbMovementDescId = zc_Movement_Income() AND 1=0
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             -- !!! проводим - Income !!!
+             PERFORM gpComplete_Movement_Income (inMovementId     := inMovementId
+                                               , inIsLastComplete := NULL
+                                               , inSession        := zfCalc_UserAdmin());
+     ELSE
+
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
      END IF;
      END IF;
      END IF;

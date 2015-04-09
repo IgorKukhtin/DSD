@@ -180,7 +180,7 @@ BEGIN
                          THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                     ELSE COALESCE (ObjectLink_Partner_Branch.ChildObjectId, COALESCE (ObjectLink_MoneyPlace_Branch.ChildObjectId, COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis())))
                END AS BranchId_Balance
-               -- Филиал ОПиУ: всегда по подразделению !!!но для ЗП - не используется!!!
+               -- Филиал ОПиУ: всегда по подразделению !!!но для выплаты ЗП - не используется!!!
              , CASE WHEN MI_Child.Id > 0
                          THEN 0
                     ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0)
@@ -234,7 +234,7 @@ BEGIN
                                              AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
 
              LEFT JOIN ObjectLink AS ObjectLink_MoneyPlace_Branch ON ObjectLink_MoneyPlace_Branch.ObjectId = MILinkObject_MoneyPlace.ObjectId
-                                                                 AND ObjectLink_MoneyPlace_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                                                 AND ObjectLink_MoneyPlace_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
 
              LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId

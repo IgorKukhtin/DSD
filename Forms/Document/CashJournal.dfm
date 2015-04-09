@@ -222,6 +222,21 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 111
           end
+          object PersonalServiceListCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1074#1077#1076#1084'.'
+            DataBinding.FieldName = 'PersonalServiceListCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object PersonalServiceListName: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
+            DataBinding.FieldName = 'PersonalServiceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -286,6 +301,14 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 55
+          end
+          object UnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'UnitCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object clUnitName: TcxGridDBColumn

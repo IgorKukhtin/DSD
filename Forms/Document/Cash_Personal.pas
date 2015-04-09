@@ -76,6 +76,11 @@ type
     actMasterPost: TDataSetPost;
     mactInsertUpdateMIAmount_One: TMultiAction;
     mactList: TMultiAction;
+    SummMinus: TcxGridDBColumn;
+    SummAdd: TcxGridDBColumn;
+    SummSocialIn: TcxGridDBColumn;
+    SummSocialAdd: TcxGridDBColumn;
+    SummChild: TcxGridDBColumn;
   private
     { Private declarations }
   public

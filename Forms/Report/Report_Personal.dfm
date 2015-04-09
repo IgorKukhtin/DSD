@@ -1,26 +1,26 @@
 inherited Report_PersonalForm: TReport_PersonalForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'>'
   ClientHeight = 555
-  ClientWidth = 1020
-  ExplicitWidth = 1036
+  ClientWidth = 1028
+  ExplicitWidth = 1044
   ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1020
+    Width = 1028
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1020
     ExplicitHeight = 472
     ClientRectBottom = 472
-    ClientRectRight = 1020
+    ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1028
         Height = 472
         ExplicitWidth = 1020
         ExplicitHeight = 472
@@ -406,7 +406,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1028
     Height = 57
     ExplicitWidth = 1020
     ExplicitHeight = 57
@@ -548,7 +548,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AccountGuides
+        Component = GuidesAccount
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -574,19 +574,19 @@ inherited Report_PersonalForm: TReport_PersonalForm
           'Date')
       end
       item
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1883,35 +1883,35 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inBranchId'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyGroupId'
         Value = ''
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Value = ''
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -2004,7 +2004,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = PeriodChoice
       end
       item
-        Component = BranchGuides
+        Component = GuidesBranch
       end
       item
         Component = deServiceDate
@@ -2013,31 +2013,31 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = cbServiceDate
       end
       item
-        Component = AccountGuides
+        Component = GuidesAccount
       end
       item
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
       end
       item
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
       end>
     Top = 236
   end
-  object InfoMoneyGroupGuides: TdsdGuides
+  object GuidesInfoMoneyGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyGroup
-    FormNameParam.Value = 'TInfoMoneyGroupForm'
+    FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoneyGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoneyGroup_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2045,26 +2045,31 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
       end>
     Left = 648
     Top = 29
   end
-  object InfoMoneyDestinationGuides: TdsdGuides
+  object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
-    FormNameParam.Value = 'TInfoMoneyDestinationForm'
+    FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoneyDestinationForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoneyDestination_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2072,60 +2077,75 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
       end>
     Left = 776
     Top = 29
   end
-  object InfoMoneyGuides: TdsdGuides
+  object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoney_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
         DataType = ftString
       end>
     Left = 920
     Top = 29
   end
-  object AccountGuides: TdsdGuides
+  object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
-    FormNameParam.Value = 'TAccount_ObjectForm'
+    FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccount_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TAccount_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValueAll'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
       end>
     Left = 496
     Top = 24
@@ -2276,18 +2296,18 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Left = 240
     Top = 232
   end
-  object BranchGuides: TdsdGuides
+  object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBranch
-    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBranchForm'
+    FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2295,7 +2315,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

@@ -36,6 +36,7 @@ type
     BranchName: TcxGridDBColumn;
     UnitCode: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
+    MoneyPlaceCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

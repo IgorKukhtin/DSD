@@ -204,11 +204,6 @@
         Name = 'inMovementId_Value'
         Value = '0'
         ParamType = ptInput
-      end
-      item
-        Name = 'const_DescCode'
-        Value = 'zc_Object_Member'
-        DataType = ftString
       end>
     Left = 56
     Top = 242
@@ -476,29 +471,35 @@
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
+    FormNameParam.Value = 'TMember_ContainerForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoney_ObjectDescForm'
+    FormName = 'TMember_ContainerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'Key'
+        Name = 'InfoMoneyId'
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
       end
       item
-        Name = 'TextValue'
+        Name = 'InfoMoneyName_all'
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'inDescCode'
+        Name = 'MasterMemberId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'const_DescCode'
+        Component = GuidesMember
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterMemberName'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 470
@@ -543,9 +544,7 @@
       end
       item
         Name = 'inDescCode'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'const_DescCode'
+        Value = 'zc_Object_Member'
         DataType = ftString
       end>
     Left = 109

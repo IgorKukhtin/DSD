@@ -50,12 +50,14 @@ object Branch_ObjectForm: TBranch_ObjectForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 84
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 246
       end
@@ -63,6 +65,7 @@ object Branch_ObjectForm: TBranch_ObjectForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 57
       end
@@ -224,11 +227,13 @@ object Branch_ObjectForm: TBranch_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -246,6 +251,7 @@ object Branch_ObjectForm: TBranch_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 200
     Top = 192
   end

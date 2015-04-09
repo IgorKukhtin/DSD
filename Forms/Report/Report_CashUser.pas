@@ -18,14 +18,14 @@ uses
 
 type
   TReport_CashUserForm = class(TAncestorReportForm)
-    colAccountName: TcxGridDBColumn;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
+    AccountName: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
     StartAmount: TcxGridDBColumn;
     EndAmount: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
     bbPrint: TdxBarButton;
-    colInfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
     DebetSumm: TcxGridDBColumn;
     KreditSumm: TcxGridDBColumn;
     SaleJournal: TdsdOpenForm;
@@ -44,10 +44,10 @@ type
     MoneyPlaceName: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     ceCash: TcxButtonEdit;
-    CashGuides: TdsdGuides;
+    GuidesCash: TdsdGuides;
     cxLabel3: TcxLabel;
     edAccount: TcxButtonEdit;
-    AccountGuides: TdsdGuides;
+    GuidesAccount: TdsdGuides;
     spSelectPrint: TdsdStoredProc;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -56,13 +56,20 @@ type
     StartAmountK: TcxGridDBColumn;
     EndAmountD: TcxGridDBColumn;
     EndAmountK: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colGroupName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    GroupName: TcxGridDBColumn;
     GroupId: TcxGridDBColumn;
     actPrint_byElements: TdsdPrintAction;
     actPrint_byElements_byComments: TdsdPrintAction;
     bbPrint_byElements: TdxBarButton;
     bbPrint_byElements_byComments: TdxBarButton;
+    UnitCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    ProfitLossGroupCode: TcxGridDBColumn;
+    ProfitLossGroupName: TcxGridDBColumn;
+    ProfitLossDirectionCode: TcxGridDBColumn;
+    ProfitLossDirectionName: TcxGridDBColumn;
+    MoneyPlaceCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

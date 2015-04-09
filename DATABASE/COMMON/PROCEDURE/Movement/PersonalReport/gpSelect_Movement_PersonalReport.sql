@@ -74,9 +74,9 @@ BEGIN
            , Object_Branch.ValueData            AS BranchName
            , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
-       FROM (SELECT CLO_Member.ContainerId     AS ContainerId
-                  , CLO_Member.ObjectId        AS MemberId
-                  , Movement.DescId            AS MovementDescId
+       FROM (SELECT CLO_Member.ContainerId AS ContainerId
+                  , CLO_Member.ObjectId    AS MemberId
+                  , Movement.DescId        AS MovementDescId
                   , Movement.InvNumber
                   , Movement.StatusId
                   , MIReport.MovementId

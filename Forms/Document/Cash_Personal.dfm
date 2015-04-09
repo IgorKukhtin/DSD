@@ -2,9 +2,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientHeight = 623
   ClientWidth = 982
-  ExplicitTop = -105
-  ExplicitWidth = 990
-  ExplicitHeight = 650
+  ExplicitWidth = 998
+  ExplicitHeight = 658
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -77,6 +76,31 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00'
               Kind = skSum
               Column = Amount_service
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummMinus
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummAdd
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummSocialIn
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummSocialAdd
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummChild
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -130,6 +154,31 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00'
               Kind = skSum
               Column = Amount_service
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummMinus
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummAdd
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummSocialIn
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummSocialAdd
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummChild
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -305,14 +354,64 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object Comment: TcxGridDBColumn [16]
+          object SummMinus: TcxGridDBColumn [16]
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
+            DataBinding.FieldName = 'SummMinus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummAdd: TcxGridDBColumn [17]
+            Caption = #1055#1088#1077#1084#1080#1103
+            DataBinding.FieldName = 'SummAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummSocialIn: TcxGridDBColumn [18]
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
+            DataBinding.FieldName = 'SummSocialIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummSocialAdd: TcxGridDBColumn [19]
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
+            DataBinding.FieldName = 'SummSocialAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummChild: TcxGridDBColumn [20]
+            Caption = #1040#1083#1080#1084#1077#1085#1090#1099
+            DataBinding.FieldName = 'SummChild'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Comment: TcxGridDBColumn [21]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object InfoMoneyCode: TcxGridDBColumn [17]
+          object InfoMoneyCode: TcxGridDBColumn [22]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -321,7 +420,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 55
           end
-          object InfoMoneyName: TcxGridDBColumn [18]
+          object InfoMoneyName: TcxGridDBColumn [23]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -330,7 +429,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object InfoMoneyName_all: TcxGridDBColumn [19]
+          object InfoMoneyName_all: TcxGridDBColumn [24]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False

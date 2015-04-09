@@ -25,12 +25,22 @@ BEGIN
           -- сохранили связь с <Договора>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, inContractId);
 
-          -- создаются временные таблицы - для формирование данных для проводок
-          PERFORM lpComplete_Movement_Income_CreateTemp();
-          -- Проводим Документ
-          PERFORM lpComplete_Movement_Income (inMovementId     := inMovementId
-                                            , inUserId         := vbUserId
-                                            , inIsLastComplete := FALSE);
+          IF EXISTS (SELECT * FROM Movement WHERE Movement.Id = inMovementId AND DescId = zc_Movement_Income())
+          THEN
+              -- создаются временные таблицы - для формирование данных для проводок
+              PERFORM lpComplete_Movement_Income_CreateTemp();
+              -- Проводим Документ
+              PERFORM lpComplete_Movement_Income (inMovementId     := inMovementId
+                                                , inUserId         := vbUserId
+                                                , inIsLastComplete := NULL);
+          ELSE
+              -- создаются временные таблицы - для формирование данных для проводок
+              PERFORM lpComplete_Movement_ReturnOut_CreateTemp();
+              -- Проводим Документ
+              PERFORM lpComplete_Movement_ReturnOut (inMovementId     := inMovementId
+                                                   , inUserId         := vbUserId
+                                                   , inIsLastComplete := NULL);
+          END IF;
      END IF;
 
 END;

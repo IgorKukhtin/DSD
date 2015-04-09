@@ -110,20 +110,6 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
             Options.Editing = False
             Width = 150
           end
-          object MoneyPlaceName: TcxGridDBColumn
-            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
-            DataBinding.FieldName = 'MoneyPlaceName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 150
-          end
-          object ItemName: TcxGridDBColumn
-            Caption = #1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'ItemName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object AmountIn: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'AmountIn'
@@ -141,6 +127,28 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MoneyPlaceCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'MoneyPlaceCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object MoneyPlaceName: TcxGridDBColumn
+            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
+            DataBinding.FieldName = 'MoneyPlaceName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object ItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -186,7 +194,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
             Width = 100
           end
           object UnitCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087'.'
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
             DataBinding.FieldName = 'UnitCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -510,6 +518,49 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
     Top = 424
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'StartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+      end
+      item
+        Name = 'EndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+      end
+      item
+        Name = 'MemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MemberName'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 336
   end
   inherited spMovementReComplete: TdsdStoredProc

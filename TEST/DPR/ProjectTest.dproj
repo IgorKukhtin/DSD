@@ -1998,6 +1998,10 @@
 				<Form>BankAccount_PersonalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Member_Container.pas">
+				<Form>Member_ContainerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Member_Object.pas">
 				<Form>Member_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>

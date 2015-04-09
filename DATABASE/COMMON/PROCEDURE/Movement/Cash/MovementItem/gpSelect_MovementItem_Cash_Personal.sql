@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PositionId Integer, PositionName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
-             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat
+             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummMinus TFloat, SummAdd TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
              , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat
              , SummRemains TFloat
              , Comment TVarChar
@@ -68,6 +68,11 @@ BEGIN
                                    , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) AS SummToPay_cash
                                    , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))        AS SummToPay
                                    , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))         AS SummCard
+                                   , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
+                                   , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))          AS SummAdd
+                                   , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))     AS SummSocialIn
+                                   , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))    AS SummSocialAdd
+                                   , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))        AS SummChild
                                    , MovementItem.ObjectId                                  AS PersonalId
                                    , MILinkObject_Unit.ObjectId                             AS UnitId
                                    , MILinkObject_Position.ObjectId                         AS PositionId
@@ -99,6 +104,20 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummCard
                                                                ON MIFloat_SummCard.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
+                                                               ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                                               ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
+                                                               ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
+                                                               ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummChild
                                                                ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
@@ -177,6 +196,11 @@ BEGIN
                                    , tmpParent.SummToPay_cash
                                    , tmpParent.SummToPay
                                    , tmpParent.SummCard
+                                   , tmpParent.SummMinus
+                                   , tmpParent.SummAdd
+                                   , tmpParent.SummSocialIn
+                                   , tmpParent.SummSocialAdd
+                                   , tmpParent.SummChild
                                    , tmpCash.Amount_current
                                    , tmpCash.Amount_avance
                                    , tmpCash.Amount_service
@@ -192,6 +216,11 @@ BEGIN
                                    , tmpService.SummToPay_cash
                                    , tmpService.SummToPay
                                    , tmpService.SummCard
+                                   , tmpService.SummMinus
+                                   , tmpService.SummAdd
+                                   , tmpService.SummSocialIn
+                                   , tmpService.SummSocialAdd
+                                   , tmpService.SummChild
                                    , tmpService.Amount_current
                                    , tmpService.Amount_avance
                                    , tmpService.Amount_service
@@ -230,6 +259,12 @@ BEGIN
             , tmpData.SummToPay_cash :: TFloat AS SummToPay_cash
             , tmpData.SummToPay      :: TFloat AS SummToPay
             , tmpData.SummCard       :: TFloat AS SummCard
+            , tmpData.SummMinus      :: TFloat AS SummMinus
+            , tmpData.SummAdd        :: TFloat AS SummAdd
+            , tmpData.SummSocialIn   :: TFloat AS SummSocialIn
+            , tmpData.SummSocialAdd  :: TFloat AS SummSocialAdd
+            , tmpData.SummChild      :: TFloat AS SummChild
+
             , tmpData.Amount_current :: TFloat AS Amount_current
             , tmpData.Amount_avance  :: TFloat AS Amount_avance
             , tmpData.Amount_service :: TFloat AS Amount_service

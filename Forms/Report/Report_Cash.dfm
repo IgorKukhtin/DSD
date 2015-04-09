@@ -118,7 +118,7 @@ inherited Report_CashForm: TReport_CashForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colGroupName: TcxGridDBColumn
+          object GroupName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GroupName'
             HeaderAlignmentHorz = taCenter
@@ -141,6 +141,14 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 55
           end
+          object MoneyPlaceCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'MoneyPlaceCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object MoneyPlaceName: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'MoneyPlaceName'
@@ -148,14 +156,14 @@ inherited Report_CashForm: TReport_CashForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clItemName: TcxGridDBColumn
+          object ItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colContractCode: TcxGridDBColumn
+          object lContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -172,7 +180,7 @@ inherited Report_CashForm: TReport_CashForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             Visible = False
@@ -181,7 +189,7 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 55
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -190,7 +198,7 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 45
           end
-          object colInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -199,7 +207,7 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -208,7 +216,7 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
@@ -223,6 +231,21 @@ inherited Report_CashForm: TReport_CashForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
+          end
+          object UnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'UnitCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object StartAmount: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086
@@ -328,24 +351,59 @@ inherited Report_CashForm: TReport_CashForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colAccountName: TcxGridDBColumn
+          object ProfitLossGroupCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1075#1088'. ('#1076#1083#1103' '#1087#1086#1076#1088'. )'
+            DataBinding.FieldName = 'ProfitLossGroupCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ProfitLossGroupName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072' ('#1076#1083#1103' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'ProfitLossGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object ProfitLossDirectionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1085#1072#1087#1088'.  ('#1076#1083#1103' '#1087#1086#1076#1088'.)'
+            DataBinding.FieldName = 'ProfitLossDirectionCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ProfitLossDirectionName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'  ('#1076#1083#1103' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'ProfitLossDirectionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 180
+          end
+          object AccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 100
           end
           object GroupId: TcxGridDBColumn
             DataBinding.FieldName = 'GroupId'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 55
           end
         end
@@ -359,14 +417,14 @@ inherited Report_CashForm: TReport_CashForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -1814,14 +1872,14 @@ inherited Report_CashForm: TReport_CashForm
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inCashId'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -1915,8 +1973,8 @@ inherited Report_CashForm: TReport_CashForm
     Left = 128
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 144
-    Top = 8
+    Left = 48
+    Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1924,10 +1982,10 @@ inherited Report_CashForm: TReport_CashForm
         Component = PeriodChoice
       end
       item
-        Component = CashGuides
+        Component = GuidesCash
       end
       item
-        Component = AccountGuides
+        Component = GuidesAccount
       end
       item
       end
@@ -2097,14 +2155,14 @@ inherited Report_CashForm: TReport_CashForm
       item
         Name = 'CashId'
         Value = Null
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'CashName'
         Value = Null
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2112,7 +2170,7 @@ inherited Report_CashForm: TReport_CashForm
     Left = 240
     Top = 232
   end
-  object CashGuides: TdsdGuides
+  object GuidesCash: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
     FormNameParam.Value = 'TCash_ObjectForm'
@@ -2123,13 +2181,13 @@ inherited Report_CashForm: TReport_CashForm
       item
         Name = 'Key'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CashGuides
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -2169,28 +2227,33 @@ inherited Report_CashForm: TReport_CashForm
     Left = 312
     Top = 13
   end
-  object AccountGuides: TdsdGuides
+  object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
-    FormNameParam.Value = 'TAccount_ObjectForm'
+    FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccount_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TAccount_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValueAll'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Cash'
+        DataType = ftString
       end>
     Left = 592
     Top = 24

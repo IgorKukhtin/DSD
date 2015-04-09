@@ -14,8 +14,10 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar
              , BranchName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AccountName TVarChar
-             , UnitName TVarChar
-             , MoneyPlaceName TVarChar, ItemName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar
+             , ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
+             , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
@@ -42,6 +44,7 @@ BEGIN
 
      -- Результат
   RETURN QUERY
+     WITH tmpUnit_byProfitLoss AS (SELECT * FROM lfSelect_Object_Unit_byProfitLossDirection ())
      SELECT
         Operation.ContainerId,
         Object_Cash.ObjectCode                                                                      AS CashCode,
@@ -55,7 +58,13 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyName                                                         AS InfoMoneyName,
         Object_InfoMoney_View.InfoMoneyName_all                                                     AS InfoMoneyName_all,
         Object_Account_View.AccountName_all                                                         AS AccountName,
+        Object_Unit.ObjectCode                                                                      AS UnitCode,
         Object_Unit.ValueData                                                                       AS UnitName,
+        tmpUnit_byProfitLoss.ProfitLossGroupCode,
+        tmpUnit_byProfitLoss.ProfitLossGroupName,
+        tmpUnit_byProfitLoss.ProfitLossDirectionCode,
+        tmpUnit_byProfitLoss.ProfitLossDirectionName,
+        Object_MoneyPlace.ObjectCode                                                                AS MoneyPlaceCode,
         Object_MoneyPlace.ValueData                                                                 AS MoneyPlaceName,
         ObjectDesc.ItemName                                                                         AS ItemName,
         Object_Contract_InvNumber_View.ContractCode                                                 AS ContractCode,
@@ -166,6 +175,9 @@ BEGIN
      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Operation.UnitId
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
      LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
+
+
+     LEFT JOIN tmpUnit_byProfitLoss ON tmpUnit_byProfitLoss.UnitId = Operation.UnitId
 
      LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
                           ON ObjectLink_Cash_Branch.ObjectId = Operation.CashId

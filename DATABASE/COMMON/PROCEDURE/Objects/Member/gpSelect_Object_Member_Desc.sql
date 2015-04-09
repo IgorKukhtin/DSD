@@ -59,6 +59,7 @@ ALTER FUNCTION gpSelect_Object_Member_Desc (TVarChar, Boolean, TVarChar) OWNER T
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  09.04.15                                        *
 */
+
 -- тест
 -- SELECT * FROM gpSelect_Object_Member_Desc ('zc_Object_Member', FALSE, zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_Member_Desc ('zc_Object_Member', TRUE, zfCalc_UserAdmin())

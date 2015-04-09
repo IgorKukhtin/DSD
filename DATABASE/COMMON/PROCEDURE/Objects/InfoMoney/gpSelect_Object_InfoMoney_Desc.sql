@@ -27,6 +27,8 @@ BEGIN
                                          THEN zc_ContainerLinkObject_Juridical()
                                     WHEN ObjectDesc.Id = zc_Object_Member()
                                          THEN zc_ContainerLinkObject_Member()
+                                    WHEN ObjectDesc.Id = zc_Object_Personal()
+                                         THEN zc_ContainerLinkObject_Personal()
                                     ELSE 0
                                END AS DescId
                         FROM ObjectDesc

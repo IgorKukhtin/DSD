@@ -99,11 +99,12 @@ begin
       from
       (select Bill.Id as BillId, min (Bill_find.Id) as BillId_union
             , case when Bill.BillDate + isnull (_toolsView_Client_isChangeDate.addDay, 0) < zc_def_StartDate_PG() then zc_rvNo() else zc_rvYes() end as isBillDate
-            , max (isnull(case when BillItems2.OperPrice<>0 and BillItems2.OperCount<>0 then BillItems2.Id else 0 end,0))as findId
+            , max (isnull(case when /*BillItems2.OperPrice<>0 and BillItems2.OperCount<>0*/ GoodsProperty.InfoMoneyCode not in (20501) then BillItems2.Id else 0 end,0))as findId
       from dba.Bill
            left join _toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Bill.ToId
            left join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId = 5510 and BillItems.OperCount<>0 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
            left join dba.BillItems as BillItems2 on BillItems2.BillId = Bill.Id
+           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems2.GoodsPropertyId
            left outer join dba.Bill as Bill_find on Bill_find.BillDate = Bill.BillDate
                                                 and Bill_find.BillKind = Bill.BillKind
                                                 and Bill_find.BillNumber = Bill.BillNumber
@@ -173,9 +174,10 @@ from
      (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvNo() as isOnlyUpdateInt
-           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId
+           , max(isnull(case when /*BillItems.OperPrice<>0*/ GoodsProperty.InfoMoneyCode not in (20501) then BillItems.Id else 0 end,0))as findId
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
+           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId
                       left outer join dba.Unit on Unit.Id = Bill.ToId
                       left outer join dba.ContractKind_byHistory as find1
                            on find1.ClientId = Unit.DolgByUnitID
@@ -199,9 +201,10 @@ from
       select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvYes() as isOnlyUpdateInt
-           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId
+           , max(isnull(case when /*BillItems.OperPrice<>0*/ GoodsProperty.InfoMoneyCode not in (20501)  then BillItems.Id else 0 end,0))as findId
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.GoodsPropertyId = 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
+           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId
                       left outer join dba.Unit on Unit.Id = Bill.ToId
                       left outer join dba.ContractKind_byHistory as find1
                            on find1.ClientId = Unit.DolgByUnitID
@@ -241,10 +244,11 @@ from
       select Bill.Id, 0 as Id_Postgres, 30101 as CodeIM -- Готовая продукция
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvNo() as isOnlyUpdateInt
-           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId
+           , max(isnull(case when /*BillItems.OperPrice<>0*/ GoodsProperty.InfoMoneyCode not in (20501) then BillItems.Id else 0 end,0))as findId
       from dba.Bill
            left join dba.isUnit on isUnit.UnitId = Bill.ToId
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
+           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId
                       left outer join dba.Unit on Unit.Id = Bill.ToId
                       left outer join dba.ContractKind_byHistory as find1
                            on find1.ClientId = Unit.DolgByUnitID
