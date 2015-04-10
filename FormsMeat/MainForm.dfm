@@ -24,6 +24,7 @@ inherited MainForm: TMainForm
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
     TabOrder = 0
+    ExplicitHeight = 21
     Width = 1086
   end
   inherited ActionList: TActionList

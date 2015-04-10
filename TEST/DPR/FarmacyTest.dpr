@@ -281,7 +281,10 @@ uses
   Report_JuridicalSold in '..\..\FormsFarmacy\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm},
   StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
   SendOnPrice in '..\..\FormsFarmacy\Document\SendOnPrice.pas' {SendOnPriceForm: TParentForm},
-  SendOnPriceJournal in '..\..\FormsFarmacy\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm: TParentForm};
+  SendOnPriceJournal in '..\..\FormsFarmacy\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm: TParentForm},
+  MarginCategory in '..\..\Forms\Guides\MarginCategory.pas' {MarginCategoryForm: TParentForm},
+  MarginCategoryItem in '..\..\Forms\Guides\MarginCategoryItem.pas' {MarginCategoryItemForm: TParentForm},
+  MarginCategoryLink in '..\..\Forms\Guides\MarginCategoryLink.pas' {MarginCategoryLinkForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

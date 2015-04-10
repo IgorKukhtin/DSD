@@ -13,7 +13,13 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
            , Object_PartnerGoods.GoodsName      AS PartnerGoodsName
            , MovementItem.Amount                AS Amount
            , MIFloat_Price.ValueData            AS Price
+           , CASE 
+                 WHEN Movement_Income.PriceWithVAT THEN  MIFloat_Price.ValueData
+                                     ELSE (MIFloat_Price.ValueData * (1 + Movement_Income.NDS/100))::TFloat
+             END AS PriceWithVAT
+           , MIFloat_PriceSale.ValueData        AS PriceSale
            , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
+           , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))::TFloat AS SummSale
            , MovementItem.isErased              AS isErased
            , MovementItem.MovementId            AS MovementId
            , MIDate_ExpirationDate.ValueData    AS ExpirationDate
@@ -26,6 +32,10 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                        ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
 
             LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
                                         ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
@@ -51,6 +61,8 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
+            LEFT JOIN Movement_Income_View AS Movement_Income ON Movement_Income.Id = MovementItem.MovementId
+
    WHERE MovementItem.DescId     = zc_MI_Master();
 
 
@@ -61,6 +73,7 @@ ALTER TABLE MovementItem_Income_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.04.15                        * 
  06.03.15                        * 
  11.12.14                        * 
 */

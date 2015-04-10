@@ -2303,6 +2303,18 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberRegistered'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDateRegistered'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 256

@@ -63,6 +63,13 @@ type
     spIncome_GoodsId: TdsdStoredProc;
     colFEA: TcxGridDBColumn;
     colMeasure: TcxGridDBColumn;
+    spCalculateSalePrice: TdsdStoredProc;
+    actCalculateSalePrice: TdsdExecStoredProc;
+    bbCreateSend: TdxBarButton;
+    colSalePrice: TcxGridDBColumn;
+    colSaleSumm: TcxGridDBColumn;
+    colPercent: TcxGridDBColumn;
+    colPriceWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

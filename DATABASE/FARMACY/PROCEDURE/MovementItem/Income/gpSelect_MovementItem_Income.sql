@@ -12,7 +12,11 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar
              , Amount TFloat
              , Price TFloat
+             , PriceWithVAT TFloat
+             , MarginPercent TFloat
              , Summ TFloat
+             , SalePrice TFloat
+             , SaleSumm TFloat
              , isErased Boolean
              , ExpirationDate TDateTime
              , PartionGoods TVarChar
@@ -24,12 +28,18 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbObjectId Integer;
+  DECLARE vbVAT TFloat;
+  DECLARE vbPriceWithVAT Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
      vbUserId := inSession;
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
+   SELECT Movement_Income_View.PriceWithVAT, Movement_Income_View.NDS INTO vbPriceWithVAT, vbVAT 
+     FROM Movement_Income_View 
+    WHERE Movement_Income_View.Id = inMovementId;
 
 
      IF inShowAll THEN
@@ -44,7 +54,11 @@ BEGIN
            , ''::TVarChar               AS PartnerGoodsName
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS Price
+           , CAST (NULL AS TFloat)      AS PriceWithVAT
+           , CAST (NULL AS TFloat)      AS MarginPercent
            , CAST (NULL AS TFloat)      AS Summ
+           , CAST (NULL AS TFloat)      AS PriceSale
+           , CAST (NULL AS TFloat)      AS SummSale
            , FALSE                      AS isErased
            , NULL::TDateTime            AS ExpirationDate
            , NULL::TVarChar             AS PartionGoods
@@ -78,7 +92,11 @@ BEGIN
            , MovementItem.PartnerGoodsName
            , MovementItem.Amount
            , MovementItem.Price
+           , MovementItem.PriceWithVAT
+           , ((MovementItem.PriceSale/MovementItem.PriceWithVAT - 1) * 100)::TFloat AS MarginPercent
            , MovementItem.AmountSumm
+           , MovementItem.PriceSale
+           , MovementItem.SummSale
            , MovementItem.isErased
            , MovementItem.ExpirationDate
            , MovementItem.PartionGoods
@@ -103,7 +121,11 @@ BEGIN
            , MovementItem.PartnerGoodsName
            , MovementItem.Amount
            , MovementItem.Price
+           , MovementItem.PriceWithVAT
+           , ((MovementItem.PriceSale/MovementItem.PriceWithVAT - 1) * 100)::TFloat AS MarginPercent
            , MovementItem.AmountSumm
+           , MovementItem.PriceSale
+           , MovementItem.SummSale
            , MovementItem.isErased
            , MovementItem.ExpirationDate
            , MovementItem.PartionGoods
@@ -126,6 +148,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.04.15                         *
  06.03.15                         *
  26.12.14                         *
  09.12.14                         *

@@ -1,28 +1,29 @@
 inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
-  ClientWidth = 776
-  ExplicitLeft = 6
-  ExplicitTop = -127
-  ExplicitWidth = 784
+  ClientWidth = 806
+  ExplicitLeft = -16
+  ExplicitTop = -170
+  ExplicitWidth = 814
   ExplicitHeight = 553
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 776
+    Width = 806
     Height = 400
     ExplicitTop = 126
     ExplicitWidth = 776
     ExplicitHeight = 400
     ClientRectBottom = 400
-    ClientRectRight = 776
+    ClientRectRight = 806
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 776
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
-        Width = 776
+        Width = 806
         Height = 376
+        ExplicitTop = 3
         ExplicitWidth = 776
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -167,11 +168,44 @@ inherited IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
+          end
+          object colPriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Options.Editing = False
+            Width = 100
+          end
+          object colSalePrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083'. '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SalePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Width = 76
+          end
+          object colPercent: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'MarginPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object colSaleSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083'. '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SaleSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Options.Editing = False
+            Width = 83
           end
           object colExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -204,7 +238,7 @@ inherited IncomeForm: TIncomeForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 776
+    Width = 806
     Height = 100
     TabOrder = 3
     ExplicitWidth = 776
@@ -466,6 +500,7 @@ inherited IncomeForm: TIncomeForm
     object actGoodsKindChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -489,6 +524,7 @@ inherited IncomeForm: TIncomeForm
     object actChoiceGoods: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceGoods'
       FormName = 'TGoodsLiteForm'
       FormNameParam.Value = 'TGoodsLiteForm'
@@ -532,6 +568,7 @@ inherited IncomeForm: TIncomeForm
     object actRefreshGoodsCode: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spIncome_GoodsId
       StoredProcList = <
         item
@@ -545,6 +582,21 @@ inherited IncomeForm: TIncomeForm
         end>
       Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
       ImageIndex = 43
+    end
+    object actCalculateSalePrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCalculateSalePrice
+      StoredProcList = <
+        item
+          StoredProc = spCalculateSalePrice
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
+      Hint = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
+      ImageIndex = 74
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1094#1077#1085'?'
+      InfoAfterExecute = #1062#1077#1085#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1085#1099
     end
   end
   inherited MasterDS: TDataSource
@@ -664,6 +716,10 @@ inherited IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbCreateSend'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -712,6 +768,11 @@ inherited IncomeForm: TIncomeForm
     object bbRefreshGoodsCode: TdxBarButton
       Action = actRefreshGoodsCode
       Category = 0
+    end
+    object bbCreateSend: TdxBarButton
+      Action = actCalculateSalePrice
+      Category = 0
+      ImageIndex = 75
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1390,5 +1451,21 @@ inherited IncomeForm: TIncomeForm
     PackSize = 1
     Left = 264
     Top = 296
+  end
+  object spCalculateSalePrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Income_SendPrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inIncomeId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 160
   end
 end

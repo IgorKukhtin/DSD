@@ -36,6 +36,7 @@ type
     procedure LoadJuridicalFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLossDebtFormTest;
+    procedure LoadMargineCategory;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
     procedure LoadOrderInternalFormTest;
@@ -208,6 +209,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadMargineCategory;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryLinkForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryLinkForm');
 end;
 
 procedure TLoadFormTest.LoadMeasureFormTest;

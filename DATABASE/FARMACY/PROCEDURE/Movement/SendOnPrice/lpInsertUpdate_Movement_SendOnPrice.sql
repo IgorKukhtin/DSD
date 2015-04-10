@@ -8,11 +8,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendOnPrice(
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inRouteSortingId      Integer   , -- Сортировки маршрутов
+    IN inParentId            Integer   , -- Документ-родитель
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inProcessId           Integer   , -- 
