@@ -43,6 +43,9 @@ type
     isLoad: TcxGridDBColumn;
     actReport_Cash: TdsdOpenForm;
     bbReport_Cash: TdxBarButton;
+    UnitCode: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
+    PersonalServiceListCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

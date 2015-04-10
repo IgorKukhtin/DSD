@@ -28,16 +28,16 @@ type
     bbPrint: TdxBarButton;
     cxLabel3: TcxLabel;
     ceInfoMoneyGroup: TcxButtonEdit;
-    InfoMoneyGroupGuides: TdsdGuides;
-    InfoMoneyDestinationGuides: TdsdGuides;
+    GuidesInfoMoneyGroup: TdsdGuides;
+    GuidesInfoMoneyDestination: TdsdGuides;
     ceInfoMoneyDestination: TcxButtonEdit;
     cxLabel4: TcxLabel;
-    InfoMoneyGuides: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
     ceInfoMoney: TcxButtonEdit;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     edAccount: TcxButtonEdit;
-    AccountGuides: TdsdGuides;
+    GuidesAccount: TdsdGuides;
     colInfoMoneyCode: TcxGridDBColumn;
     colDebetSumm: TcxGridDBColumn;
     colKreditSumm: TcxGridDBColumn;
@@ -58,7 +58,7 @@ type
     bbPrintReal: TdxBarButton;
     ceBranch: TcxButtonEdit;
     cxLabel7: TcxLabel;
-    BranchGuides: TdsdGuides;
+    GuidesBranch: TdsdGuides;
     BranchName: TcxGridDBColumn;
     ServiceDate: TcxGridDBColumn;
     cbServiceDate: TcxCheckBox;
@@ -75,6 +75,8 @@ type
     UnitName: TcxGridDBColumn;
     PositionCode: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
+    PersonalServiceListCode: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

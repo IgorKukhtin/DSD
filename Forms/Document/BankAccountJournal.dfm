@@ -1,27 +1,27 @@
 inherited BankAccountJournalForm: TBankAccountJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientHeight = 377
+  ClientHeight = 356
   ClientWidth = 1028
   ExplicitWidth = 1044
-  ExplicitHeight = 415
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1028
-    Height = 320
+    Height = 299
     TabOrder = 3
     ExplicitWidth = 1028
-    ExplicitHeight = 320
-    ClientRectBottom = 320
+    ExplicitHeight = 299
+    ClientRectBottom = 299
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
-      ExplicitHeight = 320
+      ExplicitHeight = 299
       inherited cxGrid: TcxGrid
         Width = 1028
-        Height = 320
+        Height = 299
         ExplicitWidth = 1028
-        ExplicitHeight = 320
+        ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -351,6 +351,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object clisCopy: TcxGridDBColumn
+            Caption = #1050#1086#1087#1080#1103' '#1087#1086' '#1084#1072#1089#1082#1077
+            DataBinding.FieldName = 'isCopy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
         end
       end
     end
@@ -442,6 +449,19 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Component = deEnd
           DataType = ftDateTime
         end>
+    end
+    object actisCopy: TdsdExecStoredProc [6]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isCopy
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isCopy
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1086#1087#1080#1103' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1086#1087#1080#1103' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 50
     end
     object actInsertProfitLossService: TdsdInsertUpdateAction
       MoveParams = <>
@@ -633,6 +653,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbisCopy'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -676,6 +704,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Action = actPrint1
       Category = 0
       ShortCut = 16465
+    end
+    object bbisCopy: TdxBarButton
+      Action = actisCopy
+      Category = 0
     end
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -742,5 +774,29 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 631
     Top = 232
+  end
+  object spUpdate_isCopy: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isCopy'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisCopy'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isCopy'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 243
   end
 end

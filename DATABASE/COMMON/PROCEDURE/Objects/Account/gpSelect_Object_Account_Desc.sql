@@ -30,6 +30,12 @@ BEGIN
                                          THEN zc_ContainerLinkObject_Juridical()
                                     WHEN ObjectDesc.Id = zc_Object_Goods()
                                          THEN zc_ContainerLinkObject_Goods()
+                                    WHEN ObjectDesc.Id = zc_Object_Cash()
+                                         THEN zc_ContainerLinkObject_Cash()
+                                    WHEN ObjectDesc.Id = zc_Object_Member()
+                                         THEN zc_ContainerLinkObject_Member()
+                                    WHEN ObjectDesc.Id = zc_Object_Personal()
+                                         THEN zc_ContainerLinkObject_Personal()
                                     ELSE 0
                                END AS DescId
                         FROM ObjectDesc
@@ -67,4 +73,5 @@ ALTER FUNCTION gpSelect_Object_Account_Desc (TVarChar, TVarChar) OWNER TO postgr
 */
 
 -- тест
+-- SELECT * FROM gpSelect_Object_Account_Desc ('zc_Object_Cash', zfCalc_UserAdmin()) ORDER BY Code
 -- SELECT * FROM gpSelect_Object_Account_Desc ('zc_Object_Juridical', zfCalc_UserAdmin()) ORDER BY Code

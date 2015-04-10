@@ -18,11 +18,11 @@ BEGIN
   FROM
    (SELECT D.FieldXML
     FROM
-   (SELECT '<Field FieldName = "ObjectId" FieldValue = "' || MovementItem.ObjectId || '"/>'
-        || '<Field FieldName = "ValueData" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>'
-        || '<Field FieldName = "Amount" FieldValue = "' || MovementItem.Amount || '"/>'
+   (SELECT '<Field FieldName = "Ключ объекта" FieldValue = "' || MovementItem.ObjectId || '"/>'
+        || '<Field FieldName = "Объект" FieldValue = "' || zfStrToXmlStr (COALESCE (Object.ValueData, 'NULL')) || '"/>'
+        || '<Field FieldName = "Значение" FieldValue = "' || MovementItem.Amount || '"/>'
         || CASE WHEN MovementItem.ParentId <> 0 THEN '<Field FieldName = "ParentId" FieldValue = "' || MovementItem.ParentId || '"/>' ELSE '' END
-        || '<Field FieldName = "isErased" FieldValue = "' || MovementItem.isErased || '"/>'
+        || '<Field FieldName = "Удален" FieldValue = "' || MovementItem.isErased || '"/>'
            AS FieldXML
          , 1 AS GroupId
          , MovementItem.DescId

@@ -21,8 +21,8 @@ type
     ceOperDate: TcxDateEdit;
     ceAmountDebet: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    UnitGuides: TdsdGuides;
-    InfoMoneyGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
     GuidesFiller: TGuidesFiller;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
@@ -30,14 +30,14 @@ type
     cxLabel3: TcxLabel;
     edInvNumber: TcxTextEdit;
     cxLabel6: TcxLabel;
-    ceMember: TcxButtonEdit;
-    MemberGuides: TdsdGuides;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
     edCar: TcxButtonEdit;
     cxLabel2: TcxLabel;
     GuidesCar: TdsdGuides;
     ceMoneyPlace: TcxButtonEdit;
     cxLabel8: TcxLabel;
-    MoneyPlaceGuides: TdsdGuides;
+    GuidesMoneyPlace: TdsdGuides;
   private
     { Private declarations }
   public

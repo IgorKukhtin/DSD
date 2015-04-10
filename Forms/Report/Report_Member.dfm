@@ -2,6 +2,7 @@ inherited Report_MemberForm: TReport_MemberForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091'>'
   ClientHeight = 555
   ClientWidth = 1020
+  ExplicitLeft = -38
   ExplicitWidth = 1036
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -140,8 +141,8 @@ inherited Report_MemberForm: TReport_MemberForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -151,6 +152,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object CarName: TcxGridDBColumn
@@ -158,6 +160,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'CarName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 93
           end
           object MemberName: TcxGridDBColumn
@@ -168,7 +171,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Options.Editing = False
             Width = 181
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -177,7 +180,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Options.Editing = False
             Width = 45
           end
-          object colInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -186,7 +189,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -195,7 +198,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
@@ -209,6 +212,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object StartAmount: TcxGridDBColumn
@@ -236,6 +240,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object StartAmountK: TcxGridDBColumn
@@ -249,6 +254,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object MoneySumm: TcxGridDBColumn
@@ -259,6 +265,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -271,6 +278,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -280,6 +288,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'AccountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -289,6 +298,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'SendSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -305,7 +315,6 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object KreditSumm: TcxGridDBColumn
@@ -320,7 +329,6 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object EndAmount: TcxGridDBColumn
@@ -348,6 +356,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object EndAmountK: TcxGridDBColumn
@@ -361,9 +370,10 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object colAccountName: TcxGridDBColumn
+          object AccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
             HeaderAlignmentHorz = taCenter
@@ -501,7 +511,7 @@ inherited Report_MemberForm: TReport_MemberForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AccountGuides
+        Component = GuidesAccount
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -517,19 +527,19 @@ inherited Report_MemberForm: TReport_MemberForm
           'Date')
       end
       item
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -552,8 +562,8 @@ inherited Report_MemberForm: TReport_MemberForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1090#1095#1077#1090#1091
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1090#1095#1077#1090#1091
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091'>'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -582,8 +592,8 @@ inherited Report_MemberForm: TReport_MemberForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
-      Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -608,12 +618,12 @@ inherited Report_MemberForm: TReport_MemberForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ReportNameParam.DataType = ftString
     end
-    object IncomeJournal: TdsdOpenForm
+    object PersonalReportJournal: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'IncomeJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
+      Caption = 'PersonalReportJournal'
+      FormName = 'TPersonalReportJournalForm'
+      FormNameParam.Value = 'TPersonalReportJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -629,1025 +639,16 @@ inherited Report_MemberForm: TReport_MemberForm
           DataType = ftDateTime
         end
         item
-          Name = 'AccountId'
+          Name = 'MemberId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
+          Name = 'MemberName'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'IncomeDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
           Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object ReturnOutJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'ReturnOutJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ReturnOutDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object SaleJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'SaleDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object ReturnInJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'ReturnInJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ReturnInDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object MoneyJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'MoneyJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'MoneyDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object ServiceJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'ServiceJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ServiceDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object SendDebtJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'SendDebtJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'SendDebtDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object OtherJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'OtherJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'OtherDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object SaleRealJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'SaleRealJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'SaleRealDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object ReturnInRealJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'ReturnInJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ReturnInRealDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object TransferDebtJournal: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'SendDebtJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Component = MasterCDS
-          ComponentItem = 'AccountId'
-        end
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'ContractId'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'PaidKindId'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'TransferDebtDesc'
-          DataType = ftString
-        end
-        item
-          Name = 'AccountName'
-          Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractNumber'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
+          ComponentItem = 'MemberName'
           DataType = ftString
         end>
       isShowModal = False
@@ -1680,35 +681,35 @@ inherited Report_MemberForm: TReport_MemberForm
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inBranchId'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyGroupId'
         Value = ''
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Value = ''
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -1776,14 +777,38 @@ inherited Report_MemberForm: TReport_MemberForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColumnAddOnList = <
       item
+        Column = MoneySumm
+        Action = PersonalReportJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = ReportSumm
+        Action = PersonalReportJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = AccountSumm
+        Action = PersonalReportJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = SendSumm
+        Action = PersonalReportJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
         Column = DebetSumm
-        Action = IncomeJournal
+        Action = PersonalReportJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
         Column = KreditSumm
-        Action = ReturnOutJournal
+        Action = PersonalReportJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end>
@@ -1801,34 +826,34 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = PeriodChoice
       end
       item
-        Component = AccountGuides
+        Component = GuidesAccount
       end
       item
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
       end
       item
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
       end
       item
-        Component = BranchGuides
+        Component = GuidesBranch
       end>
     Top = 228
   end
-  object InfoMoneyGroupGuides: TdsdGuides
+  object GuidesInfoMoneyGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyGroup
-    FormNameParam.Value = 'TInfoMoneyGroupForm'
+    FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoneyGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoneyGroup_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1836,26 +861,31 @@ inherited Report_MemberForm: TReport_MemberForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGroupGuides
+        Component = GuidesInfoMoneyGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
       end>
-    Left = 776
-    Top = 53
+    Left = 416
+    Top = 45
   end
-  object InfoMoneyDestinationGuides: TdsdGuides
+  object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
-    FormNameParam.Value = 'TInfoMoneyDestinationForm'
+    FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoneyDestinationForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoneyDestination_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1863,60 +893,75 @@ inherited Report_MemberForm: TReport_MemberForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyDestinationGuides
+        Component = GuidesInfoMoneyDestination
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
       end>
     Left = 584
     Top = 53
   end
-  object InfoMoneyGuides: TdsdGuides
+  object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoney_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
       end>
-    Left = 440
-    Top = 61
+    Left = 752
+    Top = 45
   end
-  object AccountGuides: TdsdGuides
+  object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
-    FormNameParam.Value = 'TAccount_ObjectForm'
+    FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccount_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TAccount_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValueAll'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
       end>
     Left = 312
     Top = 48
@@ -2003,6 +1048,7 @@ inherited Report_MemberForm: TReport_MemberForm
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 232
   end
@@ -2066,18 +1112,18 @@ inherited Report_MemberForm: TReport_MemberForm
     Left = 240
     Top = 232
   end
-  object BranchGuides: TdsdGuides
+  object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBranch
-    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBranchForm'
+    FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2085,7 +1131,7 @@ inherited Report_MemberForm: TReport_MemberForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

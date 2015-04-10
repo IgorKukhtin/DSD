@@ -21,9 +21,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , MemberName TVarChar, PositionName TVarChar
+             , MemberName TVarChar, PositionName TVarChar, PersonalServiceListId Integer, PersonalServiceListCode Integer, PersonalServiceListName TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
-             , UnitName TVarChar
+             , UnitCode Integer, UnitName TVarChar
              , CurrencyName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
@@ -93,9 +93,13 @@ BEGIN
            , View_InfoMoney.InfoMoneyName_all
            , Object_Member.ValueData            AS MemberName
            , Object_Position.ValueData          AS PositionName
+           , Object_PersonalServiceList.Id         AS PersonalServiceListId
+           , Object_PersonalServiceList.ObjectCode AS PersonalServiceListCode
+           , Object_PersonalServiceList.ValueData  AS PersonalServiceListName
            , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , View_Contract_InvNumber.ContractTagName
+           , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
 
            , Object_Currency.ValueData                     AS CurrencyName 
@@ -115,6 +119,11 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isLoad 
                                       ON MovementBoolean_isLoad.MovementId = Movement.Id
                                      AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
+
+            LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                         ON MLO_PersonalServiceList.MovementId = Movement.Id
+                                        AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MLO_PersonalServiceList.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                          ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id

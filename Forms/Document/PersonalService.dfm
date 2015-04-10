@@ -14,7 +14,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     ClientRectBottom = 576
     ClientRectRight = 1112
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1112
       ExplicitHeight = 552
       inherited cxGrid: TcxGrid
@@ -400,6 +399,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 121
+      ExplicitHeight = 22
       Width = 121
     end
     object edServiceDate: TcxDateEdit

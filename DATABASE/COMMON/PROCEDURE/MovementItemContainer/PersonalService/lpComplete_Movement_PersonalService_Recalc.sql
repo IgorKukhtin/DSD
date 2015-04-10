@@ -13,9 +13,9 @@ BEGIN
      -- таблица - по документам
      CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer) ON COMMIT DROP;
      -- таблица - по элементам
-     CREATE TEMP TABLE _tmpMI_Recalc (MovementItemId Integer, SummCardRecalc TFloat, MovementItemId_find Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, MovementItemId_to Integer, SummCardRecalc TFloat) ON COMMIT DROP;
 
-     -- Все документа за соответствующий <Месяц начислений>
+     -- формируются данные - Все документы для распределения за соответствующий <Месяц начислений>
      WITH tmpMovement AS (SELECT MovementDate_ServiceDate.ValueData AS ServiceDate
                           FROM Movement
                                LEFT JOIN MovementDate AS MovementDate_ServiceDate
@@ -42,18 +42,50 @@ BEGIN
                                                                                                                              , 413454 -- Ведомость карточки БН Пиреус
                                                                                                                               )
                                 )
-     -- данные по документам
+     -- данные по всем документам для распределения за соответствующий <Месяц начислений>
      INSERT INTO _tmpMovement_Recalc (MovementId)
        SELECT MovementId FROM tmpMovement_Recalc WHERE MovementId <> inMovementId;
 
-     --
-     WITH tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
+
+     -- формируются данные по элементам для распределения
+     WITH tmpMovement AS (SELECT MovementDate_ServiceDate.ValueData AS ServiceDate
+                          FROM Movement
+                               LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                                      ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                                     AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+                          WHERE Movement.Id = inMovementId
+                            AND Movement.DescId = zc_Movement_PersonalService()
+                            AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                          )
+            -- Все документы в которых будем искать zc_MIFloat_SummCardRecalc
+          , tmpMovement_card AS (SELECT Movement.Id AS MovementId
+                                 FROM tmpMovement
+                                      INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                                              ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
+                                                             AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+                                      INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+	                                                 AND Movement.DescId = zc_Movement_PersonalService()
+                                                         AND (Movement.StatusId = zc_Enum_Status_Complete()
+                                                           OR Movement.Id = inMovementId)
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                                    ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                                                   AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                                                   AND MovementLinkObject_PersonalServiceList.ObjectId IN (293716 -- Ведомость карточки БН Фидо
+                                                                                                                         , 413454 -- Ведомость карточки БН Пиреус
+                                                                                                                          )
+                                )
+          -- элементы с суммой для распределния
+        , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
+                         , tmpMovement_card.MovementId                   AS MovementId
                          , COALESCE (MovementItem.ObjectId, 0)           AS ObjectId
                          , COALESCE (MILinkObject_Unit.ObjectId, 0)      AS UnitId
                          , COALESCE (MILinkObject_Position.ObjectId, 0)  AS PositionId
                          , COALESCE (MILinkObject_InfoMoney.ObjectId, 0) AS InfoMoneyId
                          , (MIFloat_SummCardRecalc.ValueData)            AS SummCardRecalc
-                    FROM MovementItem
+                    FROM tmpMovement_card
+                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement_card.MovementId
+                                                AND MovementItem.DescId = zc_MI_Master()
+                                                AND MovementItem.isErased = FALSE
                          INNER JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                                       ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
                                                      AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
@@ -67,9 +99,12 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                       ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
-                    WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
                    )
+
+          -- Все документы в которые будем распределять сумму zc_MIFloat_SummCardRecalc
         , tmpMovement_Recalc AS (SELECT MovementId FROM _tmpMovement_Recalc WHERE EXISTS (SELECT SummCardRecalc FROM tmpMI))
+
+              -- Все элементы в которые будем распределять сумму zc_MIFloat_SummCardRecalc
             , tmpMI_find AS (SELECT MovementItem.Id AS MovementItemId
                                   , COALESCE (MovementItem.ObjectId, 0)           AS ObjectId
                                   , COALESCE (MILinkObject_Unit.ObjectId, 0)      AS UnitId
@@ -111,9 +146,10 @@ BEGIN
                                                                    ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
                             )
-          , tmpMI_Recalc AS (SELECT tmpMI.MovementItemId
+          , tmpMI_Recalc AS (SELECT tmpMI.MovementId     AS MovementId_from
+                                  , tmpMI.MovementItemId AS MovementItemId_from
+                                  , COALESCE (tmpMI_find.MovementItemId, 0) AS MovementItemId_to
                                   , tmpMI.SummCardRecalc
-                                  , COALESCE (tmpMI_find.MovementItemId, 0) AS MovementItemId_find
                              FROM tmpMI
                                   LEFT JOIN tmpMI_find ON tmpMI_find.ObjectId    = tmpMI.ObjectId
                                                       AND tmpMI_find.UnitId      = tmpMI.UnitId
@@ -121,13 +157,13 @@ BEGIN
                                                       AND tmpMI_find.InfoMoneyId = tmpMI.InfoMoneyId
                                                       AND tmpMI_find.SummToPay   >= tmpMI.SummCardRecalc
                             )
-     -- данные по элементам
-     INSERT INTO _tmpMI_Recalc (MovementItemId, SummCardRecalc, MovementItemId_find)
-       SELECT MovementItemId, SummCardRecalc, MAX (MovementItemId_find) FROM tmpMI_Recalc GROUP BY MovementItemId, SummCardRecalc;
+     -- данные по элементам для распределения
+     INSERT INTO _tmpMI_Recalc (MovementId_from, MovementItemId_from, MovementItemId_to, SummCardRecalc)
+       SELECT MovementId_from, MovementItemId_from, MAX (MovementItemId_to), SummCardRecalc FROM tmpMI_Recalc GROUP BY MovementId_from, MovementItemId_from, SummCardRecalc;
 
 
      -- !!!Выход если нет <Сумма на карточку (БН) для распределения>!!!
-     IF NOT EXISTS (SELECT MovementItemId FROM _tmpMI_Recalc)
+     IF NOT EXISTS (SELECT MovementId_from FROM _tmpMI_Recalc)
      THEN RETURN;
      END IF;
 
@@ -138,18 +174,19 @@ BEGIN
           INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement_Recalc.MovementId AND MovementItem.DescId = zc_MI_Master();
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), MovementItemId_find, SummCardRecalc)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), MovementItemId_to, SummCardRecalc)
      FROM _tmpMI_Recalc
-     WHERE MovementItemId_find <> 0;
+     WHERE MovementItemId_to <> 0;
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), MovementItemId, CASE WHEN MovementItemId_find <> 0 THEN 0 ELSE SummCardRecalc END)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), MovementItemId_from, CASE WHEN MovementItemId_to <> 0 THEN 0 ELSE SummCardRecalc END)
      FROM _tmpMI_Recalc;
 
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     -- пересчитали Итоговые суммы
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (tmp.MovementId_from)
+     FROM (SELECT MovementId_from FROM _tmpMI_Recalc GROUP BY MovementId_from) AS tmp;
 
-     -- пересчитали Итоговые суммы по накладной
+     -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (MovementId)
      FROM _tmpMovement_Recalc;
 

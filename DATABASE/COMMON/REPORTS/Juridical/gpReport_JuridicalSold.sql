@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inCurrencyId       Integer   , -- Валюта
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , JuridicalPartnerlName TVarChar
@@ -105,6 +105,7 @@ BEGIN
                                        GROUP BY ObjectLink_Contract_Personal.ObjectId
                                       )
      SELECT 
+        Operation.ContainerId,
         Object_Juridical.ObjectCode AS JuridicalCode,   
         Object_Juridical.ValueData AS JuridicalName,
         ObjectHistory_JuridicalDetails_View.OKPO,
@@ -179,7 +180,8 @@ BEGIN
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat AS EndAmount_K
 
      FROM
-         (SELECT Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId
+         (SELECT MAX (Operation_all.ContainerId) AS ContainerId
+               , Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId
                , Operation_all.PaidKindId, Operation_all.BranchId
                , CLO_Partner.ObjectId AS PartnerId
                , View_Contract_ContractKey.ContractId_Key AS ContractId,

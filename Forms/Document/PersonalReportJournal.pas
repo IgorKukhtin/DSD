@@ -13,22 +13,30 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit, dsdGuides,
+  cxButtonEdit;
 
 type
   TPersonalReportJournalForm = class(TAncestorJournalForm)
-    colAmountOut: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     MoneyPlaceName: TcxGridDBColumn;
     MemberCode: TcxGridDBColumn;
     N13: TMenuItem;
-    actReCompleteAll: TdsdExecStoredProc;
-    spMovementReCompleteAll: TdsdStoredProc;
-    bbReCompleteAll: TdxBarButton;
     CarName: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
+    MovementDescName: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
+    BranchCode: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
+    MoneyPlaceCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

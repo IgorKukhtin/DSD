@@ -33,7 +33,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
-                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , AnalyzerId
                          , IsActive, IsMaster
                           )
@@ -63,8 +63,9 @@ BEGIN
                -- Главное Юр.лицо всегда из кассы
              , COALESCE (ObjectLink_Cash_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
 
-             , 0 AS UnitId     -- не используется
-             , 0 AS PositionId -- не используется
+             , 0 AS UnitId                -- не используется
+             , 0 AS PositionId            -- не используется
+             , 0 AS PersonalServiceListId -- не используется
 
                -- Филиал Баланс: не используется
              , 0 AS BranchId_Balance
@@ -123,7 +124,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
-                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , AnalyzerId
                          , IsActive, IsMaster
                           )
@@ -167,15 +168,19 @@ BEGIN
                -- Главное Юр.лицо всегда из кассы
              , _tmpItem.JuridicalId_Basis
 
-             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
+             , COALESCE (MILinkObject_Unit.ObjectId, 0)     AS UnitId
              , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
+             , CASE WHEN MI_Child.Id > 0
+                         THEN COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)
+                    ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)
+               END AS PersonalServiceListId
 
                -- Филиал Баланс: всегда из кассы (нужен для НАЛ долгов или долгов подотчета) !!!но для ЗП - как в начислениях!!!
              , CASE WHEN MI_Child.Id > 0
                          THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                     ELSE COALESCE (ObjectLink_Partner_Branch.ChildObjectId, COALESCE (ObjectLink_MoneyPlace_Branch.ChildObjectId, COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis())))
                END AS BranchId_Balance
-               -- Филиал ОПиУ: всегда по подразделению !!!но для ЗП - не используется!!!
+               -- Филиал ОПиУ: всегда по подразделению !!!но для выплаты ЗП - не используется!!!
              , CASE WHEN MI_Child.Id > 0
                          THEN 0
                     ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0)
@@ -207,6 +212,10 @@ BEGIN
                                                AND MI_Child.DescId = zc_MI_Child()
                                                AND MI_Child.isErased = FALSE
 
+             LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                          ON MLO_PersonalServiceList.MovementId = inMovementId
+                                         AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+
              LEFT JOIN MovementItemDate AS MIDate_ServiceDate
                                         ON MIDate_ServiceDate.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
                                        AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
@@ -225,7 +234,7 @@ BEGIN
                                              AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
 
              LEFT JOIN ObjectLink AS ObjectLink_MoneyPlace_Branch ON ObjectLink_MoneyPlace_Branch.ObjectId = MILinkObject_MoneyPlace.ObjectId
-                                                                 AND ObjectLink_MoneyPlace_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                                                 AND ObjectLink_MoneyPlace_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
 
              LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId

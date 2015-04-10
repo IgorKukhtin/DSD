@@ -128,7 +128,7 @@ from
                             then 30502 -- Прочие товары
                        else 30501 -- Прочие доходы
                   end )as CodeIM
-           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId
+           , max(isnull(case when /*BillItems.OperPrice<>0*/ GoodsProperty.Id is not null then BillItems.Id else 0 end,0))as findId
       from (select Bill.Id
                  , Bill.FromId
                  , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) AS OKPO

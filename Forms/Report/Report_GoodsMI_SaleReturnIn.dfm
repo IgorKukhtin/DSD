@@ -1,27 +1,27 @@
 ﻿inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
-  Caption = #1054#1090#1095#1077#1090' < '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'> '
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'> '
   ClientHeight = 387
-  ClientWidth = 1020
+  ClientWidth = 1461
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
+  ExplicitWidth = 1477
   ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1020
+    Width = 1461
     Height = 307
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1020
     ExplicitHeight = 307
     ClientRectBottom = 307
-    ClientRectRight = 1020
+    ClientRectRight = 1461
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1461
         Height = 307
         ExplicitWidth = 1020
         ExplicitHeight = 307
@@ -889,7 +889,7 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1461
     Height = 54
     ExplicitWidth = 1020
     ExplicitHeight = 54
@@ -977,7 +977,7 @@
       Top = 6
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
-    object ceInfoMoney: TcxButtonEdit
+    object edInfoMoney: TcxButtonEdit
       Left = 1235
       Top = 30
       Properties.Buttons = <
@@ -1006,7 +1006,7 @@
       Top = 6
       Caption = #1060#1080#1083#1080#1072#1083':'
     end
-    object ceArea: TcxButtonEdit
+    object edArea: TcxButtonEdit
       Left = 315
       Top = 30
       Properties.Buttons = <
@@ -1023,7 +1023,7 @@
       Top = 6
       Caption = #1056#1077#1075#1080#1086#1085':'
     end
-    object ceRetail: TcxButtonEdit
+    object edRetail: TcxButtonEdit
       Left = 470
       Top = 30
       Properties.Buttons = <
@@ -1045,7 +1045,7 @@
       Top = 6
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
     end
-    object сеTradeMark: TcxButtonEdit
+    object еdTradeMark: TcxButtonEdit
       Left = 915
       Top = 30
       Properties.Buttons = <
@@ -1093,13 +1093,13 @@
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AreaGuides
+        Component = GuidesArea
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = BranchGuides
+        Component = GuidesBranch
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1135,37 +1135,37 @@
           'Date')
       end
       item
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = RetailGuides
+        Component = GuidesRetail
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = TradeMarkGuides
+        Component = GuidesTradeMark
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1338,56 +1338,56 @@
       item
         Name = 'inBranchId'
         Value = Null
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inAreaId'
         Value = Null
-        Component = AreaGuides
+        Component = GuidesArea
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inRetailId'
         Value = Null
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
         Value = '0'
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inTradeMarkId'
         Value = Null
-        Component = TradeMarkGuides
+        Component = GuidesTradeMark
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsGroupId'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1567,33 +1567,33 @@
         Component = PeriodChoice
       end
       item
-        Component = BranchGuides
+        Component = GuidesBranch
       end
       item
-        Component = AreaGuides
+        Component = GuidesArea
       end
       item
-        Component = RetailGuides
+        Component = GuidesRetail
       end
       item
-        Component = JuridicalGuides
+        Component = GuidesJuridical
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
       end
       item
-        Component = TradeMarkGuides
+        Component = GuidesTradeMark
       end
       item
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
       end>
     Left = 184
     Top = 136
   end
-  object GoodsGroupGuides: TdsdGuides
+  object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
@@ -1604,7 +1604,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1612,7 +1612,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1625,7 +1625,7 @@
     Left = 328
     Top = 170
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     Key = '0'
@@ -1638,14 +1638,14 @@
       item
         Name = 'Key'
         Value = '0'
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1653,31 +1653,36 @@
     Left = 728
     Top = 8
   end
-  object InfoMoneyGuides: TdsdGuides
+  object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    LookupControl = edInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TInfoMoney_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
         DataType = ftString
       end>
     Left = 1368
     Top = 65533
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -1688,7 +1693,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1696,7 +1701,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1704,7 +1709,7 @@
     Left = 840
     Top = 32
   end
-  object BranchGuides: TdsdGuides
+  object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
@@ -1715,7 +1720,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1723,16 +1728,16 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
     Left = 216
   end
-  object AreaGuides: TdsdGuides
+  object GuidesArea: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceArea
+    LookupControl = edArea
     FormNameParam.Value = 'TAreaForm'
     FormNameParam.DataType = ftString
     FormName = 'TAreaForm'
@@ -1741,7 +1746,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = AreaGuides
+        Component = GuidesArea
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1749,7 +1754,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = AreaGuides
+        Component = GuidesArea
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1757,9 +1762,9 @@
     Left = 384
     Top = 5
   end
-  object RetailGuides: TdsdGuides
+  object GuidesRetail: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceRetail
+    LookupControl = edRetail
     FormNameParam.Value = 'TRetailForm'
     FormNameParam.DataType = ftString
     FormName = 'TRetailForm'
@@ -1768,7 +1773,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1776,7 +1781,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = RetailGuides
+        Component = GuidesRetail
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1784,9 +1789,9 @@
     Left = 544
     Top = 13
   end
-  object TradeMarkGuides: TdsdGuides
+  object GuidesTradeMark: TdsdGuides
     KeyField = 'Id'
-    LookupControl = сеTradeMark
+    LookupControl = еdTradeMark
     FormNameParam.Value = 'TTradeMarkForm'
     FormNameParam.DataType = ftString
     FormName = 'TTradeMarkForm'
@@ -1795,13 +1800,13 @@
       item
         Name = 'Key'
         Value = ''
-        Component = TradeMarkGuides
+        Component = GuidesTradeMark
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = TradeMarkGuides
+        Component = GuidesTradeMark
         ComponentItem = 'TextValue'
         DataType = ftString
       end>

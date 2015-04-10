@@ -39,12 +39,18 @@ $BODY$
   DECLARE vbVATPercent TFloat;
   DECLARE vbDiscountPercent TFloat;
   DECLARE vbExtraChargesPercent TFloat;
+
+  DECLARE vbBranchId_Juridical Integer;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
+
+
+     -- для долга !!!определяется Филиал по Пользователю!!!, иначе всегда на Главном филиале
+     vbBranchId_Juridical:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0), zc_Branch_Basis());
 
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и для формирования Аналитик в проводках
@@ -494,7 +500,7 @@ BEGIN
                                                        , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                        , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
                                                        , inDescId_7          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                       , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_Branch_Basis() ELSE NULL END -- долг всегда на Главном филиале
+                                                       , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbBranchId_Juridical ELSE NULL END
                                                         )
                                   -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
                             ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -515,7 +521,7 @@ BEGIN
                                                        , inDescId_5          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                        , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
                                                        , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг всегда на Главном филиале
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN vbBranchId_Juridical ELSE NULL END
                                                         )
                   END AS ContainerId
                 , tmp.AccountId
@@ -562,7 +568,7 @@ BEGIN
                                                        , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                        , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
                                                        , inDescId_7          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                       , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_Branch_Basis() ELSE NULL END -- долг всегда на Главном филиале
+                                                       , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbBranchId_Juridical ELSE NULL END
                                                         )
                                   -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
                             ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -583,7 +589,7 @@ BEGIN
                                                        , inDescId_5          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                        , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
                                                        , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг всегда на Главном филиале
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN vbBranchId_Juridical ELSE NULL END
                                                         )
                   END AS ContainerId
                 , tmp.AccountId

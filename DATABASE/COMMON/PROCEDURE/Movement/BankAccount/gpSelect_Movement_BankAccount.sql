@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSI
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , PartnerBankName TVarChar, PartnerBankMFO TVarChar, PartnerBankAccountName TVarChar
+             , isCopy Boolean
               )
 AS
 $BODY$
@@ -94,6 +95,7 @@ BEGIN
            , Partner_BankAccount_View.BankName
            , Partner_BankAccount_View.MFO
            , Partner_BankAccount_View.Name      AS BankAccountName
+           , COALESCE(MovementBoolean_isCopy.ValueData, FALSE) AS isCopy
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -101,6 +103,10 @@ BEGIN
             LEFT JOIN Movement AS Movement_BankStatementItem ON Movement_BankStatementItem.Id = Movement.ParentId
             LEFT JOIN Movement AS Movement_BankStatement ON Movement_BankStatement.Id = Movement_BankStatementItem.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpStatus.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
+                                      ON MovementBoolean_isCopy.MovementId = Movement.Id
+                                     AND MovementBoolean_isCopy.DescId = zc_MovementBoolean_isCopy()
 
             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                     ON MovementFloat_Amount.MovementId = Movement.Id
@@ -177,6 +183,7 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVa
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.04.15         * add isCopy
  14.11.14                                        * add Currency...
  27.09.14                                        * add ContractTagName
  18.06.14                         * add Object_BankAccount_View

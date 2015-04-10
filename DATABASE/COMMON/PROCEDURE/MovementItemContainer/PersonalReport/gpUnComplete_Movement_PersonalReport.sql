@@ -14,6 +14,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_PersonalReport());
 
+     -- проверка
+     PERFORM lpCheck_Movement_PersonalReport (inMovementId:= inMovementId, inComment:= 'распроведен', inUserId:= vbUserId);
+
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);

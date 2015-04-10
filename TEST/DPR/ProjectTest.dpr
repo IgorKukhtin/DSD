@@ -119,7 +119,7 @@ uses
   RouteEdit in '..\..\Forms\Guides\RouteEdit.pas' {RouteEditForm},
   RouteSorting_Object in '..\..\Forms\Guides\RouteSorting_Object.pas' {RouteSorting_ObjectForm},
   RouteSortingEdit in '..\..\Forms\Guides\RouteSortingEdit.pas' {RouteSortingEditForm},
-  Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm},
+  Member_ObjectDesc in '..\..\Forms\Guides\Member_ObjectDesc.pas' {Member_ObjectDescForm},
   MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm},
   CarModel in '..\..\Forms\CarModel.pas' {CarModelForm},
   CarModelEdit in '..\..\Forms\CarModelEdit.pas' {CarModelEditForm},
@@ -658,7 +658,11 @@ uses
   InfoMoneyGroup_Object in '..\..\Forms\Guides\InfoMoneyGroup_Object.pas' {InfoMoneyGroup_ObjectForm: TParentForm},
   Report_GoodsMI_Package in '..\..\Forms\Report\Report_GoodsMI_Package.pas' {Report_GoodsMI_PackageForm: TParentForm},
   Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm},
-  GlobalConst in '..\..\FormsMeat\System\GlobalConst.pas' {GlobalConstForm: TParentForm};
+  GlobalConst in '..\..\FormsMeat\System\GlobalConst.pas' {GlobalConstForm: TParentForm},
+  BankAccount_Personal in '..\..\Forms\Document\BankAccount_Personal.pas' {BankAccount_PersonalForm: TParentForm},
+  BankAccount_PersonalJournal in '..\..\Forms\Document\BankAccount_PersonalJournal.pas' {BankAccount_PersonalJournalForm: TParentForm},
+  Member_Container in '..\..\Forms\Guides\Member_Container.pas' {Member_ContainerForm: TParentForm},
+  Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

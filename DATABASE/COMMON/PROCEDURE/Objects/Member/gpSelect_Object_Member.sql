@@ -119,6 +119,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
  01.10.13         *  add DriverCertificate, Comment             
  01.07.13         *              
 */
+
 -- тест
 -- SELECT * FROM gpSelect_Object_Member (FALSE, zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_Member (TRUE, zfCalc_UserAdmin())

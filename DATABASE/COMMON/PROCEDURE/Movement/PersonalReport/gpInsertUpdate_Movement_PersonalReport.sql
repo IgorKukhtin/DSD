@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalReport(
     IN inOperDate                 TDateTime , -- Дата документа
     IN inAmountIn                 TFloat    , -- Сумма операции
     IN inAmountOut                TFloat    , -- Сумма операции
-    IN inComment                  TVarChar  , -- Комментарий
+    IN inComment                  TVarChar  , -- Примечание
     IN inMemberId                 Integer   ,
     IN inInfoMoneyId              Integer   , -- Статьи назначения
     IN inUnitId                   Integer   ,
@@ -28,6 +28,9 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalReport());
      -- определяем ключ доступа
 --     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalReport());
+
+     -- проверка
+     PERFORM lpCheck_Movement_PersonalReport (inMovementId:= -1 * (SELECT DescId FROM Object WHERE Id = inMoneyPlaceId), inComment:= CASE WHEN ioId > 0 THEN 'изменен' ELSE 'добавлен' END, inUserId:= vbUserId);
 
      -- проверка
      IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
@@ -65,7 +68,7 @@ BEGIN
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inMemberId, ioId, vbAmount, NULL);
 
-     -- Комментарий
+     -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
      -- сохранили связь с <Управленческие статьи>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
@@ -79,7 +82,7 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
-/*
+
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
@@ -87,9 +90,9 @@ BEGIN
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_PersonalReport())
      THEN
           PERFORM lpComplete_Movement_PersonalReport (inMovementId := ioId
-                                             , inUserId     := vbUserId);
+                                                    , inUserId     := vbUserId);
      END IF;
-*/
+
 
 END;
 $BODY$

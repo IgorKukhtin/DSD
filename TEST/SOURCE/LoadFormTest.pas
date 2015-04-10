@@ -154,6 +154,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementForm');
+//
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_PersonalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccount_PersonalJournalForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountFormTest;
@@ -1471,12 +1474,16 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectDescForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ContainerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_ContainerForm');
 end;
 
 procedure TLoadFormTest.LoadMemberExternalFormTest;

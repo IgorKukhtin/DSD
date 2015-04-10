@@ -64,7 +64,8 @@ requires
   fs16,
   frx16,
   frxDB16,
-  kbmMemRunDXE2Pro;
+  kbmMemRunDXE2Pro,
+  zlibex;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

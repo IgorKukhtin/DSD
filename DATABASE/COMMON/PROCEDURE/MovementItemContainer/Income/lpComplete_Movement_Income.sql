@@ -134,7 +134,7 @@ BEGIN
                 , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Car() THEN Object_To.Id ELSE 0 END, 0) AS CarId
                 , COALESCE (ObjectLink_PersonalDriver_Member.ChildObjectId, 0) AS MemberDriverId
                 , COALESCE (ObjectLink_UnitTo_Branch.ChildObjectId, 0) AS BranchId_To
-                , COALESCE (ObjectLink_UnitCar_Branch.ChildObjectId, 0) AS BranchId_Car
+                , COALESCE (ObjectLink_UnitCar_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Car
                   -- Аналитики счетов - направления
                 , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Car()
                                       THEN zc_Enum_AccountDirection_20500() -- 20000; "Запасы"; 20500; "сотрудники (МО)"
@@ -1071,7 +1071,7 @@ BEGIN
                                                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                         , inObjectId_2        := _tmpItem_SummDriver.InfoMoneyId
                                                                         , inDescId_3          := zc_ContainerLinkObject_Branch()
-                                                                        , inObjectId_3        := vbBranchId_Car -- долг Подотчета на филиале Автомобиля
+                                                                        , inObjectId_3        := vbBranchId_Car -- долг Подотчета на филиале Автомобиля or zc_Branch_Basis
                                                                         , inDescId_4          := zc_ContainerLinkObject_Car()
                                                                         , inObjectId_4        := vbCarId
                                                                          )

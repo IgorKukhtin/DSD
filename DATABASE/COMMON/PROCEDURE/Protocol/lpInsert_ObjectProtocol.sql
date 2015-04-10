@@ -20,10 +20,10 @@ BEGIN
      FROM
           (SELECT D.FieldXML
            FROM 
-          (SELECT '<Field FieldName = "Name" FieldValue = "' || zfStrToXmlStr(Object.ValueData) || '"/>'
-               || '<Field FieldName = "Code" FieldValue = "' || Object.ObjectCode || '"/>'
-               || '<Field FieldName = "AccessKeyId" FieldValue = "' || CASE WHEN Object.AccessKeyId IS NULL THEN 'NULL' ELSE Object.AccessKeyId :: TVarChar END || '"/>'
-               || '<Field FieldName = "isErased" FieldValue = "' || Object.isErased || '"/>' AS FieldXML
+          (SELECT '<Field FieldName = "Значение" FieldValue = "' || zfStrToXmlStr(Object.ValueData) || '"/>'
+               || '<Field FieldName = "Код" FieldValue = "' || Object.ObjectCode || '"/>'
+               || '<Field FieldName = "Доступ" FieldValue = "' || CASE WHEN Object.AccessKeyId IS NULL THEN 'NULL' ELSE Object.AccessKeyId :: TVarChar END || '"/>'
+               || '<Field FieldName = "Удален" FieldValue = "' || Object.isErased || '"/>' AS FieldXML
                 , 1 AS GroupId
                 , Object.DescId
            FROM Object

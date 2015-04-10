@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Car (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar 
              , RegistrationCertificate TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -31,6 +31,7 @@ BEGIN
              Object_Car.Id          AS Id
            , Object_Car.ObjectCode  AS Code
            , Object_Car.ValueData   AS Name
+           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS NameAll
            
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
            

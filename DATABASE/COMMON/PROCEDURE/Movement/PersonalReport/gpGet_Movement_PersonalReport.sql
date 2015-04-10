@@ -1,15 +1,16 @@
 -- Function: gpGet_Movement_PersonalReport()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalReport (Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalReport (Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalReport(
     IN inMovementId        Integer   , -- ключ Документа
     IN inMovementId_Value  Integer   ,
+    IN inMemberId          Integer   ,
     IN inOperDate          TDateTime , --
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat, AmountOut TFloat
              , Comment TVarChar
              , MemberId Integer, MemberName TVarChar
@@ -25,24 +26,31 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalReport());
      vbUserId := lpGetUserBySession (inSession);
+
+
      --новый
      IF (COALESCE (inMovementId, 0) = 0) AND (COALESCE (inMovementId_Value, 0) = 0)
      THEN
+          -- проверка
+          IF COALESCE (inMemberId, 0) = 0
+          THEN 
+              RAISE EXCEPTION 'Ошибка. Не установлено значение <Подотчет (ФИО)>.';
+          END IF;
+
      RETURN QUERY
        SELECT
              0                                  AS Id
            , CAST (NEXTVAL ('movement_personalreport_seq') AS TVarChar) AS InvNumber
 --           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
            , inOperDate                         AS OperDate
-           , lfObject_Status.Code               AS StatusCode
-           , lfObject_Status.Name               AS StatusName
+
 
            , 0::TFloat                          AS AmountIn
            , 0::TFloat                          AS AmountOut
 
            , ''::TVarChar                       AS Comment
-           , 0                                  AS MemberId
-           , CAST ('' as TVarChar)              AS MemberName
+           , Object_Member.Id                   AS MemberId
+           , Object_Member.ValueData            AS MemberName
            , 0                                  AS InfoMoneyId
            , CAST ('' as TVarChar)              AS InfoMoneyName
            , 0                                  AS UnitId
@@ -52,7 +60,9 @@ BEGIN
            , 0                                  AS CarId
            , CAST ('' as TVarChar)              AS CarName
 
-       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
+       FROM Object AS Object_Member 
+       WHERE Object_Member.Id = inMemberId
+       ;
    END IF;
 
    --новый по маске
@@ -63,8 +73,6 @@ BEGIN
              inMovementId                       AS Id
            , CAST (NEXTVAL ('movement_personalreport_seq') AS TVarChar) AS InvNumber
            , inOperDate                         AS OperDate
-           , Object_Status.ObjectCode           AS StatusCode
-           , Object_Status.ValueData            AS StatusName
 
            , 0 :: TFloat                        AS AmountIn
            , 0 :: TFloat                        AS AmountOut
@@ -80,7 +88,7 @@ BEGIN
            , Object_MoneyPlace.Id               AS MoneyPlaceId
            , Object_MoneyPlace.ValueData        AS MoneyPlaceName
            , Object_Car.Id                      AS CarId
-           , Object_Car.ValueData               AS CarName
+           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = zc_Enum_Status_UnComplete()
@@ -112,21 +120,27 @@ BEGIN
                                              ON MILinkObject_Car.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
+            LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
+                                                AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
 
        WHERE Movement.Id =  inMovementId_Value;
 
    END IF;
 
-   --существующий
+   -- существующий
    IF (COALESCE (inMovementId, 0) <> 0)
    THEN
+
+          -- проверка
+          PERFORM lpCheck_Movement_PersonalReport (inMovementId:= inMovementId, inComment:= 'изменен', inUserId:= vbUserId);
+
+
    RETURN QUERY
        SELECT
              Movement.Id                        AS Id
            , Movement.InvNumber                 AS InvNumber
            , Movement.OperDate                  AS OperDate
-           , Object_Status.ObjectCode           AS StatusCode
-           , Object_Status.ValueData            AS StatusName
 
            , CASE
                   WHEN MovementItem.Amount > 0
@@ -150,10 +164,9 @@ BEGIN
            , Object_MoneyPlace.Id               AS MoneyPlaceId
            , Object_MoneyPlace.ValueData        AS MoneyPlaceName
            , Object_Car.Id                      AS CarId
-           , Object_Car.ValueData               AS CarName
+           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
        FROM Movement
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
@@ -182,6 +195,9 @@ BEGIN
                                              ON MILinkObject_Car.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
+            LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
+                                                AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
 
        WHERE Movement.Id =  inMovementId;
 
@@ -190,15 +206,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalReport (Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_PersonalReport (Integer, Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.04.15                                        * all
  16.09.14                                                        *
  15.09.14                                                        *
-
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PersonalReport (inMovementId:= 1, inOperDate:= CURRENT_DATE, inMovementId_Value:=0,  inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_PersonalReport (inMovementId:= 1, inMovementId_Value:=0,  inMemberId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin());
