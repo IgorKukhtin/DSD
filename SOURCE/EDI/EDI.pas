@@ -1003,7 +1003,8 @@ begin
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
         COUNTRYORIGIN := 'UA';
-        PRICE := FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat);
+        PRICE := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
       end;
       inc(i);
       Next;
@@ -1771,11 +1772,47 @@ begin
 end;
 
 procedure TEDI.ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
+  procedure FillReceipt(s: string; Receipt: TStrings);
+  var g: string;
+      j: integer;
+  begin
+    g := '';
+    for j := 1 to Length(s) do
+      if s[j] = #13 then
+      begin
+        Receipt.Add(g);
+        g := '';
+      end
+      else if s[j] <> #10 then
+        g := g + s[j];
+    if g <> '' then
+      Receipt.Add(g);
+  end;
+  procedure FillProtocol(Receipt: TStrings; spProtocol: TdsdStoredProc; ListValue: string);
+  var FileName: string;
+      DOCRNNDate: string;
+  begin
+    spProtocol.ParamByName('inisOk').Value := Receipt[4] = 'RESULT=0';
+    spProtocol.ParamByName('inTaxNumber').Value := StrToInt(copy(ListValue, 26, 7));
+    spProtocol.ParamByName('inEDIEvent').Value := copy(Receipt[1], 9, MaxInt);
+    spProtocol.ParamByName('inOperMonth').Value :=
+      EncodeDate(StrToInt(copy(ListValue, 36, 4)), StrToInt(copy(ListValue, 34, 2)), 1);
+    FileName := copy(Receipt[0], pos('FILENAME=', Receipt[0]) + 9, MaxInt);
+    spProtocol.ParamByName('inFileName').Value :=
+      copy(FileName, 1, 23) + '__' + copy(FileName, 26, MaxInt);
+    if spProtocol.ParamByName('inisOk').Value then begin
+       spProtocol.ParamByName('inInvNumberRegistered').Value := copy(Receipt[5], 8, MaxInt);
+       DOCRNNDate := copy(Receipt[11], 10, 8);
+       spProtocol.ParamByName('inDateRegistered').Value :=
+          EncodeDate(StrToInt(copy(DOCRNNDate, 1, 4)), StrToInt(copy(DOCRNNDate, 5, 2)), StrToInt(copy(DOCRNNDate, 7, 2)));
+    end
+    else
+       spProtocol.ParamByName('inDateRegistered').Value := Date;
+  end;
 var
   List, Receipt: TStrings;
-  i, j: integer;
+  i: integer;
   Stream: TStringStream;
-  g, FileName: string;
   Status: IXMLStatusType;
 begin
   FTPSetConnection;
@@ -1824,30 +1861,13 @@ begin
             begin
               // тянем файл к нам
               Stream.Clear;
-              FIdFTP.Get(List[i], Stream);
-              g := '';
-              for j := 1 to Length(Stream.DataString) do
-                if Stream.DataString[j] = #13 then
-                begin
-                  Receipt.Add(g);
-                  g := '';
-                end
-                else if Stream.DataString[j] <> #10 then
-                  g := g + Stream.DataString[j];
-              if g <> '' then
-                Receipt.Add(g);
-              spProtocol.ParamByName('inisOk').Value := Receipt[4] = 'RESULT=0';
-              spProtocol.ParamByName('inTaxNumber').Value :=
-                StrToInt(copy(List[i], 26, 7));
-              spProtocol.ParamByName('inEDIEvent').Value :=
-                copy(Receipt[1], 9, MaxInt);
-              spProtocol.ParamByName('inOperMonth').Value :=
-                EncodeDate(StrToInt(copy(List[i], 36, 4)),
-                StrToInt(copy(List[i], 34, 2)), 1);
-              FileName := copy(Receipt[0], pos('FILENAME=', Receipt[0]) +
-                9, MaxInt);
-              spProtocol.ParamByName('inFileName').Value :=
-                copy(FileName, 1, 23) + '__' + copy(FileName, 26, MaxInt);
+              try
+                FIdFTP.Get(List[i], Stream);
+              except
+                break;
+              end;
+              FillReceipt(Stream.DataString, Receipt);
+              FillProtocol(Receipt, spProtocol, List[i]);
               spProtocol.Execute;
               Receipt.Clear;
               // теперь перенесли файл в директроию Archive

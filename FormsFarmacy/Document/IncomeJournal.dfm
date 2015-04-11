@@ -310,6 +310,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     object actGetDataForSend: TdsdExecStoredProc
       Category = 'dsdImportExport'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetDataForSend
       StoredProcList = <
         item

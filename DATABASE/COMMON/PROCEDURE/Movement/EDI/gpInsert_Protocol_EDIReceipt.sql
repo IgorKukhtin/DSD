@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsert_Protocol_EDIReceipt(
     IN inEDIEvent            TVarChar  , -- Описание события
     IN inOperMonth           TDateTime , 
     IN inFileName            TVarChar  , -- Имя файла DECLAR
+    IN inInvNumberRegistered TVarChar   , -- Номер
+    IN inDateRegistered      TDateTime  , -- Дата
     IN inSession             TVarChar     -- Пользователь
 )                              
 RETURNS VOID AS
@@ -63,10 +65,9 @@ BEGIN
       PERFORM lpInsert_Movement_EDIEvents(vbMovementId, inEDIEvent, vbUserId);
 
       IF inisOk THEN 
+         PERFORM lpInsertUpdate_MovementString(zc_MovementString_InvNumberRegistered(), vbTaxMovementId, inInvNumberRegistered);
+         PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_DateRegistered(), vbTaxMovementId, inDateRegistered);
          PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
-         -- сохранили протокол
-         PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, FALSE);
-
          PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbTaxMovementId, inisOk);
          -- сохранили протокол
          PERFORM lpInsert_MovementProtocol (vbTaxMovementId, vbUserId, FALSE);
@@ -82,6 +83,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.06.15                         * inInvNumberRegistered, inDateRegistered
  05.12.14                         * add сохранили протокол
  14.10.14                         * 
  04.08.14                         * 

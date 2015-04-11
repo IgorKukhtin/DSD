@@ -132,6 +132,14 @@ type
     actSendOnPrice: TdsdOpenForm;
     N42: TMenuItem;
     N43: TMenuItem;
+    actMarginCategory: TdsdOpenForm;
+    actMarginCategoryItem: TdsdOpenForm;
+    dsdOpenForm2: TdsdOpenForm;
+    actMarginCategoryLink: TdsdOpenForm;
+    N44: TMenuItem;
+    N45: TMenuItem;
+    N46: TMenuItem;
+    N47: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }
