@@ -1183,12 +1183,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           StoredProc = spSelect
         end>
     end
-    object dsdPrintAction: TdsdPrintAction
+    object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080', '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080', '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
       ImageIndex = 3
       DataSets = <
         item
@@ -1319,148 +1319,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
       ReportNameParam.DataType = ftString
     end
-    object dsdPrintReal_byJuridicalPersonal: TdsdPrintAction
+    object actPrintSale: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      ImageIndex = 3
-      DataSets = <
-        item
-          UserName = 'frxDBDataset'
-          IndexFieldNames = 
-            'JuridicalGroupName;RetailName;JuridicalName;PartnerName;Contract' +
-            'TagGroupName;ContractTagName;ContractNumber'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Value = Null
-          Component = GuidesAccount
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'AccountName'
-          Value = Null
-          Component = GuidesAccount
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyGroupId'
-          Value = Null
-          Component = GuidesInfoMoneyGroup
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'InfoMoneyGroupName'
-          Value = Null
-          Component = GuidesInfoMoneyGroup
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyDestinationId'
-          Value = Null
-          Component = GuidesInfoMoneyDestination
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'InfoMoneyDestinationName'
-          Value = Null
-          Component = GuidesInfoMoneyDestination
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyId'
-          Value = Null
-          Component = GuidesInfoMoney
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          Component = GuidesInfoMoney
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindId'
-          Value = Null
-          Component = GuidesPaidKind
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'PaidKindName'
-          Value = Null
-          Component = GuidesPaidKind
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Value = Null
-          Component = GuidesBranch
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'BranchName'
-          Value = Null
-          Component = GuidesBranch
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalGroupId'
-          Value = Null
-          Component = GuidesJuridicalGroup
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'JuridicalGroupName'
-          Value = Null
-          Component = GuidesJuridicalGroup
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'CurrencyId'
-          Value = Null
-          Component = GuidesCurrency
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'CurrencyName'
-          Value = Null
-          Component = GuidesCurrency
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
-      ReportNameParam.DataType = ftString
-    end
-    object dsdPrintRealAction: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080', '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080', '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -1590,6 +1454,142 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrintSalePartner: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080', '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080', '#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 
+            'JuridicalGroupName;RetailName;JuridicalName;PartnerName;Contract' +
+            'TagGroupName;ContractTagName;ContractNumber'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyGroupId'
+          Value = Null
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Value = Null
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyDestinationId'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyDestinationName'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
       ReportNameParam.DataType = ftString
     end
     object IncomeJournal: TdsdOpenForm
@@ -3271,6 +3271,279 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       isShowModal = False
     end
+    object actPrintIncome: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080')'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 
+            'JuridicalGroupName;RetailName;JuridicalName;PartnerName;Contract' +
+            'TagGroupName;ContractTagName;ContractNumber'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyGroupId'
+          Value = ''
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Value = ''
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyDestinationId'
+          Value = ''
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyDestinationName'
+          Value = ''
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = ''
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = ''
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = ''
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = ''
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080'('#1092#1072#1082#1090')'
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080'('#1092#1072#1082#1090')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrintIncomePartner: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 
+            'JuridicalGroupName;RetailName;JuridicalName;PartnerName;Contract' +
+            'TagGroupName;ContractTagName;ContractNumber'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyGroupId'
+          Value = ''
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Value = ''
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyDestinationId'
+          Value = ''
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyDestinationName'
+          Value = ''
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = ''
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = ''
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'CurrencyId'
+          Value = ''
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = ''
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' - '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080'('#1092#1072#1082#1090')'
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' - '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080'('#1092#1072#1082#1090')'
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Top = 184
@@ -3387,7 +3660,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintReal'
+          ItemName = 'bbPrintSale'
         end
         item
           Visible = True
@@ -3395,7 +3668,27 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintReal_byJuridicalPersonal'
+          ItemName = 'bbPrintSalePartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintIncomePartner'
         end
         item
           Visible = True
@@ -3411,15 +3704,23 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
     end
     object bbPrint: TdxBarButton
-      Action = dsdPrintAction
+      Action = actPrint
       Category = 0
     end
-    object bbPrintReal: TdxBarButton
-      Action = dsdPrintRealAction
+    object bbPrintSale: TdxBarButton
+      Action = actPrintSale
       Category = 0
     end
-    object bbPrintReal_byJuridicalPersonal: TdxBarButton
-      Action = dsdPrintReal_byJuridicalPersonal
+    object bbPrintSalePartner: TdxBarButton
+      Action = actPrintSalePartner
+      Category = 0
+    end
+    object bbPrintIncome: TdxBarButton
+      Action = actPrintIncome
+      Category = 0
+    end
+    object bbPrintIncomePartner: TdxBarButton
+      Action = actPrintIncomePartner
       Category = 0
     end
   end

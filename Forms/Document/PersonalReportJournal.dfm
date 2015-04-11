@@ -2,6 +2,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1074#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1095#1077#1090'>'
   ClientHeight = 649
   ClientWidth = 1151
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1167
   ExplicitHeight = 684
   PixelsPerInch = 96

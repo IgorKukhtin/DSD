@@ -12,9 +12,9 @@ CREATE OR REPLACE FUNCTION gpReport_Member(
     IN inInfoMoneyDestinationId   Integer,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ContainerId Integer, MemberCode Integer, MemberName TVarChar
+RETURNS TABLE (ContainerId Integer, MemberId Integer, MemberCode Integer, MemberName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , AccountName TVarChar
+             , AccountId Integer, AccountName TVarChar
              , CarName TVarChar
              , BranchName TVarChar
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
@@ -33,6 +33,7 @@ BEGIN
   RETURN QUERY
      SELECT
         Operation.ContainerId,
+        Object_Member.Id                                                                            AS MemberId,
         Object_Member.ObjectCode                                                                    AS MemberCode,
         Object_Member.ValueData                                                                     AS MemberName,
         Object_InfoMoney_View.InfoMoneyGroupName                                                    AS InfoMoneyGroupName,
@@ -40,8 +41,10 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyCode                                                         AS InfoMoneyCode,
         Object_InfoMoney_View.InfoMoneyName                                                         AS InfoMoneyName,
         Object_InfoMoney_View.InfoMoneyName_all                                                     AS InfoMoneyName_all,
+        Object_Account_View.AccountId                                                               AS AccountId,
         Object_Account_View.AccountName_all                                                         AS AccountName,
-        Object_Car.ValueData                                                                        AS CarName,
+        (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName,
+
         Object_Branch.ValueData                                                                     AS BranchName,
         Operation.StartAmount ::TFloat                                                              AS StartAmount,
 
@@ -131,11 +134,15 @@ BEGIN
           GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.MemberId, Operation_all.InfoMoneyId, CLO_Car.ObjectId, Operation_all.BranchId
          ) AS Operation
 
-     LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
-     LEFT JOIN Object AS Object_Member ON Object_Member.Id = Operation.MemberId
-     LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
-     LEFT JOIN Object AS Object_Car ON Object_Car.Id = Operation.CarId
-     LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
+            LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = Operation.MemberId
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = Operation.CarId
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
+
+            LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
+                                                AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);
 

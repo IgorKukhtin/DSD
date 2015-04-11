@@ -10046,6 +10046,7 @@ begin
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id  and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
+           +'                                                            and GoodsProperty.InfoMoneyCode not between 21400 + 1 and 21500 - 1' // услуги полученные
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
            +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
@@ -10185,11 +10186,12 @@ begin
         Add('     left outer join (select Bill.Id as BillId'
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
 //           +'                            ,max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
-           +'                            ,max(isnull(case GoodsProperty.Id is not null then BillItems.Id else 0 end,0))as findId'
+           +'                            ,max(isnull(case when GoodsProperty.Id is not null then BillItems.Id else 0 end,0))as findId'
            +'                      from dba.Bill'
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
+           +'                                                            and GoodsProperty.InfoMoneyCode not between 21400 + 1 and 21500 - 1' // услуги полученные
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
            +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
@@ -10689,6 +10691,7 @@ begin
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id  and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
+           +'                                                            and GoodsProperty.InfoMoneyCode not between 21400 + 1 and 21500 - 1' // услуги полученные
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
            +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
@@ -11385,6 +11388,7 @@ begin
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
+           +'                                                            and GoodsProperty.InfoMoneyCode not between 21400 + 1 and 21500 - 1' // услуги полученные
            +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
            +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))

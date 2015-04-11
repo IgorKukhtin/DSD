@@ -760,7 +760,9 @@ BEGIN
                                OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
                                   THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                              */
-                             WHEN vbAccountDirectionId_To = zc_Enum_AccountDirection_20300() -- Запасы + на хранении
+                             WHEN (vbAccountDirectionId_To = zc_Enum_AccountDirection_20200() -- !!!временно!!! Запасы + на складах 
+                                OR vbAccountDirectionId_To = zc_Enum_AccountDirection_20300() -- Запасы + на хранении
+                                  )
                               AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
                                   THEN zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
 
@@ -774,7 +776,9 @@ BEGIN
                                  OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
                                     THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                                */
-                               WHEN vbAccountDirectionId_To = zc_Enum_AccountDirection_20300() -- Запасы + на хранении
+                               WHEN (vbAccountDirectionId_To = zc_Enum_AccountDirection_20200() -- !!!временно!!! Запасы + на складах 
+                                  OR vbAccountDirectionId_To = zc_Enum_AccountDirection_20300() -- Запасы + на хранении
+                                    )
                                 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
                                     THEN zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
 

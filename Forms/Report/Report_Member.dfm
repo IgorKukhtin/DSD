@@ -2,7 +2,6 @@ inherited Report_MemberForm: TReport_MemberForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091'>'
   ClientHeight = 555
   ClientWidth = 1020
-  ExplicitLeft = -38
   ExplicitWidth = 1036
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -220,7 +219,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Properties.ReadOnly = True
@@ -234,7 +233,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'StartAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Visible = False
@@ -248,7 +247,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'StartAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Visible = False
@@ -262,7 +261,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'MoneySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Properties.ReadOnly = True
@@ -275,7 +274,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'ReportSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Properties.ReadOnly = True
@@ -287,7 +286,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1056#1072#1089#1095#1077#1090#1099' '#1089' '#1102#1088'.'#1083#1080#1094#1086#1084
             DataBinding.FieldName = 'AccountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -297,7 +296,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' (+)'#1087#1088#1080#1093' (-)'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'SendSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -308,7 +307,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Properties.ReadOnly = True
@@ -322,7 +321,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Properties.ReadOnly = True
@@ -336,7 +335,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Properties.ReadOnly = True
@@ -350,7 +349,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'EndAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Visible = False
@@ -364,7 +363,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'EndAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
             Visible = False
@@ -392,14 +391,14 @@ inherited Report_MemberForm: TReport_MemberForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 60
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 60
     end
     inherited deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 60
       ExplicitTop = 30
@@ -642,7 +641,7 @@ inherited Report_MemberForm: TReport_MemberForm
           Name = 'MemberId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'AccountId'
+          ComponentItem = 'MemberId'
         end
         item
           Name = 'MemberName'
