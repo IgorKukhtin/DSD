@@ -2456,7 +2456,7 @@ begin
         Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = GoodsProperty.InfoMoneyCode');
         Add('where Goods.HasChildren = zc_hsLeaf()');
 //  Add(' and GoodsProperty.GoodsCode in (7001)');
-        Add('group by ObjectId, Goods.ParentId');
+        Add('group by ObjectId desc, Goods.ParentId');
         Add('       , ObjectName');
         Add('       , ObjectCode');
         Add('       , Erased');

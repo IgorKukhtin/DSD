@@ -68,15 +68,18 @@ type
     colChildComment: TcxGridDBColumn;
     PrintMasterCDS: TClientDataSet;
     PrintChildCDS: TClientDataSet;
-    spReport_GoodsMI_ProductionUnion_Tax: TdsdStoredProc;
+    spReport_TaxExit: TdsdStoredProc;
     isTaxExit: TcxGridDBColumn;
     isWeightMain: TcxGridDBColumn;
     actPrintReceipt: TdsdPrintAction;
-    spSelect_Object_Receipt: TdsdStoredProc;
-    spSelect_Object_ReceiptChild: TdsdStoredProc;
+    spPrintReceipt: TdsdStoredProc;
+    spPrintReceiptChild: TdsdStoredProc;
     bbPrintReceipt: TdxBarButton;
     actReceiptChoice: TOpenChoiceForm;
     colLineNum: TcxGridDBColumn;
+    spReport_TaxLoss: TdsdStoredProc;
+    bbReport_TaxLoss: TdxBarButton;
+    actReport_TaxLoss: TdsdPrintAction;
   private
     { Private declarations }
   public

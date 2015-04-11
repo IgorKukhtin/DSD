@@ -1,11 +1,12 @@
--- Function: gpReport_GoodsMI_ProductionUnion_Tax () - <Производство и процент выхода (итоги)>
+-- Function: gpReport_GoodsMI_ProductionUnion_TaxExit () - <Производство и процент выхода (итоги)>
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_TaxExit (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion_Tax (
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion_TaxExit (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
-    IN inUnitId       Integer   , 
+    IN inFromId       Integer   , 
+    IN inToId         Integer   , 
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar
@@ -44,7 +45,7 @@ BEGIN
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
-                        AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                        AND MIContainer.WhereObjectId_Analyzer = inFromId
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
@@ -75,7 +76,7 @@ BEGIN
                       FROM tmpMI_WorkProgress_out
                            INNER JOIN MovementItemContainer AS MIContainer
                                                             ON MIContainer.Id = tmpMI_WorkProgress_out.ParentId
-                                                           AND MIContainer.WhereObjectId_Analyzer <> inUnitId -- !!!если "производство ГП"!!!
+                                                           AND MIContainer.WhereObjectId_Analyzer <> inFromId -- !!!если "производство ГП"!!!
                            LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                          ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
@@ -221,7 +222,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_TaxExit (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -230,4 +231,4 @@ ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_Tax (TDateTime, TDateTime, Integ
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionUnion_Tax (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inUnitId:= 8447, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_ProductionUnion_TaxExit (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inFromId:= 8447, inSession:= zfCalc_UserAdmin()) ORDER BY 2;

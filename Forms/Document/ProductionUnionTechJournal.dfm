@@ -617,10 +617,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Enabled = False
     end
     inherited actPrint: TdsdPrintAction
-      StoredProc = spReport_GoodsMI_ProductionUnion_Tax
+      StoredProc = spReport_TaxExit
       StoredProcList = <
         item
-          StoredProc = spReport_GoodsMI_ProductionUnion_Tax
+          StoredProc = spReport_TaxExit
         end>
       Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')>'
@@ -644,6 +644,32 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           Value = Null
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
@@ -834,13 +860,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object actPrintReceipt: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect_Object_Receipt
+      StoredProc = spPrintReceipt
       StoredProcList = <
         item
-          StoredProc = spSelect_Object_Receipt
+          StoredProc = spPrintReceipt
         end
         item
-          StoredProc = spSelect_Object_ReceiptChild
+          StoredProc = spPrintReceiptChild
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
       Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
@@ -871,6 +897,67 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
+      ReportNameParam.DataType = ftString
+    end
+    object actReport_TaxLoss: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport_TaxLoss
+      StoredProcList = <
+        item
+          StoredProc = spReport_TaxLoss
+        end>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')>'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintMasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41791d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41791d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      ReportName = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')'
+      ReportNameParam.Value = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.DataType = ftString
     end
     object actReceiptChoice: TOpenChoiceForm
@@ -1036,6 +1123,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_TaxLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1061,6 +1156,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     end
     object bbPrintReceipt: TdxBarButton
       Action = actPrintReceipt
+      Category = 0
+    end
+    object bbReport_TaxLoss: TdxBarButton
+      Action = actReport_TaxLoss
       Category = 0
     end
   end
@@ -1253,6 +1352,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   end
   inherited GuidesFrom: TdsdGuides
     PositionDataSet = 'MasterCDS'
+    Left = 448
+    Top = 65528
   end
   inherited spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_ProductionUnionTech_Child'
@@ -1355,8 +1456,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Left = 708
     Top = 278
   end
-  object spReport_GoodsMI_ProductionUnion_Tax: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI_ProductionUnion_Tax'
+  object spReport_TaxExit: TdsdStoredProc
+    StoredProcName = 'gpReport_GoodsMI_ProductionUnion_TaxExit'
     DataSet = PrintMasterCDS
     DataSets = <
       item
@@ -1378,16 +1479,24 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'inFromId'
         Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = Null
         Component = GuidesTo
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 608
-    Top = 272
+    Left = 496
+    Top = 264
   end
-  object spSelect_Object_Receipt: TdsdStoredProc
+  object spPrintReceipt: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Receipt'
     DataSet = PrintMasterCDS
     DataSets = <
@@ -1423,10 +1532,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 456
-    Top = 233
+    Left = 424
+    Top = 185
   end
-  object spSelect_Object_ReceiptChild: TdsdStoredProc
+  object spPrintReceiptChild: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptChild'
     DataSet = PrintChildCDS
     DataSets = <
@@ -1448,7 +1557,47 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 480
-    Top = 249
+    Left = 440
+    Top = 201
+  end
+  object spReport_TaxLoss: TdsdStoredProc
+    StoredProcName = 'gpReport_GoodsMI_ProductionUnion_TaxLoss'
+    DataSet = PrintMasterCDS
+    DataSets = <
+      item
+        DataSet = PrintMasterCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41791d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41791d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 296
   end
 end
