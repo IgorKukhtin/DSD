@@ -602,6 +602,7 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- DELETE FROM HistoryCost WHERE ('01.06.2014' BETWEEN StartDate AND EndDate) OR ('30.06.2014' BETWEEN StartDate AND EndDate);
+-- DELETE FROM HistoryCost WHERE ('01.01.2015' BETWEEN StartDate AND EndDate) OR ('31.01.2015' BETWEEN StartDate AND EndDate);
 
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8462, 8459); -- Склад Брак -> Склад Реализации 
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8461, 8459); -- Склад Возвратов -> Склад Реализации 

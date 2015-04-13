@@ -35,8 +35,18 @@ BEGIN
    
    -- сохранили свойство <Значение>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptChild_Value(), ioId, inValue);
-   -- сохранили свойство <Входит в общий вес выхода>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_WeightMain(), ioId, inIsWeightMain);
+   IF EXISTS (SELECT * FROM ObjectLink WHERE ObjectId = inReceiptId AND DescId = zc_ObjectLink_Receipt_GoodsKind() AND ChildObjectId = zc_GoodsKind_WorkProgress())
+      OR EXISTS (SELECT * FROM ObjectLink WHERE ObjectId = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inReceiptId AND DescId = zc_ObjectLink_Receipt_Goods())
+                                            AND DescId = zc_ObjectLink_Goods_InfoMoney()
+                                            AND ChildObjectId = zc_Enum_InfoMoney_10105()) -- Основное сырье + Мясное сырье + Прочее мясное сырье
+   THEN
+       -- сохранили свойство <Входит в осн. сырье (100 кг.)>
+       PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_WeightMain(), ioId, inIsWeightMain);
+   ELSE
+       -- сохранили свойство <Входит в осн. сырье (100 кг.)>
+       PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_WeightMain(), ioId, FALSE);
+   END IF;
+
    -- сохранили свойство <Зависит от % выхода>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inIsTaxExit);
    -- сохранили свойство <Начальная дата>

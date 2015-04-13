@@ -1,12 +1,14 @@
--- Function: gpReport_GoodsMI_ProductionUnion_TaxLoss () - <Производство ГП и процент потерь (итоги)>
+-- Function: gpReport_GoodsMI_ProductionUnion_TaxLoss () - <Приход на склад и процент потерь (итоги) or (детально)>
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_TaxLoss (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_TaxLoss (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion_TaxLoss (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
     IN inFromId       Integer   , 
     IN inToId         Integer   , 
+    IN inIsDetail     Boolean   , -- 
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar
@@ -16,6 +18,9 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , Amount_out TFloat
              , AmountSend_out TFloat
              , AmountSend_In TFloat
+             , Amount_result TFloat
+             , TaxLoss TFloat
+             , TaxLoss_receipt TFloat
               )
 AS
 $BODY$
@@ -30,7 +35,9 @@ BEGIN
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
                            , CLO_GoodsKind.ObjectId                  AS GoodsKindId
                            , MIContainer.Amount                      AS Amount
-                           , CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN COALESCE (ObjectFloat_Value_child.ValueData, 0) * MIContainer.Amount / ObjectFloat_Value_master.ValueData ELSE 0 END AS AmountReceipt_out
+                           , CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN COALESCE (ObjectFloat_Value_child.ValueData, 0) * MIContainer.Amount / ObjectFloat_Value_master.ValueData ELSE 0 END
+                           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                             AS AmountReceipt_out
                       FROM MovementItemContainer AS MIContainer
                            INNER JOIN MovementLinkObject AS MLO_From
                                                          ON MLO_From.MovementId = MIContainer.MovementId
@@ -45,12 +52,31 @@ BEGIN
                            LEFT JOIN ObjectFloat AS ObjectFloat_Value_master
                                                  ON ObjectFloat_Value_master.ObjectId = MILO_Receipt.ObjectId
                                                 AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent
+                                                ON ObjectLink_Receipt_Parent.ObjectId = MILO_Receipt.ObjectId
+                                               AND ObjectLink_Receipt_Parent.DescId = zc_ObjectLink_Receipt_Parent()
+                           LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_parent
+                                                ON ObjectLink_Receipt_Goods_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
+                                               AND ObjectLink_Receipt_Goods_parent.DescId = zc_ObjectLink_Receipt_Goods()
+
                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
                                                 ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = MILO_Receipt.ObjectId
                                                AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                           INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                 ON ObjectLink_ReceiptChild_Goods.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+                                                AND ObjectLink_ReceiptChild_Goods.ChildObjectId = ObjectLink_Receipt_Goods_parent.ChildObjectId
                            LEFT JOIN ObjectFloat AS ObjectFloat_Value_child
                                                  ON ObjectFloat_Value_child.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                 AND ObjectFloat_Value_child.DescId = zc_ObjectFloat_ReceiptChild_Value()
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight	
+                                                 ON ObjectFloat_Weight.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
                         AND MIContainer.WhereObjectId_Analyzer = inToId
@@ -62,11 +88,16 @@ BEGIN
        , tmpMI_GP_out AS
                      (SELECT tmpMI_GP_in.GoodsId
                            , tmpMI_GP_in.GoodsKindId
-                           , SUM (-1 * MIContainer.Amount) AS Amount
+                           , SUM (-1 * MIContainer.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount
                       FROM tmpMI_GP_in
                            INNER JOIN MovementItemContainer AS MIContainer
                                                             ON MIContainer.ParentId = tmpMI_GP_in.Id
                                                            AND MIContainer.DescId = zc_MIContainer_Count()
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = MIContainer.ObjectId_Analyzer
+                                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight	
+                                                 ON ObjectFloat_Weight.ObjectId = tmpMI_GP_in.GoodsId
+                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                       GROUP BY tmpMI_GP_in.GoodsId
                              , tmpMI_GP_in.GoodsKindId
                       )
@@ -100,11 +131,11 @@ BEGIN
        , tmpResult AS
                      (SELECT tmp.GoodsId
                            , tmp.GoodsKindId
-                           , SUM (tmp.Amount_in)             AS Amount_in
-                           , SUM (tmp.AmountReceipt_out)     AS AmountReceipt_out
-                           , SUM (tmp.Amount_out)            AS Amount_out
-                           , SUM (tmp.AmountSend_out)        AS AmountSend_out
-                           , SUM (tmp.AmountSend_In)         AS AmountSend_In
+                           , SUM (tmp.Amount_in      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount_in
+                           , SUM (tmp.AmountSend_out * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountSend_out
+                           , SUM (tmp.AmountSend_In  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountSend_In
+                           , SUM (tmp.AmountReceipt_out) AS AmountReceipt_out
+                           , SUM (tmp.Amount_out)        AS Amount_out
                       FROM
                      (SELECT tmpMI_GP_in.GoodsId
                            , tmpMI_GP_in.GoodsKindId
@@ -135,6 +166,11 @@ BEGIN
                            , tmpMI_GP_send.Amount_In  AS AmountSend_In
                       FROM tmpMI_GP_send
                      ) AS tmp
+                     LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmp.GoodsId
+                                                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                     LEFT JOIN ObjectFloat AS ObjectFloat_Weight	
+                                           ON ObjectFloat_Weight.ObjectId = tmp.GoodsId
+                                          AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                       GROUP BY tmp.GoodsId
                              , tmp.GoodsKindId
                      )
@@ -150,6 +186,16 @@ BEGIN
          , tmpResult.Amount_out        :: TFloat AS Amount_out
          , tmpResult.AmountSend_out    :: TFloat AS AmountSend_out
          , tmpResult.AmountSend_In     :: TFloat AS AmountSend_In
+
+         , (tmpResult.Amount_in - tmpResult.AmountSend_out + tmpResult.AmountSend_In) :: TFloat AS Amount_result
+
+         , CASE WHEN tmpResult.Amount_out <> 0
+                     THEN (tmpResult.Amount_in / tmpResult.Amount_out) * 100
+           END :: TFloat AS TaxLoss
+
+         , CASE WHEN tmpResult.AmountReceipt_out <> 0
+                     THEN (tmpResult.Amount_in / tmpResult.AmountReceipt_out) * 100
+           END :: TFloat AS TaxLoss_receipt
 
      FROM tmpResult
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpResult.GoodsId
@@ -167,7 +213,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_TaxLoss (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_TaxLoss (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -176,4 +222,4 @@ ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_TaxLoss (TDateTime, TDateTime, I
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionUnion_TaxLoss (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inFromId:= 8447, inToId:= 8458, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_ProductionUnion_TaxLoss (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inFromId:= 8447, inToId:= 8458, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin()) ORDER BY 2;

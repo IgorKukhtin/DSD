@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lfGet_Object_ValueData (IN inId Integer)
 AS
 $BODY$
 BEGIN
-     RETURN (SELECT ValueData FROM Object where Id = inId);
+     RETURN (SELECT CASE WHEN ObjectCode <> 0 THEN '(' || ObjectCode :: TVarChar || ')' ELSE '' END || ValueData FROM Object where Id = inId);
           
 END;
 $BODY$

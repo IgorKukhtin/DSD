@@ -225,8 +225,9 @@ BEGIN
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
                                                                                                           AND NOT (vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE) -- !!!нужен только для затрат!!!
-             LEFT JOIN MovementItem AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
+             LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = inMovementId
                                                AND MI_Child.DescId = zc_MI_Child()
+                                               AND MI_Child.ParentId = _tmpItem.MovementItemId
                                                AND MI_Child.isErased = FALSE
                                                AND _tmpItem.MovementDescId = zc_Movement_ProfitLossService()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch

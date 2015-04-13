@@ -234,6 +234,7 @@ BEGIN
             , MovementItem.isErased         AS isErased
        FROM _tmpListMaster
             INNER JOIN MovementItem ON MovementItem.ParentId = _tmpListMaster.MovementItemId
+                                   AND MovementItem.MovementId = _tmpListMaster.MovementId
                                    AND MovementItem.DescId   = zc_MI_Child()
        WHERE _tmpListMaster.MovementId <> 0;
 
@@ -323,7 +324,7 @@ BEGIN
             , Object_Goods.ValueData            AS GoodsName
 
             , COALESCE (tmpMI_Child.MovementItemId, tmpMI_ReceiptChild.MovementItemId) AS ParentId
-            , tmpMI_Child.MovementItemId_Child
+            , tmpMI_Child.MovementItemId_Child AS MovementItemId
             , tmpMI_Child.Amount
 
             , COALESCE (MIFloat_AmountReceipt.ValueData, CASE WHEN tmpMI_ReceiptChild.GoodsKindId_master = zc_GoodsKind_WorkProgress() THEN tmpMI_ReceiptChild.Value ELSE 0 END) AS AmountReceipt
@@ -340,12 +341,55 @@ BEGIN
                    ELSE 0
               END AS AmountCalc
 
+            , CASE WHEN TRUE = zfCalc_ReceiptChild_isWeightTotal (inGoodsId                := tmpMI_Child.GoodsId
+                                                                , inGoodsKindId            := tmpMI_Child.GoodsKindId
+                                                                , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
+                                                                , inIsWeightMain           := CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN COALESCE (MIBoolean_WeightMain.ValueData, FALSE) ELSE COALESCE (tmpMI_ReceiptChild.isWeightMain, FALSE) END
+                                                                , inIsTaxExit              := CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN COALESCE (MIBoolean_TaxExit.ValueData, FALSE)    ELSE COALESCE (tmpMI_ReceiptChild.isTaxExit, FALSE)    END
+                                                                 )
+                        THEN tmpMI_Child.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                    ELSE 0
+              END :: TFloat AS AmountWeight
+            , CASE WHEN TRUE = zfCalc_ReceiptChild_isWeightTotal (inGoodsId                := tmpMI_Child.GoodsId
+                                                                , inGoodsKindId            := tmpMI_Child.GoodsKindId
+                                                                , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
+                                                                , inIsWeightMain           := CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN COALESCE (MIBoolean_WeightMain.ValueData, FALSE) ELSE COALESCE (tmpMI_ReceiptChild.isWeightMain, FALSE) END
+                                                                , inIsTaxExit              := CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN COALESCE (MIBoolean_TaxExit.ValueData, FALSE)    ELSE COALESCE (tmpMI_ReceiptChild.isTaxExit, FALSE)    END
+                                                                 )
+                        THEN CASE WHEN tmpMI_ReceiptChild.GoodsKindId_master = zc_GoodsKind_WorkProgress()
+                                       THEN CASE WHEN tmpMI_ReceiptChild.isTaxExit = FALSE
+                                                      THEN tmpMI_ReceiptChild.CuterCount_calc * tmpMI_ReceiptChild.Value
+                                                 WHEN tmpMI_ReceiptChild.Value_master <> 0
+                                                      THEN tmpMI_ReceiptChild.Amount_calc * tmpMI_ReceiptChild.Value / tmpMI_ReceiptChild.Value_master
+                                                 ELSE 0
+                                            END
+                                  WHEN tmpMI_ReceiptChild.Value_master <> 0
+                                       THEN tmpMI_ReceiptChild.Amount_calc * tmpMI_ReceiptChild.Value / tmpMI_ReceiptChild.Value_master 
+                                  ELSE 0
+                             END
+                           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                   ELSE 0
+              END :: TFloat AS AmountCalcWeight
+            , CASE WHEN TRUE = zfCalc_ReceiptChild_isWeightTotal (inGoodsId                := tmpMI_Child.GoodsId
+                                                                , inGoodsKindId            := tmpMI_Child.GoodsKindId
+                                                                , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
+                                                                , inIsWeightMain           := CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN COALESCE (MIBoolean_WeightMain.ValueData, FALSE) ELSE COALESCE (tmpMI_ReceiptChild.isWeightMain, FALSE) END
+                                                                , inIsTaxExit              := CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN COALESCE (MIBoolean_TaxExit.ValueData, FALSE)    ELSE COALESCE (tmpMI_ReceiptChild.isTaxExit, FALSE)    END
+                                                                 )
+                        THEN COALESCE (MIFloat_AmountReceipt.ValueData, CASE WHEN tmpMI_ReceiptChild.GoodsKindId_master = zc_GoodsKind_WorkProgress() THEN tmpMI_ReceiptChild.Value ELSE 0 END)
+                           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                   ELSE 0
+              END :: TFloat AS AmountReceiptWeight
+
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
             , MIString_PartionGoods.ValueData   AS PartionGoods
             , MIString_Comment.ValueData        AS Comment
 
-            , CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN MIBoolean_TaxExit.ValueData    ELSE tmpMI_ReceiptChild.isTaxExit    END :: Boolean  AS isTaxExit
-            , CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN MIBoolean_WeightMain.ValueData ELSE tmpMI_ReceiptChild.isWeightMain END :: Boolean  AS isWeightMain
+            , CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN COALESCE (MIBoolean_WeightMain.ValueData, FALSE) ELSE COALESCE (tmpMI_ReceiptChild.isWeightMain, FALSE) END :: Boolean  AS isWeightMain
+            , CASE WHEN tmpMI_Child.MovementItemId <> 0 THEN COALESCE (MIBoolean_TaxExit.ValueData, FALSE)    ELSE COALESCE (tmpMI_ReceiptChild.isTaxExit, FALSE)    END :: Boolean  AS isTaxExit
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -391,6 +435,10 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpMI_Child.MovementItemId_Child
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id

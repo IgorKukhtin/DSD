@@ -1,35 +1,31 @@
 inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075
   ClientHeight = 685
-  ClientWidth = 1097
-  ExplicitWidth = 1113
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 61
-    Width = 1097
+    Width = 1020
     Height = 624
     TabOrder = 2
     ExplicitTop = 61
-    ExplicitWidth = 1097
+    ExplicitWidth = 1020
     ExplicitHeight = 624
     ClientRectBottom = 624
-    ClientRectRight = 1097
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1097
+      ExplicitWidth = 1020
       ExplicitHeight = 600
       inherited cxGrid: TcxGrid
-        Width = 1097
+        Width = 1020
         Height = 292
-        ExplicitWidth = 1097
+        ExplicitWidth = 1020
         ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####;-,0.####; ;'
-              Kind = skSum
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -61,10 +57,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Column = colCuterCount_order
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####;-,0.####; ;'
-              Kind = skSum
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -309,41 +301,41 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       inherited cxGridChild: TcxGrid
         Top = 297
-        Width = 1097
+        Width = 1020
         ExplicitTop = 297
-        ExplicitWidth = 1097
+        ExplicitWidth = 1020
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colChildAmountReceipt
+              Column = colChildAmountReceiptWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colChildAmount
+              Column = colChildAmountWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colChildAmountCalc
+              Column = colChildAmountCalcWeight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colChildAmountReceipt
+              Column = colChildAmountReceiptWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colChildAmount
+              Column = colChildAmountWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colChildAmountCalc
+              Column = colChildAmountCalcWeight
             end>
           Styles.Content = nil
           object colChildGroupNumber: TcxGridDBColumn [0]
@@ -372,6 +364,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -407,31 +400,70 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          object isTaxExit: TcxGridDBColumn [8]
+          object colChildAmountReceiptWeight: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086' 1 '#1082#1091#1090#1077#1088' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountReceiptWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colChildAmountWeight: TcxGridDBColumn [9]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colChildAmountCalcWeight: TcxGridDBColumn [10]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountCalcWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isTaxExit: TcxGridDBColumn [11]
             Caption = #1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093'.'
             DataBinding.FieldName = 'isTaxExit'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 70
           end
-          object isWeightMain: TcxGridDBColumn [9]
+          object isWeightMain: TcxGridDBColumn [12]
             Caption = #1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)'
             DataBinding.FieldName = 'isWeightMain'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
-          object colChildPartionGoodsDate: TcxGridDBColumn [10]
+          object colChildPartionGoodsDate: TcxGridDBColumn [13]
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'PartionGoodsDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.SaveTime = False
+            Properties.ShowTime = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colChildPartionGoods: TcxGridDBColumn [11]
+          object colChildPartionGoods: TcxGridDBColumn [14]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -440,7 +472,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colChildComment: TcxGridDBColumn [12]
+          object colChildComment: TcxGridDBColumn [15]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -456,16 +488,16 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 292
-        Width = 1097
+        Width = 1020
         ExplicitTop = 292
-        ExplicitWidth = 1097
+        ExplicitWidth = 1020
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1097
+    Width = 1020
     Height = 35
-    ExplicitWidth = 1097
+    ExplicitWidth = 1020
     ExplicitHeight = 35
     inherited edInvNumber: TcxTextEdit
       Left = 835
@@ -513,7 +545,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ExplicitLeft = 983
       ExplicitTop = 17
       ExplicitWidth = 100
-      ExplicitHeight = 22
       Width = 100
     end
     inherited cxLabel3: TcxLabel
@@ -617,6 +648,17 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Enabled = False
     end
     inherited actPrint: TdsdPrintAction
+      MoveParams = <
+        item
+          FromParam.Name = 'isDetail'
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          ToParam.Name = 'isDetail'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isDetail'
+          ToParam.DataType = ftBoolean
+        end>
       StoredProc = spReport_TaxExit
       StoredProcList = <
         item
@@ -670,6 +712,16 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           Component = GuidesTo
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'isDetail'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isLoss'
+          Value = False
+          DataType = ftBoolean
         end>
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
@@ -737,13 +789,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       isShowModal = True
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
-      Enabled = True
-    end
-    inherited actComplete: TdsdChangeMovementStatus
-      Enabled = True
-    end
-    object actUpdate: TdsdInsertUpdateAction [23]
+    object actUpdate: TdsdInsertUpdateAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -803,7 +849,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'MovementItemId'
     end
-    object actInsert: TdsdInsertUpdateAction [24]
+    object actInsert: TdsdInsertUpdateAction [22]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -854,10 +900,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'MovementItemId'
     end
-    inherited actSetErased: TdsdChangeMovementStatus
-      Enabled = True
-    end
-    object actPrintReceipt: TdsdPrintAction
+    object actPrintReceipt: TdsdPrintAction [24]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spPrintReceipt
@@ -870,8 +913,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
       Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
-      ImageIndex = 3
-      ShortCut = 16464
+      ImageIndex = 17
       DataSets = <
         item
           DataSet = PrintMasterCDS
@@ -899,9 +941,102 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
     end
-    object actReport_TaxLoss: TdsdPrintAction
+    object actReport_TaxExit_Loss: TdsdPrintAction [25]
       Category = 'DSDLib'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Name = 'isDetail'
+          FromParam.Value = True
+          FromParam.DataType = ftBoolean
+          ToParam.Name = 'isDetail'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isDetail'
+          ToParam.DataType = ftBoolean
+        end>
+      StoredProc = spReport_TaxExit
+      StoredProcList = <
+        item
+          StoredProc = spReport_TaxExit
+        end>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')>'
+      ImageIndex = 18
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintMasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsName;PartionGoodsDate;GoodsKindName_Comp' +
+            'lete'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41791d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41791d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'FromId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'ToId'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'isDetail'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isLoss'
+          Value = True
+          DataType = ftBoolean
+        end>
+      ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
+      ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
+      ReportNameParam.DataType = ftString
+    end
+    object actReport_TaxLoss: TdsdPrintAction [26]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'isDetail'
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          ToParam.Name = 'isDetail'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isDetail'
+          ToParam.DataType = ftBoolean
+        end>
       StoredProc = spReport_TaxLoss
       StoredProcList = <
         item
@@ -909,8 +1044,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')>'
-      ImageIndex = 3
-      ShortCut = 16464
+      ImageIndex = 19
       DataSets = <
         item
           DataSet = PrintMasterCDS
@@ -946,21 +1080,26 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           Name = 'ToId'
           Value = Null
-          Component = GuidesTo
-          ComponentItem = 'Key'
+          Component = FormParams
+          ComponentItem = 'ToId_baza'
         end
         item
           Name = 'ToName'
           Value = Null
-          Component = GuidesTo
-          ComponentItem = 'TextValue'
+          Component = FormParams
+          ComponentItem = 'ToName_baza'
           DataType = ftString
+        end
+        item
+          Name = 'isDetail'
+          Value = False
+          DataType = ftBoolean
         end>
       ReportName = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.Value = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.DataType = ftString
     end
-    object actReceiptChoice: TOpenChoiceForm
+    object actReceiptChoice: TOpenChoiceForm [27]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1011,6 +1150,48 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ComponentItem = 'GoodsKindId'
         end>
       isShowModal = True
+    end
+    object actUnComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 11
+      Status = mtUncomplete
+      DataSource = MasterDS
+    end
+    object actComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      DataSource = MasterDS
+    end
+    object actSetErased: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 13
+      Status = mtDelete
+      DataSource = MasterDS
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -1123,6 +1304,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_TaxExit_Loss'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_TaxLoss'
         end
         item
@@ -1154,12 +1343,25 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Action = actInsert
       Category = 0
     end
+    inherited bbComplete: TdxBarButton
+      Action = actComplete
+    end
+    inherited dxBarButton1: TdxBarButton
+      Action = actUnComplete
+    end
+    inherited dxBarButton2: TdxBarButton
+      Action = actSetErased
+    end
     object bbPrintReceipt: TdxBarButton
       Action = actPrintReceipt
       Category = 0
     end
     object bbReport_TaxLoss: TdxBarButton
       Action = actReport_TaxLoss
+      Category = 0
+    end
+    object bbReport_TaxExit_Loss: TdxBarButton
+      Action = actReport_TaxExit_Loss
       Category = 0
     end
   end
@@ -1232,6 +1434,20 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'ToId_baza'
+        Value = 8458
+      end
+      item
+        Name = 'ToName_baza'
+        Value = #1057#1082#1083#1072#1076' '#1041#1072#1079#1072' '#1043#1055
+        DataType = ftString
+      end
+      item
+        Name = 'isDetail'
+        Value = Null
+        DataType = ftBoolean
       end>
   end
   inherited StatusGuides: TdsdGuides
@@ -1362,8 +1578,15 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Name = 'ioId'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementItemId'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
@@ -1373,27 +1596,27 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inParentId'
         Value = Null
-        Component = ChildCDS
-        ComponentItem = 'ParentId'
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
         ParamType = ptInput
       end
       item
-        Name = 'inAmountReceipt'
+        Name = 'ioAmountReceipt'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'AmountReceipt'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inPartionGoodsDate'
@@ -1404,23 +1627,20 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = ChildCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
       end>
-  end
-  inherited spMovementSetErased: TdsdStoredProc
-    Top = 248
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1441,7 +1661,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 64
+    Left = 168
     Top = 40
   end
   object PrintMasterCDS: TClientDataSet
@@ -1490,6 +1710,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsDetail'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'isDetail'
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1
@@ -1592,12 +1820,68 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inToId'
         Value = Null
-        Component = GuidesTo
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'ToId_baza'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsDetail'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'isDetail'
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1
     Left = 528
-    Top = 296
+    Top = 304
+  end
+  object spMovementUnComplete: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement_ProductionUnion'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 48
+    Top = 288
+  end
+  object spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_ProductionUnion'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 80
+    Top = 272
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_ProductionUnion'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 151
+    Top = 299
   end
 end

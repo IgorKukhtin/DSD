@@ -24,83 +24,92 @@ BEGIN
 
      RETURN QUERY 
                             -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого месяца в долг по прибыли???
-      WITH tmpContainer AS (SELECT Container.Id AS ContainerId
-                                 , ReportContainerLink.ReportContainerId
-                                 , ReportContainerLink.ChildContainerId AS ContainerId_inf
+      WITH tmpContainer AS (SELECT ReportContainerLink.ReportContainerId
+                                 -- , ReportContainerLink.ChildContainerId   AS ContainerId_inf
+                                 , CLO_Branch.ObjectId                    AS BranchId_ProfitLoss
+                                 , CLO_ProfitLoss.ObjectId                AS ProfitLossId
+                                 , CLO_Business.ObjectId                  AS BusinessId
+                                 , CLO_JuridicalBasis.ObjectId            AS JuridicalId_Basis
+                                 , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId_inf
                             FROM Container
-                                 JOIN ReportContainerLink ON ReportContainerLink.ContainerId = Container.Id
+                                 INNER JOIN ReportContainerLink ON ReportContainerLink.ContainerId = Container.Id
+                                 LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                                               ON CLO_Branch.ContainerId = Container.Id
+                                                              AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                                 LEFT JOIN ContainerLinkObject AS CLO_ProfitLoss
+                                                               ON CLO_ProfitLoss.ContainerId = Container.Id
+                                                              AND CLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
+                                 LEFT JOIN ContainerLinkObject AS CLO_Business
+                                                               ON CLO_Business.ContainerId = Container.Id
+                                                              AND CLO_Business.DescId = zc_ContainerLinkObject_Business()
+                                 LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis
+                                                               ON CLO_JuridicalBasis.ContainerId = Container.Id
+                                                              AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+
+                                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                                               ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink.ChildContainerId
+                                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                             WHERE Container.ObjectId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
                               AND Container.DescId = zc_Container_Summ()
                            )
-      -- , tmpMIReport_all AS (SELECT tmpContainer.ContainerId
-          , tmpMIReport AS (SELECT tmpContainer.ContainerId
-                                 , tmpContainer.ContainerId_inf
+          , tmpProfitLoss /*tmpMIReport*/ AS (SELECT /*tmpContainer.ContainerId
+                                 , tmpContainer.ContainerId_inf*/
+                                   tmpContainer.BranchId_ProfitLoss
+                                 , tmpContainer.ProfitLossId
+                                 , tmpContainer.BusinessId
+                                 , tmpContainer.JuridicalId_Basis
+                                 , tmpContainer.InfoMoneyId_inf
                                  -- , MIReport.MovementItemId
                                  , SUM (CASE WHEN MIReport.ActiveAccountId = zc_Enum_Account_100301() THEN -1 ELSE 1 END * MIReport.Amount) AS Amount
                                  , MILinkObject_Unit.ObjectId   AS UnitId_ProfitLoss
-                                 , COALESCE (MILinkObject_Branch.ObjectId, MovementLinkObject_Branch.ObjectId) AS BranchId_ProfitLoss
+                                 -- , COALESCE (MILinkObject_Branch.ObjectId, MovementLinkObject_Branch.ObjectId) AS BranchId_ProfitLoss
                                  , MILinkObject_Route.ObjectId  AS RouteId_inf
                             FROM tmpContainer
+
                                  INNER JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpContainer.ReportContainerId
                                                                           AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                   ON MILinkObject_Unit.MovementItemId = MIReport.MovementItemId
                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                                                                  -- AND MILinkObject_Unit.ObjectId >0
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                 /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                                   ON MILinkObject_Branch.MovementItemId = MIReport.MovementItemId
                                                                  AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                                                                 -- AND MILinkObject_Branch.ObjectId >0
+                                                                 -- AND MILinkObject_Branch.ObjectId >0*/
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                                   ON MILinkObject_Route.MovementItemId = MIReport.MovementItemId
                                                                  AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
                                                                  -- AND MILinkObject_Route.ObjectId >0
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
                                                              ON MovementLinkObject_Branch.MovementId = MIReport.MovementId
-                                                            AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
-                            GROUP BY tmpContainer.ContainerId
-                                   , tmpContainer.ContainerId_inf
+                                                            AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()*/
+                            GROUP BY /*tmpContainer.ContainerId
+                                   , tmpContainer.ContainerId_inf*/
+                                     tmpContainer.BranchId_ProfitLoss
+                                   , tmpContainer.ProfitLossId
+                                   , tmpContainer.BusinessId
+                                   , tmpContainer.JuridicalId_Basis
                                    -- , MIReport.MovementItemId
                                    , MILinkObject_Unit.ObjectId
-                                   , MILinkObject_Branch.ObjectId
                                    , MILinkObject_Route.ObjectId
-                                   , MovementLinkObject_Branch.ObjectId
+                                   , tmpContainer.InfoMoneyId_inf
+                                   -- , MILinkObject_Branch.ObjectId
+                                   -- , MovementLinkObject_Branch.ObjectId
                            )
-/*          , tmpMIReport AS (SELECT tmpMIReport_all.ContainerId
-                                 , tmpMIReport_all.ContainerId_inf
-                                 , SUM (tmpMIReport_all.Amount) AS Amount
-                                 , MILinkObject_Unit.ObjectId   AS UnitId_ProfitLoss
-                                 , MILinkObject_Branch.ObjectId AS BranchId_ProfitLoss
-                                 , MILinkObject_Route.ObjectId  AS RouteId_inf
-                            FROM tmpMIReport_all
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                                  ON MILinkObject_Unit.MovementItemId = tmpMIReport_all.MovementItemId
-                                                                 AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                                                                 -- AND MILinkObject_Unit.ObjectId >0
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                                  ON MILinkObject_Branch.MovementItemId = tmpMIReport_all.MovementItemId
-                                                                 AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                                                                 -- AND MILinkObject_Branch.ObjectId >0
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
-                                                                  ON MILinkObject_Route.MovementItemId = tmpMIReport_all.MovementItemId
-                                                                 AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
-                                                                 -- AND MILinkObject_Route.ObjectId >0
-                            GROUP BY tmpMIReport_all.ContainerId
-                                   , tmpMIReport_all.ContainerId_inf
-                                   , MILinkObject_Unit.ObjectId
-                                   , MILinkObject_Branch.ObjectId
-                                   , MILinkObject_Route.ObjectId
-                           )*/
-  , tmpProfitLoss AS (SELECT tmpMIReport.ContainerId_inf
+  /*, tmpProfitLoss AS (SELECT tmpMIReport.ContainerId_inf
+                           -- , COALESCE (ContainerLinkObject_Branch.ObjectId, tmpMIReport.BranchId_ProfitLoss) AS BranchId_ProfitLoss
+                           , tmpMIReport.BranchId_ProfitLoss
+                           , tmpMIReport.ProfitLossId
+                           , tmpMIReport.BusinessId
+                           , tmpMIReport.JuridicalId_Basis
                            , tmpMIReport.UnitId_ProfitLoss
-                           , COALESCE (ContainerLinkObject_Branch.ObjectId, tmpMIReport.BranchId_ProfitLoss) AS BranchId_ProfitLoss
                            , tmpMIReport.RouteId_inf
                            , SUM (tmpMIReport.Amount) AS Amount
-                           , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
+                           --, ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
                            , ContainerLinkObject_Business.ObjectId AS BusinessId
-                           , ContainerLinkObject_JuridicalBasis.ObjectId AS JuridicalId_Basis
+                           , ContainerLinkObject_JuridicalBasis.ObjectId AS JuridicalId_Basis--
                       FROM tmpMIReport
-                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_ProfitLoss
+                           --LEFT JOIN ContainerLinkObject AS ContainerLinkObject_ProfitLoss
                                                          ON ContainerLinkObject_ProfitLoss.ContainerId = tmpMIReport.ContainerId
                                                         AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
                            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Branch
@@ -111,40 +120,51 @@ BEGIN
                                                         AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
                            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
                                                          ON ContainerLinkObject_JuridicalBasis.ContainerId = tmpMIReport.ContainerId
-                                                        AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                                                        AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()--
                       GROUP BY tmpMIReport.ContainerId_inf
-                             , tmpMIReport.UnitId_ProfitLoss
-                             , COALESCE (ContainerLinkObject_Branch.ObjectId, tmpMIReport.BranchId_ProfitLoss)
+                             --, COALESCE (ContainerLinkObject_Branch.ObjectId, tmpMIReport.BranchId_ProfitLoss)
+                             , tmpMIReport.BranchId_ProfitLoss
+                             , tmpMIReport.ProfitLossId
+                             , tmpMIReport.BusinessId
+                             , tmpMIReport.JuridicalId_Basis
                              , tmpMIReport.RouteId_inf
-                             , ContainerLinkObject_ProfitLoss.ObjectId
+                             , tmpMIReport.UnitId_ProfitLoss
+                             --, ContainerLinkObject_ProfitLoss.ObjectId
                              , ContainerLinkObject_Business.ObjectId
                              , ContainerLinkObject_JuridicalBasis.ObjectId
-                     )
+                     )*/
       , tmpReport AS (SELECT tmpProfitLoss.ProfitLossId
                            , tmpProfitLoss.BusinessId
                            , tmpProfitLoss.JuridicalId_Basis
                            , tmpProfitLoss.UnitId_ProfitLoss
                            , tmpProfitLoss.BranchId_ProfitLoss
                            , tmpProfitLoss.RouteId_inf
-                           , CASE WHEN tmpProfitLoss.RouteId_inf <> 0 THEN tmpProfitLoss.RouteId_inf
+                           , /*CASE WHEN tmpProfitLoss.RouteId_inf <> 0 THEN tmpProfitLoss.RouteId_inf
                                   WHEN ContainerLinkObject_Juridical.ObjectId <> 0 THEN ContainerLinkObject_Juridical.ObjectId
                                   WHEN ContainerLinkObject_Personal.ObjectId <> 0 THEN ContainerLinkObject_Personal.ObjectId
                                   WHEN ContainerLinkObject_Unit.ObjectId <> 0 THEN ContainerLinkObject_Unit.ObjectId
                                   ELSE ContainerLinkObject_Car.ObjectId
-                             END AS DirectionId
+                             END*/ 0 AS DirectionId
                            , SUM (tmpProfitLoss.Amount) AS Amount
-                           , ContainerLinkObject_InfoMoney.ObjectId       AS InfoMoneyId
-                           , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
+                           , tmpProfitLoss.InfoMoneyId_inf        AS InfoMoneyId
+                           -- , ContainerLinkObject_InfoMoney.ObjectId       AS InfoMoneyId
+                           , 0 AS InfoMoneyId_Detail
+                           , 0 AS JuridicalId_inf
+                           , 0 AS PersonalId_inf
+                           , 0 AS UnitId_inf
+                           , 0 AS CarId_inf
+                           , 0 AS GoodsId_inf
+                           /*, ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
                            , ContainerLinkObject_Juridical.ObjectId       AS JuridicalId_inf
                            , ContainerLinkObject_Personal.ObjectId        AS PersonalId_inf
                            , ContainerLinkObject_Unit.ObjectId            AS UnitId_inf
                            , ContainerLinkObject_Car.ObjectId             AS CarId_inf
-                           , ContainerLinkObject_Goods.ObjectId           AS GoodsId_inf
+                           , ContainerLinkObject_Goods.ObjectId           AS GoodsId_inf*/
                       FROM tmpProfitLoss
-                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                           /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                          ON ContainerLinkObject_InfoMoney.ContainerId = tmpProfitLoss.ContainerId_inf
-                                                        AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                                                        AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()*/
+                           /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                                          ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpProfitLoss.ContainerId_inf
                                                         AND ContainerLinkObject_InfoMoneyDetail.DescId = tmpProfitLoss.ContainerId_inf
                            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
@@ -166,20 +186,21 @@ BEGIN
                            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
                                                          ON ContainerLinkObject_Goods.ContainerId = tmpProfitLoss.ContainerId_inf
                                                         AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                                        -- AND ContainerLinkObject_Goods.ObjectId >0
+                                                        -- AND ContainerLinkObject_Goods.ObjectId >0*/
                       GROUP BY tmpProfitLoss.ProfitLossId
                              , tmpProfitLoss.BusinessId
                              , tmpProfitLoss.JuridicalId_Basis
                              , tmpProfitLoss.UnitId_ProfitLoss
                              , tmpProfitLoss.BranchId_ProfitLoss
                              , tmpProfitLoss.RouteId_inf
-                             , ContainerLinkObject_InfoMoney.ObjectId
-                             , ContainerLinkObject_InfoMoneyDetail.ObjectId
+                             -- , ContainerLinkObject_InfoMoney.ObjectId
+                           , tmpProfitLoss.InfoMoneyId_inf
+                             /*, ContainerLinkObject_InfoMoneyDetail.ObjectId
                              , ContainerLinkObject_Juridical.ObjectId
                              , ContainerLinkObject_Personal.ObjectId
                              , ContainerLinkObject_Unit.ObjectId
                              , ContainerLinkObject_Car.ObjectId
-                             , ContainerLinkObject_Goods.ObjectId
+                             , ContainerLinkObject_Goods.ObjectId*/
                      )
       SELECT
              View_ProfitLoss.ProfitLossGroupName

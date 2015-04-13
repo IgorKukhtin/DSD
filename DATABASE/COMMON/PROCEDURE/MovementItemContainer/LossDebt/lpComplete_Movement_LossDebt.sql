@@ -41,7 +41,8 @@ BEGIN
              AND COALESCE (View_Contract_InvNumber.InfoMoneyId, 0) <> COALESCE (MILinkObject_InfoMoney.ObjectId, 0)
           ) AS tmpUpdate
      WHERE MovementItemLinkObject.MovementItemId = tmpUpdate.Id
-       AND MovementItemLinkObject.DescId = zc_MILinkObject_InfoMoney();
+       AND MovementItemLinkObject.DescId = zc_MILinkObject_InfoMoney()
+       AND tmpUpdate.InfoMoneyId > 0;
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -91,7 +92,7 @@ BEGIN
                                      -- Бизнес: нет
                                    , 0  AS BusinessId
                                      -- Главное Юр.лицо: всегда из договора
-                                   , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
+                                   , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
                                      -- Подразделение (затраты): нет
                                    , 0 AS UnitId
                                      -- еще одна аналитика для 2-ой формы и не наши компании
@@ -414,7 +415,7 @@ BEGIN
                                    AND tmpMovementItem.PaidKindId = tmpContainerSumm.PaidKindId 
                                    AND tmpMovementItem.JuridicalId_Basis = tmpContainerSumm.JuridicalId_Basis
                                    AND tmpMovementItem.BusinessId = tmpContainerSumm.BusinessId
-                                   AND tmpMovementItem.ContractId = ContainerLO_Contract.ObjectId
+                                   AND tmpMovementItem.ContractId = COALESCE (ContainerLO_Contract.ObjectId, 0) -- !!!важно, т.к. может быть NULL!!!
                              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpContainerSumm.InfoMoneyId
                         WHERE tmpContainerSumm.SummRemainsEnd <> 0
                           AND tmpMovementItem.ObjectId IS NULL
@@ -481,7 +482,8 @@ BEGIN
        UNION ALL
         SELECT zc_Movement_LossDebt() AS MovementDescId
              , tmpResult.OperDate
-             , CASE WHEN tmpResult.OperDate < '01.06.2014' THEN zc_Enum_ProfitLoss_80301() ELSE 0 END AS ObjectId -- Расходы с прибыли + Списание дебиторской задолженности + Продукция
+             -- , CASE WHEN tmpResult.OperDate < '01.06.2014' THEN zc_Enum_ProfitLoss_80301() ELSE 0 END AS ObjectId -- Расходы с прибыли + Списание дебиторской задолженности + Продукция
+             , CASE WHEN tmpResult.OperDate < '01.01.2015' THEN zc_Enum_ProfitLoss_80301() ELSE 0 END AS ObjectId -- Расходы с прибыли + Списание дебиторской задолженности + Продукция
              , 0 AS ObjectDescId
              , -1 * tmpResult.OperSumm
              , tmpResult.MovementItemId

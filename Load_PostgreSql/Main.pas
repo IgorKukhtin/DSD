@@ -2456,7 +2456,7 @@ begin
         Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = GoodsProperty.InfoMoneyCode');
         Add('where Goods.HasChildren = zc_hsLeaf()');
 //  Add(' and GoodsProperty.GoodsCode in (7001)');
-        Add('group by ObjectId desc, Goods.ParentId');
+        Add('group by ObjectId, Goods.ParentId');
         Add('       , ObjectName');
         Add('       , ObjectCode');
         Add('       , Erased');
@@ -2468,7 +2468,7 @@ begin
         Add('       , FuelId_PG');
         Add('       , isPartionCount');
         Add('       , isPartionSumm');
-        Add('order by ObjectId');
+        Add('order by ObjectId desc');
         Open;
         cbGoods.Caption:='1.3. ('+IntToStr(RecordCount)+') Товары';
         //
@@ -5008,7 +5008,13 @@ begin
            +'            else zc_rvNo()'
            +'       end as inIsWeightMain');
 
-        Add('     , case when ReceiptItem_byHistory.KindPackageId_parent = zc_KindPackage_groupPF() or ReceiptItem_byHistory.KindPackageId_parent = zc_KindPackage_PF() then isnull(ReceiptItem_byHistory.isTaxExit,zc_rvNo()) else zc_rvYes() end as inIsTaxExit');
+        Add('     , case when ReceiptItem_byHistory.KindPackageId = zc_KindPackage_Composition_Y()'
+          +'                  then zc_rvYes()'
+          +'             when ReceiptItem_byHistory.KindPackageId_parent = zc_KindPackage_groupPF()'
+          +'               or ReceiptItem_byHistory.KindPackageId_parent = zc_KindPackage_PF()'
+          +'                  then isnull(ReceiptItem_byHistory.isTaxExit,zc_rvNo())'
+          +'             else zc_rvYes()'
+          +'        end as inIsTaxExit');
         Add('     , zc_rvYes() as zc_rvYes');
 
         Add('     , Receipt_byHistory.Id_pg as inReceiptId');

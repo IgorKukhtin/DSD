@@ -80,6 +80,17 @@ type
     spReport_TaxLoss: TdsdStoredProc;
     bbReport_TaxLoss: TdxBarButton;
     actReport_TaxLoss: TdsdPrintAction;
+    actReport_TaxExit_Loss: TdsdPrintAction;
+    bbReport_TaxExit_Loss: TdxBarButton;
+    spMovementUnComplete: TdsdStoredProc;
+    spMovementSetErased: TdsdStoredProc;
+    spMovementComplete: TdsdStoredProc;
+    actUnComplete: TdsdChangeMovementStatus;
+    actComplete: TdsdChangeMovementStatus;
+    actSetErased: TdsdChangeMovementStatus;
+    colChildAmountWeight: TcxGridDBColumn;
+    colChildAmountCalcWeight: TcxGridDBColumn;
+    colChildAmountReceiptWeight: TcxGridDBColumn;
   private
     { Private declarations }
   public
