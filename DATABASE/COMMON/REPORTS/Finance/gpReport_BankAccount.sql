@@ -16,6 +16,9 @@ RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar,
              , AccountName TVarChar
              , MoneyPlaceName TVarChar, ItemName TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar
+             , ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
@@ -50,6 +53,7 @@ BEGIN
                             AND (CLO_BankAccount.ObjectId = inBankAccountId OR inBankAccountId = 0)
                             AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
                           )
+        , tmpUnit_byProfitLoss AS (SELECT * FROM lfSelect_Object_Unit_byProfitLossDirection ())
      SELECT
         Operation.ContainerId,
         Object_BankAccount_View.BankName                                                            AS BankName,
@@ -63,10 +67,16 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyName_all                                                     AS InfoMoneyName_all,
         Object_Account_View.AccountName_all                                                         AS AccountName,
         (Object_MoneyPlace.ValueData || COALESCE (' * '|| Object_Bank_MoneyPlace.ValueData, '')) :: TVarChar AS MoneyPlaceName,
-        ObjectDesc_MoneyPlace.ItemName                                                               AS ItemName,
+        ObjectDesc_MoneyPlace.ItemName                                                              AS ItemName,
         Object_Contract_InvNumber_View.ContractCode                                                 AS ContractCode,
         Object_Contract_InvNumber_View.InvNumber                                                    AS ContractInvNumber,
         Object_Contract_InvNumber_View.ContractTagName                                              AS ContractTagName,
+        Object_Unit.ObjectCode                                                                      AS UnitCode,
+        Object_Unit.ValueData                                                                       AS UnitName,
+        tmpUnit_byProfitLoss.ProfitLossGroupCode,
+        tmpUnit_byProfitLoss.ProfitLossGroupName,
+        tmpUnit_byProfitLoss.ProfitLossDirectionCode,
+        tmpUnit_byProfitLoss.ProfitLossDirectionName,
 
         Operation.StartAmount ::TFloat                                                              AS StartAmount,
         CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount ELSE 0 END ::TFloat          AS StartAmountD,
@@ -91,7 +101,7 @@ BEGIN
 
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
-               , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId
+               , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
                , Operation_all.MovementId
                , SUM (Operation_all.StartAmount) AS StartAmount
                , SUM (Operation_all.DebetSumm)   AS DebetSumm
@@ -111,6 +121,7 @@ BEGIN
                 , 0                         AS InfoMoneyId
                 , 0                         AS MoneyPlaceId
                 , 0                         AS ContractId
+                , 0                         AS UnitId
                 , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)                                                            AS StartAmount
                 , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
                 , 0                         AS DebetSumm
@@ -134,6 +145,7 @@ BEGIN
                 , 0                         AS InfoMoneyId
                 , 0                         AS MoneyPlaceId
                 , 0                         AS ContractId
+                , 0                         AS UnitId
                 , 0                         AS StartAmount
                 , 0                         AS EndAmount
                 , 0                         AS DebetSumm
@@ -158,6 +170,7 @@ BEGIN
                 , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
                 , COALESCE (MILO_MoneyPlace.ObjectId, CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() AND inIsDetail = TRUE THEN zc_Enum_ProfitLoss_80103() ELSE 0 END)  AS MoneyPlaceId
                 , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
+                , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
                 , 0                         AS StartAmount
                 , 0                         AS EndAmount
                 , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm
@@ -179,12 +192,16 @@ BEGIN
                                                  ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
                                                 AND MILO_Contract.DescId = zc_MILinkObject_Contract()
                                                 AND inIsDetail = TRUE
+                LEFT JOIN MovementItemLinkObject AS MILO_Unit
+                                                 ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
+                                                AND MILO_Unit.DescId = zc_MILinkObject_Unit()
+                                                AND inIsDetail = TRUE
                 LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
                                                  ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
                                                 AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                                                 AND inIsDetail = TRUE
            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
-                  , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId
+                  , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
                   , MIContainer.MovementDescId
                   , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ THEN MIContainer.MovementId ELSE 0 END
           UNION ALL
@@ -196,6 +213,7 @@ BEGIN
                 , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
                 , COALESCE (MILO_MoneyPlace.ObjectId, 0)  AS MoneyPlaceId
                 , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
+                , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
                 , 0                         AS StartAmount
                 , 0                         AS EndAmount
                 , 0                         AS DebetSumm
@@ -217,13 +235,17 @@ BEGIN
                                                  ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
                                                 AND MILO_Contract.DescId = zc_MILinkObject_Contract()
                                                 AND inIsDetail = TRUE
+                LEFT JOIN MovementItemLinkObject AS MILO_Unit
+                                                 ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
+                                                AND MILO_Unit.DescId = zc_MILinkObject_Unit()
+                                                AND inIsDetail = TRUE
                 LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
                                                  ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
                                                 AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                                                 AND inIsDetail = TRUE
            WHERE tmpContainer.ContainerId_Currency > 0
            GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
-                  , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId
+                  , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
                   , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ THEN MIContainer.MovementId ELSE 0 END
 
           UNION ALL
@@ -235,6 +257,7 @@ BEGIN
                 , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
                 , COALESCE (MILO_MoneyPlace.ObjectId, 0)  AS MoneyPlaceId
                 , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
+                , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
                 , 0                         AS StartAmount
                 , 0                         AS EndAmount
                 , 0                         AS DebetSumm
@@ -265,25 +288,32 @@ BEGIN
                                                  ON MILO_Contract.MovementItemId = MIReport.MovementItemId
                                                 AND MILO_Contract.DescId = zc_MILinkObject_Contract()
                                                 AND inIsDetail = TRUE
+                LEFT JOIN MovementItemLinkObject AS MILO_Unit
+                                                 ON MILO_Unit.MovementItemId = MIReport.MovementItemId
+                                                AND MILO_Unit.DescId = zc_MILinkObject_Unit()
+                                                AND inIsDetail = TRUE
                 LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
                                                  ON MILO_InfoMoney.MovementItemId = MIReport.MovementItemId
                                                 AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                                                 AND inIsDetail = TRUE
            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
-                  , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId
+                  , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
                   , CASE WHEN 1 = 1 THEN MIReport.MovementId ELSE 0 END
           ) AS Operation_all
 
           GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
-                 , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId
+                 , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
                  , Operation_all.MovementId
          ) AS Operation
 
      LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
      LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = Operation.BankAccountId
      LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
+     LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Operation.UnitId
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
      LEFT JOIN ObjectDesc AS ObjectDesc_MoneyPlace ON ObjectDesc_MoneyPlace.Id = Object_MoneyPlace.DescId
+
+     LEFT JOIN tmpUnit_byProfitLoss ON tmpUnit_byProfitLoss.UnitId = Operation.UnitId
 
      LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = Operation.CurrencyId
 

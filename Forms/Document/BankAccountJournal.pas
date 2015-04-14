@@ -13,7 +13,7 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, ClientBankLoad, cxCurrencyEdit, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns;
 
 type
   TBankAccountJournalForm = class(TAncestorJournalForm)
@@ -21,7 +21,7 @@ type
     colBankAccount: TcxGridDBColumn;
     colJuridical: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
-    colUnit: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
     colContract: TcxGridDBColumn;
     colDebet: TcxGridDBColumn;
     colKredit: TcxGridDBColumn;
@@ -29,7 +29,7 @@ type
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     colInvNumber_Parent: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
     clOKPO: TcxGridDBColumn;
     clOKPO_Parent: TcxGridDBColumn;
     colPartnerBankName: TcxGridDBColumn;
@@ -55,9 +55,14 @@ type
     clMFO: TcxGridDBColumn;
     clBankSInvNumber_Parent: TcxGridDBColumn;
     spUpdate_isCopy: TdsdStoredProc;
-    actisCopy: TdsdExecStoredProc;
+    actIsCopy: TdsdExecStoredProc;
     bbisCopy: TdxBarButton;
     clisCopy: TcxGridDBColumn;
+    mactInsertProfitLossService: TMultiAction;
+    actIsCopyTrue: TdsdExecStoredProc;
+    actMasterPost: TDataSetPost;
+    mactIsCopy: TMultiAction;
+    colUnitCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

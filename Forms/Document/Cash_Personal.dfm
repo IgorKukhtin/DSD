@@ -736,8 +736,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     object actMasterPost: TDataSetPost
       Category = 'actAllGrid'
       Caption = 'actMasterPost'
-      Hint = 'Post'
-      ImageIndex = 74
+      Hint = 'actMasterPost'
       DataSource = MasterDS
     end
     object mactInsertUpdateMIAmount_One: TMultiAction

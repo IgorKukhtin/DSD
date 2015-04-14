@@ -12,12 +12,12 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.Controls, Vcl.ExtCtrls, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns;
 
 type
   TSendDebtJournalForm = class(TParentForm)
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
@@ -26,7 +26,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
@@ -89,9 +89,14 @@ type
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     spUpdate_isCopy: TdsdStoredProc;
-    actisCopy: TdsdExecStoredProc;
+    actIsCopy: TdsdExecStoredProc;
     clisCopy: TcxGridDBColumn;
     bbisCopy: TdxBarButton;
+    actMasterPost: TDataSetPost;
+    FormParams: TdsdFormParams;
+    mactIsCopy: TMultiAction;
+    actIsCopyTrue: TdsdExecStoredProc;
+    mactInsertProfitLossService: TMultiAction;
   private
   public
   end;

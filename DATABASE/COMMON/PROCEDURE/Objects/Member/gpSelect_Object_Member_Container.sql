@@ -75,7 +75,7 @@ BEGIN
        FROM tmpContainer
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpContainer.MemberId
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpContainer.BranchId
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpContainer.InfoMoneyId
+            FULL JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpContainer.InfoMoneyId
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpContainer.CarId
             LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()

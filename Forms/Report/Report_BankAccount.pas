@@ -60,6 +60,12 @@ type
     PrintItemsCDS: TClientDataSet;
     Summ_Currency: TcxGridDBColumn;
     CurrencyName_BankAccount: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    ProfitLossGroupCode: TcxGridDBColumn;
+    ProfitLossGroupName: TcxGridDBColumn;
+    ProfitLossDirectionCode: TcxGridDBColumn;
+    ProfitLossDirectionName: TcxGridDBColumn;
   private
     { Private declarations }
   public

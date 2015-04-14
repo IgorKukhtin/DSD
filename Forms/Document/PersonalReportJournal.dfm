@@ -251,6 +251,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 300
     end
