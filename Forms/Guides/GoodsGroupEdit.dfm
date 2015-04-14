@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 379
-  ClientWidth = 300
+  ClientHeight = 417
+  ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 34
-    Top = 344
+    Left = 50
+    Top = 386
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 3
   end
   object cxButton2: TcxButton
-    Left = 178
-    Top = 344
+    Left = 194
+    Top = 386
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -145,6 +145,23 @@
     TabOrder = 15
     Width = 273
   end
+  object cxLabel7: TcxLabel
+    Left = 8
+    Top = 324
+    Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
+  end
+  object ceGoodsPlatform: TcxButtonEdit
+    Left = 8
+    Top = 345
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 208
     Top = 56
@@ -166,10 +183,12 @@
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -494,5 +513,29 @@
       end>
     Left = 200
     Top = 192
+  end
+  object GoodsPlatformGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoodsPlatform
+    FormNameParam.Value = 'TGoodsPlatformForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsPlatformForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsPlatformGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsPlatformGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 168
+    Top = 337
   end
 end

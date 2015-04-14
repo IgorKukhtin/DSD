@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
+             , GoodsPlatformId Integer, GoodsPlatformName TVarChar
              )
 AS
 $BODY$
@@ -38,6 +39,9 @@ BEGIN
            
            , CAST (0 as Integer)    AS GoodsGroupAnalystId
            , CAST ('' as TVarChar)  AS GoodsGroupAnalystName
+
+           , CAST (0 as Integer)    AS GoodsPlatformId
+           , CAST ('' as TVarChar)  AS GoodsPlatformName
            ;
    ELSE
        RETURN QUERY 
@@ -57,7 +61,10 @@ BEGIN
            , Object_GoodsTag.ValueData     AS GoodsTagName 
            
            , Object_GoodsGroupAnalyst.Id             AS GoodsGroupAnalystId
-           , Object_GoodsGroupAnalyst.ValueData     AS GoodsGroupAnalystName         
+           , Object_GoodsGroupAnalyst.ValueData     AS GoodsGroupAnalystName    
+
+           , Object_GoodsPlatform.Id            AS GoodsPlatformId
+           , Object_GoodsPlatform.ValueData     AS GoodsPlatformName      
 
        FROM OBJECT AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -84,6 +91,11 @@ BEGIN
                                 ON ObjectLink_GoodsGroupAnalyst.ObjectId = Object_GoodsGroup.Id
                                AND ObjectLink_GoodsGroupAnalyst.DescId = zc_ObjectLink_GoodsGroup_GoodsGroupAnalyst()
            LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_GoodsGroupAnalyst.ChildObjectId            
+           
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsPlatform
+                                ON ObjectLink_GoodsPlatform.ObjectId = Object_GoodsGroup.Id
+                               AND ObjectLink_GoodsPlatform.DescId = zc_ObjectLink_GoodsGroup_GoodsPlatform()
+           LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_GoodsPlatform.ChildObjectId  
            
        WHERE Object_GoodsGroup.Id = inId;
    END IF;
