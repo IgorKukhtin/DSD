@@ -12,17 +12,17 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 965
+    ExplicitWidth = 982
     ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 965
+      ExplicitWidth = 982
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 982
         Height = 472
-        ExplicitWidth = 965
+        ExplicitWidth = 982
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -316,6 +316,21 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Options.Editing = False
             Width = 90
           end
+          object UnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'UnitCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object StartAmount: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086
             DataBinding.FieldName = 'StartAmount'
@@ -545,6 +560,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Options.Editing = False
             Width = 70
           end
+          object ProfitLossGroupCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1075#1088'. ('#1076#1083#1103' '#1087#1086#1076#1088'. )'
+            DataBinding.FieldName = 'ProfitLossGroupCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ProfitLossGroupName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072' ('#1076#1083#1103' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'ProfitLossGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object ProfitLossDirectionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1085#1072#1087#1088'.  ('#1076#1083#1103' '#1087#1086#1076#1088'.)'
+            DataBinding.FieldName = 'ProfitLossDirectionCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ProfitLossDirectionName: TcxGridDBColumn
+            Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'  ('#1076#1083#1103' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'ProfitLossDirectionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 180
+          end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
@@ -560,7 +606,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
   inherited Panel: TPanel
     Width = 982
     Height = 57
-    ExplicitWidth = 965
+    ExplicitWidth = 982
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118

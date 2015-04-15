@@ -176,7 +176,6 @@ BEGIN
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
      LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
 
-
      LEFT JOIN tmpUnit_byProfitLoss ON tmpUnit_byProfitLoss.UnitId = Operation.UnitId
 
      LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch

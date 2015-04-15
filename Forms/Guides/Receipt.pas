@@ -131,7 +131,7 @@ type
     clInfoMoneyGroupNameChild: TcxGridDBColumn;
     clInfoMoneyDestinationNameChild: TcxGridDBColumn;
     clInfoMoneyNameChild: TcxGridDBColumn;
-    clValueWeightChild: TcxGridDBColumn;
+    clValueWeight_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

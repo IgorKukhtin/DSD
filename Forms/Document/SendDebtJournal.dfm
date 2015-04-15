@@ -14,6 +14,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -59,7 +60,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
       DataController.Filter.TranslateBetween = True
       DataController.Filter.TranslateIn = True
@@ -394,21 +395,23 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Width = 55
       end
       object clisCopy: TcxGridDBColumn
-        Caption = #1050#1086#1087#1080#1103' '#1087#1086' '#1084#1072#1089#1082#1077
+        Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
         DataBinding.FieldName = 'isCopy'
-        Width = 65
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
     Left = 24
     Top = 136
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 120
@@ -507,14 +510,6 @@ object SendDebtJournalForm: TSendDebtJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbAddBonus'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -523,7 +518,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'bbAddBonus'
         end
         item
           Visible = True
@@ -532,6 +527,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Visible = True
           ItemName = 'bbisCopy'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
@@ -606,7 +609,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       Category = 0
     end
     object bbAddBonus: TdxBarButton
-      Action = actInsertProfitLossService
+      Action = mactInsertProfitLossService
       Category = 0
     end
     object bbMovementProtocol: TdxBarButton
@@ -614,7 +617,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       Category = 0
     end
     object bbisCopy: TdxBarButton
-      Action = actisCopy
+      Action = mactIsCopy
       Category = 0
     end
   end
@@ -622,40 +625,13 @@ object SendDebtJournalForm: TSendDebtJournalForm
     Images = dmMain.ImageList
     Left = 80
     Top = 98
-    object actInsertProfitLossService: TdsdInsertUpdateAction
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
-      ImageIndex = 27
-      FormName = 'TProfitLossServiceForm'
-      FormNameParam.Value = 'TProfitLossServiceForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = '-1'
-        end
-        item
-          Name = 'inMovementId_Value'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41579d
-          Component = deStart
-          DataType = ftDateTime
-        end>
-      isShowModal = False
-      IdFieldName = 'Id'
-    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -683,7 +659,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
           DataType = ftDateTime
         end>
       isShowModal = False
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -699,36 +675,23 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'inOperDate'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
-    end
-    object actisCopy: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isCopy
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isCopy
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1086#1087#1080#1103' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1086#1087#1080#1103' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 50
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -742,7 +705,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
       Status = mtUncomplete
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -756,7 +719,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -770,7 +733,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
       Status = mtDelete
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -807,7 +770,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
@@ -831,13 +794,121 @@ object SendDebtJournalForm: TSendDebtJournalForm
         end>
       isShowModal = False
     end
+    object actMasterPost: TDataSetPost
+      Category = 'DSDLib'
+      Caption = 'actMasterPost'
+      Hint = 'actMasterPost'
+      DataSource = MasterDS
+    end
+    object mactIsCopy: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actIsCopy
+        end
+        item
+          Action = actMasterPost
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
+    object actIsCopy: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'isCopy'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'isCopy'
+          FromParam.DataType = ftBoolean
+          ToParam.Name = 'isCopy'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isCopy'
+          ToParam.DataType = ftBoolean
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isCopy
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isCopy
+        end>
+      Caption = 'actIsCopy'
+    end
+    object mactInsertProfitLossService: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actIsCopyTrue
+        end
+        item
+          Action = actMasterPost
+        end
+        item
+          Action = actInsertProfitLossService
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
+      ImageIndex = 27
+    end
+    object actIsCopyTrue: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'isCopy'
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          ToParam.Name = 'isCopy'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isCopy'
+          ToParam.DataType = ftBoolean
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isCopy
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isCopy
+        end>
+      Caption = 'actIsCopyTrue'
+    end
+    object actInsertProfitLossService: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actInsertProfitLossService'
+      FormName = 'TProfitLossServiceForm'
+      FormNameParam.Value = 'TProfitLossServiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '-1'
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41579d
+          Component = deStart
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+      IdFieldName = 'Id'
+    end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SendDebt'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -866,7 +937,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -893,7 +964,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -903,17 +974,17 @@ object SendDebtJournalForm: TSendDebtJournalForm
   end
   object spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_SendDebt'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     OutputType = otResult
     Params = <
       item
         Name = 'inMovementId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -997,14 +1068,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
       item
         Name = 'ioId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inInvNumber'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'InvNumber'
         DataType = ftString
         ParamType = ptInput
@@ -1012,7 +1083,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       item
         Name = 'inOperDate'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
@@ -1020,35 +1091,35 @@ object SendDebtJournalForm: TSendDebtJournalForm
       item
         Name = 'inBusinessId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'BusinessId'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalBasisId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'JuridicalBasisId'
         ParamType = ptInput
       end
       item
         Name = 'ioMasterId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'MI_MasterId'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioChildId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'MI_ChildId'
         ParamType = ptInputOutput
       end
       item
         Name = 'inAmount'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
@@ -1056,56 +1127,56 @@ object SendDebtJournalForm: TSendDebtJournalForm
       item
         Name = 'inJuridicalFromId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'JuridicalFromId'
         ParamType = ptInput
       end
       item
         Name = 'inContractfromId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'ContractFromId'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindFromId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PaidKindFromId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyFromId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'InfoMoneyFromId'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalToId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'JuridicalToId'
         ParamType = ptInput
       end
       item
         Name = 'inContractToId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'ContractToId'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindToId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PaidKindToId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyToId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'InfoMoneyToId'
         ParamType = ptInput
       end>
@@ -1121,20 +1192,37 @@ object SendDebtJournalForm: TSendDebtJournalForm
       item
         Name = 'ioId '
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'inisCopy'
+        Name = 'inIsCopy'
         Value = Null
-        Component = ClientDataSet
+        Component = FormParams
         ComponentItem = 'isCopy'
         DataType = ftBoolean
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'outIsCopy'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isCopy'
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 464
     Top = 243
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'isCopy'
+        Value = Null
+        DataType = ftBoolean
+      end>
+    Left = 320
+    Top = 232
   end
 end

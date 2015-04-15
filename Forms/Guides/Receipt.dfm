@@ -431,13 +431,13 @@ object ReceiptForm: TReceiptForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clValueWeightChild
+          Column = clValueWeight_calc
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clValueWeightChild
+          Column = clValueWeight_calc
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -511,9 +511,9 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object clValueWeightChild: TcxGridDBColumn
+      object clValueWeight_calc: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1077#1089')'
-        DataBinding.FieldName = 'ValueWeight'
+        DataBinding.FieldName = 'ValueWeight_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1024,6 +1024,7 @@ object ReceiptForm: TReceiptForm
     object ReceiptChildChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ReceiptChildForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = 'TGoodsKindForm'
@@ -1069,6 +1070,7 @@ object ReceiptForm: TReceiptForm
     object Goods_ObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Goods_ObjectChoiceForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
@@ -1092,6 +1094,7 @@ object ReceiptForm: TReceiptForm
     object InsertRecordCCK: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableViewReceiptChild
       Action = Goods_ObjectChoiceForm
       Params = <>
@@ -1102,6 +1105,7 @@ object ReceiptForm: TReceiptForm
     object actReceiptChild: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateReceiptChild
       StoredProcList = <
         item
@@ -1113,6 +1117,7 @@ object ReceiptForm: TReceiptForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item

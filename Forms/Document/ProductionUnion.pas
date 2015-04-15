@@ -42,6 +42,11 @@ type
     colChildComment: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
     colChildGoodsGroupNameFull: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
+    clInfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

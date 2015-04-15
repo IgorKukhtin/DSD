@@ -139,6 +139,7 @@ type
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    clInfoMoneyName_all: TcxGridDBColumn;
   private
   public
   end;

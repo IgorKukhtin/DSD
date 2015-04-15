@@ -10,9 +10,9 @@ CREATE OR REPLACE FUNCTION zfCalc_ReceiptChild_GroupNumber(
     IN inInfoMoneyId            Integer, -- 
     IN inIsWeightMain           Boolean, -- 
     IN inIsTaxExit              Boolean  -- 
-
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
 BEGIN
      -- возвращаем результат

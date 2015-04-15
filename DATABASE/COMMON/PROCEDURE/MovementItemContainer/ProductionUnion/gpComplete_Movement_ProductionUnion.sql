@@ -335,6 +335,7 @@ BEGIN
               --     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
               FROM _tmpItem
                    INNER JOIN MovementItem ON MovementItem.ParentId = _tmpItem.MovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
+                                          AND MovementItem.MovementId = inMovementId
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -609,6 +610,7 @@ BEGIN
                                     OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
                                        THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                                   WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                    OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20800() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()) -- Запасы + на упаковке AND Основное сырье + Мясное сырье
                                        THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                   ELSE _tmpItem.InfoMoneyDestinationId
                              END AS InfoMoneyDestinationId_calc
@@ -624,6 +626,7 @@ BEGIN
                                       OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
                                          THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                                     WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                      OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20800() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()) -- Запасы + на упаковке AND Основное сырье + Мясное сырье
                                          THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                     ELSE _tmpItem.InfoMoneyDestinationId
                                END
@@ -792,8 +795,9 @@ BEGIN
                      , COALESCE (tmpMI.isWeightMain, FALSE) AS isWeightMain
                      , COALESCE (tmpMI.isTaxExit, FALSE)    AS isTaxExit
                 FROM _tmpItem
-                     INNER JOIN MovementItem ON MovementItem.ParentId = _tmpItem.MovementItemId
+                     INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                             AND MovementItem.DescId   = zc_MI_Child()
+                                            AND MovementItem.ParentId = _tmpItem.MovementItemId
                                             AND MovementItem.isErased  = FALSE
                      LEFT JOIN (SELECT _tmpItem.MovementItemId                              AS MovementItemId
                                      , ObjectLink_ReceiptChild_Goods.ChildObjectId          AS GoodsId

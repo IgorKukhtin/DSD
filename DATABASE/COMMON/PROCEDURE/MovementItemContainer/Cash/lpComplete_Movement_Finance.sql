@@ -11,7 +11,7 @@ AS
 $BODY$
 BEGIN
      -- Проверка
-     IF EXISTS (SELECT SUM (OperSumm) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm) <> 0)
+     IF EXISTS (SELECT SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) <> 0)
      THEN
          RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%)', (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = TRUE), (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = FALSE);
      END IF;
@@ -64,8 +64,11 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                                            THEN zc_Enum_AccountDirection_30100() -- покупатели
 
-                                                      WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
-                                                           THEN zc_Enum_AccountDirection_70200() -- услуги полученные
+                                                      WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
+                                                       AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
+                                                                                             , zc_Enum_InfoMoneyDestination_80500() -- Собственный капитал + Прочие
+                                                                                              )
+                                                           THEN zc_Enum_AccountDirection_70200() -- Кредиторы по услугам
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                            THEN zc_Enum_AccountDirection_70300() -- Маркетинг
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21600() -- Коммунальные услуги
@@ -174,7 +177,11 @@ BEGIN
 
                                           ELSE lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem.AccountGroupId
                                                                           , inAccountDirectionId     := _tmpItem.AccountDirectionId
-                                                                          , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                          , inInfoMoneyDestinationId := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80500() -- Собственный капитал + Прочие
+                                                                                                                  -- !!!замена!!!
+                                                                                                                  THEN zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
+                                                                                                              ELSE _tmpItem.InfoMoneyDestinationId
+                                                                                                        END
                                                                           , inInfoMoneyId            := NULL
                                                                           , inInsert                 := CASE WHEN 1=0
                                                                                                               AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол

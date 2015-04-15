@@ -194,3 +194,4 @@ create table dba._pgMovementReComlete
 */
 -- тест
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015', inIsBefoHistoryCost:= FALSE)

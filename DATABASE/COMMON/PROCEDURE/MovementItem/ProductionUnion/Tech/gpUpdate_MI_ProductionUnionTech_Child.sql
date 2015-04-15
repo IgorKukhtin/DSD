@@ -1,6 +1,6 @@
 -- Function: gpUpdate_MI_ProductionUnionTech_Child()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionUnionTech_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_ProductionUnionTech_Child (Integer, Integer, Integer, TFloat, Integer, TFloat, TDateTime, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_ProductionUnionTech_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_ProductionUnionTech_Child(
     IN inGoodsId             Integer   , -- Товары
  INOUT ioAmount              TFloat    , -- Количество
     IN inParentId            Integer   , -- Главный элемент документа
-    IN inAmountReceipt       TFloat    , -- Количество по рецептуре на 1 кутер
+ INOUT ioAmountReceipt       TFloat    , -- Количество по рецептуре на 1 кутер
     IN inPartionGoodsDate    TDateTime , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров            
     IN inComment             TVarChar  , -- Примечание
@@ -19,6 +19,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbAmount_master TFloat;
+   DECLARE vbCuterCount TFloat;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech_Child());
@@ -37,13 +39,37 @@ BEGIN
    END IF;
 
 
+   -- определяется <Количество кутеров>
+   vbCuterCount:= (SELECT MIFloat_CuterCount.ValueData FROM MovementItemFloat AS MIFloat_CuterCount WHERE MIFloat_CuterCount.MovementItemId = inParentId AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount());
+   -- проверка
+   IF COALESCE (vbCuterCount, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Количество кутеров> не определено.';
+   END IF;
+
+
+   -- расчет, смотря что вводили
+   IF ioId > 0
+   THEN
+       IF COALESCE (ioAmountReceipt, 0) <> COALESCE ((SELECT MIFloat_AmountReceipt.ValueData FROM MovementItemFloat AS MIFloat_AmountReceipt WHERE MIFloat_AmountReceipt.MovementItemId = ioId AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()), 0)
+       THEN ioAmount:= vbCuterCount * ioAmountReceipt; -- если вводили <Количество по рецептуре на 1 кутер> тогда расчет <Количество>
+       ELSE IF COALESCE (ioAmount, 0) <> COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = ioId), 0)
+            THEN ioAmountReceipt:= 0; -- если вводили <Количество> тогда обнуляется <Количество по рецептуре на 1 кутер>
+            END IF;
+       END IF;
+   ELSE
+       IF ioAmountReceipt <> 0
+       THEN ioAmount:= vbCuterCount * ioAmountReceipt; -- если вводили <Количество по рецептуре на 1 кутер> тогда расчет <Количество>
+       END IF;
+   END IF;
+
    -- сохранили
    ioId:= lpInsertUpdate_MI_ProductionUnionTech_Child (ioId                 := ioId
                                                      , inMovementId         := inMovementId
                                                      , inGoodsId            := inGoodsId
                                                      , inAmount             := ioAmount
                                                      , inParentId           := inParentId
-                                                     , inAmountReceipt      := inAmountReceipt
+                                                     , inAmountReceipt      := ioAmountReceipt
                                                      , inPartionGoodsDate   := inPartionGoodsDate
                                                      , inComment            := inComment
                                                      , inGoodsKindId        := inGoodsKindId
@@ -52,23 +78,29 @@ BEGIN
 
 
    -- Расчет кол-во
-   vbAmount = (SELECT SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
+   vbAmount_master =
+              (SELECT SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
                FROM MovementItem
+                    LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
+                                                  ON MIBoolean_TaxExit.MovementItemId =  MovementItem.Id
+                                                 AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
+                                                 AND MIBoolean_TaxExit.ValueData = TRUE
                     LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                         ON ObjectLink_Goods_Measure.ObjectId = _tmpChild.GoodsId
+                                         ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                     LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                          ON ObjectFloat_Weight.ObjectId = _tmpChild.GoodsId
+                                          ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                          AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                WHERE MovementItem.ParentId = inParentId
                  AND MovementItem.MovementId = inMovementId
                  AND MovementItem.DescId = zc_MI_Child()
                  AND MovementItem.isErased = FALSE
+                 AND MIBoolean_TaxExit.MovementItemId IS NULL
               );
 
 
    -- !!!сохранили св-ва <Количество> у zc_MI_Master!!!
-   PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, vbAmount, MovementItem.ParentId)
+   PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, vbAmount_master, MovementItem.ParentId)
    FROM MovementItem
    WHERE MovementItem.Id = inParentId;
 

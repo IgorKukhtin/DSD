@@ -3,7 +3,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientHeight = 356
   ClientWidth = 1028
   ExplicitWidth = 1044
-  ExplicitHeight = 394
+  ExplicitHeight = 391
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -281,16 +281,23 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colUnit: TcxGridDBColumn
+          object colUnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'UnitCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
           end
-          object clComment: TcxGridDBColumn
+          object colComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -302,14 +309,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'PartnerBankName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 46
+            Width = 70
           end
           object colPartnerBankMFO: TcxGridDBColumn
             Caption = #1052#1060#1054' '#1073#1072#1085#1082#1072' '#1087#1072#1088#1090#1085#1077#1088#1072
             DataBinding.FieldName = 'PartnerBankMFO'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 102
+            Width = 80
           end
           object colPartnerBankAccount: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1087#1072#1088#1090#1085#1077#1088#1072
@@ -352,11 +359,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 30
           end
           object clisCopy: TcxGridDBColumn
-            Caption = #1050#1086#1087#1080#1103' '#1087#1086' '#1084#1072#1089#1082#1077
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
             DataBinding.FieldName = 'isCopy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 65
+            Width = 80
           end
         end
       end
@@ -450,46 +457,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           DataType = ftDateTime
         end>
     end
-    object actisCopy: TdsdExecStoredProc [6]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isCopy
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isCopy
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1086#1087#1080#1103' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1086#1087#1080#1103' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 50
-    end
-    object actInsertProfitLossService: TdsdInsertUpdateAction
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
-      ImageIndex = 27
-      FormName = 'TProfitLossServiceForm'
-      FormNameParam.Value = 'TProfitLossServiceForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = '-1'
-        end
-        item
-          Name = 'inMovementId_Value'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end>
-      isShowModal = False
-      IdFieldName = 'Id'
-    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -575,6 +542,114 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actMasterPost: TDataSetPost
+      Category = 'DSDLib'
+      Caption = 'actMasterPost'
+      Hint = 'actMasterPost'
+      DataSource = MasterDS
+    end
+    object mactIsCopy: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actIsCopy
+        end
+        item
+          Action = actMasterPost
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
+    object actIsCopy: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'isCopy'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'isCopy'
+          FromParam.DataType = ftBoolean
+          ToParam.Name = 'isCopy'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isCopy'
+          ToParam.DataType = ftBoolean
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isCopy
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isCopy
+        end>
+      Caption = 'actIsCopy'
+    end
+    object mactInsertProfitLossService: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actIsCopyTrue
+        end
+        item
+          Action = actMasterPost
+        end
+        item
+          Action = actInsertProfitLossService
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
+      ImageIndex = 27
+    end
+    object actIsCopyTrue: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'isCopy'
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          ToParam.Name = 'isCopy'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isCopy'
+          ToParam.DataType = ftBoolean
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isCopy
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isCopy
+        end>
+      Caption = 'actIsCopyTrue'
+    end
+    object actInsertProfitLossService: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actInsertProfitLossService'
+      FormName = 'TProfitLossServiceForm'
+      FormNameParam.Value = 'TProfitLossServiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '-1'
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+      IdFieldName = 'Id'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccount'
@@ -645,7 +720,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'bbisCopy'
         end
         item
           Visible = True
@@ -653,7 +728,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbisCopy'
+          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
@@ -693,7 +768,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end>
     end
     object bbAddBonus: TdxBarButton
-      Action = actInsertProfitLossService
+      Action = mactInsertProfitLossService
       Category = 0
     end
     object bbPrint: TdxBarButton
@@ -706,7 +781,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ShortCut = 16465
     end
     object bbisCopy: TdxBarButton
-      Action = actisCopy
+      Action = mactIsCopy
       Category = 0
     end
   end
@@ -718,6 +793,31 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankAccount'
+  end
+  inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'isCopy'
+        Value = Null
+        DataType = ftBoolean
+      end>
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_BankAccount'
@@ -788,12 +888,19 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inisCopy'
+        Name = 'inIsCopy'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isCopy'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outIsCopy'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isCopy'
         DataType = ftBoolean
-        ParamType = ptInputOutput
       end>
     PackSize = 1
     Left = 464

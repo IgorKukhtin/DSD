@@ -31,7 +31,7 @@ type
     colOtherSumm: TcxGridDBColumn;
     colEndAmount_A: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
-    dsdPrintAction: TdsdPrintAction;
+    actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     cxLabel3: TcxLabel;
     edInfoMoneyGroup: TcxButtonEdit;
@@ -84,15 +84,15 @@ type
     SaleRealJournal: TdsdOpenForm;
     ReturnInRealJournal: TdsdOpenForm;
     TransferDebtJournal: TdsdOpenForm;
-    dsdPrintRealAction: TdsdPrintAction;
-    bbPrintReal: TdxBarButton;
+    actPrintSale: TdsdPrintAction;
+    bbPrintSale: TdxBarButton;
     cxLabel8: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
-    dsdPrintReal_byJuridicalPersonal: TdsdPrintAction;
-    bbPrintReal_byJuridicalPersonal: TdxBarButton;
+    actPrintSalePartner: TdsdPrintAction;
+    bbPrintSalePartner: TdxBarButton;
     cxLabel9: TcxLabel;
     edJuridicalGroup: TcxButtonEdit;
     clPersonalTradeName: TcxGridDBColumn;
@@ -117,6 +117,10 @@ type
     colPersonalTradeName_Partner: TcxGridDBColumn;
     colAreaName_Partner: TcxGridDBColumn;
     JuridicalPartnerlName: TcxGridDBColumn;
+    actPrintIncome: TdsdPrintAction;
+    actPrintIncomePartner: TdsdPrintAction;
+    bbPrintIncome: TdxBarButton;
+    bbPrintIncomePartner: TdxBarButton;
   private
     { Private declarations }
   public

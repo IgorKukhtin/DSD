@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Amount TFloat, AmountPartner TFloat, AmountPacker TFloat
              , Price TFloat, CountForPrice TFloat, LiveWeight TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
-             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AmountSumm TFloat, isErased Boolean
               )
 AS
@@ -58,6 +58,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
 
            , CAST (NULL AS TFloat) AS AmountSumm
            , FALSE AS isErased
@@ -131,6 +132,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -230,6 +232,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))

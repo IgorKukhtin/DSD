@@ -81,17 +81,14 @@ type
     bbComplete: TdxBarButton;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
-    actUnComplete: TdsdChangeMovementStatus;
-    actComplete: TdsdChangeMovementStatus;
-    actSetErased: TdsdChangeMovementStatus;
-    spMovementUnComplete: TdsdStoredProc;
-    spMovementSetErased: TdsdStoredProc;
-    spMovementComplete: TdsdStoredProc;
     colChildGoodsName: TcxGridDBColumn;
     cxBottomSplitter: TcxSplitter;
     actGoodsChoiceChild: TOpenChoiceForm;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
+    actUnCompleteMovement: TChangeGuidesStatus;
+    actCompleteMovement: TChangeGuidesStatus;
+    actDeleteMovement: TChangeGuidesStatus;
   private
     { Private declarations }
   public

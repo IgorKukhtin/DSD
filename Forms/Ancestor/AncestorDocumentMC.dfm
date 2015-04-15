@@ -4,7 +4,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 951
-  ExplicitHeight = 712
+  ExplicitHeight = 709
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -178,25 +178,16 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Top = 61
       Properties.Buttons = <
         item
-          Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+          Action = actCompleteMovement
           Default = True
-          Enabled = False
-          ImageIndex = 12
-          Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
           Kind = bkGlyph
         end
         item
-          Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-          Enabled = False
-          ImageIndex = 11
-          Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+          Action = actUnCompleteMovement
           Kind = bkGlyph
         end
         item
-          Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-          Enabled = False
-          ImageIndex = 13
-          Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+          Action = actDeleteMovement
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
@@ -507,51 +498,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end>
       isShowModal = False
     end
-    object actUnComplete: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      StoredProc = spMovementUnComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementUnComplete
-        end>
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 11
-      Status = mtUncomplete
-      DataSource = MasterDS
-    end
-    object actComplete: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      StoredProc = spMovementComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementComplete
-        end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
-      Status = mtComplete
-      DataSource = MasterDS
-    end
-    object actSetErased: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      StoredProc = spMovementSetErased
-      StoredProcList = <
-        item
-          StoredProc = spMovementSetErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 13
-      Status = mtDelete
-      DataSource = MasterDS
-    end
     object actGoodsChoiceChild: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -581,6 +527,49 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           DataType = ftString
         end>
       isShowModal = True
+    end
+    object actUnCompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end>
+      Caption = 'UnCompleteMovement'
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = StatusGuides
+    end
+    object actCompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end>
+      Caption = 'CompleteMovement'
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = StatusGuides
+    end
+    object actDeleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end>
+      Caption = 'DeleteMovement'
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = StatusGuides
     end
   end
   inherited MasterDS: TDataSource
@@ -790,16 +779,27 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Category = 0
     end
     object bbComplete: TdxBarButton
-      Action = actComplete
+      Caption = 'actCompleteMovement'
       Category = 0
+      Enabled = False
+      Hint = 'actCompleteMovement'
+      Visible = ivAlways
+      ImageIndex = 12
     end
     object dxBarButton1: TdxBarButton
-      Action = actUnComplete
+      Caption = 'actUnCompleteMovement'
       Category = 0
+      Enabled = False
+      Visible = ivAlways
+      ImageIndex = 11
     end
     object dxBarButton2: TdxBarButton
-      Action = actSetErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Category = 0
+      Enabled = False
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Visible = ivAlways
+      ImageIndex = 13
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1375,51 +1375,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     SummaryItemList = <>
     Left = 830
     Top = 449
-  end
-  object spMovementUnComplete: TdsdStoredProc
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 48
-    Top = 288
-  end
-  object spMovementSetErased: TdsdStoredProc
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 80
-    Top = 272
-  end
-  object spMovementComplete: TdsdStoredProc
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 151
-    Top = 299
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

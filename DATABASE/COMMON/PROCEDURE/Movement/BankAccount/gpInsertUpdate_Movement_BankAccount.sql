@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -15,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса, Ведомости начисления
     IN inContractId           Integer   , -- Договора
     IN inInfoMoneyId          Integer   , -- Статьи назначения 
-    -- IN inUnitId               Integer   , -- Подразделение
+    IN inUnitId               Integer   , -- Подразделение
     IN inCurrencyId           Integer   , -- Валюта 
    OUT outCurrencyValue       TFloat    , -- Курс для перевода в валюту баланса
    OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
@@ -92,7 +93,7 @@ BEGIN
                                                , inMoneyPlaceId         := inMoneyPlaceId
                                                , inContractId           := inContractId
                                                , inInfoMoneyId          := inInfoMoneyId
-                                               , inUnitId               := NULL
+                                               , inUnitId               := inUnitId
                                                , inCurrencyId           := inCurrencyId
                                                , inCurrencyValue        := outCurrencyValue
                                                , inParValue             := outParValue

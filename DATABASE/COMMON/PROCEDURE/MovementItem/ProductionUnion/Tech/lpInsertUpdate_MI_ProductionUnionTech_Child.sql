@@ -20,7 +20,7 @@ $BODY$
 
 BEGIN
    -- меняем параметр
-   IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
+   IF (inPartionGoodsDate <= '01.01.1900') OR COALESCE (inGoodsKindId, 0) <> zc_GoodsKind_WorkProgress() THEN inPartionGoodsDate:= NULL; END IF;
 
    -- определяется признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;

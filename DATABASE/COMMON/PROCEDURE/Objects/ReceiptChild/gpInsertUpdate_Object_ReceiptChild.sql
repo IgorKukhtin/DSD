@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
  INOUT ioId              Integer   , -- ключ объекта <Составляющие рецептур>
     IN inValue           TFloat    , -- Значение объекта 
    OUT outValueWeight    TFloat    , -- Значение объекта 
-    IN inIsWeightMain    Boolean   , -- Входит в общий вес сырья
+    IN inIsWeightMain    Boolean   , -- Входит в осн. сырье (100 кг.)
     IN inIsTaxExit       Boolean   , -- Зависит от % выхода
     IN inStartDate       TDateTime , -- Начальная дата
     IN inEndDate         TDateTime , -- Конечная дата
@@ -48,7 +48,7 @@ BEGIN
    
    -- сохранили свойство <Значение>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptChild_Value(), ioId, inValue);
-   -- сохранили свойство <Входит в общий вес выхода>
+   -- сохранили свойство <Входит в осн. сырье (100 кг.)>
    -- PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_WeightMain(), ioId, inIsWeightMain);
    -- сохранили свойство <Зависит от % выхода>
    -- PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inIsTaxExit);

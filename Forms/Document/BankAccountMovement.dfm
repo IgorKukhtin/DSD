@@ -123,7 +123,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 291
+    Width = 125
   end
   object cxLabel8: TcxLabel [16]
     Left = 280
@@ -227,6 +227,23 @@
     TabOrder = 29
     Width = 92
   end
+  object ceUnit: TcxButtonEdit [30]
+    Left = 415
+    Top = 135
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 30
+    Width = 156
+  end
+  object cxLabel14: TcxLabel [31]
+    Left = 415
+    Top = 115
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 131
   end
@@ -327,6 +344,13 @@
         Name = 'ininfomoneyid'
         Value = ''
         Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -503,6 +527,19 @@
         Value = Null
         Component = ceParPartnerValue
         DataType = ftFloat
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 408
     Top = 228
@@ -723,8 +760,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 452
-    Top = 115
+    Left = 324
+    Top = 131
   end
   object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
@@ -747,8 +784,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 408
-    Top = 106
+    Left = 424
+    Top = 66
   end
   object BankGuides: TdsdGuides
     KeyField = 'Id'
@@ -773,5 +810,29 @@
       end>
     Left = 448
     Top = 2
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 480
+    Top = 117
   end
 end

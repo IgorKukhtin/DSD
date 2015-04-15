@@ -534,6 +534,8 @@ type
     TextEdit: TcxTextEdit;
     actPersonalBankAccount: TdsdOpenForm;
     N54: TMenuItem;
+    actGoodsPlatform: TdsdOpenForm;
+    N55: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

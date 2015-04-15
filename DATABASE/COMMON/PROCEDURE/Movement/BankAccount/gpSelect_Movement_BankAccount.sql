@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSI
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
-             , UnitName TVarChar
+             , UnitCode Integer, UnitName TVarChar
              , CurrencyName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
@@ -86,6 +86,7 @@ BEGIN
            , Object_Contract_InvNumber_View.ContractCode
            , Object_Contract_InvNumber_View.InvNumber  AS ContractInvNumber
            , Object_Contract_InvNumber_View.ContractTagName
+           , Object_Unit.ObjectCode            AS UnitCode
            , Object_Unit.ValueData             AS UnitName
            , Object_Currency.ValueData         AS CurrencyName 
            , MovementFloat_CurrencyValue.ValueData             AS CurrencyValue

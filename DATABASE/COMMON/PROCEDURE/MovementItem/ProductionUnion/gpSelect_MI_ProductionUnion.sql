@@ -46,12 +46,22 @@ BEGIN
             , CAST (NULL AS TVarchar)               AS ReceiptCode
             , CAST (NULL AS TVarchar)               AS ReceiptName
 
+            , Object_InfoMoney_View.InfoMoneyCode
+            , Object_InfoMoney_View.InfoMoneyGroupName
+            , Object_InfoMoney_View.InfoMoneyDestinationName
+            , Object_InfoMoney_View.InfoMoneyName
+            , Object_InfoMoney_View.InfoMoneyName_all
+
            , FALSE                                  AS isErased
 
-       FROM (SELECT Object_Goods.Id           AS GoodsId
-                  , Object_Goods.ObjectCode   AS GoodsCode
-                  , Object_Goods.ValueData    AS GoodsName
+       FROM (SELECT Object_Goods.Id                          AS GoodsId
+                  , Object_Goods.ObjectCode                  AS GoodsCode
+                  , Object_Goods.ValueData                   AS GoodsName
+                  , ObjectLink_Goods_InfoMoney.ChildObjectId AS InfoMoneyId
              FROM Object AS Object_Goods
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                       ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              WHERE Object_Goods.DescId = zc_Object_Goods()
             ) AS tmpGoods
 
@@ -70,6 +80,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpGoods.InfoMoneyId
 
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
@@ -103,6 +115,12 @@ BEGIN
             , Object_Receipt.Id                   AS ReceiptId
             , ObjectString_Receipt_Code.ValueData AS ReceiptCode
             , Object_Receipt.ValueData            AS ReceiptName
+
+            , Object_InfoMoney_View.InfoMoneyCode
+            , Object_InfoMoney_View.InfoMoneyGroupName
+            , Object_InfoMoney_View.InfoMoneyDestinationName
+            , Object_InfoMoney_View.InfoMoneyName
+            , Object_InfoMoney_View.InfoMoneyName_all
 
             , MovementItem.isErased               AS isErased
 
@@ -164,6 +182,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
             ;
 
     RETURN NEXT Cursor1;
@@ -202,6 +224,12 @@ BEGIN
             , ObjectString_Receipt_Code.ValueData AS ReceiptCode
             , Object_Receipt.ValueData            AS ReceiptName
 
+            , Object_InfoMoney_View.InfoMoneyCode
+            , Object_InfoMoney_View.InfoMoneyGroupName
+            , Object_InfoMoney_View.InfoMoneyDestinationName
+            , Object_InfoMoney_View.InfoMoneyName
+            , Object_InfoMoney_View.InfoMoneyName_all
+
             , MovementItem.isErased               AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -260,7 +288,12 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-            ;
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+           ;
+
     RETURN NEXT Cursor1;
    END IF;
 
@@ -392,9 +425,4 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_ProductionUnion (inMovementId:= 1, inShowAll:= TRUE, inSession:= '2')
-/*
-BEGIN;
- select * from gpGet_Movement_ProductionUnion(inMovementId := 385717 , inOperDate := ('02.06.2014')::TDateTime ,  inSession := '5');
-COMMIT;
-*/
+-- SELECT * FROM gpSelect_MI_ProductionUnion (inMovementId:= 1, inShowAll:= TRUE, inisErased:= FALSE, inSession:= '2')

@@ -948,6 +948,7 @@ BEGIN
                                   THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                         END AS AccountId_Corporate
                  FROM _tmpItem
+                 WHERE _tmpItem.isTareReturning = FALSE -- !!!Возвратная тара не учавствует!!!
                  -- WHERE _tmpItem.OperSumm_Partner_ChangePercent <> 0 !!!нельзя ограничивать, т.к. этот AccountId в проводках для отчета!!!
                  GROUP BY _tmpItem.InfoMoneyDestinationId, _tmpItem.isTareReturning, _tmpItem.isLossMaterials
                 ) AS _tmpItem_group
@@ -1028,6 +1029,7 @@ BEGIN
                              ELSE _tmpItem.InfoMoneyId -- иначе берем по товару
                         END AS InfoMoneyId_calc
                  FROM _tmpItem
+                 WHERE _tmpItem.isTareReturning = FALSE -- !!!Возвратная тара не учавствует!!!
                  -- WHERE _tmpItem.OperSumm_Partner_ChangePercent <> 0 !!!нельзя ограничивать, т.к. этот ContainerId в проводках для отчета!!!
                  GROUP BY _tmpItem.AccountId_Partner
                         , _tmpItem.InfoMoneyId
@@ -1038,9 +1040,9 @@ BEGIN
      ;
 
      -- 3.3. !!!Очень важно - определили здесь vbContainerId_Analyzer для ВСЕХ!!!, если он не один - тогда ошибка
-     vbContainerId_Analyzer:= (SELECT ContainerId_Partner FROM _tmpItem GROUP BY ContainerId_Partner);
+     vbContainerId_Analyzer:= (SELECT ContainerId_Partner FROM _tmpItem WHERE ContainerId_Partner <> 0 GROUP BY ContainerId_Partner);
      -- определили
-     vbContainerId_Analyzer_PartnerFrom:= (SELECT ContainerId_Partner FROM _tmpItemPartnerFrom GROUP BY ContainerId_Partner);
+     vbContainerId_Analyzer_PartnerFrom:= (SELECT ContainerId_Partner FROM _tmpItemPartnerFrom WHERE ContainerId_Partner <> 0 GROUP BY ContainerId_Partner);
      -- определили
      vbWhereObjectId_Analyzer:= CASE WHEN vbUnitId_From <> 0 THEN vbUnitId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From WHEN vbPartnerId_From <> 0 THEN vbPartnerId_From END;
      -- определили

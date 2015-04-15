@@ -65,7 +65,7 @@ BEGIN
        ;
    END IF;
 
-   --новый по маске
+   -- новый по маске
    IF (COALESCE (inMovementId, 0) = 0) AND (COALESCE (inMovementId_Value, 0) <> 0)
    THEN
    RETURN QUERY
@@ -95,8 +95,6 @@ BEGIN
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
-            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementItem.ObjectId
-
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -112,9 +110,11 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                             ON MILinkObject_MoneyPlace.MovementItemId = THEN MovementItem.Id
                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = CASE WHEN Movement.DescId = zc_Movement_PersonalReport() THEN MILinkObject_MoneyPlace.ObjectId END
+
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = CASE WHEN Movement.DescId = zc_Movement_PersonalReport() THEN MovementItem.ObjectId WHEN Movement.DescId = zc_Movement_Cash() THEN MILinkObject_MoneyPlace.ObjectId END
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
                                              ON MILinkObject_Car.MovementItemId = MovementItem.Id
