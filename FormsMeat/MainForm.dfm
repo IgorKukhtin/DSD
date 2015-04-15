@@ -3,14 +3,14 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitWidth = 1094
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   object TextEdit: TcxTextEdit [0]
     Left = 0
     Top = 0
-    Align = alClient
+    Align = alTop
     Enabled = False
     ParentFont = False
     Properties.Alignment.Horz = taCenter
@@ -24,7 +24,6 @@ inherited MainForm: TMainForm
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
     TabOrder = 0
-    ExplicitHeight = 21
     Width = 1086
   end
   inherited ActionList: TActionList

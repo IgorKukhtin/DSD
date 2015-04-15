@@ -41,6 +41,10 @@ type
     colContractName: TcxGridDBColumn;
     colPaymentDate: TcxGridDBColumn;
     colPaySumm: TcxGridDBColumn;
+    mactSendOneDocNEW: TMultiAction;
+    actGetDataForSendNew: TdsdExecStoredProc;
+    spGetDataForSendNew: TdsdStoredProc;
+    bbNewSend: TdxBarButton;
   private
     { Private declarations }
   public

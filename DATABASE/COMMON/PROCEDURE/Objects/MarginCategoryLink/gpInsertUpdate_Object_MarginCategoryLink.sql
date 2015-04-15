@@ -1,12 +1,12 @@
 -- Function: gpInsertUpdate_Object_MarginCategory(Integer, Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MarginCategoryItem (Integer, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MarginCategoryLink (Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MarginCategoryItem(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MarginCategoryLink(
     IN inId               Integer,       -- Ключ объекта <Виды форм оплаты>
-    IN inMinPrice         TFloat, 
-    IN inMarginPercent    TFloat, 
     IN inMarginCategoryId Integer, 
+    IN inUnitId           Integer, 
+    IN inJuridicalId      Integer, 
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE(Id INTEGER) AS
@@ -22,18 +22,21 @@ BEGIN
       RAISE EXCEPTION 'Необходимо определить категорию наценки';
    END IF;
 
-   IF COALESCE(inId, 0) = 0 THEN
-      -- сохранили <Объект>
-      inId := lpInsertUpdate_Object (0, zc_Object_MarginCategoryItem(), 0, '');
+   IF COALESCE(inJuridicalId, 0) = 0 THEN
+      RAISE EXCEPTION 'Необходимо определить продавца';
    END IF;
 
-   -- сохранили свойство <Минимальная цена>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginCategoryItem_MinPrice(), inId, inMinPrice);
-   -- сохранили свойство <% наценки>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginCategoryItem_MarginPercent(), inId, inMarginPercent);
+   IF COALESCE(inId, 0) = 0 THEN
+      -- сохранили <Объект>
+      inId := lpInsertUpdate_Object (0, zc_Object_MarginCategoryLink(), 0, '');
+   END IF;
 
    -- сохранили связь с <Категорией наценки>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MarginCategoryItem_MarginCategory(), inId, inMarginCategoryId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MarginCategoryLink_MarginCategory(), inId, inMarginCategoryId);
+   -- сохранили связь с <ПОдразделением>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MarginCategoryLink_Unit(), inId, inUnitId);
+   -- сохранили связь с <Продавцом>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MarginCategoryLink_Juridical(), inId, inJuridicalId);
 
 
    -- сохранили протокол
@@ -45,7 +48,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_MarginCategoryItem (Integer, TFloat, TFloat, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_MarginCategoryLink (Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

@@ -4,7 +4,7 @@ interface
 
 uses
   DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxLocalization, dsdAddOn, dsdDB,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dsdAddOn, dsdDB,
   Data.DB, Datasnap.DBClient, frxExportXML, frxExportXLS, frxClass, frxExportRTF,
   Vcl.ActnList, dxBar, cxClasses, Vcl.StdActns, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinsdxBarPainter, cxPropertiesStore, Vcl.Menus,
@@ -14,9 +14,7 @@ uses
 
 type
   TAncestorMainForm = class(TForm)
-    cxLocalizer: TcxLocalizer;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    spUserProtocol: TdsdStoredProc;
     StoredProc: TdsdStoredProc;
     ClientDataSet: TClientDataSet;
     frxXMLExport: TfrxXMLExport;
@@ -40,13 +38,10 @@ type
     miUpdateProgramm: TMenuItem;
     frxXLSExport: TfrxXLSExport;
     procedure FormCreate(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
     procedure actUpdateProgramExecute(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
     procedure actLookAndFeelExecute(Sender: TObject);
-  private
-    procedure OnException(Sender: TObject; E: Exception);
   end;
 
 implementation
@@ -85,80 +80,10 @@ begin
   ShowMessage('Программа обновлена');
 end;
 
-procedure TAncestorMainForm.OnException(Sender: TObject; E: Exception);
-  function GetTextMessage(E: Exception; var isMessage: boolean): string;
-  begin
-    isMessage := false;
-    if E is EStorageException then begin
-       isMessage := (E as EStorageException).ErrorCode = 'P0001';
-       if pos('context', AnsilowerCase(E.Message)) = 0 then
-          Result := E.Message
-       else
-          // Выбрасываем все что после Context
-          Result := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1);
-       exit;
-    end;
-    if (E is EOutOfMemory) or (E is EVariantOutOfMemoryError)
-        or ((E is EDBClient) and (EDBClient(E).ErrorCode = 9473)) then begin
-       Result := 'Невозможно показать большой объем данных.'#10#13'Закройте другие приложения.'#10#13'Или установите другие условия для выбора данных.';
-       exit;
-    end;
-    Result := E.Message;
-  end;
-var TextMessage: String;
-    isMessage: boolean;
-begin
-  if E is ESortException then
-     exit;
-
-  TMessagesForm.Create(nil).Execute(GetTextMessage(E, isMessage), E.Message);
-  if not isMessage then begin
-    // Сохраняем протокол в базе
-    try
-      spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message);
-      spUserProtocol.Execute;
-    except
-      // Обязательно так, потому как иначе он может зациклиться.
-    end;
-  end;
-end;
 
 procedure TAncestorMainForm.FormCreate(Sender: TObject);
 begin
-  // Локализуем сообщения DevExpress
-  cxLocalizer.Active:= True;
-  cxLocalizer.Locale:= 1049;
-  Application.OnException := OnException;
   UserSettingsStorageAddOn.LoadUserSettings;
-end;
-
-procedure TAncestorMainForm.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  // Ctrl + Shift + S
-  if ShortCut(Key, Shift) = 24659 then begin
-     gc_isDebugMode := not gc_isDebugMode;
-     if gc_isDebugMode then
-        ShowMessage('Установлен режим отладки')
-      else
-        ShowMessage('Снят режим отладки');
-  end;
-  // Ctrl + Shift + T
-  if ShortCut(Key, Shift) = 24660 then begin
-     gc_isShowTimeMode := not gc_isShowTimeMode;
-     if gc_isShowTimeMode then
-        ShowMessage('Установлен режим проверки времени')
-      else
-        ShowMessage('Снят режим проверки времени');
-  end;
-  // Ctrl + Shift + D
-  if ShortCut(Key, Shift) = 24644 then begin
-     gc_isSetDefault := not gc_isSetDefault;
-     if gc_isSetDefault then
-        ShowMessage('Установки пользователя не загружаются')
-      else
-        ShowMessage('Установки пользователя загружаются');
-  end;
 end;
 
 procedure TAncestorMainForm.FormShow(Sender: TObject);

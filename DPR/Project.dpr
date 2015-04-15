@@ -82,6 +82,7 @@ uses
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
+  TdsdApplication.Create;
 
   // Процесс аутентификации
   if FindCmdLineSwitch('autologin', true) then begin

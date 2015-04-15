@@ -21,7 +21,6 @@ type
     FisAlreadyOpen: boolean;
     FAddOnFormData: TAddOnFormData;
     FNeedRefreshOnExecute: boolean;
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -86,7 +85,6 @@ begin
   FNeedRefreshOnExecute := false;
   FAddOnFormData := TAddOnFormData.Create;
   inherited;
-  onKeyDown := FormKeyDown;
   onClose := FormClose;
   onShow := FormShow;
   OnCloseQuery := FormCloseQuery;
@@ -156,40 +154,6 @@ begin
   // Нужно что бы вызать событие OnExit на последнем компоненте
   ActiveControl := nil;
   CanClose := not Assigned(ActiveControl);
-end;
-
-procedure TParentForm.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  // Ctrl + Shift + S
-  if ShortCut(Key, Shift) = 24659 then begin
-     gc_isDebugMode := not gc_isDebugMode;
-     if gc_isDebugMode then
-        ShowMessage('Установлен режим отладки')
-      else
-        ShowMessage('Снят режим отладки');
-  end;
-  // Ctrl + Shift + T
-  if ShortCut(Key, Shift) = 24660 then begin
-     gc_isShowTimeMode := not gc_isShowTimeMode;
-     if gc_isShowTimeMode then
-        ShowMessage('Установлен режим проверки времени')
-      else
-        ShowMessage('Снят режим проверки времени');
-  end;
-  // Ctrl + Shift + D
-  if ShortCut(Key, Shift) = 24644 then begin
-     gc_isSetDefault := not gc_isSetDefault;
-     if gc_isSetDefault then
-        ShowMessage('Установки пользователя не загружаются')
-      else
-        ShowMessage('Установки пользователя загружаются');
-  end;
-
-  // Ctrl + Alt + N
-  if ShortCut(Key, Shift) = 49230 then ShowMessage(name)
-
-
 end;
 
 procedure TParentForm.FormShow(Sender: TObject);
