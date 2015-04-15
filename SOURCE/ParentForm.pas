@@ -35,7 +35,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     function Execute(Sender: TComponent; Params: TdsdParams): boolean;
-    procedure Close(Sender: TObject);
+    procedure CloseAction(Sender: TObject);
     property FormClassName: string read FFormClassName write FFormClassName;
     property onAfterShow: TNotifyEvent read FonAfterShow write FonAfterShow;
     // проперти устанавливается в компоненте TRefreshDispatcher если форма не видима, но было изменение значений для изменения запроса
@@ -49,13 +49,12 @@ implementation
 uses
   cxControls, cxContainer, cxEdit, UtilConst,
   cxGroupBox, dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
-  dxBar, cxTextEdit, cxLabel,
-  StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
+  dxBar, cxTextEdit, cxLabel, StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
-  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
-  cxDBEdit, Document, Defaults, ExternalSave, EDI, kbmMemTable, cxDBVGrid,
-  Vcl.DBActns, ExternalDocumentLoad, ExternalLoad, dsdInternetAction, cxMemo;
+  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
+  cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
+  Vcl.DBActns, cxMemo;
 
 {$R *.dfm}
 
@@ -67,7 +66,7 @@ begin
      FonAfterShow(Self);
 end;
 
-procedure TParentForm.Close(Sender: TObject);
+procedure TParentForm.CloseAction(Sender: TObject);
 var FormAction: IFormAction;
 begin
   // Вызывается событие на закрытие формы, например для справочников для перечитывания
@@ -75,9 +74,6 @@ begin
      if Assigned(FormSender) then
         if FormSender.GetInterface(IFormAction, FormAction) then
            FormAction.OnFormClose(AddOnFormData.Params.Params);
-  Application.ProcessMessages;
-  inherited Close;
-  Application.ProcessMessages;
 end;
 
 constructor TParentForm.Create(AOwner: TComponent);
@@ -252,18 +248,11 @@ initialization
   RegisterClass (TdxBarStatic);
   RegisterClass (TdxBevel);
 
-  RegisterClass (TkbmMemTable);
-
   // Собственнтые компоненты
-  RegisterClass (TADOQueryAction);
   RegisterClass (TBooleanStoredProcAction);
   RegisterClass (TChangeStatus);
   RegisterClass (TChangeGuidesStatus);
-  RegisterClass (TClientBankLoadAction);
   RegisterClass (TCrossDBViewAddOn);
-  RegisterClass (TDefaultKey);
-  RegisterClass (TDocument);
-  RegisterClass (TDocumentOpenAction);
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
   RegisterClass (TdsdDataSetRefresh);
@@ -279,17 +268,11 @@ initialization
   RegisterClass (TdsdOpenForm);
   RegisterClass (TdsdPrintAction);
   RegisterClass (TdsdStoredProc);
-  RegisterClass (TdsdSMTPGridAction);
   RegisterClass (TdsdUpdateDataSet);
   RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdUserSettingsStorageAddOn);
 
-  RegisterClass (TEDI);
-  RegisterClass (TEDIAction);
-
   RegisterClass (TExecuteDialog);
-  RegisterClass (TExecuteImportSettingsAction);
-  RegisterClass (TExternalSaveAction);
   RegisterClass (TFileDialogAction);
   RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
@@ -302,7 +285,6 @@ initialization
   RegisterClass (TRefreshAddOn);
   RegisterClass (TRefreshDispatcher);
   RegisterClass (TUpdateRecord);
-  RegisterClass (TMoney1CLoadAction);
 
 // ДЛЯ ТЕСТА
 

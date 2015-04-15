@@ -315,7 +315,7 @@ begin
 end;
 
 initialization
-
   RegisterClass(TSale1CLoadAction);
+  RegisterClass (TMoney1CLoadAction);
 
 end.

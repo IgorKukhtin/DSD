@@ -320,7 +320,10 @@ begin
           if StringList[i] = '' then
              break;
           ElementList := SplitString(StringList[i], #9);
-          Price := gfStrToFloat(ElementList[20]) / gfStrToFloat(ElementList[15]);
+          if PriceWithVAT then
+             Price := gfStrToFloat(ElementList[19])
+          else
+             Price := gfStrToFloat(ElementList[20]) / gfStrToFloat(ElementList[15]);
           ElementList[13] := trim(ElementList[13]);
           if (ElementList[13] = '') or (ElementList[13] = '.  .') then
              ExpirationDate := OperDate + 365
@@ -807,5 +810,8 @@ begin
     SQL.Text := ASQL;
   end;
 end;
+
+initialization
+  Classes.RegisterClass (TExecuteImportSettingsAction);
 
 end.

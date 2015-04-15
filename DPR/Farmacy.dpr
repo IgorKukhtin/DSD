@@ -68,7 +68,6 @@ uses
 
 begin
   Application.Initialize;
-//  Application.MainFormOnTaskbar := True;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
 

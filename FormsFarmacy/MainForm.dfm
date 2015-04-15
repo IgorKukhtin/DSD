@@ -620,9 +620,6 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
   end
-  inherited cxLocalizer: TcxLocalizer
-    Top = 40
-  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
     Top = 24

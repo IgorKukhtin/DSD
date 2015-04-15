@@ -77,6 +77,31 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
+			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
+			<DCCReference Include="..\SOURCE\dsdApplication.pas"/>
+			<DCCReference Include="..\SOURCE\dsdException.pas"/>
+			<DCCReference Include="..\SOURCE\Log.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
+			<DCCReference Include="..\SOURCE\Storage.pas"/>
+			<DCCReference Include="..\SOURCE\MessagesUnit.pas">
+				<Form>MessagesForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\SimpleGauge.pas">
+				<Form>SimpleGaugeForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\CommonData.pas"/>
+			<DCCReference Include="..\SOURCE\Authentication.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdGuides.pas"/>
+			<DCCReference Include="..\SOURCE\ParentForm.pas">
+				<Form>ParentForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdAddOn.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
+			<DCCReference Include="..\SOURCE\FormStorage.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\ChoicePeriod.pas">
+				<Form>PeriodChoiceForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

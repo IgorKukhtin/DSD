@@ -64,8 +64,7 @@ requires
   fs16,
   frx16,
   frxDB16,
-  kbmMemRunDXE2Pro,
-  zlibex;
+  kbmMemRunDXE2Pro;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -121,6 +120,7 @@ contains
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas',
-  MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas';
+  MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas',
+  dsdException in '..\SOURCE\dsdException.pas';
 
 end.

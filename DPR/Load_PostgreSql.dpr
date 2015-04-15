@@ -51,7 +51,8 @@ uses
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  StatusXML in '..\SOURCE\EDI\StatusXML.pas';
+  StatusXML in '..\SOURCE\EDI\StatusXML.pas',
+  dsdException in '..\SOURCE\dsdException.pas';
 
 {$R *.res}
 

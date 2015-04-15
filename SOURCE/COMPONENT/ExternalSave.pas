@@ -221,4 +221,8 @@ begin
   result := true;
 end;
 
+initialization
+  RegisterClass (TADOQueryAction);
+  RegisterClass (TExternalSaveAction);
+
 end.

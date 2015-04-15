@@ -1073,4 +1073,7 @@ begin
   result := FDataSet.FieldByName('DK').AsInteger = 2
 end;
 
+initialization
+  RegisterClass(TClientBankLoadAction)
+
 end.

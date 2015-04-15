@@ -2820,9 +2820,6 @@ inherited MainForm: TMainForm
       Caption = 'spRefresh'
     end
   end
-  inherited cxLocalizer: TcxLocalizer
-    Top = 32
-  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 56
   end

@@ -152,8 +152,8 @@ object MemberForm: TMemberForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -361,7 +361,7 @@ object MemberForm: TMemberForm
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh

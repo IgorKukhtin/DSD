@@ -98,4 +98,7 @@ begin
               Params[i].Component := nil;
 end;
 
+initialization
+  RegisterClass(TDefaultKey)
+
 end.
