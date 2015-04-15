@@ -17,6 +17,9 @@ BEGIN
 
      IF vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Corrective()
      THEN
+          -- 1. ѕроверки на "распроведение" / "удаление"
+          PERFORM lpCheck_Movement_Status (inMovementId, inUserId);
+
           -- у всех возвратов "удал€ем" <“ип формировани€ налогового документа>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), MovementLinkMovement.MovementChildId, NULL)
           FROM MovementLinkMovement
