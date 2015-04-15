@@ -10,6 +10,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                BusinessId Integer, BusinessName TVarChar, 
                BranchId Integer, BranchName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
+               ContractId Integer, InvNumber TVarChar,
+               Contract_JuridicalId Integer, Contract_JuridicalName TVarChar,
+               Contract_InfomoneyId Integer, Contract_InfomoneyName TVarChar,
                AccountGroupCode Integer, AccountGroupName TVarChar,
                AccountDirectionCode Integer, AccountDirectionName TVarChar,
                ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar,
@@ -53,7 +56,14 @@ BEGIN
          
            , Object_Unit_View.JuridicalId
            , Object_Unit_View.JuridicalName
-         
+
+           , Object_Contract_View.ContractId
+           , Object_Contract_View.InvNumber
+           , Object_Contract_View.JuridicalId   AS Contract_JuridicalId
+           , Object_Juridical.ValueData         AS Contract_JuridicalName
+           , Object_Contract_View.InfomoneyId   AS Contract_InfomoneyId
+           , Object_Infomoney.ValueData         AS Contract_InfomoneyName
+
            , View_AccountDirection.AccountGroupCode
            , View_AccountDirection.AccountGroupName
            , View_AccountDirection.AccountDirectionCode
@@ -69,6 +79,14 @@ BEGIN
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract
+                                 ON ObjectLink_Unit_Contract.ObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+            LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = ObjectLink_Unit_Contract.ChildObjectId
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
+            LEFT JOIN Object AS Object_Infomoney ON Object_Infomoney.Id = Object_Contract_View.InfomoneyId
+
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
               OR vbIsConstraint = FALSE
@@ -93,17 +111,26 @@ BEGIN
            , Object_Branch.Id :: Integer AS BranchId
            , Object_Branch.ValueData :: TVarChar AS BranchName
          
-           , 0 :: Integer AS JuridicalId
+           , 0 :: Integer   AS JuridicalId
            , '' :: TVarChar AS JuridicalName
+
+           , 0 :: Integer   AS ContractId
+           , '' :: TVarChar AS InvNumber
+
+           , 0 :: Integer   AS Contract_JuridicalId
+           , '' :: TVarChar AS Contract_JuridicalName
          
-           , 0 :: Integer AS AccountGroupCode
+           , 0 :: Integer   AS Contract_InfomoneyId
+           , '' :: TVarChar AS Contract_InfomoneyName
+
+           , 0 :: Integer   AS AccountGroupCode
            , '' :: TVarChar AS AccountGroupName
-           , 0 :: Integer AS AccountDirectionCode
+           , 0 :: Integer   AS AccountDirectionCode
            , '' :: TVarChar AS AccountDirectionName
          
-           , 0 :: Integer AS ProfitLossGroupCode
+           , 0 :: Integer   AS ProfitLossGroupCode
            , '' :: TVarChar AS ProfitLossGroupName
-           , 0 :: Integer AS ProfitLossDirectionCode
+           , 0 :: Integer   AS ProfitLossDirectionCode
            , '' :: TVarChar AS ProfitLossDirectionName
          
            , FALSE AS isErased
@@ -127,6 +154,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.15         * add Contract
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  21.12.13                                        * ParentId
  21.11.13                       * добавил WITH из-за неправильной оптимизации DISTINCT и GROUP BY в 9.3

@@ -30,7 +30,6 @@ object UnitForm: TUnitForm
     Height = 394
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 659
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -165,6 +164,30 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
+      end
+      object clInvNumber: TcxGridDBColumn
+        Caption = #1044#1086#1075#1086#1074#1086#1088
+        DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clContract_JuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
+        DataBinding.FieldName = 'Contract_JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clContract_InfomoneyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
+        DataBinding.FieldName = 'Contract_InfomoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -68,6 +68,9 @@ type
     ceParentName: TcxGridDBColumn;
     actGridToExcel: TdsdGridToExcel;
     dxBarButton1: TdxBarButton;
+    clInvNumber: TcxGridDBColumn;
+    clContract_JuridicalName: TcxGridDBColumn;
+    clContract_InfomoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public
