@@ -1,37 +1,80 @@
 inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
-  Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1086#1082
-  ClientWidth = 360
-  ExplicitWidth = 368
+  Caption = #1057#1074#1103#1079#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1086#1082
+  ClientWidth = 507
+  ExplicitWidth = 515
   ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 360
-    ClientRectRight = 360
+    Width = 507
+    ExplicitWidth = 507
+    ClientRectRight = 507
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 507
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 360
+        Width = 507
+        ExplicitWidth = 507
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.Appending = True
+          OptionsData.Inserting = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
-            HeaderAlignmentVert = vaCenter
-            Width = 77
-          end
-          object colName: TcxGridDBColumn
+          object colMarginCategoryName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'Name'
+            DataBinding.FieldName = 'MarginCategoryName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceMarginCategory
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentVert = vaCenter
-            Width = 265
+            Width = 145
+          end
+          object colUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceUnit
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentVert = vaCenter
+            Width = 176
+          end
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1074#1077#1094
+            DataBinding.FieldName = 'JuridicalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceJuridical
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Width = 133
           end
         end
       end
     end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
   end
   inherited ActionList: TActionList
     object actInsertUpdate: TdsdUpdateDataSet
@@ -46,6 +89,78 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
       Caption = 'actInsertUpdate'
       DataSource = MasterDS
     end
+    object actChoiceUnit: TOpenChoiceForm
+      Category = #1042#1099#1073#1086#1088' '#1079#1085#1072#1095#1077#1085#1080#1081
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceMarginCategory'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actChoiceJuridical: TOpenChoiceForm
+      Category = #1042#1099#1073#1086#1088' '#1079#1085#1072#1095#1077#1085#1080#1081
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceMarginCategory'
+      FormName = 'TJuridicalForm'
+      FormNameParam.Value = 'TJuridicalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actChoiceMarginCategory: TOpenChoiceForm
+      Category = #1042#1099#1073#1086#1088' '#1079#1085#1072#1095#1077#1085#1080#1081
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceMarginCategory'
+      FormName = 'TMarginCategoryForm'
+      FormNameParam.Value = 'TMarginCategoryForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MarginCategoryId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MarginCategoryName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -54,7 +169,7 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
     Top = 80
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MarginCategory'
+    StoredProcName = 'gpSelect_Object_MarginCategoryLink'
     Top = 80
   end
   inherited BarManager: TdxBarManager
@@ -65,50 +180,38 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
       0
       26
       0)
-    inherited Bar: TdxBar
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbChoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end>
-    end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_MarginCategory'
+    StoredProcName = 'gpInsertUpdate_Object_MarginCategoryLink'
     DataSets = <>
+    OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'inCode'
+        Name = 'inMarginCategoryId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Code'
+        ComponentItem = 'MarginCategoryId'
         ParamType = ptInput
       end
       item
-        Name = 'inName'
+        Name = 'inUnitId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Name'
-        DataType = ftString
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
@@ -116,12 +219,6 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-      end
-      item
-        Name = 'Code'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Code'
       end>
     PackSize = 1
     Left = 296

@@ -1,19 +1,19 @@
 inherited MarginCategoryItemForm: TMarginCategoryItemForm
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
-  ClientWidth = 360
-  ExplicitWidth = 368
+  ClientWidth = 453
+  ExplicitWidth = 461
   ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 360
+    Width = 453
     ExplicitWidth = 360
-    ClientRectRight = 360
+    ClientRectRight = 453
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 360
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 360
+        Width = 453
         ExplicitWidth = 360
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -55,7 +55,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             Kind = bkEllipsis
           end>
         TabOrder = 2
-        Width = 121
+        Width = 209
       end
     end
   end

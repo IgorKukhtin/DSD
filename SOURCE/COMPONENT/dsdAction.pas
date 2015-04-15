@@ -1603,10 +1603,11 @@ begin
     raise;
   end;
   result := true;
-  if fsModal in TParentForm(Owner).FormState then
-     TParentForm(Owner).ModalResult := mrOk
+  if fsModal in TForm(Owner).FormState then
+     TForm(Owner).ModalResult := mrOk
   else
-     TParentForm(Owner).Close(Self);
+     TForm(Owner).Close;
+  TParentForm(Owner).CloseAction(Self);
 end;
 
 procedure TdsdInsertUpdateGuides.Notification(AComponent: TComponent;

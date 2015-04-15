@@ -65,7 +65,7 @@ type
     colMeasure: TcxGridDBColumn;
     spCalculateSalePrice: TdsdStoredProc;
     actCalculateSalePrice: TdsdExecStoredProc;
-    bbCreateSend: TdxBarButton;
+    bbCalculateSalePrice: TdxBarButton;
     colSalePrice: TcxGridDBColumn;
     colSaleSumm: TcxGridDBColumn;
     colPercent: TcxGridDBColumn;

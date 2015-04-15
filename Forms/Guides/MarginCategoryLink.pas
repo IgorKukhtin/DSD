@@ -10,14 +10,19 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, dsdGuides, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  cxLabel, cxCurrencyEdit;
 
 type
   TMarginCategoryLinkForm = class(TAncestorEnumForm)
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
+    colMarginCategoryName: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
+    colJuridicalName: TcxGridDBColumn;
+    actChoiceMarginCategory: TOpenChoiceForm;
+    actChoiceUnit: TOpenChoiceForm;
+    actChoiceJuridical: TOpenChoiceForm;
   private
     { Private declarations }
   public

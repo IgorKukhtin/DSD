@@ -21,7 +21,6 @@ type
     FisAlreadyOpen: boolean;
     FAddOnFormData: TAddOnFormData;
     FNeedRefreshOnExecute: boolean;
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -36,7 +35,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     function Execute(Sender: TComponent; Params: TdsdParams): boolean;
-    procedure Close(Sender: TObject);
+    procedure CloseAction(Sender: TObject);
     property FormClassName: string read FFormClassName write FFormClassName;
     property onAfterShow: TNotifyEvent read FonAfterShow write FonAfterShow;
     // проперти устанавливается в компоненте TRefreshDispatcher если форма не видима, но было изменение значений для изменения запроса
@@ -50,13 +49,12 @@ implementation
 uses
   cxControls, cxContainer, cxEdit, UtilConst,
   cxGroupBox, dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
-  dxBar, cxTextEdit, cxLabel,
-  StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
+  dxBar, cxTextEdit, cxLabel, StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
-  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
-  cxDBEdit, Document, Defaults, ExternalSave, EDI, kbmMemTable, cxDBVGrid,
-  Vcl.DBActns, ExternalDocumentLoad, ExternalLoad, dsdInternetAction, cxMemo;
+  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
+  cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
+  Vcl.DBActns, cxMemo;
 
 {$R *.dfm}
 
@@ -68,7 +66,7 @@ begin
      FonAfterShow(Self);
 end;
 
-procedure TParentForm.Close(Sender: TObject);
+procedure TParentForm.CloseAction(Sender: TObject);
 var FormAction: IFormAction;
 begin
   // Вызывается событие на закрытие формы, например для справочников для перечитывания
@@ -76,9 +74,6 @@ begin
      if Assigned(FormSender) then
         if FormSender.GetInterface(IFormAction, FormAction) then
            FormAction.OnFormClose(AddOnFormData.Params.Params);
-  Application.ProcessMessages;
-  inherited Close;
-  Application.ProcessMessages;
 end;
 
 constructor TParentForm.Create(AOwner: TComponent);
@@ -86,7 +81,6 @@ begin
   FNeedRefreshOnExecute := false;
   FAddOnFormData := TAddOnFormData.Create;
   inherited;
-  onKeyDown := FormKeyDown;
   onClose := FormClose;
   onShow := FormShow;
   OnCloseQuery := FormCloseQuery;
@@ -156,40 +150,6 @@ begin
   // Нужно что бы вызать событие OnExit на последнем компоненте
   ActiveControl := nil;
   CanClose := not Assigned(ActiveControl);
-end;
-
-procedure TParentForm.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  // Ctrl + Shift + S
-  if ShortCut(Key, Shift) = 24659 then begin
-     gc_isDebugMode := not gc_isDebugMode;
-     if gc_isDebugMode then
-        ShowMessage('Установлен режим отладки')
-      else
-        ShowMessage('Снят режим отладки');
-  end;
-  // Ctrl + Shift + T
-  if ShortCut(Key, Shift) = 24660 then begin
-     gc_isShowTimeMode := not gc_isShowTimeMode;
-     if gc_isShowTimeMode then
-        ShowMessage('Установлен режим проверки времени')
-      else
-        ShowMessage('Снят режим проверки времени');
-  end;
-  // Ctrl + Shift + D
-  if ShortCut(Key, Shift) = 24644 then begin
-     gc_isSetDefault := not gc_isSetDefault;
-     if gc_isSetDefault then
-        ShowMessage('Установки пользователя не загружаются')
-      else
-        ShowMessage('Установки пользователя загружаются');
-  end;
-
-  // Ctrl + Alt + N
-  if ShortCut(Key, Shift) = 49230 then ShowMessage(name)
-
-
 end;
 
 procedure TParentForm.FormShow(Sender: TObject);
@@ -288,18 +248,11 @@ initialization
   RegisterClass (TdxBarStatic);
   RegisterClass (TdxBevel);
 
-  RegisterClass (TkbmMemTable);
-
   // Собственнтые компоненты
-  RegisterClass (TADOQueryAction);
   RegisterClass (TBooleanStoredProcAction);
   RegisterClass (TChangeStatus);
   RegisterClass (TChangeGuidesStatus);
-  RegisterClass (TClientBankLoadAction);
   RegisterClass (TCrossDBViewAddOn);
-  RegisterClass (TDefaultKey);
-  RegisterClass (TDocument);
-  RegisterClass (TDocumentOpenAction);
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
   RegisterClass (TdsdDataSetRefresh);
@@ -315,17 +268,11 @@ initialization
   RegisterClass (TdsdOpenForm);
   RegisterClass (TdsdPrintAction);
   RegisterClass (TdsdStoredProc);
-  RegisterClass (TdsdSMTPGridAction);
   RegisterClass (TdsdUpdateDataSet);
   RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdUserSettingsStorageAddOn);
 
-  RegisterClass (TEDI);
-  RegisterClass (TEDIAction);
-
   RegisterClass (TExecuteDialog);
-  RegisterClass (TExecuteImportSettingsAction);
-  RegisterClass (TExternalSaveAction);
   RegisterClass (TFileDialogAction);
   RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
@@ -338,7 +285,6 @@ initialization
   RegisterClass (TRefreshAddOn);
   RegisterClass (TRefreshDispatcher);
   RegisterClass (TUpdateRecord);
-  RegisterClass (TMoney1CLoadAction);
 
 // ДЛЯ ТЕСТА
 

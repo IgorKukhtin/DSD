@@ -81,6 +81,8 @@ type
     colJDData: TcxGridDBColumn;
     JuridicalDetailsGridLevel: TcxGridLevel;
     colDeferment: TcxGridDBColumn;
+    cePercent: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
   private
     { Private declarations }
   public

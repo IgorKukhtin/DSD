@@ -13,7 +13,6 @@ object AncestorMainForm: TAncestorMainForm
   Menu = MainMenu
   OldCreateOrder = False
   OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -221,29 +220,9 @@ object AncestorMainForm: TAncestorMainForm
       isShowModal = False
     end
   end
-  object cxLocalizer: TcxLocalizer
-    StorageType = lstResource
-    Left = 96
-    Top = 64
-  end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 32
     Top = 72
-  end
-  object spUserProtocol: TdsdStoredProc
-    StoredProcName = 'gpInsert_UserProtocol'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inProtocolData'
-        Value = Null
-        DataType = ftBlob
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 312
-    Top = 48
   end
   object StoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ActionByUser'

@@ -2,7 +2,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 469
   ClientWidth = 807
-  ExplicitLeft = -25
   ExplicitWidth = 815
   ExplicitHeight = 496
   PixelsPerInch = 96
@@ -253,6 +252,31 @@ inherited IncomeJournalForm: TIncomeJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
+    object actGetDataForSendNew: TdsdExecStoredProc [2]
+      Category = 'dsdImportExport'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetDataForSendNew
+      StoredProcList = <
+        item
+          StoredProc = spGetDataForSendNew
+        end>
+    end
+    object mactSendOneDocNEW: TMultiAction [3]
+      Category = 'dsdImportExport'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetDataForSendNew
+        end
+        item
+          Action = ADOQueryAction1
+        end
+        item
+          Action = actComplete
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TIncomeForm'
     end
@@ -469,6 +493,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbNewSend'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -507,6 +535,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
     object bbSendData: TdxBarButton
       Action = mactSendOneDoc
+      Category = 0
+    end
+    object bbNewSend: TdxBarButton
+      Action = mactSendOneDocNEW
       Category = 0
     end
   end
@@ -674,5 +706,34 @@ inherited IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 440
     Top = 48
+  end
+  object spGetDataForSendNew: TdsdStoredProc
+    StoredProcName = 'gpGetDataForSendNew'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ConnectionString'
+        Value = Null
+        Component = ADOQueryAction1
+        ComponentItem = 'ConnectionString'
+      end
+      item
+        Name = 'QueryText'
+        Value = Null
+        Component = ADOQueryAction1
+        ComponentItem = 'QueryText'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 88
   end
 end

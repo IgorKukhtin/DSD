@@ -180,6 +180,9 @@
 				<Form>GuideGoodsMovementForm</Form>
 				<FormType>dfm</FormType>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\dsdApplication.pas"/>
+			<DCCReference Include="..\SOURCE\dsdException.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

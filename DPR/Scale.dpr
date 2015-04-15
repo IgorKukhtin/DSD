@@ -64,13 +64,17 @@ uses
   SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
   FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm};
+  GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm},
+  dsdApplication in '..\SOURCE\dsdApplication.pas',
+  dsdException in '..\SOURCE\dsdException.pas',
+  StatusXML in '..\SOURCE\EDI\StatusXML.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
 
+  TdsdApplication.Create;
   //global Initialize
   gpInitialize_Ini;
 

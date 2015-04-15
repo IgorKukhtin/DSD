@@ -74,7 +74,9 @@ uses
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas',
-  MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas';
+  MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas',
+  dsdException in '..\SOURCE\dsdException.pas',
+  dsdApplication in '..\SOURCE\dsdApplication.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -82,6 +84,7 @@ uses
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
+  TdsdApplication.Create;
 
   // Процесс аутентификации
   if FindCmdLineSwitch('autologin', true) then begin

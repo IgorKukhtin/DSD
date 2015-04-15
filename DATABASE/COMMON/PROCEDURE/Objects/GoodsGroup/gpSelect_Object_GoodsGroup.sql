@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , TradeMarkId Integer, TradeMarkName TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
+             , GoodsPlatformId Integer, GoodsPlatformName TVarChar
              ) AS
 $BODY$BEGIN
 
@@ -36,7 +37,10 @@ $BODY$BEGIN
          , Object_GoodsTag.ValueData     AS GoodsTagName      
          
          , Object_GoodsGroupAnalyst.Id             AS GoodsGroupAnalystId
-         , Object_GoodsGroupAnalyst.ValueData     AS GoodsGroupAnalystName               
+         , Object_GoodsGroupAnalyst.ValueData     AS GoodsGroupAnalystName   
+
+         , Object_GoodsPlatform.Id            AS GoodsPlatformId
+         , Object_GoodsPlatform.ValueData     AS GoodsPlatformName            
          
      FROM Object AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -63,7 +67,12 @@ $BODY$BEGIN
                                 ON ObjectLink_GoodsGroupAnalyst.ObjectId = Object_GoodsGroup.Id
                                AND ObjectLink_GoodsGroupAnalyst.DescId = zc_ObjectLink_GoodsGroup_GoodsGroupAnalyst()
            LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_GoodsGroupAnalyst.ChildObjectId             
-                  
+           
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsPlatform
+                                ON ObjectLink_GoodsPlatform.ObjectId = Object_GoodsGroup.Id
+                               AND ObjectLink_GoodsPlatform.DescId = zc_ObjectLink_GoodsGroup_GoodsPlatform()
+           LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_GoodsPlatform.ChildObjectId  
+       
     WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup();
   
 END;$BODY$
@@ -76,6 +85,7 @@ ALTER FUNCTION gpSelect_Object_GoodsGroup(TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.04.15         * add GoodsPlatform
  24.11.14         * add GoodsGroupAnalyst             
  15.09.14         * add GoodsTag
  11.09.14         * add TradeMark

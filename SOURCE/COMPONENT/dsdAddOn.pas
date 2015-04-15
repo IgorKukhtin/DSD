@@ -62,10 +62,6 @@ type
     property DBTreeList: TcxDBTreeList read FDBTreeList write SetDBTreeList;
   end;
 
-  ESortException = class(Exception)
-
-  end;
-
   // Управление цветами
 
   // Значение цвета
@@ -474,7 +470,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
-     cxCustomPivotGrid, Dialogs;
+     cxCustomPivotGrid, Dialogs, dsdException;
 
 type
 
