@@ -17,7 +17,7 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
                  WHEN Movement_Income.PriceWithVAT THEN  MIFloat_Price.ValueData
                                      ELSE (MIFloat_Price.ValueData * (1 + Movement_Income.NDS/100))::TFloat
              END AS PriceWithVAT
-           , MIFloat_PriceSale.ValueData        AS PriceSale
+           , COALESCE(MIFloat_PriceSale.ValueData,0)::TFloat        AS PriceSale
            , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
            , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))::TFloat AS SummSale
            , MovementItem.isErased              AS isErased

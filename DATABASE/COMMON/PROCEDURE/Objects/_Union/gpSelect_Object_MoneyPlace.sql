@@ -23,7 +23,7 @@ BEGIN
 
      RETURN QUERY
      WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
-        , View_InfoMoney_40801 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 40801)
+        , View_InfoMoney_40801 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 40801) -- Внутренний оборот
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode     
           , Object_Cash.Valuedata AS Name

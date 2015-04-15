@@ -3,14 +3,14 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitWidth = 1094
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   object TextEdit: TcxTextEdit [0]
     Left = 0
     Top = 0
-    Align = alClient
+    Align = alTop
     Enabled = False
     ParentFont = False
     Properties.Alignment.Horz = taCenter
@@ -2819,9 +2819,6 @@ inherited MainForm: TMainForm
         end>
       Caption = 'spRefresh'
     end
-  end
-  inherited cxLocalizer: TcxLocalizer
-    Top = 32
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 56

@@ -2030,6 +2030,10 @@ begin
   inherited;
 end;
 
+initialization
+  Classes.RegisterClass(TEDI);
+  Classes.RegisterClass(TEDIAction);
+
 end.
 
 { FIdFTP.Username := 'uatovalanftp'; FIdFTP.Password := 'ftp349067';

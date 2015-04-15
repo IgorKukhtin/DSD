@@ -47,31 +47,31 @@ BEGIN
      'call "DBA"."LoadIncomeBillItems"('''||Movement_Income_View.InvNumber||''','''||to_char(Movement_Income_View.OperDate, 'yyyy-mm-dd')||
           ''','''||to_char(Movement_Income_View.PaymentDate, 'yyyy-mm-dd')||
           ''','||0::integer||','''||coalesce(Juridical.OKPO,'')||''','||COALESCE(vbClientId, 0)||','||vbUnitId||','||ObjectFloat_NDSKind_NDS.ValueData||
-          ','||MovementItem.GoodsCode||','''||MovementItem.GoodsName||''','||MovementItem.Amount||','||
-             CASE WHEN Movement_Income_View.PriceWithVAT THEN MovementItem.Price
-             ELSE MovementItem.Price * (1 + Movement_Income_View.NDS/100)
-             END||')'::text AS OneProcedure
+          ','||MovementItem.GoodsCode||','''||MovementItem.GoodsName||''','''||Object_Goods_View.MeasureName||''','||MovementItem.Amount||','||
+             MovementItem.PriceWithVAT||','||PriceSale||')'::text AS OneProcedure
        FROM Movement_Income_View    
          LEFT JOIN ObjectHistory_JuridicalDetails_View AS Juridical ON Juridical.JuridicalId = Movement_Income_View.FromId
-         LEFT JOIN (SELECT GoodsCode, GoodsName, SUM(Amount) AS Amount, Price
+         LEFT JOIN (SELECT GoodsId, GoodsCode, GoodsName, SUM(Amount) AS Amount, PriceWithVAT, PriceSale
                       FROM MovementItem_Income_View AS MovementItem 
                      WHERE MovementItem.MovementId = inMovementId
                        AND MovementItem.isErased = false
-                     GROUP BY GoodsCode, GoodsName, Price) AS MovementItem ON true
+                     GROUP BY GoodsId, GoodsCode, GoodsName, PriceWithVAT, PriceSale) AS MovementItem ON true
         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                               ON ObjectFloat_NDSKind_NDS.ObjectId = Movement_Income_View.NDSKindId 
                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+        LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem.GoodsId                     
       WHERE Movement_Income_View.Id = inMovementId) AS DD; 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGetDataForSend (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGetDataForSend(Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.04.15                         *
  27.01.15                         *
  12.01.15                         *
  26.12.14                         *
@@ -83,6 +83,6 @@ ALTER FUNCTION gpGetDataForSend (Integer, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 --
---SELECT * FROM gpGetDataForSend (inMovementId:= 15532  , inSession:= '2') --15532 --15476
+SELECT * FROM gpGetDataForSendNew (inMovementId:= 53675  , inSession:= '2') --15532 --15476
 --call "DBA"."LoadIncomeBillItems"('БН8687','2015-01-20','2015-01-20',1,'35341093',0,79,7.0000,12654,'Тонометр Росма (...)"
 

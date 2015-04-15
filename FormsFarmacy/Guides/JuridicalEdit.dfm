@@ -48,8 +48,8 @@
     Width = 273
   end
   object cbisCorporate: TcxCheckBox [6]
-    Left = 80
-    Top = 160
+    Left = 9
+    Top = 161
     Caption = #1053#1072#1096#1077' '#1102#1088'.'#1083'.'
     TabOrder = 1
     Width = 111
@@ -329,8 +329,20 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 12
     Width = 273
+  end
+  object cePercent: TcxCurrencyEdit [10]
+    Left = 112
+    Top = 161
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 14
+    Width = 166
+  end
+  object cxLabel2: TcxLabel [11]
+    Left = 112
+    Top = 141
+    Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
@@ -364,6 +376,7 @@
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -377,6 +390,7 @@
     object actFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object actContractInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -421,6 +435,7 @@
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ContractCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -460,6 +475,7 @@
     object JuridicalDetailsUDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spJuridicalDetailsIU
       StoredProcList = <
         item
@@ -470,6 +486,7 @@
     object actSave: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -483,6 +500,7 @@
     object actChoiceBank: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceBank'
       FormName = 'TBankForm'
       FormNameParam.Value = ''
@@ -490,11 +508,13 @@
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = JuridicalDetailsCDS
           ComponentItem = 'BankId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = JuridicalDetailsCDS
           ComponentItem = 'BankName'
           DataType = ftString
@@ -572,6 +592,12 @@
         Value = ''
         Component = RetailGuides
         ParamType = ptInput
+      end
+      item
+        Name = 'inPercent'
+        Value = Null
+        Component = cePercent
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 240
@@ -617,6 +643,12 @@
         Component = RetailGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'Percent'
+        Value = Null
+        Component = cePercent
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 240
@@ -802,6 +834,7 @@
     Params = <
       item
         Name = 'ioid'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -815,6 +848,7 @@
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -822,12 +856,14 @@
       end
       item
         Name = 'inBankId'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'BankId'
         ParamType = ptInput
       end
       item
         Name = 'infullname'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'FullName'
         DataType = ftString
@@ -835,6 +871,7 @@
       end
       item
         Name = 'injuridicaladdress'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'JuridicalAddress'
         DataType = ftString
@@ -842,6 +879,7 @@
       end
       item
         Name = 'inokpo'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'OKPO'
         DataType = ftString
@@ -849,6 +887,7 @@
       end
       item
         Name = 'ininn'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'INN'
         DataType = ftString
@@ -856,6 +895,7 @@
       end
       item
         Name = 'innumbervat'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'NumberVAT'
         DataType = ftString
@@ -863,6 +903,7 @@
       end
       item
         Name = 'inaccountername'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'AccounterName'
         DataType = ftString
@@ -870,6 +911,7 @@
       end
       item
         Name = 'inbankaccount'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'BankAccount'
         DataType = ftString
@@ -877,6 +919,7 @@
       end
       item
         Name = 'inphone'
+        Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'Phone'
         DataType = ftString

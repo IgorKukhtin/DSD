@@ -167,8 +167,9 @@ begin
 end;
 
 initialization
+  Classes.RegisterClass(TDocument);
+  Classes.RegisterClass(TDocumentOpenAction);
   EnvironmentStrings := TStringList.Create;
   GetEnvironmentStrings(EnvironmentStrings);
-
 
 end.

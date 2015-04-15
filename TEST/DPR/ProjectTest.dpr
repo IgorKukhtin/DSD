@@ -664,7 +664,8 @@ uses
   Member_Container in '..\..\Forms\Guides\Member_Container.pas' {Member_ContainerForm: TParentForm},
   Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm: TParentForm},
   GoodsPlatform in '..\..\Forms\Guides\GoodsPlatform.pas' {GoodsPlatformForm: TParentForm},
-  GoodsPlatformEdit in '..\..\Forms\Guides\GoodsPlatformEdit.pas' {GoodsPlatformEditForm: TParentForm};
+  GoodsPlatformEdit in '..\..\Forms\Guides\GoodsPlatformEdit.pas' {GoodsPlatformEditForm: TParentForm},
+  dsdException in '..\..\SOURCE\dsdException.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

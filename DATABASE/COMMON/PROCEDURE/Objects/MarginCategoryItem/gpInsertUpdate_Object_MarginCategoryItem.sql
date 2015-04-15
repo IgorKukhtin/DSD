@@ -28,19 +28,19 @@ BEGIN
    END IF;
 
    -- сохранили свойство <ћинимальна€ цена>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinPrice(), inId, inMinPrice);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginCategoryItem_MinPrice(), inId, inMinPrice);
    -- сохранили свойство <% наценки>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MarginPercent(), inId, inMarginPercent);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginCategoryItem_MarginPercent(), inId, inMarginPercent);
 
    -- сохранили св€зь с < атегорией наценки>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MarginCategoryItem_MarginCategory(), inId, inMarginCategoryId);
 
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (inId, UserId);
 
    RETURN 
-      QUERY SELECT ioId AS Id;
+      QUERY SELECT inId AS Id;
 
 END;$BODY$
 

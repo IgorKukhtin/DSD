@@ -60,17 +60,18 @@ uses
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  StatusXML in '..\SOURCE\EDI\StatusXML.pas';
+  StatusXML in '..\SOURCE\EDI\StatusXML.pas',
+  dsdApplication in '..\SOURCE\dsdApplication.pas',
+  dsdException in '..\SOURCE\dsdException.pas';
 
 {$R *.res}
-{$R DevExpressRus.res}
-
 
 begin
   Application.Initialize;
-//  Application.MainFormOnTaskbar := True;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
+
+  TdsdApplication.Create;
 
   with TLoginForm.Create(Application) do
   //≈сли все хорошо создаем главную форму Application.CreateForm();

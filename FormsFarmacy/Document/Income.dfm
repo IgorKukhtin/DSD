@@ -2,8 +2,6 @@ inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 806
-  ExplicitLeft = -16
-  ExplicitTop = -170
   ExplicitWidth = 814
   ExplicitHeight = 553
   PixelsPerInch = 96
@@ -591,10 +589,13 @@ inherited IncomeForm: TIncomeForm
       StoredProcList = <
         item
           StoredProc = spCalculateSalePrice
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
       Hint = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
-      ImageIndex = 74
+      ImageIndex = 75
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1094#1077#1085'?'
       InfoAfterExecute = #1062#1077#1085#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1085#1099
     end
@@ -716,7 +717,7 @@ inherited IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbCreateSend'
+          ItemName = 'bbCalculateSalePrice'
         end
         item
           Visible = True
@@ -769,10 +770,9 @@ inherited IncomeForm: TIncomeForm
       Action = actRefreshGoodsCode
       Category = 0
     end
-    object bbCreateSend: TdxBarButton
+    object bbCalculateSalePrice: TdxBarButton
       Action = actCalculateSalePrice
       Category = 0
-      ImageIndex = 75
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
