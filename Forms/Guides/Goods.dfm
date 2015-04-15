@@ -111,6 +111,13 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object clGoodsPlatformName: TcxGridDBColumn
+        Caption = #1055#1088#1086#1080#1079#1074'.'#1087#1083#1086#1097#1072#1076#1082#1072
+        DataBinding.FieldName = 'GoodsPlatformName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089
         DataBinding.FieldName = 'Weight'

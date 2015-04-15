@@ -255,6 +255,13 @@
         Component = GoodsTagGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsPlatformId'
+        Value = Null
+        Component = GoodsPlatformGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 208
@@ -355,6 +362,19 @@
         Name = 'GoodsGroupAnalystName'
         Value = Null
         Component = GoodsGroupAnalystGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'GoodsPlatformId'
+        Value = Null
+        Component = GoodsPlatformGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsPlatformName'
+        Value = Null
+        Component = GoodsPlatformGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -535,7 +555,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 168
-    Top = 337
+    Left = 160
+    Top = 345
   end
 end

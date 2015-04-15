@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MeasureName TVarChar
              , TradeMarkName TVarChar
              , GoodsTagName TVarChar
+             , GoodsPlatformName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , BusinessName TVarChar
              , FuelName TVarChar
@@ -48,10 +49,11 @@ BEGIN
             , Object_GoodsGroupAnalyst.Id        AS GoodsGroupAnalystId
             , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName             
             
-            , Object_Measure.ValueData     AS MeasureName
+            , Object_Measure.ValueData        AS MeasureName
 
-            , Object_TradeMark.ValueData  AS TradeMarkName
-            , Object_GoodsTag.ValueData   AS GoodsTagName
+            , Object_TradeMark.ValueData      AS TradeMarkName
+            , Object_GoodsTag.ValueData       AS GoodsTagName
+            , Object_GoodsPlatform.ValueData  AS GoodsPlatformName
 
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
@@ -113,6 +115,11 @@ BEGIN
                                  AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
              LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                                  ON ObjectLink_Goods_GoodsPlatform.ObjectId = Object_Goods.Id 
+                                 AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+             LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
+
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -152,6 +159,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 15.04.15         * add GoodsPlatform
  23.02.15         * add inShowAll 
  24.11.14         * add GoodsGroupAnalyst
  13.09.14                                        * add zc_ObjectLink_Goods_GoodsTag()

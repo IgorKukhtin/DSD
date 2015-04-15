@@ -130,7 +130,7 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 248
+    Left = 192
     Top = 72
   end
   object spGet: TdsdStoredProc
