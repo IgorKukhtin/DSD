@@ -47,6 +47,9 @@ type
     clJuridicalName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    clPaidKindName: TcxGridDBColumn;
+    clBranchName: TcxGridDBColumn;
+    clBankName: TcxGridDBColumn;
   private
     { Private declarations }
   public
