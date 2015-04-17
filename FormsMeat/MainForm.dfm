@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1094
-  ExplicitHeight = 253
+  ExplicitWidth = 1102
+  ExplicitHeight = 265
   PixelsPerInch = 96
   TextHeight = 13
   object TextEdit: TcxTextEdit [0]
@@ -2480,6 +2480,26 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actReport_GoodsMI_byPriceDifReturn: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1088#1072#1079#1085#1080#1094#1072' '#1074' '#1094#1077#1085#1072#1093')'
+      FormName = 'TReport_GoodsMI_byPriceDifForm'
+      FormNameParam.Value = 'TReport_GoodsMI_byPriceDifForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 6
+        end
+        item
+          Name = 'InDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
     object actReport_CheckContractInMovement: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
@@ -3338,6 +3358,9 @@ inherited MainForm: TMainForm
       end
       object miReport_GoodsMI_byMovementDifReturn: TMenuItem
         Action = actReport_GoodsMI_byMovementDifReturn
+      end
+      object N56: TMenuItem
+        Action = actReport_GoodsMI_byPriceDifReturn
       end
       object N26: TMenuItem
         Caption = '-'
