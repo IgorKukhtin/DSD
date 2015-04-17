@@ -142,19 +142,37 @@ with tmpPartner as
 -- select * from tmpFind_result order by Address, JuridicalId
 
          -- Find - Movement
-      , tmpFind_Movement as (select MovementItem.MovementId, Movement.OperDate, Movement.DescId from tmpFind_result join MovementItemLinkObject on MovementItemLinkObject.ObjectId = tmpFind_result.Id join MovementItem on MovementItem.Id = MovementItemId join Movement on Movement.Id = MovementId and Movement.StatusId = zc_Enum_Status_Complete() group by MovementItem.MovementId, Movement.OperDate, Movement.DescId
+      , tmpFind_Movement as (select MovementItem.MovementId, Movement.OperDate, Movement.DescId from tmpFind_result join MovementItemLinkObject on MovementItemLinkObject.ObjectId = tmpFind_result.Id join MovementItem on MovementItem.Id = MovementItemId join Movement on Movement.Id = MovementId and Movement.StatusId = zc_Enum_Status_Complete() where Movement.DescId <> zc_Movement_LossDebt() group by MovementItem.MovementId, Movement.OperDate, Movement.DescId
                             union
-                             select MovementItem.MovementId, Movement.OperDate, Movement.DescId from tmpFind_result join MovementItem on MovementItem.ObjectId = tmpFind_result.Id join Movement on Movement.Id = MovementId and Movement.StatusId = zc_Enum_Status_Complete() group by MovementItem.MovementId, Movement.OperDate, Movement.DescId
+                             select MovementItem.MovementId, Movement.OperDate, Movement.DescId from tmpFind_result join MovementItem on MovementItem.ObjectId = tmpFind_result.Id join Movement on Movement.Id = MovementId and Movement.StatusId = zc_Enum_Status_Complete() where Movement.DescId <> zc_Movement_SendDebt() group by MovementItem.MovementId, Movement.OperDate, Movement.DescId
                             union
                              select MovementLinkObject.MovementId, Movement.OperDate, Movement.DescId from tmpFind_result join MovementLinkObject on MovementLinkObject.ObjectId = tmpFind_result.Id join Movement on Movement.Id = MovementId and Movement.StatusId = zc_Enum_Status_Complete() group by MovementLinkObject.MovementId, Movement.OperDate, Movement.DescId
                             )
 -- select count(*), min(OperDate), max (OperDate) from tmpFind_Movement
+/*
 select tmpFind_Movement.*, tmpFind_result.Id, tmpFind_result.PartnerId_find, MovementItemLinkObject.ObjectId, '1' from tmpFind_Movement join MovementItem on MovementItem.MovementId = tmpFind_Movement.MovementId join MovementItemLinkObject on MovementItemLinkObject.MovementItemId = MovementItem.Id join tmpFind_result on tmpFind_result.PartnerId_find = MovementItemLinkObject.ObjectId where tmpFind_Movement.DescId <> zc_Movement_ProfitLossService()
 union all
 select tmpFind_Movement.*, tmpFind_result.Id, tmpFind_result.PartnerId_find, MovementItem.ObjectId, '2' from tmpFind_Movement join MovementItem on MovementItem.MovementId = tmpFind_Movement.MovementId join tmpFind_result on tmpFind_result.PartnerId_find = MovementItem.ObjectId
 union all
 select tmpFind_Movement.*, tmpFind_result.Id, tmpFind_result.PartnerId_find, MovementLinkObject.ObjectId, '3' from tmpFind_Movement join MovementLinkObject on MovementLinkObject.MovementId = tmpFind_Movement.MovementId join tmpFind_result on tmpFind_result.PartnerId_find = MovementLinkObject.ObjectId
+*/
+
 
 
 -- insert into _tmp_noDELETE_Partner (FromId, ToId) select Id, PartnerId_find from tmpFind_result
 -- insert into _tmp_noDELETE_Movement (MovementId) select MovementId from tmpFind_Movement
+
+-- update Object set ValueData = '***' || Object.ValueData, isErased = TRUE from _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = Object.Id;
+-- update Object set isErased = FALSE from _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.ToId = Object.Id AND isErased = TRUE;
+--*** update Object set  ValueData = substring (ValueData FROM case when position ('***' in ValueData) = 1 then 1 + 3 else 1 end FOR case when position ('***' in ValueData) = 1 then length (ValueData) - 3 else length (ValueData) end)
+
+update MovementItemLinkObject set ObjectId      = _tmp_noDELETE_Partner.ToId from _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = MovementItemLinkObject.ObjectId;
+update MovementItem           set ObjectId      = _tmp_noDELETE_Partner.ToId from _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = MovementItem.ObjectId;
+update MovementLinkObject     set ObjectId      = _tmp_noDELETE_Partner.ToId from _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = MovementLinkObject.ObjectId;
+update ObjectLink             set ChildObjectId = _tmp_noDELETE_Partner.ToId from _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = ObjectLink.ChildObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner1CLink_Partner();
+
+
+
+select count(*) from MovementItemLinkObject , _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = MovementItemLinkObject.ObjectId;
+select count(*) from MovementItem           , _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = MovementItem.ObjectId;
+select count(*) from MovementLinkObject     , _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = MovementLinkObject.ObjectId;

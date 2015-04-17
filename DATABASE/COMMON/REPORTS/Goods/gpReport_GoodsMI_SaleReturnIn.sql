@@ -536,6 +536,7 @@ BEGIN
          , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
 
      FROM tmpOperationGroup
+          LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
@@ -577,12 +578,12 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-          LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpOperationGroup.PartnerId
+          LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
           LEFT JOIN ObjectString AS ObjectString_Address
-                                 ON ObjectString_Address.ObjectId = tmpOperationGroup.PartnerId
+                                 ON ObjectString_Address.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
-          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
@@ -603,7 +604,7 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
 
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                               ON ObjectLink_Partner_Personal.ObjectId = tmpOperationGroup.PartnerId
+                               ON ObjectLink_Partner_Personal.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
                               AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
           LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
@@ -612,7 +613,7 @@ BEGIN
           LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                               ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpOperationGroup.PartnerId
+                               ON ObjectLink_Partner_PersonalTrade.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
           LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
