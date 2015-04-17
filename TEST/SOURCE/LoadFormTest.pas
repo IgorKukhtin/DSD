@@ -158,6 +158,8 @@ begin
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_PersonalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccount_PersonalJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_PersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccount_PersonalForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountFormTest;

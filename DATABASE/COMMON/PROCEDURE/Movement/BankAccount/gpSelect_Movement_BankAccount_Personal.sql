@@ -45,15 +45,7 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId, tmpDate.StartDate, tmpDate.EndDate FROM tmpDate WHERE inIsErased = TRUE
                          )
-          , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
-          , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
-          , tmpAccessKey_isBankAccountAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
-                                 UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_BankAccountAll()
-                                      )
-          , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_isBankAccountAll.Id FROM tmpAccessKey_isBankAccountAll)
-                           UNION SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = zc_Enum_Process_InsertUpdate_Movement_BankAccount() AND EXISTS (SELECT tmpAccessKey_isBankAccountAll.Id FROM tmpAccessKey_isBankAccountAll) GROUP BY AccessKeyId
-                                )
-          , tmpAll AS (SELECT tmpStatus.StatusId, tmpStatus.StartDate, tmpStatus.EndDate, tmpRoleAccessKey.AccessKeyId FROM tmpStatus, tmpRoleAccessKey)
+          , tmpAll AS (SELECT tmpStatus.StatusId, tmpStatus.StartDate, tmpStatus.EndDate FROM tmpStatus)
           , tmpMovement AS (SELECT Movement.*
                                  , Object_Status.ObjectCode AS StatusCode
                                  , Object_Status.ValueData  AS StatusName
@@ -61,8 +53,10 @@ BEGIN
                                  INNER JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
                                                     AND Movement.OperDate BETWEEN tmpAll.StartDate AND tmpAll.EndDate -- inStartDate AND inEndDate
                                                     AND Movement.StatusId = tmpAll.StatusId
-                                                    AND Movement.AccessKeyId = tmpAll.AccessKeyId
-                                                    AND Movement.ParentId > 0
+                                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                                                 ON MovementLinkMovement_Child.MovementId = Movement.Id
+                                                                AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                                                                AND MovementLinkMovement_Child.MovementChildId > 0
                                  LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
                             WHERE inIsServiceDate = FALSE
                            UNION ALL
@@ -76,8 +70,10 @@ BEGIN
                                  INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
                                                     AND Movement.DescId = zc_Movement_BankAccount()
                                                     AND Movement.StatusId = tmpAll.StatusId
-                                                    AND Movement.AccessKeyId = tmpAll.AccessKeyId
-                                                    AND Movement.ParentId > 0
+                                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                                                 ON MovementLinkMovement_Child.MovementId = Movement.Id
+                                                                AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                                                                AND MovementLinkMovement_Child.MovementChildId > 0
                                  LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
                             WHERE inIsServiceDate = TRUE
                            )

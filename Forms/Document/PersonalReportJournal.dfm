@@ -303,7 +303,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         item
           Name = 'inOperDate'
           Value = 41640d
-          Component = deStart
+          Component = deEnd
           DataType = ftDateTime
         end>
     end
@@ -324,7 +324,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         item
           Name = 'inOperDate'
           Value = 41640d
-          Component = deStart
+          Component = deEnd
           DataType = ftDateTime
         end>
     end

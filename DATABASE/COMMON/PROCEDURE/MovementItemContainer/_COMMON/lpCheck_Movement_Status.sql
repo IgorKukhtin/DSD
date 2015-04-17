@@ -41,13 +41,14 @@ BEGIN
      -- определяется тип налог.
      SELECT MovementLinkObject_DocumentTaxKind_Master.ObjectId AS DocumentTaxKindId
           , Movement_DocumentMaster.StatusId
-          , MS_InvNumberPartner.ValueData AS vbInvNumber
+          , COALESCE (MS_InvNumberPartner.ValueData, Movement_DocumentMaster.InvNumber) AS vbInvNumber
           , Movement_DocumentMaster.OperDate
           , MovementDesc.ItemName
             INTO vbDocumentTaxKindId, vbStatusId_Tax, vbInvNumber, vbOperDate, vbDescName
      FROM MovementLinkMovement AS MovementLinkMovement_Master
           INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
                                                         AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+                                                        AND Movement_DocumentMaster.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Tax(), zc_Movement_TaxCorrective())
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_DocumentMaster.DescId
           LEFT JOIN MovementString AS MS_InvNumberPartner
                                    ON MS_InvNumberPartner.MovementId = Movement_DocumentMaster.Id
@@ -66,7 +67,7 @@ BEGIN
      -- 2.2.
      -- определяется данные корректировки
      SELECT Movement_Document.StatusId
-          , MS_InvNumberPartner.ValueData AS vbInvNumber
+          , COALESCE (MS_InvNumberPartner.ValueData, Movement_Document.InvNumber) AS vbInvNumber
           , Movement_Document.OperDate
           , MovementDesc.ItemName
             INTO vbStatusId_Tax, vbInvNumber, vbOperDate, vbDescName
@@ -75,6 +76,7 @@ BEGIN
                              AND Movement.StatusId = zc_Enum_Status_Complete()
           INNER JOIN Movement AS Movement_Document ON Movement_Document.Id = MovementLinkMovement_Child.MovementId
                                                   AND Movement_Document.StatusId = zc_Enum_Status_Complete()
+                                                  AND Movement_Document.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Tax(), zc_Movement_TaxCorrective())
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Document.DescId
           LEFT JOIN MovementString AS MS_InvNumberPartner
                                    ON MS_InvNumberPartner.MovementId = Movement_Document.Id
@@ -134,7 +136,7 @@ BEGIN
             SELECT tmp.InvNumber, tmp.OperDate, MovementDesc.ItemName
                    INTO vbInvNumber, vbOperDate, vbDescName
             FROM
-           (SELECT MS_InvNumberPartner.ValueData AS InvNumber, Movement.OperDate, Movement.DescId
+           (SELECT COALESCE (MS_InvNumberPartner.ValueData, Movement.InvNumber) AS InvNumber, Movement.OperDate, Movement.DescId
             FROM Movement
                  INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -156,7 +158,7 @@ BEGIN
               AND Movement.StatusId = zc_Enum_Status_Complete()
               AND vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
            UNION
-            SELECT MS_InvNumberPartner.ValueData AS InvNumber, Movement.OperDate, Movement.DescId
+            SELECT COALESCE (MS_InvNumberPartner.ValueData, Movement.InvNumber) AS InvNumber, Movement.OperDate, Movement.DescId
             FROM Movement
                  INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -193,7 +195,7 @@ BEGIN
             SELECT tmp.InvNumber, tmp.OperDate, MovementDesc.ItemName
                    INTO vbInvNumber, vbOperDate, vbDescName
             FROM
-           (SELECT MS_InvNumberPartner.ValueData AS InvNumber, Movement.OperDate, Movement.DescId
+           (SELECT COALESCE (MS_InvNumberPartner.ValueData, Movement.InvNumber) AS InvNumber, Movement.OperDate, Movement.DescId
             FROM Movement
                  INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -215,7 +217,7 @@ BEGIN
               AND Movement.StatusId = zc_Enum_Status_Complete()
               AND vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
            UNION
-            SELECT MS_InvNumberPartner.ValueData AS InvNumber, Movement.OperDate, Movement.DescId
+            SELECT COALESCE (MS_InvNumberPartner.ValueData, Movement.InvNumber) AS InvNumber, Movement.OperDate, Movement.DescId
             FROM Movement
                  INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -251,7 +253,7 @@ BEGIN
      -- !!!для Админа!!!
      -- определяется данные корректировки
      SELECT Movement_Document.StatusId
-          , MS_InvNumberPartner.ValueData AS vbInvNumber
+          , COALESCE (MS_InvNumberPartner.ValueData, Movement_Document.InvNumber) AS vbInvNumber
           , Movement_Document.OperDate
           , MovementDesc.ItemName
             INTO vbStatusId_Tax, vbInvNumber, vbOperDate, vbDescName
@@ -260,6 +262,7 @@ BEGIN
                              AND Movement.StatusId = zc_Enum_Status_Erased()
           INNER JOIN Movement AS Movement_Document ON Movement_Document.Id = MovementLinkMovement_Child.MovementId
                                                   AND Movement_Document.StatusId = zc_Enum_Status_Complete()
+                                                  AND Movement_Document.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Tax(), zc_Movement_TaxCorrective())
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Document.DescId
           LEFT JOIN MovementString AS MS_InvNumberPartner
                                    ON MS_InvNumberPartner.MovementId = Movement_Document.Id

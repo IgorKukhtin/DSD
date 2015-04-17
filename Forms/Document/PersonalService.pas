@@ -27,10 +27,7 @@ type
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
     PrintHeaderCDS: TClientDataSet;
-    bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
-    bbTax: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     colSummCard: TcxGridDBColumn;
     colComment: TcxGridDBColumn;

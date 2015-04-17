@@ -27,19 +27,13 @@ type
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
     PrintHeaderCDS: TClientDataSet;
-    bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
-    bbTax: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     Comment: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     edServiceDate: TcxDateEdit;
     cxLabel6: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel12: TcxLabel;
-    Amount_avance: TcxGridDBColumn;
     edPersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
     cxLabel3: TcxLabel;
@@ -47,35 +41,17 @@ type
     PersonalCode: TcxGridDBColumn;
     isMain: TcxGridDBColumn;
     isOfficial: TcxGridDBColumn;
-    SummToPay_cash: TcxGridDBColumn;
     edDocumentPersonalService: TcxButtonEdit;
     GuidesPersonalServiceJournal: TdsdGuides;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
-    edCash: TcxButtonEdit;
-    GuidesCash: TdsdGuides;
-    cxLabel9: TcxLabel;
-    edMember: TcxButtonEdit;
-    GuidesMember: TdsdGuides;
-    SummService: TcxGridDBColumn;
-    SummRemains: TcxGridDBColumn;
+    edBankAccount: TcxButtonEdit;
+    GuidesBankAccount: TdsdGuides;
     spInsertUpdateMIAmount: TdsdStoredProc;
-    bbInsertUpdateMIAmount_One: TdxBarButton;
-    bbInsertUpdateMIAmount_All: TdxBarButton;
-    SummToPay: TcxGridDBColumn;
     SummCard: TcxGridDBColumn;
-    Amount_service: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
-    spGetMIAmount: TdsdStoredProc;
     actRefreshMaster: TdsdDataSetRefresh;
-    mactInsertUpdateMIAmount_AllGrid: TMultiAction;
-    actGetMIAmount: TdsdExecStoredProc;
-    actInsertUpdateMIAmount_One: TdsdExecStoredProc;
-    actInsertUpdateMIAmount_All: TdsdExecStoredProc;
-    actMasterPost: TDataSetPost;
-    mactInsertUpdateMIAmount_One: TMultiAction;
-    mactList: TMultiAction;
   private
     { Private declarations }
   public

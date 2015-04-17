@@ -13131,11 +13131,12 @@ begin
            +'                     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'                where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                  and Bill.Id_Postgres > 0'
-           +'                  and Bill.BillKind=zc_bkReturnToUnit()'
+           +'                  and Bill.BillKind in (zc_bkReturnToUnit(),zc_bkSendUnitToUnit())'
            +'                  and Bill.MoneyKindId=zc_mkBN()'
            +'                group by Bill.Id'
            +'                ) as Bill_find on Bill_find.BillId = Bill.Id'
            );
+        Add('     left join dba.isUnit on isUnit.UnitId = Bill.FromId');
         Add('     left join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromID');
         Add('     left join dba.Unit as UnitTo on UnitTo.Id = Bill.ToID');
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
@@ -13147,8 +13148,11 @@ begin
         end;
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Id_Postgres > 0'
-           +'  and Bill.BillKind=zc_bkReturnToUnit()'
+           +'  and Bill.BillKind in (zc_bkReturnToUnit(),zc_bkSendUnitToUnit())'
+           +'  and Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF()'
+           +'                   ,zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())'
            +'  and Bill.MoneyKindId=zc_mkBN()'
+           +'  and isUnit.UnitId is null'
            );
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'')
         then
@@ -16539,6 +16543,7 @@ begin
 //           +'           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'           , max(isnull(case when GoodsProperty.InfoMoneyCode not in (20501) then BillItems.Id else 0 end,0))as findId'
            +'      from dba.Bill'
+           +'           left join dba.isUnit on isUnit.UnitId = Bill.FromId'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'                           left outer join dba.Unit on Unit.Id = Bill.FromId'
@@ -16551,9 +16556,10 @@ begin
            +'                              and Bill.BillDate between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-           +'        and Bill.BillKind in (zc_bkReturnToUnit())'
+           +'        and Bill.BillKind in (zc_bkReturnToUnit(),zc_bkSendUnitToUnit())'
            +'        and Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
+           +'        and isUnit.UnitId is null'
            +'      group by Bill.Id'
            +'     union all'
            +'      select Bill.Id as BillId'
@@ -16562,6 +16568,7 @@ begin
 //           +'           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId'
            +'           , max(isnull(case when GoodsProperty.InfoMoneyCode not in (20501) then BillItems.Id else 0 end,0))as findId'
            +'      from dba.Bill'
+           +'           left join dba.isUnit on isUnit.UnitId = Bill.FromId'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and (BillItems.OperCount<>0 or BillItems.Id_Postgres<>0)'
            +'           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'                           left outer join dba.Unit on Unit.Id = Bill.FromId'
@@ -16575,9 +16582,10 @@ begin
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillDate >=zc_def_StartDate_PG()'
-           +'        and Bill.BillKind in (zc_bkReturnToUnit())'
+           +'        and Bill.BillKind in (zc_bkReturnToUnit(),zc_bkSendUnitToUnit())'
            +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil(),zc_UnitId_StorePav())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
+           +'        and isUnit.UnitId is null'
            +'      group by Bill.Id'
            +'      ) as Bill_find');
 
@@ -16740,8 +16748,8 @@ begin
            +'                 then zc_rvNo()'
            +'            else zc_rvYes()'
            +'       end as IsChangeAmount');
-        Add('     , BillItems.OperCount as AmountPartner');
-        Add('     , BillItems.OperCount as Amount');
+        Add('     , abs (BillItems.OperCount) as AmountPartner');
+        Add('     , abs (BillItems.OperCount) as Amount');
 
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -16754,6 +16762,7 @@ begin
         Add('     , zc_rvYes() as zc_rvYes');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
+        Add('     left join dba.isUnit on isUnit.UnitId = Bill.FromId');
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
@@ -16761,11 +16770,12 @@ begin
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
         Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // »Ì‡  + √ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-           +'  and Bill.BillKind in (zc_bkReturnToUnit())'
+           +'  and Bill.BillKind in (zc_bkReturnToUnit(),zc_bkSendUnitToUnit())'
            +'  and Bill.Id_Postgres>0'
            +'  and Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF()'
            +'                   ,zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())'
            +'  and Bill.MoneyKindId = zc_mkBN()'
+           +'  and isUnit.UnitId is null'
 //           +'  and BillItems.GoodsPropertyId<>1041' // Œ¬¡¿—ÕI ¬»–Œ¡»
 // +'  and 1=0'
 // +'  and MovementId_Postgres = 10154'

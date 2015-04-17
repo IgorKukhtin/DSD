@@ -145,6 +145,20 @@ BEGIN
                                           SELECT inServiceDate - INTERVAL '4 MONTH' AS ServiceDate
                                          UNION
                                           SELECT inServiceDate - INTERVAL '5 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '6 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '7 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '8 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '9 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '10 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '11 MONTH' AS ServiceDate
+                                         UNION
+                                          SELECT inServiceDate - INTERVAL '12 MONTH' AS ServiceDate
                                          ) AS tmpDate
                                          INNER JOIN MovementDate AS MovementDate_ServiceDate
                                                                  ON MovementDate_ServiceDate.ValueData = tmpDate.ServiceDate

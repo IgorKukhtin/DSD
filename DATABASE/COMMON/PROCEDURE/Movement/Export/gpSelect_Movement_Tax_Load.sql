@@ -2,13 +2,17 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Load (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Load(
-    IN inStartDate      TDateTime , --
-    IN inEndDate        TDateTime , --
-    IN inInfoMoneyId    Integer   ,
-    IN inPaidKindId     Integer   ,
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inStartDate            TDateTime , --
+    IN inEndDate              TDateTime , --
+    IN inStartDateReg         TDateTime , --
+    IN inEndDateReg           TDateTime , --
+    IN inInfoMoneyId          Integer   ,
+    IN inPaidKindId           Integer   ,
+    IN inIsTaxCorrectiveOnly  Boolean   ,
+    IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (NPP TVarChar,  NUM TVarChar,   DATEV TDateTime, NAZP TVarChar, IPN TVarChar, 
                ZAGSUM TFloat, BAZOP20 TFloat, SUMPDV TFloat,   BAZOP0 TFloat, ZVILN TFloat,
@@ -88,6 +92,10 @@ BEGIN
                                       ON MovementBoolean_Electron.MovementId =  Movement.Id
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
+            LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                   ON MovementDate_DateRegistered.MovementId =  Movement.Id
+                                  AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+
             LEFT JOIN ObjectHistory AS ObjectHistory_JuridicalDetails 
                    ON ObjectHistory_JuridicalDetails.ObjectId = MovementLinkObject_To.ObjectId
                   AND ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
@@ -109,19 +117,22 @@ BEGIN
                                                                                   END*/
 
       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-        AND Movement.DescId in (zc_Movement_Tax(), zc_Movement_TaxCorrective())
+        AND (MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg
+          OR Movement.DescId = zc_Movement_Tax()
+            )
+        AND (Movement.DescId = zc_Movement_Tax() AND inIsTaxCorrectiveOnly = FALSE
+          OR Movement.DescId = zc_Movement_TaxCorrective()
+            )
         AND Movement.StatusId = zc_Enum_Status_Complete()
         AND (View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
         -- AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
         AND MovementFloat_TotalSummPVAT.ValueData <> 0
      ;
 
-
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Tax_Load (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -135,4 +146,4 @@ ALTER FUNCTION gpSelect_Movement_Tax_Load (TDateTime, TDateTime, Integer, Intege
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '01.12.2014', inEndDate:= '31.12.2014', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '01.02.2015', inEndDate:= '28.02.2015', inStartDateReg:= '16.03.2015', inEndDateReg:= '16.03.2015', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsTaxCorrectiveOnly:= TRUE, inSession:= zfCalc_UserAdmin())
