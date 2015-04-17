@@ -172,7 +172,17 @@ update MovementLinkObject     set ObjectId      = _tmp_noDELETE_Partner.ToId fro
 update ObjectLink             set ChildObjectId = _tmp_noDELETE_Partner.ToId from _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = ObjectLink.ChildObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner1CLink_Partner();
 
 
-
 select count(*) from MovementItemLinkObject , _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = MovementItemLinkObject.ObjectId;
 select count(*) from MovementItem           , _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = MovementItem.ObjectId;
 select count(*) from MovementLinkObject     , _tmp_noDELETE_Partner where _tmp_noDELETE_Partner.FromId = MovementLinkObject.ObjectId;
+
+/*
+select _tmp_noDELETE_Partner.FromId, tmpFindGLN_2.Id, Count(*) AS Movement_Count, Address, JuridicalId, min (Movement.OperDAte), max (Movement.OperDAte)
+                  from tmpFindGLN_2
+                       inner join MovementLinkObject AS MLO ON MLO.ObjectId = tmpFindGLN_2.Id
+                       inner join Movement ON Movement.Id = MLO.MovementId and Movement.DescId = zc_Movement_Sale() and Movement.StatusId = zc_Enum_Status_Complete() and Movement.OperDate >= '01.06.2014'
+                       left join _tmp_noDELETE_Movement on _tmp_noDELETE_Movement.MovementId = Movement.Id
+                       left join _tmp_noDELETE_Partner on _tmp_noDELETE_Partner.ToId = tmpFindGLN_2.Id and _tmp_noDELETE_Movement.MovementId is not null
+                  where  tmpFindGLN_2.Id in (279404, 278186) 
+                  group by _tmp_noDELETE_Partner.FromId, tmpFindGLN_2.Id, Address, JuridicalId
+*/
