@@ -25,7 +25,6 @@ object BranchForm: TBranchForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 458
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -83,6 +82,13 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 57
+      end
+      object clIsMedoc: TcxGridDBColumn
+        Caption = #1052#1077#1076#1086#1082
+        DataBinding.FieldName = 'IsMedoc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
       end
     end
     object cxGridLevel: TcxGridLevel
