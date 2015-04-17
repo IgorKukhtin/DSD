@@ -60,6 +60,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     clInvNumber: TcxGridDBColumn;
     clPersonalBookkeeperName: TcxGridDBColumn;
+    clIsMedoc: TcxGridDBColumn;
   private
     { Private declarations }
   public

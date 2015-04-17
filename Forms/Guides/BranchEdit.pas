@@ -45,6 +45,7 @@ type
     edPersonalBookkeeper: TcxButtonEdit;
     PersonalBookkeeperGuides: TdsdGuides;
     cxLabel19: TcxLabel;
+    cbIsMedoc: TcxCheckBox;
   private
     { Private declarations }
   public
