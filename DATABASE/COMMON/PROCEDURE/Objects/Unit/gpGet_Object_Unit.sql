@@ -11,6 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                BusinessId Integer, BusinessName TVarChar, 
                BranchId Integer, BranchName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
+               ContractId Integer, InvNumber TVarChar,
+               Contract_JuridicalId Integer, Contract_JuridicalName TVarChar,
+               Contract_InfomoneyId Integer, Contract_InfomoneyName TVarChar,
                AccountDirectionId Integer, AccountDirectionName TVarChar,
                ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar,
                isErased boolean, isLeaf boolean) AS
@@ -37,6 +40,15 @@ BEGIN
          
            , CAST (0 as Integer)   AS JuridicalId
            , CAST ('' as TVarChar) AS JuridicalName
+
+           , CAST (0 as Integer)   AS ContractId
+           , CAST ('' as TVarChar) AS InvNumber
+
+           , CAST (0 as Integer)   AS Contract_JuridicalId
+           , CAST ('' as TVarChar) AS Contract_JuridicalName
+         
+           , CAST (0 as Integer)   AS Contract_InfomoneyId
+           , CAST ('' as TVarChar) AS Contract_InfomoneyName
          
            , CAST (0 as Integer)   AS AccountDirectionId
            , CAST ('' as TVarChar) AS AccountDirectionName
@@ -64,7 +76,14 @@ BEGIN
          
            , Object_Unit_View.JuridicalId
            , Object_Unit_View.JuridicalName
-         
+
+           , Object_Contract_View.ContractId
+           , Object_Contract_View.InvNumber
+           , Object_Contract_View.JuridicalId   AS Contract_JuridicalId
+           , Object_Juridical.ValueData         AS Contract_JuridicalName
+           , Object_Contract_View.InfomoneyId   AS Contract_InfomoneyId
+           , Object_Infomoney.ValueData         AS Contract_InfomoneyName
+
            , View_AccountDirection.AccountDirectionId
            , View_AccountDirection.AccountDirectionName
          
@@ -79,6 +98,15 @@ BEGIN
                                  ON ObjectLink_Unit_ProfitLossDirection.ObjectId = Object_Unit_View.Id
                                 AND ObjectLink_Unit_ProfitLossDirection.DescId = zc_ObjectLink_Unit_ProfitLossDirection()
             LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_Unit_ProfitLossDirection.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract
+                                 ON ObjectLink_Unit_Contract.ObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+            LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = ObjectLink_Unit_Contract.ChildObjectId
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
+            LEFT JOIN Object AS Object_Infomoney ON Object_Infomoney.Id = Object_Contract_View.InfomoneyId
+
+
       WHERE Object_Unit_View.Id = inId;
    END IF;
   
@@ -92,6 +120,7 @@ ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.04.15         * add Contract
  12.11.13                                        * add Object_AccountDirection_View
  04.07.13          * + If...              
  11.06.13                        *

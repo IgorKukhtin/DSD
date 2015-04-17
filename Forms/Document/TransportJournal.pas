@@ -92,6 +92,24 @@ type
     BranchName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    spReCompete: TdsdExecStoredProc;
+    actSimpleReCompleteList: TMultiAction;
+    actReCompleteList: TMultiAction;
+    spMovementReComplete: TdsdStoredProc;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    spCompete: TdsdExecStoredProc;
+    actSimpleCompleteList: TMultiAction;
+    actCompleteList: TMultiAction;
+    N6: TMenuItem;
+    spUncomplete: TdsdExecStoredProc;
+    actSimpleUncompleteList: TMultiAction;
+    actUnCompleteList: TMultiAction;
+    N7: TMenuItem;
+    spErased: TdsdExecStoredProc;
+    actSimpleErased: TMultiAction;
+    actSetErasedList: TMultiAction;
   private
   public
   end;

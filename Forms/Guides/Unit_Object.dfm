@@ -3,23 +3,23 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 420
   ClientWidth = 699
   ExplicitWidth = 715
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 699
     Height = 394
-    ExplicitWidth = 371
+    ExplicitWidth = 699
     ExplicitHeight = 394
     ClientRectBottom = 394
     ClientRectRight = 699
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 371
+      ExplicitWidth = 699
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 699
         Height = 394
-        ExplicitWidth = 371
+        ExplicitWidth = 699
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -82,6 +82,30 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
+          end
+          object clInvNumber: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clContract_JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
+            DataBinding.FieldName = 'Contract_JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clContract_InfomoneyName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
+            DataBinding.FieldName = 'Contract_InfomoneyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end

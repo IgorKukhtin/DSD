@@ -30,6 +30,15 @@ type
     cxLabel3: TcxLabel;
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    cePaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edBankId: TcxButtonEdit;
+    BankGuides: TdsdGuides;
   private
     { Private declarations }
   public
