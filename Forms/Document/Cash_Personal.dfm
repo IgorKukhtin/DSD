@@ -508,9 +508,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     object edCash: TcxButtonEdit
       Left = 470
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
