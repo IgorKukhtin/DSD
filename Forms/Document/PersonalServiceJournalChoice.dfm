@@ -12,17 +12,17 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     Width = 913
     Height = 477
     TabOrder = 3
-    ExplicitWidth = 868
+    ExplicitWidth = 913
     ExplicitHeight = 477
     ClientRectBottom = 477
     ClientRectRight = 913
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 868
+      ExplicitWidth = 913
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
         Width = 913
         Height = 477
-        ExplicitWidth = 868
+        ExplicitWidth = 913
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -212,7 +212,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
   end
   inherited Panel: TPanel
     Width = 913
-    ExplicitWidth = 868
+    ExplicitWidth = 913
     inherited deStart: TcxDateEdit
       Left = 103
       EditValue = 42005d
@@ -246,6 +246,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 200
   end
@@ -408,6 +409,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         end>
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
       Hint = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
