@@ -49,6 +49,7 @@ BEGIN
                            , ObjectLink_Partner1CLink_Branch.ChildObjectId   AS BranchId
                            , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
                            , ObjectLink_Partner1CLink_Partner.ChildObjectId  AS PartnerId
+                           , ObjectLink_Partner_Juridical.ChildObjectId      AS JuridicalId
                        FROM Object AS Object_Partner1CLink
                            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                                 ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
@@ -59,6 +60,11 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
                                                 ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
                                                AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+
+                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
                       WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                         AND ObjectLink_Partner1CLink_Branch.ChildObjectId = (SELECT Object_BranchLink_View.Id FROM Object_BranchLink_View WHERE Object_BranchLink_View.BranchId = inBranchId AND COALESCE (Object_BranchLink_View.PaidKindId, 0) <> zc_Enum_PaidKind_FirstForm()) -- оптимизируем
                         AND Object_Partner1CLink.ObjectCode <> 0
@@ -66,7 +72,8 @@ BEGIN
                      ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Money1C.ClientCode
                                           -- AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Money1C.UnitId), zc_Enum_PaidKind_SecondForm())
 
-           LEFT JOIN Object_Contract_View ON tmpPartner1CLink.ContractId = Object_Contract_View.ContractId
+           LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = tmpPartner1CLink.ContractId
+                                         AND Object_Contract_View.JuridicalId = tmpPartner1CLink.JuridicalId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpPartner1CLink.PartnerId
            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
 

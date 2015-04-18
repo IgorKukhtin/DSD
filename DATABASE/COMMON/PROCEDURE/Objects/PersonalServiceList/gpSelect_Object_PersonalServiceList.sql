@@ -10,12 +10,22 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindName TVarChar 
              , BranchId Integer, BranchName TVarChar 
              , BankId Integer, BankName TVarChar 
-             , isErased boolean) AS
-$BODY$BEGIN
-   
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PersonalServiceList()());
+             , isErased Boolean
+              )
+AS
+$BODY$
+   DECLARE vbUserId Integer;
 
+   DECLARE vbBranchId_Constraint Integer;
+BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_PersonalServiceList());
+   vbUserId:= lpGetUserBySession (inSession);
+
+   -- определяется уровень доступа
+   vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+
+   -- Результат
    RETURN QUERY 
        SELECT 
              Object_PersonalServiceList.Id         AS Id
@@ -54,14 +64,14 @@ $BODY$BEGIN
                                AND ObjectLink_PersonalServiceList_Bank.DescId = zc_ObjectLink_PersonalServiceList_Bank()
            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_PersonalServiceList_Bank.ChildObjectId
           
-   WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList();
-  
-END;$BODY$
+   WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+      AND (ObjectLink_PersonalServiceList_Branch.ChildObjectId = vbBranchId_Constraint
+           OR vbBranchId_Constraint IS NULL)
+   ;
 
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_PersonalServiceList(TVarChar) OWNER TO postgres;
-
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*

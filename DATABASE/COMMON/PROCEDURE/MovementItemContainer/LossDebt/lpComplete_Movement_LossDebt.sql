@@ -17,6 +17,23 @@ BEGIN
      END IF;
 
 
+     -- !!!обязательно!!! удаление "пустых"
+     UPDATE MovementItem SET isErased = TRUE
+     FROM (SELECT MovementItem.Id
+           FROM MovementItem
+                INNER JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                               ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                              AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                                              AND MIBoolean_Calculated.ValueData = TRUE
+                LEFT JOIN MovementItemFloat AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+           WHERE MovementItem.MovementId = inMovementId
+             AND MovementItem.isErased = FALSE 
+             AND COALESCE (MIFloat_Summ.ValueData, 0) = 0
+          ) AS tmp
+     WHERE MovementItem.Id = tmp.Id;
+
+
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
@@ -109,7 +126,7 @@ BEGIN
                                    JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                                     AND MovementItem.DescId = zc_MI_Master()
                                                     AND MovementItem.isErased = FALSE
-                                   LEFT JOIN MovementItemFloat AS MIFloat_Summ 
+                                   LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                                                ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                                               AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
@@ -147,12 +164,13 @@ BEGIN
                                     , Container.Amount
                                     , tmpMovementItem.JuridicalId
                                     , COALESCE (ContainerLO_Partner.ObjectId, 0) AS PartnerId
-                                    , COALESCE (ContainerLO_Branch.ObjectId, 0)  AS BranchId
+                                    -- , COALESCE (ContainerLO_Branch.ObjectId, 0)  AS BranchId
+                                    , tmpMovementItem.BranchId
                                     , tmpMovementItem.InfoMoneyId
                                     , tmpMovementItem.PaidKindId
                                     , tmpMovementItem.JuridicalId_Basis
                                     , tmpMovementItem.BusinessId
-                               FROM (SELECT ObjectId AS JuridicalId, InfoMoneyId, PaidKindId, JuridicalId_Basis, BusinessId, AccountId FROM tmpMovementItem WHERE isCalculated = TRUE GROUP BY ObjectId, InfoMoneyId, PaidKindId, JuridicalId_Basis, BusinessId, AccountId
+                               FROM (SELECT ObjectId AS JuridicalId, InfoMoneyId, PaidKindId, JuridicalId_Basis, BranchId, BusinessId, AccountId FROM tmpMovementItem WHERE isCalculated = TRUE GROUP BY ObjectId, InfoMoneyId, PaidKindId, JuridicalId_Basis, BranchId, BusinessId, AccountId
                                     ) AS tmpMovementItem
                                     JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                              ON ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -173,6 +191,11 @@ BEGIN
                                                              ON ContainerLO_Business.ContainerId = ContainerLO_Juridical.ContainerId
                                                             AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
                                                             AND ContainerLO_Business.ObjectId = tmpMovementItem.BusinessId
+                                    JOIN ContainerLinkObject AS ContainerLO_Branch
+                                                             ON ContainerLO_Branch.ContainerId = ContainerLO_Juridical.ContainerId
+                                                            AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                                                            AND (ContainerLO_Branch.ObjectId = tmpMovementItem.BranchId
+                                                              OR tmpMovementItem.BranchId = 0)
                                     JOIN Container ON Container.Id = ContainerLO_Juridical.ContainerId
                                                   AND Container.DescId = zc_Container_Summ()
                                                   AND (Container.ObjectId = tmpMovementItem.AccountId
@@ -181,14 +204,14 @@ BEGIN
                                     LEFT JOIN ContainerLinkObject AS ContainerLO_Partner
                                                                   ON ContainerLO_Partner.ContainerId = ContainerLO_Juridical.ContainerId
                                                                  AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()
-                                    LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
-                                                                  ON ContainerLO_Branch.ContainerId = ContainerLO_Juridical.ContainerId
-                                                                 AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                                     LEFT JOIN ContainerLinkObject AS ContainerLO_PartionMovement
                                                                   ON ContainerLO_PartionMovement.ContainerId = Container.Id
                                                                  AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
                                                                  AND ContainerLO_PartionMovement.ObjectId = 0
                                WHERE ContainerLO_PartionMovement.ContainerId IS NULL -- !!!некрасивое решение!!!
+                                 /*AND ((ContainerLO_Branch.ObjectId IN (zc_Branch_Basis(), 0)
+                                       AND tmpMovement.MovementId = 1110118  -- № 27 от 31.12.2014
+                                      ) OR tmpMovement.MovementId <> 1110118) -- № 27 от 31.12.2014*/
                               UNION
                                -- Все контейнеры - по счету в документе + Вид формы оплаты
                                SELECT Container.Id AS ContainerId
@@ -233,7 +256,7 @@ BEGIN
                                                                  AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
                                                                  AND ContainerLO_PartionMovement.ObjectId = 0
                                WHERE tmpMovement.AccountId <> 0
-                                 AND ((ContainerLO_Branch.ObjectId = zc_Branch_Basis()
+                                 AND ((ContainerLO_Branch.ObjectId IN (zc_Branch_Basis(), 0)
                                        AND tmpMovement.MovementId = 1110118  -- № 27 от 31.12.2014
                                       ) OR tmpMovement.MovementId <> 1110118) -- № 27 от 31.12.2014
                                  AND ContainerLO_PartionMovement.ContainerId IS NULL -- !!!некрасивое решение!!!
@@ -592,7 +615,49 @@ $BODY$
  30.01.14                                        * all
  27.01.14         * 
 */
-
+/*
+SELECT Movement.Id, Movement.InvNumber, Movement.OperDate
+     , COALESCE (MovementItem.ObjectId, 0) AS JuridicalId
+     , COALESCE (MILinkObject_InfoMoney.ObjectId, 0) AS InfoMoneyId
+     , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
+     , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+     , COALESCE (MILinkObject_Partner.ObjectId, 0) AS PartnerId
+     , COALESCE (MILinkObject_Branch.ObjectId, 0) AS BranchId
+     , min (MovementItem.Amount), max (MovementItem.Amount)
+     , min (COALESCE (MIFloat_Summ.ValueData, 0))
+     , max (COALESCE (MIFloat_Summ.ValueData, 0))
+FROM Movement
+     inner join MovementItem on MovementId = Movement.Id
+                      AND MovementItem.isErased = FALSE
+     left JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                      ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+     left JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                      ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+     left JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                      ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+     left JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                      ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
+     left JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                      ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+     LEFT JOIN MovementItemFloat AS MIFloat_Summ 
+                                 ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+WHERE Movement.DescId = zc_Movement_LossDebt()
+group by Movement.Id, Movement.InvNumber, Movement.OperDate
+       , COALESCE (MovementItem.ObjectId, 0)
+       , COALESCE (MILinkObject_InfoMoney.ObjectId, 0)
+       , COALESCE (MILinkObject_Contract.ObjectId, 0)
+       , COALESCE (MILinkObject_PaidKind.ObjectId, 0)
+       , COALESCE (MILinkObject_Partner.ObjectId, 0)
+       , COALESCE (MILinkObject_Branch.ObjectId, 0)
+having count(*) >1
+order by 3, 2
+*/
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM lpComplete_Movement_LossDebt (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())

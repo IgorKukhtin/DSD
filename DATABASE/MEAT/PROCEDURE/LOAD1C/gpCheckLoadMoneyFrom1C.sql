@@ -41,9 +41,14 @@ BEGIN
                                            ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
                                           AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
                       LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                           ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                      LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = ObjectLink_Partner1CLink_Contract.ChildObjectId
+                                                    AND Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                  WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                    AND Object_Partner1CLink.ObjectCode <> 0
-                   AND (ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0 OR Object_To.DescId <> zc_Object_Partner()) -- проверка Договор только для контрагента
+                   AND (Object_Contract_View.ContractId <> 0 OR Object_To.DescId <> zc_Object_Partner()) -- проверка Договор только для контрагента
                    AND ObjectLink_Partner1CLink_Partner.ChildObjectId <> 0 -- еще проверка что есть объект
                 ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Money1C.ClientCode
                                      AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind (zfGetBranchFromUnitId (Money1C.UnitId), zc_Enum_PaidKind_SecondForm())
@@ -70,4 +75,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpLoadMoneyFrom1C('01-01-2013'::TDateTime, '01-01-2014'::TDateTime, '')
+-- SELECT * FROM gpCheckLoadMoneyFrom1C ('01-01-2013'::TDateTime, '01-01-2014'::TDateTime, 8379, zfCalc_UserAdmin())

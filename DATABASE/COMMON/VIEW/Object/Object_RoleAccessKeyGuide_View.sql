@@ -112,6 +112,15 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                              , zc_Enum_Process_AccessKey_PersonalServiceMarketing()
                                              , zc_Enum_Process_AccessKey_PersonalServiceSB()
                                              , zc_Enum_Process_AccessKey_PersonalServiceFirstForm()
+
+                                             , zc_Enum_Process_AccessKey_PersonalServiceKiev()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceKrRog()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceNikolaev()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceKharkov()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceCherkassi()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceDoneck()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceOdessa() 
+                                             , zc_Enum_Process_AccessKey_PersonalServiceZaporozhye()
                                               )
                                THEN AccessKeyId
                           ELSE 0
@@ -175,7 +184,32 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                                                      AND ProfitLossDirectionCode IN (30300 -- Административные расходы + Содержание охраны
                                                                                                     ))
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceFirstForm()
-                                                                                                    )
+                                                                        )
+
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceKiev()
+                                                                     AND BranchId = 8379 -- филиал Киев
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceKrRog()
+                                                                     AND BranchId = 8377 -- филиал Кр.Рог
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceNikolaev()
+                                                                     AND BranchId = 8373 -- филиал Николаев (Херсон)
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceKharkov()
+                                                                     AND BranchId = 8381 -- филиал Харьков
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceCherkassi()
+                                                                     AND BranchId = 8375 -- филиал Черкассы (Кировоград)
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceDoneck()
+                                                                     AND BranchId = 8378 -- филиал Донецк
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceOdessa()
+                                                                     AND BranchId = 8374 -- филиал Одесса
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceZaporozhye()
+                                                                     AND BranchId = 301310 -- филиал Запорожье
+                                                                        )
            ;
 
 ALTER TABLE Object_RoleAccessKeyGuide_View OWNER TO postgres;

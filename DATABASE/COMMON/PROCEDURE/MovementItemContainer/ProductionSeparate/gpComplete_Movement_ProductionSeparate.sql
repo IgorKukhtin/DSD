@@ -12,8 +12,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 
-  DECLARE vbFromWhereObjectId_Analyzer Integer;
-  DECLARE vbToWhereObjectId_Analyzer Integer;
+  DECLARE vbWhereObjectId_Analyzer_From Integer;
+  DECLARE vbWhereObjectId_Analyzer_To Integer;
 
   DECLARE vbMovementDescId Integer;
 
@@ -431,8 +431,8 @@ BEGIN
      ;
 
      -- определили
-     vbFromWhereObjectId_Analyzer:= CASE WHEN vbUnitId_From <> 0 THEN vbUnitId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From END;
-     vbToWhereObjectId_Analyzer:= CASE WHEN vbUnitId_To <> 0 THEN vbUnitId_To WHEN vbMemberId_To <> 0 THEN vbMemberId_To END;
+     vbWhereObjectId_Analyzer_From:= CASE WHEN vbUnitId_From <> 0 THEN vbUnitId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From END;
+     vbWhereObjectId_Analyzer_To:= CASE WHEN vbUnitId_To <> 0 THEN vbUnitId_To WHEN vbMemberId_To <> 0 THEN vbMemberId_To END;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -591,10 +591,10 @@ BEGIN
                                        , ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId_GoodsFrom
-            , 0                                       AS AccountId  -- нет счета
-            , 0                                       AS AnalyzerId -- нет аналитики
+            , 0                                       AS AccountId              -- нет счета
+            , vbWhereObjectId_Analyzer_To             AS AnalyzerId             -- нет аналитики, но для ускорения отчетов будет Подраделение "Кому" или...
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
-            , vbFromWhereObjectId_Analyzer            AS WhereObjectId_Analyzer -- Подраделение или..
+            , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или..
             , 0                                       AS ContainerId_Analyzer   -- (для Separate нет)
             , 0                                       AS ParentId
             , -1 * _tmpItem.OperCount
@@ -608,10 +608,10 @@ BEGIN
                                        , ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId
             , _tmpItemChild.ContainerId_GoodsTo
-            , 0                                       AS AccountId  -- нет счета
-            , 0                                       AS AnalyzerId -- нет аналитики
+            , 0                                       AS AccountId              -- нет счета
+            , vbWhereObjectId_Analyzer_From           AS AnalyzerId             -- нет аналитики, но для ускорения отчетов будет Подраделение "От кого" или...
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
-            , vbToWhereObjectId_Analyzer              AS WhereObjectId_Analyzer -- Подраделение или..
+            , vbWhereObjectId_Analyzer_To             AS WhereObjectId_Analyzer -- Подраделение или..
             , 0                                       AS ContainerId_Analyzer   -- (для Separate нет)
             , 0                                       AS ParentId
             , _tmpItemChild.OperCount
@@ -759,11 +759,11 @@ BEGIN
                                                  , inMovementItemId := _tmpItemChild.MovementItemId
                                                  , inParentId       := NULL
                                                  , inContainerId    := _tmpItemSummChild.ContainerId_To
-                                                 , inAccountId      := _tmpItemSummChild.AccountId_To      -- счет есть всегда
-                                                 , inAnalyzerId     := 0                                   -- нет аналитики
-                                                 , inObjectId_Analyzer       := _tmpItemChild.GoodsId      -- Товар
-                                                 , inWhereObjectId_Analyzer  := vbToWhereObjectId_Analyzer -- Подраделение или..
-                                                 , inContainerId_Analyzer    := 0                          -- суммовой Контейнер-Мастер (для прихода не надо)
+                                                 , inAccountId      := _tmpItemSummChild.AccountId_To          -- счет есть всегда
+                                                 , inAnalyzerId              := vbWhereObjectId_Analyzer_From  -- нет аналитики, но для ускорения отчетов будет Подраделение "От кого" или...
+                                                 , inObjectId_Analyzer       := _tmpItemChild.GoodsId          -- Товар
+                                                 , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To    -- Подраделение или..
+                                                 , inContainerId_Analyzer    := 0                              -- суммовой Контейнер-Мастер (для прихода не надо)
                                                  , inAmount         := (OperSumm)
                                                  , inOperDate       := vbOperDate
                                                  , inIsActive       := TRUE
@@ -779,9 +779,9 @@ BEGIN
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItemSumm.ContainerId_From
             , _tmpItemSumm.AccountId_From             AS AccountId  -- счет есть всегда
-            , 0                                       AS AnalyzerId -- нет аналитики
+            , vbWhereObjectId_Analyzer_To             AS AnalyzerId             -- нет аналитики, но для ускорения отчетов будет Подраделение "Кому" или...
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
-            , vbFromWhereObjectId_Analyzer            AS WhereObjectId_Analyzer -- Подраделение или..
+            , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или..
             , _tmpItemSummChild.ContainerId_To        AS ContainerId_Analyzer   -- суммовой Контейнер-Мастер (т.е. из прихода)
             , _tmpItemSummChild.MIContainerId_To      AS ParentId
             , -1 * _tmpItemSummChild.OperSumm
