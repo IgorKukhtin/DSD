@@ -5,6 +5,7 @@
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -473
   ExplicitWidth = 1477
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -1873,7 +1874,7 @@
       end
       item
         Name = 'inDescCode'
-        Value = 'zc_Object_Juridical'
+        Value = 'zc_Enum_InfoMoneyGroup_30000'
         DataType = ftString
       end>
     Left = 1368

@@ -630,7 +630,7 @@
       end
       item
         Name = 'inDescCode'
-        Value = 'zc_Object_Juridical'
+        Value = 'zc_Enum_InfoMoneyGroup_30000'
         DataType = ftString
       end>
     Left = 384
