@@ -388,8 +388,8 @@
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ChoicePeriod.pas">
 				<Form>PeriodChoiceForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsDialog.pas">
-				<Form>Report_MotionGoodsDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnInDialog.pas">
+				<Form>Report_GoodsMI_SaleReturnInDialogForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_MotionGoods.pas">
 				<Form>Report_MotionGoodsForm</Form>
@@ -2015,6 +2015,10 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\dsdException.pas"/>
+			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsDialog.pas">
+				<Form>Report_MotionGoodsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

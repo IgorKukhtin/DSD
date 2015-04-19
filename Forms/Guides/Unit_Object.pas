@@ -18,9 +18,6 @@ type
     ceBusinessName: TcxGridDBColumn;
     ceJuridicalName: TcxGridDBColumn;
     ceParentName: TcxGridDBColumn;
-    clInvNumber: TcxGridDBColumn;
-    clContract_JuridicalName: TcxGridDBColumn;
-    clContract_InfomoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

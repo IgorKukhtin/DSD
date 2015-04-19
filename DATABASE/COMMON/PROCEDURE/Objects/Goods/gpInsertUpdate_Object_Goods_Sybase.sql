@@ -24,6 +24,7 @@ $BODY$
    DECLARE vbTradeMarkId         Integer;
    DECLARE vbGoodsTagId          Integer;
    DECLARE vbGoodsGroupAnalystId Integer;
+   DECLARE vbGoodsPlatformId     Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
@@ -37,6 +38,7 @@ BEGIN
 
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
+
 
 
    -- !!!заменили!!!
@@ -62,6 +64,21 @@ BEGIN
        inInfoMoneyId:= zc_Enum_InfoMoney_10203(); -- Упаковка
    END IF;
 
+
+   -- хардкод
+   vbGoodsPlatformId:= (SELECT CASE WHEN InfoMoneyCode IN (10102,10103,10104,10105,30101,30201,30301) -- Основное сырье + Мясное сырье OR Доходы + Продукция or Мясное сырье
+                                         THEN (SELECT Id FROM Object WHERE ObjectCode = 1 AND DescId = zc_Object_GoodsPlatform())
+                                    WHEN InfoMoneyCode IN (20901) -- Ирна
+                                         THEN (SELECT Id FROM Object WHERE ObjectCode = 2 AND DescId = zc_Object_GoodsPlatform())
+                                    WHEN InfoMoneyCode IN (30102) -- Тушенка
+                                         THEN (SELECT Id FROM Object WHERE ObjectCode = 3 AND DescId = zc_Object_GoodsPlatform())
+                                    WHEN InfoMoneyCode IN (20901) -- Хлеб
+                                         THEN (SELECT Id FROM Object WHERE ObjectCode = 4 AND DescId = zc_Object_GoodsPlatform())
+                               END AS GoodsPlatformId
+                        FROM Object_InfoMoney_View
+                        WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId);
+
+
    -- расчетно свойство <Полное название группы>
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
 
@@ -85,6 +102,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили связь с <Бизнесы>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Business(), ioId, inBusinessId);
+   -- сохранили связь с <Производственная площадка>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ioId, vbGoodsPlatformId);
 
 
    -- Level-0

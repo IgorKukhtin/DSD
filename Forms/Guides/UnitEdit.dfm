@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 365
+  ClientHeight = 430
   ClientWidth = 497
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 112
-    Top = 335
+    Top = 384
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 306
-    Top = 335
+    Top = 384
     Width = 75
     Height = 25
     Action = FormClose
@@ -156,20 +156,20 @@
     Width = 209
   end
   object cbPartionDate: TcxCheckBox
-    Left = 280
-    Top = 244
+    Left = 40
+    Top = 232
     Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
     TabOrder = 18
     Width = 157
   end
   object cxLabel8: TcxLabel
     Left = 40
-    Top = 221
-    Caption = #1044#1086#1075#1086#1074#1086#1088
+    Top = 263
+    Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
   end
   object ceContract: TcxButtonEdit
     Left = 40
-    Top = 242
+    Top = 286
     Properties.Buttons = <
       item
         Default = True
@@ -180,11 +180,12 @@
     Width = 209
   end
   object ceContract_Juridical: TcxButtonEdit
-    Left = 40
-    Top = 290
+    Left = 280
+    Top = 286
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -192,26 +193,27 @@
     Width = 209
   end
   object cxLabel9: TcxLabel
-    Left = 40
-    Top = 271
+    Left = 280
+    Top = 263
     Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
   end
   object cxLabel10: TcxLabel
-    Left = 280
-    Top = 271
-    Caption = #1057#1090#1072#1090#1100#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
+    Left = 40
+    Top = 320
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
   end
   object ceContract_Infomoney: TcxButtonEdit
-    Left = 280
-    Top = 290
+    Left = 40
+    Top = 340
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
     TabOrder = 24
-    Width = 209
+    Width = 449
   end
   object ActionList: TActionList
     Top = 40
@@ -331,8 +333,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 16
-    Top = 304
+    Left = 24
+    Top = 368
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -687,8 +689,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 136
-    Top = 232
+    Left = 184
+    Top = 240
   end
   object Contract_JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -715,8 +717,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 136
-    Top = 280
+    Left = 256
+    Top = 320
   end
   object Contract_InfomoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -743,7 +745,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 368
-    Top = 280
+    Left = 376
+    Top = 272
   end
 end

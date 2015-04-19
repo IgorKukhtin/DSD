@@ -3,7 +3,7 @@ object UnitForm: TUnitForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 420
-  ClientWidth = 790
+  ClientWidth = 980
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -26,10 +26,11 @@ object UnitForm: TUnitForm
   object cxGrid: TcxGrid
     Left = 8
     Top = 26
-    Width = 782
+    Width = 972
     Height = 394
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 782
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -156,22 +157,13 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object ceIsErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
       object clInvNumber: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1086#1088
+        Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 120
       end
       object clContract_JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
@@ -182,12 +174,21 @@ object UnitForm: TUnitForm
         Width = 70
       end
       object clContract_InfomoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
         DataBinding.FieldName = 'Contract_InfomoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 120
+      end
+      object ceIsErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -26,6 +26,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, GoodsGroupStatName TVarChar
+             , GoodsPlatformName TVarChar
              , JuridicalGroupName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
@@ -459,6 +460,7 @@ BEGIN
           , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
           , Object_GoodsTag.ValueData          AS GoodsTagName
           , Object_GoodsGroupStat.ValueData    AS GoodsGroupStatName
+          , Object_GoodsPlatform.ValueData     AS GoodsPlatformName
 
           , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
           , Object_Branch.ObjectCode    AS BranchCode
@@ -571,6 +573,11 @@ BEGIN
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                               ON ObjectLink_Goods_GoodsPlatform.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+          LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
 

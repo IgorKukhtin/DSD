@@ -119,6 +119,9 @@ type
     PartnerCode: TcxGridDBColumn;
     cbGoodsKind: TcxCheckBox;
     bbGoodsKind: TdxBarControlContainerItem;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
+    GoodsPlatformName: TcxGridDBColumn;
   private
     { Private declarations }
   public

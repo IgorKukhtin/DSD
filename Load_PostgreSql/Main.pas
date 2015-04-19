@@ -210,6 +210,8 @@ type
     function myExecToStoredProc_three:Boolean;
     function myExecSqlUpdateErased(ObjectId:Integer;Erased,Erased_del:byte):Boolean;
 
+    procedure myShowSql(mySql:TStrings);
+
     function myReplaceStr(const S, Srch, Replace: string): string;
     function FormatToVarCharServer_notNULL(_Value:string):string;
     function FormatToVarCharServer_isSpace(_Value:string):string;
@@ -1073,6 +1075,19 @@ begin
         try ExecSql except ShowMessage('fExecSqToQuery'+#10+#13+mySql);Result:=false;exit;end;
      end;
      Result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.myShowSql(mySql:TStrings);
+var
+  I: Integer;
+  Str: string;
+begin
+     Str:='';
+     for i:= 0 to mySql.Count-1 do
+     if i=mySql.Count-1
+     then Str:=Str+mySql[i]
+     else Str:=Str+mySql[i]+#10+#13;
+     ShowMessage('Error.OpenSql'+#10+#13+Str);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.FormatToVarCharServer_notNULL(_Value:string):string;
@@ -3139,7 +3154,9 @@ begin
                   //Add('  and(isnull(_pgPartner_find.JuridicalDetailsId_pg,0) = 0 ');
                   //Add('   or isnull(_pgPartner_find.JuridicalId_pg,0)=0)');
                   Add('order by ObjectName, ObjectId');
-        Open;
+
+        try Open; except myShowSql(fromQuery.sql);fStop:=true;exit;end;
+
         cbJuridicalInt.Caption:='2.4. ('+IntToStr(RecordCount)+') Юр.лица Int';
         //
         fStop:=cbOnlyOpen.Checked;
@@ -13755,9 +13772,8 @@ begin
         try
         Open;
         except
-              str:='';
-              for i := 0 to Sql.Count-1 do str:=str+' '+Sql[i];
-              ShowMessage (str);
+              myShowSql(Sql);
+              fStop:=true;
               exit;
         end;
 
@@ -16216,6 +16232,8 @@ begin
           + '                 then 298605' // ОГОРЕНКО новый дистрибьютор
           + '            when UnitFrom.pgUnitId = 1625' // ф. Никополь
           + '                 then 256624' // Мержиєвський О.В. ФОП дистрибьютор
+          //+ '            when UnitFrom.pgUnitId = 5' // ф.Крым
+          //+ '                 then ' // Мержиєвський О.В. ФОП дистрибьютор
           + '            else isnull (_pgPartner.PartnerId_pg, UnitFrom.Id3_Postgres)'
           + '       end as FromId_Postgres');
         Add('     , pgUnitTo.Id_Postgres as ToId_Postgres');
