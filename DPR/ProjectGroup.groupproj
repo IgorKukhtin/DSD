@@ -33,6 +33,9 @@
 			<Projects Include="Scale.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="ProjectCom.dproj">
+				<Dependencies/>
+			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -131,14 +134,23 @@
 		<Target Name="Scale:Make">
 			<MSBuild Projects="Scale.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="ProjectCom">
+			<MSBuild Projects="ProjectCom.dproj"/>
+		</Target>
+		<Target Name="ProjectCom:Clean">
+			<MSBuild Projects="ProjectCom.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="ProjectCom:Make">
+			<MSBuild Projects="ProjectCom.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;FarmacyCash;Scale"/>
+			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;FarmacyCash;Scale;ProjectCom"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;Scale:Clean"/>
+			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;Scale:Clean;ProjectCom:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;Scale:Make"/>
+			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;Scale:Make;ProjectCom:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

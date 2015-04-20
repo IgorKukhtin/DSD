@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
+    IN inSalePrice           TFloat    , -- Цена реализации
     IN inFEA                 TVarChar  , -- УК ВЭД
     IN inMeasure             TVarChar  , -- Ед. измерения
     IN inSession             TVarChar    -- сессия пользователя
@@ -24,6 +26,8 @@ BEGIN
 
      ioId := lpInsertUpdate_MovementItem_Income(ioId, inMovementId, inGoodsId, inAmount, inPrice, inFEA, inMeasure, vbUserId);
 
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, inSalePrice);
+                  
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -36,6 +40,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.04.15                        *
  06.03.15                        *
  26.12.14                        *
  07.12.14                        *

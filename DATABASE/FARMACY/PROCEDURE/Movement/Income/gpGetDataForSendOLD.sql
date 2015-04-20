@@ -53,11 +53,11 @@ BEGIN
              END||')'::text AS OneProcedure
        FROM Movement_Income_View    
          LEFT JOIN ObjectHistory_JuridicalDetails_View AS Juridical ON Juridical.JuridicalId = Movement_Income_View.FromId
-         LEFT JOIN (SELECT GoodsCode, GoodsName, SUM(Amount) AS Amount, Price
+         LEFT JOIN (SELECT GoodsCode, GoodsName, SUM(Amount) AS Amount, SUM(Amount*Price)/SUM(Amount) AS Price
                       FROM MovementItem_Income_View AS MovementItem 
                      WHERE MovementItem.MovementId = inMovementId
                        AND MovementItem.isErased = false
-                     GROUP BY GoodsCode, GoodsName, Price) AS MovementItem ON true
+                     GROUP BY GoodsCode, GoodsName) AS MovementItem ON true
         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                               ON ObjectFloat_NDSKind_NDS.ObjectId = Movement_Income_View.NDSKindId 
                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   

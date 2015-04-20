@@ -15,6 +15,7 @@ type
     procedure SetUp; override;
   published
     procedure MainFormTest;
+    procedure LoadCashFormTest;
     procedure LoadAccountFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
@@ -141,6 +142,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankAccount_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
+end;
+
+procedure TLoadFormTest.LoadCashFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMainCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMainCashForm');
 end;
 
 procedure TLoadFormTest.LoadContactPersonFormTest;

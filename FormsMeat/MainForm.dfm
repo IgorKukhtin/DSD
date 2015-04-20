@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 262
+  ExplicitWidth = 1094
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   object TextEdit: TcxTextEdit [0]

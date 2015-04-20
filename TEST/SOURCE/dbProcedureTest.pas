@@ -355,6 +355,8 @@ begin
   ProcedureLoad;
   ScriptDirectory := ProcedurePath + 'OBJECTS\GoodsPlatform\';
   ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\RouteGroup\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreatePeriodCloseProcedure;

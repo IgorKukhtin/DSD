@@ -1,14 +1,14 @@
 ﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 		<PropertyGroup>
-			<ProjectGuid>{A55784B3-0B8C-47D7-9499-BF8D9E287BE3}</ProjectGuid>
+			<ProjectGuid>{9ED889FD-49AB-45BA-89DB-5703F355CBDB}</ProjectGuid>
 			<ProjectVersion>13.4</ProjectVersion>
 			<FrameworkType>VCL</FrameworkType>
-			<MainSource>FarmacyCash.dpr</MainSource>
+			<MainSource>ProjectCom.dpr</MainSource>
 			<Base>True</Base>
 			<Config Condition="'$(Config)'==''">Debug</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
 			<TargetedPlatforms>1</TargetedPlatforms>
-			<AppType>Application</AppType>
+			<AppType>Library</AppType>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
 			<Base>true</Base>
@@ -40,9 +40,9 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
-			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
 			<DCC_UsePackage>IndySystem;JvCrypt;DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DataSnapClient;DataSnapProviderClient;DbxCommonDriver;dbxcds;DBXOracleDriver;CustomIPTransport;JvCore;dsnap;IndyCore;inetdbxpress;rtl;dbrtl;DbxClientDriver;inetdb;xmlrtl;ibxpress;DBXMySQLDriver;IndyProtocols;soaprtl;kbmMemRunDXE2Pro;DBXInformixDriver;DBXFirebirdDriver;inet;DBXSybaseASADriver;dbexpress;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+			<GenDll>true</GenDll>
 			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
 			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
 		</PropertyGroup>
@@ -50,11 +50,10 @@
 			<DCC_UsePackage>dxTileControlRS16;dxdborRS16;cxLibraryRS16;office2K;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;dxBarRS16;cxSpreadSheetRS16;TeeDB;dxDBXServerModeRS16;cxTreeListdxBarPopupMenuRS16;dxPSCoreRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;vclib;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;officeXPrt;vclimg;cxTreeListRS16;dxComnRS16;vcldb;dxADOServerModeRS16;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;dxDockingRS16;cxPageControldxBarPopupMenuRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;EhLib160;dxPSLnksRS16;EhLibDataDrivers160;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;Tee;DBXOdbcDriver;dxSkinsCoreRS16;dxPScxSSLnkRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;cxGridRS16;vclactnband;TeeUI;cxEditorsRS16;cxPivotGridRS16;dxServerModeRS16;ipstudiowin;Jcl;vclie;cxSchedulerRS16;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;dsnapcon;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;vclx;dxFlowChartRS16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<DCC_UsePackage>dxTileControlRS16;dxdborRS16;fsADO16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;office2K;dxPScxPivotGridLnkRS16;dxCoreRS16;ipstudiowindataset;RtmRxBDE160;cxExportRS16;ZComponent;QExport4RT_D16;dxBarRS16;cxSpreadSheetRS16;QRDBASE_D2007;TeeDB;dxDBXServerModeRS16;cxTreeListdxBarPopupMenuRS16;ProjectComponent;frxTee16;inetdbbde;frxBDE16;dxPSCoreRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;vclib;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;fsIBX16;officeXPrt;vclimg;QR5RunDXE2;cxTreeListRS16;RtmRxCtl160;dxComnRS16;vcldb;dxADOServerModeRS16;vcldsnap;DBXDb2Driver;frxADO16;frxe16;vtable160;navXE2;vcl;RaudusD160;RtmRxDB160;DBXMSSQLDriver;CodeSiteExpressPkg;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;fsTee16;Intraweb_15_DXE2;cxSchedulerGridRS16;ADDONS_XE2;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;EhLib160;dxPSLnksRS16;EhLibDataDrivers160;ExcelExportXE2;dclCrossTalk_XE2;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;frxDBX16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;ZDbc;frx16;ZPlain;Tee;JSONDataSet;DBXOdbcDriver;dxdbtrRS16;kassa;dxSkinsCoreRS16;svnui;dxPScxSSLnkRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;frxDB16;fsBDE16;cxGridRS16;fs16;vclactnband;TeeUI;cxEditorsRS16;cxPivotGridRS16;dxPScxSchedulerLnkRS16;dxServerModeRS16;ipstudiowin;frxcs16;Jcl;vclie;QImport3RT_D16;inernetpackage;cxSchedulerRS16;F1Book;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;cefcomponent;fsDB16;DataSnapConnectors;dclfrxTee16;dsdLib;dsnapcon;dxPSdxFCLnkRS16;dd;dxThemeRS16;JclVcl;dcldxSkinsCoreRS16;ZParseSql;vclx;svn;dxFlowChartRS16;bdertl;frxIBX16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+			<DCC_UsePackage>dxTileControlRS16;dxdborRS16;fsADO16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;office2K;dxPScxPivotGridLnkRS16;dxCoreRS16;ipstudiowindataset;RtmRxBDE160;cxExportRS16;ZComponent;QExport4RT_D16;dxBarRS16;cxSpreadSheetRS16;QRDBASE_D2007;TeeDB;dxDBXServerModeRS16;cxTreeListdxBarPopupMenuRS16;ProjectComponent;frxTee16;inetdbbde;frxBDE16;dxPSCoreRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;vclib;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;fsIBX16;officeXPrt;vclimg;QR5RunDXE2;cxTreeListRS16;RtmRxCtl160;dxComnRS16;vcldb;dxADOServerModeRS16;vcldsnap;DBXDb2Driver;frxADO16;frxe16;vtable160;navXE2;vcl;RaudusD160;RtmRxDB160;DBXMSSQLDriver;CodeSiteExpressPkg;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;fsTee16;Intraweb_15_DXE2;cxSchedulerGridRS16;ADDONS_XE2;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;EhLib160;dxPSLnksRS16;EhLibDataDrivers160;ExcelExportXE2;dclCrossTalk_XE2;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;frxDBX16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;ZDbc;frx16;ZPlain;Tee;JSONDataSet;DBXOdbcDriver;dxdbtrRS16;kassa;dxSkinsCoreRS16;svnui;dxPScxSSLnkRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;frxDB16;fsBDE16;cxGridRS16;fs16;vclactnband;TeeUI;cxEditorsRS16;cxPivotGridRS16;dxPScxSchedulerLnkRS16;dxServerModeRS16;ipstudiowin;frxcs16;Jcl;vclie;QImport3RT_D16;inernetpackage;cxSchedulerRS16;F1Book;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;cefcomponent;fsDB16;DataSnapConnectors;dclfrxTee16;dsdLib;dsnapcon;dxPSdxFCLnkRS16;dd;dxThemeRS16;JclVcl;dcldxSkinsCoreRS16;ZParseSql;vclx;svn;dxFlowChartRS16;bdertl;frxIBX16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_Locale>1033</VerInfo_Locale>
-			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1)'!=''">
@@ -65,10 +64,12 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<Manifest_File>None</Manifest_File>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
+			<Debugger_HostApplication>D:\WORK\DSD\DSD\BIN\ProjectTest.exe</Debugger_HostApplication>
 			<DCC_RemoteDebug>false</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -81,9 +82,9 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
-			<DCCReference Include="..\SOURCE\dsdApplication.pas"/>
+			<DCCReference Include="ProjectCOM_TLB.pas"/>
 			<DCCReference Include="..\SOURCE\dsdException.pas"/>
+			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\Log.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\Storage.pas"/>
@@ -144,6 +145,10 @@
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\Updater.pas"/>
+			<DCCReference Include="..\SOURCE\COM\dsdCOMApplication.pas">
+				<CoClasses>dsdCOMApplication</CoClasses>
+			</DCCReference>
+			<RidlCompile Include="ProjectCOM.ridl"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -161,6 +166,9 @@
 			<Borland.ProjectType/>
 			<BorlandProject>
 				<Delphi.Personality>
+					<Source>
+						<Source Name="MainSource">ProjectCom.dpr</Source>
+					</Source>
 					<VersionInfo>
 						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
 						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
@@ -189,11 +197,11 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages/>
-					<Source>
-						<Source Name="MainSource">FarmacyCash.dpr</Source>
-					</Source>
 				</Delphi.Personality>
 				<Deployment/>
+				<ActiveXProjectInfo>
+					<version>1</version>
+				</ActiveXProjectInfo>
 				<Platforms>
 					<Platform value="Win64">False</Platform>
 					<Platform value="Win32">True</Platform>

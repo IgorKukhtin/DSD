@@ -1,12 +1,12 @@
-program FarmacyCash;
+library ProjectCom;
 
 uses
-  Vcl.Forms,
+  ComServ,
+  ProjectCOM_TLB in 'ProjectCOM_TLB.pas',
+  dsdException in '..\SOURCE\dsdException.pas',
   SysUtils,
   Controls,
   UtilConst in '..\SOURCE\UtilConst.pas',
-  dsdApplication in '..\SOURCE\dsdApplication.pas',
-  dsdException in '..\SOURCE\dsdException.pas',
   Log in '..\SOURCE\Log.pas',
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
   Storage in '..\SOURCE\Storage.pas',
@@ -53,25 +53,20 @@ uses
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  Updater in '..\SOURCE\COMPONENT\Updater.pas';
+  Updater in '..\SOURCE\COMPONENT\Updater.pas',
+  dsdCOMApplication in '..\SOURCE\COM\dsdCOMApplication.pas' {dsdCOMApplication: CoClass};
 
-{$R *.res}
+exports
+  DllGetClassObject,
+  DllCanUnloadNow,
+  DllRegisterServer,
+  DllUnregisterServer,
+  DllInstall;
+
+{$R *.TLB}
+
+{$R *.RES}
 
 begin
-  Application.Initialize;
-  Logger.Enabled := FindCmdLineSwitch('log');
-  ConnectionPath := '..\INIT\farmacy_init.php';
-
-  TdsdApplication.Create;
-
-  with TLoginForm.Create(Application) do
-  //Если все хорошо создаем главную форму Application.CreateForm();
-  if ShowModal = mrOk then
-  begin
-     TUpdater.AutomaticUpdateProgram;
-     TUpdater.AutomaticCheckConnect;
-     Application.CreateForm(TdmMain, dmMain);
-     TParentForm(TdsdFormStorageFactory.GetStorage.Load('TMainCashForm')).Execute(nil, nil);
-  end;
-  Application.Run;
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
 end.
