@@ -625,6 +625,12 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsPlatform', 'Производственная площадка' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsPlatform');
 
 
+CREATE OR REPLACE FUNCTION zc_Object_RouteGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_RouteGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_RouteGroup', 'Группа маршрута' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_RouteGroup');
+
+
+
 --!!! Аптека
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
@@ -663,7 +669,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 14.04.05         * add zc_Object_GoodsPlatform
+ 20.04.15         * add zc_Object_RouteGroup
+ 14.04.15         * add zc_Object_GoodsPlatform
  28.03.15                                        * add zc_Object_MemberExternal
  11.03.15         * add zc_Object_OrderType
  09.02.15         * add zc_Object_Quality
