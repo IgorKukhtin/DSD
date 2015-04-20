@@ -1709,6 +1709,9 @@ begin
   with TParentForm(ShowForm) do
     if ModalResult = mrOk then begin
        result := true;
+       // Не перечитываем RefreshDispatcher при установке значений. Иначе получится два раза
+       if Assigned(RefreshDispatcher) then
+          RefreshDispatcher.FNotRefresh := true;
        Self.GuiParams.AssignParams(AddOnFormData.Params.Params);
        if Assigned(RefreshDispatcher) and Assigned(RefreshDispatcher.RefreshAction) and RefreshAllow then
           RefreshDispatcher.RefreshAction.Execute;// OnComponentChange(Self);

@@ -42,6 +42,7 @@ var
   i: integer;
   s, Form: string;
 begin
+{
   MedocCom := TMedocCOM.Create;
   res := MedocCom.GetDocumentList('F1201007', StrToDate('01.03.2015'));
   if not res.Eof then begin
@@ -51,7 +52,7 @@ begin
   if Assigned(Params) then
      for I := 0 to Params.Count - 1 do
          s := s + Params[i].Name + ' = ' + Params[i].AsString + ';';
-  Check(false, s);
+  Check(false, s);}
 end;
 
 procedure TMedocCOMTest.GetItemOneTaxCorrectiveMedocDocument;
@@ -68,7 +69,7 @@ var
   dddd: string;
   DataSet: IZDataset;
 begin
-  MedocCom := TMedocCOM.Create;
+  {MedocCom := TMedocCOM.Create;
   res := MedocCom.GetDocumentList('F1201007', StrToDate('01.03.2015'));
   if not res.Eof then begin
      DataSet := MedocCom.GetDocumentItemByCode(res.Fields['CODE'].Value);
@@ -81,7 +82,7 @@ begin
      s := s + #10#13;
      DataSet.Next;
   end;
-  Check(false, s);
+  Check(false, s);}
 end;
 
 procedure TMedocCOMTest.GetOneTaxCorrectiveMedocDocument;
@@ -92,7 +93,7 @@ var
   i: integer;
   s: string;
 begin
-  MedocCom := TMedocCOM.Create;
+  {MedocCom := TMedocCOM.Create;
   res := MedocCom.GetDocumentList('F1201207', StrToDate('01.03.2015'));
   if not res.Eof then begin
      Params := MedocCom.GetDocumentByCode(res.Fields.Item['CODE'].Value, res.Fields.Item['FORM'].Value);
@@ -100,7 +101,7 @@ begin
   if Assigned(Params) then
      for I := 0 to Params.Count - 1 do
          s := s + Params[i].Name + ' = ' + Params[i].AsString + ';';
-  Check(false, s);
+  Check(false, s);}
 end;
 
 procedure TMedocCOMTest.SetUp;
