@@ -50,7 +50,7 @@ BEGIN
 
 
      -- для долга !!!определяется Филиал по Пользователю!!!, иначе всегда на Главном филиале
-     vbBranchId_Juridical:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0), zc_Branch_Basis());
+     vbBranchId_Juridical:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), zc_Branch_Basis());
 
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и для формирования Аналитик в проводках

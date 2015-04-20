@@ -19,7 +19,7 @@ BEGIN
 
 
      -- для долга !!!определяется Филиал по Пользователю!!!, иначе всегда на Главном филиале
-     vbBranchId_Member:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0), zc_Branch_Basis());
+     vbBranchId_Member:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), zc_Branch_Basis());
 
      -- проверка
      PERFORM lpCheck_Movement_PersonalReport (inMovementId:= inMovementId, inComment:= 'проведен', inUserId:= inUserId);
