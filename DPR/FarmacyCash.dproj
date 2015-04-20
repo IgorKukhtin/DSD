@@ -65,6 +65,10 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
 			<DCC_RemoteDebug>false</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -102,6 +106,44 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\ChoicePeriod.pas">
 				<Form>PeriodChoiceForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\UnilWin.pas"/>
+			<DCCReference Include="..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFCDX.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFCollate.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFCrypt.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFDataSet.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFGostCrypt.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFIndex.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFMemMgr.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFParser.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFPrx.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFSorters.pas"/>
+			<DCCReference Include="..\SOURCE\DBF\VKDBFUtil.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\Defaults.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\Document.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\InvoiceXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
+			<DCCReference Include="..\SOURCE\LoginForm.pas">
+				<Form>LoginForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\DataModul.pas">
+				<Form>dmMain</Form>
+				<DesignClass>TDataModule</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\Updater.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -146,16 +188,7 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
-					<Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dsdLib.bpl">(untitled)</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\Guides_XE2.bpl">Guide Controls</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\ip3000dcl_XE2.bpl">File c:\program files (x86)\embarcadero\rad studio\9.0\bin\ip3000dcl_XE2.bpl not found</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2K160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4\LibD16\dclfsDB16.bpl">FastScript 1.9 DB Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl">File C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl not found</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
-					</Excluded_Packages>
+					<Excluded_Packages/>
 					<Source>
 						<Source Name="MainSource">FarmacyCash.dpr</Source>
 					</Source>

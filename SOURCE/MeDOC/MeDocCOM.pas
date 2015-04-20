@@ -11,7 +11,6 @@ type
   public
     constructor Create;
     function GetDocumentList(CharCode: string; PeriodDate: TDateTime): IZDataset;
-    function GetDocumentByCode(Code: integer): TParams;
   end;
 
   TMedocComAction = class(TdsdCustomAction)
@@ -19,6 +18,7 @@ type
     FPeriodDate: TdsdParam;
     FCharCode: TdsdParam;
     FspUpdate_IsElectronFromMedoc: TdsdStoredProc;
+    FspInsertUpdate_MovementItem_TaxFromMedoc: TdsdStoredProc;
   protected
     function LocalExecute: boolean; override;
   public
@@ -66,19 +66,15 @@ begin
   end;
 end;
 
-function TMedocCOM.GetDocumentByCode(Code: integer): TParams;
+{function TMedocCOM.GetDocumentByCode(Code, FORM: integer): TParams;
 var Doc: IZDocument;
     DocDataSet: IZDataset;
-    FORM: integer;
 begin
   result := TParams.Create(nil);
   Doc := pMedoc.OpenDocumentByCode(Code, false);
-  DocDataSet := Doc.Card;
-  if not DocDataSet.Eof then begin
-     FORM := DocDataSet.Fields.Item['FORM'].Value;
-     result.CreateParam(ftVariant, 'FORM', ptInput).Value := FORM;
+  Doc.DisableScripts();
 
-  end;
+  result.CreateParam(ftVariant, 'FORM', ptInput).Value := FORM;
 
   DocDataSet := Doc.DataSets('', 0);
   if not DocDataSet.Eof then
@@ -104,7 +100,7 @@ begin
        result.CreateParam(ftVariant, 'DocKind', ptInput).Value := 'TaxCorrective';
      end;
   end;
-end;
+end; }
 
 function TMedocCOM.GetDocumentList(CharCode: string; PeriodDate: TDateTime): IZDataset;
 begin
@@ -119,16 +115,31 @@ begin
   FPeriodDate := TdsdParam.Create(nil);
   FCharCode := TdsdParam.Create(nil);
   FspUpdate_IsElectronFromMedoc := TdsdStoredProc.Create(nil);
-  FspUpdate_IsElectronFromMedoc.StoredProcName := 'gpUpdate_IsElectronFromMedoc';
-  FspUpdate_IsElectronFromMedoc.OutputType := otResult;
-  FspUpdate_IsElectronFromMedoc.Params.AddParam('inFromINN', ftString, ptInput, '');
-  FspUpdate_IsElectronFromMedoc.Params.AddParam('inToINN', ftString, ptInput, '');
-  FspUpdate_IsElectronFromMedoc.Params.AddParam('inInvNumber', ftString, ptInput, '');
-  FspUpdate_IsElectronFromMedoc.Params.AddParam('inOperDate', ftDateTime, ptInput, Date);
-  FspUpdate_IsElectronFromMedoc.Params.AddParam('inBranchNumber', ftString, ptInput, '');
-  FspUpdate_IsElectronFromMedoc.Params.AddParam('inInvNumberRegistered', ftString, ptInput, '');
-  FspUpdate_IsElectronFromMedoc.Params.AddParam('inDateRegistered', ftDateTime, ptInput, '');
-  FspUpdate_IsElectronFromMedoc.Params.AddParam('inDocKind', ftString, ptInput, '');
+  with FspUpdate_IsElectronFromMedoc do begin
+    FspUpdate_IsElectronFromMedoc.StoredProcName := 'gpUpdate_IsElectronFromMedoc';
+    FspUpdate_IsElectronFromMedoc.OutputType := otResult;
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('outId', ftInteger, ptOutput, 0);
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inMedocCode', ftInteger, ptInput, '');
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inFromINN', ftString, ptInput, '');
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inToINN', ftString, ptInput, '');
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inInvNumber', ftString, ptInput, '');
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inOperDate', ftDateTime, ptInput, Date);
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inBranchNumber', ftString, ptInput, '');
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inInvNumberRegistered', ftString, ptInput, '');
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inDateRegistered', ftDateTime, ptInput, '');
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inDocKind', ftString, ptInput, '');
+  end;
+
+  FspInsertUpdate_MovementItem_TaxFromMedoc := TdsdStoredProc.Create(nil);
+  with FspInsertUpdate_MovementItem_TaxFromMedoc do begin
+     StoredProcName := 'gpInsertUpdate_MovementItem_TaxFromMedoc';
+     OutputType := otResult;
+     Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+     Params.AddParam('inGoodsName', ftString, ptInput, '');
+     Params.AddParam('inMeasureName', ftString, ptInput, '');
+     Params.AddParam('inAmount', ftFloat, ptInput, 0);
+     Params.AddParam('inSumm', ftFloat, ptInput, 0);
+  end;
 end;
 
 destructor TMedocComAction.Destroy;
@@ -136,46 +147,82 @@ begin
   FreeAndNil(FPeriodDate);
   FreeAndNil(FCharCode);
   FreeAndNil(FspUpdate_IsElectronFromMedoc);
+  FreeAndNil(FspInsertUpdate_MovementItem_TaxFromMedoc);
   inherited;
 end;
 
 function TMedocComAction.LocalExecute: boolean;
 var DocumentList: IZDataset;
-    DocumentParam: TParams;
     s: string;
-    i: integer;
+    i, MovementId: integer;
+    MedocDocument: IZDocument;
+    HeaderDataSet: IZDataset;
+    LineDataSet: IZDataset;
 begin
   with TMedocCOM.Create do
     try
-      // Получили список документов
+      // Получили список документов Медок
       DocumentList := GetDocumentList(CharCode.Value, StartOfTheMonth(PeriodDate.Value));
+      // Получили список документов из Project
       with TGaugeFactory.GetGauge('Загрузка данных', 1, DocumentList.RecordCount) do begin
          Start;
          try
            while not DocumentList.Eof do begin
-             DocumentParam := GetDocumentByCode(DocumentList.Fields.Item['CODE'].Value);
-             s := '';
-             for I := 0 to DocumentParam.Count - 1 do
-                  s := s + DocumentParam[i].Name + ' = ' + DocumentParam[i].AsString + ';';
-             Logger.AddToLog(s);
-             try
-               if (DocumentParam.ParamByName('SEND_DPA').asString = '12') and (DocumentParam.ParamByName('SEND_DPA_RN').asString <> '') then begin
-                  FspUpdate_IsElectronFromMedoc.ParamByName('inFromINN').Value := DocumentParam.ParamByName('FIRM_INN').asString;
-                  FspUpdate_IsElectronFromMedoc.ParamByName('inToINN').Value := DocumentParam.ParamByName('N4').asString;
-                  FspUpdate_IsElectronFromMedoc.ParamByName('inInvNumber').Value := DocumentParam.ParamByName('InvNumber').asString;
-                  FspUpdate_IsElectronFromMedoc.ParamByName('inOperDate').Value := VarToDateTime(DocumentParam.ParamByName('OperDate').asString);
-                  FspUpdate_IsElectronFromMedoc.ParamByName('inBranchNumber').Value := DocumentParam.ParamByName('BranchNumber').asString;
-                  FspUpdate_IsElectronFromMedoc.ParamByName('inInvNumberRegistered').Value := DocumentParam.ParamByName('SEND_DPA_RN').asString;
-                  FspUpdate_IsElectronFromMedoc.ParamByName('inDateRegistered').Value := VarToDateTime(DocumentParam.ParamByName('SEND_DPA_DATE').asString);
-                  FspUpdate_IsElectronFromMedoc.ParamByName('inDocKind').Value := DocumentParam.ParamByName('DocKind').asString;
-                  FspUpdate_IsElectronFromMedoc.Execute;
-                  Application.ProcessMessages;
+               //сначала проверяем, а не зарегистрировали мы ее УЖЕ
+
+               // Если НЕ зарегистрировали, только тогда открываем
+               MedocDocument := pMedoc.OpenDocumentByCode(DocumentList.Fields['CODE'].Value, false);
+
+               HeaderDataSet := MedocDocument.DataSets('', 0);
+//               s := '';
+  //             for I := 0 to DocumentParam.Count - 1 do
+    //               s := s + DocumentParam[i].Name + ' = ' + DocumentParam[i].AsString + ';';
+               Logger.AddToLog(s);
+               if (HeaderDataSet.Fields['SEND_DPA'].Value = '12') {or
+                  (DocumentParam.ParamByName('SEND_DPA').asString = '11') }then begin
+                  Logger.AddToLog(s);
+                  {with FspUpdate_IsElectronFromMedoc do begin
+                    ParamByName('inMedocCODE').Value := DocumentList.Fields['CODE'].Value;
+                    ParamByName('inFromINN').Value := DocumentParam.ParamByName('FIRM_INN').asString;
+                    ParamByName('inToINN').Value := DocumentParam.ParamByName('N4').asString;
+                    ParamByName('inInvNumber').Value := DocumentParam.ParamByName('InvNumber').asString;
+                    ParamByName('inOperDate').Value := VarToDateTime(DocumentParam.ParamByName('OperDate').asString);
+                    ParamByName('inBranchNumber').Value := DocumentParam.ParamByName('BranchNumber').asString;
+                    ParamByName('inInvNumberRegistered').Value := DocumentParam.ParamByName('SEND_DPA_RN').asString;
+                    if DocumentParam.ParamByName('SEND_DPA_DATE').asString <> '' then
+                       ParamByName('inDateRegistered').Value := VarToDateTime(DocumentParam.ParamByName('SEND_DPA_DATE').asString)
+                    else
+                       ParamByName('inDateRegistered').Value := Date;
+                    ParamByName('inDocKind').Value := DocumentParam.ParamByName('DocKind').asString;
+
+                    Execute;
+                  end;
+                  if FspUpdate_IsElectronFromMedoc.ParamByName('outId').AsString <> '0' then begin
+                     MovementId := FspUpdate_IsElectronFromMedoc.ParamByName('outId').Value;
+                     LineDataSet := GetDocumentItemByCode(DocumentList.Fields.Item['CODE'].Value);
+                     while not LineDataSet.EOF do
+                       with FspInsertUpdate_MovementItem_TaxFromMedoc do begin
+                         ParamByName('inMovementId').Value := MovementId;
+                         if DocumentParam.ParamByName('DocKind').asString = 'Tax' then begin
+                            ParamByName('inGoodsName').Value := LineDataSet.Fields['TAB1_A13'].Value;
+                            ParamByName('inMeasureName').Value := LineDataSet.Fields['TAB1_A14'].Value;
+                            ParamByName('inAmount').Value := LineDataSet.Fields['TAB1_A15'].Value;
+                            ParamByName('inSumm').Value := LineDataSet.Fields['TAB1_A17'].Value;
+                         end
+                         else begin
+                            ParamByName('inGoodsName').Value := LineDataSet.Fields['TAB1_A3'].Value;
+                            ParamByName('inMeasureName').Value := LineDataSet.Fields['TAB1_A4'].Value;
+                            ParamByName('inAmount').Value := LineDataSet.Fields['TAB1_A5'].Value;
+                            ParamByName('inSumm').Value := LineDataSet.Fields['TAB1_A9'].Value;
+                         end;
+                         Execute;
+                         LineDataSet.Next;
+                       end;
+                  end;}
                end;
-             finally
-               FreeAndNil(DocumentParam);
-             end;
-             DocumentList.Next;
-             IncProgress;
+               Application.ProcessMessages;
+               DocumentList.Next;
+               IncProgress;
            end;
            result := true;
          finally

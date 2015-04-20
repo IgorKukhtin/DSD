@@ -2810,8 +2810,6 @@ inherited MainForm: TMainForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      EnabledTimer = True
-      Timer = spRefresh.Timer
       StoredProc = spGetInfo
       StoredProcList = <
         item

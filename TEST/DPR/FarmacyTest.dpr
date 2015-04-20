@@ -285,7 +285,8 @@ uses
   MarginCategory in '..\..\Forms\Guides\MarginCategory.pas' {MarginCategoryForm: TParentForm},
   MarginCategoryItem in '..\..\Forms\Guides\MarginCategoryItem.pas' {MarginCategoryItemForm: TParentForm},
   MarginCategoryLink in '..\..\Forms\Guides\MarginCategoryLink.pas' {MarginCategoryLinkForm: TParentForm},
-  dsdException in '..\..\SOURCE\dsdException.pas';
+  dsdException in '..\..\SOURCE\dsdException.pas',
+  MainCash in '..\..\FormsFarmacy\Cash\MainCash.pas' {MainCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1,6 +1,6 @@
 inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
   BorderStyle = bsSingle
-  Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1089#1090#1072#1090#1091#1089#1086#1074' '#1080#1079' '#1052#1077#1076#1082#1072
+  Caption = #1047#1072#1075#1088#1091#1079#1082#1072'  '#1080#1079' '#1052#1077#1076#1082#1072
   ClientHeight = 98
   ClientWidth = 359
   ExplicitWidth = 365
@@ -8,13 +8,17 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
+    Left = 73
     Top = 54
     Action = MultiAction
+    ExplicitLeft = 73
     ExplicitTop = 54
   end
   inherited bbCancel: TcxButton
+    Left = 231
     Top = 54
     Action = dsdFormClose1
+    ExplicitLeft = 231
     ExplicitTop = 54
   end
   object cxLabel1: TcxLabel [2]

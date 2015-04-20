@@ -51,11 +51,11 @@ BEGIN
              MovementItem.PriceWithVAT||','||PriceSale||')'::text AS OneProcedure
        FROM Movement_Income_View    
          LEFT JOIN ObjectHistory_JuridicalDetails_View AS Juridical ON Juridical.JuridicalId = Movement_Income_View.FromId
-         LEFT JOIN (SELECT GoodsId, GoodsCode, GoodsName, SUM(Amount) AS Amount, PriceWithVAT, PriceSale
+         LEFT JOIN (SELECT GoodsId, GoodsCode, GoodsName, SUM(Amount) AS Amount, SUM(Amount*PriceWithVAT)/SUM(Amount) AS PriceWithVAT, PriceSale
                       FROM MovementItem_Income_View AS MovementItem 
                      WHERE MovementItem.MovementId = inMovementId
                        AND MovementItem.isErased = false
-                     GROUP BY GoodsId, GoodsCode, GoodsName, PriceWithVAT, PriceSale) AS MovementItem ON true
+                     GROUP BY GoodsId, GoodsCode, GoodsName, PriceSale) AS MovementItem ON true
         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                               ON ObjectFloat_NDSKind_NDS.ObjectId = Movement_Income_View.NDSKindId 
                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   

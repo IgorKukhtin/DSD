@@ -2,6 +2,7 @@ inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 806
+  ExplicitTop = -76
   ExplicitWidth = 814
   ExplicitHeight = 553
   PixelsPerInch = 96
@@ -11,18 +12,17 @@ inherited IncomeForm: TIncomeForm
     Width = 806
     Height = 400
     ExplicitTop = 126
-    ExplicitWidth = 776
+    ExplicitWidth = 806
     ExplicitHeight = 400
     ClientRectBottom = 400
     ClientRectRight = 806
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 776
+      ExplicitWidth = 806
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 806
         Height = 376
-        ExplicitTop = 3
-        ExplicitWidth = 776
+        ExplicitWidth = 806
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -239,7 +239,7 @@ inherited IncomeForm: TIncomeForm
     Width = 806
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 776
+    ExplicitWidth = 806
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1167,6 +1167,14 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
       end
       item
+        Name = 'inSalePrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SalePrice'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inFEA'
         Value = Null
         Component = MasterCDS
@@ -1181,10 +1189,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'Measure'
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end
       item
         Value = Null
