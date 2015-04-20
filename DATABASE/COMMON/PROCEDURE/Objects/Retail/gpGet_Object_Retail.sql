@@ -21,15 +21,15 @@ BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             CAST (0 as Integer)    AS Id
+             CAST (0 as Integer)     AS Id
            , lfGet_ObjectCode(0, zc_Object_Retail()) AS Code
-           , CAST ('' as TVarChar)  AS NAME
-           , CAST (NULL AS Boolean) AS OperDateOrder
-           , CAST ('' as TVarChar)  AS GLNCode
-           , CAST ('' as TVarChar)  AS GLNCodeCorporate
-           , CAST (0 as Integer)    AS GoodsPropertyId 
-           , CAST ('' as TVarChar)  AS GoodsPropertyName           
-           , CAST (NULL AS Boolean) AS isErased;
+           , CAST ('' as TVarChar)   AS NAME
+           , CAST (FALSE AS Boolean) AS OperDateOrder
+           , CAST ('' as TVarChar)   AS GLNCode
+           , CAST ('' as TVarChar)   AS GLNCodeCorporate
+           , CAST (0 as Integer)     AS GoodsPropertyId 
+           , CAST ('' as TVarChar)   AS GoodsPropertyName           
+           , CAST (NULL AS Boolean)  AS isErased;
    ELSE
        RETURN QUERY 
        SELECT 

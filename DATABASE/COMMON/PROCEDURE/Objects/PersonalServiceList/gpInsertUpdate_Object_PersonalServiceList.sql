@@ -1,12 +1,16 @@
 -- Function: gpInsertUpdate_Object_PersonalServiceList()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
  INOUT ioId             Integer   ,     -- ключ объекта <> 
     IN inCode           Integer   ,     -- Код объекта  
     IN inName           TVarChar  ,     -- Название объекта 
     IN inJuridicalId    Integer   ,     -- Юр. лицо
+    IN inPaidKindId     Integer   ,     -- 
+    IN inBranchId       Integer   ,     -- 
+    IN inBankId         Integer   ,     -- 
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -34,19 +38,27 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PersonalServiceList(), vbCode_calc, inName);
    -- сохранили св-во 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Juridical(), ioId, inJuridicalId);
+
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_PaidKind(), ioId, inPaidKindId);
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Branch(), ioId, inBranchId);
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Bank(), ioId, inBankId);
         
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_PersonalServiceList (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_PersonalServiceList (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.15          * add PaidKind, Branch, Bank
  12.09.14         *
 */
 

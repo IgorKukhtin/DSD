@@ -4,7 +4,7 @@ inherited ContractChoiceForm: TContractChoiceForm
   ClientWidth = 853
   AddOnFormData.Params = FormParams
   ExplicitWidth = 869
-  ExplicitHeight = 534
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -507,7 +507,6 @@ inherited ContractChoiceForm: TContractChoiceForm
     Top = 88
   end
   object RefreshDispatcher: TRefreshDispatcher
-    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

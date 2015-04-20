@@ -19,9 +19,9 @@ uses
 type
   TBankAccount_PersonalJournalForm = class(TAncestorJournalForm)
     Comment: TcxGridDBColumn;
-    ceCash: TcxButtonEdit;
+    edBankAccount: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    CashGuides: TdsdGuides;
+    GuidesBankAccount: TdsdGuides;
     MemberName: TcxGridDBColumn;
     PersonalServiceListName: TcxGridDBColumn;
     Comment_Service: TcxGridDBColumn;

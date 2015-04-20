@@ -29,9 +29,10 @@ BEGIN
    RETURN QUERY 
      WITH tmpPartner1CLink AS (SELECT Object_Partner1CLink.Id AS ObjectId
                                     , Object_Partner1CLink.ObjectCode
-                                    , ObjectLink_Partner1CLink_Branch.ChildObjectId AS BranchId_Link
+                                    , ObjectLink_Partner1CLink_Branch.ChildObjectId   AS BranchId_Link
                                     , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
                                     , ObjectLink_Partner1CLink_Partner.ChildObjectId  AS PartnerId
+                                    , ObjectLink_Partner_Juridical.ChildObjectId      AS JuridicalId
                                FROM Object AS Object_Partner1CLink
                                     LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                                          ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
@@ -43,6 +44,11 @@ BEGIN
                                                          ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
                                                         AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
                                     LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
                                WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                                  AND Object_Partner1CLink.ObjectCode <> 0
                                  AND (ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0 OR Object_To.DescId <> zc_Object_Partner()) -- проверка ƒоговор только дл€ контрагента
@@ -96,7 +102,8 @@ BEGIN
            LEFT JOIN tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
                                      AND tmpPartner1CLink.BranchId_Link = Sale1C.BranchId_Link
 
-           LEFT JOIN Object_Contract_View ON tmpPartner1CLink.ContractId = Object_Contract_View.ContractId
+           LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = tmpPartner1CLink.ContractId
+                                         AND Object_Contract_View.JuridicalId = tmpPartner1CLink.JuridicalId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpPartner1CLink.PartnerId
            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
 

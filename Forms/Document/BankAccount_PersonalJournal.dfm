@@ -2,7 +2,6 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitTop = -13
   ExplicitWidth = 998
   PixelsPerInch = 96
   TextHeight = 13
@@ -15,8 +14,6 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
       ExplicitWidth = 982
       inherited cxGrid: TcxGrid
         Width = 982
-        ExplicitLeft = 128
-        ExplicitTop = 3
         ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -190,7 +187,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
       Top = 7
       ExplicitTop = 7
     end
-    object ceCash: TcxButtonEdit
+    object edBankAccount: TcxButtonEdit
       Left = 649
       Top = 5
       Properties.Buttons = <
@@ -204,7 +201,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
     object cxLabel3: TcxLabel
       Left = 610
       Top = 7
-      Caption = #1050#1072#1089#1089#1072':'
+      Caption = #1056'/'#1089#1095':'
     end
     object cbIsServiceDate: TcxCheckBox
       Left = 405
@@ -241,13 +238,13 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         item
           Name = 'CashId_top'
           Value = ''
-          Component = CashGuides
+          Component = GuidesBankAccount
           ComponentItem = 'Key'
         end
         item
           Name = 'CashName_top'
           Value = Null
-          Component = CashGuides
+          Component = GuidesBankAccount
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
@@ -321,7 +318,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
       item
         Name = 'inCashId'
         Value = Null
-        Component = CashGuides
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -365,7 +362,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Component = PeriodChoice
       end
       item
-        Component = CashGuides
+        Component = GuidesBankAccount
       end>
     Left = 400
     Top = 144
@@ -381,7 +378,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
     Top = 448
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Cash'
+    StoredProcName = 'gpSetErased_Movement_BankAccount'
     Left = 72
     Top = 328
   end
@@ -407,14 +404,14 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
       item
         Name = 'CashId_top'
         Value = ''
-        Component = CashGuides
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInputOutput
       end
       item
         Name = 'CashName_top'
         Value = ''
-        Component = CashGuides
+        Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
@@ -425,26 +422,32 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
     Left = 200
     Top = 312
   end
-  object CashGuides: TdsdGuides
+  object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceCash
-    FormNameParam.Value = 'TCash_ObjectForm'
+    LookupControl = edBankAccount
+    FormNameParam.Value = 'TBankAccount_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCash_ObjectForm'
+    FormName = 'TBankAccount_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = CashGuides
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
       end
       item
-        Name = 'TextValue'
+        Name = 'NameAll'
         Value = ''
-        Component = CashGuides
+        Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
       end>
     Left = 552
     Top = 5

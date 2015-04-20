@@ -72,7 +72,7 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                 AND MLO_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-          INNER JOIN JOIN tmpUnit ON tmpUnit.UnitId = MLO_To.ObjectId
+          INNER JOIN tmpUnit ON tmpUnit.UnitId = MLO_To.ObjectId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ReturnIn())

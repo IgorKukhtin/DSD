@@ -1,27 +1,27 @@
 inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientHeight = 623
-  ClientWidth = 982
-  ExplicitWidth = 998
-  ExplicitHeight = 661
+  ClientWidth = 875
+  ExplicitWidth = 891
+  ExplicitHeight = 658
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 982
+    Width = 875
     Height = 508
     ExplicitTop = 115
-    ExplicitWidth = 982
+    ExplicitWidth = 875
     ExplicitHeight = 508
     ClientRectBottom = 508
-    ClientRectRight = 982
+    ClientRectRight = 875
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
+      ExplicitWidth = 875
       ExplicitHeight = 484
       inherited cxGrid: TcxGrid
-        Width = 982
+        Width = 875
         Height = 484
-        ExplicitWidth = 982
+        ExplicitWidth = 875
         ExplicitHeight = 484
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -31,51 +31,9 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
               Column = Amount
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = Amount_avance
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummToPay_cash
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummRemains
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummService
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummToPay
-            end
-            item
               Format = ',0.00'
               Kind = skSum
               Column = SummCard
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = Amount_service
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -84,51 +42,9 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
               Column = Amount
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = Amount_avance
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummToPay_cash
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummRemains
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummService
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummToPay
-            end
-            item
               Format = ',0.00'
               Kind = skSum
               Column = SummCard
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = Amount_service
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -156,7 +72,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 150
           end
           object INN: TcxGridDBColumn [2]
             Caption = #1048#1053#1053
@@ -182,7 +98,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 250
           end
           object PositionName: TcxGridDBColumn [5]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -198,7 +114,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 120
           end
           object isMain: TcxGridDBColumn [6]
             Caption = #1054#1089#1085#1086#1074'. '#1084#1077#1089#1090#1086' '#1088'.'
@@ -217,29 +133,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
             Options.Editing = False
             Width = 60
           end
-          object SummService: TcxGridDBColumn [8]
-            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
-            DataBinding.FieldName = 'SummService'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object SummToPay: TcxGridDBColumn [9]
-            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'SummToPay'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object SummCard: TcxGridDBColumn [10]
+          object SummCard: TcxGridDBColumn [8]
             Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053')'
             DataBinding.FieldName = 'SummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -250,40 +144,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummToPay_cash: TcxGridDBColumn [11]
-            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
-            DataBinding.FieldName = 'SummToPay_cash'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Amount_avance: TcxGridDBColumn [12]
-            Caption = #1040#1074#1072#1085#1089' ('#1074#1099#1087#1083#1072#1095#1077#1085#1086')'
-            DataBinding.FieldName = 'Amount_avance'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object Amount_service: TcxGridDBColumn [13]
-            Caption = #1044#1088#1091#1075#1080#1077' ('#1074#1099#1087#1083#1072#1095#1077#1085#1086')'
-            DataBinding.FieldName = 'Amount_service'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object Amount: TcxGridDBColumn [14]
+          object Amount: TcxGridDBColumn [9]
             Caption = #1042#1099#1087#1083#1072#1090#1072' '#1092#1072#1082#1090
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -293,25 +154,15 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummRemains: TcxGridDBColumn [15]
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077
-            DataBinding.FieldName = 'SummRemains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Comment: TcxGridDBColumn [16]
+          object Comment: TcxGridDBColumn [10]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 200
           end
-          object InfoMoneyCode: TcxGridDBColumn [17]
+          object InfoMoneyCode: TcxGridDBColumn [11]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -320,7 +171,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
             Options.Editing = False
             Width = 55
           end
-          object InfoMoneyName: TcxGridDBColumn [18]
+          object InfoMoneyName: TcxGridDBColumn [12]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -329,7 +180,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object InfoMoneyName_all: TcxGridDBColumn [19]
+          object InfoMoneyName_all: TcxGridDBColumn [13]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -343,10 +194,10 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 982
+    Width = 875
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 982
+    ExplicitWidth = 875
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -410,6 +261,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     object edPersonalServiceList: TcxButtonEdit
       Left = 215
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -429,9 +281,10 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
       Top = 45
       Caption = #8470' '#1076#1086#1082'. ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
     end
-    object edCash: TcxButtonEdit
+    object edBankAccount: TcxButtonEdit
       Left = 470
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -439,29 +292,13 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 140
-    end
-    object cxLabel9: TcxLabel
-      Left = 625
-      Top = 5
-      Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
-    end
-    object edMember: TcxButtonEdit
-      Left = 625
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 15
-      Width = 232
+      Width = 387
     end
   end
   object edDocumentPersonalService: TcxButtonEdit [2]
     Left = 320
     Top = 63
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -475,7 +312,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
   object cxLabel5: TcxLabel [3]
     Left = 470
     Top = 5
-    Caption = #1050#1072#1089#1089#1072':'
+    Caption = #1056'/'#1089#1095':'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -488,17 +325,6 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
-    object mactList: TMultiAction [0]
-      Category = 'actAllGrid'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      ActionList = <
-        item
-          Action = actGetMIAmount
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -537,7 +363,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
           StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074#1099#1087#1083#1072#1090#1099' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-      Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074#1099#1087#1083#1072#1090#1099' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -575,95 +401,14 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object mactInsertUpdateMIAmount_AllGrid: TMultiAction
-      Category = 'actAllGrid'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      ActionList = <
-        item
-          Action = mactList
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> ?'
-      InfoAfterExecute = '<'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-      ImageIndex = 50
-    end
-    object actInsertUpdateMIAmount_One: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetMIAmount
-      StoredProcList = <
-        item
-          StoredProc = spGetMIAmount
-        end>
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-      ImageIndex = 47
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> ?'
-    end
-    object actGetMIAmount: TdsdExecStoredProc
-      Category = 'actAllGrid'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetMIAmount
-      StoredProcList = <
-        item
-          StoredProc = spGetMIAmount
-        end>
-      Caption = 'actGetMIAmount'
-    end
-    object actInsertUpdateMIAmount_All: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIAmount
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIAmount
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-      ImageIndex = 50
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> ?'
-      InfoAfterExecute = '<'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'> '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
-    end
-    object actMasterPost: TDataSetPost
-      Category = 'actAllGrid'
-      Caption = 'actMasterPost'
-      Hint = 'Post'
-      ImageIndex = 74
-      DataSource = MasterDS
-    end
-    object mactInsertUpdateMIAmount_One: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      ActionList = <
-        item
-          Action = actGetMIAmount
-        end
-        item
-          Action = actMasterPost
-        end>
-      QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
-      ImageIndex = 47
-    end
   end
   inherited MasterDS: TDataSource
     Left = 32
     Top = 512
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 96
+    Top = 456
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Cash_Personal'
@@ -754,22 +499,6 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMIAmount_One'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMIAmount_All'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -785,44 +514,8 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bbPrint_Bill: TdxBarButton [5]
-      Caption = #1057#1095#1077#1090
-      Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
-    end
-    object bbPrintTax: TdxBarButton [6]
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Visible = ivAlways
-      ImageIndex = 16
-    end
-    object bbPrintTax_Client: TdxBarButton [7]
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Visible = ivAlways
-      ImageIndex = 18
-    end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
-    end
-    object bbTax: TdxBarButton
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Category = 0
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bbInsertUpdateMIAmount_One: TdxBarButton
-      Action = mactInsertUpdateMIAmount_One
-      Category = 0
-    end
-    object bbInsertUpdateMIAmount_All: TdxBarButton
-      Action = mactInsertUpdateMIAmount_AllGrid
-      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -868,14 +561,14 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
       item
         Name = 'CashId_top'
         Value = Null
-        Component = GuidesCash
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInputOutput
       end
       item
         Name = 'CashName_top'
         Value = Null
-        Component = GuidesCash
+        Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
@@ -888,7 +581,6 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Cash'
     Left = 160
     Top = 8
   end
@@ -970,13 +662,13 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
       item
         Name = 'CashId'
         Value = ''
-        Component = GuidesCash
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
       end
       item
         Name = 'CashName'
         Value = ''
-        Component = GuidesCash
+        Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -992,25 +684,11 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'MemberId'
-        Value = ''
-        Component = GuidesMember
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'MemberName'
-        Value = ''
-        Component = GuidesMember
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end>
     Left = 224
     Top = 264
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Cash_Personal'
     Params = <
       item
         Name = 'ioMovementId'
@@ -1043,7 +721,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
       item
         Name = 'inCashId'
         Value = ''
-        Component = GuidesCash
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1052,13 +730,6 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Value = ''
         Component = edComment
         DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inMemberId'
-        Value = 'False'
-        Component = GuidesMember
-        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 162
@@ -1070,7 +741,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Guides = GuidesPersonalServiceList
       end
       item
-        Guides = GuidesCash
+        Guides = GuidesBankAccount
       end>
     Left = 160
     Top = 192
@@ -1093,10 +764,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Control = edDocumentPersonalService
       end
       item
-        Control = edCash
-      end
-      item
-        Control = edMember
+        Control = edBankAccount
       end
       item
         Control = edComment
@@ -1105,23 +773,22 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     Top = 193
   end
   inherited RefreshAddOn: TRefreshAddOn
-    FormName = 'TCash_PersonalJournalForm'
+    FormName = 'TBankAccount_PersonalJournalForm'
     DataSet = 'MasterCDS'
     Left = 792
     Top = 344
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Cash_Personal_SetErased'
+    StoredProcName = ''
     Left = 430
     Top = 472
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Cash_Personal_SetUnErased'
+    StoredProcName = ''
     Left = 438
     Top = 416
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Cash_Personal'
     Params = <
       item
         Name = 'ioId'
@@ -1227,14 +894,8 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
-    Top = 246
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
+    Left = 556
+    Top = 262
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_Print'
@@ -1369,56 +1030,31 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     Left = 448
     Top = 64
   end
-  object GuidesCash: TdsdGuides
+  object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edCash
-    FormNameParam.Value = 'TCash_ObjectForm'
+    LookupControl = edBankAccount
+    FormNameParam.Value = 'TBankAccount_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCash_ObjectForm'
+    FormName = 'TBankAccount_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesCash
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
       end
       item
-        Name = 'TextValue'
+        Name = 'NameAll'
         Value = ''
-        Component = GuidesCash
+        Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 528
     Top = 65533
   end
-  object GuidesMember: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edMember
-    FormNameParam.Value = 'TMember_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TMember_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesMember
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesMember
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 736
-    Top = 65533
-  end
   object spInsertUpdateMIAmount: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Cash_Personal_Amount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1439,37 +1075,5 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     PackSize = 1
     Left = 290
     Top = 352
-  end
-  object spGetMIAmount: TdsdStoredProc
-    StoredProcName = 'gpGet_MovementItem_Cash_Personal_Amount'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'ioAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'ioSummRemains'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummRemains'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-      end>
-    PackSize = 1
-    Left = 282
-    Top = 424
   end
 end

@@ -17,11 +17,20 @@ CREATE TABLE MovementItemContainer(
    ParentId       Integer,
    isActive       Boolean,  
 
+   MovementDescId integer,
+   AnalyzerId integer,
+   AccountId integer,
+   ObjectId_analyzer integer,
+   WhereObjectId_analyzer integer,
+   ContainerId_analyzer integer,
+
+   
    CONSTRAINT fk_MovementItemContainer_DescId FOREIGN KEY(DescId) REFERENCES MovementItemContainerDesc(Id),
    CONSTRAINT fk_MovementItemContainer_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
    CONSTRAINT fk_MovementItemContainer_ContainerId FOREIGN KEY(ContainerId) REFERENCES Container(Id),
    CONSTRAINT fk_MovementItemContainer_ParentId FOREIGN KEY(ParentId) REFERENCES MovementItemContainer(Id),
    CONSTRAINT fk_MovementItemContainer_MovementItemId FOREIGN KEY (MovementItemId) REFERENCES MovementItem(id)
+   CONSTRAINT fk_MovementItemContainer_MovementDescId FOREIGN KEY(MovementDescId) REFERENCES MovementDesc(Id),
 );
 
 /*-------------------------------------------------------------------------------*/

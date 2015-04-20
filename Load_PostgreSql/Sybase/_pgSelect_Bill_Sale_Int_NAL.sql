@@ -124,7 +124,7 @@ from
                             then 30201 -- Мясное сырье
                        when Bill.FromId in (zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())
                             then 30301 -- Переработка
-                       when GoodsProperty.InfoMoneyCode in (20700)
+                       when GoodsProperty.InfoMoneyCode in (20701)
                             then 30502 -- Прочие товары
                        else 30501 -- Прочие доходы
                   end )as CodeIM

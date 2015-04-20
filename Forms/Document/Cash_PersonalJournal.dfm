@@ -190,9 +190,11 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
     object ceCash: TcxButtonEdit
       Left = 649
       Top = 5
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       TabOrder = 4

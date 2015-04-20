@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount_Currency(
     IN inOperDate    TDateTime ,    -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar, isErased Boolean
              , BankId Integer, BankName TVarChar, CurrencyId Integer, CurrencyName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
               )
@@ -77,6 +77,7 @@ BEGIN
       SELECT Object_BankAccount_View.Id
            , Object_BankAccount_View.Code
            , Object_BankAccount_View.Name
+           , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS NameAll
            , Object_BankAccount_View.isErased
            , Object_BankAccount_View.BankId
            , Object_BankAccount_View.BankName

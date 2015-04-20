@@ -39,7 +39,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object deEnd: TcxDateEdit
     Left = 121
     Top = 27
-    EditValue = 41640d
+    EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
@@ -47,7 +47,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object deStart: TcxDateEdit
     Left = 11
     Top = 27
-    EditValue = 41640d
+    EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90

@@ -13,7 +13,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
@@ -66,10 +65,7 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Retail(integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -78,8 +74,7 @@ ALTER FUNCTION gpGet_Object_Retail(integer, TVarChar) OWNER TO postgres;
  19.02.15         * add GoodsProperty               
  10.11.14         * add GLNCode
  23.05.14         *
-
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Retail (0, '2')
+-- SELECT * FROM gpGet_Object_Retail (0, zfCalc_UserAdmin())

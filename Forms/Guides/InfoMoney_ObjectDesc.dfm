@@ -12,7 +12,6 @@ object InfoMoney_ObjectDescForm: TInfoMoney_ObjectDescForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
@@ -26,7 +25,6 @@ object InfoMoney_ObjectDescForm: TInfoMoney_ObjectDescForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 597
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS

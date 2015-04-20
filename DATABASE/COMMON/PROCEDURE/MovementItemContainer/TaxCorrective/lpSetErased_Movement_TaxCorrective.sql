@@ -17,6 +17,9 @@ BEGIN
 
      IF vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Corrective()
      THEN
+          -- 1. Проверки на "распроведение" / "удаление"
+          PERFORM lpCheck_Movement_Status (inMovementId, inUserId);
+
           -- у всех возвратов "удаляем" <Тип формирования налогового документа>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), MovementLinkMovement.MovementChildId, NULL)
           FROM MovementLinkMovement
@@ -28,19 +31,76 @@ BEGIN
             AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
             AND MovementLinkMovement_find.MovementChildId IS NULL;
      /*ELSE 
-     !!!!!!!!!! ДОДЕЛАТЬ !!!!!!!
+     -- !!!!!!!!!! ДОДЕЛАТЬ !!!!!!! - Juridical
      IF vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR())
+     THEN
           -- у всех возвратов по Юр.лицу + Договор + период "удаляем" <Тип формирования налогового документа>
-          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), MovementLinkMovement.MovementChildId, NULL)
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), Movement_find.Id, NULL)
           FROM Movement
                INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                              ON MovementLinkObject_Contract.MovementId = Movement.Id
                                             AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                            AND MovementLinkObject_Contract.ObjectId = vbContractId
-               INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
-                                            AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
-                                            AND MovementLinkObject.ObjectId = vbToId
-          WHERE Movement.Id = inMovementId;*/
+               INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+               INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                     ON ObjectLink_Partner_Juridical.ChildObjectId = MovementLinkObject_From.ObjectId
+                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+               INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                             ON MovementLinkObject_From_find.ObjectId = ObjectLink_Partner_Juridical.ObjectId
+                                            AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract_find
+                                             ON MovementLinkObject_Contract_find.ObjectId = MovementLinkObject_Contract.ObjectId
+                                            AND MovementLinkObject_Contract_find.DescId = zc_MovementLinkObject_Contract()
+                                            AND MovementLinkObject_Contract_find.MovementId = MovementLinkObject_From_find.MovementId
+
+               INNER JOIN Movement AS Movement_find ON Movement_find.Id = MovementLinkObject_From_find.MovementId
+                                                   AND Movement_find.DescId = zc_Movement_ReturnIn()
+               INNER JOIN MovementDate AS MovementDate_OperDatePartner_find
+                                       ON MovementDate_OperDatePartner_find.MovementId = Movement_find.Id
+                                      AND MovementDate_OperDatePartner_find.DescId = zc_MovementDate_OperDatePartner()
+                                      AND MovementDate_OperDatePartner_find.ValueData BETWEEN DATE_TRUNC ('MONTH', Movement.OperDate) AND (DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+               INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                             ON MovementLinkObject_DocumentTaxKind.MovementId = Movement_find.Id
+                                            AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                            AND MovementLinkObject_DocumentTaxKind.ObjectId = vbDocumentTaxKindId
+          WHERE Movement.Id = inMovementId;
+     ELSE 
+     -- !!!!!!!!!! ДОДЕЛАТЬ !!!!!!! - Partner
+     IF vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR(), zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR())
+     THEN
+          -- у всех возвратов по Юр.лицу + Договор + период "удаляем" <Тип формирования налогового документа>
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), Movement_find.Id, NULL)
+          FROM Movement
+               INNER JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                             ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                            AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+               INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                             ON MovementLinkObject_From_find.ObjectId = MovementLinkObject_Partner.ObjectId
+                                            AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract_find
+                                             ON MovementLinkObject_Contract_find.ObjectId = MovementLinkObject_Contract.ObjectId
+                                            AND MovementLinkObject_Contract_find.DescId = zc_MovementLinkObject_Contract()
+                                            AND MovementLinkObject_Contract_find.MovementId = MovementLinkObject_From_find.MovementId
+
+               INNER JOIN Movement AS Movement_find ON Movement_find.Id = MovementLinkObject_From_find.MovementId
+                                                   AND Movement_find.DescId = zc_Movement_ReturnIn()
+               INNER JOIN MovementDate AS MovementDate_OperDatePartner_find
+                                       ON MovementDate_OperDatePartner_find.MovementId = Movement_find.Id
+                                      AND MovementDate_OperDatePartner_find.DescId = zc_MovementDate_OperDatePartner()
+                                      AND MovementDate_OperDatePartner_find.ValueData BETWEEN DATE_TRUNC ('MONTH', Movement.OperDate) AND (DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+               INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                             ON MovementLinkObject_DocumentTaxKind.MovementId = Movement_find.Id
+                                            AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                            AND MovementLinkObject_DocumentTaxKind.ObjectId = vbDocumentTaxKindId
+          WHERE Movement.Id = inMovementId;
+     END IF;
+     END IF;*/
      END IF;
 
      -- Удаляем Документ

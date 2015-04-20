@@ -180,7 +180,7 @@ BEGIN
                 , 0                         AS DebetSumm_Currency
                 , 0                         AS KreditSumm_Currency
                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END) AS Summ_Currency
-                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ THEN MIContainer.MovementId ELSE 0 END AS MovementId
+                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
            FROM tmpContainer
                 INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -203,7 +203,7 @@ BEGIN
            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
                   , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
                   , MIContainer.MovementDescId
-                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ THEN MIContainer.MovementId ELSE 0 END
+                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
           UNION ALL
            -- 2.2. движение в валюте операции
            SELECT tmpContainer.ContainerId
@@ -223,7 +223,7 @@ BEGIN
                 , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm_Currency
                 , SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm_Currency
                 , 0                         AS Summ_Currency
-                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ THEN MIContainer.MovementId ELSE 0 END AS MovementId
+                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
            FROM tmpContainer
                 INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
                                                                AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -246,7 +246,7 @@ BEGIN
            WHERE tmpContainer.ContainerId_Currency > 0
            GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
                   , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
-                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ THEN MIContainer.MovementId ELSE 0 END
+                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
 
           UNION ALL
            -- 2.2. курсовая разница (!!!только не для ввода курса!!!)
@@ -267,7 +267,7 @@ BEGIN
                 , 0                         AS DebetSumm_Currency
                 , 0                         AS KreditSumm_Currency
                 , SUM (CASE WHEN MIReport.ActiveContainerId = tmpContainer.ContainerId THEN 1 ELSE -1 END * MIReport.Amount ) AS Summ_Currency
-                , CASE WHEN 1 = 1 THEN MIReport.MovementId ELSE 0 END AS MovementId
+                , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIReport.MovementId ELSE 0 END AS MovementId
            FROM (SELECT tmpContainer.*
                       , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN zc_Enum_AccountKind_Passive() ELSE zc_Enum_AccountKind_Active() END AccountKindId_find
                       , ReportContainerLink.ReportContainerId
@@ -298,7 +298,7 @@ BEGIN
                                                 AND inIsDetail = TRUE
            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
                   , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
-                  , CASE WHEN 1 = 1 THEN MIReport.MovementId ELSE 0 END
+                  , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIReport.MovementId ELSE 0 END
           ) AS Operation_all
 
           GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId

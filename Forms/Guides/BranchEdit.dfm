@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1083#1080#1072#1083'>'
-  ClientHeight = 202
-  ClientWidth = 323
+  ClientHeight = 221
+  ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 56
-    Top = 165
+    Top = 186
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 165
+    Top = 186
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -89,6 +89,13 @@
     Top = 102
     Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088')'
   end
+  object cbIsMedoc: TcxCheckBox
+    Left = 21
+    Top = 149
+    Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1080#1079' '#1084#1077#1076#1082#1072
+    TabOrder = 10
+    Width = 196
+  end
   object ActionList: TActionList
     Left = 256
     Top = 24
@@ -110,6 +117,7 @@
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -120,6 +128,7 @@
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -160,10 +169,17 @@
         Component = PersonalBookkeeperGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsMedoc'
+        Value = Null
+        Component = cbIsMedoc
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     PackSize = 1
-    Left = 181
-    Top = 149
+    Left = 293
+    Top = 61
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -172,8 +188,7 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 16
-    Top = 152
+    Top = 96
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Branch'
@@ -216,6 +231,12 @@
         Component = PersonalBookkeeperGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'IsMedoc'
+        Value = Null
+        Component = cbIsMedoc
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 224
@@ -241,7 +262,7 @@
     Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 136
+    Top = 48
   end
   object PersonalBookkeeperGuides: TdsdGuides
     KeyField = 'Id'

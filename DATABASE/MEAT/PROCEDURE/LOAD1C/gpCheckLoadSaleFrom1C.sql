@@ -66,9 +66,15 @@ BEGIN
                                                          ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
                                                         AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
                                     LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                    LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = ObjectLink_Partner1CLink_Contract.ChildObjectId
+                                                                  AND Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+
                                WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                                  AND Object_Partner1CLink.ObjectCode <> 0
-                                 AND (ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0 OR Object_To.DescId <> zc_Object_Partner()) -- проверка Договор только для контрагента
+                                 AND (Object_Contract_View.ContractId <> 0 OR Object_To.DescId <> zc_Object_Partner()) -- проверка Договор только для контрагента
                                  AND ObjectLink_Partner1CLink_Partner.ChildObjectId <> 0 -- еще проверка что есть объект
                                  AND ObjectLink_Partner1CLink_Branch.ChildObjectId = vbBranchId_Link
                                  AND COALESCE (ObjectLink_Partner1CLink_Partner.ChildObjectId, 0) <> zc_Enum_InfoMoney_40801() -- Внутренний оборот
@@ -118,4 +124,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpCheckLoadSaleFrom1C ('01.11.2014'::TDateTime, '30.11.2014'::TDateTime, 8379, '5')
+-- SELECT * FROM gpCheckLoadSaleFrom1C ('01.11.2014'::TDateTime, '30.11.2014'::TDateTime, 8379, zfCalc_UserAdmin())

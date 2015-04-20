@@ -57,6 +57,15 @@ type
     AccountDirectionGuides: TdsdGuides;
     ProfitLossDirectionGuides: TdsdGuides;
     cbPartionDate: TcxCheckBox;
+    cxLabel8: TcxLabel;
+    ceContract: TcxButtonEdit;
+    ContractGuides: TdsdGuides;
+    ceContract_Juridical: TcxButtonEdit;
+    Contract_JuridicalGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
+    ceContract_Infomoney: TcxButtonEdit;
+    Contract_InfomoneyGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -9,17 +9,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   inherited PageControl: TcxPageControl
     Width = 699
     Height = 394
-    ExplicitWidth = 371
+    ExplicitWidth = 699
     ExplicitHeight = 394
     ClientRectBottom = 394
     ClientRectRight = 699
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 371
+      ExplicitWidth = 699
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 699
         Height = 394
-        ExplicitWidth = 371
+        ExplicitWidth = 699
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -70,6 +70,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           object ceJuridicalName: TcxGridDBColumn
             Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100

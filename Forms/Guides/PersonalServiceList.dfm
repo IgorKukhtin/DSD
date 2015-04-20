@@ -2,8 +2,8 @@ object PersonalServiceListForm: TPersonalServiceListForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
-  ClientHeight = 376
-  ClientWidth = 390
+  ClientHeight = 321
+  ClientWidth = 627
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 390
-    Height = 350
+    Width = 627
+    Height = 295
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 390
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,20 +53,20 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 56
+        Width = 65
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 174
+        Width = 200
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
-        Width = 146
+        Width = 101
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -75,6 +77,30 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object clBranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 81
+      end
+      object clBankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082
+        DataBinding.FieldName = 'BankName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 106
+      end
+      object clPaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -110,8 +136,8 @@ object PersonalServiceListForm: TPersonalServiceListForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

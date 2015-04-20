@@ -27,7 +27,7 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     bbEdit: TdxBarButton;
     clErased: TcxGridDBColumn;
     clCode: TcxGridDBColumn;

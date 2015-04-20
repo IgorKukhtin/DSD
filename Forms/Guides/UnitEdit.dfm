@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 300
+  ClientHeight = 430
   ClientWidth = 497
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 118
-    Top = 267
+    Left = 112
+    Top = 384
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 312
-    Top = 267
+    Left = 306
+    Top = 384
     Width = 75
     Height = 25
     Action = FormClose
@@ -156,15 +156,67 @@
     Width = 209
   end
   object cbPartionDate: TcxCheckBox
-    Left = 200
+    Left = 40
     Top = 232
     Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
     TabOrder = 18
     Width = 157
   end
+  object cxLabel8: TcxLabel
+    Left = 40
+    Top = 263
+    Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
+  end
+  object ceContract: TcxButtonEdit
+    Left = 40
+    Top = 286
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 209
+  end
+  object ceContract_Juridical: TcxButtonEdit
+    Left = 280
+    Top = 286
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 209
+  end
+  object cxLabel9: TcxLabel
+    Left = 280
+    Top = 263
+    Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
+  end
+  object cxLabel10: TcxLabel
+    Left = 40
+    Top = 320
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
+  end
+  object ceContract_Infomoney: TcxButtonEdit
+    Left = 40
+    Top = 340
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 24
+    Width = 449
+  end
   object ActionList: TActionList
-    Left = 48
-    Top = 216
+    Top = 40
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -185,6 +237,7 @@
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -195,6 +248,7 @@
     object FormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -258,6 +312,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inAccountDirectionId'
         Value = ''
         Component = AccountDirectionGuides
@@ -272,8 +333,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 48
-    Top = 248
+    Left = 24
+    Top = 368
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -360,6 +421,26 @@
         DataType = ftString
       end
       item
+        Name = 'ContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Contract_JuridicalName'
+        Value = Null
+        Component = Contract_JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'AccountDirectionId'
         Value = ''
         Component = AccountDirectionGuides
@@ -382,6 +463,13 @@
         Name = 'ProfitLossDirectionName'
         Value = ''
         Component = ProfitLossDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Contract_InfomoneyName'
+        Value = Null
+        Component = Contract_InfomoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -547,5 +635,117 @@
       end>
     Left = 384
     Top = 168
+  end
+  object ContractGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceContract
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = Contract_JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = Contract_JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = Contract_InfomoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = Null
+        Component = Contract_InfomoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 184
+    Top = 240
+  end
+  object Contract_JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceContract_Juridical
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    ParentDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = Contract_JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = Contract_JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 256
+    Top = 320
+  end
+  object Contract_InfomoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceContract_Infomoney
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = Contract_InfomoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = Contract_InfomoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 376
+    Top = 272
   end
 end

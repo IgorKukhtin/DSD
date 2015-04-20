@@ -1,67 +1,69 @@
 inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
   ActiveControl = deStart
-  Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1074' '#1052#1077#1076#1086#1082
-  ClientHeight = 154
+  Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' '#1052#1077#1076#1086#1082
+  ClientHeight = 170
   ClientWidth = 503
   AddOnFormData.RefreshAction = nil
   AddOnFormData.isSingle = False
   ExplicitWidth = 509
-  ExplicitHeight = 179
+  ExplicitHeight = 195
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 148
-    Top = 101
+    Left = 161
+    Top = 125
     Action = MultiAction
-    ExplicitLeft = 148
-    ExplicitTop = 101
+    ExplicitLeft = 161
+    ExplicitTop = 125
   end
   inherited bbCancel: TcxButton
-    Left = 292
-    Top = 101
+    Left = 289
+    Top = 125
     Action = actClose
-    ExplicitLeft = 292
-    ExplicitTop = 101
+    ExplicitLeft = 289
+    ExplicitTop = 125
   end
   object deStart: TcxDateEdit [2]
-    Left = 131
+    Left = 132
     Top = 16
+    EditValue = 42109d
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 121
+    Width = 104
   end
   object deEnd: TcxDateEdit [3]
     Left = 371
     Top = 16
+    EditValue = 42109d
     Properties.ShowTime = False
     TabOrder = 3
-    Width = 121
+    Width = 104
   end
   object cxLabel1: TcxLabel [4]
-    Left = 38
+    Left = 5
     Top = 18
-    Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072':'
+    Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072' ('#1076#1086#1082'.):'
   end
   object cxLabel2: TcxLabel [5]
-    Left = 278
+    Left = 250
     Top = 18
-    Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072':'
+    Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072' ('#1076#1086#1082'.):'
   end
   object cxLabel7: TcxLabel [6]
-    Left = 7
-    Top = 55
+    Left = 5
+    Top = 89
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
   end
   object ceInfoMoney: TcxButtonEdit [7]
-    Left = 131
-    Top = 54
+    Left = 132
+    Top = 88
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 170
+    Width = 343
   end
   object cxLabel5: TcxLabel [8]
     Left = 307
@@ -71,7 +73,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
   end
   object edPaidKind: TcxButtonEdit [9]
     Left = 402
-    Top = 54
+    Top = 110
     Properties.Buttons = <
       item
         Default = True
@@ -81,9 +83,43 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     Visible = False
     Width = 90
   end
+  object deStartReg: TcxDateEdit [10]
+    Left = 132
+    Top = 51
+    EditValue = 42109d
+    Properties.ShowTime = False
+    TabOrder = 10
+    Width = 104
+  end
+  object deEndReg: TcxDateEdit [11]
+    Left = 371
+    Top = 51
+    EditValue = 42109d
+    Properties.ShowTime = False
+    TabOrder = 11
+    Width = 104
+  end
+  object cxLabel3: TcxLabel [12]
+    Left = 5
+    Top = 53
+    Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072' ('#1088#1077#1075'.):'
+  end
+  object cxLabel4: TcxLabel [13]
+    Left = 250
+    Top = 53
+    Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072' ('#1088#1077#1075'.):'
+  end
+  object cbTaxCorrectiveOnly: TcxCheckBox [14]
+    Left = 5
+    Top = 126
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1058#1086#1083#1100#1082#1086' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+    TabOrder = 14
+    Width = 146
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 59
-    Top = 48
+    Left = 107
+    Top = 128
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -93,16 +129,31 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
           'Date')
       end
       item
+        Component = deEndReg
+        Properties.Strings = (
+          'Date')
+      end
+      item
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = deStartReg
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = InfoMoneyGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
-    Left = 32
-    Top = 48
+    Top = 112
   end
   inherited ActionList: TActionList
-    Left = 87
-    Top = 47
+    Left = 63
+    Top = 111
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spTaxBillList
       StoredProcList = <
@@ -222,12 +273,14 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     object actClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = #1054#1090#1084#1077#1085#1072
       Hint = #1054#1090#1084#1077#1085#1072
     end
   end
   inherited FormParams: TdsdFormParams
-    Top = 32
+    Left = 240
+    Top = 128
   end
   object spTaxBillList: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Load'
@@ -252,6 +305,20 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         ParamType = ptInput
       end
       item
+        Name = 'inStartDateReg'
+        Value = Null
+        Component = deStartReg
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDateReg'
+        Value = Null
+        Component = deEndReg
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
@@ -264,21 +331,28 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsTaxCorrectiveOnly'
+        Value = Null
+        Component = cbTaxCorrectiveOnly
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
-    Left = 280
-    Top = 24
+    PackSize = 1
+    Left = 368
+    Top = 112
   end
   object TaxBillList: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 256
-    Top = 8
+    Left = 408
+    Top = 120
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 392
-    Top = 56
+    Left = 376
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -329,6 +403,12 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         ParamType = ptInput
       end>
     Left = 456
-    Top = 56
+    Top = 112
+  end
+  object PeriodChoiceReg: TPeriodChoice
+    DateStart = deStartReg
+    DateEnd = deEndReg
+    Left = 296
+    Top = 48
   end
 end

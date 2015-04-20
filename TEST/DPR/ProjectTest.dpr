@@ -165,7 +165,7 @@ uses
   CommonMovementItemReportProcedureTest in '..\SOURCE\MovementItemReport\CommonMovementItemReportProcedureTest.pas',
   TradeMarkTest in '..\SOURCE\Objects\All\TradeMarkTest.pas',
   ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
-  Report_MotionGoodsDialog in '..\..\Forms\Report\Report_MotionGoodsDialog.pas' {Report_MotionGoodsDialogForm},
+  Report_GoodsMI_SaleReturnInDialog in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInDialog.pas' {Report_GoodsMI_SaleReturnInDialogForm},
   Report_MotionGoods in '..\..\Forms\Report\Report_MotionGoods.pas' {Report_MotionGoodsForm},
   ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
   Role in '..\..\Forms\Role.pas' {RoleForm},
@@ -665,7 +665,8 @@ uses
   Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm: TParentForm},
   GoodsPlatform in '..\..\Forms\Guides\GoodsPlatform.pas' {GoodsPlatformForm: TParentForm},
   GoodsPlatformEdit in '..\..\Forms\Guides\GoodsPlatformEdit.pas' {GoodsPlatformEditForm: TParentForm},
-  dsdException in '..\..\SOURCE\dsdException.pas';
+  dsdException in '..\..\SOURCE\dsdException.pas',
+  Report_MotionGoodsDialog in '..\..\Forms\Report\Report_MotionGoodsDialog.pas' {Report_MotionGoodsDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

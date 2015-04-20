@@ -21,6 +21,12 @@ BEGIN
                                LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                                       ON MovementDate_ServiceDate.MovementId = Movement.Id
                                                      AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                             ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                                            AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                                            AND MovementLinkObject_PersonalServiceList.ObjectId IN (293716 -- Ведомость карточки БН Фидо
+                                                                                                                  , 413454 -- Ведомость карточки БН Пиреус
+                                                                                                                   )
                           WHERE Movement.Id = inMovementId
                             AND Movement.DescId = zc_Movement_PersonalService()
                             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())

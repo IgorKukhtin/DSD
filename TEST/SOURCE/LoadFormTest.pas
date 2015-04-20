@@ -158,6 +158,8 @@ begin
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_PersonalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccount_PersonalJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_PersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccount_PersonalForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountFormTest;
@@ -1086,6 +1088,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');

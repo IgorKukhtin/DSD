@@ -7,8 +7,10 @@ CREATE OR REPLACE FUNCTION lfSelect_Object_Unit_byProfitLossDirection()
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar,
                ProfitLossGroupId Integer, ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar, 
                ProfitLossDirectionId Integer, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar,
+               BranchId Integer, BranchCode Integer, BranchName TVarChar,
                UnitId_parent0 Integer, UnitCode_parent0 Integer, UnitName_parent0 TVarChar,
-               UnitId_parent1 Integer, UnitCode_parent1 Integer, UnitName_parent1 TVarChar)
+               UnitId_parent1 Integer, UnitCode_parent1 Integer, UnitName_parent1 TVarChar
+              )
 AS
 $BODY$
 BEGIN
@@ -26,6 +28,10 @@ BEGIN
            , View_ProfitLossDirection.ProfitLossDirectionId
            , View_ProfitLossDirection.ProfitLossDirectionCode
            , View_ProfitLossDirection.ProfitLossDirectionName
+
+           , Object_Branch.Id         AS BranchId
+           , Object_Branch.ObjectCode AS BranchCode
+           , Object_Branch.ValueDAta  AS BranchName
 
            , Object_Unit_parent0.Id         AS UnitId_parent0
            , Object_Unit_parent0.ObjectCode AS UnitCode_parent0
@@ -112,6 +118,10 @@ BEGIN
                                                 AND ObjectLink_Unit_Parent0.DescId = zc_ObjectLink_Unit_Parent()
                        WHERE Object_Unit.DescId = zc_Object_Unit()
                       ) AS _tmpObject_Unit ON _tmpObject_Unit.ParentId_main = COALESCE (ObjectLink_Unit_Child.ObjectId, Object_Unit_parent0.finId2)
+                      LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                           ON ObjectLink_Unit_Branch.ObjectId = _tmpObject_Unit.UnitId
+                                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                      LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
        ;
 
 END;

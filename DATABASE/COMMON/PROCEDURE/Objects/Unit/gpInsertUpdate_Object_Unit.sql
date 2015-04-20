@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Unit
 
--- DROP FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   , -- ключ объекта <Подразделение>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inBranchId                Integer   , -- ссылка на филиал
     IN inBusinessId              Integer   , -- ссылка на бизнес
     IN inJuridicalId             Integer   , -- ссылка на Юридические лицо
+    IN inContractId              Integer   , -- ссылка на договор
     IN inAccountDirectionId      Integer   , -- ссылка на Аналитики управленческих счетов
     IN inProfitLossDirectionId   Integer   , -- ссылка на Аналитики статей отчета ПиУ
     IN inSession                 TVarChar    -- сессия пользователя
@@ -54,6 +56,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Business(), ioId, inBusinessId);
    -- сохранили связь с <Юридические лица>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Juridical(), ioId, inJuridicalId);
+
+   -- сохранили связь с <Договор>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Contract(), ioId, inContractId);
+
    -- сохранили связь с <Аналитики управленческих счетов - направление>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
    -- сохранили связь с <Аналитики статей отчета о прибылях и убытках - направление>
@@ -80,12 +86,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.15         * add Contract
  08.12.13                                        * add inAccessKeyId
  20.07.13                                        * add inPartionDate
  16.06.13                                        * COALESCE (MAX (ObjectCode), 0)

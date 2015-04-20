@@ -14,10 +14,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar,
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbInfoMoneyGroupId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры 
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_InfoMoney());
      vbUserId:= lpGetUserBySession (inSession);
+
+     IF STRPOS (inDescCode, 'zc_Enum_InfoMoneyGroup') = 1
+     THEN
+         vbInfoMoneyGroupId:= (SELECT Value FROM gpExecSql_Value ('SELECT '||inDescCode||'() :: TVarChar', inSession)) :: Integer;
+     END IF;
 
 
      -- Результат
@@ -47,6 +53,11 @@ BEGIN
                                   INNER JOIN Container ON Container.Id = ContainerLinkObject.ContainerId
                                                       AND Container.DescId = zc_Container_Summ()
                              GROUP BY ContainerLinkObject_InfoMoney.ObjectId
+                            UNION
+                             SELECT Object_InfoMoney_View.InfoMoneyId
+                             FROM Object_InfoMoney_View
+                             WHERE Object_InfoMoney_View.InfoMoneyGroupId = vbInfoMoneyGroupId
+                               AND Object_InfoMoney_View.InfoMoneyCode <> 30401 -- Доходы + услуги предоставленные
                             )
           , tmpLevel AS (SELECT InfoMoneyId FROM lfSelect_Object_InfoMoney_Level (vbUserId))
           , tmpInfoMoney AS (SELECT * FROM gpSelect_Object_InfoMoney (inSession))
@@ -74,4 +85,5 @@ ALTER FUNCTION gpSelect_Object_InfoMoney_Desc (TVarChar, TVarChar) OWNER TO post
 */
 
 -- тест
+-- SELECT * FROM gpSelect_Object_InfoMoney_Desc ('zc_Enum_InfoMoneyGroup_30000', zfCalc_UserAdmin()) ORDER BY Code
 -- SELECT * FROM gpSelect_Object_InfoMoney_Desc ('zc_Object_Juridical', zfCalc_UserAdmin()) ORDER BY Code

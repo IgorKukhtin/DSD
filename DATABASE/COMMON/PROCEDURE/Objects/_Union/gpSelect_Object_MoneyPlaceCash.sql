@@ -30,17 +30,17 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- определяется уровень доступа (группа юр.лиц)
-     vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
+     vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);
      vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
 
      -- определяется уровень доступа (филиал)
-     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
      vbIsConstraint_Branch:= COALESCE (vbObjectId_Constraint_Branch, 0) > 0;
 
 
      -- Результат
      RETURN QUERY
-     WITH View_InfoMoney_40801 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 40801)
+     WITH View_InfoMoney_40801 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 40801) -- Внутренний оборот
         , tmpPersonal_Branch AS (SELECT View_Personal.MemberId
                                  FROM ObjectLink AS ObjectLink_Unit_Branch
                                       INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = ObjectLink_Unit_Branch.ObjectId
@@ -55,7 +55,7 @@ BEGIN
                                  GROUP BY View_Personal.MemberId
                                 )
         , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
-        , tmpObject_InfoMoney_View AS (SELECT * FROM tmpObject_InfoMoney_View)
+        -- , tmpObject_InfoMoney_View AS (SELECT * FROM gpSelect_Object_InfoMoney_Desc ('zc_Object_Juridical', inSession))
 
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode
@@ -191,7 +191,8 @@ BEGIN
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
-          LEFT JOIN tmpObject_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
+          -- LEFT JOIN tmpObject_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (Container_Partner_View.PaidKindId, View_Contract.PaidKindId)
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
@@ -199,11 +200,17 @@ BEGIN
                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                               ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+          LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
      WHERE Object_Partner.DescId = zc_Object_Partner()
        AND Object_Partner.isErased = FALSE
        AND View_Contract.isErased = FALSE
        -- AND COALESCE (Object_Contract_View_Container.PaidKindId, View_Contract.PaidKindId) = zc_Enum_PaidKind_SecondForm()
        AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+            OR Object_PersonalTrade.BranchId = vbObjectId_Constraint_Branch
             OR vbIsConstraint = FALSE)
     UNION ALL
      SELECT Object_Juridical.Id
@@ -292,4 +299,4 @@ ALTER FUNCTION gpSelect_Object_MoneyPlaceCash (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MoneyPlaceCash (inSession:= '2')
+-- SELECT * FROM gpSelect_Object_MoneyPlaceCash (inSession:= '300547')

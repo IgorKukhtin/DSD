@@ -325,7 +325,7 @@ type
     miSheetWorkTime: TMenuItem;
     N22: TMenuItem;
     miPersonalService: TMenuItem;
-    miCash_Personal: TMenuItem;
+    miPersonalCash: TMenuItem;
     miReportsProduction: TMenuItem;
     miReportProductionUnion: TMenuItem;
     miReportsGoods: TMenuItem;
@@ -533,9 +533,26 @@ type
     spGetInfo: TdsdStoredProc;
     TextEdit: TcxTextEdit;
     actPersonalBankAccount: TdsdOpenForm;
-    N54: TMenuItem;
+    miPersonalBankAccount: TMenuItem;
     actGoodsPlatform: TdsdOpenForm;
     N55: TMenuItem;
+    actReport_GoodsMI_byPriceDifReturn: TdsdOpenForm;
+    N56: TMenuItem;
+    actPersonalCashKiev: TdsdOpenForm;
+    actPersonalCashKrRog: TdsdOpenForm;
+    actPersonalCashNikolaev: TdsdOpenForm;
+    actPersonalCashKharkov: TdsdOpenForm;
+    actPersonalCashCherkassi: TdsdOpenForm;
+    actPersonalCashZaporozhye: TdsdOpenForm;
+    actPersonalCashOdessa: TdsdOpenForm;
+    N57: TMenuItem;
+    miPersonalCashKiev: TMenuItem;
+    miPersonalCashKrRog: TMenuItem;
+    miPersonalCashNikolaev: TMenuItem;
+    miPersonalCashKharkov: TMenuItem;
+    miPersonalCashCherkassi: TMenuItem;
+    miPersonalCashZaporozhye: TMenuItem;
+    miPersonalCashOdessa: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
