@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
              , FreightId Integer, FreightCode Integer, FreightName TVarChar
+             , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar             
              , isErased Boolean
              ) AS
 $BODY$BEGIN
@@ -42,6 +43,10 @@ $BODY$BEGIN
            , CAST (0 as Integer)   AS FreightId 
            , CAST (0 as Integer)   AS FreightCode
            , CAST ('' as TVarChar) AS FreightName
+  
+           , CAST (0 as Integer)   AS RouteGroupId 
+           , CAST (0 as Integer)   AS RouteGroupCode
+           , CAST ('' as TVarChar) AS RouteGroupName           
             
            , CAST (NULL AS Boolean) AS isErased
            ;
@@ -67,6 +72,10 @@ $BODY$BEGIN
            , Object_Freight.Id         AS FreightId 
            , Object_Freight.ObjectCode AS FreightCode
            , Object_Freight.ValueData  AS FreightName
+  
+           , Object_RouteGroup.Id         AS RouteGroupId 
+           , Object_RouteGroup.ObjectCode AS RouteGroupCode
+           , Object_RouteGroup.ValueData  AS RouteGroupName              
            
            , Object_Route.isErased   AS isErased
            
@@ -86,6 +95,10 @@ $BODY$BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Route_Freight ON ObjectLink_Route_Freight.ObjectId = Object_Route.Id
                                                             AND ObjectLink_Route_Freight.DescId = zc_ObjectLink_Route_Freight()
             LEFT JOIN Object AS Object_Freight ON Object_Freight.Id = ObjectLink_Route_Freight.ChildObjectId
+  
+            LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
+                                                               AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
+            LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = ObjectLink_Route_RouteGroup.ChildObjectId            
             
        WHERE Object_Route.Id = inId;
    END IF;
@@ -100,6 +113,7 @@ ALTER FUNCTION gpGet_Object_Route (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.04.15         * RouteGroup                
  13.12.13         * add             
  24.09.13         * add Unit, RouteKind, Freight            
  03.06.13         *

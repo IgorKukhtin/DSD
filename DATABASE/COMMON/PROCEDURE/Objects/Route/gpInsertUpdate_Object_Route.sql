@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
  INOUT ioId             Integer   , -- Ключ объекта <маршрут>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
     IN inBranchId       Integer   , -- ссылка на Филиал
     IN inRouteKindId    Integer   , -- ссылка на Типы маршрутов
     IN inFreightId      Integer   , -- ссылка на Название груза
+    IN inRouteGroupId   Integer   , -- ссылка на Группу маршрута
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -46,19 +48,23 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_RouteKind(), ioId, inRouteKindId);
    -- сохранили связь с <Название груза>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_Freight(), ioId, inFreightId);
+  
+   -- сохранили связь с <Группой>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_RouteGroup(), ioId, inRouteGroupId);   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.04.15         * RouteGroup                
  13.12.13         * add inBranchId              
  08.12.13                                        * add inAccessKeyId
  09.10.13                                        * пытаемся найти код
