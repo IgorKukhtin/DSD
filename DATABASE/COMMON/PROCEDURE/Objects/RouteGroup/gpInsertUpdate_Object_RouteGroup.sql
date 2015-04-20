@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RouteGroup(Integer,Integer,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RouteGroup(
- INOUT ioId	                 Integer,       -- ключ объекта <Область>
+ INOUT ioId                  Integer,       -- ключ объекта 
     IN inCode                Integer,       -- Код объекта <>
     IN inName                TVarChar,      -- Название объекта <>
     IN inSession             TVarChar       -- сессия пользователя

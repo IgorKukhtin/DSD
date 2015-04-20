@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpGet_Object_RouteGroup (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_RouteGroup(
-    IN inId          Integer,       -- ключ объекта <Область>
+    IN inId          Integer,       -- ключ объекта 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
