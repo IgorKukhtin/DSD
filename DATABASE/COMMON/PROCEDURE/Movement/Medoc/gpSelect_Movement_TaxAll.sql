@@ -36,7 +36,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberRegistered
                                      ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                     AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
-          WHERE (Movement.StatusId <> zc_Enum_Status_Erased()) AND Movement.DescId in (zc_Movement_Tax(), zc_Movement_TaxCorective())
+          WHERE (Movement.StatusId <> zc_Enum_Status_Erased()) AND Movement.DescId in (zc_Movement_Tax(), zc_Movement_TaxCorrective())
                  AND Movement.OperDate >=  inPeriodDate AND Movement.OperDate < (inPeriodDate + INTERVAL '1 month');
 
 END;
@@ -51,4 +51,4 @@ ALTER FUNCTION gpSelect_Movement_TaxAll (TDateTime, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxAll (inStartDate:= '01.02.2014', inEndDate:= '01.02.2014', inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TaxAll (inPeriodDate:= ('01.03.2015')::TDateTime, inSession:= zfCalc_UserAdmin())

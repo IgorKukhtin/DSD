@@ -1473,6 +1473,7 @@ begin
   with spHeader, ЕлектроннийДокумент do
   begin
     ParamByName('inOrderInvNumber').Value := Заголовок.НомерЗамовлення;
+    ParamByName('inComDocDate').Value := VarToDateTime(Заголовок.ДатаДокументу);
     if Заголовок.ДатаЗамовлення <> '' then
       ParamByName('inOrderOperDate').Value :=
         VarToDateTime(Заголовок.ДатаЗамовлення)

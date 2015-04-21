@@ -201,7 +201,7 @@ begin
                HeaderDataSet := MedocDocument.DataSets('', 0);
                SEND_DPA := HeaderDataSet.Fields['SEND_DPA'].Value;
                // Вставлена, но не зарегистрирована. Крутим цикл дальше
-               if FTaxBill.Locate('MedocCode', MedocCode, []) and (SEND_DPA = '11') then begin
+               if FTaxBill.Locate('MedocCode', MedocCode, []) and (SEND_DPA <> '12') then begin
                   Application.ProcessMessages;
                   DocumentList.Next;
                   IncProgress;
@@ -215,7 +215,7 @@ begin
                   else
                      DocKind := 'TaxCorrective';
                   with FspUpdate_IsElectronFromMedoc do begin
-                    ParamByName('inMedocCODE').Value := DocumentList.Fields['CODE'].Value;
+                    ParamByName('inMedocCODE').Value := MedocCode;
                     ParamByName('inFromINN').Value := HeaderDataSet.Fields['FIRM_INN'].Value;
                     ParamByName('inToINN').Value := HeaderDataSet.Fields['N4'].Value;
                     if DocKind = 'Tax' then begin

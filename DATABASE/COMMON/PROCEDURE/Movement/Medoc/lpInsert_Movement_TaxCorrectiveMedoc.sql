@@ -57,16 +57,16 @@ BEGIN
 --     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKindId);
 
      -- сохранили связь с <филиал>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), ioId, vbBranchId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), outId, vbBranchId);
 
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (outId);
 
      IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          -- сохранили протокол
-         PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+         PERFORM lpInsert_MovementProtocol (outId, inUserId, vbIsInsert);
      END IF;
 
 END;

@@ -20,14 +20,27 @@ BEGIN
 
      -- Ищем товар. Если не нашли - вставляем
      
-     SELECT Id INTO vbGoodsExternalId FROM Object WHERE DescId = zc_ObjectExternal() AND ValueData = inGoodsName;
+     SELECT Id INTO vbGoodsExternalId FROM Object WHERE DescId = zc_Object_GoodsExternal() AND ValueData = inGoodsName;
 
      IF COALESCE(vbGoodsExternalId, 0) = 0 THEN
-        vbGoodsExternalId := lpInsertUpdate_Object (vbGoodsExternalId, zc_ObjectExternal(), 0, inGoodsName);
+        vbGoodsExternalId := lpInsertUpdate_Object (vbGoodsExternalId, zc_Object_GoodsExternal(), 0, inGoodsName);
      END IF;
 
-     -- сохранили <Элемент документа>
-     PERFORM lpInsertUpdate_MovementItem_Tax (ioId              := ioId
+     IF inAmount = 0 THEN 
+        -- сохранили <Элемент документа>
+        PERFORM lpInsertUpdate_MovementItem_Tax (ioId              := 0
+                                         , inMovementId         := inMovementId
+                                         , inGoodsId            := vbGoodsExternalId
+                                         , inAmount             := 0
+                                         , inPrice              := inSumm
+                                         , ioCountForPrice      := 1
+                                         , inGoodsKindId        := NULL
+                                         , inUserId             := vbUserId
+                                          );
+     ELSE
+
+        -- сохранили <Элемент документа>
+        PERFORM lpInsertUpdate_MovementItem_Tax (ioId              := 0
                                          , inMovementId         := inMovementId
                                          , inGoodsId            := vbGoodsExternalId
                                          , inAmount             := inAmount
@@ -36,6 +49,7 @@ BEGIN
                                          , inGoodsKindId        := NULL
                                          , inUserId             := vbUserId
                                           );
+    END IF;
 
 END;
 $BODY$

@@ -1879,6 +1879,12 @@ inherited EDIJournalForm: TEDIJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inComDocDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'MovementId'
         Value = Null
       end

@@ -190,7 +190,7 @@ BEGIN
            , OH_JuridicalDetails_From.Phone             AS Phone_From
 
            , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
-           , COALESCE (Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData)     AS OperDatePartnerEDI
+           , COALESCE (MovementDate_COMDOC.OperDate, COALESCE(Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData))     AS OperDatePartnerEDI
 
            , CASE WHEN inisClientCopy = TRUE
                   THEN 'X' ELSE '' END                  AS CopyForClient
@@ -227,6 +227,12 @@ BEGIN
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 
             LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id =  MovementLinkMovement_Sale.MovementChildId
+
+            LEFT JOIN MovementDate AS MovementDate_COMDOC
+                                   ON MovementDate_COMDOC.MovementId =  MovementLinkMovement_Sale.MovementChildId
+                                  AND MovementDate_COMDOC.DescId = zc_MovementDate_COMDOC()
+
+
             LEFT JOIN MovementDate AS MovementDate_OperDatePartnerEDI
                                    ON MovementDate_OperDatePartnerEDI.MovementId =  MovementLinkMovement_Sale.MovementChildId
                                   AND MovementDate_OperDatePartnerEDI.DescId = zc_MovementDate_OperDatePartner()
@@ -587,6 +593,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.04.15                        * add MovementDate_COMDOC
  14.01.15                                                       *
  30.12.14                                                       * add MeasureCode
  23.07.14                                        * add tmpObject_GoodsPropertyValueGroup and ArticleGLN

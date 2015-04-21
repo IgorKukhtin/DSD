@@ -1,0 +1,11 @@
+gpInsertUpdate_Movement_OrderExternal_1C(
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ>
+ INOUT ioMovementItemId      Integer   , -- Ключ объекта <Элемент документа>
+    IN inInvNumber           TVarChar  , -- Номер документа
+    IN inInvNumberPartner    TVarChar  , -- Номер заявки у контрагента
+    IN inOperDate            TDateTime , -- Дата документа
+    IN inFromCode_1C         Integer   , -- От кого, код 1С
+    IN inGoodsCode_1C        Integer   , -- Товар, код 1С
+    IN inAmount              TFloat    , -- Количество
+    IN inPrice               TFloat    , -- Цена
+    IN inSession             TVarChar    -- сессия пользователя

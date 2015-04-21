@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_IsElectronFromMedoc(
    OUT outId                 Integer    ,
@@ -114,6 +115,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.04.15                         * 
  02.04.15                         * 
  31.03.15                         * 
 

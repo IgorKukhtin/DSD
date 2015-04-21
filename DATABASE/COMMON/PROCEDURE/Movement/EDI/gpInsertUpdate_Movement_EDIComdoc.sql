@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOrderInvNumber      TVarChar  , -- Номер заявки контрагента
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inJurIdicalName       TVarChar  , --
     IN inDesc                TVarChar  , -- тип документа
     IN inGLNPlace            TVarChar  , -- Код GLN - место доставки
+    IN inComDocDate          TDateTime , -- Дата заявки контрагента
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (MovementId Integer, GoodsPropertyId Integer) -- Классификатор товаров
@@ -140,6 +142,9 @@ BEGIN
      -- сохранили
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), vbMovementId, inPartnerOperDate);
      -- сохранили
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_COMDOC(), vbMovementId, inComDocDate);
+
+     -- сохранили
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), vbMovementId, inPartnerInvNumber);
 
      -- сохранили
@@ -186,6 +191,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.04.15                         * 
  02.04.15                                        * add inGLNPlace
  07.08.14                                        * add calc inDesc
  07.08.14                                        * add inPartnerInvNumber := inPartnerInvNumber
