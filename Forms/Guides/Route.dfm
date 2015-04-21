@@ -86,6 +86,13 @@ object RouteForm: TRouteForm
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
+      object clRouteGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+        DataBinding.FieldName = 'RouteGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -129,8 +136,8 @@ object RouteForm: TRouteForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

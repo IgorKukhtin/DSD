@@ -49,6 +49,9 @@ type
     cxLabel4: TcxLabel;
     ceBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceRouteGroup: TcxButtonEdit;
+    RouteGroupGuides: TdsdGuides;
 
   private
     { Private declarations }

@@ -61,6 +61,7 @@ type
     clBranchName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    clRouteGroupName: TcxGridDBColumn;
 
   private
     { Private declarations }
