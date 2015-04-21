@@ -2020,6 +2020,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COM\COMTestUnit.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\RouteGroup.pas">
+				<Form>RouteGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RouteGroupEdit.pas">
+				<Form>RouteGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
