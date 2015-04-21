@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_TaxAll()
 
- DROP FUNCTION IF EXISTS gpSelect_Movement_TaxAll (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_Movement_TaxAll (TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxAll(
     IN inPeriodDate     TDateTime , --
@@ -42,7 +42,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TaxAll (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_TaxAll (TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

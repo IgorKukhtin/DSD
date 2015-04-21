@@ -1712,10 +1712,16 @@ begin
        // Не перечитываем RefreshDispatcher при установке значений. Иначе получится два раза
        if Assigned(RefreshDispatcher) then
           RefreshDispatcher.FNotRefresh := true;
-       Self.GuiParams.AssignParams(AddOnFormData.Params.Params);
-       if Assigned(RefreshDispatcher) and Assigned(RefreshDispatcher.RefreshAction) and RefreshAllow then
-          RefreshDispatcher.RefreshAction.Execute;// OnComponentChange(Self);
-       RefreshAllow := true;
+       try
+         Self.GuiParams.AssignParams(AddOnFormData.Params.Params);
+         if Assigned(RefreshDispatcher) and Assigned(RefreshDispatcher.RefreshAction) and RefreshAllow then
+            RefreshDispatcher.RefreshAction.Execute;// OnComponentChange(Self);
+         RefreshAllow := true;
+       finally
+         // Обязательно вернули флаг на место
+         if Assigned(RefreshDispatcher) then
+            RefreshDispatcher.FNotRefresh := false;
+       end;
     end;
 end;
 
