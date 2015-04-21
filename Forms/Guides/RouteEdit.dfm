@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
   ClientHeight = 397
-  ClientWidth = 382
+  ClientWidth = 354
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 72
-    Top = 346
+    Top = 360
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 346
+    Top = 360
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -63,7 +63,7 @@
   end
   object ceUnit: TcxButtonEdit
     Left = 32
-    Top = 196
+    Top = 182
     Properties.Buttons = <
       item
         Default = True
@@ -75,17 +75,17 @@
   end
   object cxLabel7: TcxLabel
     Left = 32
-    Top = 173
+    Top = 159
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel2: TcxLabel
     Left = 32
-    Top = 223
+    Top = 207
     Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object ceRouteKind: TcxButtonEdit
     Left = 32
-    Top = 246
+    Top = 228
     Properties.Buttons = <
       item
         Default = True
@@ -97,12 +97,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 32
-    Top = 279
+    Top = 251
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
   end
   object ceFreight: TcxButtonEdit
     Left = 32
-    Top = 302
+    Top = 274
     Properties.Buttons = <
       item
         Default = True
@@ -114,12 +114,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 32
-    Top = 125
+    Top = 114
     Caption = #1060#1080#1083#1080#1072#1083
   end
   object ceBranch: TcxButtonEdit
     Left = 32
-    Top = 145
+    Top = 134
     Properties.Buttons = <
       item
         Default = True
@@ -127,6 +127,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 13
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 32
+    Top = 303
+    Caption = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+  end
+  object ceRouteGroup: TcxButtonEdit
+    Left = 32
+    Top = 323
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
     Width = 273
   end
   object ActionList: TActionList
@@ -147,10 +164,12 @@
     end
     object dsdFormClose1: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -206,6 +225,13 @@
         Name = 'inFreight'
         Value = ''
         Component = FreightGuides
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteGroupId'
+        Value = Null
+        Component = RouteGroupGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     PackSize = 1
@@ -296,6 +322,19 @@
         Component = FreightGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'RouteGroupId'
+        Value = Null
+        Component = RouteGroupGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RouteGroupName'
+        Value = Null
+        Component = RouteGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 328
@@ -343,8 +382,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 127
-    Top = 193
+    Left = 191
+    Top = 161
   end
   object RouteKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -370,8 +409,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 175
-    Top = 241
+    Left = 127
+    Top = 209
   end
   object FreightGuides: TdsdGuides
     KeyField = 'Id'
@@ -397,8 +436,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 167
-    Top = 297
+    Left = 207
+    Top = 257
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -423,7 +462,34 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 130
-    Top = 132
+    Left = 138
+    Top = 116
+  end
+  object RouteGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRouteGroup
+    FormNameParam.Value = 'TRouteGroupForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRouteGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RouteGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RouteGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 159
+    Top = 305
   end
 end

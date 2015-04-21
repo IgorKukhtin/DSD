@@ -667,7 +667,9 @@ uses
   GoodsPlatformEdit in '..\..\Forms\Guides\GoodsPlatformEdit.pas' {GoodsPlatformEditForm: TParentForm},
   dsdException in '..\..\SOURCE\dsdException.pas',
   Report_MotionGoodsDialog in '..\..\Forms\Report\Report_MotionGoodsDialog.pas' {Report_MotionGoodsDialogForm: TParentForm},
-  COMTestUnit in '..\SOURCE\COM\COMTestUnit.pas';
+  COMTestUnit in '..\SOURCE\COM\COMTestUnit.pas',
+  RouteGroup in '..\..\Forms\Guides\RouteGroup.pas' {RouteGroupForm: TParentForm},
+  RouteGroupEdit in '..\..\Forms\Guides\RouteGroupEdit.pas' {RouteGroupEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,4 +1,4 @@
-unit Route;
+unit RouteGroup;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
 
 type
-  TRouteForm = class(TParentForm)
+  TRouteGroupForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -55,14 +55,8 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clUnitName: TcxGridDBColumn;
-    clRouteKind: TcxGridDBColumn;
-    clFreight: TcxGridDBColumn;
-    clBranchName: TcxGridDBColumn;
-    ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    clRouteGroupName: TcxGridDBColumn;
-
+    ProtocolOpenForm: TdsdOpenForm;
   private
     { Private declarations }
   public
@@ -73,7 +67,6 @@ type
 implementation
 
 {$R *.dfm}
-
 initialization
-  RegisterClass(TRouteForm);
+  RegisterClass(TRouteGroupForm);
 end.

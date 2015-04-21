@@ -553,6 +553,8 @@ type
     miPersonalCashCherkassi: TMenuItem;
     miPersonalCashZaporozhye: TMenuItem;
     miPersonalCashOdessa: TMenuItem;
+    actRouteGroup: TdsdOpenForm;
+    N54: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

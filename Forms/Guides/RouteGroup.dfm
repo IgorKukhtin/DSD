@@ -1,9 +1,9 @@
-object RouteForm: TRouteForm
+object RouteGroupForm: TRouteGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1072#1088#1096#1088#1091#1090#1099'>'
-  ClientHeight = 395
-  ClientWidth = 823
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1072' '#1052#1072#1088#1096#1088#1091#1090#1072'>'
+  ClientHeight = 332
+  ClientWidth = 440
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object RouteForm: TRouteForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 823
-    Height = 369
+    Width = 440
+    Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -46,6 +46,7 @@ object RouteForm: TRouteForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -53,54 +54,21 @@ object RouteForm: TRouteForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 82
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 176
-      end
-      object clBranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
-        HeaderAlignmentVert = vaCenter
-        Width = 127
-      end
-      object clUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentVert = vaCenter
-        Width = 141
-      end
-      object clRouteKind: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
-        DataBinding.FieldName = 'RouteKindName'
-        HeaderAlignmentVert = vaCenter
-        Width = 91
-      end
-      object clFreight: TcxGridDBColumn
-        Caption = #1043#1088#1091#1079
-        DataBinding.FieldName = 'FreightName'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 52
-      end
-      object clRouteGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-        DataBinding.FieldName = 'RouteGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 272
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 47
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -186,25 +154,13 @@ object RouteForm: TRouteForm
           ItemName = 'bbUnErased'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -221,6 +177,10 @@ object RouteForm: TRouteForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -291,15 +251,15 @@ object RouteForm: TRouteForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TRouteEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TRouteGroupEditForm'
+      FormNameParam.Value = 'TRouteGroupEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
         end>
-      isShowModal = False
+      isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
@@ -310,8 +270,8 @@ object RouteForm: TRouteForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TRouteEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TRouteGroupEditForm'
+      FormNameParam.Value = 'TRouteGroupEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -321,7 +281,7 @@ object RouteForm: TRouteForm
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
-      isShowModal = False
+      isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -374,58 +334,11 @@ object RouteForm: TRouteForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftString
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Code'
-          DataType = ftString
-        end
-        item
-          Name = 'RouteKindId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'RouteKindId'
-        end
-        item
-          Name = 'RouteKindName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'RouteKindName'
-          DataType = ftString
-        end
-        item
-          Name = 'FreightId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'FreightId'
-        end
-        item
-          Name = 'FreightName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'FreightName'
-          DataType = ftString
-        end
-        item
-          Name = 'RouteKindId2'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'RouteKindId'
-        end
-        item
-          Name = 'RouteKindName2'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'RouteKindName'
-          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
       ImageIndex = 7
-      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -465,7 +378,7 @@ object RouteForm: TRouteForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Route'
+    StoredProcName = 'gpSelect_Object_RouteGroup'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -521,7 +434,7 @@ object RouteForm: TRouteForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 160
-    Top = 216
+    Left = 368
+    Top = 128
   end
 end
