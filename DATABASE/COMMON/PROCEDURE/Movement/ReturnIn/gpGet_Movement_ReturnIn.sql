@@ -32,7 +32,7 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
-         WITH tmpBranch AS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
+         WITH tmpBranch AS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) AS InvNumber

@@ -110,12 +110,8 @@ type
     SummSendOnPriceIn: TcxGridDBColumn;
     CountSendOnPriceOut: TcxGridDBColumn;
     SummSendOnPriceOut: TcxGridDBColumn;
-    actPrintBy_Goods: TdsdPrintAction;
+    actPrint: TdsdPrintAction;
     bbPrintBy_Goods: TdxBarButton;
-    actPrintBy_Goods_Partion: TdsdPrintAction;
-    actPrintBy_Goods_Type: TdsdPrintAction;
-    bbPrintBy_Goods_Partion: TdxBarButton;
-    bbPrintBy_Goods_Partion_Type: TdxBarButton;
     SummProductionIn: TcxGridDBColumn;
     CountProductionIn: TcxGridDBColumn;
     PriceProductionIn: TcxGridDBColumn;
@@ -171,6 +167,12 @@ type
     SaleJournal: TdsdOpenForm;
     LineNum: TcxGridDBColumn;
     actIsInfoMoney: TdsdDataSetRefresh;
+    cbGoodsKind: TcxCheckBox;
+    bbGoodsKind: TdxBarControlContainerItem;
+    cbPartionGoods: TcxCheckBox;
+    cbAmount: TcxCheckBox;
+    bbPartionGoods: TdxBarControlContainerItem;
+    bbAmount: TdxBarControlContainerItem;
   private
   public
   end;

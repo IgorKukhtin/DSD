@@ -5,8 +5,8 @@
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1378
-  ExplicitHeight = 414
+  ExplicitWidth = 1386
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1095,10 +1095,10 @@
   object cbGoodsKind: TcxCheckBox [5]
     Left = 445
     Top = 87
-    Caption = #1087#1086' '#1042#1080#1076#1072#1084
+    Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
     Properties.ReadOnly = False
     TabOrder = 9
-    Width = 78
+    Width = 113
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
