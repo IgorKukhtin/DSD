@@ -190,7 +190,7 @@ BEGIN
            , OH_JuridicalDetails_From.Phone             AS Phone_From
 
            , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
-           , COALESCE (MovementDate_COMDOC.OperDate, COALESCE(Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData))     AS OperDatePartnerEDI
+           , COALESCE (MovementDate_COMDOC.ValueData, COALESCE(Movement_EDI.OperDate, MovementDate_OperDatePartnerEDI.ValueData))     AS OperDatePartnerEDI
 
            , CASE WHEN inisClientCopy = TRUE
                   THEN 'X' ELSE '' END                  AS CopyForClient

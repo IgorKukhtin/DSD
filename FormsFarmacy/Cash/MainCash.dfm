@@ -2,33 +2,11 @@ inherited MainCashForm: TMainCashForm
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 412
   ClientWidth = 674
-  ExplicitTop = -32
   ExplicitWidth = 682
   ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
-  object cxGrid1: TcxGrid [0]
-    Left = 0
-    Top = 0
-    Width = 674
-    Height = 172
-    Align = alClient
-    TabOrder = 0
-    ExplicitLeft = 176
-    ExplicitTop = -8
-    ExplicitWidth = 250
-    ExplicitHeight = 200
-    object cxGrid1DBTableView1: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-    end
-    object cxGrid1Level1: TcxGridLevel
-      GridView = cxGrid1DBTableView1
-    end
-  end
-  object BottomPanel: TPanel [1]
+  object BottomPanel: TPanel [0]
     Left = 0
     Top = 216
     Width = 674
@@ -36,46 +14,65 @@ inherited MainCashForm: TMainCashForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 176
-    ExplicitWidth = 627
-    object cxGrid2: TcxGrid
+    object CheckGrid: TcxGrid
       Left = 0
       Top = 0
       Width = 421
       Height = 196
       Align = alClient
       TabOrder = 0
-      ExplicitTop = -8
-      ExplicitWidth = 250
-      ExplicitHeight = 200
-      object cxGrid2DBTableView1: TcxGridDBTableView
+      object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        object CheckGridDBTableViewColumn1: TcxGridDBColumn
+        end
+        object CheckGridDBTableViewColumn2: TcxGridDBColumn
+        end
+        object CheckGridDBTableViewColumn3: TcxGridDBColumn
+        end
+        object CheckGridDBTableViewColumn4: TcxGridDBColumn
+        end
+        object CheckGridDBTableViewColumn5: TcxGridDBColumn
+        end
       end
-      object cxGrid2Level1: TcxGridLevel
-        GridView = cxGrid2DBTableView1
+      object CheckGridLevel: TcxGridLevel
+        GridView = CheckGridDBTableView
       end
     end
-    object cxGrid3: TcxGrid
+    object cxGrid: TcxGrid
       Left = 424
       Top = 0
       Width = 250
       Height = 196
       Align = alRight
       TabOrder = 1
-      ExplicitLeft = 448
-      ExplicitTop = 16
-      ExplicitHeight = 200
-      object cxGrid3DBTableView1: TcxGridDBTableView
+      object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object cxGridDBTableViewColumn1: TcxGridDBColumn
+        end
+        object cxGridDBTableViewColumn2: TcxGridDBColumn
+        end
       end
-      object cxGrid3Level1: TcxGridLevel
-        GridView = cxGrid3DBTableView1
+      object cxGridLevel: TcxGridLevel
+        GridView = cxGridDBTableView
       end
     end
     object cxSplitter1: TcxSplitter
@@ -84,33 +81,100 @@ inherited MainCashForm: TMainCashForm
       Width = 3
       Height = 196
       AlignSplitter = salRight
-      ExplicitLeft = 374
-      ExplicitTop = 1
-      ExplicitHeight = 90
+      Control = cxGrid
     end
   end
-  object Panel1: TPanel [2]
+  object cxSplitter2: TcxSplitter [1]
     Left = 0
-    Top = 175
-    Width = 674
-    Height = 41
-    Align = alBottom
-    Caption = 'Panel1'
-    TabOrder = 2
-    ExplicitLeft = 48
-    ExplicitTop = 168
-    ExplicitWidth = 185
-  end
-  object cxSplitter2: TcxSplitter [3]
-    Left = 0
-    Top = 172
+    Top = 213
     Width = 674
     Height = 3
     AlignSplitter = salBottom
-    ExplicitTop = 171
+  end
+  object MainPanel: TPanel [2]
+    Left = 0
+    Top = 0
+    Width = 674
+    Height = 213
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 2
+    object MainGrid: TcxGrid
+      Left = 0
+      Top = 0
+      Width = 674
+      Height = 172
+      Align = alClient
+      TabOrder = 0
+      object MainGridDBTableView: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.GroupByBox = False
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object MainColName: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          HeaderAlignmentVert = vaCenter
+          Width = 385
+        end
+        object MainColCode: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          HeaderAlignmentVert = vaCenter
+          Width = 73
+        end
+        object MainColRemains: TcxGridDBColumn
+          Caption = #1054#1089#1090#1072#1090#1086#1082
+          HeaderAlignmentVert = vaCenter
+          Width = 58
+        end
+        object MainColPrice: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072
+          HeaderAlignmentVert = vaCenter
+          Width = 45
+        end
+        object MainColReserved: TcxGridDBColumn
+          Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077
+          HeaderAlignmentVert = vaCenter
+          Width = 87
+        end
+      end
+      object MainGridLevel: TcxGridLevel
+        GridView = MainGridDBTableView
+      end
+    end
+    object SearchPanel: TPanel
+      Left = 0
+      Top = 172
+      Width = 674
+      Height = 41
+      Align = alBottom
+      Caption = 'SearchPanel'
+      TabOrder = 1
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = BottomPanel
+        Properties.Strings = (
+          'Height')
+      end
+      item
+        Component = CheckGrid
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = cxGrid
+        Properties.Strings = (
+          'Width')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -118,6 +182,25 @@ inherited MainCashForm: TMainCashForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = MainGrid
+        Properties.Strings = (
+          'Height')
       end>
+  end
+  object dsdDBViewAddOnMain: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = MainGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 280
+    Top = 96
   end
 end

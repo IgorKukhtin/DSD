@@ -3,7 +3,8 @@ unit MainCash;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dsdAddOn, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
@@ -13,19 +14,33 @@ uses
 
 type
   TMainCashForm = class(TAncestorBaseForm)
-    cxGrid1DBTableView1: TcxGridDBTableView;
-    cxGrid1Level1: TcxGridLevel;
-    cxGrid1: TcxGrid;
+    MainGridDBTableView: TcxGridDBTableView;
+    MainGridLevel: TcxGridLevel;
+    MainGrid: TcxGrid;
     BottomPanel: TPanel;
-    cxGrid2DBTableView1: TcxGridDBTableView;
-    cxGrid2Level1: TcxGridLevel;
-    cxGrid2: TcxGrid;
-    cxGrid3DBTableView1: TcxGridDBTableView;
-    cxGrid3Level1: TcxGridLevel;
-    cxGrid3: TcxGrid;
+    CheckGridDBTableView: TcxGridDBTableView;
+    CheckGridLevel: TcxGridLevel;
+    CheckGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
     cxSplitter1: TcxSplitter;
-    Panel1: TPanel;
+    SearchPanel: TPanel;
     cxSplitter2: TcxSplitter;
+    MainPanel: TPanel;
+    CheckGridDBTableViewColumn1: TcxGridDBColumn;
+    CheckGridDBTableViewColumn2: TcxGridDBColumn;
+    CheckGridDBTableViewColumn3: TcxGridDBColumn;
+    CheckGridDBTableViewColumn4: TcxGridDBColumn;
+    CheckGridDBTableViewColumn5: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    cxGridDBTableViewColumn2: TcxGridDBColumn;
+    MainColCode: TcxGridDBColumn;
+    MainColName: TcxGridDBColumn;
+    MainColRemains: TcxGridDBColumn;
+    MainColPrice: TcxGridDBColumn;
+    MainColReserved: TcxGridDBColumn;
+    dsdDBViewAddOnMain: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
