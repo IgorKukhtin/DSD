@@ -173,6 +173,10 @@ type
     cbAmount: TcxCheckBox;
     bbPartionGoods: TdxBarControlContainerItem;
     bbAmount: TdxBarControlContainerItem;
+    actPrint2: TdsdPrintAction;
+    bbPrint2: TdxBarButton;
+    actPrint3: TdsdPrintAction;
+    bbPrint3: TdxBarButton;
   private
   public
   end;
