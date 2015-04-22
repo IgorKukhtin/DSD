@@ -475,7 +475,7 @@ object Report_AccountForm: TReport_AccountForm
     object deStart: TcxDateEdit
       Left = 10
       Top = 29
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -484,7 +484,7 @@ object Report_AccountForm: TReport_AccountForm
     object deEnd: TcxDateEdit
       Left = 10
       Top = 79
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -907,6 +907,7 @@ object Report_AccountForm: TReport_AccountForm
     object actMovementForm: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = getMovementForm
       StoredProcList = <
         item
@@ -1082,6 +1083,7 @@ object Report_AccountForm: TReport_AccountForm
     Top = 120
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

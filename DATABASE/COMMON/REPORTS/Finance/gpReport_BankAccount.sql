@@ -37,18 +37,21 @@ BEGIN
 
      -- Результат
   RETURN QUERY
-     WITH tmpContainer AS (SELECT CLO_BankAccount.ContainerId             AS ContainerId
+     WITH tmpAccount AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_40000()) -- Денежные средства
+        , tmpContainer AS (SELECT CLO_BankAccount.ContainerId             AS ContainerId
                                 , Container_Currency.Id                   AS ContainerId_Currency
                                 , Container.ObjectId                      AS AccountId
-                                , CLO_BankAccount.ObjectId                AS BankAccountId
+                                , COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) AS BankAccountId
                                 , COALESCE (CLO_Currency.ObjectId, 0)     AS CurrencyId
                                 , Container.Amount                        AS Amount
                                 , COALESCE (Container_Currency.Amount, 0) AS Amount_Currency
-                           FROM ContainerLinkObject AS CLO_BankAccount
-                                INNER JOIN Container ON Container.Id = CLO_BankAccount.ContainerId AND Container.DescId = zc_Container_Summ()
-                                LEFT JOIN ContainerLinkObject AS CLO_Currency ON CLO_Currency.ContainerId = CLO_BankAccount.ContainerId AND CLO_Currency.DescId = zc_ContainerLinkObject_Currency()
-                                LEFT JOIN Container AS Container_Currency ON Container_Currency.ParentId = CLO_BankAccount.ContainerId AND Container_Currency.DescId = zc_Container_SummCurrency()
-                           WHERE CLO_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
+                           FROM tmpAccount
+                                INNER JOIN Container ON Container.ObjectId = tmpAccount.AccountId AND Container.DescId = zc_Container_Summ()
+                                LEFT JOIN ContainerLinkObject AS CLO_BankAccount ON CLO_BankAccount.ContainerId = Container.Id AND CLO_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
+                                LEFT JOIN ContainerLinkObject AS CLO_Juridical ON CLO_Juridical.ContainerId = Container.Id AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                LEFT JOIN ContainerLinkObject AS CLO_Currency ON CLO_Currency.ContainerId = Container.Id AND CLO_Currency.DescId = zc_ContainerLinkObject_Currency()
+                                LEFT JOIN Container AS Container_Currency ON Container_Currency.ParentId = Container.Id AND Container_Currency.DescId = zc_Container_SummCurrency()
+                           WHERE (CLO_BankAccount.ContainerId IS NOT NULL OR CLO_Juridical.ContainerId IS NOT NULL)
                             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                             AND (CLO_BankAccount.ObjectId = inBankAccountId OR inBankAccountId = 0)
                             AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
@@ -57,7 +60,7 @@ BEGIN
      SELECT
         Operation.ContainerId,
         Object_BankAccount_View.BankName                                                            AS BankName,
-        Object_BankAccount_View.Name                                                                AS BankAccountName,
+        COALESCE (Object_BankAccount_View.Name, Object_Juridical.ValueData) :: TVarChar             AS BankAccountName,
         Object_BankAccount_View.CurrencyName                                                        AS CurrencyName_BankAccount,
         Object_Currency.ValueData                                                                   AS CurrencyName,
         Object_InfoMoney_View.InfoMoneyGroupName                                                    AS InfoMoneyGroupName,
@@ -308,7 +311,8 @@ BEGIN
 
      LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
      LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = Operation.BankAccountId
-     LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
+     LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Operation.BankAccountId -- !!!не ошибка!!!
+     LEFT JOIN Object_InfoMoney_View ON Object_Juridical.Id = Operation.InfoMoneyId
      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Operation.UnitId
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
      LEFT JOIN ObjectDesc AS ObjectDesc_MoneyPlace ON ObjectDesc_MoneyPlace.Id = Object_MoneyPlace.DescId

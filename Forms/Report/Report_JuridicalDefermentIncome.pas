@@ -57,16 +57,14 @@ type
     clAreaName: TcxGridDBColumn;
     clStartDate: TcxGridDBColumn;
     clEndDate: TcxGridDBColumn;
-    actPrintSale: TdsdPrintAction;
+    actPrintIncome: TdsdPrintAction;
     spReport_JuridicalSaleDocument: TdsdStoredProc;
-    bbSale: TdxBarButton;
+    bbIncome: TdxBarButton;
     cxLabel6: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
     clStartContractDate: TcxGridDBColumn;
     clRetailName: TcxGridDBColumn;
-    actPrint_byJuridical: TdsdPrintAction;
-    bbPrint_byJuridical: TdxBarButton;
     cxLabel9: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;

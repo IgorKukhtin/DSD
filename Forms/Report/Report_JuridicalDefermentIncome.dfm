@@ -1157,7 +1157,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ReportNameParam.DataType = ftString
     end
-    object actPrintSale: TdsdPrintAction
+    object actPrintIncome: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spReport_JuridicalSaleDocument
@@ -1231,91 +1231,6 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
-      ReportNameParam.DataType = ftString
-    end
-    object actPrint_byJuridical: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1077#1090#1103#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1077#1090#1103#1084
-      ImageIndex = 19
-      DataSets = <
-        item
-          DataSet = MasterCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'RetailName'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'AccountId'
-          Value = Null
-          Component = GuidesAccount
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'AccountName'
-          Value = Null
-          Component = GuidesAccount
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindId'
-          Value = Null
-          Component = GuidesPaidKind
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'PaidKindName'
-          Value = Null
-          Component = GuidesPaidKind
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Value = Null
-          Component = GuidesBranch
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'BranchName'
-          Value = Null
-          Component = GuidesBranch
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalGroupId'
-          Value = Null
-          Component = GuidesJuridicalGroup
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'JuridicalGroupName'
-          Value = Null
-          Component = GuidesJuridicalGroup
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'DescName'
-          Value = 'zc_Movement_Income'
-          DataType = ftString
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
       ReportNameParam.DataType = ftString
     end
   end
@@ -1406,7 +1321,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         end
         item
           Visible = True
-          ItemName = 'bbSale'
+          ItemName = 'bbIncome'
         end
         item
           Visible = True
@@ -1431,14 +1346,6 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         item
           Visible = True
           ItemName = 'bbOther'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_byJuridical'
         end
         item
           Visible = True
@@ -1477,14 +1384,9 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       Action = actPrint
       Category = 0
     end
-    object bbSale: TdxBarButton
-      Action = actPrintSale
+    object bbIncome: TdxBarButton
+      Action = actPrintIncome
       Category = 0
-    end
-    object bbPrint_byJuridical: TdxBarButton
-      Action = actPrint_byJuridical
-      Category = 0
-      ImageIndex = 20
     end
   end
   inherited PeriodChoice: TPeriodChoice

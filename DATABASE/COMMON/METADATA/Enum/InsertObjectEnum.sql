@@ -331,6 +331,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40400,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_40400');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40500,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_40500');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40600,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_40600');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40700,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_40700');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60100,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_60100');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 60200,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_60200');
@@ -385,6 +386,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Account_40501(),  inDescId:= zc_Object_Account(), inCode:= 40501, inName:= 'касса БН', inEnumName:= 'zc_Enum_Account_40501');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40501, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40501');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40601, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40601');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40701, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40701');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50401, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_50401');
 
@@ -450,7 +452,6 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40800, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_40800');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40900, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_40900');
 
-     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InfoMoneyDestination_41000(),  inDescId:= zc_Object_InfoMoneyDestination(), inCode:= 41000, inName:= 'Покупка/продажа валюты', inEnumName:= 'zc_Enum_InfoMoneyDestination_41000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 41000, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_41000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 41100, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_41100');
 
@@ -498,6 +499,8 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30201, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_30201');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40801, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_40801');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 41001, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_41001');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50201, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_50201');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50202, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_50202');

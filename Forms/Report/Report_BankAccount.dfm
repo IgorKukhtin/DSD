@@ -610,14 +610,14 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30

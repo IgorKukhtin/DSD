@@ -789,6 +789,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Name = 'Id'
           Value = Null
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>

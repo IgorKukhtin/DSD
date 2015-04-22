@@ -1264,18 +1264,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     object actPrint_byJuridical: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1077#1090#1103#1084
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1077#1090#1103#1084
       ImageIndex = 19
       DataSets = <
         item
           DataSet = MasterCDS
-          UserName = 'frxDBDMaster'
+          UserName = 'frxDBDataset'
           IndexFieldNames = 'RetailName'
         end>
       Params = <

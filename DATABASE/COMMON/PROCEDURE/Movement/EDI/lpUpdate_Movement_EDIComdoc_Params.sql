@@ -143,14 +143,14 @@ BEGIN
                AND Movement.DescId = zc_Movement_Sale();
 
              -- Проверка - должны найти
-             IF 1 = 0 AND COALESCE (vbMovementId_Master, 0) = 0
+             IF 1 = 1 AND COALESCE (vbMovementId_Master, 0) = 0
              THEN
-                  RAISE EXCEPTION 'Ошибка.Не найдена накладная продажи № <%> от <%> для GLN точки доставки = <%> и ОКПО = <%>, в документа EDI № <%> от <%> .', vbInvNumberSaleLink, DATE (vbOperDateSaleLink), vbGLNPlace, inOKPO, (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+                  RAISE EXCEPTION 'Ошибка.%Не найдена накладная продажи № <%> от <%>%для точки доставки GLN <%> (%) с ОКПО <%>%в документа EDI № <%> от <%> .', chr(13), vbInvNumberSaleLink, DATE (vbOperDateSaleLink), chr(13), vbGLNPlace, lfGet_Object_ValueData (vbPartnerId), inOKPO, chr(13), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
              END IF;
              -- Проверка - должны найти
              IF COALESCE (vbMovementId_Child, 0) = 0 AND vbMovementId_Master <> 0
              THEN
-                  RAISE EXCEPTION 'Ошибка.Не найдена Налоговая у накладной продажи № <%> от <%> для GLN точки доставки = <%> и ОКПО = <%>, в документа EDI № <%> от <%> .', vbInvNumberSaleLink, DATE (vbOperDateSaleLink), vbGLNPlace, inOKPO, (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+                  RAISE EXCEPTION 'Ошибка.%Не найдена Налоговая у накладной продажи № <%> от <%>%для точки доставки GLN <%> (%) с ОКПО = <%>,% в документа EDI № <%> от <%> .', chr(13), vbInvNumberSaleLink, DATE (vbOperDateSaleLink), chr(13), vbGLNPlace, lfGet_Object_ValueData (vbPartnerId), inOKPO, chr(13), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
              END IF;
 
          ELSE

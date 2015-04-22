@@ -88,6 +88,9 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- проценты по кредитам
                                                            THEN zc_Enum_AccountDirection_80400() -- проценты по кредитам
 
+                                                      WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                                                           THEN zc_Enum_AccountDirection_40700() -- Покупка/продажа валюты
+
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_40000() -- Финансовая деятельность
                                                            THEN zc_Enum_AccountDirection_30400() -- Прочие дебиторы
 
