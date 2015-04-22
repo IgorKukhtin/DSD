@@ -94,7 +94,7 @@ BEGIN
          , Object_Goods.ValueData                 AS GoodsName
        
          , Object_Measure.ValueData               AS MeasureName
-         , MovementString_PartionGoods.ValueData      AS PartionGoods
+         , Object_PartionGoods.ValueData      AS PartionGoods
 
          , tmpMI_Union.Amount_Separate_out
          , tmpMI_Union.Amount_Separate_in
@@ -119,9 +119,9 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-          LEFT JOIN MovementString AS MovementString_PartionGoods
-                                 ON MovementString_PartionGoods.MovementId = tmpMI_Union.PartionGoodsId
-                                AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+          LEFT JOIN Object AS Object_PartionGoods
+                           ON Object_PartionGoods.Id = tmpMI_Union.PartionGoodsId
+                          AND Object_PartionGoods.DescId = zc_Object_PartionGoods()
     ;
          
 END;
