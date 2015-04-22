@@ -943,7 +943,7 @@ BEGIN
      WHERE _tmpItem.MovementItemId = _tmpItemPartnerTo.MovementItemId
     ;
 
-     -- 1.2.1. определяется ContainerId_Goods для количественного учета
+     -- 1.2.1.1. определяется ContainerId_Goods для количественного учета + ...
      UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId_To
                                                                                 , inCarId                  := NULL
@@ -972,7 +972,7 @@ BEGIN
                                                                                 , inAccountId              := vbAccountId_GoodsTransit -- эта аналитика нужна для "товар в пути"
                                                                                  )
                                         ELSE 0 END
-                       , ContainerId_Goods_Alternative = CASE WHEN vbUnitId_HistoryCost = 0
+                       , ContainerId_Goods_Alternative = CASE WHEN vbUnitId_HistoryCost NOT IN (0, vbUnitId_To)
                                                                    THEN 0
                                         ELSE lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId_HistoryCost
@@ -988,7 +988,74 @@ BEGIN
                                                                                 , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                  )
                                                         END
+                         -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
+                       , AccountId_SummIn_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To
+                                                            THEN 0
+                                                       ELSE lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
+                                                                                       , inAccountDirectionId     := vbAccountDirectionId_To
+                                                                                       , inInfoMoneyDestinationId := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                                                               THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                          ELSE _tmpItem.InfoMoneyDestinationId
+                                                                                                                     END
+                                                                                       , inInfoMoneyId            := NULL
+                                                                                       , inUserId                 := inUserId
+                                                                                        )
+                                                    END
+                        -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
+                      , AccountId_SummOut_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To
+                                                            THEN 0
+                                                       ELSE lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
+                                                                                       , inAccountDirectionId     := zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
+                                                                                       , inInfoMoneyDestinationId := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                                                               THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                          ELSE _tmpItem.InfoMoneyDestinationId
+                                                                                                                     END
+                                                                                       , inInfoMoneyId            := NULL
+                                                                                       , inUserId                 := inUserId
+                                                                                        )
+                                                    END
      WHERE vbPartnerId_To = 0 -- !!!если НЕ возврат от Контрагента -> Контрагенту!!!
+    ;
+
+     -- 1.2.1.2. определяется ContainerId для проводок !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
+     UPDATE _tmpItem SET ContainerId_SummIn_60000 = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                                                                      , inUnitId                 := vbUnitId_To
+                                                                                      , inCarId                  := NULL
+                                                                                      , inMemberId               := vbMemberId_To
+                                                                                      , inBranchId               := vbBranchId_To
+                                                                                      , inJuridicalId_basis      := vbJuridicalId_Basis_To
+                                                                                      , inBusinessId             := _tmpItem.BusinessId_To
+                                                                                      , inAccountId              := _tmpItem.AccountId_SummIn_60000
+                                                                                      , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                      , inInfoMoneyId            := _tmpItem.InfoMoneyId
+                                                                                      , inInfoMoneyId_Detail     := zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                                                                                      , inContainerId_Goods      := _tmpItem.ContainerId_Goods
+                                                                                      , inGoodsId                := _tmpItem.GoodsId
+                                                                                      , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                      , inIsPartionSumm          := _tmpItem.isPartionSumm
+                                                                                      , inPartionGoodsId         := _tmpItem.PartionGoodsId
+                                                                                      , inAssetId                := _tmpItem.AssetId
+                                                                                       )
+                      , ContainerId_SummOut_60000 = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                                                                      , inUnitId                 := vbUnitId_To
+                                                                                      , inCarId                  := NULL
+                                                                                      , inMemberId               := vbMemberId_To
+                                                                                      , inBranchId               := vbBranchId_To
+                                                                                      , inJuridicalId_basis      := vbJuridicalId_Basis_To
+                                                                                      , inBusinessId             := _tmpItem.BusinessId_To
+                                                                                      , inAccountId              := _tmpItem.AccountId_SummOut_60000
+                                                                                      , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                      , inInfoMoneyId            := _tmpItem.InfoMoneyId
+                                                                                      , inInfoMoneyId_Detail     := zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                                                                                      , inContainerId_Goods      := _tmpItem.ContainerId_Goods
+                                                                                      , inGoodsId                := _tmpItem.GoodsId
+                                                                                      , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                      , inIsPartionSumm          := _tmpItem.isPartionSumm
+                                                                                      , inPartionGoodsId         := _tmpItem.PartionGoodsId
+                                                                                      , inAssetId                := _tmpItem.AssetId
+                                                                                       )
+     WHERE _tmpItem.AccountId_SummIn_60000 <> 0
+        OR _tmpItem.AccountId_SummOut_60000 <> 0
     ;
 
      -- 1.2.2. формируются Проводки для количественного учета (остаток)
@@ -1186,6 +1253,8 @@ BEGIN
           AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                -- здесь нули !!!НЕ НУЖНЫ!!! 
             OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- здесь нули !!!НЕ НУЖНЫ!!! 
           AND vbPartnerId_To = 0 -- !!!если НЕ продажа от Контрагента -> Контрагенту!!!
+          AND AccountId_SummIn_60000  = 0 -- !!!если НЕ "виртуальная" прибыль текущего периода!!!
+          AND AccountId_SummOut_60000 = 0 -- !!!если НЕ "виртуальная" прибыль текущего периода!!!
         GROUP BY _tmpItem.MovementItemId
                , Container_Summ.Id
                , Container_Summ.ObjectId
@@ -1283,6 +1352,7 @@ BEGIN
             , tmpMIContainer.isActive
        FROM tmpMIContainer
             INNER JOIN _tmpItem ON _tmpItem.MovementItemId = tmpMIContainer.MovementItemId
+
      UNION ALL
        -- это две проводки для счета Транзит
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, tmpMIContainer.MovementItemId
@@ -1299,6 +1369,22 @@ BEGIN
        FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
             INNER JOIN _tmpItem ON vbAccountId_GoodsTransit <> 0
             INNER JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = _tmpItem.MovementItemId
+
+     UNION ALL
+       -- это необычная проводка - !!!прибыль текущего периода!!! по ценам ПРАЙСА zc_PriceList_Basis
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , CASE WHEN tmp.mySign > 0 THEN _tmpItem.ContainerId_SummIn_60000 ELSE _tmpItem.ContainerId_SummOut_60000 END AS ContainerId
+            , CASE WHEN tmp.mySign > 0 THEN _tmpItem.AccountId_SummIn_60000   ELSE _tmpItem.AccountId_SummOut_60000   END AS AccountId  -- счет есть всегда
+            , zc_Enum_AnalyzerId_ReturnInSumm_10800()  AS AnalyzerId -- Сумма с/с, возврат, от покупателя -- !!!аналитика есть всегда!!! (она нужна для склада)
+            , _tmpItem.GoodsId                         AS ObjectId_Analyzer
+            , vbWhereObjectId_Analyzer                 AS WhereObjectId_Analyzer
+            , vbContainerId_Analyzer                   AS ContainerId_Analyzer
+            , 0                                        AS ParentId
+            , tmp.mySign * _tmpItem.OperSumm_PriceList AS Amount
+            , vbOperDate                               AS OperDate -- т.е. по "Дате склад"
+            , tmp.isActive                             AS isActive
+       FROM (SELECT 1 AS mySign, TRUE AS isActive UNION SELECT -1 AS mySign, FALSE AS isActive) AS tmp
+             INNER JOIN _tmpItem ON AccountId_SummIn_60000 <> 0 OR AccountId_SummOut_60000 <> 0
       ;      
 
 
@@ -1862,7 +1948,8 @@ BEGIN
                 , CASE WHEN -1 * _tmpCalc.OperSumm > 0 THEN _tmpCalc.AccountId              ELSE _tmpCalc.AccountId_ProfitLoss   END AS PassiveAccountId
                 , _tmpCalc.MovementItemId
                 , _tmpCalc.OperDate
-           FROM (SELECT _tmpCalc_all.MovementItemId
+           FROM  -- это обычная
+                (SELECT _tmpCalc_all.MovementItemId
                       , tmpOperDate.OperDate
                       , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpCalc_all.ContainerId ELSE _tmpCalc_all.ContainerId_Transit END AS ContainerId
                       , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpCalc_all.AccountId   ELSE _tmpCalc_all.AccountId_Transit   END AS AccountId
@@ -1882,6 +1969,20 @@ BEGIN
                                                                                                 -- п.с. убыток: Active=ContainerId_ProfitLoss а доход: Passive=ContainerId_ProfitLoss
                                   FROM _tmpItemSumm
                                  ) AS _tmpCalc_all ON _tmpCalc_all.OperSumm <> 0 -- !!!ограничили, т.к. нулевые не нужны!!!
+
+                UNION ALL
+                 -- !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
+                 SELECT _tmpItem.MovementItemId
+                      , vbOperDate                         AS OperDate
+                      , _tmpItem.ContainerId_SummIn_60000  AS ContainerId
+                      , _tmpItem.AccountId_SummIn_60000    AS AccountId
+                      , _tmpItem.ContainerId_SummOut_60000 AS ContainerId_ProfitLoss -- !!!никакой это не ProfitLoss!!!
+                      , _tmpItem.AccountId_SummOut_60000   AS AccountId_ProfitLoss   -- !!!никакой это не ProfitLoss!!!
+                      , _tmpItem.OperSumm_PriceList
+                 FROM _tmpItem
+                 WHERE _tmpItem.OperSumm_PriceList <> 0 -- !!!ограничили, т.к. нулевые не нужны!!!
+                   AND (_tmpItem.AccountId_SummIn_60000 <> 0 OR _tmpItem.AccountId_SummOut_60000 <> 0)
+
                 /*-- !!!если возврат от Контрагента -> Контрагенту!!!
                 UNION ALL
                  SELECT ...

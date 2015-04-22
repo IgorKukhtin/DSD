@@ -50,7 +50,7 @@ BEGIN
      THEN
          IF inGLNPlace <> ''
          THEN
-              -- !!!так для продажи!!! + !!!по точке доставки!!!
+              -- !!!так для продажи!!! + !!!по точке доставки!!! + !!!inDesc!!!
               vbMovementId:= (SELECT Movement.Id
                               FROM Movement
                                    INNER JOIN MovementString AS MovementString_OKPO
@@ -60,7 +60,7 @@ BEGIN
                                    INNER JOIN MovementString AS MovementString_MovementDesc
                                                              ON MovementString_MovementDesc.MovementId =  Movement.Id
                                                             AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
-                                                            AND MovementString_MovementDesc.ValueData IN (inDesc, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()))
+                                                            AND MovementString_MovementDesc.ValueData IN (inDesc)
                                    INNER JOIN MovementString AS MovementString_GLNPlaceCode
                                                              ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
                                                             AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
@@ -69,11 +69,34 @@ BEGIN
                                 AND Movement.InvNumber = inOrderInvNumber
                                 AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
                              );
-            IF vbMovementId <> 0
-            THEN
-                 -- !!!поменяли у документа EDI признак!!!
-                 PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()));
-            END IF;
+              IF COALESCE (vbMovementId, 0) = 0
+              THEN
+              -- !!!так для продажи!!! + !!!по точке доставки!!! + !!!zc_Movement_OrderExternal!!!
+              vbMovementId:= (SELECT Movement.Id
+                              FROM Movement
+                                   INNER JOIN MovementString AS MovementString_OKPO
+                                                             ON MovementString_OKPO.MovementId =  Movement.Id
+                                                            AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                            AND MovementString_OKPO.ValueData = inOKPO
+                                   INNER JOIN MovementString AS MovementString_MovementDesc
+                                                             ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                            AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                                                            AND MovementString_MovementDesc.ValueData IN ((SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()))
+                                   INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                                             ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                                            AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                                            AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                              WHERE Movement.DescId = zc_Movement_EDI()
+                                AND Movement.InvNumber = inOrderInvNumber
+                                AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                             );
+              END IF;
+
+              IF vbMovementId <> 0
+              THEN
+                   -- !!!поменяли у документа EDI признак!!!
+                   PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()));
+              END IF;
 
          ELSE
               -- !!!так для продажи!!! + !!!НЕ важна точка доставки!!!
@@ -92,11 +115,11 @@ BEGIN
                                 AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
                              );
 
-            IF vbMovementId <> 0
-            THEN
-                 -- !!!поменяли у документа EDI признак!!!
-                 PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()));
-            END IF;
+              IF vbMovementId <> 0
+              THEN
+                   -- !!!поменяли у документа EDI признак!!!
+                   PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale()));
+              END IF;
 
          END IF;
      END IF;
