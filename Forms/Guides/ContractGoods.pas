@@ -16,6 +16,7 @@ type
   TContractGoodsForm = class(TAncestorGuidesForm)
     clGoodsKindName: TcxGridDBColumn;
     clPrice: TcxGridDBColumn;
+    clContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

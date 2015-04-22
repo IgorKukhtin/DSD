@@ -5,8 +5,8 @@ inherited ContractGoodsForm: TContractGoodsForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 781
-  ExplicitHeight = 408
+  ExplicitWidth = 789
+  ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,6 +34,7 @@ inherited ContractGoodsForm: TContractGoodsForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -44,12 +45,14 @@ inherited ContractGoodsForm: TContractGoodsForm
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 123
           end
@@ -67,9 +70,17 @@ inherited ContractGoodsForm: TContractGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 47
           end
+          object clContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object clInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
           end
@@ -421,6 +432,7 @@ inherited ContractGoodsForm: TContractGoodsForm
           object colGLNCode: TcxGridDBColumn
             Caption = #1050#1086#1076' GLN'
             DataBinding.FieldName = 'GLNCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 30
@@ -496,6 +508,7 @@ inherited ContractGoodsForm: TContractGoodsForm
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 92
           end
