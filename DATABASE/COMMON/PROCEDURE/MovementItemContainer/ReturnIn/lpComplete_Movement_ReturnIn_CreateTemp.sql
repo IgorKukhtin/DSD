@@ -18,7 +18,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItemPartnerTo (MovementItemId Integer, ContainerId_Goods Integer, ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_ProfitLoss_10700 Integer, ContainerId_ProfitLoss_10800 Integer, OperSumm_Partner TFloat) ON COMMIT DROP;
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, ContainerId_Goods_Alternative Integer, ContainerId_GoodsPartner Integer, ContainerId_GoodsTransit Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , ContainerId_Goods Integer, ContainerId_Goods_Alternative Integer, ContainerId_SummIn_60000 Integer, ContainerId_SummOut_60000 Integer, AccountId_SummIn_60000 Integer, AccountId_SummOut_60000 Integer, ContainerId_GoodsPartner Integer, ContainerId_GoodsTransit Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, tmpOperSumm_Partner_original TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
                                , ContainerId_ProfitLoss_10700 Integer
                                , ContainerId_Partner Integer, AccountId_Partner Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
@@ -33,6 +33,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.04.15                                        * add ..._60000
  07.02.15                                        * add _tmpItemPartnerTo
  06.12.14                                        *
 */

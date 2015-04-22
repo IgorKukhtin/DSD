@@ -337,7 +337,7 @@ BEGIN
            , tmpResult.InvNumber
 
            , tmpResult.JuridicalId
-           , tmpResult.PartnerId
+           , COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId) AS PartnerId
            , tmpResult.InfoMoneyId
            , tmpResult.PaidKindId
            , tmpResult.BranchId
@@ -474,9 +474,11 @@ BEGIN
                    , tmpOperation.GoodsKindId
            ) AS tmpResult
 
-           LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpResult.PartnerId
+           LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpResult.PartnerId
+
+           LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
            LEFT JOIN ObjectString AS ObjectString_Address
-                                  ON ObjectString_Address.ObjectId = tmpResult.PartnerId
+                                  ON ObjectString_Address.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
                                  AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
            LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
@@ -507,7 +509,7 @@ BEGIN
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                ON ObjectLink_Partner_Personal.ObjectId = tmpResult.PartnerId
+                                ON ObjectLink_Partner_Personal.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                 ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Partner_Personal.ChildObjectId
@@ -517,7 +519,7 @@ BEGIN
                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpResult.PartnerId
+                                ON ObjectLink_Partner_PersonalTrade.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
      UNION ALL
       SELECT MovementItemContainer.OperDate

@@ -6,10 +6,9 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_FounderService(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )
-RETURNS void
+RETURNS VOID
 AS
 $BODY$
-  DECLARE vbMovementDescId Integer;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -154,7 +153,7 @@ BEGIN
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := vbMovementDescId
+                                , inDescId     := zc_Movement_FounderService()
                                 , inUserId     := inUserId
                                  );
 
