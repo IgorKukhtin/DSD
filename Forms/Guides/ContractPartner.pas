@@ -14,6 +14,7 @@ uses
 
 type
   TContractPartnerForm = class(TAncestorGuidesForm)
+    clContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

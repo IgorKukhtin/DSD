@@ -6,11 +6,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPartner_All(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
-             , ContractId Integer, InvNumber TVarChar
+             , ContractId Integer, ContractCode Integer, InvNumber TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , isErased boolean
 
- , InvNumberArchive TVarChar
+             , InvNumberArchive TVarChar
 
              , ContractKeyId Integer, ContractId_Key Integer, Code_Key Integer
              , InvNumber_Key TVarChar, ContractStateKindCode_Key Integer
@@ -66,6 +66,7 @@ BEGIN
            , Object_ContractPartner.ObjectCode  AS Code
          
            , Object_Contract_View.ContractId    AS ContractId
+           , Object_Contract_View.ContractCode  AS ContractCode
            , Object_Contract_View.InvNumber     AS InvNumber
 
            , Object_Partner.Id         AS PartnerId
@@ -312,8 +313,7 @@ ALTER FUNCTION gpSelect_Object_ContractPartner_All(TVarChar) OWNER TO postgres;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  19.01.15         * add поля договора
  16.01.15         * 
-        
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_ContractPartner_All (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractPartner_All (zfCalc_UserAdmin())

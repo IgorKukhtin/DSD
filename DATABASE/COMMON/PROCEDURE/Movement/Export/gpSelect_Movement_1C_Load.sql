@@ -49,7 +49,7 @@ BEGIN
                        THEN 6
              END :: TVarChar                                           AS VidDoc
            , Movement.InvNumber				               AS InvNumber
-           , TO_CHAR (COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate), 'DD.MM.YYYY') :: TVarChar AS OperDate
+           , TO_CHAR (Movement.OperDatePartner, 'DD.MM.YYYY') :: TVarChar AS OperDate
 
            , COALESCE (Object_Partner.Id, 0) :: TVarChar               AS ClientCode
            , Object_Partner.ValueData :: TVarChar                      AS ClientName
@@ -148,7 +148,19 @@ BEGIN
            , '' :: TVarChar                                            AS Doc2Date
            , '' :: TVarChar                                            AS Doc2Number
 
-       FROM Movement
+       FROM (SELECT Movement.*, Movement.OperDate AS OperDatePartner
+             FROM Movement
+             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
+               AND Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
+               AND Movement.StatusId = zc_Enum_Status_Complete()
+            UNION 
+             SELECT Movement.*, MovementDate_OperDatePartner.ValueData AS OperDatePartner
+             FROM MovementDate AS MovementDate_OperDatePartner
+                  INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                     AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+             WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate 
+            ) AS Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective())
@@ -170,9 +182,9 @@ BEGIN
                                                                                            THEN zc_MovementLinkObject_PaidKindFrom()
                                                                                   END
 
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+            /*LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
-                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()*/
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()

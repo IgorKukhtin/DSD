@@ -165,6 +165,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Options.Editing = False
             Width = 60
           end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'Code'
@@ -173,14 +181,6 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
-          end
-          object clContractTagName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractTagName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
@@ -537,6 +537,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -548,6 +549,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
     object actChoiceRoute: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Route_ObjectForm'
       FormName = 'TRoute_ObjectForm'
       FormNameParam.Value = 'TRoute_ObjectForm'
@@ -571,6 +573,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
     object actChoiceRouteSorting: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'RouteSorting_ObjectForm'
       FormName = 'TRouteSorting_ObjectForm'
       FormNameParam.Value = 'TRouteSorting_ObjectForm'
@@ -594,6 +597,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
     object actChoicePersonalTake: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Member_ObjectForm'
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'

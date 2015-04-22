@@ -46,6 +46,7 @@ BEGIN
         , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
         , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
                                    UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
+                                   UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentTaxAll()
                                         )
         , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
@@ -56,9 +57,9 @@ BEGIN
            , Movement.OperDate	                        AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
-           , MovementBoolean_Checked.ValueData          AS Checked
-           , MovementBoolean_Document.ValueData         AS Document
-           , MovementBoolean_Registered.ValueData       AS Registered
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean          AS Checked
+           , COALESCE (MovementBoolean_Document.ValueData, FALSE) :: Boolean         AS Document
+           , COALESCE (MovementBoolean_Registered.ValueData, FALSE) :: Boolean       AS Registered
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT

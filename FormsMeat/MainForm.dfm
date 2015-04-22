@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object TextEdit: TcxTextEdit [0]
@@ -365,8 +365,8 @@ inherited MainForm: TMainForm
     object actContractPartner: TdsdOpenForm [20]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1044#1086#1075#1086#1074#1086#1088#1072' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
-      Hint = #1044#1086#1075#1086#1074#1086#1088#1072' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093
+      Hint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1074' '#1076#1086#1075#1086#1074#1086#1088#1072#1093
       FormName = 'TContractPartnerForm'
       FormNameParam.Value = 'TContractPartnerForm'
       FormNameParam.DataType = ftString
@@ -962,8 +962,8 @@ inherited MainForm: TMainForm
     object actBankAccountContract: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1074#1089#1077#1093' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078')'
-      Hint = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1074#1089#1077#1093' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078')'
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1088'/'#1089#1095' '#1076#1083#1103' '#1042#1089#1077#1093' ('#1087#1077#1095#1072#1090#1100')'
+      Hint = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1088'/'#1089#1095' '#1076#1083#1103' '#1042#1089#1077#1093' ('#1087#1077#1095#1072#1090#1100')'
       FormName = 'TBankAccountContractForm'
       FormNameParam.Value = 'TBankAccountContractForm'
       FormNameParam.DataType = ftString
@@ -3639,6 +3639,9 @@ inherited MainForm: TMainForm
       object miPriceList: TMenuItem
         Action = actPriceList
       end
+      object N55: TMenuItem
+        Action = actGoodsPlatform
+      end
       object miTradeMark: TMenuItem
         Action = actTradeMark
       end
@@ -3674,9 +3677,6 @@ inherited MainForm: TMainForm
       end
       object miBox: TMenuItem
         Action = actBox
-      end
-      object N55: TMenuItem
-        Action = actGoodsPlatform
       end
       object N1: TMenuItem
         Caption = '-'
