@@ -191,6 +191,7 @@ BEGIN
                                                            , inPartnerInvNumber := inPartnerInvNumber
                                                            , inOrderInvNumber   := inOrderInvNumber
                                                            , inOKPO             := inOKPO
+                                                           , inIsCheck          := FALSE
                                                            , inUserId           := vbUserId);
 
 

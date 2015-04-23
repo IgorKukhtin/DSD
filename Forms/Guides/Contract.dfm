@@ -850,14 +850,16 @@ object ContractForm: TContractForm
           DataBinding.FieldName = 'isConnected'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 55
         end
         object clPartnerCode: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'PartnerCode'
+          Visible = False
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 84
+          Width = 45
         end
         object clPartnerName: TcxGridDBColumn
           Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -1386,6 +1388,7 @@ object ContractForm: TContractForm
     object PaidKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PaidKindChoiceForm'
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
@@ -1409,6 +1412,7 @@ object ContractForm: TContractForm
     object InsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableViewGoods
       Action = GoodsChoiceForm
       Params = <>
@@ -1419,6 +1423,7 @@ object ContractForm: TContractForm
     object InsertRecordCP: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPartner
       Action = PartnerChoiceForm
       Params = <>
@@ -1565,6 +1570,7 @@ object ContractForm: TContractForm
     object InsertRecordCCK: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableViewContractCondition
       Action = ContractConditionKindChoiceForm
       Params = <>
@@ -1611,6 +1617,7 @@ object ContractForm: TContractForm
     object ContractKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ContractKindChoiceForm'
       FormName = 'TContractKindForm'
       FormNameParam.Value = ''
@@ -1642,7 +1649,6 @@ object ContractForm: TContractForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSourceGoods
     end
@@ -1657,7 +1663,6 @@ object ContractForm: TContractForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSourcePartner
     end
@@ -1672,13 +1677,13 @@ object ContractForm: TContractForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'InfoMoneyChoiceForm'
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
@@ -1721,6 +1726,7 @@ object ContractForm: TContractForm
     object InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'InfoMoneyChoiceForm'
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
@@ -1744,6 +1750,7 @@ object ContractForm: TContractForm
     object JuridicalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'JuridicalChoiceForm'
       FormName = 'TJuridical_ObjectForm'
       FormNameParam.Value = ''
@@ -1801,7 +1808,6 @@ object ContractForm: TContractForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSourceGoods
@@ -1817,7 +1823,6 @@ object ContractForm: TContractForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSourcePartner
@@ -1833,7 +1838,6 @@ object ContractForm: TContractForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -1841,6 +1845,7 @@ object ContractForm: TContractForm
     object ContractTagChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ContractTagChoiceForm'
       FormName = 'TContractTagForm'
       FormNameParam.Value = 'TContractTagForm'
@@ -1864,6 +1869,7 @@ object ContractForm: TContractForm
     object BankAccountChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'BankAccountChoiceForm'
       FormName = 'TBankAccountForm'
       FormNameParam.Value = 'TBankAccountForm'
@@ -1924,6 +1930,7 @@ object ContractForm: TContractForm
     object ContractConditionKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ContractConditionKindChoiceForm'
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
@@ -1947,6 +1954,7 @@ object ContractForm: TContractForm
     object BonusKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'BonusKindChoiceForm'
       FormName = 'TBonusKindForm'
       FormNameParam.Value = 'TBonusKindForm'
@@ -1970,6 +1978,7 @@ object ContractForm: TContractForm
     object actContractCondition: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateContractCondition
       StoredProcList = <
         item
@@ -1981,6 +1990,7 @@ object ContractForm: TContractForm
     object actUpdateDSGoods: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateContractGoods
       StoredProcList = <
         item
@@ -1992,6 +2002,7 @@ object ContractForm: TContractForm
     object dsdUpdateDataSet1: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateContractPartner
       StoredProcList = <
         item
@@ -2003,6 +2014,7 @@ object ContractForm: TContractForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -2014,6 +2026,7 @@ object ContractForm: TContractForm
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PersonalChoiceForm'
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -2037,6 +2050,7 @@ object ContractForm: TContractForm
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsChoiceForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
@@ -2060,6 +2074,7 @@ object ContractForm: TContractForm
     object PersonalTradeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PersonalTradeChoiceForm'
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -2083,6 +2098,7 @@ object ContractForm: TContractForm
     object GoodsKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindChoiceForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = 'TGoodsKindForm'
@@ -2106,6 +2122,7 @@ object ContractForm: TContractForm
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PartnerChoiceForm'
       FormName = 'TPartner_ObjectForm'
       FormNameParam.Value = 'TPartner_ObjectForm'
@@ -2142,6 +2159,7 @@ object ContractForm: TContractForm
     object PersonalCollationChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PersonalCollationChoiceForm'
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -2165,6 +2183,7 @@ object ContractForm: TContractForm
     object JuridicalDocumentChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'JuridicalDocumentChoiceForm'
       FormName = 'TJuridical_ObjectForm'
       FormNameParam.Value = 'TJuridical_ObjectForm'

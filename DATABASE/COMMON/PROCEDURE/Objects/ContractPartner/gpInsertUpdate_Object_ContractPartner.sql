@@ -27,6 +27,17 @@ BEGIN
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContractPartner(), vbCode_calc);
 
+   -- проверка уникальности
+   IF EXISTS (SELECT Object_ContractPartner_View.ContractId
+              FROM Object_ContractPartner_View
+              WHERE Object_ContractPartner_View.ContractId = inContractId
+                AND Object_ContractPartner_View.PartnerId = inPartnerId
+                AND Object_ContractPartner_View.Id <> COALESCE (ioId, 0))
+   THEN 
+       RAISE EXCEPTION 'Ошибка.%Значение договор № <%> и контрагент <%> уже есть в справочнике.%Дублирование запрещено.', CHR(13), lfGet_Object_ValueData (inContractId), lfGet_Object_ValueData (inPartnerId), CHR(13);
+   END IF;   
+
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractPartner(), vbCode_calc, '');
                                 --, inAccessKeyId:= COALESCE ((SELECT Object_Branch.AccessKeyId FROM ObjectLink LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink.ChildObjectId WHERE ObjectLink.ObjectId = inUnitId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch()), zc_Enum_Process_AccessKey_TrasportDnepr()));
