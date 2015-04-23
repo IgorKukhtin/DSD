@@ -39,6 +39,12 @@ type
     cxLabel7: TcxLabel;
     cbInfoMoney: TcxCheckBox;
     GuidesAccountGroup: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edUnitGroup_by: TcxButtonEdit;
+    GuidesUnitGroup_by: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edLocation_by: TcxButtonEdit;
+    GuidesLocation_by: TdsdGuides;
   private
     { Private declarations }
   public

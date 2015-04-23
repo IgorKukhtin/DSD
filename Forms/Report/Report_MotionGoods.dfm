@@ -3,7 +3,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 670
-  ClientWidth = 1329
+  ClientWidth = 1344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 80
-    Width = 1329
+    Width = 1344
     Height = 590
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1329
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -1751,12 +1752,13 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1329
+    Width = 1344
     Height = 54
     Align = alTop
-    TabOrder = 2
+    TabOrder = 1
+    ExplicitWidth = 1329
     object edGoodsGroup: TcxButtonEdit
-      Left = 900
+      Left = 853
       Top = 5
       Properties.Buttons = <
         item
@@ -1786,7 +1788,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 85
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 585
+      Left = 555
       Top = 5
       Properties.Buttons = <
         item
@@ -1798,17 +1800,17 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 457
+      Left = 427
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object cxLabel1: TcxLabel
-      Left = 809
+      Left = 762
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoods: TcxButtonEdit
-      Left = 900
+      Left = 853
       Top = 30
       Properties.Buttons = <
         item
@@ -1820,7 +1822,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 192
     end
     object edLocation: TcxButtonEdit
-      Left = 585
+      Left = 555
       Top = 30
       Properties.Buttons = <
         item
@@ -1832,7 +1834,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 203
     end
     object cxLabel4: TcxLabel
-      Left = 511
+      Left = 481
       Top = 31
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
     end
@@ -1847,12 +1849,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
     end
     object cxLabel7: TcxLabel
-      Left = 860
+      Left = 813
       Top = 31
       Caption = #1058#1086#1074#1072#1088':'
     end
     object ceAccountGroup: TcxButtonEdit
-      Left = 243
+      Left = 221
       Top = 5
       Properties.Buttons = <
         item
@@ -1864,17 +1866,51 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 200
     end
     object cxLabel2: TcxLabel
-      Left = 170
+      Left = 148
       Top = 6
       Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072':'
     end
     object cbInfoMoney: TcxCheckBox
-      Left = 243
+      Left = 221
       Top = 30
       Action = actIsInfoMoney
       Properties.ReadOnly = False
       TabOrder = 14
       Width = 166
+    end
+    object cxLabel8: TcxLabel
+      Left = 1052
+      Top = 6
+      Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076'.1:'
+    end
+    object cxLabel9: TcxLabel
+      Left = 1071
+      Top = 31
+      Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' 1:'
+    end
+    object edUnitGroup_by: TcxButtonEdit
+      Left = 1152
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 189
+    end
+    object edLocation_by: TcxButtonEdit
+      Left = 1152
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 189
     end
   end
   object cbGoodsKind: TcxCheckBox
@@ -1882,7 +1918,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 87
     Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
     Properties.ReadOnly = False
-    TabOrder = 4
+    TabOrder = 2
     Width = 114
   end
   object cbPartionGoods: TcxCheckBox
@@ -1890,7 +1926,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 87
     Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
     Properties.ReadOnly = False
-    TabOrder = 6
+    TabOrder = 5
     Width = 88
   end
   object cbAmount: TcxCheckBox
@@ -2281,6 +2317,36 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Value = Null
           Component = cbInfoMoney
           DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitGroupId_by'
+          Value = Null
+          Component = GuidesUnitGroup_by
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitGroupName_by'
+          Value = Null
+          Component = GuidesUnitGroup_by
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'LocationId_by'
+          Value = Null
+          Component = GuidesLocation_by
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'LocationName_by'
+          Value = Null
+          Component = GuidesLocation_by
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
         end>
       isShowModal = True
@@ -2733,6 +2799,20 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         ParamType = ptInput
       end
       item
+        Name = 'inUnitGroupId_by'
+        Value = Null
+        Component = GuidesUnitGroup_by
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLocationId_by'
+        Value = Null
+        Component = GuidesLocation_by
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inIsInfoMoney'
         Value = Null
         Component = cbInfoMoney
@@ -3103,5 +3183,60 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     PackSize = 1
     Left = 528
     Top = 272
+  end
+  object GuidesUnitGroup_by: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitGroup_by
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitGroup_by
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitGroup_by
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1192
+    Top = 65528
+  end
+  object GuidesLocation_by: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLocation_by
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TStoragePlace_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLocation_by
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLocation_by
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1248
+    Top = 24
   end
 end
