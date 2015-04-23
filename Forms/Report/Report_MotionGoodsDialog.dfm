@@ -3,7 +3,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 260
+  ClientHeight = 296
   ClientWidth = 453
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 98
-    Top = 220
+    Top = 263
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   end
   object cxButton2: TcxButton
     Left = 272
-    Top = 220
+    Top = 263
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -65,8 +65,8 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
     Width = 200
   end
   object edGoodsGroup: TcxButtonEdit
-    Left = 11
-    Top = 177
+    Left = 8
+    Top = 179
     Properties.Buttons = <
       item
         Default = True
@@ -154,6 +154,40 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
     Properties.ReadOnly = False
     TabOrder = 16
     Width = 166
+  end
+  object cxLabel8: TcxLabel
+    Left = 11
+    Top = 206
+    Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' 1:'
+  end
+  object edUnitGroup_by: TcxButtonEdit
+    Left = 11
+    Top = 224
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 18
+    Width = 200
+  end
+  object cxLabel9: TcxLabel
+    Left = 240
+    Top = 206
+    Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' 1:'
+  end
+  object edLocation_by: TcxButtonEdit
+    Left = 240
+    Top = 224
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 200
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -276,9 +310,39 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         Component = cbInfoMoney
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'UnitGroupId_by'
+        Value = Null
+        Component = GuidesUnitGroup_by
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'UnitGroupName_by'
+        Value = Null
+        Component = GuidesUnitGroup_by
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'LocationId_by'
+        Value = Null
+        Component = GuidesLocation_by
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'LocationName_by'
+        Value = Null
+        Component = GuidesLocation_by
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
-    Left = 32
-    Top = 208
+    Left = 24
+    Top = 232
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -419,5 +483,60 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
       end>
     Left = 128
     Top = 45
+  end
+  object GuidesUnitGroup_by: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitGroup_by
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitGroup_by
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitGroup_by
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 56
+    Top = 216
+  end
+  object GuidesLocation_by: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLocation_by
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TStoragePlace_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLocation_by
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLocation_by
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 320
+    Top = 216
   end
 end
