@@ -48,13 +48,22 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Width = 224
           end
           object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 72
+          end
+          object colPriceSale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -205,6 +214,7 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
     object actRefreshSearch: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = gpGetObjectGoods
       StoredProcList = <
         item
@@ -212,6 +222,59 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
         end>
       Caption = 'actRefreshSearch'
       ShortCut = 13
+    end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormName = 'NULL'
+      FormNameParam.Value = Null
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actGetForm'
+    end
+    object actOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 28
+      ShortCut = 115
     end
   end
   inherited MasterDS: TDataSource
@@ -257,6 +320,43 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocument'
+        end>
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = actOpenDocument
+      Category = 0
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actOpenDocument
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 32
@@ -326,5 +426,38 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
     PackSize = 1
     Left = 120
     Top = 128
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 120
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'FormName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 192
+    Top = 144
   end
 end

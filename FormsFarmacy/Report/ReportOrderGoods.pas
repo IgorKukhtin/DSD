@@ -40,6 +40,9 @@ type
     gpGetObjectGoods: TdsdStoredProc;
     colStatusName: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
+    colPriceSale: TcxGridDBColumn;
+    getMovementForm: TdsdStoredProc;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

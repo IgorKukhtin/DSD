@@ -252,8 +252,8 @@ begin
                          else begin
                             ParamByName('inGoodsName').Value := LineDataSet.Fields['TAB1_A3'].Value;
                             ParamByName('inMeasureName').Value := LineDataSet.Fields['TAB1_A4'].Value;
-                            ParamByName('inAmount').Value := LineDataSet.Fields['TAB1_A5'].Value;
-                            ParamByName('inSumm').Value := LineDataSet.Fields['TAB1_A9'].Value;
+                            ParamByName('inAmount').Value := - LineDataSet.Fields['TAB1_A5'].Value;
+                            ParamByName('inSumm').Value := - LineDataSet.Fields['TAB1_A9'].Value;
                          end;
                          Execute;
                          LineDataSet.Next;

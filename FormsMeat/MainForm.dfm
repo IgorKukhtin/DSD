@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 262
+  ExplicitWidth = 1094
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   object TextEdit: TcxTextEdit [0]
@@ -2002,16 +2002,6 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actMovementDesc: TdsdOpenForm
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      FormName = 'TMovementDescDataForm'
-      FormNameParam.Value = 'TMovementDescDataForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
     object actSetUserDefaults: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
@@ -3852,9 +3842,6 @@ inherited MainForm: TMainForm
       end
       object miSetUserDefaults: TMenuItem [5]
         Action = actSetUserDefaults
-      end
-      object miMovementDesc: TMenuItem [6]
-        Action = actMovementDesc
       end
       object miPeriodClose: TMenuItem [7]
         Action = actPeriodClose

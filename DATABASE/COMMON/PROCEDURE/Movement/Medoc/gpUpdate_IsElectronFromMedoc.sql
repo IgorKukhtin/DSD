@@ -83,12 +83,16 @@ BEGIN
                          LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                   ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-              WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.INN = inToINN  
-                AND JuridicalTo.INN = inFromINN AND Movement.StatusId <> zc_Enum_Status_Erased()
+              WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.INN = inFromINN  
+                AND JuridicalTo.INN = inToINN AND Movement.StatusId <> zc_Enum_Status_Erased()
                 AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective();
               IF COALESCE(vbMovementId, 0) = 0 AND COALESCE(vbAccessKey, 0) <> 0 THEN 
-                 SELECT JuridicalId INTO vbFromId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inFromINN;
-                 SELECT JuridicalId INTO vbToId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inToINN;
+                 SELECT JuridicalId INTO vbToId 
+                   FROM ObjectHistory_JuridicalDetails_View 
+                  WHERE ObjectHistory_JuridicalDetails_View.INN = inFromINN;
+                 SELECT JuridicalId INTO vbFromId 
+                   FROM ObjectHistory_JuridicalDetails_View 
+                  WHERE ObjectHistory_JuridicalDetails_View.INN = inToINN;
                  vbMovementId := lpInsert_Movement_TaxCorrectiveMedoc(inInvNumber, inInvNumberBranch, 
                                        inOperDate, 20::TFloat, vbFromId, vbToId, vbUserId);
                  update Movement set AccessKeyId = vbAccessKey where Id = vbMovementId;
