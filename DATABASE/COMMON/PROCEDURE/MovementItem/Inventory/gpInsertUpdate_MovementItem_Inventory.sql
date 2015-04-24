@@ -29,45 +29,25 @@ BEGIN
      -- меняем параметр
      IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 
-
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-     -- сохранили свойство <Сумма>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
-
-     -- сохранили свойство <Количество голов>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
-     -- сохранили свойство <Количество батонов или упаковок>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
-
-
-     -- сохранили свойство <Дата партии/Дата перемещения>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
-     -- сохранили свойство <Партия товара/Инвентарный номер>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
-
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-
-     -- сохранили связь с <Подразделение (для МО)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
-     -- сохранили связь с <Место хранения>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
-
-     -- создали объект <Связи Товары и Виды товаров>
-     PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+-- сохранили
+     SELECT tmp.ioId
+            INTO ioId
+     FROM lpInsertUpdate_MovementItem_Inventory (ioId                 := ioId
+                                               , inMovementId         := inMovementId
+                                               , inGoodsId            := inGoodsId
+                                               , inAmount             := inAmount
+                                               , inPartionGoodsDate   := inPartionGoodsDate
+                                               , inPrice              := inPrice
+                                               , inSumm               := inSumm
+                                               , inHeadCount          := inHeadCount
+                                               , inCount              := inCount
+                                               , inPartionGoods       := inPartionGoods
+                                               , inGoodsKindId        := inGoodsKindId
+                                               , inAssetId            := inAssetId
+                                               , inUnitId             := inUnitId
+                                               , inStorageId          := inStorageId
+                                               , inUserId             := vbUserId
+                                                ) AS tmp;
 
 END;
 $BODY$
@@ -76,6 +56,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.04.05         * add lpInsertUpdate_MovementItem_Inventory
  26.07.14                                        * add inPrice and inUnitId and inStorageId
  21.08.13                                        * add inGoodsKindId
  18.07.13         *

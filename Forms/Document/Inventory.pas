@@ -50,6 +50,9 @@ type
     colPartionGoodsDate: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
+    spInsertUpdateMIAmount: TdsdStoredProc;
+    actInsertUpdateMIAmount: TdsdExecStoredProc;
+    bbInsertUpdateMIAmount: TdxBarButton;
   private
     { Private declarations }
   public
