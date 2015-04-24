@@ -37,6 +37,8 @@ type
     miAbout: TMenuItem;
     miUpdateProgramm: TMenuItem;
     frxXLSExport: TfrxXLSExport;
+    actMovementDesc: TdsdOpenForm;
+    miMovementDesc: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure actUpdateProgramExecute(Sender: TObject);
