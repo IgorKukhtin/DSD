@@ -8,10 +8,11 @@ CREATE OR REPLACE FUNCTION gpReport_OrderGoodsSearch(
   , IN inEndDate       TDateTime
   , IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ItemName TVarChar, Amount TFloat, 
+RETURNS TABLE (MovementId Integer, ItemName TVarChar, Amount TFloat, 
                Code Integer, Name TVarChar, 
                OperDate TDateTime, InvNumber TVarChar, 
                UnitName TVarChar, JuridicalName TVarChar, Price TFloat, StatusName TVarChar
+             , PriceSale TFloat
              , OrderKindId Integer,  OrderKindName TVarChar, Comment  TVarChar)
 
 
@@ -32,9 +33,10 @@ BEGIN
      vbUnitId := vbUnitKey::Integer;
 
      RETURN QUERY
-      SELECT MovementDesc.ItemName,  MovementItem.Amount, Object.ObjectCode, Object.ValueData, 
+      SELECT Movement.Id AS MovementId,  MovementDesc.ItemName,  MovementItem.Amount, Object.ObjectCode, Object.ValueData, 
        Movement.OperDate, Movement.InvNumber, Object_Unit.ValueData, Object_From.ValueData, 
        MIFloat_Price.ValueData, Status.ValueData
+           , MIFloat_PriceSale.ValueData        AS PriceSale
            , Object_OrderKind.Id                AS OrderKindId
            , Object_OrderKind.ValueData         AS OrderKindName
            , MIString_Comment.ValueData         AS Comment
@@ -47,6 +49,11 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
+ 
+                  LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                               ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                              AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+
 --                                                  AND Movement.DescId = zc_Movement_OrderExternal() 
    LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -86,6 +93,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.04.15                        *
  18.03.15                        *
  27.01.15                        *
  21.01.15                        *

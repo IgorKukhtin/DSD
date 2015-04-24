@@ -2,7 +2,6 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitLeft = -246
   ExplicitWidth = 1080
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -491,7 +490,25 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actUnitChoice: TOpenChoiceForm [15]
+    object actInsertUpdateMIAmount: TdsdExecStoredProc [15]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIAmount
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIAmount
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1086#1089#1090#1072#1090#1086#1082' '#1082#1086#1083'-'#1074#1086' '#1085#1072' '#1076#1072#1090#1091'>'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1086#1089#1090#1072#1090#1086#1082' '#1082#1086#1083'-'#1074#1086' '#1085#1072' '#1076#1072#1090#1091'>'
+      ImageIndex = 50
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1086#1089#1090#1072#1090#1086#1082' '#1082#1086#1083'-'#1074#1086' '#1085#1072' '#1076#1072#1090#1091'> ?'
+      InfoAfterExecute = '<'#1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1076#1072#1090#1091'> '#1079#1072#1087#1086#1083#1085#1077#1085' '#1091#1089#1087#1077#1096#1085#1086'.'
+    end
+    object actUnitChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -515,7 +532,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -655,6 +672,14 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdateMIAmount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -687,6 +712,10 @@ inherited InventoryForm: TInventoryForm
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
+    end
+    object bbInsertUpdateMIAmount: TdxBarButton
+      Action = actInsertUpdateMIAmount
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1300,5 +1329,21 @@ inherited InventoryForm: TInventoryForm
       end>
     Left = 568
     Top = 8
+  end
+  object spInsertUpdateMIAmount: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Inventory_Amount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 330
+    Top = 384
   end
 end

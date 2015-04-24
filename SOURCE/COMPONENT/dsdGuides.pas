@@ -660,15 +660,21 @@ begin
 end;
 
 procedure TCustomGuides.SetTextValue(const Value: String);
+var
+  TextShow: string;
 begin
   FTextValue := Value;
+  if (FTextValue = '') and (Key <> '0') and (Key <> '') then
+     TextShow := Key
+  else
+     TextShow := FTextValue;
   if Assigned(LookupControl) then begin
      if LookupControl is TcxLookupComboBox then
-        (LookupControl as TcxLookupComboBox).Text := Value;
+        (LookupControl as TcxLookupComboBox).Text := TextShow;
      if LookupControl is TcxButtonEdit then
-        (LookupControl as TcxButtonEdit).Text := Value;
+        (LookupControl as TcxButtonEdit).Text := TextShow;
      if LookupControl is TcxDBButtonEdit then
-        (LookupControl as TcxDBButtonEdit).Text := Value;
+        (LookupControl as TcxDBButtonEdit).Text := TextShow;
   end;
 end;
 

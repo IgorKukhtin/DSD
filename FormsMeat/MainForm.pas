@@ -105,7 +105,6 @@ type
     actCity: TdsdOpenForm;
     actReport_JuridicalSold: TdsdOpenForm;
     actReport_JuridicalCollation: TdsdOpenForm;
-    actMovementDesc: TdsdOpenForm;
     actReport_GoodsMISale: TdsdOpenForm;
     actSendDebt: TdsdOpenForm;
     actPartner1CLink: TdsdOpenForm;

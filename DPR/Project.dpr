@@ -76,22 +76,35 @@ uses
   MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas',
   MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas',
   dsdException in '..\SOURCE\dsdException.pas',
-  dsdApplication in '..\SOURCE\dsdApplication.pas';
+  dsdApplication in '..\SOURCE\dsdApplication.pas',
+  ScriptXML in '..\SOURCE\AutoMode\ScriptXML.pas',
+  RunScript in '..\SOURCE\AutoMode\RunScript.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
 
+var i: integer;
+
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
-  TdsdApplication.Create;
 
+  if FindCmdLineSwitch('autosrcipt', true) then begin
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+     i := 0;
+     while ParamStr(i) <> '/autosrcipt' do
+           inc(i);
+     TRunScript.RunScript(ParamStr(i + 1));
+     exit;
+  end;
+
+  TdsdApplication.Create;
   // Процесс аутентификации
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
      TUpdater.AutomaticUpdateProgram;
+     Application.CreateForm(TdmMain, dmMain);
      Application.CreateForm(TMainForm, MainFormInstance);
-  Application.CreateForm(TdmMain, dmMain);
   end
   else
     with TLoginForm.Create(Application) do

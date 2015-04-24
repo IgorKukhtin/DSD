@@ -324,6 +324,8 @@ begin
                 end;
                 // теперь перенесли файл в директроию Archive
                 try
+                  if not FIdFTP.Connected then
+                     FIdFTP.Connect;
                   FIdFTP.ChangeDir('/archive');
                   FIdFTP.Put(Stream, List[i]);
                 finally
