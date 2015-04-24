@@ -235,6 +235,10 @@ BEGIN
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                            THEN zc_Enum_ProfitLossDirection_70400() -- Дополнительная прибыль + Списание кредиторской задолженности
 
+                                                      WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
+                                                       AND _tmpItem.MovementDescId = zc_Movement_LossDebt()
+                                                           THEN zc_Enum_ProfitLossDirection_80300() -- Расходы с прибыли + Списание дебиторской задолженности
+
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80500() -- Собственный капиталл + Прочие
                                                            THEN zc_Enum_ProfitLossDirection_80400() -- Расходы с прибыли + Прочие
 
@@ -249,6 +253,7 @@ BEGIN
 
                                          -- WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                          WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Продукция OR Доходы + Мясное сырье
+                                          AND _tmpItem.MovementDescId <> zc_Movement_LossDebt()
                                               THEN zc_Enum_ProfitLoss_10301() -- Результат основной деятельности + Скидка дополнительная + Продукция
 
                                          WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
