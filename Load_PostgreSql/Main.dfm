@@ -38,11 +38,10 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1240
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1240
+      Width = 1020
       Height = 19
       Align = alTop
       Progress = 50
@@ -127,7 +126,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 469
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -708,7 +706,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitLeft = 790
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -1110,9 +1107,9 @@ object MainForm: TMainForm
       TabOrder = 26
     end
     object cbOnlyUpdateInt: TCheckBox
-      Left = 3
+      Left = 6
       Top = 461
-      Width = 235
+      Width = 157
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1076#1072#1085#1085#1099#1077' '#1057#1082#1083#1072#1076#1072
       Font.Charset = DEFAULT_CHARSET
@@ -1386,6 +1383,21 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 45
     end
+    object cbDocERROR: TCheckBox
+      Left = 166
+      Top = 454
+      Width = 75
+      Height = 31
+      Caption = #1058#1086#1083#1100#1082#1086' c ERROR'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 46
+      WordWrap = True
+    end
   end
   object CompleteDocumentPanel: TPanel
     Left = 808
@@ -1395,7 +1407,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitLeft = 1028
     object Label3: TLabel
       Left = 6
       Top = 22

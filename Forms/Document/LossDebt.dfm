@@ -1546,13 +1546,7 @@ object LossDebtForm: TLossDebtForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    GuidesList = <
-      item
-        Guides = GuidesAccount
-      end
-      item
-        Guides = PaidKindGuides
-      end>
+    GuidesList = <>
     ActionItemList = <
       item
         Action = actInsertUpdateMovement

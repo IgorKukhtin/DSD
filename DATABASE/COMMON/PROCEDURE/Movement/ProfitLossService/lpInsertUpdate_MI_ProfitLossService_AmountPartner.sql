@@ -47,9 +47,9 @@ BEGIN
                , vbInfoMoneyId_all, vbPaidKindId_all
      FROM MovementItem
           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-          INNER JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
-                                            ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
+                                           ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
           LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()

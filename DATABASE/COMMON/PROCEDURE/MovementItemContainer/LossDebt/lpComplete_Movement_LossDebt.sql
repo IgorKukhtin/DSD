@@ -10,10 +10,33 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbPartionMovementId Integer;
+   DECLARE vbOperDate TDateTime;
+   DECLARE vbIsLossOnly Boolean;
 BEGIN
+     -- проверка
      IF inMovementId = 123096 -- № 15 от 31.12.2013
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не может быть проведен.';
+     END IF;
+
+     -- проверка
+     vbIsLossOnly:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) >= '01.01.2015';
+     IF vbIsLossOnly = TRUE
+        AND EXISTS (SELECT MovementItem.MovementId
+                    FROM MovementItem
+                         LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                     ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                         LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                       ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                      AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId = zc_MI_Master()
+                      AND MovementItem.isErased = FALSE
+                      AND (MIFloat_Summ.ValueData <> 0 OR MIBoolean_Calculated.ValueData = TRUE)
+                   )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе операция <Ввод долга> запрещена.';
      END IF;
 
 
@@ -30,6 +53,7 @@ BEGIN
            WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.isErased = FALSE 
              AND COALESCE (MIFloat_Summ.ValueData, 0) = 0
+             AND vbIsLossOnly = FALSE -- !!!только если НЕ списание!!!
           ) AS tmp
      WHERE MovementItem.Id = tmp.Id;
 
@@ -209,6 +233,7 @@ BEGIN
                                                                  AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
                                                                  AND ContainerLO_PartionMovement.ObjectId = 0
                                WHERE ContainerLO_PartionMovement.ContainerId IS NULL -- !!!некрасивое решение!!!
+                                 AND vbIsLossOnly = FALSE -- !!!только если НЕ списание!!!
                                  /*AND ((ContainerLO_Branch.ObjectId IN (zc_Branch_Basis(), 0)
                                        AND tmpMovement.MovementId = 1110118  -- № 27 от 31.12.2014
                                       ) OR tmpMovement.MovementId <> 1110118) -- № 27 от 31.12.2014*/
@@ -256,9 +281,14 @@ BEGIN
                                                                  AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
                                                                  AND ContainerLO_PartionMovement.ObjectId = 0
                                WHERE tmpMovement.AccountId <> 0
+                                 AND vbIsLossOnly = FALSE -- !!!только если НЕ списание!!!
                                  AND ((ContainerLO_Branch.ObjectId IN (zc_Branch_Basis(), 0)
                                        AND tmpMovement.MovementId = 1110118  -- № 27 от 31.12.2014
-                                      ) OR tmpMovement.MovementId <> 1110118) -- № 27 от 31.12.2014
+                                      )
+                                   OR (ContainerLO_Branch.ObjectId IN (8378)
+                                       AND tmpMovement.MovementId = 1374968 -- № 36 от 31.12.2014
+                                      )
+                                   OR tmpMovement.MovementId NOT IN (1110118, 1374968)) -- № 27 от 31.12.2014 + № 36 от 31.12.2014
                                  AND ContainerLO_PartionMovement.ContainerId IS NULL -- !!!некрасивое решение!!!
                               UNION
                                -- Все контейнеры - для Вид формы оплаты, если пустой счет
@@ -285,8 +315,9 @@ BEGIN
                                                                                                                  , zc_Enum_AccountGroup_90000() -- Расчеты с бюджетом
                                                                                                                   )
                                      WHERE tmpMovement.AccountId = 0
-                                       AND tmpMovement.MovementId <> 123096 -- № 15 от 31.12.2013
-                                       AND tmpMovement.MovementId <> 1110118  -- № 27 от 31.12.2014
+                                       AND tmpMovement.MovementId <> 123096  -- № 15 от 31.12.2013
+                                       AND tmpMovement.MovementId <> 1110118 -- № 27 от 31.12.2014
+                                       AND tmpMovement.MovementId <> 1374968 -- № 36 от 31.12.2014
                                     ) AS tmpMovement
                                     JOIN ContainerLinkObject AS ContainerLO_PaidKind
                                                              ON ContainerLO_PaidKind.ObjectId = tmpMovement.PaidKindId
@@ -318,6 +349,7 @@ BEGIN
                                                                  AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
                                                                  AND ContainerLO_PartionMovement.ObjectId = 0
                                WHERE ContainerLO_PartionMovement.ContainerId IS NULL -- !!!некрасивое решение!!!
+                                 AND vbIsLossOnly = FALSE -- !!!только если НЕ списание!!!
                               )
         , tmpContainerSumm AS (SELECT tmpListContainer.ContainerId
                                     , tmpListContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummRemainsEnd

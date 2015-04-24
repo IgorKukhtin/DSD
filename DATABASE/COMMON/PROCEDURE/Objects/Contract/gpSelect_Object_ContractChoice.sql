@@ -111,7 +111,7 @@ BEGIN
        
    FROM _tmpPaidKind
         INNER JOIN Object_Contract_View ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
-                                       AND Object_Contract_View.isErased = FALSE
+                                       -- AND Object_Contract_View.isErased = FALSE
                                        AND Object_Contract_View.JuridicalId = inJuridicalId
         LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.JuridicalId = Object_Contract_View.JuridicalId
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind

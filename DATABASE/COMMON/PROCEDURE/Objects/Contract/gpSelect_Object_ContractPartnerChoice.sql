@@ -170,6 +170,7 @@ BEGIN
 
          LEFT JOIN Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
                                          AND Container_Partner_View.ContractId = Object_Contract_View.ContractId
+                                         AND (Container_Partner_View.BranchId = vbBranchId_Constraint OR vbBranchId_Constraint = 0)
 
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
@@ -353,6 +354,7 @@ BEGIN
 
          LEFT JOIN Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
                                          AND Container_Partner_View.ContractId = Object_Contract_View.ContractId
+                                         AND (Container_Partner_View.BranchId = vbBranchId_Constraint OR vbBranchId_Constraint = 0)
 
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id

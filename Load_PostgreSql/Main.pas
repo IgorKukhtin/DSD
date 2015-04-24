@@ -184,6 +184,7 @@ type
     cbCompleteIncome_UpdateConrtact: TCheckBox;
     cbInsertHistoryCost_andReComplete: TCheckBox;
     fromQueryDate: TADOQuery;
+    cbDocERROR: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -10041,6 +10042,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Income(isLastComplete:Boolean);
+var isDocBEGIN:Boolean;
 begin
      if (not cbCompleteIncomeBN.Checked)or(not cbCompleteIncomeBN.Enabled) then exit;
      //
@@ -10123,6 +10125,17 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              if cbUnComplete.Checked then
              begin
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -10146,6 +10159,8 @@ begin
                        if not myExecToStoredProc_two then ;//exit;
                   end;
              end;
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -10163,6 +10178,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Income:Integer;
 var JuridicalId_pg,PartnerId_pg,ContractId_pg,PersonalPackerId_pg:Integer;
+    isDocBEGIN:Boolean;
 begin
        Result:=0;
      if (not cbIncomeBN.Checked)or(not cbIncomeBN.Enabled) then exit;
@@ -10304,6 +10320,19 @@ begin
              PartnerId_pg:=0;
              JuridicalId_pg:=0;
              ContractId_pg:=0;
+             //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                  cbUpdateConrtact.Checked:=TRUE;
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              //Сначала находим контрагента  и юр.лицо по ОКПО
              fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, Object_Partner.ObjectCode as PartnerCode, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
                            +' from ObjectHistory_JuridicalDetails_View'
@@ -10397,6 +10426,9 @@ begin
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
              //
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
+
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -10409,7 +10441,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Income(SaveCount:Integer);
 begin
-     if (cbOKPO.Checked)then exit;
+     if (cbOKPO.Checked)or(cbDocERROR.Checked)then exit;
      if (not cbIncomeBN.Checked)or(not cbIncomeBN.Enabled) then exit;
      //
      myEnabledCB(cbIncomeBN);
@@ -10685,6 +10717,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_IncomeNal(isLastComplete:Boolean);
+var isDocBEGIN:Boolean;
 begin
      if (not cbCompleteIncomeNal.Checked)or(not cbCompleteIncomeNal.Enabled) then exit;
      //
@@ -10773,6 +10806,17 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              if cbUnComplete.Checked then
              begin
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -10796,6 +10840,8 @@ begin
                       if not myExecToStoredProc_two then ;//exit;
                   end;
              end;
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -11355,6 +11401,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_IncomeNal:Integer;
 var JuridicalId_pg,PartnerId_pg,ContractId_pg,PersonalPackerId_pg:Integer;
+    isDocBEGIN:Boolean;
 begin
      Result:=0;
      if (not cbIncomeNal.Checked)or(not cbIncomeNal.Enabled) then exit;
@@ -11507,6 +11554,17 @@ begin
              JuridicalId_pg:=0;
              ContractId_pg:=0;
              //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                  //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              if FieldByName('isOKPO_Virtual').AsInteger=zc_rvYes
              then begin
                         //находим юр.лицо по Контрагенту
@@ -11658,6 +11716,8 @@ begin
                                                     +'                                           )'
                                                     );
                   end;}
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -11671,7 +11731,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_IncomeNal(SaveCount:Integer);
 begin
-     if (cbOKPO.Checked)then exit;
+     if (cbOKPO.Checked)or(cbDocERROR.Checked)then exit;
      if (not cbIncomeNal.Checked)or(not cbIncomeNal.Enabled) then exit;
      //
      myEnabledCB(cbIncomeNal);
@@ -11808,6 +11868,7 @@ end;
 function TMainForm.pLoadDocument_IncomePacker:Integer;
 var
    FromId_pg, ContractId_pg,PaidKindId_pg:Integer;
+   isDocBEGIN:Boolean;
 begin
      Result:=0;
      if (not cbIncomePacker.Checked)or(not cbIncomePacker.Enabled) then exit;
@@ -11892,6 +11953,17 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                  cbUpdateConrtact.Checked:=TRUE;
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
              // !!!договор и поставщика из документа!!!
              if (FieldByName('Id_Postgres').AsInteger<>0)then
              begin
@@ -11942,6 +12014,8 @@ begin
              //
              if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and isnull(Id_Postgres,0)<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -11955,6 +12029,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_IncomePacker(SaveCount:Integer);
 begin
+     if (cbOKPO.Checked)or(cbDocERROR.Checked)then exit;
      if (not cbIncomePacker.Checked)or(not cbIncomePacker.Enabled) then exit;
      //
      myEnabledCB(cbIncomePacker);
@@ -12754,6 +12829,7 @@ var
    CurrencyDocumentId:Integer;
    CurrencyPartnerId:Integer;
    zc_Enum_Currency_Basis:Integer;
+   isDocBEGIN:Boolean;
 begin
      if (not cbCompleteSaleInt.Checked)or(not cbCompleteSaleInt.Enabled) then exit;
      //
@@ -12821,7 +12897,18 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
-
+             //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              //!!!ВАЛЮТА!!!
              begin
                    fOpenSqToQuery (' SELECT coalesce (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis())   AS CurrencyDocumentId'
@@ -12877,6 +12964,8 @@ begin
 
              end; //if !!!если ВАЛЮТА, ничего не делаем!!!
 
+         end; //if isDocBEGIN // если надо обработать только ошибки
+             //
              Next;
              Application.ProcessMessages;
              Application.ProcessMessages;
@@ -12896,6 +12985,7 @@ var
    CurrencyDocumentId:Integer;
    CurrencyPartnerId:Integer;
    zc_Enum_Currency_Basis:Integer;
+   isDocBEGIN:Boolean;
 begin
      if (not cbCompleteSaleIntNal.Checked)or(not cbCompleteSaleIntNal.Enabled) then exit;
      //
@@ -12964,7 +13054,18 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
-
+             //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              //!!!ВАЛЮТА!!!
              begin
                    fOpenSqToQuery (' SELECT coalesce (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis())   AS CurrencyDocumentId'
@@ -13023,6 +13124,8 @@ begin
 
              end; //if !!!если ВАЛЮТА, ничего не делаем!!!
 
+         end; //if isDocBEGIN // если надо обработать только ошибки
+             //
              Next;
              Application.ProcessMessages;
              Application.ProcessMessages;
@@ -13122,6 +13225,7 @@ begin
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_ReturnIn_IntBN(isLastComplete:Boolean);
+var isDocBEGIN:Boolean;
 begin
      if (not cbCompleteReturnInInt.Checked)or(not cbCompleteReturnInInt.Enabled) then exit;
      //
@@ -13202,6 +13306,19 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+
+             //
              if cbUnComplete.Checked then
              begin
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -13226,6 +13343,8 @@ begin
                        if not myExecToStoredProc_two then ;//exit;
                   end;
              end;
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -13242,6 +13361,7 @@ begin
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_ReturnIn_IntNal(isLastComplete:Boolean);
+var isDocBEGIN:Boolean;
 begin
      if (not cbCompleteReturnInIntNal.Checked)or(not cbCompleteReturnInIntNal.Enabled) then exit;
      //
@@ -13322,6 +13442,18 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+
+             //
              if cbUnComplete.Checked then
              begin
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -13346,6 +13478,8 @@ begin
                        if not myExecToStoredProc_two then ;//exit;
                   end;
              end;
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -13452,6 +13586,7 @@ var ContractId_pg,PriceListId:Integer;
    CurrencyDocumentId:Integer;
    CurrencyPartnerId:Integer;
    zc_Enum_Currency_Basis:Integer;
+   isDocBEGIN:Boolean;
 begin
      Result:=0;
      if (not cbSaleIntNal.Checked)or(not cbSaleIntNal.Enabled) then exit;
@@ -13534,7 +13669,17 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
-
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              //!!!ВАЛЮТА!!!
              if FieldByName('Id_Postgres').AsInteger<>0 then
              begin
@@ -13668,6 +13813,8 @@ begin
 
              end; //if !!!если ВАЛЮТА, ничего не делаем!!!
 
+         end; //if isDocBEGIN // если надо обработать только ошибки
+             //
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -13685,7 +13832,7 @@ var str:String;
    CurrencyPartnerId:Integer;
    zc_Enum_Currency_Basis:Integer;
 begin
-     if (cbOKPO.Checked)then exit;
+     if (cbOKPO.Checked)or(cbDocERROR.Checked)then exit;
      if (not cbSaleIntNal.Checked)or(not cbSaleIntNal.Enabled) then exit;
      //
      myEnabledCB(cbSaleIntNal);
@@ -13902,6 +14049,7 @@ var ContractId_pg,PriceListId:Integer;
    CurrencyDocumentId:Integer;
    CurrencyPartnerId:Integer;
    zc_Enum_Currency_Basis:Integer;
+   isDocBEGIN:Boolean;
 begin
      Result:=0;
      if (not cbSaleInt.Checked)or(not cbSaleInt.Enabled) then exit;
@@ -13983,7 +14131,19 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
-             // gc_isDebugMode:=true;
+
+             //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              //
              //!!!ВАЛЮТА!!!
              if FieldByName('Id_Postgres').AsInteger<>0 then
@@ -14128,6 +14288,8 @@ begin
 
              end; //if !!!если ВАЛЮТА, ничего не делаем!!!
 
+         end; //if isDocBEGIN // если надо обработать только ошибки
+             //
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -14145,7 +14307,7 @@ var
    CurrencyPartnerId:Integer;
    zc_Enum_Currency_Basis:Integer;
 begin
-     if (cbOKPO.Checked)then exit;
+     if (cbOKPO.Checked)or(cbDocERROR.Checked)then exit;
      if (not cbSaleInt.Checked)or(not cbSaleInt.Enabled) then exit;
      //
      myEnabledCB(cbSaleInt);
@@ -15360,6 +15522,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_ReturnOut(isLastComplete:Boolean);
+var isDocBEGIN:Boolean;
 begin
      if (not cbCompleteReturnOutBN.Checked)or(not cbCompleteReturnOutBN.Enabled) then exit;
      //
@@ -15437,6 +15600,17 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              if cbUnComplete.Checked then
              begin
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -15460,6 +15634,8 @@ begin
                        if not myExecToStoredProc_two then ;//exit;
                   end;
              end;
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -15477,6 +15653,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_ReturnOut:Integer;
 var JuridicalId_pg,PartnerId_pg,ContractId_pg:Integer;
+    isDocBEGIN:Boolean;
 begin
      Result:=0;
      if (not cbReturnOutBN.Checked)or(not cbReturnOutBN.Enabled) then exit;
@@ -15604,6 +15781,19 @@ begin
              PartnerId_pg:=0;
              JuridicalId_pg:=0;
              ContractId_pg:=0;
+             //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                  cbUpdateConrtact.Checked:=TRUE;
+                  //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              //Сначала находим контрагента  и юр.лицо
              fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
                            +' from ObjectHistory_JuridicalDetails_View'
@@ -15670,6 +15860,8 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -15683,7 +15875,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_ReturnOut(SaveCount:Integer);
 begin
-     if (cbOKPO.Checked)then exit;
+     if (cbOKPO.Checked)or(cbDocERROR.Checked)then exit;
      if (not cbReturnOutBN.Checked)or(not cbReturnOutBN.Enabled) then exit;
      //
      myEnabledCB(cbReturnOutBN);
@@ -15778,6 +15970,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_ReturnOutNal(isLastComplete:Boolean);
+var isDocBEGIN:Boolean;
 begin
      if (not cbCompleteReturnOutNal.Checked)or(not cbCompleteReturnOutNal.Enabled) then exit;
      //
@@ -15855,6 +16048,17 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              if cbUnComplete.Checked then
              begin
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -15878,6 +16082,8 @@ begin
                        if not myExecToStoredProc_two then ;//exit;
                   end;
              end;
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -15895,6 +16101,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_ReturnOutNal:Integer;
 var JuridicalId_pg,PartnerId_pg,ContractId_pg:Integer;
+    isDocBEGIN:Boolean;
 begin
      Result:=0;
      if (not cbReturnOutNal.Checked)or(not cbReturnOutNal.Enabled) then exit;
@@ -16026,6 +16233,17 @@ begin
              JuridicalId_pg:=0;
              ContractId_pg:=0;
              //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
+             //
              if FieldByName('isOKPO_Virtual').AsInteger=zc_rvYes
              then begin
                        //находим юр.лицо
@@ -16090,6 +16308,8 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -16103,7 +16323,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_ReturnOutNal(SaveCount:Integer);
 begin
-     if (cbOKPO.Checked)then exit;
+     if (cbOKPO.Checked)or(cbDocERROR.Checked)then exit;
      if (not cbReturnOutNal.Checked)or(not cbReturnOutNal.Enabled) then exit;
      //
      myEnabledCB(cbReturnOutNal);
@@ -16201,6 +16421,7 @@ end;
 function TMainForm.pLoadDocument_ReturnInNal:Integer;
 var ContractId_pg:Integer;
     InvNumberMark:String;
+    isDocBEGIN:Boolean;
 begin
      Result:=0;
      if (not cbReturnInIntNal.Checked)or(not cbReturnInIntNal.Enabled) then exit;
@@ -16333,7 +16554,18 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
-             // gc_isDebugMode:=true;
+
+             //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
              //
              //Номер "перекресленої зеленої марки зi складу" не должен измениться
              if FieldByName('Id_Postgres').AsInteger<>0 then
@@ -16368,6 +16600,8 @@ begin
              //
              if (FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -16381,7 +16615,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_ReturnInNal(SaveCount:Integer);
 begin
-     if (cbOKPO.Checked)then exit;
+     if (cbOKPO.Checked)or(cbDocERROR.Checked)then exit;
      if (not cbReturnInIntNal.Checked)or(not cbReturnInIntNal.Enabled) then exit;
      //
      myEnabledCB(cbReturnInIntNal);
@@ -16519,6 +16753,7 @@ function TMainForm.pLoadDocument_ReturnIn:Integer;
 var ContractId_pg:Integer;
     InvNumberMark,InvNumberPartner:String;
     OperDate,OperDatePartner:TDateTime;
+   isDocBEGIN:Boolean;
 begin
      Result:=0;
      if (not cbReturnInInt.Checked)or(not cbReturnInInt.Enabled) then exit;
@@ -16681,7 +16916,18 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
-             // gc_isDebugMode:=true;
+
+             //
+             //!!!если надо обработать только ошибки!!!
+             if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
+             begin
+                 //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                  isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
+             end
+             else isDocBEGIN:=true;
+         if isDocBEGIN then
+         begin
              //
              //Номер "перекресленої зеленої марки зi складу" не должен измениться
              if FieldByName('Id_Postgres').AsInteger<>0 then
@@ -16733,6 +16979,8 @@ begin
              //
              if (FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+
+         end; //if isDocBEGIN // если надо обработать только ошибки
              //
              Next;
              Application.ProcessMessages;
@@ -16747,7 +16995,7 @@ end;
 //!!!!INTEGER
 procedure TMainForm.pLoadDocumentItem_ReturnIn(SaveCount:Integer);
 begin
-     if (cbOKPO.Checked)then exit;
+     if (cbOKPO.Checked)or(cbDocERROR.Checked)then exit;
      if (not cbReturnInInt.Checked)or(not cbReturnInInt.Enabled) then exit;
      //
      myEnabledCB(cbReturnInInt);

@@ -1134,7 +1134,7 @@ BEGIN
 
 
      -- 3.2. определяется ContainerId для проводок по "Прибыль будущих периодов"
-     UPDATE _tmpItemSumm SET ContainerId_60000 = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+     UPDATE _tmpItemSumm SET ContainerId_60000 = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDatePartner -- !!!по "Дате покупателя"!!!
                                                                                    , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN 0 ELSE vbUnitId_To END
                                                                                    , inCarId                  := NULL
                                                                                    , inMemberId               := vbMemberId_To
@@ -1170,7 +1170,7 @@ BEGIN
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
             , 0 AS ParentId
             , -1 * _tmpItemSumm_group.OperSumm
-            , vbOperDate
+            , vbOperDatePartner                       AS OperDate -- !!!по "Дате покупателя"!!!
             , CASE WHEN vbBranchId_From = 0 OR vbBranchId_From = zc_Branch_Basis() THEN TRUE ELSE FALSE END AS isActive
        FROM (SELECT _tmpItemSumm.ContainerId_60000 AS ContainerId, _tmpItemSumm.AccountId_60000 AS AccountId, _tmpItem.GoodsId, (_tmpItemSumm.OperSumm_Account_60000) AS OperSumm
              FROM _tmpItemSumm
@@ -1202,7 +1202,7 @@ BEGIN
                                                       --, inAccountId_1        := tmpMIReport.AccountId_Kind
                                                        ) AS ChildReportContainerId
                    , tmpMIReport.OperSumm AS Amount
-                   , vbOperDate AS OperDate
+                   , vbOperDate AS OperDate -- по "Дате склад"
               FROM (SELECT ABS (tmpCalc.OperSumm) AS OperSumm
                          , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_ProfitLoss ELSE tmpCalc.ContainerId_From       END AS ActiveContainerId
                          , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_From       ELSE tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
@@ -1249,7 +1249,7 @@ BEGIN
                                                       , inAccountId_1        := tmpMIReport.AccountId_Kind
                                                        ) AS ChildReportContainerId
                    , tmpMIReport.OperSumm AS Amount
-                   , vbOperDate AS OperDate
+                   , vbOperDate AS OperDate -- по "Дате склад"
               FROM (SELECT ABS (tmpCalc.OperSumm) AS OperSumm
                          , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_ProfitLoss ELSE tmpCalc.ContainerId_From       END AS ActiveContainerId
                          , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_From       ELSE tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
@@ -1297,7 +1297,7 @@ BEGIN
                                                       , inAccountId_1        := tmpMIReport.AccountId_Kind
                                                        ) AS ChildReportContainerId
                    , tmpMIReport.OperSumm AS Amount
-                   , vbOperDate AS OperDate
+                   , vbOperDate AS OperDate -- по "Дате склад"
               FROM (SELECT ABS (tmpCalc.OperSumm) AS OperSumm
                          , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_ProfitLoss ELSE tmpCalc.ContainerId_From       END AS ActiveContainerId
                          , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_From       ELSE tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
@@ -1407,7 +1407,7 @@ BEGIN
                                                       --, inAccountId_1        := tmpMIReport.AccountId_Kind
                                                        ) AS ChildReportContainerId
                    , tmpMIReport.OperSumm AS Amount
-                   , vbOperDate AS OperDate
+                   , vbOperDatePartner    AS OperDate -- !!!по "Дате покупателя"!!!
               FROM (SELECT ABS (tmpCalc.OperSumm) AS OperSumm
                          , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_To    ELSE tmpCalc.ContainerId_60000 END AS ActiveContainerId
                          , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_60000 ELSE tmpCalc.ContainerId_To    END AS PassiveContainerId
@@ -1455,7 +1455,7 @@ BEGIN
                                                       --, inAccountId_1        := tmpMIReport.AccountId_Kind
                                                        ) AS ChildReportContainerId
                    , tmpMIReport.OperSumm AS Amount
-                   , vbOperDatePartner AS OperDate -- т.е. по "Дате покупателя"
+                   , vbOperDate           AS OperDate -- т.е. по "Дате склад"
               FROM (SELECT ABS (_tmpCalc.OperSumm) AS OperSumm
                          , MAX (CASE WHEN _tmpCalc.OperSumm > 0 THEN 0                          ELSE _tmpCalc.ContainerId_From END) AS ActiveContainerId
                          , MAX (CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.ContainerId_From  ELSE 0                         END) AS PassiveContainerId
