@@ -2,7 +2,6 @@ inherited MainCashForm: TMainCashForm
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 412
   ClientWidth = 674
-  ExplicitTop = -40
   ExplicitWidth = 682
   ExplicitHeight = 439
   PixelsPerInch = 96
@@ -22,7 +21,6 @@ inherited MainCashForm: TMainCashForm
       Height = 196
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 421
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.Summary.DefaultGroupSummaryItems = <>
@@ -97,8 +95,6 @@ inherited MainCashForm: TMainCashForm
       Height = 196
       AlignSplitter = salRight
       Control = AlternativeGrid
-      ExplicitLeft = 477
-      ExplicitTop = 6
     end
   end
   object cxSplitter2: TcxSplitter [1]
@@ -107,6 +103,7 @@ inherited MainCashForm: TMainCashForm
     Width = 674
     Height = 3
     AlignSplitter = salBottom
+    Control = BottomPanel
   end
   object MainPanel: TPanel [2]
     Left = 0

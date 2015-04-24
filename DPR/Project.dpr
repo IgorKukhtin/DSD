@@ -77,8 +77,8 @@ uses
   MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas',
   dsdException in '..\SOURCE\dsdException.pas',
   dsdApplication in '..\SOURCE\dsdApplication.pas',
-  ScriptXML in '..\SOURCE\AutoMode\ScriptXML.pas',
-  RunScript in '..\SOURCE\AutoMode\RunScript.pas';
+  RunScript in '..\SOURCE\AutoMode\RunScript.pas',
+  ScriptXML in '..\SOURCE\AutoMode\ScriptXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

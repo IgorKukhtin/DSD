@@ -120,6 +120,10 @@ BEGIN
        WHERE Object_Goods_View.ObjectId = inJuridicalId AND GoodsCode = inGoodsCode;
    END IF;
 
+   IF inExpirationDate = CURRENT_DATE THEN 
+      inExpirationDate := zc_DateEnd();
+   END IF;	
+
    IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
       INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName)
              VALUES(vbLoadPriceListId, inCommonCode, inBarCode, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, inExpirationDate, inPackCount, inProducerName);

@@ -44,10 +44,13 @@ END $$;
 DO $$
 BEGIN
 
-   IF NOT EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_GlobalConst())
-   THEN
-       PERFORM lpInsertUpdate_Object (0, zc_Object_GlobalConst(), 1, 'Константа');
-   END IF;
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_BankAccountDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'Банковская выписка актуальна на: ', inEnumName:= 'zc_Enum_GlobalConst_BankAccountDate');
+
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_IntegerDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 2, inName:= 'актуальность данных Integer', inEnumName:= 'zc_Enum_GlobalConst_IntegerDate');
+
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_CashDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'актуальность данных по кассе', inEnumName:= 'zc_Enum_GlobalConst_CashDate');
+
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_MedocTaxDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 101, inName:= 'актуальность данных Медок', inEnumName:= 'zc_Enum_GlobalConst_MedocTaxDate');
 
 END $$;
 
