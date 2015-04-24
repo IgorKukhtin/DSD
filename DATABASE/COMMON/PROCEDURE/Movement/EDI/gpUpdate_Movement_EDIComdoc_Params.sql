@@ -30,7 +30,9 @@ BEGIN
                                                                    , inPartnerInvNumber:= MovementString_InvNumberPartner.ValueData
                                                                    , inOrderInvNumber  := Movement.InvNumber
                                                                    , inOKPO            := MovementString_OKPO.ValueData
-                                                                   , inUserId          := vbUserId)
+                                                                   , inIsCheck         := TRUE
+                                                                   , inUserId          := vbUserId
+                                                                    )
                           FROM Movement
                                LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id

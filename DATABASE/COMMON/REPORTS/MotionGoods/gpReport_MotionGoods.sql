@@ -1,6 +1,7 @@
 -- Function: gpReport_MotionGoods()
 
 DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inStartDate          TDateTime , --
@@ -10,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inLocationId         Integer,    --
     IN inGoodsGroupId       Integer,    -- группа товара
     IN inGoodsId            Integer,    -- товар
+    IN inUnitGroupId_by     Integer,    -- группа подразделений 1
+    IN inLocationId_by      Integer,    -- место учета 1
     IN inIsInfoMoney        Boolean,    --
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -1074,7 +1077,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

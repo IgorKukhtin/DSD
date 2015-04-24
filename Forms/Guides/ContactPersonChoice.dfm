@@ -133,7 +133,8 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 4
+    Properties.ReadOnly = True
+    TabOrder = 3
     Width = 245
   end
   object cxLabel1: TcxLabel
@@ -149,6 +150,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 8
     Width = 245
   end
@@ -659,6 +661,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
     Top = 240
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

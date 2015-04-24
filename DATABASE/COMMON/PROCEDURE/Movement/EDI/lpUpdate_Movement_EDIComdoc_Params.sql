@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpUpdate_Movement_EDIComdoc_Params (Integer, TDateTime, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_Movement_EDIComdoc_Params (Integer, TDateTime, TVarChar, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_Movement_EDIComdoc_Params (Integer, TDateTime, TVarChar, TVarChar, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_Movement_EDIComdoc_Params(
     IN inMovementId       Integer   , --
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_Movement_EDIComdoc_Params(
     IN inPartnerInvNumber TVarChar  , -- Номер накладной у контрагента
     IN inOrderInvNumber   TVarChar  , -- Номер заявки контрагента
     IN inOKPO             TVarChar  , -- 
+    IN inIsCheck          Boolean   , -- 
     IN inUserId           Integer     -- пользователь
 )                              
 RETURNS Integer
@@ -45,7 +47,7 @@ BEGIN
      -- Поиск GLN точки доставки
      vbGLNPlace:= (SELECT MovementString.ValueData FROM MovementString WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_GLNPlaceCode());
      -- проверка
-     IF 1=0 AND COALESCE (vbGLNPlace, '') = ''
+     IF 1=1 AND inIsCheck = TRUE AND COALESCE (vbGLNPlace, '') = ''
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлен <GLN точки доставки> в документе EDI № <%> от <%> .', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
      END IF;
@@ -143,12 +145,12 @@ BEGIN
                AND Movement.DescId = zc_Movement_Sale();
 
              -- Проверка - должны найти
-             IF 1 = 1 AND COALESCE (vbMovementId_Master, 0) = 0
+             IF 1 = 1 AND inIsCheck = TRUE AND COALESCE (vbMovementId_Master, 0) = 0
              THEN
                   RAISE EXCEPTION 'Ошибка.%Не найдена накладная продажи № <%> от <%>%для точки доставки GLN <%> (%) с ОКПО <%>%в документа EDI № <%> от <%> .', chr(13), vbInvNumberSaleLink, DATE (vbOperDateSaleLink), chr(13), vbGLNPlace, lfGet_Object_ValueData (vbPartnerId), inOKPO, chr(13), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
              END IF;
              -- Проверка - должны найти
-             IF COALESCE (vbMovementId_Child, 0) = 0 AND vbMovementId_Master <> 0
+             IF COALESCE (vbMovementId_Child, 0) = 0 AND vbMovementId_Master <> 0 AND EXISTS (SELECT MovementString.MovementId FROM MovementString WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_InvNumberTax() AND TRIM (MovementString.ValueData) <> '')
              THEN
                   RAISE EXCEPTION 'Ошибка.%Не найдена Налоговая у накладной продажи № <%> от <%>%для точки доставки GLN <%> (%) с ОКПО = <%>,% в документа EDI № <%> от <%> .', chr(13), vbInvNumberSaleLink, DATE (vbOperDateSaleLink), chr(13), vbGLNPlace, lfGet_Object_ValueData (vbPartnerId), inOKPO, chr(13), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
              END IF;

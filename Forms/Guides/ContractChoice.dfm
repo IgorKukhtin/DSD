@@ -4,7 +4,7 @@ inherited ContractChoiceForm: TContractChoiceForm
   ClientWidth = 853
   AddOnFormData.Params = FormParams
   ExplicitWidth = 869
-  ExplicitHeight = 534
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -210,6 +210,7 @@ inherited ContractChoiceForm: TContractChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 245
   end

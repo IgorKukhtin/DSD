@@ -77,7 +77,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ReturnIn())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE
+       AND inIsBefoHistoryCost = TRUE
     UNION
      -- 4. To: SendOnPrice
      SELECT Movement.Id AS MovementId

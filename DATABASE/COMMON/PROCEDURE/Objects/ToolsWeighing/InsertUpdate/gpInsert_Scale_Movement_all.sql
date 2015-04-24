@@ -213,7 +213,7 @@ BEGIN
                            , MovementItem.ObjectId                               AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                            , MovementItem.Amount                                 AS Amount
-                           , MovementItem.Amount                                 AS AmountChangePercent
+                           , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountChangePercent
                            , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner
                            , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
                            , COALESCE (MIFloat_Price.ValueData, 0)               AS Price

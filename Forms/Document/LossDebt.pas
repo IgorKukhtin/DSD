@@ -92,7 +92,6 @@ type
     DeleteMovement: TChangeGuidesStatus;
     InfoMoneyChoiceForm: TOpenChoiceForm;
     clContractName: TcxGridDBColumn;
-    ContractChoiceForm: TOpenChoiceForm;
     clInfoMoneyCode: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edBusiness: TcxButtonEdit;
@@ -122,6 +121,8 @@ type
     BranchChoiceForm: TOpenChoiceForm;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    clContractCode: TcxGridDBColumn;
+    ContractChoiceForm: TOpenChoiceForm;
   private
   public
   end;

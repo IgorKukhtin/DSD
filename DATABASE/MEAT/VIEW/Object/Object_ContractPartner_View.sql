@@ -4,7 +4,8 @@
 
 CREATE OR REPLACE VIEW Object_ContractPartner_View
 AS
-        SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
+        SELECT ObjectLink_ContractPartner_Contract.ObjectId      AS Id
+             , ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
              , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId
              , Object_ContractPartner.isErased
          FROM ObjectLink AS ObjectLink_ContractPartner_Contract

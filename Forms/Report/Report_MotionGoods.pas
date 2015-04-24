@@ -177,6 +177,12 @@ type
     bbPrint2: TdxBarButton;
     actPrint3: TdsdPrintAction;
     bbPrint3: TdxBarButton;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    edUnitGroup_by: TcxButtonEdit;
+    edLocation_by: TcxButtonEdit;
+    GuidesUnitGroup_by: TdsdGuides;
+    GuidesLocation_by: TdsdGuides;
   private
   public
   end;
