@@ -209,15 +209,34 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 65
           end
+          object clOperDate_Sale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1087#1088'.'
+            DataBinding.FieldName = 'OperDate_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
+          object clInvNumber_Sale: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'#1087#1088'.'
+            DataBinding.FieldName = 'InvNumber_Sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actSaleJournalChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
         end
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 1020
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -225,7 +244,6 @@ inherited ReturnInForm: TReturnInForm
         Height = 518
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1020
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -619,9 +637,9 @@ inherited ReturnInForm: TReturnInForm
       Top = 63
       TabOrder = 8
       ExplicitTop = 63
-      ExplicitWidth = 223
+      ExplicitWidth = 74
       ExplicitHeight = 22
-      Width = 223
+      Width = 74
     end
     object cxLabel3: TcxLabel
       Left = 520
@@ -749,7 +767,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 118
     end
     object edPriceList: TcxButtonEdit
-      Left = 788
+      Left = 786
       Top = 63
       Properties.Buttons = <
         item
@@ -804,6 +822,38 @@ inherited ReturnInForm: TReturnInForm
       Properties.ReadOnly = True
       TabOrder = 29
       Width = 97
+    end
+    object cxLabel18: TcxLabel
+      Left = 83
+      Top = 45
+      Caption = #1044#1072#1090#1072' '#1087#1088'.'
+    end
+    object edOperDateSale: TcxDateEdit
+      Left = 83
+      Top = 63
+      EditValue = 42005d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 31
+      Width = 70
+    end
+    object cxLabel19: TcxLabel
+      Left = 154
+      Top = 45
+      Caption = #8470' '#1076#1086#1082'. '#1087#1088'.'
+    end
+    object edInvNumberSale: TcxButtonEdit
+      Left = 150
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 80
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -1286,6 +1336,30 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actSaleJournalChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TSaleJournalChoiceForm'
+      FormName = 'TSaleJournalChoiceForm'
+      FormNameParam.Value = 'TSaleJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_Sale'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Sale'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
     object actGoodsKindChoice: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2464,8 +2538,8 @@ inherited ReturnInForm: TReturnInForm
         Component = edVATPercent
         DataType = ftFloat
       end>
-    Left = 820
-    Top = 48
+    Left = 812
+    Top = 56
   end
   object spTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
@@ -2956,5 +3030,52 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 400
     Top = 520
+  end
+  object SaleChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberSale
+    Key = '0'
+    FormNameParam.Value = 'TSaleJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TSaleJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = SaleChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = 42005d
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = edOperDateSale
+        DataType = ftDateTime
+      end>
+    Left = 164
+    Top = 56
   end
 end

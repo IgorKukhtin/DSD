@@ -21,7 +21,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
-             , AmountSumm TFloat, isErased Boolean
+             , AmountSumm TFloat
+             , OperDate_Sale TDateTime, InvNumber_Sale TVarChar
+             , isErased Boolean
              )
 AS
 $BODY$
@@ -54,6 +56,8 @@ BEGIN
            , 0 ::Integer                AS AssetId
            , '' ::TVarChar              AS AssetName
            , CAST (NULL AS TFloat)      AS AmountSumm
+           , CAST (NULL AS TDateTime)   AS OperDate_Sale
+           , CAST (NULL AS TVarChar)  	AS InvNumber_Sale
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id           AS GoodsId
@@ -123,7 +127,11 @@ BEGIN
                         THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) 				AS AmountSumm
-           , MovementItem.isErased				AS isErased
+
+           , Movement_Sale.OperDate 	        AS OperDate_Sale
+           , Movement_Sale.InvNumber      	AS InvNumber_Sale
+
+           , MovementItem.isErased		AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -148,6 +156,11 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = NULL -- zc_MIFloat_HeadCount()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
@@ -195,6 +208,10 @@ BEGIN
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)			    AS AmountSumm
+
+           , Movement_Sale.OperDate 	        AS OperDate_Sale
+           , Movement_Sale.InvNumber      	AS InvNumber_Sale
+
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -222,6 +239,11 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = NULL -- zc_MIFloat_HeadCount()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
