@@ -39,6 +39,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -247,6 +248,12 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   inherited Panel: TPanel
     Width = 1212
     ExplicitWidth = 1212
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99
@@ -255,9 +262,13 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   inherited ActionList: TActionList
     Left = 47
     Top = 274
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TTransportServiceForm'
+    end
     object CarChoiceForm: TOpenChoiceForm [3]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TCarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -287,6 +298,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     object ContractConditionKindChoiceForm: TOpenChoiceForm [4]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -316,6 +328,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     object RouteChoiceForm: TOpenChoiceForm [5]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -335,12 +348,32 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end>
       isShowModal = True
     end
-    inherited actInsert: TdsdInsertUpdateAction
+    inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTransportServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object ContractChoiceForm: TOpenChoiceForm [8]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -394,6 +427,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     object PaidKindChoiceForm: TOpenChoiceForm [9]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -416,6 +450,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     object InfoMoneyChoiceForm: TOpenChoiceForm [10]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TInfoMoneyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -435,12 +470,10 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end>
       isShowModal = True
     end
-    inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TTransportServiceForm'
-    end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item

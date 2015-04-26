@@ -27,7 +27,7 @@ object TransportJournalForm: TTransportJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41579d
+      EditValue = 42309d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -36,7 +36,7 @@ object TransportJournalForm: TTransportJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41608d
+      EditValue = 42309d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -125,48 +125,56 @@ object TransportJournalForm: TTransportJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
       object InvNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 47
       end
       object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object CarTrailerName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1087#1088#1080#1094#1077#1087')'
         DataBinding.FieldName = 'CarTrailerName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object PersonalDriver: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object PersonalDriverMoreName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100', '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'PersonalDriverMoreName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
@@ -174,6 +182,7 @@ object TransportJournalForm: TTransportJournalForm
         Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
         DataBinding.FieldName = 'PersonalName'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -181,42 +190,49 @@ object TransportJournalForm: TTransportJournalForm
         Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
         DataBinding.FieldName = 'BranchCode'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object UnitForwardingName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
         DataBinding.FieldName = 'UnitForwardingName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object StartRunPlan: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
         DataBinding.FieldName = 'StartRunPlan'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object EndRunPlan: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1087#1083#1072#1085
         DataBinding.FieldName = 'EndRunPlan'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object StartRun: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1092#1072#1082#1090
         DataBinding.FieldName = 'StartRun'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object EndRun: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1092#1072#1082#1090
         DataBinding.FieldName = 'EndRun'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
@@ -225,6 +241,7 @@ object TransportJournalForm: TTransportJournalForm
         DataBinding.FieldName = 'HoursWork'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
@@ -233,12 +250,14 @@ object TransportJournalForm: TTransportJournalForm
         DataBinding.FieldName = 'HoursAdd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
@@ -345,11 +364,6 @@ object TransportJournalForm: TTransportJournalForm
           ItemName = 'bbDelete'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbReCompleteAll'
-        end
-        item
           Visible = True
           ItemName = 'bbBarStatic'
         end
@@ -416,10 +430,6 @@ object TransportJournalForm: TTransportJournalForm
       Action = dsdGridToExcel
       Category = 0
     end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
-      Category = 0
-    end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
       Category = 0
@@ -432,10 +442,10 @@ object TransportJournalForm: TTransportJournalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -537,21 +547,6 @@ object TransportJournalForm: TTransportJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
-    end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
     object actMIContainer: TdsdOpenForm
       Category = 'DSDLib'
@@ -725,7 +720,7 @@ object TransportJournalForm: TTransportJournalForm
       Caption = 'spErased'
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Transport'
     DataSet = ClientDataSet
     DataSets = <
@@ -866,29 +861,6 @@ object TransportJournalForm: TTransportJournalForm
     Left = 456
     Top = 24
   end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Transport'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41579d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41608d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 288
-  end
   object spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Transport'
     DataSets = <>
@@ -908,7 +880,7 @@ object TransportJournalForm: TTransportJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 409
-    Top = 218
+    Left = 185
+    Top = 298
   end
 end

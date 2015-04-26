@@ -44,6 +44,31 @@ BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
      LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
 
+
+     --
+     -- !!!добавляется аналитика юр лицам (долги)!!!
+     IF EXISTS (SELECT 1
+                FROM (SELECT inDescId_1 AS DescId UNION SELECT inDescId_2 AS DescId UNION SELECT inDescId_3 AS DescId UNION SELECT inDescId_4 AS DescId) AS tmpDescIn
+                      INNER JOIN (SELECT zc_ContainerLinkObject_Juridical() AS DescId UNION SELECT zc_ContainerLinkObject_Contract() AS DescId UNION SELECT zc_ContainerLinkObject_InfoMoney() AS DescId UNION SELECT zc_ContainerLinkObject_PaidKind() AS DescId
+                                 ) AS tmpDesc ON tmpDesc.DescId = tmpDescIn.DescId
+                HAVING COUNT (*) = 4)
+        AND COALESCE (inDescId_5, 0) <> zc_ContainerLinkObject_PartionMovement()
+        AND COALESCE (inDescId_6, 0) <> zc_ContainerLinkObject_PartionMovement()
+        AND COALESCE (inDescId_7, 0) <> zc_ContainerLinkObject_PartionMovement()
+        AND COALESCE (inDescId_8, 0) <> zc_ContainerLinkObject_PartionMovement()
+        AND COALESCE (inDescId_9, 0) <> zc_ContainerLinkObject_PartionMovement()
+        AND COALESCE (inDescId_10, 0) <> zc_ContainerLinkObject_PartionMovement()
+     THEN
+         IF COALESCE (inDescId_5, 0) = 0 THEN inDescId_5:= zc_ContainerLinkObject_PartionMovement(); END IF;
+         IF COALESCE (inDescId_6, 0) = 0 THEN inDescId_6:= zc_ContainerLinkObject_PartionMovement(); END IF;
+         IF COALESCE (inDescId_7, 0) = 0 THEN inDescId_7:= zc_ContainerLinkObject_PartionMovement(); END IF;
+         IF COALESCE (inDescId_8, 0) = 0 THEN inDescId_8:= zc_ContainerLinkObject_PartionMovement(); END IF;
+         IF COALESCE (inDescId_9, 0) = 0 THEN inDescId_9:= zc_ContainerLinkObject_PartionMovement(); END IF;
+         IF COALESCE (inDescId_10, 0) = 0 THEN inDescId_10:= zc_ContainerLinkObject_PartionMovement(); END IF;
+     END IF;
+
+
+     --
      --
      inContainerDescId   := COALESCE (inContainerDescId, 0);
      inObjectId          := COALESCE (inObjectId, 0);
@@ -120,7 +145,7 @@ BEGIN
      -- vbContainerId := (SELECT Id FROM Container WHERE KeyValue = vbKeyValue);
 
      -- !!!находим СРАЗУ по ДВУМ ключам!!!
-     vbContainerId := (SELECT Id FROM Container WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue);
+     vbContainerId := (SELECT Id FROM Container WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue AND Id <> 7505);
      EXCEPTION
               WHEN invalid_row_count_in_limit_clause
               THEN RAISE EXCEPTION 'Счет не уникален : vbContainerId = "%", inContainerDescId = "%", inParentId = "%", inObjectId = "%", inJuridicalId_basis = "%", inBusinessId = "%", inObjectCostDescId = "%", inObjectCostId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%", inDescId_8 = "%", inObjectId_8 = "%", inDescId_9 = "%", inObjectId_9 = "%", inDescId_10 = "%", inObjectId_10 = "%"', vbContainerId, inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId, inObjectCostDescId, inObjectCostId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7, inDescId_8, inObjectId_8, inDescId_9, inObjectId_9, inDescId_10, inObjectId_10;
@@ -137,9 +162,9 @@ BEGIN
 
          -- добавили Аналитики
          INSERT INTO ContainerLinkObject (DescId, ContainerId, ObjectId)
-            SELECT zc_ContainerLinkObject_JuridicalBasis(), vbContainerId, inJuridicalId_basis WHERE inContainerDescId = zc_Container_Summ()
+            SELECT zc_ContainerLinkObject_JuridicalBasis(), vbContainerId, inJuridicalId_basis WHERE inContainerDescId IN (zc_Container_Summ(), zc_Container_SummCurrency())
            UNION ALL
-            SELECT zc_ContainerLinkObject_Business(), vbContainerId, inBusinessId WHERE inContainerDescId = zc_Container_Summ()
+            SELECT zc_ContainerLinkObject_Business(), vbContainerId, inBusinessId WHERE inContainerDescId IN (zc_Container_Summ(), zc_Container_SummCurrency())
            UNION ALL
             SELECT inDescId_1, vbContainerId, inObjectId_1 WHERE inDescId_1 <> 0
            UNION ALL

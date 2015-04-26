@@ -397,10 +397,8 @@ BEGIN
 
      -- 3.2. определяется ContainerId для проводок по долг Покупателя или Физ.лица (недостачи, порча)
      UPDATE _tmpItem SET ContainerId_Partner = tmp.ContainerId
-     FROM (SELECT CASE WHEN tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                        AND tmp.IsCorporate = FALSE
-                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
-                            THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+     FROM (SELECT                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
+                                 lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                        , inParentId          := NULL
                                                        , inObjectId          := tmp.AccountId
                                                        , inJuridicalId_basis := tmp.JuridicalId_Basis
@@ -409,33 +407,17 @@ BEGIN
                                                        , inObjectCostId      := NULL
                                                        , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                        , inObjectId_1        := tmp.JuridicalId
-                                                       , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                       , inObjectId_3        := tmp.ContractId
-                                                       , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                       , inObjectId_2        := tmp.PaidKindId
-                                                       , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_4        := tmp.InfoMoneyId
+                                                       , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                       , inObjectId_2        := tmp.ContractId
+                                                       , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                       , inObjectId_3        := tmp.InfoMoneyId
+                                                       , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                       , inObjectId_4        := tmp.PaidKindId
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
-                                                       , inObjectId_5        := tmp.PartionMovementId
-                                                        )
-                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
-                            ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
-                                                       , inParentId          := NULL
-                                                       , inObjectId          := tmp.AccountId
-                                                       , inJuridicalId_basis := tmp.JuridicalId_Basis
-                                                       , inBusinessId        := tmp.BusinessId
-                                                       , inObjectCostDescId  := NULL
-                                                       , inObjectCostId      := NULL
-                                                       , inDescId_1          := zc_ContainerLinkObject_Juridical()
-                                                       , inObjectId_1        := tmp.JuridicalId
-                                                       , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                       , inObjectId_3        := tmp.ContractId
-                                                       , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                       , inObjectId_2        := tmp.PaidKindId
-                                                       , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_4        := tmp.InfoMoneyId
-                                                        )
-                  END AS ContainerId
+                                                       , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                       , inDescId_6          := NULL -- ...zc_ContainerLinkObject_Currency()
+                                                       , inObjectId_6        := NULL -- ...vbCurrencyPartnerId
+                                                        ) AS ContainerId
                 , tmp.BusinessId
            FROM (SELECT _tmpItem.AccountId_Partner    AS AccountId
                       , vbJuridicalId_From            AS JuridicalId

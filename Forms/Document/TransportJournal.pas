@@ -38,7 +38,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
@@ -84,9 +84,6 @@ type
     cxLabel2: TcxLabel;
     CarModelName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    spMovementReCompleteAll: TdsdStoredProc;
-    bbReCompleteAll: TdxBarButton;
-    actReCompleteAll: TdsdExecStoredProc;
     clPersonalName: TcxGridDBColumn;
     BranchCode: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;

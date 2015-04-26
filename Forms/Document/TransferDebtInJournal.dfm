@@ -2,8 +2,8 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 569
+  ExplicitWidth = 1036
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -406,6 +406,12 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   inherited Panel: TPanel
     Width = 1020
     ExplicitWidth = 1020
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
     object cxLabel14: TcxLabel
       Left = 615
       Top = 6
@@ -439,10 +445,30 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTransferDebtInForm'
       FormNameParam.Value = 'TTransferDebtInForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actChecked: TdsdExecStoredProc [6]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spChecked
       StoredProcList = <
         item
@@ -455,6 +481,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     object actTaxCorrective: TdsdExecStoredProc [10]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTaxCorrective
       StoredProcList = <
         item
@@ -473,6 +500,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     object actCorrective: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spCorrective
       StoredProcList = <
         item
@@ -491,6 +519,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -610,6 +639,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportNameTaxCorrective
       StoredProcList = <
         item
@@ -1004,6 +1034,11 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_TransferDebtIn'
+    Left = 184
+    Top = 304
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

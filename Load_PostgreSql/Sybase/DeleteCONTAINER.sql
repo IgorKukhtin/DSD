@@ -116,47 +116,33 @@ group by ContainerId, ContainerLinkObject.descId having count (*) >1
 END $$;
 
 /*
+DO $$
+BEGIN
+
+     CREATE TEMP TABLE _tmpContainer (ContainerId Integer) ON COMMIT DROP;
+     INSERT INTO _tmpContainer (ContainerId)
+
+     INSERT INTO _tmpContainer (ContainerId)
+      select Container.Id from Container join _tmpContainer ON _tmpContainer.ContainerId = Container.ParentId;
+
 -- select * from Container where id in ( 109693, 28702  )  or KeyValue = 
-delete from containerobjectcost;
+-- delete from containerobjectcost;
 
-delete from HistoryCostContainerLink where MasterContainerId_Count in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-;
-delete from HistoryCostContainerLink where ChildContainerId_Count in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-;
-delete from HistoryCostContainerLink where MasterContainerId_Summ in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-;
-delete from HistoryCostContainerLink where ChildContainerId_Summ in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-;
+delete from HistoryCostContainerLink where MasterContainerId_Count in (select ContainerId from _tmpContainer);
+delete from HistoryCostContainerLink where ChildContainerId_Count in (select ContainerId from _tmpContainer);
+delete from HistoryCostContainerLink where MasterContainerId_Summ in (select ContainerId from _tmpContainer);
+delete from HistoryCostContainerLink where ChildContainerId_Summ in (select ContainerId from _tmpContainer);
 
-delete from HistoryCost where ContainerId in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-;
+delete from HistoryCost              where ContainerId in (select ContainerId from _tmpContainer);
 
-delete from reportcontainerlink where ContainerId in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-;
+delete from reportcontainerlink      where ContainerId in (select ContainerId from _tmpContainer);
+delete from ChildReportContainerLink where ContainerId in (select ContainerId from _tmpContainer);
 
-delete from ChildReportContainerLink where ContainerId in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-;
+delete from ContainerLinkObject      where ContainerId in (select ContainerId from _tmpContainer);
 
+delete from Container        where parentid > 0 and Id in (select ContainerId from _tmpContainer);
+delete from Container                         where Id in (select ContainerId from _tmpContainer);
 
-delete from ContainerLinkObject where ContainerId in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-;
-
-delete from Container where 
-parentid >0 and id in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-;
-delete from Container where Id in
-(select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
-
-delete from Container where Id in
- (select Container.Id from Container left join ContainerLinkObject on ContainerLinkObject.ContainerId = Container.Id where ContainerLinkObject.ObjectId is null)
+END $$;
 
 */

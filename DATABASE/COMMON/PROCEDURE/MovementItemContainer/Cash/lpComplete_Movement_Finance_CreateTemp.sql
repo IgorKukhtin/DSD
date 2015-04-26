@@ -20,6 +20,7 @@ BEGIN
                                , UnitId Integer, PositionId Integer, PersonalServiceListId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
                                , AnalyzerId Integer
                                , CurrencyId Integer
+                               , PartionMovementId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 

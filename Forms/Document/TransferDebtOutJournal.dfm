@@ -1225,6 +1225,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_TransferDebtOut'
     Left = 178
     Top = 349
   end

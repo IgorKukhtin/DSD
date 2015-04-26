@@ -477,10 +477,8 @@ BEGIN
 
      -- 2.2.1. определяется ContainerId для проводок по долг Контрагенту (От кого)
      UPDATE _tmpItem SET ContainerId_From = tmp.ContainerId
-     FROM (SELECT CASE WHEN tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                        AND tmp.IsCorporate = FALSE
-                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
-                            THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+     FROM (SELECT                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
+                                 lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                        , inParentId          := NULL
                                                        , inObjectId          := tmp.AccountId
                                                        , inJuridicalId_basis := tmp.JuridicalId_Basis
@@ -489,41 +487,21 @@ BEGIN
                                                        , inObjectCostId      := NULL
                                                        , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                        , inObjectId_1        := tmp.JuridicalId
-                                                       , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                       , inObjectId_3        := tmp.ContractId
-                                                       , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                       , inObjectId_2        := tmp.PaidKindId
-                                                       , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_4        := tmp.InfoMoneyId
+                                                       , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                       , inObjectId_2        := tmp.ContractId
+                                                       , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                       , inObjectId_3        := tmp.InfoMoneyId
+                                                       , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                       , inObjectId_4        := tmp.PaidKindId
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
-                                                       , inObjectId_5        := tmp.PartionMovementId
-                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
-                                                       , inDescId_7          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                       , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbBranchId_Juridical ELSE NULL END
-                                                        )
-                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
-                            ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
-                                                       , inParentId          := NULL
-                                                       , inObjectId          := tmp.AccountId
-                                                       , inJuridicalId_basis := tmp.JuridicalId_Basis
-                                                       , inBusinessId        := tmp.BusinessId
-                                                       , inObjectCostDescId  := NULL
-                                                       , inObjectCostId      := NULL
-                                                       , inDescId_1          := zc_ContainerLinkObject_Juridical()
-                                                       , inObjectId_1        := tmp.JuridicalId
-                                                       , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                       , inObjectId_3        := tmp.ContractId
-                                                       , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                       , inObjectId_2        := tmp.PaidKindId
-                                                       , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_4        := tmp.InfoMoneyId
-                                                       , inDescId_5          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                       , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
-                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN vbBranchId_Juridical ELSE NULL END
-                                                        )
-                  END AS ContainerId
+                                                       , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
+                                                       , inDescId_7          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                       , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN vbBranchId_Juridical ELSE NULL END
+                                                       , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
+                                                       , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
+                                                        ) AS ContainerId
                 , tmp.AccountId
            FROM (SELECT _tmpItem.AccountId_From  AS AccountId
                       , vbFromId                 AS JuridicalId
@@ -533,7 +511,6 @@ BEGIN
                       , vbPaidKindId_From        AS PaidKindId
                       , vbBusinessId_From        AS BusinessId
                       , vbJuridicalId_Basis_From AS JuridicalId_Basis
-                      , 0                        AS PartionMovementId  -- !!!по этой аналитике учет пока не ведем!!!
                       , vbInfoMoneyDestinationId_From  AS InfoMoneyDestinationId
                       , vbIsCorporate_From             AS IsCorporate
                  FROM _tmpItem
@@ -545,10 +522,8 @@ BEGIN
 
      -- 2.2.2. определяется ContainerId для проводок по долг Контрагенту (Кому)
      UPDATE _tmpItem SET ContainerId_To = tmp.ContainerId
-     FROM (SELECT CASE WHEN tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                        AND tmp.IsCorporate = FALSE
-                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
-                            THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+     FROM (SELECT                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
+                                 lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                        , inParentId          := NULL
                                                        , inObjectId          := tmp.AccountId
                                                        , inJuridicalId_basis := tmp.JuridicalId_Basis
@@ -557,41 +532,21 @@ BEGIN
                                                        , inObjectCostId      := NULL
                                                        , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                        , inObjectId_1        := tmp.JuridicalId
-                                                       , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                       , inObjectId_3        := tmp.ContractId
-                                                       , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                       , inObjectId_2        := tmp.PaidKindId
-                                                       , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_4        := tmp.InfoMoneyId
+                                                       , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                       , inObjectId_2        := tmp.ContractId
+                                                       , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                       , inObjectId_3        := tmp.InfoMoneyId
+                                                       , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                       , inObjectId_4        := tmp.PaidKindId
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
-                                                       , inObjectId_5        := tmp.PartionMovementId
-                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
-                                                       , inDescId_7          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                       , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbBranchId_Juridical ELSE NULL END
-                                                        )
-                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
-                            ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
-                                                       , inParentId          := NULL
-                                                       , inObjectId          := tmp.AccountId
-                                                       , inJuridicalId_basis := tmp.JuridicalId_Basis
-                                                       , inBusinessId        := tmp.BusinessId
-                                                       , inObjectCostDescId  := NULL
-                                                       , inObjectCostId      := NULL
-                                                       , inDescId_1          := zc_ContainerLinkObject_Juridical()
-                                                       , inObjectId_1        := tmp.JuridicalId
-                                                       , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                       , inObjectId_3        := tmp.ContractId
-                                                       , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                       , inObjectId_2        := tmp.PaidKindId
-                                                       , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_4        := tmp.InfoMoneyId
-                                                       , inDescId_5          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                       , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
-                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
-                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN vbBranchId_Juridical ELSE NULL END
-                                                        )
-                  END AS ContainerId
+                                                       , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN CASE WHEN tmp.PartnerId <> 0 THEN tmp.PartnerId ELSE (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = tmp.JuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END ELSE NULL END
+                                                       , inDescId_7          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                       , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN vbBranchId_Juridical ELSE NULL END
+                                                       , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
+                                                       , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
+                                                        )  AS ContainerId
                 , tmp.AccountId
            FROM (SELECT _tmpItem.AccountId_To  AS AccountId
                       , vbToId                 AS JuridicalId
@@ -601,7 +556,6 @@ BEGIN
                       , vbPaidKindId_To        AS PaidKindId
                       , vbBusinessId_To        AS BusinessId
                       , vbJuridicalId_Basis_To AS JuridicalId_Basis
-                      , 0                      AS PartionMovementId  -- !!!по этой аналитике учет пока не ведем!!!
                       , vbInfoMoneyDestinationId_To  AS InfoMoneyDestinationId
                       , vbIsCorporate_To             AS IsCorporate
                  FROM _tmpItem
@@ -710,6 +664,7 @@ BEGIN
                   AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                   AND vbMovementDescId = zc_Movement_TransferDebtOut()
                )
+       AND inUserId <> zfCalc_UserAdmin() :: Integer -- !!!кроме пользователя Админ!!!
      THEN PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
                                                        , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
                                                        , inDocumentTaxKindId_inf := NULL

@@ -119,7 +119,7 @@ BEGIN
                                                            , inIsLastComplete := NULL
                                                            , inSession        := zfCalc_UserAdmin());
      ELSE
-     -- !!!10. - Cash!!!
+     -- !!!10.1 - Cash!!!
      IF vbMovementDescId = zc_Movement_Cash()
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
@@ -127,6 +127,13 @@ BEGIN
              -- !!! проводим - Cash !!!
              PERFORM gpComplete_Movement_Cash (inMovementId     := inMovementId
                                              , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!10.2 - BankAccount!!!
+     IF vbMovementDescId = zc_Movement_BankAccount()
+     THEN
+             -- !!! проводим - BankAccount !!!
+             PERFORM gpComplete_Movement_BankAccount (inMovementId     := inMovementId
+                                                    , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!11. - SendDebt!!!
      IF vbMovementDescId = zc_Movement_SendDebt()
@@ -176,7 +183,25 @@ BEGIN
                                                , inSession        := zfCalc_UserAdmin());
      ELSE
 
+     -- !!!15.1 - TransferDebtIn!!!
+     IF vbMovementDescId = zc_Movement_TransferDebtIn()
+     THEN
+             -- !!! проводим - TransferDebtIn !!!
+             PERFORM gpComplete_Movement_TransferDebtIn (inMovementId     := inMovementId
+                                                       , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!15.2. - TransferDebtOut!!!
+     IF vbMovementDescId = zc_Movement_TransferDebtOut()
+     THEN
+             -- !!! проводим - TransferDebtOut !!!
+             PERFORM gpComplete_Movement_TransferDebtOut (inMovementId     := inMovementId
+                                                        , inSession        := zfCalc_UserAdmin());
+     ELSE
+
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
+     END IF;
+     END IF;
      END IF;
      END IF;
      END IF;
