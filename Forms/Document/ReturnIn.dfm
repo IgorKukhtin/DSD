@@ -2,6 +2,7 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1139
+  ExplicitTop = -6
   ExplicitWidth = 1155
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -209,16 +210,8 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 65
           end
-          object clOperDate_Sale: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1087#1088'.'
-            DataBinding.FieldName = 'OperDate_Sale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 72
-          end
           object clInvNumber_Sale: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'#1087#1088'.'
+            Caption = #1054#1089#1085#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'InvNumber_Sale'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -229,7 +222,7 @@ inherited ReturnInForm: TReturnInForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 78
+            Width = 145
           end
         end
       end
@@ -823,28 +816,13 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 29
       Width = 97
     end
-    object cxLabel18: TcxLabel
-      Left = 83
-      Top = 45
-      Caption = #1044#1072#1090#1072' '#1087#1088'.'
-    end
-    object edOperDateSale: TcxDateEdit
-      Left = 83
-      Top = 63
-      EditValue = 42005d
-      Properties.ReadOnly = True
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 31
-      Width = 70
-    end
     object cxLabel19: TcxLabel
-      Left = 154
+      Left = 88
       Top = 45
-      Caption = #8470' '#1076#1086#1082'. '#1087#1088'.'
+      Caption = #1054#1089#1085#1074#1072#1085#1080#1077
     end
     object edInvNumberSale: TcxButtonEdit
-      Left = 150
+      Left = 83
       Top = 63
       Properties.Buttons = <
         item
@@ -852,8 +830,8 @@ inherited ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 33
-      Width = 80
+      TabOrder = 31
+      Width = 147
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -1347,16 +1325,29 @@ inherited ReturnInForm: TReturnInForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'OperDate'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate_Sale'
-        end
-        item
-          Name = 'TextValue'
+          Name = 'InvNumber_Full'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumber_Sale'
+          DataType = ftString
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Sale'
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
           DataType = ftString
         end>
       isShowModal = True
@@ -2190,7 +2181,7 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inIsChangeAmountPartner'
+        Name = 'inIsCalcAmountPartner'
         Value = Null
         Component = cbCalcAmountPartner
         DataType = ftBoolean
@@ -2224,6 +2215,22 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Top'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_MI'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -3049,7 +3056,7 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
-        Name = 'TextValue'
+        Name = 'InvNumber_Full'
         Value = ''
         Component = SaleChoiceGuides
         ComponentItem = 'TextValue'
@@ -3068,12 +3075,6 @@ inherited ReturnInForm: TReturnInForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'OperDate'
-        Value = Null
-        Component = edOperDateSale
-        DataType = ftDateTime
       end>
     Left = 164
     Top = 56

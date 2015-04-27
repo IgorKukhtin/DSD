@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat
-             , OperDate_Sale TDateTime, InvNumber_Sale TVarChar
+             , InvNumber_Sale TVarChar, MovementId_Sale TFloat
              , isErased Boolean
              )
 AS
@@ -56,8 +56,9 @@ BEGIN
            , 0 ::Integer                AS AssetId
            , '' ::TVarChar              AS AssetName
            , CAST (NULL AS TFloat)      AS AmountSumm
-           , CAST (NULL AS TDateTime)   AS OperDate_Sale
+
            , CAST (NULL AS TVarChar)  	AS InvNumber_Sale
+           , CAST (NULL AS TFloat)      AS MovementId_Sale
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id           AS GoodsId
@@ -128,8 +129,9 @@ BEGIN
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) 				AS AmountSumm
 
-           , Movement_Sale.OperDate 	        AS OperDate_Sale
-           , Movement_Sale.InvNumber      	AS InvNumber_Sale
+           , CAST ('' || CAST (Movement_Sale.InvNumber AS TVarChar)
+                || ' oò '|| CAST (DATE(Movement_Sale.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Sale
+           , CAST (Movement_Sale.Id AS TFloat) 	AS MovementId_Sale
 
            , MovementItem.isErased		AS isErased
 
@@ -209,8 +211,9 @@ BEGIN
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)			    AS AmountSumm
 
-           , Movement_Sale.OperDate 	        AS OperDate_Sale
-           , Movement_Sale.InvNumber      	AS InvNumber_Sale
+           , CAST ('' || CAST (Movement_Sale.InvNumber AS TVarChar)
+                || ' oò '|| CAST (DATE(Movement_Sale.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Sale
+           , CAST (Movement_Sale.Id AS TFloat) 	AS MovementId_Sale
 
            , MovementItem.isErased              AS isErased
 
