@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inHeadCount           TFloat    , -- Количество голов
+    IN inMovementId_MI       TFloat    , -- Id документа продажи
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
@@ -38,6 +40,9 @@ BEGIN
 
      -- сохранили свойство <Количество голов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
+
+     -- сохранили свойство <id документа продажи>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_MI);
 
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
@@ -76,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 27.04.15         * add inMovementId
  11.05.14                                        * change ioCountForPrice
  07.05.14                                        * add lpInsert_MovementItemProtocol
  08.04.14                                        * rem создали объект <Связи Товары и Виды товаров>

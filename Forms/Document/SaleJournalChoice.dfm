@@ -727,6 +727,13 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ToName'
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

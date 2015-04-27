@@ -39,6 +39,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isMedoc Boolean
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , isError Boolean
+             , InvNumber_Full TVarChar
               )
 AS
 $BODY$
@@ -157,6 +158,9 @@ BEGIN
                         THEN TRUE
                         ELSE FALSE
                    END AS Boolean) AS isError
+
+        , CAST ('' || CAST (Movement.InvNumber AS TVarChar)
+                || ' oт '|| CAST (DATE(Movement.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Full
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -372,4 +376,5 @@ ALTER FUNCTION gpSelect_Movement_Sale_Choice (TDateTime, TDateTime, Boolean, Boo
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Choice (inStartDate:= '01.02.2014', inEndDate:= '01.02.2014', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- select * from gpSelect_Movement_Sale_Choice(instartdate := ('01.01.2015')::TDateTime , inenddate := ('07.01.2015')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inPartnerId := 17474 ,  inSession := '5');
+ 
