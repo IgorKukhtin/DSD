@@ -11,7 +11,9 @@ uses
   Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
   dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter, Vcl.Menus,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
-  cxEdit, cxLabel, frxBarcode, cxTextEdit;
+  cxEdit, cxLabel, frxBarcode, cxTextEdit, cxStyles, cxCustomData, cxFilter,
+  cxData, cxDataStorage, cxDBData, cxGridLevel, cxGridCustomView,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid;
 
 const
   WM_ChangeKeyboard = WM_USER + 1;
@@ -380,7 +382,6 @@ type
     miUser: TMenuItem;
     miRole: TMenuItem;
     miSetUserDefaults: TMenuItem;
-    miMovementDesc: TMenuItem;
     miPeriodClose: TMenuItem;
     miPeriodClose_User: TMenuItem;
     miPartner1CLink: TMenuItem;
@@ -530,7 +531,6 @@ type
     N40: TMenuItem;
     spRefresh: TdsdExecStoredProc;
     spGetInfo: TdsdStoredProc;
-    TextEdit: TcxTextEdit;
     actPersonalBankAccount: TdsdOpenForm;
     miPersonalBankAccount: TMenuItem;
     actGoodsPlatform: TdsdOpenForm;
@@ -554,6 +554,15 @@ type
     miPersonalCashOdessa: TMenuItem;
     actRouteGroup: TdsdOpenForm;
     N54: TMenuItem;
+    cxGridDBTableView: TcxGridDBTableView;
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
+    CDSGetInfo: TClientDataSet;
+    DataSource: TDataSource;
+    colText: TcxGridDBColumn;
+    colData: TcxGridDBColumn;
+    cxStyleRepository1: TcxStyleRepository;
+    cxStyle1: TcxStyle;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

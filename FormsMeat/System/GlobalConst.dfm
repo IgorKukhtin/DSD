@@ -1,26 +1,35 @@
 inherited GlobalConstForm: TGlobalConstForm
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1089#1080#1089#1090#1077#1084#1099
-  ClientWidth = 275
-  ExplicitWidth = 283
-  ExplicitHeight = 335
+  ClientWidth = 373
+  ExplicitWidth = 381
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 275
-    ClientRectRight = 275
+    Width = 373
+    ExplicitWidth = 275
+    ClientRectRight = 373
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 275
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 275
+        Width = 373
+        ExplicitWidth = 275
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colBankStatementDate: TcxGridDBColumn
-            Caption = #1040#1082#1090#1091#1072#1083#1100#1085#1086#1089#1090#1100' '#1073#1072#1085#1082#1086#1074#1089#1082#1086#1081' '#1074#1099#1087#1080#1089#1082#1080
-            DataBinding.FieldName = 'ActualBankStatementDate'
+          object colValueText: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1072#1090#1099
+            DataBinding.FieldName = 'ValueText'
+            Options.Editing = False
             Width = 246
+          end
+          object colDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            Width = 103
           end
         end
       end
@@ -74,7 +83,7 @@ inherited GlobalConstForm: TGlobalConstForm
         Name = 'inActualBankStatementDate'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'ActualBankStatementDate'
+        ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
       end>

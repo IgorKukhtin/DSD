@@ -14,9 +14,10 @@ uses
 
 type
   TGlobalConstForm = class(TAncestorDBGridForm)
-    colBankStatementDate: TcxGridDBColumn;
+    colValueText: TcxGridDBColumn;
     spUpdateGlobalConst: TdsdStoredProc;
     dsdUpdateDataSet1: TdsdUpdateDataSet;
+    colDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

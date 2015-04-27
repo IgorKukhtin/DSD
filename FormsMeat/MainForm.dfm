@@ -3,28 +3,66 @@ inherited MainForm: TMainForm
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
+  ExplicitLeft = -288
   ExplicitWidth = 1094
   ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
-  object TextEdit: TcxTextEdit [0]
+  object cxGrid: TcxGrid [0]
     Left = 0
     Top = 0
-    Align = alTop
-    Enabled = False
-    ParentFont = False
-    Properties.Alignment.Horz = taCenter
-    Properties.Alignment.Vert = taVCenter
-    Style.BorderStyle = ebsNone
-    Style.Color = clBtnFace
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clWindowText
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-    TabOrder = 0
     Width = 1086
+    Height = 81
+    Align = alTop
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    BorderStyle = cxcbsNone
+    Enabled = False
+    TabOrder = 0
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = True
+    object cxGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DataSource
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.ColumnHeaderHints = False
+      OptionsCustomize.ColumnFiltering = False
+      OptionsCustomize.ColumnGrouping = False
+      OptionsCustomize.ColumnHidingOnGrouping = False
+      OptionsCustomize.ColumnMoving = False
+      OptionsCustomize.ColumnSorting = False
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GridLines = glNone
+      OptionsView.GroupByBox = False
+      OptionsView.Header = False
+      Styles.Background = cxStyle1
+      Styles.Content = cxStyle1
+      Styles.Inactive = cxStyle1
+      Styles.Selection = cxStyle1
+      object colText: TcxGridDBColumn
+        DataBinding.FieldName = 'ValueText'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object colData: TcxGridDBColumn
+        DataBinding.FieldName = 'OperDate'
+        Styles.Content = cxStyle1
+        Width = 100
+      end
+    end
+    object cxGridLevel: TcxGridLevel
+      GridView = cxGridDBTableView
+    end
   end
   inherited ActionList: TActionList
     Top = 48
@@ -2965,6 +3003,7 @@ inherited MainForm: TMainForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Active = False
     Top = 56
   end
   inherited StoredProc: TdsdStoredProc
@@ -3901,17 +3940,43 @@ inherited MainForm: TMainForm
   end
   object spGetInfo: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GlobalConst'
-    DataSets = <>
-    OutputType = otResult
+    DataSet = CDSGetInfo
+    DataSets = <
+      item
+        DataSet = CDSGetInfo
+      end>
     Params = <
       item
         Name = 'ActualBankStatementText'
         Value = Null
-        Component = TextEdit
         DataType = ftString
       end>
     PackSize = 1
     Left = 440
     Top = 128
+  end
+  object CDSGetInfo: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 488
+    Top = 128
+  end
+  object DataSource: TDataSource
+    DataSet = CDSGetInfo
+    Left = 528
+    Top = 128
+  end
+  object cxStyleRepository1: TcxStyleRepository
+    PixelsPerInch = 96
+    object cxStyle1: TcxStyle
+      AssignedValues = [svColor, svFont, svTextColor]
+      Color = clBtnFace
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clInactiveCaption
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      TextColor = clInactiveCaption
+    end
   end
 end

@@ -104,6 +104,9 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
         end
         item
           Action = TaxCorrectiveJur
+        end
+        item
+          Action = actUpdateGlobalConstMedoc
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1089#1090#1072#1090#1091#1089#1086#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1080#1079' M.E.DOC?'
       InfoAfterExecute = #1059#1088#1072'! '#1042#1089#1077' '#1086#1073#1088#1072#1073#1086#1090#1072#1083#1080
@@ -115,8 +118,28 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PostDataSetBeforeExecute = False
       Caption = #1054#1090#1084#1077#1085#1072
     end
+    object actUpdateGlobalConstMedoc: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Object_GlobalConst_MEDOC
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Object_GlobalConst_MEDOC
+        end>
+      Caption = 'actUpdateGlobalConstMedoc'
+    end
   end
   inherited FormParams: TdsdFormParams
     Top = 36
+  end
+  object spUpdate_Object_GlobalConst_MEDOC: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GlobalConst_MEDOC'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 160
+    Top = 48
   end
 end

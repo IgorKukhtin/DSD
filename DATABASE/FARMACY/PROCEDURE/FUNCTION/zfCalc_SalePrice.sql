@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION zfCalc_SalePrice(
     IN inMarginPercent       TFloat    , -- % наценки
     IN inIsTop               Boolean   , -- ТОП позиция
     IN inPercentMarkup       TFloat    , -- % наценки у товара
-    IN inJuridicalPercent    TFloat     -- % корректировки у Юр Лица длдя топа
+    IN inJuridicalPercent    TFloat     -- % корректировки у Юр Лица для топа
 )
 RETURNS TFloat AS
 $BODY$

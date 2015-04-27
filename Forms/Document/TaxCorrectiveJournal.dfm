@@ -2,7 +2,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitLeft = -288
+  ExplicitLeft = -336
   ExplicitWidth = 1126
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -412,6 +412,28 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       TabOrder = 4
       Width = 262
     end
+    object cxTextEdit1: TcxTextEdit
+      Left = 616
+      Top = 5
+      Enabled = False
+      ParentColor = True
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Style.BorderStyle = ebsNone
+      TabOrder = 5
+      Text = 'cxTextEdit1'
+      Width = 208
+    end
+    object cxDateEdit1: TcxDateEdit
+      Left = 823
+      Top = 5
+      EditValue = 42121d
+      Enabled = False
+      ParentColor = True
+      Style.BorderStyle = ebsNone
+      TabOrder = 6
+      Width = 121
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -429,6 +451,15 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
       AskFilePath = False
+    end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGetInfo
+        end>
     end
     object actMedocFalse: TdsdExecStoredProc [2]
       Category = 'DSDLib'
@@ -1403,5 +1434,25 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     PackSize = 1
     Left = 736
     Top = 387
+  end
+  object spGetInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GlobalConstMEDOC'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ValueText'
+        Value = Null
+        Component = cxTextEdit1
+        DataType = ftString
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = cxDateEdit1
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 8
   end
 end

@@ -20,6 +20,8 @@ type
     dsdFormClose1: TdsdFormClose;
     TaxJur: TMedocComAction;
     TaxCorrectiveJur: TMedocComAction;
+    spUpdate_Object_GlobalConst_MEDOC: TdsdStoredProc;
+    actUpdateGlobalConstMedoc: TdsdExecStoredProc;
   private
     { Private declarations }
   public

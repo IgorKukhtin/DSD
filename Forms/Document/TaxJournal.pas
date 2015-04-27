@@ -97,6 +97,9 @@ type
     spMedoc_False: TdsdStoredProc;
     bbMedocFalse: TdxBarButton;
     colRegisteredNumber: TcxGridDBColumn;
+    cxTextEdit1: TcxTextEdit;
+    cxDateEdit1: TcxDateEdit;
+    spGetInfo: TdsdStoredProc;
   private
     { Private declarations }
   public

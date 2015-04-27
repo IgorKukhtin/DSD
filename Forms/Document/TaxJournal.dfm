@@ -2,25 +2,25 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitLeft = -221
   ExplicitWidth = 1118
   ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 77
     Width = 1110
-    Height = 478
+    Height = 458
     TabOrder = 3
     ExplicitWidth = 1110
     ExplicitHeight = 478
-    ClientRectBottom = 478
+    ClientRectBottom = 458
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1110
-        Height = 478
+        Height = 458
         ExplicitWidth = 1110
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -389,7 +389,9 @@ inherited TaxJournalForm: TTaxJournalForm
   end
   inherited Panel: TPanel
     Width = 1110
+    Height = 51
     ExplicitWidth = 1110
+    ExplicitHeight = 51
     object edIsRegisterDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -414,6 +416,28 @@ inherited TaxJournalForm: TTaxJournalForm
       TabOrder = 6
       Width = 250
     end
+    object cxTextEdit1: TcxTextEdit
+      Left = 107
+      Top = 27
+      Enabled = False
+      ParentColor = True
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Style.BorderStyle = ebsNone
+      TabOrder = 7
+      Text = 'cxTextEdit1'
+      Width = 441
+    end
+    object cxDateEdit1: TcxDateEdit
+      Left = 554
+      Top = 27
+      EditValue = 42121d
+      Enabled = False
+      ParentColor = True
+      Style.BorderStyle = ebsNone
+      TabOrder = 8
+      Width = 121
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -432,6 +456,15 @@ inherited TaxJournalForm: TTaxJournalForm
       HeaderDataSet = PrintHeaderCDS
       ItemsDataSet = PrintItemsCDS
       AskFilePath = False
+    end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGetInfo
+        end>
     end
     object actMedocFalse: TdsdExecStoredProc [2]
       Category = 'DSDLib'
@@ -1492,5 +1525,25 @@ inherited TaxJournalForm: TTaxJournalForm
     PackSize = 1
     Left = 824
     Top = 307
+  end
+  object spGetInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GlobalConstMEDOC'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ValueText'
+        Value = 'cxTextEdit1'
+        Component = cxTextEdit1
+        DataType = ftString
+      end
+      item
+        Name = 'OperDate'
+        Value = 42121d
+        Component = cxDateEdit1
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 8
   end
 end

@@ -42,6 +42,8 @@ type
     Panel1: TPanel;
     actDeleteLink: TdsdExecStoredProc;
     spDeleteLink: TdsdStoredProc;
+    colMargin: TcxGridDBColumn;
+    colCashPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,8 +1,8 @@
 -- Function: gpSelect_Object_Unit()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConst(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConstMEDOC(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_GlobalConst(
+CREATE OR REPLACE FUNCTION gpSelect_Object_GlobalConstMEDOC(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, OperDate TDateTime, ValueText TVarChar) AS
@@ -21,13 +21,13 @@ BEGIN
               LEFT JOIN ObjectDate AS ActualBankStatement 
                      ON ActualBankStatement.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()
                     AND ActualBankStatement.ObjectId = GlobalConst.Id
-      WHERE GlobalConst.DescId = zc_Object_GlobalConst() AND GlobalConst.ObjectCode < 100;
+      WHERE GlobalConst.Id = zc_Enum_GlobalConst_MedocTaxDate();
   
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_GlobalConst(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_GlobalConstMEDOC(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -1,19 +1,21 @@
 inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   ActiveControl = edGoodsSearch
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1093
-  ClientWidth = 798
-  ExplicitWidth = 806
+  ClientWidth = 832
+  ExplicitWidth = 840
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 798
+    Width = 832
     ExplicitWidth = 798
-    ClientRectRight = 798
+    ClientRectRight = 832
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 798
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Top = 27
-        Width = 798
+        Width = 832
         Height = 255
         ExplicitTop = 27
         ExplicitWidth = 798
@@ -75,13 +77,48 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Width = 154
           end
           object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 47
+            Width = 62
+          end
+          object colGoodsNDS: TcxGridDBColumn
+            Caption = #1053#1044#1057' '#1080#1079' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'GoodsNDS'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object colNDS: TcxGridDBColumn
+            Caption = #1053#1044#1057' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'NDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0 %; ; ;'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colMargin: TcxGridDBColumn
+            Caption = #1053#1072#1094#1077#1085#1082#1072
+            DataBinding.FieldName = 'MarginPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.## %'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colCashPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'NewPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
@@ -118,33 +155,17 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Options.Editing = False
             Width = 92
           end
-          object colNDS: TcxGridDBColumn
-            Caption = #1053#1044#1057' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'NDS'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0 %; ; ;'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colGoodsNDS: TcxGridDBColumn
-            Caption = #1053#1044#1057' '#1080#1079' '#1087#1088#1072#1081#1089#1072
-            DataBinding.FieldName = 'GoodsNDS'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 66
-          end
         end
       end
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 798
+        Width = 832
         Height = 27
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 798
         object edGoodsSearch: TcxTextEdit
           Left = 83
           Top = 3
