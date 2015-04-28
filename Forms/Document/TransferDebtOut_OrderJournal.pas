@@ -81,6 +81,8 @@ type
     actGet_TTN: TdsdExecStoredProc;
     mactPrint_TTN: TMultiAction;
     bbPrint_TTN: TdxBarButton;
+    colContractFromCode: TcxGridDBColumn;
+    colContractToCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
