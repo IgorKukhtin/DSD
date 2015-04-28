@@ -38,7 +38,7 @@ BEGIN
      -- Результат
   RETURN QUERY
      WITH tmpAccount AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_40000()) -- Денежные средства
-        , tmpContainer AS (SELECT CLO_BankAccount.ContainerId             AS ContainerId
+        , tmpContainer AS (SELECT Container.Id                            AS ContainerId
                                 , Container_Currency.Id                   AS ContainerId_Currency
                                 , Container.ObjectId                      AS AccountId
                                 , COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) AS BankAccountId

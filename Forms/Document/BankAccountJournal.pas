@@ -63,6 +63,7 @@ type
     actMasterPost: TDataSetPost;
     mactIsCopy: TMultiAction;
     colUnitCode: TcxGridDBColumn;
+    OKPO_BankAccount: TcxGridDBColumn;
   private
     { Private declarations }
   public

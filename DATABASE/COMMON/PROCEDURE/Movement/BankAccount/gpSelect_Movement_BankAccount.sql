@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSI
              , AmountCurrency TFloat
              , Comment TVarChar
              , BankAccountName TVarChar, BankName TVarChar, MFO TVarChar
-             , JuridicalName TVarChar
+             , JuridicalName TVarChar, OKPO_BankAccount TVarChar
              , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
@@ -70,8 +70,9 @@ BEGIN
            , MIString_Comment.ValueData        AS Comment
            , Object_BankAccount_View.Name      AS BankAccountName
            , Object_BankAccount_View.BankName  AS BankName
-           , Object_BankAccount_View.MFO    AS MFO
+           , Object_BankAccount_View.MFO       AS MFO
            , Object_BankAccount_View.JuridicalName  AS JuridicalName
+           , View_JuridicalDetails_BankAccount.OKPO AS OKPO_BankAccount
 
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , (Object_MoneyPlace.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS MoneyPlaceName
@@ -134,13 +135,14 @@ BEGIN
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
- 
+            LEFT JOIN ObjectHistory_JuridicalDetails_View AS View_JuridicalDetails_BankAccount ON View_JuridicalDetails_BankAccount.JuridicalId = Object_BankAccount_View.JuridicalId
+
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()
             
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                         ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_MoneyPlace.Id
@@ -195,4 +197,4 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVa
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_BankAccount (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_BankAccount (inStartDate:= '30.01.2015', inEndDate:= '01.01.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

@@ -335,7 +335,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 55
           end
           object clJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'.'#1083#1080#1094#1086
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1088'.'#1089#1095#1077#1090')'
             DataBinding.FieldName = 'JuridicalName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -343,12 +343,20 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Width = 100
           end
           object clMFO: TcxGridDBColumn
-            Caption = #1052#1060#1054
+            Caption = #1052#1060#1054' ('#1073#1072#1085#1082', '#1088'.'#1089#1095#1077#1090')'
             DataBinding.FieldName = 'MFO'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 30
+          end
+          object OKPO_BankAccount: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1102#1088'.'#1083', '#1088'.'#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'OKPO_BankAccount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object clBankSInvNumber_Parent: TcxGridDBColumn
             Caption = #8470' '#1087#1083#1072#1090'.'
