@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Branch(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InvNumber TVarChar
              , PersonalBookkeeperId Integer, PersonalBookkeeperName TVarChar
-             , IsMedoc boolean
+             , IsMedoc boolean, IsPartionDoc boolean
              , isErased boolean)
 AS
 $BODY$
@@ -30,7 +30,8 @@ BEGIN
         , ObjectString_InvNumber.ValueData  AS InvNumber
         , Object_Personal_View.PersonalId    AS PersonalBookkeeperId
         , Object_Personal_View.PersonalName  AS PersonalBookkeeperName        
-        , COALESCE (ObjectBoolean_Medoc.ValueData, False) AS IsMedoc
+        , COALESCE (ObjectBoolean_Medoc.ValueData, False)      AS IsMedoc
+        , COALESCE (ObjectBoolean_PartionDoc.ValueData, False) AS IsPartionDoc
         , Object_Branch.isErased             AS isErased
         
    FROM Object AS Object_Branch
@@ -44,7 +45,11 @@ BEGIN
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Medoc
                                 ON ObjectBoolean_Medoc.ObjectId = Object_Branch.Id
-                               AND ObjectBoolean_Medoc.DescId = zc_ObjectBoolean_Branch_Medoc()                        
+                               AND ObjectBoolean_Medoc.DescId = zc_ObjectBoolean_Branch_Medoc()    
+                    
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDoc
+                                ON ObjectBoolean_PartionDoc.ObjectId = Object_Branch.Id
+                               AND ObjectBoolean_PartionDoc.DescId = zc_ObjectBoolean_Branch_PartionDoc() 
 
         LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                              ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
@@ -64,6 +69,7 @@ ALTER FUNCTION gpSelect_Object_Branch(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.04.15         * add PartionDoc
  17.04.15         * add IsMedoc
  18.03.15         * add InvNumber, PersonalBookkeeper               
  14.12.13                                        * add vbAccessKeyAll

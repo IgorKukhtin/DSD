@@ -46,6 +46,7 @@ type
     PersonalBookkeeperGuides: TdsdGuides;
     cxLabel19: TcxLabel;
     cbIsMedoc: TcxCheckBox;
+    cbisPartionDoc: TcxCheckBox;
   private
     { Private declarations }
   public

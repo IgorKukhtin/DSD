@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Branch(
  INOUT ioId                     Integer,       -- ключ объекта <Филиал>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Branch(
     IN inInvNumber              TVarChar,      -- Номер филиала в налоговой
     IN inPersonalBookkeeperId   Integer,       -- Сотрудник (бухгалтер)
     IN inIsMedoc                Boolean,       -- загрузка налоговых из медка
+    IN inIsPartionDoc           Boolean,       -- Партионный учет долгов нал
     IN inSession                TVarChar       -- сессия пользователя
 )
 RETURNS integer AS
@@ -75,18 +77,22 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Branch_Medoc(), ioId, inIsMedoc);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Branch_PartionDoc(), ioId, inIsPartionDoc);
                                                      
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Integer, Boolean, Boolean,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.04.15         * add PartionDoc
  17.04.15         * add IsMedoc
  18.03.15         * add InvNumber, PersonalBookkeeper                 
  14.12.13                                        * add inAccessKeyId
