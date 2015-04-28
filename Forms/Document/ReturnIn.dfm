@@ -2,6 +2,7 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1139
+  ExplicitTop = -6
   ExplicitWidth = 1155
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -209,15 +210,26 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 65
           end
+          object clInvNumber_Sale: TcxGridDBColumn
+            Caption = #1054#1089#1085#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'InvNumber_Sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actSaleJournalChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 145
+          end
         end
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 1020
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -225,7 +237,6 @@ inherited ReturnInForm: TReturnInForm
         Height = 518
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1020
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -619,9 +630,9 @@ inherited ReturnInForm: TReturnInForm
       Top = 63
       TabOrder = 8
       ExplicitTop = 63
-      ExplicitWidth = 223
+      ExplicitWidth = 74
       ExplicitHeight = 22
-      Width = 223
+      Width = 74
     end
     object cxLabel3: TcxLabel
       Left = 520
@@ -749,7 +760,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 118
     end
     object edPriceList: TcxButtonEdit
-      Left = 788
+      Left = 786
       Top = 63
       Properties.Buttons = <
         item
@@ -804,6 +815,23 @@ inherited ReturnInForm: TReturnInForm
       Properties.ReadOnly = True
       TabOrder = 29
       Width = 97
+    end
+    object cxLabel19: TcxLabel
+      Left = 88
+      Top = 45
+      Caption = #1054#1089#1085#1074#1072#1085#1080#1077
+    end
+    object edInvNumberSale: TcxButtonEdit
+      Left = 83
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 31
+      Width = 147
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -1286,6 +1314,43 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actSaleJournalChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TSaleJournalChoiceForm'
+      FormName = 'TSaleJournalChoiceForm'
+      FormNameParam.Value = 'TSaleJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Sale'
+          DataType = ftString
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Sale'
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
     object actGoodsKindChoice: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2116,7 +2181,7 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inIsChangeAmountPartner'
+        Name = 'inIsCalcAmountPartner'
         Value = Null
         Component = cbCalcAmountPartner
         DataType = ftBoolean
@@ -2150,6 +2215,22 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Top'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_MI'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -2464,8 +2545,8 @@ inherited ReturnInForm: TReturnInForm
         Component = edVATPercent
         DataType = ftFloat
       end>
-    Left = 820
-    Top = 48
+    Left = 812
+    Top = 56
   end
   object spTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
@@ -2956,5 +3037,46 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 400
     Top = 520
+  end
+  object SaleChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberSale
+    Key = '0'
+    FormNameParam.Value = 'TSaleJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TSaleJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = SaleChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = 42005d
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 164
+    Top = 56
   end
 end

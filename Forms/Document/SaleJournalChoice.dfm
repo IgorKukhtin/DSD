@@ -5,7 +5,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -621,6 +621,22 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
     inherited deEnd: TcxDateEdit
       EditValue = 42005d
     end
+    object edPartner: TcxButtonEdit
+      Left = 523
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 4
+      Width = 245
+    end
+  end
+  object cxLabel6: TcxLabel [2]
+    Left = 453
+    Top = 6
+    Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -711,6 +727,13 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ToName'
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -726,7 +749,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale'
+    StoredProcName = 'gpSelect_Movement_Sale_Choice'
     Params = <
       item
         Name = 'instartdate'
@@ -753,6 +776,13 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Value = False
         Component = actShowErased
         DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 104
@@ -935,8 +965,47 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Value = Null
         Component = deEnd
         DataType = ftDateTime
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 304
     Top = 288
+  end
+  object PartnerGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 568
+    Top = 8
   end
 end

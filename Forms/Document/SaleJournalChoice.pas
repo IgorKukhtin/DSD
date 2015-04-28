@@ -23,7 +23,8 @@ uses
   cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
+  dsdGuides, cxButtonEdit;
 
 type
   TSaleJournalChoiceForm = class(TAncestorJournalForm)
@@ -48,6 +49,9 @@ type
     colContractCode: TcxGridDBColumn;
     InvNumber_TransportGoods: TcxGridDBColumn;
     OperDate_TransportGoods: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edPartner: TcxButtonEdit;
+    PartnerGuides: TdsdGuides;
   private
     { Private declarations }
   public

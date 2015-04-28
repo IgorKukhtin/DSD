@@ -135,6 +135,11 @@ type
     mactPrint_TaxCorrective_Client: TMultiAction;
     colLineNum: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    cxLabel19: TcxLabel;
+    edInvNumberSale: TcxButtonEdit;
+    SaleChoiceGuides: TdsdGuides;
+    clInvNumber_Sale: TcxGridDBColumn;
+    actSaleJournalChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
