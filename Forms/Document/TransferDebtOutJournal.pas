@@ -91,6 +91,8 @@ type
     actDialog_TTN: TdsdOpenForm;
     actGet_TTN: TdsdExecStoredProc;
     mactPrint_TTN: TMultiAction;
+    colContractFromCode: TcxGridDBColumn;
+    colContractToCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -35,6 +35,10 @@ BEGIN
 
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), vbBankAccountId, inJuridicalId);
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Bank(), vbBankAccountId, vbBankId);
+
+     -- сохранили протокол
+     PERFORM lpInsert_ObjectProtocol (vbBankAccountId, inUserId);
+
    END IF;
 
    RETURN vbBankAccountId;

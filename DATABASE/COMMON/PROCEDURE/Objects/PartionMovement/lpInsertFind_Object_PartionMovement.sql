@@ -3,34 +3,33 @@
 -- DROP FUNCTION lpInsertFind_Object_PartionMovement (Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionMovement(
-    IN inMovementId  Integer     -- ссылка на документ Приход от постащика
+    IN inMovementId  Integer -- ссылка на документ
 )
-  RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbPartionMovementId Integer;
 BEGIN
    
-   -- !!!будем без партий!!!
-   RETURN (0);
-/*
-   -- !!!будем без партий!!!
-   inMovementId:= 0;
+   -- 
+   IF COALESCE (inMovementId, 0) = 0
+   THEN vbPartionMovementId:= 0; -- !!!будет без партий, и элемент с пустой партией не создается!!!
+   ELSE
+       -- Находим 
+       vbPartionMovementId:= (SELECT ObjectId FROM ObjectFloat WHERE ValueData = inMovementId AND DescId = zc_ObjectFloat_PartionMovement_MovementId());
 
-
-   -- Находим 
-   SELECT ObjectId INTO vbPartionMovementId FROM ObjectFloat WHERE ValueData = inMovementId AND DescId = zc_ObjectFloat_PartionMovement_MovementId();
-
-   IF COALESCE (vbPartionMovementId, 0) = 0
-   THEN
+       IF COALESCE (vbPartionMovementId, 0) = 0
+       THEN
            -- сохранили <Объект>
-           vbPartionMovementId := lpInsertUpdate_Object (vbPartionMovementId, zc_Object_PartionMovement(), 0, CAST (inMovementId AS TVarChar));
+           vbPartionMovementId := lpInsertUpdate_Object (vbPartionMovementId, zc_Object_PartionMovement(), 0, inMovementId :: TVarChar);
            -- сохранили
-           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionMovement_MovementId(), vbPartionMovementId, inMovementId);
+           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionMovement_MovementId(), vbPartionMovementId, inMovementId :: TFloat);
 
+       END IF;
    END IF;
+
    -- Возвращаем значение
    RETURN (vbPartionMovementId);
-*/
 
 END;
 $BODY$
@@ -42,6 +41,7 @@ ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.05.15                                        * all
  13.02.14                                        * !!!будем без партий!!! но по другому
  27.09.13                                        * !!!будем без партий!!!
  02.07.13                                        * сначала Find, потом если надо Insert

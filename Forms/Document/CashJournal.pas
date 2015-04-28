@@ -46,6 +46,7 @@ type
     UnitCode: TcxGridDBColumn;
     PersonalServiceListName: TcxGridDBColumn;
     PersonalServiceListCode: TcxGridDBColumn;
+    clInvNumber_Sale: TcxGridDBColumn;
   private
     { Private declarations }
   public

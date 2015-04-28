@@ -47,6 +47,7 @@ BEGIN
                           FROM Object_BankAccount_View AS View_BankAccount
                           WHERE View_BankAccount.Name = TRIM (inBankAccountMain)
                             AND View_BankAccount.isCorporate = true
+order by 1 limit 1
                          );
 
    -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки

@@ -55,6 +55,9 @@ type
     cxLabel16: TcxLabel;
     ceAmountSumm: TcxCurrencyEdit;
     CurrencyGuides: TdsdGuides;
+    cxLabel19: TcxLabel;
+    edInvNumberSale: TcxButtonEdit;
+    SaleChoiceGuides: TdsdGuides;
   private
     { Private declarations }
   public

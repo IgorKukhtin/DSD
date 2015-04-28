@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Bank(
     IN inBankName            TVarChar,      -- Название банка
     IN inUserId              Integer
 )
-RETURNS integer AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbBankId Integer;
    DECLARE vbBankName TVarChar;
@@ -18,7 +18,8 @@ BEGIN
    SELECT Object_Bank_View.Id, Object_Bank_View.BankName INTO vbBankId, vbBankName 
           FROM Object_Bank_View 
          WHERE Object_Bank_View.MFO = inBankMFO;
-   IF COALESCE(vbBankId, 0) = 0 THEN
+
+   IF COALESCE (vbBankId, 0) = 0 THEN
       -- Если код не установлен, определяем его каи последний+1
       vbCode := lfGet_ObjectCode (0, zc_Object_Bank());
       -- проверка прав уникальности для свойства <МФО>
@@ -27,9 +28,15 @@ BEGIN
       vbBankId := lpInsertUpdate_Object (vbBankId, zc_Object_Bank(), vbCode, inBankName);
 
       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Bank_MFO(), vbBankId, inBankMFO);
+
+      -- сохранили протокол
+      PERFORM lpInsert_ObjectProtocol (vbBankId, inUserId);
+
    END IF;
    IF COALESCE(vbBankName, '') = '' AND (inBankName<>'') THEN
       UPDATE Object SET ValueData = inBankName WHERE Id = vbBankId;
+      -- сохранили протокол
+      PERFORM lpInsert_ObjectProtocol (vbBankId, inUserId);
    END IF;
 
    RETURN vbBankId;

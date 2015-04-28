@@ -36,6 +36,7 @@ type
     bbReport_CashUser: TdxBarButton;
     OKPO: TcxGridDBColumn;
     isLoad: TcxGridDBColumn;
+    clInvNumber_Sale: TcxGridDBColumn;
   private
     { Private declarations }
   public

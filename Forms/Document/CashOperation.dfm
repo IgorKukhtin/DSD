@@ -1,24 +1,24 @@
 ﻿inherited CashOperationForm: TCashOperationForm
   ActiveControl = ceAmountIn
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientHeight = 279
+  ClientHeight = 310
   ClientWidth = 563
   AddOnFormData.isSingle = False
   ExplicitWidth = 569
-  ExplicitHeight = 311
+  ExplicitHeight = 338
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 168
-    Top = 240
+    Top = 279
     ExplicitLeft = 168
-    ExplicitTop = 240
+    ExplicitTop = 279
   end
   inherited bbCancel: TcxButton
     Left = 312
-    Top = 240
+    Top = 279
     ExplicitLeft = 312
-    ExplicitTop = 240
+    ExplicitTop = 279
   end
   object cxLabel1: TcxLabel [2]
     Left = 130
@@ -122,14 +122,14 @@
   end
   object cxLabel10: TcxLabel [15]
     Left = 15
-    Top = 185
+    Top = 230
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [16]
     Left = 15
-    Top = 204
+    Top = 249
     TabOrder = 10
-    Width = 215
+    Width = 535
   end
   object cxLabel8: TcxLabel [17]
     Left = 430
@@ -279,17 +279,33 @@
     TabOrder = 35
     Width = 92
   end
+  object cxLabel19: TcxLabel [36]
+    Left = 15
+    Top = 185
+    Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+  end
+  object edInvNumberSale: TcxButtonEdit [37]
+    Left = 15
+    Top = 204
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 37
+    Width = 215
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 59
-    Top = 230
+    Left = 51
+    Top = 254
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 24
-    Top = 230
+    Top = 262
   end
   inherited ActionList: TActionList
-    Left = 95
-    Top = 229
+    Left = 87
+    Top = 261
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -299,7 +315,7 @@
   end
   inherited FormParams: TdsdFormParams
     Left = 128
-    Top = 230
+    Top = 262
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Cash'
@@ -429,9 +445,17 @@
         Component = ceParPartnerValue
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Sale'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftFloat
+        ParamType = ptInput
       end>
-    Left = 456
-    Top = 230
+    Left = 464
+    Top = 262
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Cash'
@@ -615,9 +639,22 @@
         Component = CurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MovementId_Sale'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InvNumber_Sale'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 408
-    Top = 230
+    Top = 254
   end
   object CashGuides: TdsdGuides
     KeyField = 'Id'
@@ -703,7 +740,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 376
+    Left = 336
     Top = 204
   end
   object ObjectlGuides: TdsdGuides
@@ -779,8 +816,8 @@
         Guides = CashGuides
       end>
     ActionItemList = <>
-    Left = 504
-    Top = 230
+    Left = 512
+    Top = 246
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -953,5 +990,44 @@
       end>
     Left = 416
     Top = 50
+  end
+  object SaleChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberSale
+    Key = '0'
+    FormNameParam.Value = 'TSaleJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TSaleJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = SaleChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 84
+    Top = 200
   end
 end
