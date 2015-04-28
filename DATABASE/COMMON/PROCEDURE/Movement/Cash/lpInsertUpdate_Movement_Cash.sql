@@ -1,6 +1,8 @@
 -- Function: lpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,  Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -26,6 +28,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inParValue              TFloat    , -- Номинал для перевода в валюту баланса
     IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue       TFloat    , -- Номинал для расчета суммы операции
+    IN inMovementId_Sale       TFloat    , -- Id документа продажи 
     
     IN inUserId              Integer     -- Пользователь
 )                 
@@ -245,6 +248,9 @@ BEGIN
      -- сохранили связь с <Валютой>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
 
+     -- сохранили свойство <id документа продажи>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), vbMovementItemId, inMovementId_Sale);
+
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 
@@ -255,6 +261,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.04.15         add inMovementId_Sale
  29.08.14                                        *
 */
 

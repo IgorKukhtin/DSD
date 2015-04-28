@@ -1,27 +1,27 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
-  ClientHeight = 389
-  ClientWidth = 1112
-  ExplicitWidth = 1128
-  ExplicitHeight = 424
+  ClientHeight = 410
+  ClientWidth = 1265
+  ExplicitWidth = 1281
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1112
-    Height = 309
+    Width = 1265
+    Height = 330
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1112
     ExplicitHeight = 309
-    ClientRectBottom = 309
-    ClientRectRight = 1112
+    ClientRectBottom = 330
+    ClientRectRight = 1265
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1112
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
-        Width = 1112
-        Height = 309
+        Width = 1265
+        Height = 330
         ExplicitWidth = 1112
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -472,7 +472,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 1112
+    Width = 1265
     Height = 54
     ExplicitWidth = 1112
     ExplicitHeight = 54
@@ -603,12 +603,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Width = 180
     end
     object cxLabel10: TcxLabel
-      Left = 1029
-      Top = 6
+      Left = 1056
+      Top = 30
       Caption = #1042#1072#1083#1102#1090#1072':'
     end
     object edCurrency: TcxButtonEdit
-      Left = 1029
+      Left = 1107
       Top = 29
       Properties.Buttons = <
         item
@@ -619,6 +619,23 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       TabOrder = 17
       Width = 68
     end
+    object cxLabel9: TcxLabel
+      Left = 1023
+      Top = 6
+      Caption = #1044#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080':'
+    end
+  end
+  object edInvNumberSale: TcxButtonEdit [2]
+    Left = 1107
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 150
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -708,6 +725,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     object actGetForm: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = getMovementForm
       StoredProcList = <
         item
@@ -1430,6 +1448,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Sale'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 184
     Top = 196
@@ -2093,7 +2118,47 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1048
-    Top = 8
+    Left = 1120
+    Top = 48
+  end
+  object SaleChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberSale
+    Key = '0'
+    FormNameParam.Value = 'TSaleJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TSaleJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = SaleChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 1172
   end
 end

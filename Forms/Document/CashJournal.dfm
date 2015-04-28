@@ -1,19 +1,26 @@
 inherited CashJournalForm: TCashJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientWidth = 982
+  ClientHeight = 551
+  ClientWidth = 959
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 998
+  ExplicitWidth = 975
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 982
+    Width = 959
+    Height = 494
     TabOrder = 3
     ExplicitWidth = 982
-    ClientRectRight = 982
+    ClientRectBottom = 494
+    ClientRectRight = 959
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
       inherited cxGrid: TcxGrid
-        Width = 982
+        Width = 959
+        Height = 494
+        ExplicitLeft = -3
+        ExplicitTop = -3
         ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -375,12 +382,20 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object clInvNumber_Sale: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'InvNumber_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 130
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 982
+    Width = 959
     ExplicitWidth = 982
     inherited deStart: TcxDateEdit
       EditValue = 42005d

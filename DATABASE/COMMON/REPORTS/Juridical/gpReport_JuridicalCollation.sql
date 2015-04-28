@@ -3,6 +3,9 @@
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inStartDate        TDateTime , -- 
@@ -14,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inPaidKindId       Integer   , --
     IN inInfoMoneyId      Integer,    -- Управленческая статья 
     IN inCurrencyId       Integer   , -- Валюта 
+    IN inMovementId_Sale  Integer   , -- Ключ документа продажи
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementSumm TFloat, 
@@ -356,7 +360,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

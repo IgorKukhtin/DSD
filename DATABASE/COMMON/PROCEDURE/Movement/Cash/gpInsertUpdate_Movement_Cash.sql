@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat,TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
@@ -27,8 +28,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
    OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
     IN inCurrencyPartnerValue TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue      TFloat    , -- Номинал для расчета суммы операции
-    
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inMovementId_Sale      TFloat    , -- Id документа продажи 
+    IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS record as--Integer AS
 $BODY$
@@ -106,6 +107,7 @@ BEGIN
                                          , inParValue             := outParValue
                                          , inCurrencyPartnerValue := inCurrencyPartnerValue
                                          , inParPartnerValue      := inParPartnerValue
+                                         , inMovementId_Sale      := inMovementId_Sale
                                          , inUserId      := vbUserId
                                           );
 
@@ -130,6 +132,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.05.15         * add inMovementId_Sale
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  09.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  30.08.14                                        * это временно

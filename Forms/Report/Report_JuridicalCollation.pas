@@ -83,6 +83,9 @@ type
     CurrencyName: TcxGridDBColumn;
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
+    edInvNumberSale: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    SaleChoiceGuides: TdsdGuides;
   private
     { Private declarations }
   public

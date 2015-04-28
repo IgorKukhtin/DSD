@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , isLoad Boolean
+             , InvNumber_Sale TVarChar
 )
 AS
 $BODY$
@@ -54,7 +55,7 @@ BEGIN
                            UNION SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = zc_Enum_Process_InsertUpdate_Movement_Cash() AND EXISTS (SELECT tmpAccessKey_isCashAll.Id FROM tmpAccessKey_isCashAll) GROUP BY AccessKeyId
                                 )
           , tmpAll AS (SELECT tmpStatus.StatusId, tmpStatus.StartDate, tmpStatus.EndDate, tmpRoleAccessKey.AccessKeyId FROM tmpStatus, tmpRoleAccessKey)
-          , Movement AS (SELECT Movement.*
+          , tmpMovement AS (SELECT Movement.*
                               , Object_Status.ObjectCode AS StatusCode
                               , Object_Status.ValueData  AS StatusName
                          FROM tmpAll
@@ -65,11 +66,11 @@ BEGIN
                               LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
                         )
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Movement.StatusCode
-           , Movement.StatusName
+             tmpMovement.Id
+           , tmpMovement.InvNumber
+           , tmpMovement.OperDate
+           , tmpMovement.StatusCode
+           , tmpMovement.StatusName
            , CASE WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
                   ELSE 0
@@ -109,19 +110,27 @@ BEGIN
            , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
 
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) :: Boolean AS isLoad
+
+           , CAST ('' || CAST (Movement_Sale.InvNumber AS TVarChar)
+                || ' oÚ '|| CAST (DATE(Movement_Sale.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Sale
            
-       FROM Movement
-            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+       FROM tmpMovement
+            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND MovementItem.ObjectId = inCashId
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isLoad 
-                                      ON MovementBoolean_isLoad.MovementId = Movement.Id
+                                      ON MovementBoolean_isLoad.MovementId = tmpMovement.Id
                                      AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData
+
             LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
-                                         ON MLO_PersonalServiceList.MovementId = Movement.Id
+                                         ON MLO_PersonalServiceList.MovementId = tmpMovement.Id
                                         AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MLO_PersonalServiceList.ObjectId
 
@@ -176,20 +185,20 @@ BEGIN
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
-                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                    ON MovementFloat_AmountCurrency.MovementId = tmpMovement.Id
                                    AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
 
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
-                                    ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                    ON MovementFloat_CurrencyValue.MovementId = tmpMovement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
             LEFT JOIN MovementFloat AS MovementFloat_ParValue
-                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                    ON MovementFloat_ParValue.MovementId = tmpMovement.Id
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
-                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = tmpMovement.Id
                                    AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
-                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                    ON MovementFloat_ParPartnerValue.MovementId = tmpMovement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
             
                                        
@@ -203,6 +212,7 @@ ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 27.04.15         * add InvNumber_Sale
  06.03.15         * add Currency... 
  30.08.14                                        * all
  14.01.14                                        * add Object_Contract_InvNumber_View
@@ -215,3 +225,4 @@ ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, T
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 273734, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inCashId:= 1, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+--select * from gpSelect_Movement_Cash(inStartDate := ('01.12.2014')::TDateTime , inEndDate := ('15.01.2015')::TDateTime , inCashId := 296540 , inIsErased := 'False' ,  inSession := '5');

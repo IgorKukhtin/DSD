@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TDateTime, Integer, TVarCh
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer   , -- ключ Документа
     IN inOperDate          TDateTime , -- 
-    IN inKassaId           Integer   , -- 
+    IN inCashId            Integer   , -- 
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyId Integer, CurrencyName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , InvNumber_Sale TVarChar, MovementId_Sale Integer
              )
 AS
 $BODY$
@@ -74,8 +75,11 @@ BEGIN
            , 0 :: TFloat                                       AS CurrencyPartnerValue
            , 0 :: TFloat                                       AS ParPartnerValue
 
+           , CAST (NULL AS TVarChar)  	AS InvNumber_Sale
+           , 0                          AS MovementId_Sale
+
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inKassaId -- IN (SELECT MIN (Object.Id) FROM Object WHERE Object.AccessKeyId IN (SELECT MIN (lpGetAccessKey) FROM lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Cash())))
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inCashId -- IN (SELECT MIN (Object.Id) FROM Object WHERE Object.AccessKeyId IN (SELECT MIN (lpGetAccessKey) FROM lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Cash())))
             LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
                ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
               AND ObjectLink_Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
@@ -134,6 +138,10 @@ BEGIN
            , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData      AS ParPartnerValue
            
+           , CAST ('' || CAST (Movement_Sale.InvNumber AS TVarChar)
+                || ' oт '|| CAST (DATE(Movement_Sale.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Sale
+           , Movement_Sale.Id                                                                     AS MovementId_Sale
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -155,6 +163,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData
 
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
  
@@ -212,6 +225,7 @@ ALTER FUNCTION gpGet_Movement_Cash (Integer, TDateTime, Integer, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.04.15         * add MIFloat_MovementId (sale)
  06.03.15         * add Currency...
  30.08.14                                        * all
  25.01.14                                        * add inOperDate

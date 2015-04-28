@@ -2,7 +2,6 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1139
-  ExplicitTop = -6
   ExplicitWidth = 1155
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -211,7 +210,7 @@ inherited ReturnInForm: TReturnInForm
             Width = 65
           end
           object clInvNumber_Sale: TcxGridDBColumn
-            Caption = #1054#1089#1085#1074#1072#1085#1080#1077
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'InvNumber_Sale'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -817,9 +816,9 @@ inherited ReturnInForm: TReturnInForm
       Width = 97
     end
     object cxLabel19: TcxLabel
-      Left = 88
+      Left = 83
       Top = 45
-      Caption = #1054#1089#1085#1074#1072#1085#1080#1077
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
     end
     object edInvNumberSale: TcxButtonEdit
       Left = 83
