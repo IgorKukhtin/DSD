@@ -19,13 +19,19 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbObjectId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbUnitIdStr TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
      vbUserId := inSession;
      vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
-     vbUnitId := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '0');
+     vbUnitIdStr := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '0');
+     IF vbUnitIdStr <> '' THEN 
+        vbUnitId := vbUnitIdStr;
+     ELSE
+     	vbUnitId := 0;
+     END IF;	   
 
      RETURN QUERY
      WITH DD AS (SELECT DISTINCT Object_MarginCategoryItem_View.MarginPercent

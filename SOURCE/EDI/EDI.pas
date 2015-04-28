@@ -49,6 +49,7 @@ type
     procedure PutStreamToFTP(Stream: TStream; FileName: string;
       Directory: string);
     procedure SetDirectory(const Value: string);
+    function ConvertEDIDate(ADateTime: string): TDateTime;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -220,6 +221,14 @@ begin
     if FileExists(P7SFileName) then
       DeleteFile(P7SFileName);
   end;
+end;
+
+function TEDI.ConvertEDIDate(ADateTime: string): TDateTime;
+var FormatSettings : TFormatSettings;
+begin
+  FormatSettings.DateSeparator := '-';
+  FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
+  result := StrToDate(ADateTime, FormatSettings)
 end;
 
 constructor TEDI.Create(AOwner: TComponent);
@@ -1475,18 +1484,18 @@ begin
   with spHeader, ЕлектроннийДокумент do
   begin
     ParamByName('inOrderInvNumber').Value := Заголовок.НомерЗамовлення;
-    ParamByName('inComDocDate').Value := VarToDateTime(Заголовок.ДатаДокументу);
+    ParamByName('inComDocDate').Value := ConvertEDIDate(Заголовок.ДатаДокументу);
     if Заголовок.ДатаЗамовлення <> '' then
       ParamByName('inOrderOperDate').Value :=
-        VarToDateTime(Заголовок.ДатаЗамовлення)
+        ConvertEDIDate(Заголовок.ДатаЗамовлення)
     else
       ParamByName('inOrderOperDate').Value :=
-        VarToDateTime(Заголовок.ДатаДокументу);
+        ConvertEDIDate(Заголовок.ДатаДокументу);
     ParamByName('inPartnerInvNumber').Value := Заголовок.НомерДокументу;
     if Заголовок.КодТипуДокументу = '007' then begin
        if Заголовок.ДокПідстава.ДатаДокументу <> '' then
           ParamByName('inOperDateSaleLink').Value :=
-               VarToDateTime(Заголовок.ДокПідстава.ДатаДокументу);
+               ConvertEDIDate(Заголовок.ДокПідстава.ДатаДокументу);
 
        ParamByName('inInvNumberSaleLink').Value :=
            Заголовок.ДокПідстава.НомерДокументу;
@@ -1499,14 +1508,14 @@ begin
 
        if Заголовок.ДокПідстава.ДатаДокументу = '' then
           ParamByName('inPartnerOperDate').Value :=
-            VarToDateTime(Заголовок.ДатаДокументу)
+            ConvertEDIDate(Заголовок.ДатаДокументу)
        else
           ParamByName('inPartnerOperDate').Value :=
-            VarToDateTime(Заголовок.ДокПідстава.ДатаДокументу)
+            ConvertEDIDate(Заголовок.ДокПідстава.ДатаДокументу)
     end
     else
        ParamByName('inPartnerOperDate').Value :=
-         VarToDateTime(Заголовок.ДатаДокументу);
+         ConvertEDIDate(Заголовок.ДатаДокументу);
     if Заголовок.КодТипуДокументу = '012' then
     begin
       ParamByName('inGLNPlace').Value := '';
@@ -1516,12 +1525,12 @@ begin
       if not VarIsNull(Параметри.ParamByName('Дата податкової накладної')
         .NodeValue) then
         ParamByName('inOperDateTax').Value :=
-          VarToDateTime(Параметри.ParamByName('Дата податкової накладної')
+          ConvertEDIDate(Параметри.ParamByName('Дата податкової накладної')
           .NodeValue);
       ParamByName('inInvNumberSaleLink').Value :=
         Заголовок.ДокПідстава.НомерДокументу;
       ParamByName('inOperDateSaleLink').Value :=
-        VarToDateTime(Заголовок.ДокПідстава.ДатаДокументу);
+        ConvertEDIDate(Заголовок.ДокПідстава.ДатаДокументу);
     end
     else
       ParamByName('inDesc').Value := 'Sale';
