@@ -12,74 +12,75 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 
-         -- сохранили
-     PERFORM lpInsertUpdate_MovementItem_Inventory (ioId              := COALESCE (tmp.MovementItemId,0)
-                                               , inMovementId         := inMovementId
-                                               , inGoodsId            := tmp.GoodsId
-                                               , inAmount             := COALESCE (tmp.Amount_Start,0)
-                                               , inPartionGoodsDate   := NULL
-                                               , inPrice              := 0::TFloat
-                                               , inSumm               := 0::TFloat
-                                               , inHeadCount          := 0::TFloat
-                                               , inCount              := 0::TFloat
-                                               , inPartionGoods       := NULL
-                                               , inGoodsKindId        := COALESCE (tmp.GoodsKindId, NULL)
-                                               , inAssetId            := NULL
-                                               , inUnitId             := NULL
-                                               , inStorageId          := NULL
-                                               , inUserId             := vbUserId
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE (tmp.MovementItemId, 0)
+                                                  , inMovementId         := inMovementId
+                                                  , inGoodsId            := tmp.GoodsId
+                                                  , inAmount             := COALESCE (tmp.Amount_End,0)
+                                                  , inPartionGoodsDate   := NULL
+                                                  , inPrice              := 0
+                                                  , inSumm               := 0
+                                                  , inHeadCount          := 0
+                                                  , inCount              := 0
+                                                  , inPartionGoods       := NULL
+                                                  , inGoodsKindId        := tmp.GoodsKindId
+                                                  , inAssetId            := NULL
+                                                  , inUnitId             := NULL
+                                                  , inStorageId          := NULL
+                                                  , inUserId             := vbUserId
+                                                   )
+     FROM (SELECT tmpMI.MovementItemId                                   AS MovementItemId
+                , COALESCE (tmpContainer.GoodsId, tmpMI.GoodsId)         AS GoodsId
+                , COALESCE (tmpContainer.GoodsKindId, tmpMI.GoodsKindId) AS GoodsKindId
+                , COALESCE (tmpContainer.Amount_End,0)                   AS Amount_End
 
-
-                                                       )
-     FROM (SELECT COALESCE(tmpContainer.Amount_Start,0)                   AS Amount_Start
-                , COALESCE(tmpContainer.GoodsId, tmpMI.GoodsId)           AS GoodsId
-                , COALESCE(tmpContainer.GoodsKindId, tmpMI.GoodsKindId)   AS GoodsKindId
-                , tmpMI.MovementItemId                                    AS MovementItemId
-                
-           FROM (SELECT Container.Amount  - COALESCE (SUM (MIContainer.Amount), 0)  AS Amount_Start
+           FROM (SELECT tmpContainer.GoodsId
+                      , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                      , SUM (tmpContainer.Amount_End)        AS Amount_End
+                 FROM
+                (SELECT Container.Id                                                AS ContainerId
                       , Container.ObjectId                                          AS GoodsId
-                      , CLO_GoodsKind.ObjectId                                      AS GoodsKindId
-                      --, tmpMI.MovementItemId                                        AS MovementItemId
-                FROM Movement
-                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                 ON MovementLinkObject_From.MovementId = Movement.Id
-                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                 
-                    INNER JOIN ContainerLinkObject AS CLO_Unit 
-                                                   ON CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                  AND CLO_Unit.ObjectId = MovementLinkObject_From.ObjectId   --From UnitId
-        
-                    INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId
-                                        AND Container.DescId = zc_Container_Count()
-                                
-                    INNER JOIN MovementItemContainer AS MIContainer
-                                                    ON MIContainer.ContainerId = Container.Id
-                                                   AND MIContainer.OperDate >= Movement.operdate
-
-                    LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                  ON CLO_GoodsKind.ContainerId = Container.Id
-                                                 AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                    WHERE Movement.Id =  inMovementId
-                    GROUP BY Container.ObjectId 
-                           , Container.Amount
-                           , CLO_GoodsKind.ObjectId 
-                    HAVING ( Container.Amount  - COALESCE (SUM (MIContainer.Amount), 0) )<>0
-                   ) tmpContainer  
+                      , Container.Amount  - COALESCE (SUM (MIContainer.Amount), 0)  AS Amount_End
+                 FROM Movement
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                    ON MovementLinkObject_From.MovementId = Movement.Id
+                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                      INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                     ON CLO_Unit.ObjectId = MovementLinkObject_From.ObjectId
+                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                      INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId
+                                          AND Container.DescId = zc_Container_Count()
+                      LEFT JOIN MovementItemContainer AS MIContainer
+                                                      ON MIContainer.ContainerId = Container.Id
+                                                     AND MIContainer.OperDate > Movement.OperDate -- т.к. остаток на Дата + 1
+                 WHERE Movement.Id =  inMovementId
+                 GROUP BY Container.Id
+                        , Container.ObjectId
+                        , Container.Amount
+                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0)) <> 0
+                ) tmpContainer
+                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                              ON CLO_GoodsKind.ContainerId = tmpContainer.ContainerId
+                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                 GROUP BY tmpContainer.GoodsId
+                        , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                 HAVING SUM (tmpContainer.Amount_End) <> 0
+                ) tmpContainer
                                              
-            FULL JOIN (SELECT MovementItem.ObjectId           AS GoodsId
-                            , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
-                            , MovementItem.Id                 AS MovementItemId
-                       FROM  Movement
-                             INNER JOIN MovementItem ON Movement.id = MovementItem.MovementId
-                                                   AND MovementItem.isErased = False
-                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
-                       WHERE Movement.Id =  inMovementId
-                       ) as tmpMI ON tmpMI.GoodsId = tmpContainer.GoodsId
-                                 AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId 
+                FULL JOIN (SELECT MovementItem.Id                               AS MovementItemId
+                                , MovementItem.ObjectId                         AS GoodsId
+                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           FROM Movement
+                                INNER JOIN MovementItem ON Movement.id = MovementItem.MovementId
+                                                       AND MovementItem.isErased = FALSE
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
+                           WHERE Movement.Id =  inMovementId
+                          ) AS tmpMI ON tmpMI.GoodsId = tmpContainer.GoodsId
+                                    AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
            
            ) AS tmp;
 
@@ -90,13 +91,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 24.04.15         *
+ 26.04.15                                        * all
+ 24.04.15          *
 */
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_Amount
-
-
---select * from gpInsertUpdate_MovementItem_Inventory_Amount(inMovementId := 786187 ,  inSession := '5');
-
-              

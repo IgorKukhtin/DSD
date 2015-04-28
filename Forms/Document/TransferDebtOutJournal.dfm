@@ -229,6 +229,14 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colContractFromCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1086#1090' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'ContractFromCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colContractFromName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'. ('#1086#1090' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'ContractFromName'
@@ -243,6 +251,14 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 55
+          end
+          object colContractToCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1082#1086#1084#1091')'
+            DataBinding.FieldName = 'ContractToCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object colContractToName: TcxGridDBColumn

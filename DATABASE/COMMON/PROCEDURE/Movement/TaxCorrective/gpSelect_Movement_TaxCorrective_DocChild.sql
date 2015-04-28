@@ -47,10 +47,10 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
            , Movement.OperDate	                        AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
-           , MovementBoolean_Checked.ValueData          AS Checked
-           , MovementBoolean_Document.ValueData         AS Document
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean    AS Checked
+           , COALESCE (MovementBoolean_Document.ValueData, FALSE) :: Boolean   AS Document
            , CASE WHEN MovementBoolean_Document.ValueData = TRUE THEN 'V' ELSE '-' END :: TVarChar AS DocumentValue
-           , MovementBoolean_Registered.ValueData       AS Registered
+           , COALESCE (MovementBoolean_Registered.ValueData, FALSE) :: Boolean AS Registered
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -111,7 +111,7 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
 
            , COALESCE (MovementLinkMovement_ChildEDI.MovementId, 0) <> 0     AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean AS isElectron
-           , COALESCE(MovementBoolean_Medoc.ValueData, FALSE)                AS isMedoc
+           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE) :: Boolean    AS isMedoc
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId

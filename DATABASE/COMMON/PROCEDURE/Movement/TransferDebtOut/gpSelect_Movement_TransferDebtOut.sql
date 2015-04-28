@@ -17,8 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, OKPO_From TVarChar
              , ToId Integer, ToName TVarChar, OKPO_To TVarChar
              , PartnerCode Integer, PartnerName TVarChar
-             , ContractFromId Integer, ContractFromName TVarChar, ContractTagFromName TVarChar
-             , ContractToId Integer, ContractToName TVarChar, ContractTagToName TVarChar
+             , ContractFromId Integer, ContractFromCode Integer, ContractFromName TVarChar, ContractTagFromName TVarChar
+             , ContractToId Integer, ContractToCode Integer, ContractToName TVarChar, ContractTagToName TVarChar
              , PaidKindFromName TVarChar, PaidKindToName TVarChar
              , InfoMoneyGroupName_from TVarChar, InfoMoneyDestinationName_from TVarChar, InfoMoneyCode_from Integer, InfoMoneyName_from TVarChar
              , InfoMoneyGroupName_to TVarChar, InfoMoneyDestinationName_to TVarChar, InfoMoneyCode_to Integer, InfoMoneyName_to TVarChar
@@ -83,9 +83,11 @@ BEGIN
            , Object_Partner.ValueData               	AS PartnerName
 
            , View_Contract_InvNumberFrom.ContractId      AS ContractFromId
+           , View_Contract_InvNumberFrom.ContractCode    AS ContractFromCode
            , View_Contract_InvNumberFrom.InvNumber       AS ContractFromName
            , View_Contract_InvNumberFrom.ContractTagName AS ContractTagFromName
            , View_Contract_InvNumberTo.ContractId        AS ContractToId
+           , View_Contract_InvNumberTo.ContractCode      AS ContractToCode
            , View_Contract_InvNumberTo.InvNumber         AS ContractToName
            , View_Contract_InvNumberTo.ContractTagName   AS ContractTagToName
 

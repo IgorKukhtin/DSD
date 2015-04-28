@@ -351,6 +351,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
@@ -536,6 +544,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     object actChecked: TdsdExecStoredProc [6]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spChecked
       StoredProcList = <
         item
@@ -557,6 +566,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     object actTaxCorrective: TdsdExecStoredProc [10]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTaxCorrective
       StoredProcList = <
         item
@@ -575,6 +585,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     object actCorrective: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spCorrective
       StoredProcList = <
         item
@@ -644,13 +655,16 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     inherited actInsertMask: TdsdInsertUpdateAction [16]
     end
-    inherited actReCompleteList: TMultiAction [18]
+    inherited actReCompleteList: TMultiAction [17]
+    end
+    inherited spReCompete: TdsdExecStoredProc [18]
     end
     inherited MovementProtocolOpenForm: TdsdOpenForm [19]
     end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -846,6 +860,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportNameTaxCorrective
       StoredProcList = <
         item
