@@ -1019,11 +1019,13 @@
       item
         Name = 'PartnerId'
         Value = ''
+        Component = ObjectlGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PartnerName'
         Value = ''
+        Component = ObjectlGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>

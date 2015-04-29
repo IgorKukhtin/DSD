@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1083#1080#1072#1083'>'
-  ClientHeight = 221
+  ClientHeight = 241
   ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 56
-    Top = 186
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 186
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -94,7 +94,14 @@
     Top = 149
     Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1080#1079' '#1084#1077#1076#1082#1072
     TabOrder = 10
-    Width = 196
+    Width = 180
+  end
+  object cbisPartionDoc: TcxCheckBox
+    Left = 21
+    Top = 176
+    Caption = #1055#1072#1088#1090#1080#1086#1085#1085#1099#1081' '#1091#1095#1077#1090' '#1076#1086#1083#1075#1086#1074' '#1085#1072#1083
+    TabOrder = 11
+    Width = 180
   end
   object ActionList: TActionList
     Left = 256
@@ -176,6 +183,13 @@
         Component = cbIsMedoc
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inisPartionDoc'
+        Value = Null
+        Component = cbisPartionDoc
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 293
@@ -237,6 +251,12 @@
         Value = Null
         Component = cbIsMedoc
         DataType = ftBoolean
+      end
+      item
+        Name = 'IsPartionDoc'
+        Value = Null
+        Component = cbisPartionDoc
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 224
@@ -259,7 +279,7 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 296
-    Top = 152
+    Top = 176
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 48
