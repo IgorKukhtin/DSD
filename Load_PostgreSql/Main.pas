@@ -10250,8 +10250,8 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
-           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
-           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.FromId not in (3830, 3304,10594,10598)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
+           +'  and Bill.ToId not in (3830, 3304,10594,10598)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
 //           +'  and Bill.FromId<>4928'//ФОЗЗИ-ПЕРЕПАК ПРОДУКЦИИ
            +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
@@ -10606,8 +10606,8 @@ begin
            +'  and Id_Postgres >0'
            +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
            +'  and Bill.FromId not in (5347)' //ИЗЛИШКИ ПО ПРИХОДУ СО
-           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
-           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.FromId not in (3830, 3304,10594,10598)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
+           +'  and Bill.ToId not in (3830, 3304,10594,10598)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
            +'  and isUnitFrom.UnitId is null'
            +'  and UnitFrom.PersonalId_Postgres is null'
            //!!!!!!+'  and Bill.MoneyKindId = zc_mkNal()'
@@ -10768,8 +10768,8 @@ begin
            +'  and Id_Postgres >0'
            +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
            +'  and Bill.FromId not in (5347)' //ИЗЛИШКИ ПО ПРИХОДУ СО
-           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
-           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.FromId not in (3830, 3304,10594,10598)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
+           +'  and Bill.ToId not in (3830, 3304,10594,10598)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
            +'  and isUnitFrom.UnitId is null'
            +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkNal()'
@@ -11482,8 +11482,8 @@ begin
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
            +'  and Bill.FromId not in (5347)' //ИЗЛИШКИ ПО ПРИХОДУ СО
-           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
-           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.FromId not in (3830, 3304,10594,10598)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
+           +'  and Bill.ToId not in (3830, 3304,10594,10598)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
 //           +'  and Bill.FromId<>4928'//ФОЗЗИ-ПЕРЕПАК ПРОДУКЦИИ
            +'  and isUnitFrom.UnitId is null'
            +'  and UnitFrom.PersonalId_Postgres is null'
@@ -11782,8 +11782,8 @@ begin
            +'  and Bill.Id_Postgres>0'
            +'  and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
            +'  and Bill.FromId not in (5347)' //ИЗЛИШКИ ПО ПРИХОДУ СО
-           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
-           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.FromId not in (3830, 3304,10594,10598)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
+           +'  and Bill.ToId not in (3830, 3304,10594,10598)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
            +'  and isUnitFrom.UnitId is null'
            +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkNal()');
@@ -15720,8 +15720,8 @@ begin
            +'  and Bill.BillKind=zc_bkReturnToClient()'
 //           +'  and Bill.ToId<>4928'//ФОЗЗИ-ПЕРЕПАК ПРОДУКЦИИ
            +'  and Bill.FromId<>4927'//СКЛАД ПЕРЕПАК
-           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
-           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.FromId not in (3830, 3304,10594,10598)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
+           +'  and Bill.ToId not in (3830, 3304,10594,10598)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
            );
@@ -16171,8 +16171,8 @@ begin
            +'  and Bill.BillKind=zc_bkReturnToClient()'
 //           +'  and Bill.ToId<>4928'//ФОЗЗИ-ПЕРЕПАК ПРОДУКЦИИ
            +'  and Bill.FromId<>4927'//СКЛАД ПЕРЕПАК
-           +'  and Bill.FromId not in (3830, 3304,10594)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
-           +'  and Bill.ToId not in (3830, 3304,10594)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение)
+           +'  and Bill.FromId not in (3830, 3304,10594,10598)' //КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
+           +'  and Bill.ToId not in (3830, 3304,10594,10598)'  // КРОТОН ООО (хранение) + КРОТОН ООО + ДЮКОВ Ю.О. (хранение) + ДЮКОВ Ю.О.  услуги
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkNal()'
            );

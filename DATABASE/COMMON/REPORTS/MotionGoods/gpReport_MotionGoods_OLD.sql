@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inLocationId         Integer,    --
     IN inGoodsGroupId       Integer,    -- группа товара
     IN inGoodsId            Integer,    -- товар
-    IN inUnitGroupId_by     Integer,    -- группа подразделений 1
-    IN inLocationId_by      Integer,    -- место учета 1
+--    IN inUnitGroupId_by     Integer,    -- группа подразделений 1
+--    IN inLocationId_by      Integer,    -- место учета 1
     IN inIsInfoMoney        Boolean,    --
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -125,6 +125,23 @@ BEGIN
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
 
+
+    IF vbUserId = 5
+    then RETURN QUERY
+         select * from gpReport_MotionGoods_NEW (inStartDate     
+                                               , inEndDate       
+                                               , inAccountGroupId
+                                               , inUnitGroupId  
+                                               , inLocationId   
+                                               , inGoodsGroupId 
+                                               , inGoodsId      
+                                               , NULL
+                                               , NULL
+                                               , inIsInfoMoney
+                                               , inSession
+                                                );
+    else
+
    -- !!!меняются параметры для филиала!!!
    IF 0 < (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
    THEN
@@ -223,7 +240,12 @@ BEGIN
      IF (SELECT COUNT(*) FROM _tmpContainer_Count) <= 300
      THEN
   */
-
+/*
+    IF vbUserId = 9463
+    then 
+          RAISE EXCEPTION '%    %     %', (select count(*) from _tmpLocation), (select count(*) from _tmpGoods),  (select count(*) from _tmpContainer_Count);
+    end if;
+*/
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpContainer_Count;
 
@@ -1070,6 +1092,7 @@ BEGIN
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
       ;
 
+      end if;
          -- !!!!!!!!!!!!!!!!!!!!!!!
          -- !!!финиш!!! ЕСЛИ <= 300
          -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -1077,8 +1100,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
-
+-- ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
