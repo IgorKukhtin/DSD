@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
+             , MovementId_Partion Integer, PartionMovementName TVarChar
              )
 AS
 $BODY$
@@ -69,7 +70,8 @@ BEGIN
              , Object_PriceList.ValueData               AS PriceListName
              , 0                     		        AS DocumentTaxKindId
              , CAST ('' as TVarChar) 		        AS DocumentTaxKindName
-
+             , 0                     		        AS MovementId_Partion
+             , CAST ('' as TVarChar) 		        AS PartionMovementName
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
@@ -88,6 +90,18 @@ BEGIN
      ELSE
 
      RETURN QUERY
+       WITH tmpMI AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId
+                      FROM MovementItem
+                           INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                                       AND MIFloat_MovementId.ValueData > 0
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                      ORDER BY MovementItem.Id DESC
+                      LIMIT 1
+                     )
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -125,7 +139,17 @@ BEGIN
            , Object_TaxKind.Id                	    AS DocumentTaxKindId
            , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
 
+           , tmpMI.MovementId                       AS MovementId_Partion
+           , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
+
        FROM Movement
+            LEFT JOIN tmpMI ON 1 = 1
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = tmpMI.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
+                                   ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
+                                  AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
            
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
@@ -265,6 +289,7 @@ BEGIN
 
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_ReturnIn();
+
      END IF;
 
 END;
@@ -288,4 +313,4 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())

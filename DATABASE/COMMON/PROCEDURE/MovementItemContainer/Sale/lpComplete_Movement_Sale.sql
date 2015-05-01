@@ -20,7 +20,6 @@ $BODY$
   DECLARE vbAccountId_GoodsTransit Integer;
 
   DECLARE vbMovementDescId Integer;
-  DECLARE vbPartionMovementId Integer;
 
   DECLARE vbOperSumm_PriceList_byItem TFloat;
   DECLARE vbOperSumm_PriceList TFloat;
@@ -75,6 +74,9 @@ $BODY$
   DECLARE vbCurrencyPartnerValue TFloat;
   DECLARE vbParPartnerValue TFloat;
 
+  DECLARE vbIsPartionDoc_Branch Boolean;
+  DECLARE vbPartionMovementId Integer;
+  DECLARE vbPaymentDate TDateTime;
 BEGIN
 
      -- LOCK TABLE ChildReportContainerLink IN SHARE ROW EXCLUSIVE MODE;
@@ -135,6 +137,10 @@ BEGIN
                                 THEN ObjectLink_UnitPersonalFrom_Branch.ChildObjectId
                            ELSE 0
                       END, 0) AS BranchId_From
+          , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= '01.05.2015'
+                      THEN COALESCE (ObjectBoolean_PartionDoc.ValueData, FALSE)
+                 ELSE FALSE
+            END AS isPartionDoc_Branch
           , COALESCE (ObjectLink_UnitFrom_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_From -- јналитики счетов - направлени€ !!!нужны только дл€ подразделени€!!!
           , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE) AS isPartionDate_Unit
 
@@ -175,7 +181,7 @@ BEGIN
 
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbMovementDescId, vbOperDate, vbOperDatePartner
-               , vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit
+               , vbUnitId_From, vbMemberId_From, vbBranchId_From, vbIsPartionDoc_Branch, vbAccountDirectionId_From, vbIsPartionDate_Unit
                , vbJuridicalId_From, vbPartnerId_From, vbPaidKindId_From, vbContractId_From, vbInfoMoneyId_From
                , vbJuridicalId_To, vbIsCorporate_To, vbInfoMoneyId_CorporateTo, vbPartnerId_To , vbMemberId_To, vbInfoMoneyId_To
                , vbPaidKindId, vbContractId
@@ -227,6 +233,9 @@ BEGIN
                                ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_UnitFrom_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
                               AND Object_From.DescId = zc_Object_Unit()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDoc
+                                  ON ObjectBoolean_PartionDoc.ObjectId = ObjectLink_UnitFrom_Branch.ChildObjectId
+                                 AND ObjectBoolean_PartionDoc.DescId = zc_ObjectBoolean_Branch_PartionDoc()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
                                   ON ObjectBoolean_PartionDate.ObjectId = MovementLinkObject_From.ObjectId
                                  AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
@@ -322,6 +331,28 @@ BEGIN
        AND Movement.DescId = zc_Movement_Sale()
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+
+     -- определ€етс€ "ѕартионный учет долгов нал"
+     IF vbIsPartionDoc_Branch = TRUE 
+     THEN
+         -- определ€етс€
+         vbPaymentDate:= (SELECT zfCalc_DetermentPaymentDate (COALESCE (Object_ContractCondition_View.ContractConditionKindId, 0), COALESCE (Value, 0) :: Integer, tmp.OperDate)
+                          FROM (SELECT vbOperDatePartner AS OperDate) AS tmp
+                               LEFT JOIN Object_ContractCondition_View
+                                      ON Object_ContractCondition_View.ContractId = vbContractId
+                                     AND Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
+                                     AND Object_ContractCondition_View.Value <> 0
+                         );
+         -- проверка
+         IF vbPaymentDate IS NULL OR vbPaymentDate < vbOperDatePartner
+         THEN
+             RAISE EXCEPTION 'ќшибка.¬ договоре не определены услови€ отсрочки.';
+         END IF;
+                    
+         -- определ€етс€
+         vbPartionMovementId:= lpInsertFind_Object_PartionMovement (inMovementId, vbPaymentDate);
+
+     END IF;
 
      -- определ€етс€ ”правленческие назначени€, параметр нужен дл€ дл€ формировани€ јналитик в проводках (дл€ ѕокупател€)
      SELECT View_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS View_InfoMoney;
@@ -2697,6 +2728,14 @@ BEGIN
      THEN -- сохранили свойство <ѕроверен>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), vbMovementId_Tax, (SELECT ValueData FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Checked()));
      END IF;
+
+
+     -- 6.6. ƒата оплаты по накладной (только если парт.учет долгов)
+     IF vbPartionMovementId > 0 OR EXISTS (SELECT MovementId FROM MovementDate WHERE MovementId = inMovementId AND DescId = zc_MovementDate_Payment())
+     THEN
+          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Payment(), inMovementId, vbPaymentDate);
+     END IF;
+
 
 END;
 $BODY$

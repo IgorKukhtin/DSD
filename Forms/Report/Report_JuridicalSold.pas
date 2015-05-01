@@ -121,6 +121,8 @@ type
     actPrintIncomePartner: TdsdPrintAction;
     bbPrintIncome: TdxBarButton;
     bbPrintIncomePartner: TdxBarButton;
+    clPartionMovementName: TcxGridDBColumn;
+    clPaymentDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2,6 +2,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 535
   ClientWidth = 1020
+  ExplicitLeft = -38
   ExplicitWidth = 1036
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -431,6 +432,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object colPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object PriceListName: TcxGridDBColumn
             Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090

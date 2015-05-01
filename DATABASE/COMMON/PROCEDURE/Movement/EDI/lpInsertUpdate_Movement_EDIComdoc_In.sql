@@ -130,6 +130,7 @@ BEGIN
                                                  , inPrice              := tmpMI.Price
                                                  , ioCountForPrice      := 1
                                                  , inHeadCount          := 0
+                                                 , inMovementId_Partion := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = tmpMI.MovementItemId AND DescId = zc_MIFloat_MovementId()), 0) :: Integer
                                                  , inPartionGoods       := ''
                                                  , inGoodsKindId        := tmpMI.GoodsKindId
                                                  , inAssetId            := NULL

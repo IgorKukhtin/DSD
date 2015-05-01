@@ -52,6 +52,7 @@ type
     cxLabel6: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
+    colPaymentDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

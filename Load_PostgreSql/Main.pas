@@ -1324,6 +1324,177 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StartProcess;
+    procedure autoNal(isOneDay: Boolean);
+    var Day_ReComplete:Integer;
+    begin
+               //start disable BN
+               cbSaleInt.Checked:=false;//загрузка док-тов:   3.3.Прод.пок.Int - БН
+               cbReturnInInt.Checked:=false;//загрузка док-тов:   3.4.Воз.от пок.Int - БН
+               cbTaxInt.Checked:=false;//загрузка док-тов:   8.3. Налоговые Int
+
+               cbCompleteSendOnPrice.Checked:=false;//проведение/распроведение док-тов:   2.2. Перемещение с филиалами
+               cbCompleteSaleInt.Checked:=false;//проведение/распроведение док-тов:   3.3.Прод.пок.Int - БН
+               cbCompleteReturnInInt.Checked:=false;//проведение/распроведение док-тов:   3.4.Воз.от пок.Int - БН
+               cbCompleteTaxInt.Checked:=false;//проведение/распроведение док-тов:   8.3. Налоговые Int
+
+               cbDeleteInt.Checked:=false;//3.0.2.Удаление Int
+               //end disable BN
+
+               try Day_ReComplete:=StrToInt(ParamStr(3));
+               except Day_ReComplete:=7
+               end;
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
+               then EndDateEdit.Text:=DateToStr(Date-1)
+               else EndDateEdit.Text:=DateToStr(Date-1);//DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+
+               if isOneDay=true
+               then begin
+                         StartDateEdit.Text:=DateToStr(Date-1);
+                         EndDateEdit.Text:=DateToStr(Date-1);
+               end;
+
+               StartDateCompleteEdit.Text:=StartDateEdit.Text;
+               EndDateCompleteEdit.Text:=EndDateEdit.Text;
+
+
+               cbUpdateConrtact.Checked:=isOneDay; // исправить договор - Приход
+
+               cbIncomeBN.Checked:=true;//загрузка док-тов:  1.1. Приход от поставщика - БН
+               cbReturnOutBN.Checked:=true;//загрузка док-тов:  1.2. Возврат поставщику - БН
+               cbIncomePacker.Checked:=true;//загрузка док-тов:   1.3. Приход от заготовителя
+               cbIncomeNal.Checked:=true;//загрузка док-тов:  1.4. Приход от поставщика - НАЛ
+               cbReturnOutNal.Checked:=true;//загрузка док-тов:  1.5. Возврат поставщику - НАЛ
+               cbPartner_Income.Checked:=true;//загрузка док-тов:  !!!новые поставщики/договора НАЛ!!!
+               cbSaleIntNal.Checked:=true;//загрузка док-тов:  3.1.Прод.пок. - НАЛ
+               cbReturnInIntNal.Checked:=true;//загрузка док-тов:  3.2.Воз.от пок. - НАЛ
+               cbPartner_Sale.Checked:=true;//загрузка док-тов:  !!!новые покупатели/договора НАЛ!!!
+
+               cbCompleteIncomeBN.Checked:=true;//проведение/распроведение док-тов:  1.1. Приход от поставщика - БН
+               cbCompleteReturnOutBN.Checked:=true;//проведение/распроведение док-тов:  1.2. Возврат поставщику - БН
+               cbCompleteIncomeNal.Checked:=true;//проведение/распроведение док-тов:  1.4. Приход от поставщика - НАЛ
+               cbCompleteReturnOutNal.Checked:=true;//проведение/распроведение док-тов:  1.5. Возврат поставщику - НАЛ
+               cbCompleteSaleIntNal.Checked:=true;//проведение/распроведение док-тов:  3.1.Прод.пок. - НАЛ
+               cbCompleteReturnInIntNal.Checked:=true;//проведение/распроведение док-тов:  3.2.Воз.от пок. - НАЛ
+
+               cbDeleteInt.Checked:=not isOneDay ;//3.0.2.Удаление Int
+
+               UnitCodeSendOnPriceEdit.Text:='autoNal('+IntToStr(Day_ReComplete)+'Day)';
+               //Распроводим
+               cbComplete.Checked:=false;
+               cbUnComplete.Checked:=true;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+               //
+               //Загружаем
+               OKDocumentButtonClick(Self);
+               //Проводим
+               cbComplete.Checked:=true;
+               cbUnComplete.Checked:=false;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+    end;
+    procedure autoBN (isOneDay: Boolean);
+    var Day_ReComplete:Integer;
+    begin
+               //start disable Nal
+               cbIncomeBN.Checked:=false;//загрузка док-тов:  1.1. Приход от поставщика - БН
+               cbReturnOutBN.Checked:=false;//загрузка док-тов:  1.2. Возврат поставщику - БН
+               cbIncomePacker.Checked:=false;//загрузка док-тов:   1.3. Приход от заготовителя
+               cbIncomeNal.Checked:=false;//загрузка док-тов:  1.4. Приход от поставщика - НАЛ
+               cbReturnOutNal.Checked:=false;//загрузка док-тов:  1.5. Возврат поставщику - НАЛ
+               cbPartner_Income.Checked:=false;//загрузка док-тов:  !!!новые поставщики/договора НАЛ!!!
+               cbSaleIntNal.Checked:=false;//загрузка док-тов:  3.1.Прод.пок. - НАЛ
+               cbReturnInIntNal.Checked:=false;//загрузка док-тов:  3.2.Воз.от пок. - НАЛ
+               cbPartner_Sale.Checked:=false;//загрузка док-тов:  !!!новые покупатели/договора НАЛ!!!
+
+               cbCompleteIncomeBN.Checked:=false;//проведение/распроведение док-тов:  1.1. Приход от поставщика - БН
+               cbCompleteReturnOutBN.Checked:=false;//проведение/распроведение док-тов:  1.2. Возврат поставщику - БН
+               cbCompleteIncomeNal.Checked:=false;//проведение/распроведение док-тов:  1.4. Приход от поставщика - НАЛ
+               cbCompleteReturnOutNal.Checked:=false;//проведение/распроведение док-тов:  1.5. Возврат поставщику - НАЛ
+               cbCompleteSaleIntNal.Checked:=false;//проведение/распроведение док-тов:  3.1.Прод.пок. - НАЛ
+               cbCompleteReturnInIntNal.Checked:=false;//проведение/распроведение док-тов:  3.2.Воз.от пок. - НАЛ
+
+               cbDeleteInt.Checked:=false;//3.0.2.Удаление Int
+               //end disable Nal
+
+               try Day_ReComplete:=StrToInt(ParamStr(3));
+               except Day_ReComplete:=7
+               end;
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
+               then EndDateEdit.Text:=DateToStr(Date-1)
+               else EndDateEdit.Text:=DateToStr(Date-1);//DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+
+               if isOneDay=true
+               then begin
+                         StartDateEdit.Text:=DateToStr(Date-1);
+                         EndDateEdit.Text:=DateToStr(Date-1);
+               end;
+
+               StartDateCompleteEdit.Text:=StartDateEdit.Text;
+               EndDateCompleteEdit.Text:=EndDateEdit.Text;
+
+               cbSaleInt.Checked:=true;//загрузка док-тов:   3.3.Прод.пок.Int - БН
+               cbReturnInInt.Checked:=true;//загрузка док-тов:   3.4.Воз.от пок.Int - БН
+               cbTaxInt.Checked:=true;//загрузка док-тов:   8.3. Налоговые Int
+
+               cbCompleteSendOnPrice.Checked:=not isOneDay;//проведение/распроведение док-тов:   2.2. Перемещение с филиалами
+               cbCompleteSaleInt.Checked:=true;//проведение/распроведение док-тов:   3.3.Прод.пок.Int - БН
+               cbCompleteReturnInInt.Checked:=true;//проведение/распроведение док-тов:   3.4.Воз.от пок.Int - БН
+               cbCompleteTaxInt.Checked:=true;//проведение/распроведение док-тов:   8.3. Налоговые Int
+
+               cbDeleteInt.Checked:=not isOneDay;//3.0.2.Удаление Int
+
+               UnitCodeSendOnPriceEdit.Text:='autoBN('+IntToStr(Day_ReComplete)+'Day)';
+               //Распроводим
+               cbComplete.Checked:=false;
+               cbUnComplete.Checked:=true;
+               cbLastComplete.Checked:=true;
+               OKCompleteDocumentButtonClick(Self);
+               //
+               //Загружаем
+               OKDocumentButtonClick(Self);
+               //Проводим
+               cbComplete.Checked:=true;
+               cbUnComplete.Checked:=false;
+               cbLastComplete.Checked:=true;
+               OKCompleteDocumentButtonClick(Self);
+    end;
+    procedure autoGuide;
+    begin
+               cbGoodsGroup.Checked:=true;//загрузка
+               cbJuridicalInt.Checked:=true;//загрузка
+               cbContractInt.Checked:=true;//загрузка Договора Int
+               cbPartnerInt.Checked:=true;//загрузка
+               //Загружаем справочники
+               OKGuideButtonClick(Self);
+
+               cbGoodsGroup.Checked:=true;//загрузка
+               cbJuridicalInt.Checked:=false;//нет загрузка
+               cbContractInt.Checked:=false;//нет загрузка Договора Int
+               cbPartnerInt.Checked:=false;//нет загрузка
+
+               cbMeasure.Checked:=true;//загрузка
+               cbGoods.Checked:=true;//загрузка
+               cbGoodsKind.Checked:=true;//загрузка
+               cbPriceList.Checked:=true;//загрузка
+               cbPriceListItems.Checked:=true;//загрузка
+               cbGoodsProperty_Detail.Checked:=true;//загрузка
+               cbGoodsPropertyValue.Checked:=true;//загрузка
+               cbGoodsByGoodsKind.Checked:=true;//загрузка
+               cbOrderType.Checked:=true;//загрузка
+
+               //Загружаем справочники
+               OKGuideButtonClick(Self);
+    end;
+
 var Day_ReComplete:Integer;
 begin
 
@@ -1371,97 +1542,37 @@ begin
 
      if ParamStr(2)='autoNal'
      then begin
-               try Day_ReComplete:=StrToInt(ParamStr(3));
-               except Day_ReComplete:=7
-               end;
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
-               then EndDateEdit.Text:=DateToStr(Date-1)
-               else EndDateEdit.Text:=DateToStr(Date-1);//DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
-
-               StartDateCompleteEdit.Text:=StartDateEdit.Text;
-               EndDateCompleteEdit.Text:=EndDateEdit.Text;
-
-
-               cbIncomeBN.Checked:=true;//загрузка док-тов:  1.1. Приход от поставщика - БН
-               cbReturnOutBN.Checked:=true;//загрузка док-тов:  1.2. Возврат поставщику - БН
-               cbIncomePacker.Checked:=true;//загрузка док-тов:   1.3. Приход от заготовителя
-               cbIncomeNal.Checked:=true;//загрузка док-тов:  1.4. Приход от поставщика - НАЛ
-               cbReturnOutNal.Checked:=true;//загрузка док-тов:  1.5. Возврат поставщику - НАЛ
-               cbPartner_Income.Checked:=true;//загрузка док-тов:  !!!новые поставщики/договора НАЛ!!!
-               cbSaleIntNal.Checked:=true;//загрузка док-тов:  3.1.Прод.пок. - НАЛ
-               cbReturnInIntNal.Checked:=true;//загрузка док-тов:  3.2.Воз.от пок. - НАЛ
-               cbPartner_Sale.Checked:=true;//загрузка док-тов:  !!!новые покупатели/договора НАЛ!!!
-
-               cbCompleteIncomeBN.Checked:=true;//проведение/распроведение док-тов:  1.1. Приход от поставщика - БН
-               cbCompleteReturnOutBN.Checked:=true;//проведение/распроведение док-тов:  1.2. Возврат поставщику - БН
-               cbCompleteIncomeNal.Checked:=true;//проведение/распроведение док-тов:  1.4. Приход от поставщика - НАЛ
-               cbCompleteReturnOutNal.Checked:=true;//проведение/распроведение док-тов:  1.5. Возврат поставщику - НАЛ
-               cbCompleteSaleIntNal.Checked:=true;//проведение/распроведение док-тов:  3.1.Прод.пок. - НАЛ
-               cbCompleteReturnInIntNal.Checked:=true;//проведение/распроведение док-тов:  3.2.Воз.от пок. - НАЛ
-
-               cbDeleteInt.Checked:=true;//3.0.2.Удаление Int
-
-               UnitCodeSendOnPriceEdit.Text:='autoNal('+IntToStr(Day_ReComplete)+'Day)';
-               //Распроводим
-               cbComplete.Checked:=false;
-               cbUnComplete.Checked:=true;
-               cbLastComplete.Checked:=false;
-               OKCompleteDocumentButtonClick(Self);
-               //
-               //Загружаем
-               OKDocumentButtonClick(Self);
-               //Проводим
-               cbComplete.Checked:=true;
-               cbUnComplete.Checked:=false;
-               cbLastComplete.Checked:=false;
-               OKCompleteDocumentButtonClick(Self);
+               autoGuide;
+               autoNal(false);
      end;
 
      if ParamStr(2)='autoBN'
      then begin
-               try Day_ReComplete:=StrToInt(ParamStr(3));
-               except Day_ReComplete:=7
-               end;
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+               autoGuide;
+               autoBN(false);
+     end;
 
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
-               if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
-               then EndDateEdit.Text:=DateToStr(Date-1)
-               else EndDateEdit.Text:=DateToStr(Date-1);//DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+     if ParamStr(2)='autoNalBN'
+     then begin
+               autoGuide;
+               autoBN(false);
+               autoNal(false);
+     end;
 
-               StartDateCompleteEdit.Text:=StartDateEdit.Text;
-               EndDateCompleteEdit.Text:=EndDateEdit.Text;
+     if ParamStr(2)='autoDayNalBN'
+     then begin
+               autoBN(true);
+               autoNal(true);
+     end;
 
-               cbSaleInt.Checked:=true;//загрузка док-тов:   3.3.Прод.пок.Int - БН
-               cbReturnInInt.Checked:=true;//загрузка док-тов:   3.4.Воз.от пок.Int - БН
-               cbTaxInt.Checked:=true;//загрузка док-тов:   8.3. Налоговые Int
+     if ParamStr(2)='autoDayNal'
+     then begin
+               autoNal(true);
+     end;
 
-               cbCompleteSendOnPrice.Checked:=true;//проведение/распроведение док-тов:   2.2. Перемещение с филиалами
-               cbCompleteSaleInt.Checked:=true;//проведение/распроведение док-тов:   3.3.Прод.пок.Int - БН
-               cbCompleteReturnInInt.Checked:=true;//проведение/распроведение док-тов:   3.4.Воз.от пок.Int - БН
-               cbCompleteTaxInt.Checked:=true;//проведение/распроведение док-тов:   8.3. Налоговые Int
-
-               cbDeleteInt.Checked:=true;//3.0.2.Удаление Int
-
-               UnitCodeSendOnPriceEdit.Text:='autoBN('+IntToStr(Day_ReComplete)+'Day)';
-               //Распроводим
-               cbComplete.Checked:=false;
-               cbUnComplete.Checked:=true;
-               cbLastComplete.Checked:=true;
-               OKCompleteDocumentButtonClick(Self);
-               //
-               //Загружаем
-               OKDocumentButtonClick(Self);
-               //Проводим
-               cbComplete.Checked:=true;
-               cbUnComplete.Checked:=false;
-               cbLastComplete.Checked:=true;
-               OKCompleteDocumentButtonClick(Self);
+     if ParamStr(2)='autoDayBN'
+     then begin
+               autoBN(true);
      end;
 
      if ParamStr(2)='auto'

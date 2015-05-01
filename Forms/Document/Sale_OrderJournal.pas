@@ -134,6 +134,7 @@ type
     spGet_TTN: TdsdStoredProc;
     InvNumber_TransportGoods: TcxGridDBColumn;
     OperDate_TransportGoods: TcxGridDBColumn;
+    colPaymentDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

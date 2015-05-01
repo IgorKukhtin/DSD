@@ -429,6 +429,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Options.Editing = False
             Width = 60
           end
+          object colPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object PriceListName: TcxGridDBColumn
             Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
             DataBinding.FieldName = 'PriceListName'

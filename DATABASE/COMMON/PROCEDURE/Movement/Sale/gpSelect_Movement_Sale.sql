@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean
+             , PaymentDate TDateTime
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
@@ -78,6 +79,7 @@ BEGIN
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
 
+           , MovementDate_Payment.ValueData                 AS PaymentDate
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
 
@@ -196,6 +198,9 @@ BEGIN
                                       ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
                                      AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
 
+            LEFT JOIN MovementDate AS MovementDate_Payment
+                                   ON MovementDate_Payment.MovementId =  Movement.Id
+                                  AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()

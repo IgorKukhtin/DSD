@@ -410,6 +410,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
+          object clPartionMovementName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'PartionMovementName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object clContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
@@ -460,6 +468,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object clPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clContractTagGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'

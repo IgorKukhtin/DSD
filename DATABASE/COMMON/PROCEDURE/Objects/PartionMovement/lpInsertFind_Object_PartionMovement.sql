@@ -1,9 +1,11 @@
 -- Function: lpInsertFind_Object_PartionMovement (Integer)
 
--- DROP FUNCTION lpInsertFind_Object_PartionMovement (Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionMovement (Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionMovement (Integer, TDateTime);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionMovement(
-    IN inMovementId  Integer -- ссылка на документ
+    IN inMovementId   Integer,   -- ссылка на документ
+    IN inPaymentDate  TDateTime  -- ссылка на документ
 )
 RETURNS Integer
 AS
@@ -21,11 +23,20 @@ BEGIN
        IF COALESCE (vbPartionMovementId, 0) = 0
        THEN
            -- сохранили <Объект>
-           vbPartionMovementId := lpInsertUpdate_Object (vbPartionMovementId, zc_Object_PartionMovement(), 0, inMovementId :: TVarChar);
+           vbPartionMovementId:= (SELECT lpInsertUpdate_Object (vbPartionMovementId, zc_Object_PartionMovement(), 0, zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)))
+                                  FROM Movement
+                                       LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                                       LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                              ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                  WHERE Movement.Id = inMovementId
+                                 );
            -- сохранили
            PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionMovement_MovementId(), vbPartionMovementId, inMovementId :: TFloat);
 
        END IF;
+       -- сохранили !!!всегда!!!
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionMovement_Payment(), vbPartionMovementId, inPaymentDate);
    END IF;
 
    -- Возвращаем значение
@@ -33,15 +44,14 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer) OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer, TDateTime) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 26.05.15                                        * all
+ 30.04.15                                        * add 
+ 26.04.15                                        * all
  13.02.14                                        * !!!будем без партий!!! но по другому
  27.09.13                                        * !!!будем без партий!!!
  02.07.13                                        * сначала Find, потом если надо Insert

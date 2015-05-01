@@ -134,6 +134,7 @@ type
     spGet_TTN: TdsdStoredProc;
     actGet_TTN: TdsdExecStoredProc;
     mactPrint_TTN: TMultiAction;
+    colPaymentDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

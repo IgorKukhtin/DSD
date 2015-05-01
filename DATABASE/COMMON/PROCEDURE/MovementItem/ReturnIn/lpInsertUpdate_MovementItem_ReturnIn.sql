@@ -1,7 +1,6 @@
--- Function: gpInsertUpdate_MovementItem_ReturnIn()
+-- Function: lpInsertUpdate_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, integer, tvarchar, integer, integer, integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,7 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inHeadCount           TFloat    , -- Количество голов
-    IN inMovementId_MI       TFloat    , -- Id документа продажи
+    IN inMovementId_Partion  Integer   , -- Id документа продажи
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
@@ -42,7 +41,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
 
      -- сохранили свойство <id документа продажи>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_MI);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_Partion);
 
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
@@ -90,4 +89,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, ioCountForPrice:= 1, outAmountSumm:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, ioCountForPrice:= 1, outAmountSumm:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
