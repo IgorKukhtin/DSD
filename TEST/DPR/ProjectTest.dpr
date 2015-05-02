@@ -669,7 +669,9 @@ uses
   Report_MotionGoodsDialog in '..\..\Forms\Report\Report_MotionGoodsDialog.pas' {Report_MotionGoodsDialogForm: TParentForm},
   COMTestUnit in '..\SOURCE\COM\COMTestUnit.pas',
   RouteGroup in '..\..\Forms\Guides\RouteGroup.pas' {RouteGroupForm: TParentForm},
-  RouteGroupEdit in '..\..\Forms\Guides\RouteGroupEdit.pas' {RouteGroupEditForm: TParentForm};
+  RouteGroupEdit in '..\..\Forms\Guides\RouteGroupEdit.pas' {RouteGroupEditForm: TParentForm},
+  Report_GoodsBalanceDialog in '..\..\Forms\Report\Report_GoodsBalanceDialog.pas' {Report_GoodsBalanceDialogForm: TParentForm},
+  Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

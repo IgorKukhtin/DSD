@@ -13,7 +13,8 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, cxLabel, frxBarcode, cxTextEdit, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxDBData, cxGridLevel, cxGridCustomView,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid;
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
+  dxSkinscxPCPainter;
 
 const
   WM_ChangeKeyboard = WM_USER + 1;
@@ -563,6 +564,8 @@ type
     colData: TcxGridDBColumn;
     cxStyleRepository1: TcxStyleRepository;
     cxStyle1: TcxStyle;
+    actReport_GoodsBalance: TdsdOpenForm;
+    N58: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
