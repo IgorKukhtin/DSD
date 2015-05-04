@@ -17,7 +17,6 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech_Master());
@@ -73,6 +72,14 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), inMovementItemId_order, inReceiptId);
    END IF;
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), ioMovementItemId, vbUserId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), ioMovementItemId, CURRENT_TIMESTAMP);
+
+   -- сохранили протокол
+   PERFORM lpInsert_MovementItemProtocol (ioMovementItemId, vbUserId, FALSE);
+
 
 END;
 $BODY$
@@ -83,7 +90,7 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  21.03.15                                        *all
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
- 12.12.14                                                        *
+ 12.12.14                                                       *
 */
 
 -- тест

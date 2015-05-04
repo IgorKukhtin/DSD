@@ -210,6 +210,8 @@ BEGIN
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
            , Movement.OperDate                          AS OperDate
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
+           , MovementDate_Payment.ValueData             AS PaymentDate
+           , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END AS isPaymentDate
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
@@ -220,10 +222,10 @@ BEGIN
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
-           , Object_From.ValueData             		    AS FromName
+           , Object_From.ValueData             		AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
-           , Object_PaidKind.ValueData         		    AS PaidKindName
-           , View_Contract.InvNumber        		    AS ContractName
+           , Object_PaidKind.ValueData         		AS PaidKindName
+           , View_Contract.InvNumber        		AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
@@ -231,6 +233,8 @@ BEGIN
 
            , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() AND Object_From.Id = 8459 THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
+
+           , CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
 
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
@@ -345,6 +349,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+            LEFT JOIN MovementDate AS MovementDate_Payment
+                                   ON MovementDate_Payment.MovementId =  Movement.Id
+                                  AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()

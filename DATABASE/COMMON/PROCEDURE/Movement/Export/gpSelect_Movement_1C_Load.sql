@@ -30,6 +30,9 @@ BEGIN
              '0' :: TVarChar                                           AS UnitId
            , CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective())
                        THEN 123
+                  WHEN MovementFloat_TotalSumm.ValueData < 0
+                       THEN 123
+
                   WHEN Movement.DescId IN (zc_Movement_Sale())
                        THEN 2
                   WHEN Movement.DescId IN (zc_Movement_PriceCorrective()) AND MIFloat_Price.ValueData < 0
@@ -191,6 +194,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -285,4 +291,3 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '31.10.2014', inEndDate:= '31.10.2014', inInfoMoneyId:= 0, inPaidKindId:= 0, inSession:= zfCalc_UserAdmin())
-

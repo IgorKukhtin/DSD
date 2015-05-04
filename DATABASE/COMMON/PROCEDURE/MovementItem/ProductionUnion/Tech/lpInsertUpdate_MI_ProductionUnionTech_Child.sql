@@ -22,6 +22,12 @@ BEGIN
    -- меняем параметр
    IF (inPartionGoodsDate <= '01.01.1900') OR COALESCE (inGoodsKindId, 0) <> zc_GoodsKind_WorkProgress() THEN inPartionGoodsDate:= NULL; END IF;
 
+   -- проверка
+   IF COALESCE (inGoodsId, 0) = 0 
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Название (расход)> не установлено.';
+   END IF;
+
    -- определяется признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
  
@@ -38,6 +44,20 @@ BEGIN
    
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+
+   IF vbIsInsert = TRUE
+   THEN
+       -- сохранили связь с <>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), ioId, inUserId);
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
+   ELSE
+       -- сохранили связь с <>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), ioId, inUserId);
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), ioId, CURRENT_TIMESTAMP);
+   END IF;
+
 
    -- пересчитали Итоговые суммы по накладной
    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

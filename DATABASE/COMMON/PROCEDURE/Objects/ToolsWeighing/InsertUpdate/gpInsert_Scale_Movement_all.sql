@@ -56,6 +56,7 @@ BEGIN
     -- сохранили <Документ>
     IF COALESCE (vbMovementId_begin, 0) = 0
     THEN
+        -- сохранили
         vbMovementId_begin:= (SELECT CASE WHEN vbMovementDescId = zc_Movement_Sale()
                                                     -- <Продажа покупателю>
                                                THEN lpInsertUpdate_Movement_Sale_Value
@@ -125,6 +126,9 @@ BEGIN
                                                                ON ObjectFloat_Partner_DocumentDayCount.ObjectId = tmp.ToId
                                                               AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
                                  );
+        -- дописали св-во <Дата/время создания>
+        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbMovementId_begin, CURRENT_TIMESTAMP);
+
     ELSE
         -- Распроводим Документ !!!существующий!!!
         PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_begin
@@ -359,6 +363,20 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  03.02.15                                        *
+*/
+/*
+select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), tmp.Id, tmp.EndWeighing)
+from (
+select Movement_Parent.Id, max (MovementDate_EndWeighing.ValueData) as EndWeighing
+FROM Movement 
+     INNER JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+     INNER JOIN MovementDate AS MovementDate_EndWeighing
+                             ON MovementDate_EndWeighing.MovementId =  Movement.Id
+                            AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
+where Movement.DescId in (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+  and Movement.StatuId <> zc_Enum_Status_Erased()
+group by Movement_Parent.Id
+) as tmp
 */
 
 -- тест

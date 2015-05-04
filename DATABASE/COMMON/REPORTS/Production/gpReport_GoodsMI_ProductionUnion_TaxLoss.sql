@@ -222,4 +222,4 @@ ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_TaxLoss (TDateTime, TDateTime, I
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionUnion_TaxLoss (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inFromId:= 8447, inToId:= 8458, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_ProductionUnion_TaxLoss (inStartDate:= '01.06.2015', inEndDate:= '01.06.2015', inFromId:= 8447, inToId:= 8458, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin()) ORDER BY 2;

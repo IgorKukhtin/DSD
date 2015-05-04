@@ -67,6 +67,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
+          inherited colGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1072#1089#1093#1086#1076')'
+          end
           object clMeasureName: TcxGridDBColumn [3]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -134,6 +137,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          inherited colChildGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
           end
           object colCholdMeasureName: TcxGridDBColumn [3]
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -253,6 +259,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
+    inherited actMIMasterProtocol: TdsdOpenForm
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1088#1072#1089#1093#1086#1076')>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1088#1072#1089#1093#1086#1076')>'
+    end
+    inherited actMIChildProtocol: TdsdOpenForm
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionSeparate'
@@ -337,14 +351,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -354,6 +360,18 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           Visible = True
           ItemName = 'bbPrint_obval'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIMasterProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

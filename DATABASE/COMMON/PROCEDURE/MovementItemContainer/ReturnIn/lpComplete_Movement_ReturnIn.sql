@@ -18,7 +18,6 @@ $BODY$
   DECLARE vbAccountId_GoodsTransit Integer;
 
   DECLARE vbMovementDescId Integer;
-  DECLARE vbPartionMovementId Integer;
 
   DECLARE vbOperSumm_PriceList_byItem TFloat;
   DECLARE vbOperSumm_PriceList TFloat;
@@ -70,6 +69,8 @@ $BODY$
   DECLARE vbContainerId_Summ_Alternative Integer;
   DECLARE vbContainerDescId Integer;
   DECLARE vbContainerObjectId Integer;
+
+  DECLARE vbIsPartionDoc_Branch Boolean;
 
 BEGIN
      -- !!!временно!!!
@@ -148,6 +149,10 @@ BEGIN
                                 THEN ObjectLink_UnitPersonalTo_Branch.ChildObjectId
                            ELSE 0
                       END, 0) AS BranchId_To
+          , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= '01.05.2015'
+                      THEN COALESCE (ObjectBoolean_PartionDoc.ValueData, FALSE)
+                 ELSE FALSE
+            END AS isPartionDoc_Branch
           , COALESCE (ObjectLink_UnitTo_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_To -- Аналитики счетов - направления !!!нужны только для подразделения!!!
           , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE) AS isPartionDate_Unit
           , COALESCE (ObjectLink_UnitTo_HistoryCost.ChildObjectId, 0) AS UnitId_HistoryCost
@@ -168,7 +173,7 @@ BEGIN
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbMovementDescId, vbOperDate, vbOperDatePartner
                , vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From , vbMemberId_From, vbInfoMoneyId_From
-               , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit, vbUnitId_HistoryCost
+               , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbIsPartionDoc_Branch, vbAccountDirectionId_To, vbIsPartionDate_Unit, vbUnitId_HistoryCost
                , vbJuridicalId_To, vbPartnerId_To, vbPaidKindId_To, vbContractId_To, vbInfoMoneyId_To
                , vbPaidKindId, vbContractId
                , vbJuridicalId_Basis_To, vbBusinessId_To
@@ -199,6 +204,9 @@ BEGIN
                                ON ObjectLink_UnitTo_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_UnitTo_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
                               AND Object_To.DescId = zc_Object_Unit()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDoc
+                                  ON ObjectBoolean_PartionDoc.ObjectId = ObjectLink_UnitTo_Branch.ChildObjectId
+                                 AND ObjectBoolean_PartionDoc.DescId = zc_ObjectBoolean_Branch_PartionDoc()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
                                   ON ObjectBoolean_PartionDate.ObjectId = MovementLinkObject_To.ObjectId
                                  AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
@@ -328,7 +336,7 @@ BEGIN
                          , ContainerId_Partner, AccountId_Partner, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_To
                          , isPartionCount, isPartionSumm, isTareReturning
-                         , PartionGoodsId
+                         , PartionGoodsId, PartionMovementId
                          , PriceListPrice, Price, Price_original, CountForPrice)
         SELECT
               _tmp.MovementItemId
@@ -417,6 +425,11 @@ BEGIN
 
               -- Партии товара, сформируем позже
             , 0 AS PartionGoodsId
+              -- Партии накладны, сформируем позже
+            , CASE WHEN vbIsPartionDoc_Branch = TRUE
+                        THEN lpInsertFind_Object_PartionMovement (_tmp.MovementId_Partion, NULL)
+                   ELSE 0
+              END AS PartionMovementId
 
             , _tmp.PriceListPrice
             , _tmp.Price
@@ -464,6 +477,9 @@ BEGIN
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)      AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
 
+                    --
+                  , tmpMI.MovementId_Partion
+
               FROM
              (SELECT (MovementItem.Id) AS MovementItemId
                    , MovementItem.ObjectId AS GoodsId
@@ -477,8 +493,10 @@ BEGIN
                                THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
-                   , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
+                   , COALESCE (MIFloat_Price.ValueData, 0)         AS Price_original
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
+
+                   , COALESCE (MIFloat_MovementId.ValueData, 0) :: Integer AS MovementId_Partion
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
@@ -497,6 +515,10 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                               ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                              AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ReturnIn()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
@@ -505,6 +527,7 @@ BEGIN
                      , MILinkObject_GoodsKind.ObjectId
                      , MIFloat_Price.ValueData
                      , MIFloat_CountForPrice.ValueData
+                     , MIFloat_MovementId.ValueData
              ) AS tmpMI
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
@@ -708,7 +731,7 @@ BEGIN
           ) AS _tmpItem_byAccount
      ;
 
-     -- 3.0.2. определяется ContainerId для проводок по долг Покупателя !!!если продажа от Контрагента -> Контрагенту!!!
+     -- 3.0.2. определяется ContainerId для проводок по долг Покупателя !!!если возврат от Контрагента -> Контрагенту!!!
      UPDATE _tmpItemPartnerTo SET ContainerId_Partner = _tmpItem_byInfoMoney.ContainerId
      FROM _tmpItem
           INNER JOIN (SELECT -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
@@ -728,7 +751,7 @@ BEGIN
                                                    , inDescId_4          := zc_ContainerLinkObject_PaidKind()
                                                    , inObjectId_4        := vbPaidKindId_To
                                                    , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
-                                                   , inObjectId_5        := vbPartionMovementId
+                                                   , inObjectId_5        := 0 -- !!!нет партии!!!
                                                    , inDescId_6          := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                    , inObjectId_6        := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() THEN vbPartnerId_To ELSE NULL END
                                                    , inDescId_7          := CASE WHEN vbPaidKindId_To = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Branch() ELSE NULL END
@@ -737,12 +760,12 @@ BEGIN
                                                    , inObjectId_8        := NULL -- vbCurrencyPartnerId
                                                     ) AS ContainerId
                            , tmp.BusinessId_To
-            FROM (SELECT _tmpItem.BusinessId_To
-                  FROM _tmpItem
-                  WHERE EXISTS (SELECT _tmpItemPartnerTo.AccountId_Partner FROM _tmpItemPartnerTo)
-                  GROUP BY _tmpItem.BusinessId_To
-                 ) AS tmp
-          ) AS _tmpItem_byInfoMoney ON _tmpItem_byInfoMoney.BusinessId_To = _tmpItem.BusinessId_To
+                      FROM (SELECT _tmpItem.BusinessId_To
+                            FROM _tmpItem
+                            WHERE EXISTS (SELECT _tmpItemPartnerTo.AccountId_Partner FROM _tmpItemPartnerTo)
+                            GROUP BY _tmpItem.BusinessId_To
+                           ) AS tmp
+                    ) AS _tmpItem_byInfoMoney ON _tmpItem_byInfoMoney.BusinessId_To = _tmpItem.BusinessId_To
      WHERE _tmpItem.MovementItemId = _tmpItemPartnerTo.MovementItemId
      ;
 
@@ -846,7 +869,7 @@ BEGIN
                                                   , inDescId_4          := zc_ContainerLinkObject_PaidKind()
                                                   , inObjectId_4        := vbPaidKindId
                                                   , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
-                                                  , inObjectId_5        := vbPartionMovementId
+                                                  , inObjectId_5        := _tmpItem_group.PartionMovementId
                                                   , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                   , inObjectId_6        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END
                                                   , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
@@ -856,9 +879,11 @@ BEGIN
                                                    )
                   END AS ContainerId
                 , _tmpItem_group.InfoMoneyId
+                , _tmpItem_group.PartionMovementId
            FROM (SELECT _tmpItem.AccountId_Partner
                       , _tmpItem.InfoMoneyId
                       , _tmpItem.BusinessId_To
+                      , _tmpItem.PartionMovementId
                       , CASE WHEN vbInfoMoneyId_From <> 0
                                   THEN vbInfoMoneyId_From -- УП: ВСЕГДА по договору -- ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
                              WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20901 () -- 20901; "Ирна"
@@ -870,9 +895,11 @@ BEGIN
                  GROUP BY _tmpItem.AccountId_Partner
                         , _tmpItem.InfoMoneyId
                         , _tmpItem.BusinessId_To
+                        , _tmpItem.PartionMovementId
                 ) AS _tmpItem_group
           ) AS _tmpItem_byInfoMoney
      WHERE _tmpItem.InfoMoneyId = _tmpItem_byInfoMoney.InfoMoneyId
+       AND _tmpItem.PartionMovementId = _tmpItem_byInfoMoney.PartionMovementId
      ;
 
      -- 3.3. !!!Очень важно - определили здесь vbContainerId_Analyzer для ВСЕХ!!!, если он не один - тогда ошибка

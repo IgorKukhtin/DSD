@@ -76,11 +76,8 @@ type
     cxGridLevelChild: TcxGridLevel;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
-    MovementItemProtocolOpenForm: TdsdOpenForm;
-    bbMovementItemProtocol: TdxBarButton;
-    bbComplete: TdxBarButton;
-    dxBarButton1: TdxBarButton;
-    dxBarButton2: TdxBarButton;
+    actMIMasterProtocol: TdsdOpenForm;
+    bbMIMasterProtocol: TdxBarButton;
     colChildGoodsName: TcxGridDBColumn;
     cxBottomSplitter: TcxSplitter;
     actGoodsChoiceChild: TOpenChoiceForm;
@@ -89,6 +86,8 @@ type
     actUnCompleteMovement: TChangeGuidesStatus;
     actCompleteMovement: TChangeGuidesStatus;
     actDeleteMovement: TChangeGuidesStatus;
+    actMIChildProtocol: TdsdOpenForm;
+    bbMIChildProtocol: TdxBarButton;
   private
     { Private declarations }
   public

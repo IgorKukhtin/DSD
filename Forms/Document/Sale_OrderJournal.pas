@@ -135,6 +135,7 @@ type
     InvNumber_TransportGoods: TcxGridDBColumn;
     OperDate_TransportGoods: TcxGridDBColumn;
     colPaymentDate: TcxGridDBColumn;
+    colInsertDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

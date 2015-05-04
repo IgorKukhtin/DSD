@@ -91,6 +91,19 @@ type
     colChildAmountWeight: TcxGridDBColumn;
     colChildAmountCalcWeight: TcxGridDBColumn;
     colChildAmountReceiptWeight: TcxGridDBColumn;
+    bbComplete: TdxBarButton;
+    bbUnComplete: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocol: TdxBarButton;
+    colInsertName: TcxGridDBColumn;
+    colUpdateName: TcxGridDBColumn;
+    colInsertDate: TcxGridDBColumn;
+    colUpdateDate: TcxGridDBColumn;
+    colChildInsertName: TcxGridDBColumn;
+    colChildUpdateName: TcxGridDBColumn;
+    colChildInsertDate: TcxGridDBColumn;
+    colChildUpdateDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -105,3 +118,4 @@ initialization
   RegisterClass(TProductionUnionTechJournalForm);
 
 end.
+

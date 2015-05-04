@@ -336,7 +336,7 @@ BEGIN
      IF vbIsPartionDoc_Branch = TRUE 
      THEN
          -- определяется
-         vbPaymentDate:= (SELECT zfCalc_DetermentPaymentDate (COALESCE (Object_ContractCondition_View.ContractConditionKindId, 0), COALESCE (Value, 0) :: Integer, tmp.OperDate)
+         vbPaymentDate:= (SELECT tmp.OperDate + (tmp.OperDate - zfCalc_DetermentPaymentDate (COALESCE (Object_ContractCondition_View.ContractConditionKindId, 0), COALESCE (Value, 0) :: Integer, tmp.OperDate))
                           FROM (SELECT vbOperDatePartner AS OperDate) AS tmp
                                LEFT JOIN Object_ContractCondition_View
                                       ON Object_ContractCondition_View.ContractId = vbContractId
@@ -346,7 +346,7 @@ BEGIN
          -- проверка
          IF vbPaymentDate IS NULL OR vbPaymentDate < vbOperDatePartner
          THEN
-             RAISE EXCEPTION 'Ошибка.В договоре не определены условия отсрочки.';
+             RAISE EXCEPTION 'Ошибка.В договоре не определены условия отсрочки.(%)', vbPaymentDate;
          END IF;
                     
          -- определяется

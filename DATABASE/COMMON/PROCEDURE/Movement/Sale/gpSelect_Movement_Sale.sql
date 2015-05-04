@@ -39,6 +39,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isMedoc Boolean
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , isError Boolean
+             , InsertDate TDateTime
               )
 AS
 $BODY$
@@ -159,6 +160,8 @@ BEGIN
                         ELSE FALSE
                    END AS Boolean) AS isError
 
+           , MovementDate_Insert.ValueData AS InsertDate
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
@@ -197,6 +200,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
                                       ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
                                      AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId =  Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
             LEFT JOIN MovementDate AS MovementDate_Payment
                                    ON MovementDate_Payment.MovementId =  Movement.Id
@@ -397,4 +404,4 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.02.2014', inEndDate:= '01.02.2014', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.02.2015', inEndDate:= '01.02.2015', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
