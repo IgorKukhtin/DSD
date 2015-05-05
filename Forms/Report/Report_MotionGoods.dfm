@@ -25,7 +25,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 590
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1329
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -844,7 +843,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; '
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -891,7 +889,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; '
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1756,7 +1753,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 54
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1329
     object edGoodsGroup: TcxButtonEdit
       Left = 853
       Top = 5
@@ -1926,7 +1922,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 87
     Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
     Properties.ReadOnly = False
-    TabOrder = 5
+    TabOrder = 4
     Width = 88
   end
   object cbAmount: TcxCheckBox
@@ -2803,14 +2799,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Value = Null
         Component = GuidesUnitGroup_by
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
         Name = 'inLocationId_by'
         Value = Null
         Component = GuidesLocation_by
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
         Name = 'inIsInfoMoney'
