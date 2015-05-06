@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer
 
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
-             
+             , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , PersonalId Integer, PersonalName TVarChar
              
              , PersonalTradeId Integer, PersonalTradeName TVarChar
@@ -79,6 +79,9 @@ BEGIN
            , Object_PaidKind.ValueData AS PaidKindName
            , 0 :: Integer   AS InfoMoneyId
            , '' :: TVarChar AS InfoMoneyName
+
+           , 0 :: Integer   AS GoodsPropertyId
+           , '' :: TVarChar AS GoodsPropertyName
 
            , 0 :: Integer   AS PersonalId
            , '' :: TVarChar AS PersonalName
@@ -158,6 +161,9 @@ BEGIN
 
            , Object_InfoMoney_View.InfoMoneyId
            , Object_InfoMoney_View.InfoMoneyName_all AS InfoMoneyName
+    
+           , Object_GoodsProperty.Id            AS GoodsPropertyId
+           , Object_GoodsProperty.ValueData     AS GoodsPropertyName
 
            , Object_Personal_View.PersonalId    AS PersonalId
            , Object_Personal_View.PersonalName  AS PersonalName
@@ -288,6 +294,11 @@ BEGIN
                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
             LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_GoodsProperty
+                                 ON ObjectLink_Contract_GoodsProperty.ObjectId = Object_Contract_View.ContractId 
+                                AND ObjectLink_Contract_GoodsProperty.DescId = zc_ObjectLink_Contract_GoodsProperty()
+            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Contract_GoodsProperty.ChildObjectId 
+
             LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                                  ON ObjectDate_StartPromo.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Contract_StartPromo()
@@ -323,6 +334,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.05.15         * add GoodsProperty
  12.02.15         * add StartPromo, EndPromo,
                         PriceList, PriceListPromo
  16.01.15         * add JuridicalDocument
