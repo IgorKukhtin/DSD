@@ -646,6 +646,8 @@ object ContractForm: TContractForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 60
       end
     end
