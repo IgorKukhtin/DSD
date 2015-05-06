@@ -152,6 +152,9 @@ type
     cxLabel27: TcxLabel;
     edEndPromo: TcxDateEdit;
     dsdPriceListPromoGuides: TdsdGuides;
+    cxLabel28: TcxLabel;
+    ceGoodsProperty: TcxButtonEdit;
+    GoodsPropertyGuides: TdsdGuides;
   private
     { Private declarations }
   public

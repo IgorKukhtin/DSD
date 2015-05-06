@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 
 
@@ -28,7 +29,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inInfoMoneyId         Integer  ,     -- УП статья назначения
     IN inContractKindId      Integer  ,     -- Вид договора
     IN inPaidKindId          Integer  ,     -- Вид формы оплаты
-    
+    --IN inGoodsPropertyId     Integer  ,     -- Классификаторы свойств товаров
+
     IN inPersonalId          Integer  ,     -- Сотрудник (отвественное лицо)
     IN inPersonalTradeId     Integer  ,     -- Сотрудник (торговый)
     IN inPersonalCollationId Integer  ,     -- Сотрудник (сверка)
@@ -200,6 +202,9 @@ BEGIN
    -- сохранили связь с <Виды форм оплаты>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PaidKind(), ioId, inPaidKindId);
 
+   -- сохранили связь с <>
+   --PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_GoodsProperty(), ioId, inGoodsPropertyId);
+
    -- сохранили связь с <Сотрудники (отвественное лицо)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Personal(), ioId, inPersonalId);
    
@@ -226,6 +231,7 @@ BEGIN
    
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceList(), ioId, inPriceListId);
+
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceListPromo(), ioId, inPriceListPromoId);
 
@@ -255,6 +261,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+-- 05.05.15         * add   GoodsProperty
  12.02.15         * add StartPromo, EndPromo,
                         PriceList, PriceListPromo
  16.01.15         * add JuridicalDocument
