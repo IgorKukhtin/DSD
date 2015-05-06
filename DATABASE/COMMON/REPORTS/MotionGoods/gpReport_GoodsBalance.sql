@@ -16,31 +16,17 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsBalance(
 RETURNS TABLE ( GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
            
+             , CountStart TFloat, PriceStart TFloat, SummStart TFloat
+
+             , CountEnd TFloat, PriceEnd TFloat, SummEnd TFloat
+
+             , CountRemains TFloat, PriceRemains TFloat , SummRemains TFloat   -- остаток текущий
+             
+             , CountOut TFloat, CountIn TFloat
             
-             , CountStart TFloat
-             , CountEnd TFloat
- 
-             , CountIncome TFloat
-             , CountSale TFloat
-             , CountReturnIn TFloat
-
-
-             , SummStart TFloat
-             , SummEnd TFloat
-             , SummIncome TFloat
-             , SummReturnOut TFloat
-
-             , SummSale TFloat
-     
-
-             , SummTotalIn TFloat
-             , SummTotalOut TFloat
-
-             , PriceStart TFloat
-             , PriceEnd TFloat
-             , ContainerId_Summ Integer
+             , CountOut_Remains TFloat, CountIn_Remains TFloat
+         
              , LineNum Integer
-
               )
 AS
 $BODY$
@@ -67,26 +53,23 @@ RETURN QUERY
         , CAST ( 'GoodsKindName' AS TVarChar)    AS GoodsKindName
         , CAST ( 'GoodsName' AS TVarChar)       AS MeasureName
         , CAST (4 AS TFloat) AS CountStart
-        , CAST (6 AS TFloat) AS CountEnd
-        , CAST (8 AS TFloat) AS CountIncome
-        , CAST (20 AS TFloat) AS CountSale
-        , CAST (0 AS TFloat)  AS CountReturnIn
-
-        , CAST (0 AS TFloat) AS SummStart
-        ,CAST (0 AS TFloat)  AS SummEnd
-        , CAST (0 AS TFloat)  AS SummIncome
-        , CAST (0 AS TFloat)  AS SummReturnOut
-        ,CAST (0 AS TFloat) AS SummSale
-
-        , CAST (0 AS TFloat)  AS SummTotalIn
-        , CAST (0 AS TFloat)  AS SummTotalOut
-
-        , CAST (0 AS TFloat)  AS PriceStart
+        , CAST (6 AS TFloat) AS PriceStart
+        , CAST (8 AS TFloat) AS SummStart
+        , CAST (20 AS TFloat) AS CountEnd
         , CAST (0 AS TFloat)  AS PriceEnd
+        , CAST (0 AS TFloat)  AS SummEnd
 
+        , CAST (0 AS TFloat)  AS CountRemains
+        , CAST (0 AS TFloat)  AS PriceRemains
+        , CAST (0 AS TFloat)  AS SummRemains
 
-        , CAST (7 AS Integer) AS ContainerId_Summ
-        , CAST (row_number() OVER () AS INTEGER)        AS LineNum
+        , CAST (0 AS TFloat) AS CountOut
+        , CAST (0 AS TFloat) AS CountIn
+
+        , CAST (0 AS TFloat)  AS CountOut_Remains
+        , CAST (0 AS TFloat)  AS CountIn_Remains
+
+       , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
      ;
 END;
