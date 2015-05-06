@@ -23,26 +23,15 @@ $BODY$
 
    DECLARE vbMovementId_Master Integer;
    DECLARE vbMovementId_Child  Integer;
-   DECLARE vbGoodsPropertyId Integer;
-   DECLARE vbJuridicalId     Integer;
-   DECLARE vbPriceWithVAT    Boolean;
-   DECLARE vbVATPercent      TFloat;
+   DECLARE vbGoodsPropertyId   Integer;
+   DECLARE vbJuridicalId       Integer;
+   DECLARE vbContractId        Integer;
+   DECLARE vbPriceWithVAT      Boolean;
+   DECLARE vbVATPercent        TFloat;
 BEGIN
      -- !!!переписать!!!
      vbPriceWithVAT:= FALSE;
      vbVATPercent  := 20;
-
-
-     IF (inOKPO <> '')
-     THEN
-         -- Поиск Юр лица по ОКПО
-         vbJuridicalId := (SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_View WHERE OKPO = inOKPO);
-
-         -- Поиск классификатора товаров
-         vbGoodsPropertyId := (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Juridical_GoodsProperty() AND ObjectId = vbJuridicalId);
-
-     END IF;
-
 
 
      -- !!!так для продажи!!!
@@ -119,8 +108,8 @@ BEGIN
          IF vbInvNumberSaleLink <> ''
          THEN
              -- Поиск документа <Продажа покупателю> и <Налоговая накладная>
-             SELECT Movement.Id, Movement_DocumentMaster.Id
-                    INTO vbMovementId_Master, vbMovementId_Child
+             SELECT Movement.Id, Movement_DocumentMaster.Id, MovementLinkObject_Contract.ObjectId
+                    INTO vbMovementId_Master, vbMovementId_Child, vbContractId
              FROM Movement
                   INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                           ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -141,6 +130,9 @@ BEGIN
                                                 AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                   LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
                                                                AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                               ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
              WHERE Movement.InvNumber = vbInvNumberSaleLink
                AND Movement.StatusId = zc_Enum_Status_Complete()
                AND Movement.DescId = zc_Movement_Sale();
@@ -158,8 +150,8 @@ BEGIN
 
          ELSE
              -- Поиск документа <Продажа покупателю> и <Налоговая накладная>
-             SELECT Movement.Id, Movement_DocumentMaster.Id
-                    INTO vbMovementId_Master, vbMovementId_Child
+             SELECT Movement.Id, Movement_DocumentMaster.Id, MovementLinkObject_Contract.ObjectId
+                    INTO vbMovementId_Master, vbMovementId_Child, vbContractId
              FROM MovementString AS MovementString_InvNumberOrder
                   INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                           ON MovementDate_OperDatePartner.MovementId =  MovementString_InvNumberOrder.MovementId
@@ -184,6 +176,9 @@ BEGIN
                                                 AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                   LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
                                                                AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                               ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
              WHERE MovementString_InvNumberOrder.ValueData = inOrderInvNumber
                AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder();
 
@@ -240,8 +235,8 @@ BEGIN
      IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
      THEN
          -- Поиск документа <Возврат покупателю> и <Корректировка к налоговой накладной>
-         SELECT Movement.Id, Movement_DocumentMaster.Id
-                INTO vbMovementId_Master, vbMovementId_Child
+         SELECT Movement.Id, Movement_DocumentMaster.Id, MovementLinkObject_Contract.ObjectId
+                INTO vbMovementId_Master, vbMovementId_Child, vbContractId
          FROM MovementString AS MovementString_InvNumberPartner
               INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                       ON MovementDate_OperDatePartner.MovementId =  MovementString_InvNumberPartner.MovementId
@@ -265,6 +260,9 @@ BEGIN
                                             AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
               LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementId
                                                            AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
          WHERE MovementString_InvNumberPartner.ValueData = inPartnerInvNumber
            AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner();
 
@@ -294,10 +292,23 @@ BEGIN
      END IF;
 
 
+     IF (inOKPO <> '')
+     THEN
+         -- Поиск Юр лица по ОКПО
+         vbJuridicalId := (SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_View WHERE OKPO = inOKPO);
+
+         -- Поиск <Классификатор товаров>
+         -- vbGoodsPropertyId := (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Juridical_GoodsProperty() AND ObjectId = vbJuridicalId);
+         vbGoodsPropertyId := zfCalc_GoodsPropertyId (vbContractId, vbJuridicalId);
+
+     END IF;
+
      -- сохранили <Юр лицо>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), inMovementId, vbJuridicalId);
      -- сохранили <классификатор>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsProperty(), inMovementId, vbGoodsPropertyId);
+     -- сохранили <ContractId>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, vbContractId);
 
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), inMovementId, vbPriceWithVAT);
@@ -322,4 +333,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_EDIComdoc_Params (inMovementId:= 0, inOrderInvNumber:= '-1', inOKPO:= 1, inUserId:= 2)
+-- SELECT * FROM lpUpdate_Movement_EDIComdoc_Params (inMovementId:= 0, inOrderInvNumber:= '-1', inOKPO:= 1, inUserId:= zfCalc_UserAdmin())

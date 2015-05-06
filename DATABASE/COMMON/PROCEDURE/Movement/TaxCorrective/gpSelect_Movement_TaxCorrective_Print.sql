@@ -25,7 +25,9 @@ $BODY$
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!хардкод!!!
      vbNotNDSPayer_INN := '100000000000';
 
      -- определ€етс€ <Ќалоговый документ> и его параметры
@@ -67,21 +69,24 @@ BEGIN
 */
 
      -- определ€етс€ параметр
-     vbGoodsPropertyId:= (SELECT ObjectLink_Juridical_GoodsProperty.ChildObjectId
+     vbGoodsPropertyId:= (SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)) -- ObjectLink_Juridical_GoodsProperty.ChildObjectId
                           FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                             ON MovementLinkObject_From.MovementId = Movement.Id
                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                     ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                               LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                               /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                                     ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
-                                                   AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                                                   AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()*/
                           WHERE Movement.Id = inMovementId
                          );
      -- определ€етс€ параметр
-     vbGoodsPropertyId_basis:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = zc_Juridical_Basis() AND DescId = zc_ObjectLink_Juridical_GoodsProperty());
+     vbGoodsPropertyId_basis:= zfCalc_GoodsPropertyId (0, zc_Juridical_Basis()); -- (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = zc_Juridical_Basis() AND DescId = zc_ObjectLink_Juridical_GoodsProperty());
 
 
      -- ƒанные по ¬сем корректировкам + налоговым: заголовок + строчна€ часть
@@ -714,11 +719,6 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
  07.04.14                                                       *
 */
 
-/*
-BEGIN;
- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 141816, inisClientCopy:= FALSE ,inSession:= '2');
-COMMIT;
-*/
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE ,inSession:= '2');
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 520880 , inisClientCopy:= FALSE ,inSession:= '2');
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 520880, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin());

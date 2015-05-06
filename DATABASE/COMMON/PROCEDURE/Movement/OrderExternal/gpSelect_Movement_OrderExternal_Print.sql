@@ -23,22 +23,26 @@ $BODY$
     DECLARE vbVATPercent TFloat;
     DECLARE vbDiscountPercent TFloat;
     DECLARE vbExtraChargesPercent TFloat;
+    DECLARE vbContractId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
 
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
-          , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
+          , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
-          , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
-          , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END  AS ExtraChargesPercent
+          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)) AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis())        AS GoodsPropertyId_basis
+          , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
+          -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+          -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
+            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbContractId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -49,19 +53,22 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-          LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+          /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
                               AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
           LEFT JOIN ObjectLink AS ObjectLink_JuridicalBasis_GoodsProperty
                                ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
-                              AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL
+                              AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL*/
      WHERE Movement.Id = inMovementId;
 
 
@@ -170,12 +177,12 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom())
-            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+                                        AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom())*/
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = vbContractId -- MovementLinkObject_Contract.ObjectId
 
-            --по контрагенту находим юр.лицо
+            -- по контрагенту находим юр.лицо
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -389,4 +396,4 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal_Print (Integer,TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal_Print (inMovementId := 388160, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Print (inMovementId := 388160, inSession:= zfCalc_UserAdmin())

@@ -82,6 +82,14 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ <Налоговая накладная> № <%> от <%> не найден.', vbInvNumberPartner_Tax, DATE (vbOperDate_Tax);
      END IF;
 
+
+     -- обновили <Классификатор товаров> !!!по док-ту vbMovementId_Tax!!! + сохранили элементы !!!на самом деле только обновили GoodsId and GoodsKindId!!!
+     PERFORM lpUpdate_MI_EDI_Params (inMovementId  := inMovementId
+                                   , inContractId  := (SELECT MLO_Contract.ObjectId FROM MovementLinkObject AS MLO_Contract WHERE MLO_Contract.MovementId = vbMovementId_Tax AND MLO_Contract.DescId = zc_MovementLinkObject_Contract())
+                                   , inJuridicalId := vbJuridicalId_Tax
+                                   , inUserId      := vbUserId
+                                    );
+
      -- сохранили <Возврат от покупателя>
      SELECT lpInsertUpdate_Movement_ReturnIn
                                        (ioId                := vbMovementId_ReturnIn

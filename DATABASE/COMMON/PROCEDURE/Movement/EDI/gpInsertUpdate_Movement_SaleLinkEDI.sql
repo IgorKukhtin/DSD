@@ -68,6 +68,14 @@ BEGIN
      END IF;
 
 
+     -- обновили <Классификатор товаров> !!!по док-ту продаж!!! + сохранили элементы !!!на самом деле только обновили GoodsId and GoodsKindId!!!
+     PERFORM lpUpdate_MI_EDI_Params (inMovementId  := vbMovementId_EDI
+                                   , inContractId  := (SELECT MLO_Contract.ObjectId FROM MovementLinkObject AS MLO_Contract WHERE MLO_Contract.MovementId = inMovementId AND MLO_Contract.DescId = zc_MovementLinkObject_Contract())
+                                   , inJuridicalId := (SELECT MLO_Juridical.ObjectId FROM MovementLinkObject AS MLO_Juridical WHERE MLO_Juridical.MovementId = vbMovementId_EDI AND MLO_Juridical.DescId = zc_MovementLinkObject_Juridical())
+                                   , inUserId      := vbUserId
+                                    );
+
+
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);

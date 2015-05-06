@@ -30,17 +30,21 @@ $BODY$
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!хардкод!!!
      vbNotNDSPayer_INN := '100000000000';
 
      -- определ€етс€ <Ќалоговый документ> и его параметры
-     SELECT COALESCE (tmpMovement.MovementId_Tax, 0) AS MovementId_Tax
-          , Movement_Tax.StatusId                    AS StatusId_Tax
-          , MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
+     SELECT COALESCE (tmpMovement.MovementId_Tax, 0)                AS MovementId_Tax
+          , Movement_Tax.StatusId                                   AS StatusId_Tax
+          , MovementLinkObject_DocumentTaxKind.ObjectId             AS DocumentTaxKindId
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
-          , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
-          , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
-          , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
+          , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
+          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, MovementLinkObject_To.ObjectId) AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis())        AS GoodsPropertyId_basis
+          -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+          -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
@@ -62,16 +66,19 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                   ON MovementFloat_VATPercent.MovementId = tmpMovement.MovementId_Tax
                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                       ON MovementLinkObject_Contract.MovementId = tmpMovement.MovementId_Tax
+                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = tmpMovement.MovementId_Tax
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+          /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
           LEFT JOIN ObjectLink AS ObjectLink_JuridicalBasis_GoodsProperty
                                ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
-                              -- AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL
+                              -- AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL*/
      ;
 
      -- очень важна€ проверка
@@ -618,10 +625,5 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
  05.02.14                                                       *
 */
 
-/*
-BEGIN;
- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 135428 , inisClientCopy:= FALSE ,inSession:= '2');
-COMMIT;
-*/
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 171760, inisClientCopy:= FALSE ,inSession:= '2');
+-- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 171760, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin());
