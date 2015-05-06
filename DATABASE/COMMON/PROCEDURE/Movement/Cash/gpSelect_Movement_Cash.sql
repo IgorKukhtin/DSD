@@ -126,7 +126,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData :: Integer
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
                                    ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
@@ -226,5 +226,5 @@ ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 273734, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2015', inEndDate:= '30.01.2015', inCashId:= 1, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 14462, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2015', inEndDate:= '30.01.2015', inCashId:= 14462, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

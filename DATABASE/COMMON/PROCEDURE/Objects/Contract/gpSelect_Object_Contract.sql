@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, RetailName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , JuridicalDocumentId Integer, JuridicalDocumentCode Integer, JuridicalDocumentName TVarChar
              
@@ -133,6 +133,7 @@ BEGIN
        , Object_Juridical.ObjectCode     AS JuridicalCode
        , Object_Juridical.ValueData      AS JuridicalName
        , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+       , Object_Retail.ValueData         AS RetailName
 
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
        , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
@@ -270,6 +271,11 @@ BEGIN
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Contract_View.JuridicalId
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
         LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Contract_View.JuridicalId
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                              ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId

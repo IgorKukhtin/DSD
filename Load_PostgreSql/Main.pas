@@ -8346,10 +8346,72 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
                        if (1=0)or(FieldByName('Id_Postgres20').AsInteger=0)
                        then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id20_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
+             // 21 fIsClient_KisheniContract
+             if FieldByName('is21').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres21').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName21').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount21').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode21').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article21').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN21').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN21').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName21').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId21').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId21').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId21').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres21').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id21_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
      end;
   end;
 
-begin
+  procedure my_Kisheni;
+  begin
+     with fromQuery,Sql do begin
+        //---------------------------***6***Кишени***GoodsCodeScaner_byKisheni
+        Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byKisheni)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id6_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is6');
+        Add('     , null as GroupName6');
+        Add('     , null as ObjectName6');
+        Add('     , case when is6=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,2) else cast (null as TSumm) end as Amount6');
+        Add('     , case when is6=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,1,13) end as BarCode6');
+        Add('     , case when is6=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,2) = '+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,20,5)'
+                                                   +' when GoodsProperty.MeasureId = zc_measure_Sht() and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,1) = '+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,19,6)'
+                                                   +' when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,7)'
+                                                   +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,2)='+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,17,5)'
+                                                   +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,16,6)'
+                                                   +' else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,7) end as Article6');
+        Add('     , BarCode6 as BarCodeGLN6');
+        Add('     , Article6 as ArticleGLN6');
+        Add('     , PG6.Id_Postgres as GoodsPropertyId6');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId6');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId6');
+        Add('     , GoodsProperty_Detail.Id6_Postgres as Id_Postgres6');
+        //---------------------------***21***Кишени-Contract***GoodsCodeScaner_byKisheni
+        Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byKisheni)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id21_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is21');
+        Add('     , null as GroupName21');
+        Add('     , trim(GoodsProperty_Detail.GoodsName_GD) as ObjectName21');
+        Add('     , case when is21=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then cast (null as TSumm) else cast (null as TSumm) end as Amount21');
+        Add('     , case when is21=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then NULL else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,25,13) end as BarCode21');
+        Add('     , case when is21=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,2) = '+FormatToVarCharServer_notNULL('00')+' then NULL'
+                                                   +' when GoodsProperty.MeasureId = zc_measure_Sht() and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,1) = '+FormatToVarCharServer_notNULL('0')+' then NULL'
+                                                   +' when GoodsProperty.MeasureId = zc_measure_Sht() then NULL'
+                                                   +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,39,2)='+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,41,5)'
+                                                   +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,39,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,40,6)'
+                                                   +' else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,39,7) end as Article21');
+        Add('     , BarCode21 as BarCodeGLN21');
+        Add('     , Article21 as ArticleGLN21');
+        Add('     , PG21.Id_Postgres as GoodsPropertyId21');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId21');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId21');
+        Add('     , GoodsProperty_Detail.Id21_Postgres as Id_Postgres21');
+     end;
+  end;
+
+  begin
      if (not cbGoodsPropertyValue.Checked)or(not cbGoodsPropertyValue.Enabled) then exit;
      //
      myEnabledCB(cbGoodsPropertyValue);
@@ -8445,23 +8507,8 @@ begin
         Add('     , KindPackage.Id_Postgres as GoodsKindId5');
         Add('     , GoodsProperty_Detail.Id5_Postgres as Id_Postgres5');
         //---------------------------***6***Кишени***GoodsCodeScaner_byKisheni
-        Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byKisheni)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id6_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is6');
-        Add('     , null as GroupName6');
-        Add('     , null as ObjectName6');
-        Add('     , case when is6=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,2) else cast (null as TSumm) end as Amount6');
-        Add('     , case when is6=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,1,13) end as BarCode6');
-        Add('     , case when is6=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,2) = '+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,20,5)'
-                                                   +' when GoodsProperty.MeasureId = zc_measure_Sht() and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,1) = '+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,19,6)'
-                                                   +' when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,7)'
-                                                   +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,2)='+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,17,5)'
-                                                   +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,16,6)'
-                                                   +' else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,7) end as Article6');
-        Add('     , BarCode6 as BarCodeGLN6');
-        Add('     , Article6 as ArticleGLN6');
-        Add('     , PG6.Id_Postgres as GoodsPropertyId6');
-        Add('     , GoodsProperty.Id_Postgres as GoodsId6');
-        Add('     , KindPackage.Id_Postgres as GoodsKindId6');
-        Add('     , GoodsProperty_Detail.Id6_Postgres as Id_Postgres6');
+        //---------------------------***21***Кишени-Contract***GoodsCodeScaner_byKisheni
+        my_Kisheni;
         //---------------------------***7***Виват***GoodsCodeScaner_byVivat
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byVivat)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id7_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is7');
         Add('     , null as GroupName7');
@@ -8679,7 +8726,7 @@ begin
         Add('     , Article4 as Article19');
         Add('     , BarCode19 as BarCodeGLN19');
         Add('     , Article19 as ArticleGLN19');
-        Add('     , 300422 as GoodsPropertyId19'); // ВЭД Eng
+        Add('     , PG19.Id_Postgres as GoodsPropertyId19'); // ВЭД Eng
         Add('     , GoodsProperty.Id_Postgres as GoodsId19');
         Add('     , KindPackage.Id_Postgres as GoodsKindId19');
         Add('     , GoodsProperty_Detail.Id19_pg as Id_Postgres19');
@@ -8693,7 +8740,7 @@ begin
         Add('     , Article4 as Article20');
         Add('     , BarCode20 as BarCodeGLN20');
         Add('     , Article20 as ArticleGLN20');
-        Add('     , 300423 as GoodsPropertyId20'); // ВЭД Рус
+        Add('     , PG20.Id_Postgres as GoodsPropertyId20'); // ВЭД Рус
         Add('     , GoodsProperty.Id_Postgres as GoodsId20');
         Add('     , KindPackage.Id_Postgres as GoodsKindId20');
         Add('     , GoodsProperty_Detail.Id20_pg as Id_Postgres20');
@@ -8718,6 +8765,9 @@ begin
         Add('     left outer join dba.GoodsProperty_Postgres as PG16 on PG16.Id=16');
         Add('     left outer join dba.GoodsProperty_Postgres as PG17 on PG17.Id=17');
         Add('     left outer join dba.GoodsProperty_Postgres as PG18 on PG18.Id=18');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG19 on PG19.Id=19');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG20 on PG20.Id=20');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG21 on PG21.Id=21');
 
         //Add('     left outer join dba.KindPackage on KindPackage.Id=GoodsProperty_Detail.KindPackageId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
@@ -8748,6 +8798,7 @@ begin
              +' or is18=zc_rvYes()'
              +' or is19=zc_rvYes()'
              +' or is20=zc_rvYes()'
+             +' or is21=zc_rvYes()'
              +'   )'
            );
         Add('order by is7, BarCode7, ObjectId');
@@ -21843,6 +21894,7 @@ alter table dba.GoodsProperty_Detail add Id17_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id18_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id19_pg integer null;
 alter table dba.GoodsProperty_Detail add Id20_pg integer null;
+alter table dba.GoodsProperty_Detail add Id21_Postgres integer null;
 
 create table dba.GoodsProperty_Postgres (Id integer not null, Name_PG TVarCharMedium not null, Id_Postgres integer null);
 insert into dba.GoodsProperty_Postgres (Id, Name_PG)
@@ -21863,11 +21915,23 @@ insert into dba.GoodsProperty_Postgres (Id, Name_PG)
   select 15, 'ЖД' union all        // ***fIsClient_GD  *** GoodsName_GD
   -- select 16, 'Таврия' union all    // fIsClient_Tavriya *** Code_byTavriya
   select 17, 'Адвентис' union all  // fIsClient_Adventis *** GoodsCodeScaner_byAdventis
-  select 18, 'Край'                // fIsClient_Kray *** Code_byKray
+  select 18, 'Край'               // fIsClient_Kray *** Code_byKray
   ;                               // ------
                                   // fIsClient_Furshet
                                   // fIsClient_Obgora
 
+insert into dba.GoodsProperty_Postgres (Id, Name_PG,Id_Postgres)
+  select 19, 'ВЭД Eng', 300422
+
+insert into dba.GoodsProperty_Postgres (Id, Name_PG,Id_Postgres)
+  select 20, 'ВЭД Рус', 300423
+
+insert into dba.GoodsProperty_Postgres (Id, Name_PG,Id_Postgres)
+  select 21, 'Кишени-Кулинария', 420377 // +fIsClient_KisheniContract *** GoodsCodeScaner_byKisheni
+
+
+
+update dba.GoodsProperty_Postgres set Id = 21 where Id_Postgres = 420377
 
 alter table dba.GoodsProperty_Kachestvo add Id_pg1 integer null;
 alter table dba.GoodsProperty_Kachestvo add Id_pg2 integer null;
