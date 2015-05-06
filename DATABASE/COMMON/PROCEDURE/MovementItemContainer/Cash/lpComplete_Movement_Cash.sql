@@ -121,6 +121,7 @@ BEGIN
 
 
      -- заполн€ем таблицу - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
+     WITH tmpMI_Child AS (SELECT MI.* FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -217,9 +218,9 @@ BEGIN
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
-             LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = inMovementId
-                                               AND MI_Child.DescId = zc_MI_Child()
-                                               AND MI_Child.isErased = FALSE
+             LEFT JOIN tmpMI_Child AS MI_Child ON MI_Child.MovementId = inMovementId
+                                               -- AND MI_Child.DescId = zc_MI_Child()
+                                               -- AND MI_Child.isErased = FALSE
 
              LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
                                           ON MLO_PersonalServiceList.MovementId = inMovementId

@@ -195,6 +195,7 @@ type
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
     isConnected: TcxGridDBColumn;
+    clRetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

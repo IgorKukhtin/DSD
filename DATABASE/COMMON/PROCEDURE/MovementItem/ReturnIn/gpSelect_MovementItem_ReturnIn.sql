@@ -36,6 +36,35 @@ BEGIN
 
      -- Результат
      RETURN QUERY
+       WITH tmpMI AS (SELECT MovementItem.*
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = tmpIsErased.isErased
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     )
+       , tmpPrice AS (SELECT lfObjectHistory_PriceListItem.*
+                      FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfObjectHistory_PriceListItem
+                     )
+       , tmpGoods AS (SELECT Object_Goods.Id           AS GoodsId
+                  , Object_Goods.ObjectCode   AS GoodsCode
+                  , Object_Goods.ValueData    AS GoodsName
+                  -- , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN zc_Enum_GoodsKind_Main() ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция + Доходы Мясное сырье
+                  , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN zc_Enum_GoodsKind_Main() ELSE 0 END) AS GoodsKindId
+             FROM Object_InfoMoney_View
+                  JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                  JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                             AND Object_Goods.isErased = FALSE
+                  LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
+                                                        AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье + Доходы Мясное сырье*/
+             WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
+            )
+
        SELECT
              0                          AS Id
            , 0 :: Integer               AS LineNum
@@ -46,7 +75,7 @@ BEGIN
 
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
-           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           , tmpPrice.ValuePrice        AS Price
            , CAST (NULL AS TFloat)      AS CountForPrice
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
@@ -62,35 +91,11 @@ BEGIN
 
            , FALSE                      AS isErased
 
-       FROM (SELECT Object_Goods.Id           AS GoodsId
-                  , Object_Goods.ObjectCode   AS GoodsCode
-                  , Object_Goods.ValueData    AS GoodsName
-                  -- , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN zc_Enum_GoodsKind_Main() ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция + Доходы Мясное сырье
-                  , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN zc_Enum_GoodsKind_Main() ELSE 0 END) AS GoodsKindId
-             FROM Object_InfoMoney_View
-                  JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
-                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                  JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
-                                             AND Object_Goods.isErased = FALSE
-                  LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
-                                                        AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье + Доходы Мясное сырье*/
-             WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
-            ) AS tmpGoods
-            LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                             AND MovementItem.DescId     = zc_MI_Master()
-                                             AND MovementItem.isErased   = tmpIsErased.isErased
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
-                                AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
+       FROM tmpGoods
+            LEFT JOIN tmpMI ON tmpMI.ObjectId    = tmpGoods.GoodsId
+                           AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
@@ -100,8 +105,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+       WHERE tmpMI.ObjectId IS NULL
 
-       WHERE tmpMI.GoodsId IS NULL
       UNION ALL
        SELECT
              MovementItem.Id			AS Id
@@ -135,9 +140,7 @@ BEGIN
 
            , MovementItem.isErased		AS isErased
 
-       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Master()
+       FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -162,7 +165,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData :: Integer
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
                                    ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
@@ -247,7 +250,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData :: Integer
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
                                    ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id

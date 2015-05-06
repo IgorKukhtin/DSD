@@ -166,7 +166,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData :: Integer
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
                                    ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
