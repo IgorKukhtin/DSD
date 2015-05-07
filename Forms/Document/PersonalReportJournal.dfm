@@ -4,7 +4,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
   ClientWidth = 1151
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1167
-  ExplicitHeight = 684
+  ExplicitHeight = 687
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -193,6 +193,14 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object ContractInvNumber: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
