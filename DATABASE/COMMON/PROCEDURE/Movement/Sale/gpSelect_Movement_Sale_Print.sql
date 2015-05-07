@@ -237,8 +237,13 @@ BEGIN
 
            , Object_RouteSorting.ValueData 		        AS RouteSortingName
 
-           , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() AND Object_From.Id = 8459 THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
+           , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() AND Object_From.Id = 8459
+                   AND OH_JuridicalDetails_To.OKPO NOT IN ('32516492', '39135315', '39622918')
+                       THEN 'Бабенко В.П.'
+                  ELSE ''
+             END AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
+           , CASE WHEN OH_JuridicalDetails_To.OKPO IN ('32516492', '39135315', '39622918') THEN 'м. Київ, вул Ольжича, 18/22' ELSE '' END :: TVarChar  AS UnitAddress -- адреса складання
 
            , CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
 

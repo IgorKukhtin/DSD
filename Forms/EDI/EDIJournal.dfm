@@ -3,7 +3,7 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -119
+  ExplicitLeft = -302
   ExplicitWidth = 1300
   ExplicitHeight = 488
   PixelsPerInch = 96
@@ -14,12 +14,12 @@ inherited EDIJournalForm: TEDIJournalForm
     Height = 396
     ExplicitTop = 57
     ExplicitWidth = 1284
-    ExplicitHeight = 367
+    ExplicitHeight = 396
     ClientRectBottom = 396
     ClientRectRight = 1284
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1284
-      ExplicitHeight = 367
+      ExplicitHeight = 396
       inherited cxGrid: TcxGrid
         Width = 1284
         Height = 209
@@ -303,6 +303,7 @@ inherited EDIJournalForm: TEDIJournalForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -410,7 +411,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitHeight = 153
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
@@ -419,7 +419,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 0
-          ExplicitHeight = 153
           object cxChildGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ClientDS
@@ -655,7 +654,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitHeight = 153
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -716,7 +714,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Width = 4
           Height = 182
           Control = cxChildGrid
-          ExplicitHeight = 153
         end
       end
     end

@@ -11,6 +11,12 @@ AS
 $BODY$
    DECLARE vbMovementId_check Integer;
 BEGIN
+     -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
+     CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer) ON COMMIT DROP;
+     -- таблица - по элементам, для lpComplete_Movement_PersonalService_Recalc
+     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, MovementItemId_to Integer, SummCardRecalc TFloat) ON COMMIT DROP;
+
+
      -- Проверка - других быть не должно
      vbMovementId_check:= (SELECT MovementDate_ServiceDate.MovementId
                            FROM (SELECT MovementDate.MovementId     AS MovementId
@@ -354,6 +360,43 @@ BEGIN
                                 , inDescId     := zc_Movement_PersonalService()
                                 , inUserId     := inUserId
                                  );
+
+     -- 6. ФИНИШ - распределение !!!если это НЕ БН!!! и находим !!!ведомости БН!!!
+     PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := tmpMovement.MovementId
+                                                       , inUserId     := inUserId)
+     FROM (SELECT Movement.Id AS MovementId
+           FROM
+          (SELECT MovementDate_ServiceDate.ValueData AS ServiceDate
+           FROM Movement
+                LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                       ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                      AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                              ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                             AND MovementLinkObject_PersonalServiceList.ObjectId NOT IN (293716 -- Ведомость карточки БН Фидо
+                                                                                                       , 413454 -- Ведомость карточки БН Пиреус
+                                                                                                        )
+           WHERE Movement.Id = inMovementId
+             AND Movement.DescId = zc_Movement_PersonalService()
+             AND Movement.StatusId = zc_Enum_Status_Complete()
+          ) AS tmpMovement
+          INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                  ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
+                                 AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+          INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                        ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                       AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                       AND MovementLinkObject_PersonalServiceList.ObjectId IN (293716 -- Ведомость карточки БН Фидо
+                                                                                             , 413454 -- Ведомость карточки БН Пиреус
+                                                                                              )
+          INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+                             AND Movement.DescId = zc_Movement_PersonalService()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+          LIMIT 1
+          ) AS tmpMovement
+    ;
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

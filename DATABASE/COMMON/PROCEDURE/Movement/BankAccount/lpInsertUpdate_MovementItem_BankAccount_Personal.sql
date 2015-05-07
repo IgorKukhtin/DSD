@@ -1,18 +1,20 @@
 -- Function: lpInsertUpdate_MovementItem_BankAccount_Personal()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_BankAccount_Personal (Integer, Integer, Integer, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_BankAccount_Personal (Integer, Integer, Integer, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_BankAccount_Personal(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inPersonalId          Integer   , -- Сотрудники
-    IN inAmount              TFloat    , -- Сумма к выплате
-    IN inServiceDate         TDateTime , -- Месяц начислений
-    IN inComment             TVarChar  , -- Примечание
-    IN inInfoMoneyId         Integer   , -- Статьи назначения
-    IN inUnitId              Integer   , -- Подразделение
-    IN inPositionId          Integer   , -- Должность
-    IN inUserId              Integer     -- пользователь
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inPersonalId            Integer   , -- Сотрудники
+    IN inAmount                TFloat    , -- Сумма к выплате
+    IN inServiceDate           TDateTime , -- Месяц начислений
+    IN inComment               TVarChar  , -- Примечание
+    IN inInfoMoneyId           Integer   , -- Статьи назначения
+    IN inUnitId                Integer   , -- Подразделение
+    IN inPositionId            Integer   , -- Должность
+    IN inPersonalServiceListId Integer   , -- Ведомости начисления
+    IN inUserId                Integer     -- пользователь
 )
 RETURNS Integer AS
 $BODY$
@@ -38,6 +40,11 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <Должность>.';
      END IF;
+     -- проверка
+     IF COALESCE (inPersonalServiceListId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Ведомость начисления>.';
+     END IF;
 
 
      -- определяется признак Создание/Корректировка
@@ -58,6 +65,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), ioId, inPositionId);
+     -- сохранили связь с <Ведомость начисления>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), ioId, inPersonalServiceListId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

@@ -12,17 +12,17 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1020
+    ExplicitWidth = 1028
     ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1028
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 472
-        ExplicitWidth = 1020
+        ExplicitWidth = 1028
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -272,8 +272,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
@@ -285,8 +285,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'StartAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -297,8 +297,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'StartAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -309,8 +309,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
             DataBinding.FieldName = 'ServiceSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -320,8 +320,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
             DataBinding.FieldName = 'MoneySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -331,8 +331,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             Visible = False
@@ -345,8 +345,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             Visible = False
@@ -359,8 +359,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
@@ -372,8 +372,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'EndAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -384,8 +384,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'EndAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -408,7 +408,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   inherited Panel: TPanel
     Width = 1028
     Height = 57
-    ExplicitWidth = 1020
+    ExplicitWidth = 1028
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 60

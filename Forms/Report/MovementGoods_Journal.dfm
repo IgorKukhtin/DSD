@@ -4,8 +4,9 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
   ClientWidth = 1220
   Position = poDesigned
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1228
-  ExplicitHeight = 511
+  ExplicitLeft = -238
+  ExplicitWidth = 1236
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -85,9 +86,9 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Caption = #1057#1091#1084#1084#1072' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -97,9 +98,9 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Caption = #1057#1091#1084#1084#1072' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -509,6 +510,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     object actMovementForm: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = getMovementForm
       StoredProcList = <
         item

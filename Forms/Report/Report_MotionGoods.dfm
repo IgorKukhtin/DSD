@@ -761,6 +761,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       object Weight: TcxGridDBColumn
         Caption = #1042#1077#1089
         DataBinding.FieldName = 'Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -772,7 +775,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -783,7 +786,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountStart_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -795,7 +798,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -806,7 +809,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -818,7 +821,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountIncome'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -830,7 +833,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountIncome_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -842,7 +845,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceIncome'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -853,7 +856,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummIncome'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -865,7 +868,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountReturnOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -876,7 +879,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountReturnOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -888,7 +891,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceReturnOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -899,7 +902,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummReturnOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -911,7 +914,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSendIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -922,7 +925,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSendIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -934,7 +937,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceSendIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         FooterAlignmentHorz = taRightJustify
         HeaderAlignmentHorz = taCenter
@@ -947,7 +950,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummSendIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -959,7 +962,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSendOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -970,7 +973,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSendOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -982,7 +985,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceSendOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -994,7 +997,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummSendOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1006,7 +1009,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSendOnPriceIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1017,7 +1020,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSendOnPriceIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1029,7 +1032,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceSendOnPriceIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1041,7 +1044,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummSendOnPriceIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1053,7 +1056,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountProductionIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1064,7 +1067,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountProductionIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1076,7 +1079,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceProductionIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1088,7 +1091,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummProductionIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1100,7 +1103,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSendOnPriceOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1111,7 +1114,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSendOnPriceOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1123,7 +1126,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceSendOnPriceOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1135,7 +1138,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummSendOnPriceOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1147,7 +1150,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSale'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1158,7 +1161,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSale_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1169,7 +1172,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSale_10500'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1181,7 +1184,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSale_10500_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1192,7 +1195,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSale_40208'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1204,7 +1207,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountSale_40208_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1215,7 +1218,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceSale'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1227,7 +1230,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummSale'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1238,7 +1241,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummSale_10500'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1249,7 +1252,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummSale_40208'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1261,7 +1264,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountReturnIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1272,7 +1275,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountReturnIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1284,7 +1287,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountReturnIn_40208'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1295,7 +1298,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountReturnIn_40208_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1307,7 +1310,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceReturnIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1319,7 +1322,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummReturnIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1330,7 +1333,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummReturnIn_40208'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1342,7 +1345,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountLoss'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1353,7 +1356,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountLoss_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1364,7 +1367,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceLoss'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1376,7 +1379,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummLoss'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1388,7 +1391,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountProductionOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1399,7 +1402,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountProductionOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1411,7 +1414,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceProductionOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1423,7 +1426,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummProductionOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1435,7 +1438,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountInventory'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1446,7 +1449,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountInventory_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1458,7 +1461,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceInventory'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1470,7 +1473,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummInventory'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1482,7 +1485,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummInventory_RePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1494,7 +1497,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountEnd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1505,7 +1508,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountEnd_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1517,7 +1520,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceEnd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1528,7 +1531,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummEnd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1539,7 +1542,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountTotalIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1551,7 +1554,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountTotalIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1563,7 +1566,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceTotalIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1575,7 +1578,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummTotalIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1587,7 +1590,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountTotalOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1599,7 +1602,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'CountTotalOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1611,7 +1614,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'PriceTotalOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1623,7 +1626,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'SummTotalOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1922,7 +1925,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 87
     Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
     Properties.ReadOnly = False
-    TabOrder = 4
+    TabOrder = 3
     Width = 88
   end
   object cbAmount: TcxCheckBox
@@ -2799,14 +2802,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Value = Null
         Component = GuidesUnitGroup_by
         ComponentItem = 'Key'
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
         Name = 'inLocationId_by'
         Value = Null
         Component = GuidesLocation_by
         ComponentItem = 'Key'
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
         Name = 'inIsInfoMoney'

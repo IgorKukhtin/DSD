@@ -87,7 +87,7 @@ BEGIN
      PERFORM lpUpdate_MI_EDI_Params (inMovementId  := inMovementId
                                    , inContractId  := (SELECT MLO_Contract.ObjectId FROM MovementLinkObject AS MLO_Contract WHERE MLO_Contract.MovementId = vbMovementId_Tax AND MLO_Contract.DescId = zc_MovementLinkObject_Contract())
                                    , inJuridicalId := vbJuridicalId_Tax
-                                   , inUserId      := vbUserId
+                                   , inUserId      := inUserId
                                     );
 
      -- сохранили <Возврат от покупателя>

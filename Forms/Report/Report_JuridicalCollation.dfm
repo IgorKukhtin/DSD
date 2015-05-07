@@ -2,7 +2,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 410
   ClientWidth = 1265
-  ExplicitLeft = -479
+  ExplicitLeft = -283
   ExplicitWidth = 1281
   ExplicitHeight = 445
   PixelsPerInch = 96
@@ -215,7 +215,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'StartRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -226,7 +226,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'Debet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -237,7 +237,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'Kredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -248,7 +248,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'EndRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -259,7 +259,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'StartRemains_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -271,7 +271,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'Debet_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -282,7 +282,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'Kredit_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -293,7 +293,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'EndRemains_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -459,7 +459,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'MovementSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
@@ -470,7 +470,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'MovementSumm_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False

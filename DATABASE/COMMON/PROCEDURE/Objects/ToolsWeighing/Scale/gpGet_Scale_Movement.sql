@@ -97,9 +97,9 @@ BEGIN
                   , CASE WHEN MovementLinkMovement_Order.MovementChildId <> 0 AND MovementFloat_MovementDesc.ValueData = zc_Movement_Sale()
                               THEN MovementLinkObject_PriceList_Order.ObjectId
                          WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
-                              THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_To.ObjectId, inOperDate)
+                              THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_Contract_Order.ObjectId, MovementLinkObject_To.ObjectId, inOperDate)
                          WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_ReturnIn(), zc_Movement_Income())
-                              THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_From.ObjectId, inOperDate)
+                              THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_Contract_Order.ObjectId, MovementLinkObject_From.ObjectId, inOperDate)
                          WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_SendOnPrice()
                               THEN zc_PriceList_Basis()
                          ELSE 0
@@ -136,6 +136,9 @@ BEGIN
               LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList_Order
                                            ON MovementLinkObject_PriceList_Order.MovementId = MovementLinkMovement_Order.MovementChildId
                                           AND MovementLinkObject_PriceList_Order.DescId = zc_MovementLinkObject_PriceList()
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Order
+                                           ON MovementLinkObject_Contract_Order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                          AND MovementLinkObject_Contract_Order.DescId = zc_MovementLinkObject_Contract()
 
               LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                       ON MovementFloat_MovementDesc.MovementId =  Movement.Id

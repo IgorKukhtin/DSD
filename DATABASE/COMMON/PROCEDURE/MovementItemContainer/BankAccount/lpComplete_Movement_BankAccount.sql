@@ -11,7 +11,11 @@ AS
 $BODY$
 BEGIN
      -- если данные по ЗП
-     IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = (SELECT MI_LO.ObjectId FROM MovementItem AS MI INNER JOIN MovementItemLinkObject AS MI_LO ON MI_LO.MovementItemId = MI.Id AND MI_LO.DescId = zc_MILinkObject_MoneyPlace() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master()) AND Object.DescId = zc_Object_PersonalServiceList())
+     IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = (SELECT MI_LO.ObjectId
+                                                                FROM MovementItem AS MI
+                                                                     INNER JOIN MovementItemLinkObject AS MI_LO ON MI_LO.MovementItemId = MI.Id AND MI_LO.DescId = zc_MILinkObject_MoneyPlace()
+                                                                WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master())
+                                               AND Object.DescId = zc_Object_PersonalServiceList())
      THEN
          -- формирование данных <Расчетный счет, выплата по ведомости>
          PERFORM lpComplete_Movement_BankAccount_Recalc (inMovementId := inMovementId
@@ -231,10 +235,11 @@ BEGIN
 
              , COALESCE (tmpPersonal.UnitId, COALESCE (MILinkObject_Unit.ObjectId, 0))         AS UnitId
              , COALESCE (tmpPersonal.PositionId, COALESCE (MILinkObject_Position.ObjectId, 0)) AS PositionId -- используется
-             , CASE WHEN MI_Child.Id > 0
+             /*, CASE WHEN MI_Child.Id > 0
                          THEN COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)
                     ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)
-               END AS PersonalServiceListId
+               END AS PersonalServiceListId*/
+             , COALESCE (MILinkObject_PersonalServiceList.ObjectId, 0) AS PersonalServiceListId
 
                -- Филиал Баланс: всегда из р/сч. (а значение кстати=0) !!!но для ЗП - как в начислениях!!!
              , CASE WHEN MI_Child.Id > 0
@@ -279,9 +284,9 @@ BEGIN
              LEFT JOIN MovementItemDate AS MIDate_ServiceDate
                                         ON MIDate_ServiceDate.MovementItemId = MI_Child.Id
                                        AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-             LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
-                                          ON MLO_PersonalServiceList.MovementId = inMovementId
-                                         AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                                              ON MILinkObject_PersonalServiceList.MovementItemId = MI_Child.Id
+                                             AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
 
              LEFT JOIN MovementFloat AS MovementFloat_Amount
                                      ON MovementFloat_Amount.MovementId = inMovementId

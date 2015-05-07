@@ -416,6 +416,9 @@ object Report_AccountForm: TReport_AccountForm
       object OperPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
         DataBinding.FieldName = 'OperPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -424,7 +427,8 @@ object Report_AccountForm: TReport_AccountForm
         Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086
         DataBinding.FieldName = 'SummStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -434,7 +438,8 @@ object Report_AccountForm: TReport_AccountForm
         Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
         DataBinding.FieldName = 'SummIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -444,7 +449,8 @@ object Report_AccountForm: TReport_AccountForm
         Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
         DataBinding.FieldName = 'SummOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -454,7 +460,8 @@ object Report_AccountForm: TReport_AccountForm
         Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086
         DataBinding.FieldName = 'SummEnd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

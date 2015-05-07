@@ -280,7 +280,8 @@ object Report_FuelForm: TReport_FuelForm
         Caption = #1053#1072#1095'. '#1086#1089#1090'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'StartAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -289,7 +290,8 @@ object Report_FuelForm: TReport_FuelForm
         Caption = #1053#1072#1095'. '#1086#1089#1090'.  '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'StartSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -298,7 +300,8 @@ object Report_FuelForm: TReport_FuelForm
         Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'.'
         DataBinding.FieldName = 'IncomeAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -307,7 +310,8 @@ object Report_FuelForm: TReport_FuelForm
         Caption = #1055#1088#1080#1093#1086#1076' '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'IncomeSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -316,7 +320,8 @@ object Report_FuelForm: TReport_FuelForm
         Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'.'
         DataBinding.FieldName = 'RateAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -325,7 +330,8 @@ object Report_FuelForm: TReport_FuelForm
         Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'RateSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -334,7 +340,8 @@ object Report_FuelForm: TReport_FuelForm
         Caption = #1050#1086#1085'. '#1086#1089#1090'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'EndAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -343,7 +350,8 @@ object Report_FuelForm: TReport_FuelForm
         Caption = #1050#1086#1085'. '#1086#1089#1090'. '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'EndSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -690,6 +698,7 @@ object Report_FuelForm: TReport_FuelForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 432
     Top = 232
   end
@@ -744,6 +753,7 @@ object Report_FuelForm: TReport_FuelForm
     Top = 27
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

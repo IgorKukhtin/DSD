@@ -35,16 +35,16 @@ BEGIN
        WITH Object_Partner AS (SELECT Object_Partner.Id             AS PartnerId
                                     , Object_Partner.ObjectCode     AS PartnerCode
                                     , Object_Partner.ValueData      AS PartnerName
-                                    , lfGet_Object_Partner_PriceList_record (Object_Partner.Id, inOperDate) AS PriceListId
+                                    , lfGet_Object_Partner_PriceList_record (0, Object_Partner.Id, inOperDate) AS PriceListId
                                FROM Object AS Object_Partner
                                WHERE Object_Partner.ObjectCode = inPartnerCode
                                  AND Object_Partner.DescId = zc_Object_Partner()
                                  AND inPartnerCode > 0
                              UNION ALL
-                              SELECT Object_Partner.Id             AS PartnerId
+                               SELECT Object_Partner.Id             AS PartnerId
                                     , Object_Partner.ObjectCode     AS PartnerCode
                                     , Object_Partner.ValueData      AS PartnerName
-                                    , lfGet_Object_Partner_PriceList_record (Object_Partner.Id, inOperDate) AS PriceListId
+                                    , lfGet_Object_Partner_PriceList_record (0, Object_Partner.Id, inOperDate) AS PriceListId
                                FROM Object AS Object_Partner
                                WHERE Object_Partner.Id = -1 * inPartnerCode
                                  AND Object_Partner.DescId = zc_Object_Partner()
@@ -73,8 +73,6 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
        FROM Object_Partner
-            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_Partner.PriceListId
-
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.PartnerId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -85,6 +83,25 @@ BEGIN
 
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
 
+                                 -- PriceList Contract
+                                 LEFT JOIN ObjectDate AS ObjectDate_StartPromo
+                                                      ON ObjectDate_StartPromo.ObjectId = Object_Contract_View.ContractId
+                                                     AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Contract_StartPromo()
+                                 LEFT JOIN ObjectDate AS ObjectDate_EndPromo
+                                                      ON ObjectDate_EndPromo.ObjectId = Object_Contract_View.ContractId
+                                                     AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Contract_EndPromo()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
+                                                      ON ObjectLink_Contract_PriceListPromo.ObjectId = Object_Contract_View.ContractId
+                                                     AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
+                                                     AND inOperDate BETWEEN ObjectDate_StartPromo.ValueData AND ObjectDate_EndPromo.ValueData
+                                 LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                                      ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
+                                                     AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                                     AND ObjectLink_Contract_PriceListPromo.ObjectId IS NULL
+
+            -- LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Object_Partner.PriceListId
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (ObjectLink_Contract_PriceListPromo.ChildObjectId, COALESCE (ObjectLink_Contract_PriceList.ChildObjectId, Object_Partner.PriceListId))
+                                                     
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
                                     ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  Object_Partner.PartnerId
                                    AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()

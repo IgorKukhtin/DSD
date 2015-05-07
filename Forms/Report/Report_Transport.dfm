@@ -323,6 +323,9 @@ object Report_TransportForm: TReport_TransportForm
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1088#1072#1079#1075#1088#1091#1079#1082#1072')'
         DataBinding.FieldName = 'Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -330,6 +333,9 @@ object Report_TransportForm: TReport_TransportForm
       object clWeightTransport: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
         DataBinding.FieldName = 'WeightTransport'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -338,7 +344,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1053#1072#1095'. '#1087#1086#1082#1072#1079'.'#1082#1084
         DataBinding.FieldName = 'StartOdometre'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -348,7 +355,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1050#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079'.'#1082#1084
         DataBinding.FieldName = 'EndOdometre'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -358,7 +366,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084
         DataBinding.FieldName = 'DistanceFuel'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -368,7 +377,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1053#1072#1095'. '#1086#1089#1090', '#1083'.'
         DataBinding.FieldName = 'AmountFuel_Start'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -378,7 +388,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1047#1072#1087#1088#1072#1074#1082#1072', '#1083'.'
         DataBinding.FieldName = 'AmountFuel_In'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -388,7 +399,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1056#1072#1089#1093#1086#1076', '#1083'.'
         DataBinding.FieldName = 'AmountFuel_Out'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -398,7 +410,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1050#1086#1085#1077#1095'. '#1086#1089#1090'., '#1083'.'
         DataBinding.FieldName = 'AmountFuel_End'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -407,6 +420,9 @@ object Report_TransportForm: TReport_TransportForm
       object clColdHour: TcxGridDBColumn
         Caption = #1063#1072#1089#1086#1074' '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
         DataBinding.FieldName = 'ColdHour'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -415,6 +431,9 @@ object Report_TransportForm: TReport_TransportForm
       object clColdDistance: TcxGridDBColumn
         Caption = #1050#1084'. '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
         DataBinding.FieldName = 'ColdDistance'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -441,6 +460,9 @@ object Report_TransportForm: TReport_TransportForm
       object clAmountFuel: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
         DataBinding.FieldName = 'AmountFuel'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -449,6 +471,9 @@ object Report_TransportForm: TReport_TransportForm
       object clAmountColdHour: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1074' '#1095#1072#1089
         DataBinding.FieldName = 'AmountColdHour'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -457,6 +482,9 @@ object Report_TransportForm: TReport_TransportForm
       object clAmountColdDistance: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1079#1072' 100 '#1082#1084
         DataBinding.FieldName = 'AmountColdDistance'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -466,7 +494,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1087#1088#1086#1073#1077#1075
         DataBinding.FieldName = 'Amount_Distance_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -476,7 +505,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1093#1086#1083#1086#1076' '#1095'.'
         DataBinding.FieldName = 'Amount_ColdHour_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -486,7 +516,8 @@ object Report_TransportForm: TReport_TransportForm
         Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1093#1086#1083#1086#1076' '#1082#1084'.'
         DataBinding.FieldName = 'Amount_ColdDistance_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -725,6 +756,7 @@ object Report_TransportForm: TReport_TransportForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 152
     Top = 248
   end
@@ -753,6 +785,7 @@ object Report_TransportForm: TReport_TransportForm
     Top = 64
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

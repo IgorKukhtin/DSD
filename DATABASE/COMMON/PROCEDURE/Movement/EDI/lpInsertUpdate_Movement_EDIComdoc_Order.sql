@@ -235,7 +235,7 @@ BEGIN
      -- эти параметры всегда из Прайс-листа !!!на дату vbOperDatePartner!!!
      SELECT PriceListId, PriceWithVAT, VATPercent
             INTO vbPriceListId, vbPriceWithVAT, vbVATPercent
-     FROM lfGet_Object_Partner_PriceList (inPartnerId:= vbPartnerId, inOperDate:= vbOperDatePartner);
+     FROM lfGet_Object_Partner_PriceList (inContractId:= vbContractId, inPartnerId:= vbPartnerId, inOperDate:= vbOperDatePartner);
 
 
      -- только если не нашли по значению <Номер заявки у контрагента> + набирали вручную

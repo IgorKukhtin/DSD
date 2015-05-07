@@ -4,9 +4,8 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
   ClientWidth = 1058
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -201
   ExplicitWidth = 1074
-  ExplicitHeight = 572
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -241,6 +240,9 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           object clCountPackage: TcxGridDBColumn
             Caption = #1055#1072#1082#1077#1090#1099' ('#1096#1090')'
             DataBinding.FieldName = 'CountPackage'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 88
@@ -248,6 +250,9 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           object clWeightPackage: TcxGridDBColumn
             Caption = #1055#1072#1082#1077#1090#1099' ('#1042#1077#1089')'
             DataBinding.FieldName = 'WeightPackage'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 95
@@ -257,7 +262,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             DataBinding.FieldName = 'Amount_Send_in'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -265,6 +270,9 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           object clWeight_Send_in: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1091#1087#1072#1082'. ('#1074#1077#1089')'
             DataBinding.FieldName = 'Weight_Send_in'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -274,7 +282,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             DataBinding.FieldName = 'Amount_Send_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
@@ -282,6 +290,9 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           object clWeight_Send_out: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1089' '#1091#1087#1072#1082'. ('#1074#1077#1089')'
             DataBinding.FieldName = 'Weight_Send_out'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -291,7 +302,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             DataBinding.FieldName = 'Amount_ProductionUnion'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -301,7 +312,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             DataBinding.FieldName = 'Calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -311,7 +322,7 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             DataBinding.FieldName = 'Amount_10500_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
