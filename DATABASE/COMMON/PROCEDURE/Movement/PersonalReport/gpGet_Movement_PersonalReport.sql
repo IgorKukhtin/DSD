@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , MemberId Integer, MemberName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
              , CarId Integer, CarName TVarChar
@@ -53,6 +54,10 @@ BEGIN
            , Object_Member.ValueData            AS MemberName
            , 0                                  AS InfoMoneyId
            , CAST ('' as TVarChar)              AS InfoMoneyName
+
+           , 0                                  AS ContractId
+           , ''::TVarChar                       AS ContractInvNumber
+
            , 0                                  AS UnitId
            , CAST ('' as TVarChar)              AS UnitName
            , 0                                  AS MoneyPlaceId
@@ -83,6 +88,8 @@ BEGIN
            , Object_Member.ValueData            AS MemberName
            , View_InfoMoney.InfoMoneyId         AS InfoMoneyId
            , View_InfoMoney.InfoMoneyName_all   AS InfoMoneyName
+           , View_Contract_InvNumber.ContractId AS ContractId
+           , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ValueData              AS UnitName
            , Object_MoneyPlace.Id               AS MoneyPlaceId
@@ -103,6 +110,11 @@ BEGIN
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+           
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                             ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -110,7 +122,7 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                             ON MILinkObject_MoneyPlace.MovementItemId = THEN MovementItem.Id
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = CASE WHEN Movement.DescId = zc_Movement_PersonalReport() THEN MILinkObject_MoneyPlace.ObjectId END
 
@@ -159,6 +171,8 @@ BEGIN
            , Object_Member.ValueData            AS MemberName
            , View_InfoMoney.InfoMoneyId         AS InfoMoneyId
            , View_InfoMoney.InfoMoneyName_all   AS InfoMoneyName
+           , View_Contract_InvNumber.ContractId AS ContractId
+           , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ValueData              AS UnitName
            , Object_MoneyPlace.Id               AS MoneyPlaceId
@@ -180,6 +194,11 @@ BEGIN
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                             ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -211,6 +230,7 @@ ALTER FUNCTION gpGet_Movement_PersonalReport (Integer, Integer, Integer, TDateTi
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.05.15         * add contract
  09.04.15                                        * all
  16.09.14                                                        *
  15.09.14                                                        *

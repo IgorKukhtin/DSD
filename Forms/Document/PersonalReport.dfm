@@ -5,7 +5,7 @@
   ClientWidth = 605
   AddOnFormData.isSingle = False
   ExplicitWidth = 611
-  ExplicitHeight = 338
+  ExplicitHeight = 341
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -66,7 +66,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 590
+    Width = 425
   end
   object ceOperDate: TcxDateEdit [8]
     Left = 142
@@ -99,7 +99,7 @@
     Left = 8
     Top = 227
     TabOrder = 7
-    Width = 593
+    Width = 591
   end
   object ceAmountKredit: TcxCurrencyEdit [13]
     Left = 416
@@ -151,7 +151,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 18
-    Width = 309
+    Width = 311
   end
   object cxLabel2: TcxLabel [19]
     Left = 288
@@ -174,6 +174,24 @@
     Left = 288
     Top = 57
     Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
+  end
+  object cxLabel9: TcxLabel [22]
+    Left = 445
+    Top = 107
+    Caption = #1044#1086#1075#1086#1074#1086#1088
+  end
+  object ceContract: TcxButtonEdit [23]
+    Left = 445
+    Top = 127
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 154
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
@@ -268,6 +286,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inunitid'
         Value = ''
         Component = GuidesUnit
@@ -287,10 +312,6 @@
         Component = GuidesCar
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -440,6 +461,19 @@
         Component = GuidesCar
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'Contractid'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractInvNumber'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 544
     Top = 216
@@ -502,7 +536,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 470
+    Left = 206
     Top = 113
   end
   object GuidesFiller: TGuidesFiller
@@ -600,8 +634,66 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
       end>
-    Left = 426
-    Top = 70
+    Left = 386
+    Top = 62
+  end
+  object ContractGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceContract
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 512
+    Top = 117
   end
 end

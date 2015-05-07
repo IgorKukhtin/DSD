@@ -38,6 +38,9 @@ type
     ceMoneyPlace: TcxButtonEdit;
     cxLabel8: TcxLabel;
     GuidesMoneyPlace: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceContract: TcxButtonEdit;
+    ContractGuides: TdsdGuides;
   private
     { Private declarations }
   public
