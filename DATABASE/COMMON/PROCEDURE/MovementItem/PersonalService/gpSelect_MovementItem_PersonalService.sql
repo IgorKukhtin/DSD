@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PositionId Integer, PositionName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , MemberId Integer, MemberName  TVarChar
+             , PersonalServiceListId Integer, PersonalServiceListName  TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
              , Comment TVarChar
@@ -45,6 +46,7 @@ BEGIN
                            , MILinkObject_InfoMoney.ObjectId          AS InfoMoneyId
                            , MILinkObject_Member.ObjectId             AS MemberId
                            , ObjectLink_Personal_Member.ChildObjectId AS MemberId_Personal
+                           , MILinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                            , MovementItem.isErased
                       FROM tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -65,6 +67,10 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                 ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                                                            ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList() 
                      )
           , tmpUserAll AS (SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()/*, 293449*/) AND UserId = vbUserId/* AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В.
           , tmpPersonal AS (SELECT 0 AS MovementItemId
@@ -74,7 +80,8 @@ BEGIN
                                  , View_Personal.PositionId
                                  , vbInfoMoneyId_def         AS InfoMoneyId
                                  , View_Personal.MemberId    AS MemberId_Personal
-                                 , 0 as MemberId
+                                 , 0     AS MemberId
+                                 , 0     AS PersonalServiceListId
                                  , FALSE AS isErased
                             FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE
                                  UNION
@@ -89,9 +96,9 @@ BEGIN
                                               
                             WHERE tmpMI.PersonalId IS NULL
                            )
-          , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId, tmpMI.MemberId_Personal, tmpMI.MemberId, tmpMI.isErased FROM tmpMI
+          , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId, tmpMI.MemberId_Personal, tmpMI.MemberId , tmpMI.PersonalServiceListId, tmpMI.isErased FROM tmpMI
                       UNION ALL
-                       SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.InfoMoneyId, tmpPersonal.Memberid_Personal, tmpPersonal.MemberId, tmpPersonal.isErased FROM tmpPersonal
+                       SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.InfoMoneyId, tmpPersonal.Memberid_Personal, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId, tmpPersonal.isErased FROM tmpPersonal
                       )
        SELECT tmpAll.MovementItemId                   AS Id
             , Object_Personal.Id                      AS PersonalId
@@ -113,6 +120,9 @@ BEGIN
 
             , COALESCE (Object_Member.Id, 0)          AS MemberId
             , COALESCE (Object_Member.ValueData, ''::TVarChar) AS MemberName
+
+            , COALESCE (Object_PersonalServiceList.Id, 0)                   AS PersonalServiceListId
+            , COALESCE (Object_PersonalServiceList.ValueData, ''::TVarChar) AS PersonalServiceListName
             
             , tmpAll.Amount :: TFloat          AS Amount
             , MIFloat_SummToPay.ValueData      AS AmountToPay
@@ -173,6 +183,7 @@ BEGIN
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpAll.PositionId
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpAll.MemberId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpAll.InfoMoneyId
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpAll.PersonalServiceListId
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
                                     ON ObjectBoolean_Personal_Main.ObjectId = tmpAll.PersonalId
@@ -193,6 +204,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.05.15         * add PersonalServiceList
  01.10.14         * add redmine 30.09
  14.09.14                                        * ALL
  11.09.14         *

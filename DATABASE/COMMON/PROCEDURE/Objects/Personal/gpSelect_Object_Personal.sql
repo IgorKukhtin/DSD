@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
                PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
+               PersonalServiceListId Integer, PersonalServiceListName TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean, isErased Boolean) AS
 $BODY$
@@ -70,6 +71,9 @@ BEGIN
          , Object_Personal_View.PersonalGroupCode
          , Object_Personal_View.PersonalGroupName
 
+         , Object_PersonalServiceList.Id           AS PersonalServiceListId 
+         , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
+
          , vbInfoMoneyId       AS InfoMoneyId
          , vbInfoMoneyName     AS InfoMoneyName
          , vbInfoMoneyName_all AS InfoMoneyName_all
@@ -88,6 +92,11 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Personal_View.MemberId 
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
+      
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+          LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
 
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
@@ -122,6 +131,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.05.15         * add ObjectLink_Personal_PersonalServiceList
  24.09.13                                        * add vbIsAllUnit
  12.09.13                                        * add inIsShowAll
  30.08.14                                        * add InfoMoney...

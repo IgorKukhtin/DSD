@@ -67,6 +67,8 @@ type
     actPersonalServiceJournalChoice: TOpenChoiceForm;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
+    colPersonalServiceListName: TcxGridDBColumn;
+    actPersonalServiceListChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
