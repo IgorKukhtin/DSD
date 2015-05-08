@@ -81,7 +81,7 @@ BEGIN
                                  , vbInfoMoneyId_def         AS InfoMoneyId
                                  , View_Personal.MemberId    AS MemberId_Personal
                                  , 0     AS MemberId
-                                 , 0     AS PersonalServiceListId
+                                 , ObjectLink_Personal_PersonalServiceList.ChildObjectId  AS PersonalServiceListId
                                  , FALSE AS isErased
                             FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE
                                  UNION
@@ -90,6 +90,10 @@ BEGIN
                                  ) AS View_RoleAccessKeyGuide
                                  INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = View_RoleAccessKeyGuide.UnitId_PersonalService
                                                                                  -- AND View_Personal.isErased = FALSE
+                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                      ON ObjectLink_Personal_PersonalServiceList.ObjectId = View_Personal.PersonalId
+                                                     AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+
                                  LEFT JOIN tmpMI ON tmpMI.PersonalId = View_Personal.PersonalId
                                                 AND tmpMI.UnitId     = View_Personal.UnitId
                                                 AND tmpMI.PositionId = View_Personal.PositionId
