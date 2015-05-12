@@ -12,6 +12,7 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PositionLevelId Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupName TVarChar,
+               PersonalServiceListId Integer, PersonalServiceListName TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean) AS
 $BODY$
 BEGIN
@@ -38,6 +39,9 @@ BEGIN
          , Object_Personal_View.PersonalGroupId
          , Object_Personal_View.PersonalGroupName
 
+         , Object_PersonalServiceList.Id           AS PersonalServiceListId 
+         , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
+
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
@@ -46,6 +50,11 @@ BEGIN
          , Object_Personal_View.isMain
 
     FROM Object_Personal_View
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+          LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
     WHERE Object_Personal_View.PersonalId = inMaskId;
    END IF;
 
@@ -68,6 +77,9 @@ BEGIN
 
            , CAST (0 as Integer)   AS PersonalGroupId
            , CAST ('' as TVarChar) AS PersonalGroupName
+
+           , CAST (0 as Integer)   AS PersonalServiceListId 
+           , CAST ('' as TVarChar) AS PersonalServiceListName
 
            , CURRENT_DATE :: TDateTime AS DateIn
            , CURRENT_DATE :: TDateTime AS DateOut
@@ -95,6 +107,9 @@ BEGIN
          , Object_Personal_View.PersonalGroupId
          , Object_Personal_View.PersonalGroupName
 
+         , Object_PersonalServiceList.Id           AS PersonalServiceListId 
+         , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
+
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
@@ -103,6 +118,11 @@ BEGIN
          , Object_Personal_View.isMain
 
     FROM Object_Personal_View
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+          LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
     WHERE Object_Personal_View.PersonalId = inId;
 
   END IF;
@@ -116,6 +136,7 @@ ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.05.15         * add ObjectLink_Personal_PersonalServiceList
  15.09.14                                                        *
  12.09.14                                        * add isDateOut and isOfficial
  21.05.14                         * add Official

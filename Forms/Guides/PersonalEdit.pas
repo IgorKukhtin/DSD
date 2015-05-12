@@ -59,6 +59,9 @@ type
     PositionLevelGuides: TdsdGuides;
     cbDateOut: TcxCheckBox;
     cbMain: TcxCheckBox;
+    cxLabel8: TcxLabel;
+    cePersonalServiceList: TcxButtonEdit;
+    PersonalServiceListGuides: TdsdGuides;
   private
     { Private declarations }
   public

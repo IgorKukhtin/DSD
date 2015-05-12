@@ -151,6 +151,14 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 80
       end
+      object clPersonalServiceListName: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1075#1083#1072#1074#1085#1072#1103')'
+        DataBinding.FieldName = 'PersonalServiceListName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -231,8 +239,8 @@ object PersonalForm: TPersonalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -693,6 +701,7 @@ object PersonalForm: TPersonalForm
     object actUpdateIsMain: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMain
       StoredProcList = <
         item
@@ -705,6 +714,7 @@ object PersonalForm: TPersonalForm
     object actUnitChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'TUnit_ObjectForm'
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'
@@ -728,6 +738,7 @@ object PersonalForm: TPersonalForm
     object actPositionChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'TPositionForm'
       FormName = 'TPositionForm'
       FormNameParam.Value = 'TPositionForm'
@@ -751,6 +762,7 @@ object PersonalForm: TPersonalForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -855,6 +867,7 @@ object PersonalForm: TPersonalForm
     Top = 97
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

@@ -79,6 +79,7 @@ type
     bbCopy: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bb: TdxBarButton;
+    clPersonalServiceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -23,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inUnitId              Integer   , -- Подразделение
     IN inPositionId          Integer   , -- Должность
     IN inMemberId            Integer   , -- юр.лицо
+    IN inPersonalServiceListId   Integer   , -- Ведомость начисления
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -51,6 +54,7 @@ BEGIN
                                                      , inUnitId             := inUnitId
                                                      , inPositionId         := inPositionId
                                                      , inMemberId           := inMemberId
+                                                     , inPersonalServiceListId  := inPersonalServiceListId
                                                      , inUserId             := vbUserId
                                                       ) AS tmp;
 END;
@@ -60,6 +64,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.05.15         * add PersonalServiceList
  14.09.14                                        * add outAmountToPay
  02.10.14                                        * del inSummCard
  01.10.14         * add redmine 30.09
