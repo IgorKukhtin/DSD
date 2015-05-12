@@ -987,10 +987,10 @@ BEGIN
                                                                                 , inAccountId              := vbAccountId_GoodsTransit -- эта аналитика нужна для "товар в пути"
                                                                                  )
                                         ELSE 0 END
-                       , ContainerId_Goods_Alternative = CASE WHEN vbUnitId_HistoryCost NOT IN (0, vbUnitId_To)
+                       , ContainerId_Goods_Alternative = CASE WHEN vbUnitId_HistoryCost IN (0, vbUnitId_To) -- если 0 или сам в себя
                                                                    THEN 0
                                         ELSE lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
-                                                                                , inUnitId                 := vbUnitId_HistoryCost
+                                                                                , inUnitId                 := vbUnitId_HistoryCost -- !!!на альтернативном подразделении!!!
                                                                                 , inCarId                  := NULL
                                                                                 , inMemberId               := vbMemberId_To
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
@@ -1004,9 +1004,10 @@ BEGIN
                                                                                  )
                                                         END
                          -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
-                       , AccountId_SummIn_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To
+                       , AccountId_SummIn_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
                                                             THEN 0
-                                                       ELSE lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
+                                                       ELSE -- если признак установлен сам в себя
+                                                            lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
                                                                                        , inAccountDirectionId     := vbAccountDirectionId_To
                                                                                        , inInfoMoneyDestinationId := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
                                                                                                                                THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -1017,9 +1018,10 @@ BEGIN
                                                                                         )
                                                     END
                         -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
-                      , AccountId_SummOut_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To
+                      , AccountId_SummOut_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
                                                             THEN 0
-                                                       ELSE lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
+                                                       ELSE -- если признак установлен сам в себя
+                                                            lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
                                                                                        , inAccountDirectionId     := zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
                                                                                        , inInfoMoneyDestinationId := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
                                                                                                                                THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -1199,7 +1201,7 @@ BEGIN
           --
           INSERT INTO _tmpList_Alternative (ContainerId_Goods, ContainerId_Summ_Alternative, ContainerId_Summ)
              SELECT vbContainerId_Goods, vbContainerId_Summ_Alternative
-                  , lpInsertFind_Container (inContainerDescId          := vbContainerDescId
+                         , lpInsertFind_Container (inContainerDescId   := vbContainerDescId
                                                  , inParentId          := vbContainerId_Goods
                                                  , inObjectId          := vbContainerObjectId
                                                  , inJuridicalId_basis := (SELECT ObjectId FROM tmpJuridical_basis)
@@ -1207,25 +1209,25 @@ BEGIN
                                                  , inObjectCostDescId  := NULL
                                                  , inObjectCostId      := NULL
                                                  , inDescId_1   := (SELECT DescId FROM tmpDesc1)
-                                                 , inObjectId_1 := (SELECT ObjectId FROM tmpObject1)
+                                                 , inObjectId_1 := CASE WHEN (SELECT DescId FROM tmpDesc1) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject1) END
                                                  , inDescId_2   := (SELECT DescId FROM tmpDesc2)
-                                                 , inObjectId_2 := (SELECT ObjectId FROM tmpObject2)
+                                                 , inObjectId_2 := CASE WHEN (SELECT DescId FROM tmpDesc2) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject2) END
                                                  , inDescId_3   := (SELECT DescId FROM tmpDesc3)
-                                                 , inObjectId_3 := (SELECT ObjectId FROM tmpObject3)
+                                                 , inObjectId_3 := CASE WHEN (SELECT DescId FROM tmpDesc3) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject3) END
                                                  , inDescId_4   := (SELECT DescId FROM tmpDesc4)
-                                                 , inObjectId_4 := (SELECT ObjectId FROM tmpObject4)
+                                                 , inObjectId_4 := CASE WHEN (SELECT DescId FROM tmpDesc4) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject4) END
                                                  , inDescId_5   := (SELECT DescId FROM tmpDesc5)
-                                                 , inObjectId_5 := (SELECT ObjectId FROM tmpObject5)
+                                                 , inObjectId_5 := CASE WHEN (SELECT DescId FROM tmpDesc5) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject5) END
                                                  , inDescId_6   := (SELECT DescId FROM tmpDesc6)
-                                                 , inObjectId_6 := (SELECT ObjectId FROM tmpObject6)
+                                                 , inObjectId_6 := CASE WHEN (SELECT DescId FROM tmpDesc6) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject6) END
                                                  , inDescId_7   := (SELECT DescId FROM tmpDesc7)
-                                                 , inObjectId_7 := (SELECT ObjectId FROM tmpObject7)
+                                                 , inObjectId_7 := CASE WHEN (SELECT DescId FROM tmpDesc7) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject7) END
                                                  , inDescId_8   := (SELECT DescId FROM tmpDesc8)
-                                                 , inObjectId_8 := (SELECT ObjectId FROM tmpObject8)
+                                                 , inObjectId_8 := CASE WHEN (SELECT DescId FROM tmpDesc8) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject8) END
                                                  , inDescId_9   := (SELECT DescId FROM tmpDesc9)
-                                                 , inObjectId_9 := (SELECT ObjectId FROM tmpObject9)
+                                                 , inObjectId_9 := CASE WHEN (SELECT DescId FROM tmpDesc9) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject9) END
                                                  , inDescId_10  := (SELECT DescId FROM tmpDesc10)
-                                                 , inObjectId_10:= (SELECT ObjectId FROM tmpObject10)
+                                                 , inObjectId_10:= CASE WHEN (SELECT DescId FROM tmpDesc10) = zc_ContainerLinkObject_Unit() THEN vbUnitId_To ELSE (SELECT ObjectId FROM tmpObject10) END
                                                   );
      END LOOP; -- финиш цикла по курсору
      CLOSE curContainer; -- закрыли курсор

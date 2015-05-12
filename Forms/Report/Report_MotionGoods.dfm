@@ -1633,6 +1633,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 75
       end
+      object PriceListStart: TcxGridDBColumn
+        Caption = #1094#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1085#1072#1095'.'
+        DataBinding.FieldName = 'PriceListStart'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object PriceListEnd: TcxGridDBColumn
+        Caption = #1094#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1082#1086#1085#1077#1095'.'
+        DataBinding.FieldName = 'PriceListEnd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
@@ -1743,6 +1765,156 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Visible = False
         Options.Editing = False
         Width = 60
+      end
+      object CountEnd_calc: TcxGridDBColumn
+        DataBinding.FieldName = 'CountEnd_calc'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountEnd_calc_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountEnd_calc_Weight'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummEnd_calc: TcxGridDBColumn
+        DataBinding.FieldName = 'SummEnd_calc'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountProductionIn_by: TcxGridDBColumn
+        DataBinding.FieldName = 'CountProductionIn_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountProductionIn_by_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountProductionIn_by_Weight'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummProductionIn_by: TcxGridDBColumn
+        DataBinding.FieldName = 'SummProductionIn_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountIn_by: TcxGridDBColumn
+        DataBinding.FieldName = 'CountIn_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountIn_by_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountIn_by_Weight'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummIn_by: TcxGridDBColumn
+        DataBinding.FieldName = 'SummIn_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountOtherIn_by: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOtherIn_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountOtherIn_by_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOtherIn_by_Weight'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummOtherIn_by: TcxGridDBColumn
+        DataBinding.FieldName = 'SummOtherIn_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountOut_by: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOut_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountOut_by_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOut_by_Weight'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummOut_by: TcxGridDBColumn
+        DataBinding.FieldName = 'SummOut_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountOtherOut_by: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOtherOut_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountOtherOut_by_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOtherOut_by_Weight'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummOtherOut_by: TcxGridDBColumn
+        DataBinding.FieldName = 'SummOtherOut_by'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1880,15 +2052,15 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object cxLabel8: TcxLabel
       Left = 1052
       Top = 6
-      Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076'.1:'
+      Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076'. ***:'
     end
     object cxLabel9: TcxLabel
-      Left = 1071
+      Left = 1074
       Top = 31
-      Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' 1:'
+      Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' ***:'
     end
     object edUnitGroup_by: TcxButtonEdit
-      Left = 1152
+      Left = 1169
       Top = 5
       Properties.Buttons = <
         item
@@ -1900,7 +2072,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 189
     end
     object edLocation_by: TcxButtonEdit
-      Left = 1152
+      Left = 1169
       Top = 30
       Properties.Buttons = <
         item
@@ -2006,6 +2178,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Component = GuidesUnitGroup
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnitGroup_by
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -2177,11 +2355,11 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Control = cbAmount
     end
     object bbPrint2: TdxBarButton
-      Action = actPrint2
+      Action = actPrint_GP
       Category = 0
     end
     object bbPrint3: TdxBarButton
-      Action = actPrint3
+      Action = actPrint_Remains
       Category = 0
     end
   end
@@ -2569,7 +2747,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actPrint2: TdsdPrintAction
+    object actPrint_GP: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -2649,12 +2827,26 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Value = 'False'
           Component = cbInfoMoney
           DataType = ftBoolean
+        end
+        item
+          Name = 'UnitGroupName_by'
+          Value = Null
+          Component = GuidesUnitGroup_by
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'LocationName_by'
+          Value = Null
+          Component = GuidesLocation_by
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1082#1083#1072#1076' '#1043#1055')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1082#1083#1072#1076' '#1043#1055')'
       ReportNameParam.DataType = ftString
     end
-    object actPrint3: TdsdPrintAction
+    object actPrint_Remains: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -2981,6 +3173,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Component = GuidesGoods
+      end
+      item
+        Component = GuidesUnitGroup_by
+      end
+      item
+        Component = GuidesLocation_by
       end>
     Left = 144
     Top = 344

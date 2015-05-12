@@ -12,6 +12,10 @@ CREATE OR REPLACE VIEW Container_Partner_View AS
        , CLO_PaidKind.ObjectId  AS PaidKindId
        , CLO_Branch.ObjectId    AS BranchId
        , CLO_InfoMoney.ObjectId AS InfoMoneyId
+       , ObjectFloat_MovementId.ValueData :: Integer AS MovementId_Partion
+       , CLO_PartionMovement.ObjectId     AS PartionMovementId
+       , Object_PartionMovement.ValueData AS PartionMovementName
+       , ObjectDate_Payment.ValueData     AS PaymentDate
        , CASE WHEN Container.Amount > 0 THEN Container.Amount ELSE 0 END ::TFloat AS AmountDebet
        , CASE WHEN Container.Amount < 0 THEN -1 * Container.Amount ELSE 0 END ::TFloat AS AmountKredit
   FROM ContainerLinkObject AS CLO_Partner
@@ -37,6 +41,15 @@ CREATE OR REPLACE VIEW Container_Partner_View AS
        LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                      ON CLO_InfoMoney.ContainerId = CLO_Partner.ContainerId
                                     AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+       LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
+                                     ON CLO_PartionMovement.ContainerId = CLO_Partner.ContainerId
+                                    AND CLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
+       LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = CLO_PartionMovement.ObjectId
+       LEFT JOIN ObjectDate AS ObjectDate_Payment ON ObjectDate_Payment.ObjectId = CLO_PartionMovement.ObjectId
+                                                 AND ObjectDate_Payment.DescId = zc_ObjectDate_PartionMovement_Payment()
+       LEFT JOIN ObjectFloat AS ObjectFloat_MovementId ON ObjectFloat_MovementId.ObjectId = CLO_PartionMovement.ObjectId
+                                                      AND ObjectFloat_MovementId.DescId = zc_ObjectFloat_PartionMovement_MovementId()
+
   WHERE CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
  ;
 

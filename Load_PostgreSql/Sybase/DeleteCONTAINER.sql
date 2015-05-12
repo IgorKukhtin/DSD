@@ -121,9 +121,10 @@ BEGIN
 
      CREATE TEMP TABLE _tmpContainer (ContainerId Integer) ON COMMIT DROP;
      INSERT INTO _tmpContainer (ContainerId)
+      select Container.Id from Container left join MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id where MovementItemContainer.ContainerId is null order by id desc limit 100 ;
 
-     INSERT INTO _tmpContainer (ContainerId)
-      select Container.Id from Container join _tmpContainer ON _tmpContainer.ContainerId = Container.ParentId;
+     -- INSERT INTO _tmpContainer (ContainerId)
+     --  select Container.Id from Container join _tmpContainer ON _tmpContainer.ContainerId = Container.ParentId;
 
 -- select * from Container where id in ( 109693, 28702  )  or KeyValue = 
 -- delete from containerobjectcost;

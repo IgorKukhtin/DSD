@@ -801,6 +801,19 @@
         Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MovementId_Partion'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartionMovementName'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 368
     Top = 140

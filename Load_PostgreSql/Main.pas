@@ -185,6 +185,7 @@ type
     cbInsertHistoryCost_andReComplete: TCheckBox;
     fromQueryDate: TADOQuery;
     cbDocERROR: TCheckBox;
+    cbShowContract: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -471,7 +472,10 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  //
                   // повторно
+                  if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
                   // !!!1.1. для НАЛ поиск среди БН!!!
@@ -498,7 +502,9 @@ begin
                                  )
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
-
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  end;
              end;
              //1.2. если не нашли, находим договор: статья + без условия даты + не "закрыт" + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)then
@@ -514,7 +520,10 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  //
                   // повторно
+                  if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
                   //1.2. !!!для НАЛ поиск среди БН!!!
@@ -539,6 +548,9 @@ begin
                                  )
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  end;
              end;
              //1.3. если не нашли, находим договор: статья + без условия даты + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)then
@@ -554,7 +566,10 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  //
                   // повторно
+                  if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
                   // !!!1.3. для НАЛ поиск среди БН!!!
@@ -577,6 +592,9 @@ begin
                                  )
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  end;
              end;
 
 
@@ -600,7 +618,10 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  //
                   // повторно
+                  if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
                   // !!!2.1. для НАЛ поиск среди БН!!!
@@ -627,6 +648,9 @@ begin
                                  )
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.1.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  end;
              end;
              //2.2. если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
@@ -648,7 +672,10 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  //
                   // повторно
+                  if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
                   // !!!2.2. для НАЛ поиск среди БН!!!
@@ -673,6 +700,9 @@ begin
                                  )
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  end;
              end;
 
              //3.1. если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты + не "закрыт" + не "удален"
@@ -694,7 +724,10 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  //
                   // повторно
+                  if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
                   // !!!3.1. для НАЛ поиск среди БН!!!
@@ -721,6 +754,9 @@ begin
                                  )
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.1.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  end;
              end;
              //3.2. если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
@@ -741,7 +777,10 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  //
                   // повторно
+                  if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
                   // !!!3.2. для НАЛ поиск среди БН!!!
@@ -766,6 +805,9 @@ begin
                                  )
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  end;
              end;
 
              //4. если не нашли, находим хоть один договор !!!у поставщика и если это не услуги!!! + не "удален"
@@ -788,7 +830,10 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  //
                   // повторно
+                  if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
                   // !!!4. для НАЛ поиск среди БН!!!
@@ -827,15 +872,20 @@ begin
                                  )
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  end;
              end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fFind_ContractId_pg(PartnerId,IMCode,IMCode_two,PaidKindId:Integer;myContractNumber:String):Integer;
-var where_ContractNumber:string;
+var where_ContractNumber,where_not:string;
 begin
      if (PaidKindId=zc_Enum_PaidKind_FirstForm)and (myContractNumber<>'myContractNumber is null')
      then where_ContractNumber:=' and Object_Contract_View.InvNumber = '+FormatToVarCharServer_notNULL(myContractNumber)
      else where_ContractNumber:='';
+     if where_ContractNumber='' then where_not:= ' and 1=0' else where_not:='';
+
 
              // В 1.1.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + УП статье + не закрыт!!!
              Result:=0;
@@ -856,6 +906,9 @@ begin
                                  + where_ContractNumber
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+
              end;
              // В 1.2.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + УП статье + закрыт!!!
              if (Result=0){and(myContractNumber<>'')} then
@@ -873,8 +926,11 @@ begin
                                  +'   and ContractStateKindId = zc_Enum_ContractStateKind_Close()'
                                  +'   and Object_Contract_View.isErased = FALSE'
                                  + where_ContractNumber
+                                 + where_not
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
              //
              //
@@ -891,6 +947,9 @@ begin
                                  +' from Object_Contract_View'
                                  +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
                                  +'                                AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_21500()' // Маркетинг
+                                 +'                                AND (Object_InfoMoney_View.InfoMoneyDestinationId in (zc_Enum_InfoMoneyDestination_20800(),zc_Enum_InfoMoneyDestination_20900(),zc_Enum_InfoMoneyDestination_21000(),zc_Enum_InfoMoneyDestination_21100())' //
+                                 +'                                  OR Object_InfoMoney_View.InfoMoneyGroupId in (zc_Enum_InfoMoneyGroup_30000())' // Доходы
+                                 +'                                     )'
                                  +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
                                  +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
                                  +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
@@ -900,8 +959,11 @@ begin
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  +'   and Object_Contract_View.isErased = FALSE'
                                  + where_ContractNumber
+                                 + where_not
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
              // В 1.4.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + без УП статьи + закрыт!!!
              if (Result=0){and(myContractNumber<>'')} then
@@ -910,6 +972,9 @@ begin
                                  +' from Object_Contract_View'
                                  +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
                                  +'                                AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_21500()' // // Маркетинг
+                                 +'                                AND (Object_InfoMoney_View.InfoMoneyDestinationId in (zc_Enum_InfoMoneyDestination_20800(),zc_Enum_InfoMoneyDestination_20900(),zc_Enum_InfoMoneyDestination_21000(),zc_Enum_InfoMoneyDestination_21100())' //
+                                 +'                                  OR Object_InfoMoney_View.InfoMoneyGroupId in (zc_Enum_InfoMoneyGroup_30000())' // Доходы
+                                 +'                                     )'
                                  +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
                                  +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
                                  +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
@@ -919,8 +984,11 @@ begin
                                  +'   and ContractStateKindId = zc_Enum_ContractStateKind_Close()'
                                  +'   and Object_Contract_View.isErased = FALSE'
                                  + where_ContractNumber
+                                 + where_not
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.4'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
              //
              // Во 2-ой раз Пытаемся найти <Договор> !!!по УП статье + не закрыт!!!
@@ -940,6 +1008,8 @@ begin
                                  +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
              // В 3-ий раз Пытаемся найти <Договор> !!!с "похожими" статьями!!!
              {if (Result=0)
@@ -982,6 +1052,8 @@ begin
                                  +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
 
 end;
@@ -1786,6 +1858,8 @@ begin
           end
      else fExecSqToQuery (' select * from _lpSaveData_beforeLoad('+StartDateEdit.Text+','+EndDateEdit.Text+')');}
 
+
+     if cbShowContract.Checked then cbOnlyOpen.Checked:=true;
 
      fStop:=false;
      DBGrid.Enabled:=false;
@@ -10420,6 +10494,12 @@ begin
 //+'  and Bill.Id=1383229'
 //+'  and Bill.BillNumber=18733'
            );
+
+        if (cbShowContract.Checked)and(trim(OKPOEdit.Text)<>'')
+        then
+             Add(' and Bill.BillNumber = '+trim(OKPOEdit.Text))
+        else
+
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
              Add(' and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
@@ -10430,6 +10510,25 @@ begin
 
         Result:=RecordCount;
         cbIncomeBN.Caption:='1.1. ('+IntToStr(RecordCount)+') Приход от поставщика - БН';
+        //
+        //
+        if cbShowContract.Checked
+        then begin
+             JuridicalId_pg:=0;
+             //Сначала находим контрагента  и юр.лицо по ОКПО
+             fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, Object_Partner.ObjectCode as PartnerCode, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
+                           +' from ObjectHistory_JuridicalDetails_View'
+                           +'      left join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
+                           +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                           +'      left join Object as Object_Partner on Object_Partner.Id = ObjectLink.ObjectId'
+                           +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)
+                           +'   and '+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)+'<>'+FormatToVarCharServer_notNULL('')
+                           );
+             JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             //
+             fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,zc_Enum_PaidKind_FirstForm,FieldByName('OperDate').AsDateTime);
+        end;
+        //
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -10492,6 +10591,7 @@ begin
                   isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
              end
              else isDocBEGIN:=true;
+
          if isDocBEGIN then
          begin
              //
@@ -11653,6 +11753,12 @@ begin
 //+'  and Bill.Id=1383229'
 //+'  and Bill.BillNumber=21363'
            );
+
+        if (cbShowContract.Checked)and(trim(OKPOEdit.Text)<>'')
+        then
+             Add(' and Bill.BillNumber = '+trim(OKPOEdit.Text))
+        else
+
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
              Add(' and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
@@ -11663,6 +11769,39 @@ begin
 
         Result:=RecordCount;
         cbIncomeNal.Caption:='1.4. ('+IntToStr(RecordCount)+') Приход от поставщика - НАЛ';
+        //
+        //
+        if cbShowContract.Checked
+        then begin
+             //
+             if FieldByName('isOKPO_Virtual').AsInteger=zc_rvYes
+             then begin
+                        //находим юр.лицо по Контрагенту
+                        fOpenSqToQuery(' select ObjectLink.ChildObjectId as JuridicalId'
+                                      +' from ObjectLink'
+                                      +' where ObjectLink.ObjectId='+IntToStr(FieldByName('FromId_pg_find').AsInteger)
+                                      +'   and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                                      +'   and 0 <> '+IntToStr(FieldByName('FromId_pg_find').AsInteger)
+                                      );
+                        JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             end
+             else begin
+                  //Сначала находим контрагента и юр.лицо по ОКПО
+                  fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, Object_Partner.ObjectCode as PartnerCode, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
+                                +' from ObjectHistory_JuridicalDetails_View'
+                                +'      left join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
+                                +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                                +'      left join Object as Object_Partner on Object_Partner.Id = ObjectLink.ObjectId'
+                                +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)
+                                +'   and '+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)+'<>'+FormatToVarCharServer_notNULL('')
+                                );
+                  JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+                  //
+             end;
+             //находим договор НАЛ
+             fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,zc_Enum_PaidKind_SecondForm,FieldByName('OperDate').AsDateTime);
+        end;
+        //
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -13760,6 +13899,11 @@ begin
         Clear;
         Add('select * from dba._pgSelect_Bill_Sale_NAL('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+') as tmpSelect');
 
+        if (cbShowContract.Checked)and(trim(OKPOEdit.Text)<>'')
+        then
+             Add(' where tmpSelect.InvNumber_my = '+trim(OKPOEdit.Text))
+        else
+
         if (cbBill_List.Checked)
         then
              Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=tmpSelect.InvNumber_my'
@@ -13785,6 +13929,10 @@ begin
         Open;
         Result:=RecordCount;
         cbSaleIntNal.Caption:='3.1.('+IntToStr(RecordCount)+')Прод.пок.Int - НАЛ';
+        //
+        //
+        if cbShowContract.Checked
+        then fFind_ContractId_pg(FieldByName('ToId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,zc_Enum_PaidKind_SecondForm,'');
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -14223,6 +14371,11 @@ begin
         Clear;
         Add('select * from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+') as tmpSelect');
 
+        if (cbShowContract.Checked)and(trim(OKPOEdit.Text)<>'')
+        then
+             Add(' where tmpSelect.InvNumber_my = '+trim(OKPOEdit.Text))
+        else
+
         if (cbBill_List.Checked)
         then
              Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=tmpSelect.InvNumber_my'
@@ -14247,6 +14400,9 @@ begin
         Open;
         Result:=RecordCount;
         cbSaleInt.Caption:='3.3.('+IntToStr(RecordCount)+')Прод.пок.Int - БН';
+        //
+        if cbShowContract.Checked
+        then fFind_ContractId_pg(FieldByName('ToId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,zc_Enum_PaidKind_FirstForm,FieldByName('ContractNumber').AsString);
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -15887,6 +16043,12 @@ begin
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
            );
+
+        if (cbShowContract.Checked)and(trim(OKPOEdit.Text)<>'')
+        then
+             Add(' and Bill.BillNumber = '+trim(OKPOEdit.Text))
+        else
+
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
              Add(' and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
@@ -15896,6 +16058,23 @@ begin
         Open;
         Result:=RecordCount;
         cbReturnOutBN.Caption:='1.3. ('+IntToStr(RecordCount)+') Возврат поставщику - БН';
+        //
+        //
+        if cbShowContract.Checked
+        then begin
+             //Сначала находим контрагента  и юр.лицо
+             fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
+                           +' from ObjectHistory_JuridicalDetails_View'
+                           +'      left join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
+                           +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                           +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)
+                           +'   and '+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)+'<>'+FormatToVarCharServer_notNULL('')
+                           );
+             JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             //находим договор НАЛ
+             fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,zc_Enum_PaidKind_FirstForm,FieldByName('OperDate').AsDateTime);
+        end;
+        //
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -16338,6 +16517,12 @@ begin
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkNal()'
            );
+
+        if (cbShowContract.Checked)and(trim(OKPOEdit.Text)<>'')
+        then
+             Add(' and Bill.BillNumber = '+trim(OKPOEdit.Text))
+        else
+
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
              Add(' and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
@@ -16347,6 +16532,35 @@ begin
         Open;
         Result:=RecordCount;
         cbReturnOutNal.Caption:='1.5. ('+IntToStr(RecordCount)+') Возврат поставщику - НАЛ';
+        //
+        //
+        if cbShowContract.Checked
+        then begin
+             if FieldByName('isOKPO_Virtual').AsInteger=zc_rvYes
+             then begin
+                       //находим юр.лицо
+                       fOpenSqToQuery(' select ObjectLink.ChildObjectId as JuridicalId'
+                                     +' from ObjectLink'
+                                     +' where ObjectLink.ObjectId='+IntToStr(FieldByName('ToId_pg_find').AsInteger)
+                                     +'   and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                                     );
+                        JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             end
+             else begin
+                  //Сначала находим контрагента  и юр.лицо
+                  fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
+                                +' from ObjectHistory_JuridicalDetails_View'
+                                +'      left join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
+                                +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                                +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)
+                                +'   and '+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)+'<>'+FormatToVarCharServer_notNULL('')
+                                );
+                  JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             end;
+             //находим договор НАЛ
+             fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,zc_Enum_PaidKind_SecondForm,FieldByName('OperDate').AsDateTime);
+        end;
+        //
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -16673,6 +16887,11 @@ begin
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
 
+        if (cbShowContract.Checked)and(trim(OKPOEdit.Text)<>'')
+        then
+             Add(' where Bill.BillNumber = '+trim(OKPOEdit.Text))
+        else
+
         if cbOnlyInsertDocument.Checked
         then Add('where isnull(Bill.Id_Postgres,0)=0');
 
@@ -16681,6 +16900,9 @@ begin
 
         Result:=RecordCount;
         cbReturnInIntNal.Caption:='3.2.('+IntToStr(RecordCount)+')Воз.от пок.Int - НАЛ';
+        //
+        if cbShowContract.Checked
+        then fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,zc_Enum_PaidKind_SecondForm,'');
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -17025,6 +17247,11 @@ begin
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
 
+        if (cbShowContract.Checked)and(trim(OKPOEdit.Text)<>'')
+        then
+             Add(' where Bill.BillNumber = '+trim(OKPOEdit.Text))
+        else
+
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
              Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
@@ -17043,6 +17270,9 @@ begin
 
         Result:=RecordCount;
         cbReturnInInt.Caption:='3.3.('+IntToStr(RecordCount)+')Воз.от пок.Int - БН';
+        //
+        if cbShowContract.Checked
+        then fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,zc_Enum_PaidKind_FirstForm,FieldByName('ContractNumber').AsString);
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;

@@ -523,17 +523,26 @@ BEGIN
 
 
      -- группируем и получаем таблицу - суммовые Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_From, MIContainerId_To, ContainerId_To, AccountId_To, InfoMoneyId_Detail_To, OperSumm)
-        SELECT _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From
+     INSERT INTO _tmpItemSumm (MovementItemId, AccountGroupId_From, AccountDirectionId_From, AccountId_From, ContainerId_From, MIContainerId_To, ContainerId_To, AccountId_To, InfoMoneyId_Detail_To, OperSumm)
+        SELECT _tmpItemSummChild.MovementItemId_Parent, ObjectLink_Account_AccountGroup.ChildObjectId, ObjectLink_Account_AccountDirection.ChildObjectId, _tmpItemSummChild.AccountId_From, _tmpItemSummChild.ContainerId_From
              , 0 AS MIContainerId_To
              , 0 AS ContainerId_To
-             , CASE WHEN vbIsPeresort = TRUE THEN _tmpItemSummChild.AccountId_From ELSE 0 END AS AccountId_To
+             , CASE WHEN vbIsPeresort = TRUE THEN 0 ELSE 0 END AS AccountId_To -- !!!почему было _tmpItemSummChild.AccountId_From!!!, теперь понятно почему
              , _tmpItemSummChild.InfoMoneyId_Detail_From
              , SUM (_tmpItemSummChild.OperSumm)
         FROM _tmpItemSummChild
+             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
+                                  ON ObjectLink_Account_AccountGroup.ObjectId = _tmpItemSummChild.AccountId_From
+                                 AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection
+                                  ON ObjectLink_Account_AccountDirection.ObjectId = _tmpItemSummChild.AccountId_From
+                                 AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
         GROUP BY _tmpItemSummChild.MovementItemId_Parent
+               , ObjectLink_Account_AccountGroup.ChildObjectId
+               , ObjectLink_Account_AccountDirection.ChildObjectId
+               , _tmpItemSummChild.AccountId_From
                , _tmpItemSummChild.ContainerId_From
-               , CASE WHEN vbIsPeresort = TRUE THEN _tmpItemSummChild.AccountId_From ELSE 0 END
+               -- , CASE WHEN vbIsPeresort = TRUE THEN 0 ELSE 0 END -- !!!почему было _tmpItemSummChild.AccountId_From!!!, теперь понятно почему
                , _tmpItemSummChild.InfoMoneyId_Detail_From;
 
 
@@ -584,8 +593,10 @@ BEGIN
      -- определяется Счет(справочника) для проводок по суммовому учету - Кому
      UPDATE _tmpItemSumm SET AccountId_To = _tmpItem_byAccount.AccountId
      FROM _tmpItem
-          JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                  , inAccountDirectionId     := CASE WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+          JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId_From -- zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
+                                                  , inAccountDirectionId     := CASE WHEN vbIsPeresort = TRUE
+                                                                                          THEN _tmpItem_group.AccountDirectionId_From
+                                                                                     WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
                                                                                           THEN zc_Enum_AccountDirection_20900() -- 20900; "Оборотная тара"
                                                                                      WHEN vbMemberId_To <> 0
                                                                                       AND _tmpItem_group.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- "Основное сырье"; 10100; "Мясное сырье"
@@ -604,6 +615,7 @@ BEGIN
                                                   , inUserId                 := inUserId
                                                    ) AS AccountId
                      , _tmpItem_group.InfoMoneyDestinationId
+                     , _tmpItem_group.AccountId_From
                 FROM (SELECT _tmpItem.InfoMoneyDestinationId
                            , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Ирна
                                     OR (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
@@ -617,9 +629,13 @@ BEGIN
                                        THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                   ELSE _tmpItem.InfoMoneyDestinationId
                              END AS InfoMoneyDestinationId_calc
+                           , _tmpItemSumm.AccountGroupId_From
+                           , _tmpItemSumm.AccountDirectionId_From
+                           , _tmpItemSumm.AccountId_From
                       FROM _tmpItem
+                           INNER JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
                       WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
-                        AND vbIsPeresort = FALSE -- !!!если НЕ пересортица!!!
+                        -- AND vbIsPeresort = FALSE -- !!!если НЕ пересортица!!! -- !!!почему было _tmpItemSummChild.AccountId_From!!!, теперь понятно почему
                       GROUP BY _tmpItem.InfoMoneyDestinationId
                              , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Ирна
                                       OR (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
@@ -633,9 +649,13 @@ BEGIN
                                          THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                     ELSE _tmpItem.InfoMoneyDestinationId
                                END
+                             , _tmpItemSumm.AccountGroupId_From
+                             , _tmpItemSumm.AccountDirectionId_From
+                             , _tmpItemSumm.AccountId_From
                      ) AS _tmpItem_group
                ) AS _tmpItem_byAccount ON _tmpItem_byAccount.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
-     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
+     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+       AND _tmpItemSumm.AccountId_From = _tmpItem_byAccount.AccountId_From;
 
      -- определяется ContainerId для проводок по суммовому учету - Кому  + формируется Аналитика <элемент с/с>
      UPDATE _tmpItemSumm SET ContainerId_To = _tmpItem_group.ContainerId_To

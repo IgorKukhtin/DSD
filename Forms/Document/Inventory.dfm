@@ -1,25 +1,25 @@
 inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 668
-  ClientWidth = 1064
-  ExplicitWidth = 1080
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1064
+    Width = 1020
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1064
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1064
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1064
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1064
+        Width = 1020
         Height = 518
         ExplicitWidth = 1064
         ExplicitHeight = 518
@@ -55,11 +55,6 @@ inherited InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = colCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colPrice
             end
             item
               Format = ',0.####'
@@ -100,11 +95,6 @@ inherited InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = colCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colPrice
             end
             item
               Format = ',0.####'
@@ -316,7 +306,7 @@ inherited InventoryForm: TInventoryForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1064
+    Width = 1020
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1064

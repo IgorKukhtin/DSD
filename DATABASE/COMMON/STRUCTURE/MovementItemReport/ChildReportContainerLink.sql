@@ -28,11 +28,12 @@ CREATE INDEX idx_ChildReportContainerLink_ContainerId_AccountKindId_ChildReportC
 CREATE INDEX idx_ChildReportContainerLink_ChildReportContainerId_ContainerId_AccountKindId  ON ChildReportContainerLink (ChildReportContainerId, ContainerId, AccountKindId);
 CREATE INDEX idx_ChildReportContainerLink_AccountId  ON ChildReportContainerLink (AccountId); -- констрейнт
 CREATE INDEX idx_ChildReportContainerLink_AccountKindId  ON ChildReportContainerLink (AccountKindId); -- констрейнт
-
+CREATE INDEX idx_ChildReportContainerLink_MasterkeyValue_ChildkeyValue ON ChildReportContainerLink (MasterkeyValue,ChildkeyValue); -- констрейнт
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+10.05.15                                         *
 19.09.02                                         * chage index
 03.09.13                                         *
 */
