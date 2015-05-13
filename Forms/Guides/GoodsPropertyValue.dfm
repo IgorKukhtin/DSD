@@ -23,7 +23,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Width = 986
     Height = 438
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -216,8 +216,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -498,6 +498,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     object GoodsPropertyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PriceListPromoChoiceForm'
       FormName = 'TGoodsPropertyForm'
       FormNameParam.Value = 'TGoodsPropertyForm'
@@ -521,6 +522,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsChoiceForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
@@ -544,6 +546,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     object GoodsKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindChoiceForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = 'TGoodsKindForm'
@@ -609,6 +612,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -617,6 +621,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -818,6 +823,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Top = 115
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

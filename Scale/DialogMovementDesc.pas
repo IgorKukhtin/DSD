@@ -152,6 +152,9 @@ begin
                     ParamByName('ToName').asString:= CDS.FieldByName('ToName').asString;
                     ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
                     ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
+                    ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
+                    ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
+                    ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                     ParamByName('ChangePercentAmount').asFloat:= 0;
           end
           else
@@ -166,6 +169,9 @@ begin
                     ParamByName('ToName').asString:= ParamByName('calcPartnerName').asString;
                     ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
                     ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
+                    ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
+                    ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
+                    ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                     if (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Sale)
                     then ParamByName('ChangePercentAmount').asFloat:= 0;
           end
@@ -193,6 +199,14 @@ begin
                     ParamByName('ContractTagName').asString := '';
                     ParamByName('PaidKindId').AsInteger:= 0;
                     ParamByName('PaidKindName').asString:= '';
+
+                    ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
+                    ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
+                    ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
+                    ParamByName('GoodsPropertyId').AsInteger  := 0;
+                    ParamByName('GoodsPropertyCode').AsInteger:= 0;
+                    ParamByName('GoodsPropertyName').asString := '';
+
                end;
 
     end;

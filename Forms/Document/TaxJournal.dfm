@@ -2,8 +2,8 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1118
-  ExplicitHeight = 562
+  ExplicitWidth = 1126
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,18 +11,19 @@ inherited TaxJournalForm: TTaxJournalForm
     Width = 1110
     Height = 458
     TabOrder = 3
+    ExplicitTop = 77
     ExplicitWidth = 1110
-    ExplicitHeight = 478
+    ExplicitHeight = 458
     ClientRectBottom = 458
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1110
-      ExplicitHeight = 478
+      ExplicitHeight = 458
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 458
         ExplicitWidth = 1110
-        ExplicitHeight = 478
+        ExplicitHeight = 458
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -723,7 +724,7 @@ inherited TaxJournalForm: TTaxJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actSPPrintTaxProcName: TdsdExecStoredProc
+    object actGetReporNameTax: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -732,7 +733,7 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           StoredProc = spGetReporNameTax
         end>
-      Caption = 'actSPPrintTaxProcName'
+      Caption = 'actGetReporNameTax'
     end
     object mactPrint_Tax_Us: TMultiAction
       Category = 'DSDLib'
@@ -749,7 +750,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
       ActionList = <
         item
-          Action = actSPPrintTaxProcName
+          Action = actGetReporNameTax
         end
         item
           Action = actPrintTax_Us
@@ -773,7 +774,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
       ActionList = <
         item
-          Action = actSPPrintTaxProcName
+          Action = actGetReporNameTax
         end
         item
           Action = actPrintTax_Client
@@ -793,7 +794,7 @@ inherited TaxJournalForm: TTaxJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actMedocProcedure
+          Action = actSelectTax_Medoc
         end
         item
           Action = MedocAction
@@ -809,7 +810,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
       ImageIndex = 30
     end
-    object actMedocProcedure: TdsdExecStoredProc
+    object actSelectTax_Medoc: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -818,7 +819,7 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           StoredProc = spSelectTax_Client
         end>
-      Caption = 'actMedocProcedure'
+      Caption = 'actSelectTax_Medoc'
     end
     object mactMedocDECLAR: TMultiAction
       Category = 'TaxLib'
@@ -855,7 +856,7 @@ inherited TaxJournalForm: TTaxJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = spTaxPrint
+          Action = actSelectTax_Medoc_list
         end
         item
           Action = MedocListAction
@@ -876,7 +877,7 @@ inherited TaxJournalForm: TTaxJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object spTaxPrint: TdsdExecStoredProc
+    object actSelectTax_Medoc_list: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -885,7 +886,7 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           StoredProc = spSelectTax_Client
         end>
-      Caption = 'spTaxPrint'
+      Caption = 'actSelectTax_Medoc_list'
     end
     object actUpdateIsMedoc: TdsdExecStoredProc
       Category = 'TaxLib'
@@ -1545,5 +1546,37 @@ inherited TaxJournalForm: TTaxJournalForm
     PackSize = 1
     Left = 736
     Top = 8
+  end
+  object spSelectTax_Medoc: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Tax_Medoc'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 535
+    Top = 416
   end
 end

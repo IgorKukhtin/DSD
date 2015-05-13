@@ -20,6 +20,7 @@ type
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
+    function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
 
     function gpGet_Scale_Movement(var execParamsMovement:TParams): Boolean;
 
@@ -114,6 +115,10 @@ begin
          ParamByName('ContractNumber').asString := DataSet.FieldByName('ContractNumber').asString;
          ParamByName('ContractTagName').asString:= DataSet.FieldByName('ContractTagName').asString;
 
+         ParamByName('GoodsPropertyId').AsInteger:= DataSet.FieldByName('GoodsPropertyId').AsInteger;
+         ParamByName('GoodsPropertyCode').AsInteger:= DataSet.FieldByName('GoodsPropertyCode').AsInteger;
+         ParamByName('GoodsPropertyName').asString:= DataSet.FieldByName('GoodsPropertyName').asString;
+
          ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
          ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
@@ -146,6 +151,9 @@ begin
              then ShowMessage('Ошибка.Код операции не определен.')
              else begin ParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
                         ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
+                        ParamsMovement.ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
+                        ParamsMovement.ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
+                        ParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                   end;
           end
           else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Нажмите на клавиатуре клавишу <F2>.';
@@ -390,20 +398,66 @@ begin
          Result:=DataSet.RecordCount<>0;
        with execParams do
        begin
-         ParamByName('GoodsId').AsInteger:= DataSet.FieldByName('GoodsId').AsInteger;
+         ParamByName('GoodsId').AsInteger  := DataSet.FieldByName('GoodsId').AsInteger;
          ParamByName('GoodsCode').AsInteger:= DataSet.FieldByName('GoodsCode').AsInteger;
-         ParamByName('GoodsName').asString:= DataSet.FieldByName('GoodsName').asString;
+         ParamByName('GoodsName').asString := DataSet.FieldByName('GoodsName').asString;
 
-         ParamByName('GoodsKindId').AsInteger:= DataSet.FieldByName('GoodsKindId').asInteger;
+         ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').asInteger;
          ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').AsInteger;
-         ParamByName('GoodsKindName').asString:= DataSet.FieldByName('GoodsKindName').asString;
+         ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
        end;
 
        {except
          result.Code := Code;
          result.Id   := 0;
          result.Name := '';
-         ShowMessage('Ошибка получения - gpGet_Scale_Partner');
+         ShowMessage('Ошибка получения - gpGet_Scale_Goods');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_GoodsRetail';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
+       Params.AddParam('inGoodsPropertyId', ftInteger, ptInput, execParamsMovement.ParamByName('GoodsPropertyId').AsInteger);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount<>0;
+       with execParams do
+       begin
+         ParamByName('GoodsId').AsInteger  := DataSet.FieldByName('GoodsId').AsInteger;
+         //ParamByName('GoodsCode').AsInteger:= DataSet.FieldByName('GoodsCode').AsInteger;
+         //ParamByName('GoodsName').asString := DataSet.FieldByName('GoodsName').asString;
+
+         ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').asInteger;
+         //ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').AsInteger;
+         //ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
+
+         //Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+         ParamByName('RealWeight').AsFloat          := DataSet.FieldByName('RealWeight').AsFloat;
+         ParamByName('ChangePercentAmount').AsFloat := DataSet.FieldByName('ChangePercentAmount').AsFloat;
+         ParamByName('CountTare').AsFloat           := DataSet.FieldByName('CountTare').AsFloat;
+         ParamByName('WeightTare').AsFloat          := DataSet.FieldByName('WeightTare').AsFloat;
+         ParamByName('Price').AsFloat               := DataSet.FieldByName('Price').AsFloat;
+         ParamByName('Price_Return').AsFloat        := DataSet.FieldByName('Price_Return').AsFloat;
+         ParamByName('CountForPrice').AsFloat       := DataSet.FieldByName('CountForPrice').AsFloat;
+         ParamByName('CountForPrice_Return').AsFloat:= DataSet.FieldByName('CountForPrice_Return').AsFloat;
+         //Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn')));
+         //Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
+
+       end;
+
+       {except
+         result.Code := Code;
+         result.Id   := 0;
+         result.Name := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_GoodsRetail');
        end;}
     end;
 end;
@@ -417,6 +471,7 @@ begin
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inPartnerCode', ftInteger, ptInput, inPartnerCode);
+       Params.AddParam('inInfoMoneyId', ftInteger, ptInput, execParams.ParamByName('InfoMoneyId').AsInteger);
        //try
          Execute;
          //
@@ -446,6 +501,10 @@ begin
                     ParamByName('ContractNumber').asString := '';
                     ParamByName('ContractTagName').asString:= '';
          end;
+
+         ParamByName('GoodsPropertyId').AsInteger:= DataSet.FieldByName('GoodsPropertyId').AsInteger;
+         ParamByName('GoodsPropertyCode').AsInteger:= DataSet.FieldByName('GoodsPropertyCode').AsInteger;
+         ParamByName('GoodsPropertyName').asString:= DataSet.FieldByName('GoodsPropertyName').asString;
 
          ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
@@ -504,6 +563,10 @@ begin
          ParamByName('ContractCode').AsInteger  := DataSet.FieldByName('ContractCode').asInteger;
          ParamByName('ContractNumber').asString := DataSet.FieldByName('ContractNumber').asString;
          ParamByName('ContractTagName').asString:= DataSet.FieldByName('ContractTagName').asString;
+
+         ParamByName('GoodsPropertyId').AsInteger:= DataSet.FieldByName('GoodsPropertyId').AsInteger;
+         ParamByName('GoodsPropertyCode').AsInteger:= DataSet.FieldByName('GoodsPropertyCode').AsInteger;
+         ParamByName('GoodsPropertyName').asString:= DataSet.FieldByName('GoodsPropertyName').asString;
 
          ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;

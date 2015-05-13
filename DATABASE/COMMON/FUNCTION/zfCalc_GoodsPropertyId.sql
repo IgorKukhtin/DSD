@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION zfCalc_GoodsPropertyId(
     IN inContractId                Integer,  -- 
     IN inJuridicalId               Integer   -- 
 )
-RETURNS TVarChar AS
+RETURNS Integer AS
 $BODY$
 BEGIN
      -- возвращаем результат

@@ -312,7 +312,7 @@ BEGIN
      LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
      LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = Operation.BankAccountId
      LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Operation.BankAccountId -- !!!не ошибка!!!
-     LEFT JOIN Object_InfoMoney_View ON Object_Juridical.Id = Operation.InfoMoneyId
+     LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Operation.UnitId
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
      LEFT JOIN ObjectDesc AS ObjectDesc_MoneyPlace ON ObjectDesc_MoneyPlace.Id = Object_MoneyPlace.DescId
