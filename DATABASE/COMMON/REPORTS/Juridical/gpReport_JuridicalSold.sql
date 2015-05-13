@@ -30,6 +30,8 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
              , ContractConditionKindName TVarChar, ContractConditionValue TFloat
+             , PartionMovementName TVarChar
+             , PaymentDate TDateTime
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
@@ -141,6 +143,9 @@ BEGIN
         Object_ContractConditionKind.ValueData AS ContractConditionKindName,
         tmpContract.Value :: TFloat AS ContractConditionValue,
 
+        Object_PartionMovement.ValueData AS PartionMovementName,
+        ObjectDate_PartionMovement_Payment.ValueData AS PaymentDate,
+
         Operation.ObjectId  AS AccountId,
         Object_Juridical.Id AS JuridicalId,
         Object_Partner.Id   AS PartnerId,
@@ -182,7 +187,7 @@ BEGIN
      FROM
          (SELECT MAX (Operation_all.ContainerId) AS ContainerId
                , Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId
-               , Operation_all.PaidKindId, Operation_all.BranchId
+               , Operation_all.PaidKindId, Operation_all.BranchId, Operation_all.PartionMovementId
                , CLO_Partner.ObjectId AS PartnerId
                , View_Contract_ContractKey.ContractId_Key AS ContractId,
                      SUM (Operation_all.StartAmount) AS StartAmount,
@@ -207,7 +212,8 @@ BEGIN
                      SUM (Operation_all.OtherSumm)           AS OtherSumm,
                      SUM (Operation_all.EndAmount)           AS EndAmount
           FROM
-         (SELECT tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId, tmpContainer.ContractId, tmpContainer.BranchId
+         (SELECT tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId
+               , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId
                , tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS DebetSumm
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS KreditSumm
@@ -251,7 +257,8 @@ BEGIN
                  END) AS OtherSumm
                , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
           FROM (SELECT Container.Id AS ContainerId, Container.ObjectId, Container.Amount
-                     , CLO_Juridical.ObjectId AS JuridicalId, CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_PaidKind.ObjectId AS PaidKindId, CLO_Contract.ObjectId AS ContractId, CLO_Branch.ObjectId AS BranchId
+                     , CLO_Juridical.ObjectId AS JuridicalId, CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_PaidKind.ObjectId AS PaidKindId
+                     , CLO_Contract.ObjectId AS ContractId, CLO_Branch.ObjectId AS BranchId, CLO_PartionMovement.ObjectId AS PartionMovementId
                 FROM ContainerLinkObject AS CLO_Juridical
                      INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
                      LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
@@ -266,6 +273,10 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS CLO_Contract
                                                    ON CLO_Contract.ContainerId = Container.Id
                                                   AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                     LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
+                                                   ON CLO_PartionMovement.ContainerId = Container.Id
+                                                  AND CLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
+
                      LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                           ON ObjectLink_Juridical_JuridicalGroup.ObjectId = CLO_Juridical.ObjectId
                                          AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
@@ -285,7 +296,8 @@ BEGIN
                 LEFT JOIN MovementItemContainer AS MIContainer
                                                 ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                AND MIContainer.OperDate >= inStartDate
-           GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.Amount, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId, tmpContainer.ContractId, tmpContainer.BranchId
+           GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.Amount, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId
+                  , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId
          ) AS Operation_all
 
            LEFT JOIN ContainerLinkObject AS CLO_Partner
@@ -293,7 +305,7 @@ BEGIN
                                         AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
            LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = Operation_all.ContractId
 
-          GROUP BY Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId, Operation_all.PaidKindId, Operation_all.BranchId
+          GROUP BY Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId, Operation_all.PaidKindId, Operation_all.BranchId, Operation_all.PartionMovementId
                  , View_Contract_ContractKey.ContractId_Key
                  , CLO_Partner.ObjectId
 
@@ -356,6 +368,11 @@ BEGIN
 
            LEFT JOIN tmpContract ON tmpContract.JuridicalId = Operation.JuridicalId
            LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = tmpContract.ContractConditionKindId
+
+          LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = Operation.PartionMovementId
+          LEFT JOIN ObjectDate AS ObjectDate_PartionMovement_Payment
+                               ON ObjectDate_PartionMovement_Payment.ObjectId = Operation.PartionMovementId
+                              AND ObjectDate_PartionMovement_Payment.DescId = zc_ObjectDate_PartionMovement_Payment()
 
            WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0
                OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);

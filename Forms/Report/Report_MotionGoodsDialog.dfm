@@ -158,7 +158,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object cxLabel8: TcxLabel
     Left = 11
     Top = 206
-    Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' 1:'
+    Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' ***:'
   end
   object edUnitGroup_by: TcxButtonEdit
     Left = 11
@@ -175,7 +175,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object cxLabel9: TcxLabel
     Left = 240
     Top = 206
-    Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' 1:'
+    Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' ***:'
   end
   object edLocation_by: TcxButtonEdit
     Left = 240

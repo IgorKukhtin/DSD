@@ -410,6 +410,23 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
+          object clPartionMovementName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'PartionMovementName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object clContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
@@ -596,9 +613,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
             DataBinding.FieldName = 'StartAmount_A'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -609,9 +626,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1055#1072#1089#1089#1080#1074')'
             DataBinding.FieldName = 'StartAmount_P'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -623,9 +640,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'StartAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -637,9 +654,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'StartAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -651,9 +668,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'IncomeSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -664,9 +681,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090'-'#1082#1091'.'
             DataBinding.FieldName = 'ReturnOutSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -677,9 +694,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1055#1088#1086#1076#1072#1078#1072
             DataBinding.FieldName = 'SaleRealSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -689,8 +706,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = 'C'#1082#1080#1076#1082#1072' ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'SaleSumm_10300'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -700,9 +718,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1073#1091#1093#1075'.)'
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -713,9 +731,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'.'
             DataBinding.FieldName = 'ReturnInRealSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -725,8 +743,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = 'C'#1082#1080#1076#1082#1072' ('#1074#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'.)'
             DataBinding.FieldName = 'ReturnInSumm_10300'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -736,9 +755,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. ('#1073#1091#1093#1075'.)'
             DataBinding.FieldName = 'ReturnInSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -749,9 +768,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1054#1087#1083#1072#1090#1072' (+)'#1087#1088#1080#1093' (-)'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'MoneySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -761,9 +780,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1059#1089#1083#1091#1075#1080' '#1092#1072#1082#1090' (+)'#1087#1086#1083#1091#1095'. (-)'#1086#1082#1072#1079#1072#1085'.'
             DataBinding.FieldName = 'ServiceRealSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -774,9 +793,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1059#1089#1083#1091#1075#1080' '#1073#1091#1093#1075'. (+)'#1087#1086#1083#1091#1095'. (-)'#1086#1082#1072#1079#1072#1085'.'
             DataBinding.FieldName = 'ServiceSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -786,9 +805,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1050#1086#1088#1088'. '#1094#1077#1085#1099' (+)'#1076#1086#1093#1086#1076' (-)'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'PriceCorrectiveSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -798,9 +817,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1055'.'#1076#1086#1083#1075#1072' (+)'#1087#1088#1086#1076'. (-)'#1074#1086#1079#1074#1088'.'
             DataBinding.FieldName = 'TransferDebtSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -811,9 +830,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1042#1079'-'#1079#1072#1095#1077#1090' (+)'#1086#1087#1083'.'#1087#1088#1080#1093'. (-)'#1086#1087#1083'.'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'SendDebtSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -823,8 +842,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1050#1091#1088#1089' '#1088#1072#1079#1085'.  (+)'#1076#1086#1093#1086#1076' (-)'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'ChangeCurrencySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -834,9 +854,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = '***'
             DataBinding.FieldName = 'OtherSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -846,9 +866,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -860,9 +880,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -874,9 +894,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
             DataBinding.FieldName = 'EndAmount_A'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -887,9 +907,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1050#1086#1085'.  '#1076#1086#1083#1075' ('#1055#1072#1089#1089#1080#1074')'
             DataBinding.FieldName = 'EndAmount_P'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -901,9 +921,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'EndAmount_D'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -915,9 +935,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'EndAmount_K'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter

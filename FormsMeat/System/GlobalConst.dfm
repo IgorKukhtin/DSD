@@ -1,19 +1,20 @@
 inherited GlobalConstForm: TGlobalConstForm
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1089#1080#1089#1090#1077#1084#1099
   ClientWidth = 373
-  ExplicitWidth = 381
+  ExplicitWidth = 389
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 373
-    ExplicitWidth = 275
+    ExplicitWidth = 373
     ClientRectRight = 373
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 275
+      ExplicitWidth = 373
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 373
-        ExplicitWidth = 275
+        ExplicitWidth = 373
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -56,7 +57,7 @@ inherited GlobalConstForm: TGlobalConstForm
     Top = 64
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GlobalConst'
+    StoredProcName = 'gpSelect_Object_GlobalConst_user'
     Top = 64
   end
   inherited BarManager: TdxBarManager

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Branch(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InvNumber TVarChar
              , PersonalBookkeeperId Integer, PersonalBookkeeperName TVarChar
-             , IsMedoc boolean
+             , IsMedoc boolean, IsPartionDoc boolean
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -28,6 +28,7 @@ $BODY$BEGIN
            , CAST (0 as Integer)     AS PersonalBookkeeperId
            , CAST ('' as TVarChar)   AS PersonalBookkeeperName
            , CAST (False AS Boolean) AS IsMedoc
+           , CAST (False AS Boolean) AS IsPartionDoc
            , CAST (NULL AS Boolean)  AS isErased;
    ELSE
        RETURN QUERY 
@@ -39,7 +40,8 @@ $BODY$BEGIN
            , ObjectString_InvNumber.ValueData  AS InvNumber
            , Object_Personal_View.PersonalId    AS PersonalBookkeeperId
            , Object_Personal_View.PersonalName  AS PersonalBookkeeperName
-           , COALESCE (ObjectBoolean_Medoc.ValueData, False) AS IsMedoc      
+           , COALESCE (ObjectBoolean_Medoc.ValueData, False)      AS IsMedoc     
+           , COALESCE (ObjectBoolean_PartionDoc.ValueData, False) AS IsPartionDoc 
            , Object_Branch.isErased
    
        FROM Object AS Object_Branch
@@ -50,6 +52,10 @@ $BODY$BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Medoc
                                     ON ObjectBoolean_Medoc.ObjectId = Object_Branch.Id
                                    AND ObjectBoolean_Medoc.DescId = zc_ObjectBoolean_Branch_Medoc()   
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDoc
+                                    ON ObjectBoolean_PartionDoc.ObjectId = Object_Branch.Id
+                                   AND ObjectBoolean_PartionDoc.DescId = zc_ObjectBoolean_Branch_PartionDoc() 
 
             LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                             ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id

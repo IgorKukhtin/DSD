@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isEra
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime, EndDate TDateTime
              , ContractTagName TVarChar, ContractKindName TVarChar
+             , MovementId_Partion Integer, PartionMovementName TVarChar, PaymentDate TDateTime
              , OKPO TVarChar
              , AmountDebet TFloat
              , AmountKredit TFloat
@@ -76,6 +77,9 @@ BEGIN
           , NULL::TDateTime AS EndDate
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
+          , NULL :: Integer   AS MovementId_Partion
+          , ''   :: TVarChar  AS PartionMovementName
+          , NULL :: TDateTime AS PaymentDate
           , ''::TVarChar AS OKPO
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit
@@ -106,6 +110,9 @@ BEGIN
           , NULL::TDateTime AS EndDate
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
+          , NULL :: Integer   AS MovementId_Partion
+          , ''   :: TVarChar  AS PartionMovementName
+          , NULL :: TDateTime AS PaymentDate
           , ''::TVarChar AS OKPO
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit
@@ -137,6 +144,9 @@ BEGIN
           , NULL::TDateTime AS EndDate
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
+          , NULL :: Integer   AS MovementId_Partion
+          , ''   :: TVarChar  AS PartionMovementName
+          , NULL :: TDateTime AS PaymentDate
           , ''::TVarChar AS OKPO
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit
@@ -171,6 +181,9 @@ BEGIN
           , View_Contract.EndDate         :: TDateTime AS EndDate
           , View_Contract.ContractTagName :: TVarChar  AS ContractTagName
           , View_Contract.ContractKindName :: TVarChar AS ContractKindName
+          , Container_Partner_View.MovementId_Partion
+          , Container_Partner_View.PartionMovementName
+          , Container_Partner_View.PaymentDate
           , ObjectHistory_JuridicalDetails_View.OKPO
           , Container_Partner_View.AmountDebet
           , Container_Partner_View.AmountKredit
@@ -232,6 +245,9 @@ BEGIN
           , View_Contract.EndDate
           , View_Contract.ContractTagName
           , View_Contract.ContractKindName
+          , NULL :: Integer   AS MovementId_Partion
+          , ''   :: TVarChar  AS PartionMovementName
+          , NULL :: TDateTime AS PaymentDate
           , ObjectHistory_JuridicalDetails_View.OKPO
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit
@@ -269,6 +285,9 @@ BEGIN
           , NULL::TDateTime AS EndDate
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
+          , NULL :: Integer   AS MovementId_Partion
+          , ''   :: TVarChar  AS PartionMovementName
+          , NULL :: TDateTime AS PaymentDate
           , ''::TVarChar AS OKPO
           , 0 :: TFloat  AS AmountDebet
           , 0 :: TFloat  AS AmountKredit

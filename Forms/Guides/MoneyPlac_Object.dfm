@@ -100,6 +100,20 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
             Options.Editing = False
             Width = 60
           end
+          object clPartionMovementName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'PartionMovementName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object clPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
@@ -320,6 +334,26 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           Name = 'PositionName'
           Value = ''
           DataType = ftString
+        end
+        item
+          Name = 'MovementId_Partion'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Partion'
+        end
+        item
+          Name = 'PartionMovementName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionMovementName'
+          DataType = ftString
+        end
+        item
+          Name = 'PaymentDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaymentDate'
+          DataType = ftDateTime
         end>
     end
   end

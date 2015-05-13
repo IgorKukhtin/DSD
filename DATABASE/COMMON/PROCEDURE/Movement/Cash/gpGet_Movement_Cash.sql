@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyId Integer, CurrencyName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
-             , InvNumber_Sale TVarChar, MovementId_Sale Integer
+             , MovementId_Partion Integer, PartionMovementName TVarChar
              )
 AS
 $BODY$
@@ -75,8 +75,8 @@ BEGIN
            , 0 :: TFloat                                       AS CurrencyPartnerValue
            , 0 :: TFloat                                       AS ParPartnerValue
 
-           , CAST (NULL AS TVarChar)  	AS InvNumber_Sale
-           , 0                          AS MovementId_Sale
+           , 0                          AS MovementId_Partion
+           , CAST ('' AS TVarChar)  	AS PartionMovementName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inCashId -- IN (SELECT MIN (Object.Id) FROM Object WHERE Object.AccessKeyId IN (SELECT MIN (lpGetAccessKey) FROM lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Cash())))
@@ -138,9 +138,8 @@ BEGIN
            , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData      AS ParPartnerValue
            
-           , CAST ('' || CAST (Movement_Sale.InvNumber AS TVarChar)
-                || ' oт '|| CAST (DATE(Movement_Sale.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Sale
-           , Movement_Sale.Id                                                                     AS MovementId_Sale
+           , MIFloat_MovementId.ValueData :: Integer AS MovementId_Partion
+           , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -167,7 +166,11 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData :: Integer
+            LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
+                                   ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
+                                  AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
  
@@ -236,4 +239,4 @@ ALTER FUNCTION gpGet_Movement_Cash (Integer, TDateTime, Integer, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Cash (inMovementId:= 1, inOperDate:= NULL, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Cash (inMovementId:= 1, inOperDate:= NULL, inCashId:= 1, inSession:= zfCalc_UserAdmin());

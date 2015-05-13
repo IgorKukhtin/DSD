@@ -709,6 +709,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementCheckForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
@@ -879,9 +882,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
-
 end;
 
 procedure TLoadFormTest.LoadTransferDebtOutFormTest;
@@ -1053,6 +1053,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FuelForm');

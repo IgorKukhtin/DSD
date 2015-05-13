@@ -49,5 +49,5 @@ ALTER FUNCTION gpSelect_Movement_EDIProtocol (TDateTime, TDateTime, TVarChar) OW
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_EDI (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MI_EDI (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_EDI (inMovementId:= 25173, inShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_EDI (inMovementId:= 25173, inShowAll:= FALSE, inSession:= zfCalc_UserAdmin())

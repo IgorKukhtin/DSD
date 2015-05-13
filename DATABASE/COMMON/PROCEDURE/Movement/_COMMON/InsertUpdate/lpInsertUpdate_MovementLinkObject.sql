@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItemLinkObject
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemLinkObject (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementLinkObject (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementLinkObject(
     IN inDescId                Integer           , -- код класса свойства

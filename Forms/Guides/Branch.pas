@@ -61,6 +61,7 @@ type
     clInvNumber: TcxGridDBColumn;
     clPersonalBookkeeperName: TcxGridDBColumn;
     clIsMedoc: TcxGridDBColumn;
+    clisPartionDoc: TcxGridDBColumn;
   private
     { Private declarations }
   public

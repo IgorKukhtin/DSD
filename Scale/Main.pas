@@ -141,7 +141,7 @@ type
 
     function Save_Movement_all:Boolean;
     function GetParams_MovementDesc(BarCode: String):Boolean;
-    function GetParams_Goods(BarCode: String):Boolean;
+    function GetParams_Goods(isRetail:Boolean;BarCode: String):Boolean;
     procedure Create_Scale;
     procedure Initialize_Scale;
     function fGetScale_CurrentWeight:Double;
@@ -222,7 +222,7 @@ begin
      ActiveControl:=EnterGoodsCodeScanerEdit;
 end;
 {------------------------------------------------------------------------}
-function TMainForm.GetParams_Goods(BarCode: String):Boolean;
+function TMainForm.GetParams_Goods(isRetail:Boolean;BarCode: String):Boolean;
 var GoodsWeight_two,GoodsWeight_set:Double;
     calcClientId:Integer;
 begin
@@ -231,16 +231,30 @@ begin
      if ParamsMovement.ParamByName('MovementDescId').asInteger=0
      then if GetParams_MovementDesc('')=false then exit;
      //
+     //
      if BarCode<>'' then
-     begin
-          DMMainScaleForm.gpGet_Scale_Goods(ParamsMI,BarCode);
-          if ParamsMI.ParamByName('GoodsId').AsInteger=0 then
-          begin
-               ShowMessage('Ошибка.Товар не найден.');
-               Result:=false;
-               exit;
-          end;
-     end
+        if isRetail=true then
+        begin
+             Result:=DMMainScaleForm.gpGet_Scale_GoodsRetail(ParamsMovement,ParamsMI,BarCode);
+             if Result then Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
+             if Result then
+             begin
+                   RefreshDataSet;
+                   WriteParamsMovement;
+                   CDS.First;
+             end;
+             exit;//!!!выход!!!
+        end
+        else
+            begin
+                 DMMainScaleForm.gpGet_Scale_Goods(ParamsMI,BarCode);
+                 if ParamsMI.ParamByName('GoodsId').AsInteger=0 then
+                 begin
+                      ShowMessage('Ошибка.Товар не найден.');
+                      Result:=false;
+                      exit;
+                 end;
+            end
      else EmptyValuesParams(ParamsMI);
 
      //
@@ -328,13 +342,17 @@ begin
      then
          if Pos(zc_BarCodePref_Object,EnterGoodsCodeScanerEdit.Text)=1
          then begin
-                   GetParams_Goods(EnterGoodsCodeScanerEdit.Text);
+                   GetParams_Goods(false,EnterGoodsCodeScanerEdit.Text);
                    EnterGoodsCodeScanerEdit.Text:='';
               end
          else
              if Pos(zc_BarCodePref_Movement,EnterGoodsCodeScanerEdit.Text)=1
              then begin
                        GetParams_MovementDesc(EnterGoodsCodeScanerEdit.Text);
+                       EnterGoodsCodeScanerEdit.Text:='';
+                  end
+             else begin
+                       GetParams_Goods(true,EnterGoodsCodeScanerEdit.Text);
                        EnterGoodsCodeScanerEdit.Text:='';
                   end;
 
@@ -523,7 +541,7 @@ procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftStat
 begin
      if Key = VK_F5 then Save_Movement_all;
      if Key = VK_F2 then GetParams_MovementDesc('');
-     if Key = VK_SPACE then GetParams_Goods('');
+     if Key = VK_SPACE then GetParams_Goods(false,'');
      //
      if ShortCut(Key, Shift) = 24659 then
      begin

@@ -5,7 +5,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -419,6 +419,13 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
@@ -430,7 +437,6 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           object colContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -438,7 +444,6 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           object colContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -629,6 +634,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 4
       Width = 245
     end
@@ -906,6 +912,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         Component = PeriodChoice
       end
       item
+        Component = PartnerGuides
       end>
     Left = 408
     Top = 344

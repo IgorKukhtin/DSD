@@ -43,7 +43,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
             Width = 55
           end
           object colGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -100,7 +100,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
             Width = 55
           end
           object colChildGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -479,20 +479,39 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end>
       isShowModal = False
     end
-    object MovementItemProtocolOpenForm: TdsdOpenForm
+    object actMIMasterProtocol: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'inMovementItemId'
+          Name = 'Id'
           Value = Null
           Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actMIChildProtocol: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1088#1072#1089#1093#1086#1076')>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1088#1072#1089#1093#1086#1076')>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
@@ -697,7 +716,15 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbMIMasterProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIChildProtocol'
         end
         item
           Visible = True
@@ -774,32 +801,13 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Action = actMIContainer
       Category = 0
     end
-    object bbMovementItemProtocol: TdxBarButton
-      Action = MovementItemProtocolOpenForm
+    object bbMIMasterProtocol: TdxBarButton
+      Action = actMIMasterProtocol
       Category = 0
     end
-    object bbComplete: TdxBarButton
-      Caption = 'actCompleteMovement'
+    object bbMIChildProtocol: TdxBarButton
+      Action = actMIChildProtocol
       Category = 0
-      Enabled = False
-      Hint = 'actCompleteMovement'
-      Visible = ivAlways
-      ImageIndex = 12
-    end
-    object dxBarButton1: TdxBarButton
-      Caption = 'actUnCompleteMovement'
-      Category = 0
-      Enabled = False
-      Visible = ivAlways
-      ImageIndex = 11
-    end
-    object dxBarButton2: TdxBarButton
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Category = 0
-      Enabled = False
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Visible = ivAlways
-      ImageIndex = 13
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

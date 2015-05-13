@@ -14,14 +14,24 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_EDI_Params());
-   vbUserId:= lpGetUserBySession(inSession);
+     vbUserId:= lpGetUserBySession (inSession);
 
-   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, inContractId);
 
-   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), inMovementId, inUnitId);
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, inContractId);
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), inMovementId, inUnitId);
 
-   -- сохранили протокол
-   PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+
+     -- обновили <Классификатор товаров> + сохранили элементы !!!на самом деле только обновили GoodsId and GoodsKindId!!!
+     PERFORM lpUpdate_MI_EDI_Params (inMovementId  := inMovementId
+                                   , inContractId  := inContractId
+                                   , inJuridicalId := (SELECT MLO_Juridical.ObjectId FROM MovementLinkObject AS MLO_Juridical WHERE MLO_Juridical.MovementId = inMovementId AND MLO_Juridical.DescId = zc_MovementLinkObject_Juridical())
+                                   , inUserId      := vbUserId
+                                    );
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
 END;
 $BODY$

@@ -169,6 +169,7 @@ type
     mactErrorEDI: TMultiAction;
     bbEDIError: TdxBarButton;
     mactDeclarSilent: TMultiAction;
+    clGoodsPropertyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

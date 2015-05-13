@@ -12,18 +12,17 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Height = 624
     TabOrder = 2
     ExplicitTop = 61
-    ExplicitWidth = 1020
+    ExplicitWidth = 1028
     ExplicitHeight = 624
     ClientRectBottom = 624
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 1020
+      ExplicitWidth = 1028
       ExplicitHeight = 600
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 292
-        ExplicitWidth = 1020
+        ExplicitWidth = 1028
         ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -294,6 +293,38 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object colInsertName: TcxGridDBColumn [20]
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object colUpdateName: TcxGridDBColumn [21]
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
+            DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object colInsertDate: TcxGridDBColumn [22]
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object colUpdateDate: TcxGridDBColumn [23]
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -304,7 +335,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Top = 297
         Width = 1020
         ExplicitTop = 297
-        ExplicitWidth = 1020
+        ExplicitWidth = 1028
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -419,23 +450,21 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
           object colChildAmountCalcWeight: TcxGridDBColumn [10]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090' ('#1074#1077#1089')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095'. ('#1074#1077#1089')'
             DataBinding.FieldName = 'AmountCalcWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object isTaxExit: TcxGridDBColumn [11]
             Caption = #1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093'.'
@@ -460,6 +489,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.SaveTime = False
             Properties.ShowTime = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -480,6 +510,38 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object colChildInsertName: TcxGridDBColumn [16]
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object colChildUpdateName: TcxGridDBColumn [17]
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
+            DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object colChildInsertDate: TcxGridDBColumn [18]
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object colChildUpdateDate: TcxGridDBColumn [19]
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
           inherited colChildIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -491,14 +553,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Top = 292
         Width = 1020
         ExplicitTop = 292
-        ExplicitWidth = 1020
+        ExplicitWidth = 1028
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 1020
     Height = 35
-    ExplicitWidth = 1020
+    ExplicitWidth = 1028
     ExplicitHeight = 35
     inherited edInvNumber: TcxTextEdit
       Left = 835
@@ -588,7 +650,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object deStart: TcxDateEdit
       Left = 52
       Top = 7
-      EditValue = 41791d
+      EditValue = 42156d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
@@ -602,7 +664,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object deEnd: TcxDateEdit
       Left = 204
       Top = 7
-      EditValue = 41791d
+      EditValue = 42156d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 13
@@ -641,9 +703,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Enabled = False
       StoredProc = nil
       StoredProcList = <>
-    end
-    inherited actShowErased: TBooleanStoredProcAction
-      Enabled = False
     end
     inherited actShowAll: TBooleanStoredProcAction
       Enabled = False
@@ -742,6 +801,18 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     inherited actAddMask: TdsdExecStoredProc
       Enabled = False
     end
+    inherited InsertRecordChild: TInsertRecord
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1088#1072#1089#1093#1086#1076')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1088#1072#1089#1093#1086#1076')>'
+    end
+    inherited actMIChildSetErased: TdsdUpdateErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1088#1072#1089#1093#1086#1076')>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1088#1072#1089#1093#1086#1076')>'
+    end
+    inherited actMIChildSetUnErased: TdsdUpdateErased
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1088#1072#1089#1093#1086#1076')>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1088#1072#1089#1093#1086#1076')>'
+    end
     object actGoodsKindChoiceChild: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
@@ -790,11 +861,48 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       isShowModal = True
     end
-    object actUpdate: TdsdInsertUpdateAction [21]
+    inherited actMIMasterProtocol: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+        end>
+    end
+    object MovementProtocolOpenForm: TdsdOpenForm [21]
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actUpdate: TdsdInsertUpdateAction [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')>'
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TProductionUnionTechEditForm'
@@ -850,11 +958,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'MovementItemId'
     end
-    object actInsert: TdsdInsertUpdateAction [22]
+    object actInsert: TdsdInsertUpdateAction [23]
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')>'
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TProductionUnionTechEditForm'
@@ -901,7 +1009,16 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'MovementItemId'
     end
-    object actPrintReceipt: TdsdPrintAction [24]
+    inherited actMIChildProtocol: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = ChildCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+        end>
+    end
+    object actPrintReceipt: TdsdPrintAction [25]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spPrintReceipt
@@ -942,7 +1059,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
     end
-    object actReport_TaxExit_Loss: TdsdPrintAction [25]
+    object actReport_TaxExit_Loss: TdsdPrintAction [26]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1025,7 +1142,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.DataType = ftString
     end
-    object actReport_TaxLoss: TdsdPrintAction [26]
+    object actReport_TaxLoss: TdsdPrintAction [27]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1100,7 +1217,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.DataType = ftString
     end
-    object actReceiptChoice: TOpenChoiceForm [27]
+    object actReceiptChoice: TOpenChoiceForm [28]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1152,7 +1269,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       isShowModal = True
     end
-    object actUnComplete: TdsdChangeMovementStatus
+    object actUnComplete: TdsdChangeMovementStatus [32]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementUnComplete
@@ -1166,7 +1283,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Status = mtUncomplete
       DataSource = MasterDS
     end
-    object actComplete: TdsdChangeMovementStatus
+    object actComplete: TdsdChangeMovementStatus [33]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementComplete
@@ -1180,7 +1297,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Status = mtComplete
       DataSource = MasterDS
     end
-    object actSetErased: TdsdChangeMovementStatus
+    object actSetErased: TdsdChangeMovementStatus [34]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementSetErased
@@ -1225,6 +1342,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
   end
   inherited BarManager: TdxBarManager
@@ -1241,11 +1365,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbUnComplete'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'bbSetErased'
         end
         item
           Visible = True
@@ -1278,6 +1402,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
@@ -1321,7 +1449,23 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIMasterProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIChildProtocol'
         end
         item
           Visible = True
@@ -1344,25 +1488,32 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Action = actInsert
       Category = 0
     end
-    inherited bbComplete: TdxBarButton
-      Action = actComplete
-    end
-    inherited dxBarButton1: TdxBarButton
-      Action = actUnComplete
-    end
-    inherited dxBarButton2: TdxBarButton
-      Action = actSetErased
-    end
-    object bbPrintReceipt: TdxBarButton
+    object bbPrintReceipt: TdxBarButton [20]
       Action = actPrintReceipt
       Category = 0
     end
-    object bbReport_TaxLoss: TdxBarButton
+    object bbReport_TaxLoss: TdxBarButton [21]
       Action = actReport_TaxLoss
       Category = 0
     end
-    object bbReport_TaxExit_Loss: TdxBarButton
+    object bbReport_TaxExit_Loss: TdxBarButton [22]
       Action = actReport_TaxExit_Loss
+      Category = 0
+    end
+    object bbComplete: TdxBarButton [23]
+      Action = actComplete
+      Category = 0
+    end
+    object bbUnComplete: TdxBarButton [24]
+      Action = actUnComplete
+      Category = 0
+    end
+    object bbSetErased: TdxBarButton [25]
+      Action = actSetErased
+      Category = 0
+    end
+    object bbMovementProtocol: TdxBarButton [26]
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end
@@ -1559,13 +1710,55 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     MasterFields = 'MovementItemId'
   end
   inherited spErasedMIChild: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetErased'
+    StoredProcName = 'gpMovementItem_ProductionUnionTech_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = ChildCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outAmount_master'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outIsErased'
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+      end>
   end
   inherited spUnErasedMIChild: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetUnErased'
+    StoredProcName = 'gpMovementItem_ProductionUnionTech_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = ChildCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outAmount_master'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outIsErased'
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+      end>
   end
   inherited GuidesTo: TdsdGuides
     PositionDataSet = 'MasterCDS'
+    Left = 672
+    Top = 65528
   end
   inherited GuidesFrom: TdsdGuides
     PositionDataSet = 'MasterCDS'
@@ -1620,6 +1813,47 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInputOutput
       end
       item
+        Name = 'outAmount_master'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outAmountWeight'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'AmountWeight'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outAmountReceiptWeight'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'AmountReceiptWeight'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outIsWeightMain'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isWeightMain'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'outIsTaxExit'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isTaxExit'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'outGroupNumber'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'GroupNumber'
+      end
+      item
         Name = 'inPartionGoodsDate'
         Value = Null
         Component = ChildCDS
@@ -1662,8 +1896,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 168
-    Top = 40
+    Left = 176
+    Top = 56
   end
   object PrintMasterCDS: TClientDataSet
     Aggregates = <>
@@ -1879,6 +2113,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsLastComplete'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1

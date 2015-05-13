@@ -1,29 +1,29 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 410
-  ClientWidth = 1265
-  ExplicitWidth = 1281
-  ExplicitHeight = 448
+  ClientWidth = 1020
+  ExplicitWidth = 1036
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1265
+    Width = 1020
     Height = 330
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1112
-    ExplicitHeight = 309
+    ExplicitWidth = 1265
+    ExplicitHeight = 330
     ClientRectBottom = 330
-    ClientRectRight = 1265
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1112
-      ExplicitHeight = 309
+      ExplicitWidth = 1265
+      ExplicitHeight = 330
       inherited cxGrid: TcxGrid
-        Width = 1265
+        Width = 1020
         Height = 330
-        ExplicitWidth = 1112
-        ExplicitHeight = 309
+        ExplicitWidth = 1265
+        ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -185,6 +185,22 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Options.Editing = False
             Width = 70
           end
+          object colPartionMovementName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'PartionMovementName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
@@ -198,7 +214,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'StartRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -209,7 +225,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'Debet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -220,7 +236,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'Kredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -231,7 +247,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'EndRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -242,7 +258,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'StartRemains_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -254,7 +270,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'Debet_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -265,7 +281,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'Kredit_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -276,7 +292,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'EndRemains_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -442,7 +458,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'MovementSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
@@ -453,7 +469,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'MovementSumm_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
@@ -472,9 +488,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 1265
+    Width = 1020
     Height = 54
-    ExplicitWidth = 1112
+    ExplicitWidth = 1265
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -603,12 +619,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Width = 180
     end
     object cxLabel10: TcxLabel
-      Left = 1056
+      Left = 1040
       Top = 30
       Caption = #1042#1072#1083#1102#1090#1072':'
     end
     object edCurrency: TcxButtonEdit
-      Left = 1107
+      Left = 1089
       Top = 29
       Properties.Buttons = <
         item
@@ -617,25 +633,25 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end>
       Properties.ReadOnly = True
       TabOrder = 17
-      Width = 68
+      Width = 150
     end
     object cxLabel9: TcxLabel
-      Left = 1023
+      Left = 1024
       Top = 6
-      Caption = #1044#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080':'
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077':'
     end
-  end
-  object edInvNumberSale: TcxButtonEdit [2]
-    Left = 1107
-    Top = 5
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 6
-    Width = 150
+    object edInvNumberSale: TcxButtonEdit
+      Left = 1089
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 150
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -687,6 +703,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Component = PartnerGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = SaleChoiceGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -842,6 +864,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'CurrencyName'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'PartionMovementName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartionMovementName'
+          DataType = ftString
         end
         item
           Name = 'AccounterName'
@@ -1001,6 +1030,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ParamType = ptInput
         end
         item
+          Name = 'PartionMovementName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartionMovementName'
+          DataType = ftString
+        end
+        item
           Name = 'AccounterName'
           Value = Null
           Component = FormParams
@@ -1155,6 +1191,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'CurrencyName'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'PartionMovementName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartionMovementName'
+          DataType = ftString
         end
         item
           Name = 'InternalCurrencyName'
@@ -1316,6 +1359,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ParamType = ptInput
         end
         item
+          Name = 'PartionMovementName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartionMovementName'
+          DataType = ftString
+        end
+        item
           Name = 'AccounterName'
           Value = Null
           Component = FormParams
@@ -1450,7 +1500,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ParamType = ptInput
       end
       item
-        Name = 'inMovementId_Sale'
+        Name = 'inMovementId_Partion'
         Value = Null
         Component = SaleChoiceGuides
         ComponentItem = 'Key'
@@ -1591,6 +1641,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Component = CurrencyGuides
+      end
+      item
+        Component = SaleChoiceGuides
       end>
     Left = 408
     Top = 72

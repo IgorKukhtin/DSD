@@ -2,10 +2,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -164
-  ExplicitTop = -154
   ExplicitWidth = 998
-  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -115,6 +112,14 @@ inherited CashJournalUserForm: TCashJournalUserForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object clPartionMovementName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'PartionMovementName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object clAmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
@@ -245,14 +250,6 @@ inherited CashJournalUserForm: TCashJournalUserForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
-          end
-          object clInvNumber_Sale: TcxGridDBColumn
-            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'InvNumber_Sale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 130
           end
         end
       end

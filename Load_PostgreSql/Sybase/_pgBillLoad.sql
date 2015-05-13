@@ -7,8 +7,8 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
-      select '224097 ' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '222118' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+      select '227328' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+union select '227199' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '221222' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '213917' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '211817' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
@@ -33,9 +33,9 @@ union select '198727' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 
 union select '198727' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
 union select '198727' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
 
-union select '197841' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
-union select '197841' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
-union select '197841' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+union select '227021' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
+union select '227021' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
+union select '227021' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
 
 
 -- !!!!!!

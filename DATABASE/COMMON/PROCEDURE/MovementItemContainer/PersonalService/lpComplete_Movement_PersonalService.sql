@@ -11,6 +11,12 @@ AS
 $BODY$
    DECLARE vbMovementId_check Integer;
 BEGIN
+     -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
+     CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer) ON COMMIT DROP;
+     -- таблица - по элементам, для lpComplete_Movement_PersonalService_Recalc
+     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, MovementItemId_to Integer, SummCardRecalc TFloat) ON COMMIT DROP;
+
+
      -- Проверка - других быть не должно
      vbMovementId_check:= (SELECT MovementDate_ServiceDate.MovementId
                            FROM (SELECT MovementDate.MovementId     AS MovementId
@@ -55,7 +61,6 @@ BEGIN
      DELETE FROM _tmpItem;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     -- 1.1. долг сотруднику по ЗП
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -65,6 +70,7 @@ BEGIN
                          , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
+        -- 1.1. долг сотруднику по ЗП
         SELECT Movement.DescId
              , Movement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
@@ -139,6 +145,7 @@ BEGIN
         WHERE Movement.Id = inMovementId
           AND Movement.DescId = zc_Movement_PersonalService()
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+          AND MovementItem.Amount <> 0
        ;
 
 
@@ -156,7 +163,6 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     -- 1.2. ОПиУ по ЗП
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -166,6 +172,7 @@ BEGIN
                          , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
+         -- 1.2.1. ОПиУ по ЗП
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , 0 AS ObjectId
@@ -216,7 +223,67 @@ BEGIN
         FROM _tmpItem
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = _tmpItem.UnitId
+                                                             AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
+        WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL
+       UNION ALL
+         -- 1.2.2. Перевыставление затрат на Юр Лицо
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , COALESCE (ObjectLink_Contract_Juridical.ChildObjectId, 0) AS ObjectId
+             , COALESCE (Object.DescId, 0) AS ObjectDescId
+             , -1 * _tmpItem.OperSumm
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId                                               -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из договора
+             , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
+
+             , 0 AS UnitId                -- не используется
+             , 0 AS PositionId            -- не используется
+             , 0 AS PersonalServiceListId -- не используется
+
+               -- Филиал Баланс: всегда "Главный филиал" (нужен для НАЛ долгов)
+             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал ОПиУ: здесь не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , ObjectLink_Unit_Contract.ChildObjectId     AS ContractId
+             , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+        FROM _tmpItem
+             INNER JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = _tmpItem.UnitId
+                                                              AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                                                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind ON ObjectLink_Contract_PaidKind.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                                                                 AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+             LEFT JOIN Object ON Object.Id = ObjectLink_Contract_Juridical.ChildObjectId
+        WHERE ObjectLink_Unit_Contract.ChildObjectId > 0
        ;
 
 /*
@@ -293,6 +360,43 @@ BEGIN
                                 , inDescId     := zc_Movement_PersonalService()
                                 , inUserId     := inUserId
                                  );
+
+     -- 6. ФИНИШ - распределение !!!если это НЕ БН!!! и находим !!!ведомости БН!!!
+     PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := tmpMovement.MovementId
+                                                       , inUserId     := inUserId)
+     FROM (SELECT Movement.Id AS MovementId
+           FROM
+          (SELECT MovementDate_ServiceDate.ValueData AS ServiceDate
+           FROM Movement
+                LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                       ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                      AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                              ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                             AND MovementLinkObject_PersonalServiceList.ObjectId NOT IN (293716 -- Ведомость карточки БН Фидо
+                                                                                                       , 413454 -- Ведомость карточки БН Пиреус
+                                                                                                        )
+           WHERE Movement.Id = inMovementId
+             AND Movement.DescId = zc_Movement_PersonalService()
+             AND Movement.StatusId = zc_Enum_Status_Complete()
+          ) AS tmpMovement
+          INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                  ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
+                                 AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+          INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                        ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                       AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                       AND MovementLinkObject_PersonalServiceList.ObjectId IN (293716 -- Ведомость карточки БН Фидо
+                                                                                             , 413454 -- Ведомость карточки БН Пиреус
+                                                                                              )
+          INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+                             AND Movement.DescId = zc_Movement_PersonalService()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+          LIMIT 1
+          ) AS tmpMovement
+    ;
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -37,6 +37,7 @@ type
     UnitCode: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
     MoneyPlaceCode: TcxGridDBColumn;
+    ContractInvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

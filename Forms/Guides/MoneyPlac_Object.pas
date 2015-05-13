@@ -35,6 +35,8 @@ type
     BranchName: TcxGridDBColumn;
     OKPO: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
+    clPartionMovementName: TcxGridDBColumn;
+    clPaymentDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

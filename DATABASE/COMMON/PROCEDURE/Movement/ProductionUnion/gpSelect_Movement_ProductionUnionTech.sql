@@ -1,12 +1,13 @@
 -- Function: gpSelect_Movement_ProductionUnionTech()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inStartDate      TDateTime,
     IN inEndDate        TDateTime,
     IN inFromId         Integer,
     IN inToId           Integer,
+    IN inIsErased       Boolean      , --
     IN inSession        TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS SETOF refcursor
@@ -183,6 +184,11 @@ BEGIN
             , Object_Status.ObjectCode            AS StatusCode
             , Object_Status.ValueData             AS StatusName
 
+            , Object_Insert.ValueData             AS InsertName
+            , Object_Update.ValueData             AS UpdateName
+            , MIDate_Insert.ValueData             AS InsertDate
+            , MIDate_Update.ValueData             AS UpdateDate
+
             , FALSE                               AS isErased
 
        FROM _tmpListMaster
@@ -203,6 +209,22 @@ BEGIN
                                           ON MIString_Comment.MovementItemId = _tmpListMaster.MovementItemId
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
                                          AND _tmpListMaster.MovementId <> 0
+
+             LEFT JOIN MovementItemDate AS MIDate_Insert
+                                        ON MIDate_Insert.MovementItemId = _tmpListMaster.MovementItemId
+                                       AND MIDate_Insert.DescId = zc_MIDate_Insert()
+             LEFT JOIN MovementItemDate AS MIDate_Update
+                                        ON MIDate_Update.MovementItemId = _tmpListMaster.MovementItemId
+                                       AND MIDate_Update.DescId = zc_MIDate_Update()
+
+             LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                              ON MILO_Insert.MovementItemId = _tmpListMaster.MovementItemId
+                                             AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+             LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                              ON MILO_Update.MovementItemId = _tmpListMaster.MovementItemId
+                                             AND MILO_Update.DescId = zc_MILinkObject_Update()
+             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpListMaster.GoodsId
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpListMaster.GoodsKindId
@@ -236,6 +258,7 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.ParentId = _tmpListMaster.MovementItemId
                                    AND MovementItem.MovementId = _tmpListMaster.MovementId
                                    AND MovementItem.DescId   = zc_MI_Child()
+            INNER JOIN (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased ON tmpIsErased.isErased = MovementItem.isErased
        WHERE _tmpListMaster.MovementId <> 0;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -404,8 +427,12 @@ BEGIN
                                              , inIsTaxExit              := COALESCE (MIBoolean_WeightMain.ValueData, tmpMI_ReceiptChild.isWeightMain)
                                               ) AS GroupNumber
 
-            , tmpMI_Child.isErased
+            , Object_Insert.ValueData             AS InsertName
+            , Object_Update.ValueData             AS UpdateName
+            , MIDate_Insert.ValueData             AS InsertDate
+            , MIDate_Update.ValueData             AS UpdateDate
 
+            , tmpMI_Child.isErased
 
        FROM tmpMI_Child
             FULL JOIN tmpMI_ReceiptChild ON tmpMI_ReceiptChild.MovementItemId_Child = tmpMI_Child.MovementItemId_Child
@@ -436,6 +463,22 @@ BEGIN
                                          ON MIString_Comment.MovementItemId = tmpMI_Child.MovementItemId_Child
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
+             LEFT JOIN MovementItemDate AS MIDate_Insert
+                                        ON MIDate_Insert.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                       AND MIDate_Insert.DescId = zc_MIDate_Insert()
+             LEFT JOIN MovementItemDate AS MIDate_Update
+                                        ON MIDate_Update.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                       AND MIDate_Update.DescId = zc_MIDate_Update()
+
+             LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                              ON MILO_Insert.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                             AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+             LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                              ON MILO_Update.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                             AND MILO_Update.DescId = zc_MILinkObject_Update()
+             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -456,7 +499,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -467,4 +510,4 @@ ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Inte
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= ('01.02.2015')::TDateTime, inEndDate:= ('01.02.2015')::TDateTime, inFromId:= 8447, inToId:= 8447, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= ('01.02.2015')::TDateTime, inEndDate:= ('01.02.2015')::TDateTime, inFromId:= 8447, inToId:= 8447, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

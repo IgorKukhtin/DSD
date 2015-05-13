@@ -4,8 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -18,11 +17,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioCountForPrice          TFloat    , -- Цена за количество
    OUT outAmountSumm            TFloat    , -- Сумма расчетная
     IN inHeadCount              TFloat    , -- Количество голов
-    IN inMovementId_Top         TFloat    , -- Id документа продажи из шапки
-    IN inMovementId_MI          TFloat    , -- Id документа продажи строчная часть
+    IN inMovementId_PartionTop  Integer    , -- Id документа продажи из шапки
+    IN inMovementId_PartionMI   Integer    , -- Id документа продажи строчная часть
     IN inPartionGoods           TVarChar  , -- Партия товара
     IN inGoodsKindId            Integer   , -- Виды товаров
     IN inAssetId                Integer   , -- Основные средства (для которых закупается ТМЦ)
+   OUT outMovementId_Partion    Integer   , -- 
+   OUT outPartionMovementName   TVarChar  , -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -38,10 +39,23 @@ BEGIN
          ioAmountPartner := inAmount;
      END IF;
 
-     IF COALESCE (inMovementId_MI, 0) = 0
+     -- !!!меняется параметр!!!
+     IF COALESCE (inMovementId_PartionMI, 0) = 0
      THEN
-         inMovementId_MI := COALESCE (inMovementId_Top, 0);
+         inMovementId_PartionMI := COALESCE (inMovementId_PartionTop, 0);
      END IF;
+
+     -- параметры документа inMovementId_PartionMI
+     SELECT Movement_PartionMovement.Id AS MovementId_Partion
+          , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
+            INTO outMovementId_Partion, outPartionMovementName
+     FROM Movement AS Movement_PartionMovement
+          LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
+                                 ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
+                                AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
+     WHERE Movement_PartionMovement.Id = inMovementId_PartionMI;
+
 
      -- сохранили <Элемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
@@ -54,7 +68,7 @@ BEGIN
                                               , inPrice              := inPrice
                                               , ioCountForPrice      := ioCountForPrice
                                               , inHeadCount          := inHeadCount
-                                              , inMovementId_MI      := inMovementId_MI
+                                              , inMovementId_Partion := inMovementId_PartionMI
                                               , inPartionGoods       := inPartionGoods
                                               , inGoodsKindId        := inGoodsKindId
                                               , inAssetId            := inAssetId

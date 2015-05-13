@@ -51,7 +51,7 @@ BEGIN
      THEN
          SELECT PriceListId, PriceListName, PriceWithVAT, VATPercent
                 INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
-         FROM lfGet_Object_Partner_PriceList (inPartnerId:= inFromId, inOperDate:= outOperDatePartner);
+         FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inFromId, inOperDate:= outOperDatePartner);
      ELSE
          SELECT Object_PriceList.ValueData                             AS PriceListName
               , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT

@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Choice(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean
+             , PaymentDate TDateTime
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
@@ -49,12 +50,6 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- !!!т.к. нельзя когда много данных в гриде!!!
-     IF inStartDate + (INTERVAL '100 DAY') <= inEndDate
-     THEN
-         inStartDate:= inEndDate + (INTERVAL '1 DAY');
-     END IF;
-
      -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -80,6 +75,7 @@ BEGIN
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
 
+           , MovementDate_Payment.ValueData                 AS PaymentDate
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
 
@@ -159,8 +155,7 @@ BEGIN
                         ELSE FALSE
                    END AS Boolean) AS isError
 
-        , CAST ('' || CAST (Movement.InvNumber AS TVarChar)
-                || ' oт '|| CAST (DATE(Movement.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Full
+        , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, MovementDate_OperDatePartner.ValueData) AS InvNumber_Full
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -179,6 +174,7 @@ BEGIN
             ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
 
@@ -201,6 +197,9 @@ BEGIN
                                       ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
                                      AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
 
+            LEFT JOIN MovementDate AS MovementDate_Payment
+                                   ON MovementDate_Payment.MovementId =  Movement.Id
+                                  AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -361,7 +360,7 @@ BEGIN
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
-          WHERE MovementLinkObject_To.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0
+          WHERE MovementLinkObject_To.ObjectId = inPartnerId -- OR COALESCE (inPartnerId, 0) = 0
             ;
 
 END;
@@ -377,4 +376,3 @@ ALTER FUNCTION gpSelect_Movement_Sale_Choice (TDateTime, TDateTime, Boolean, Boo
 
 -- тест
 -- select * from gpSelect_Movement_Sale_Choice(instartdate := ('01.01.2015')::TDateTime , inenddate := ('07.01.2015')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inPartnerId := 17474 ,  inSession := '5');
- 

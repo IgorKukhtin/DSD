@@ -33,6 +33,12 @@ BEGIN
      IF inShowAll THEN
 
      RETURN QUERY
+       WITH tmpPrice AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                              , lfObjectHistory_PriceListItem.ValuePrice AS Price
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                              AS lfObjectHistory_PriceListItem
+                         WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+                        )
        SELECT
              0 AS Id
            , tmpGoods.GoodsId
@@ -44,7 +50,7 @@ BEGIN
            , CAST (NULL AS TFloat)              AS Amount
            , CAST (NULL AS TFloat)              AS HeadCount
            , CAST (NULL AS TFloat)              AS Count
-           , CAST (NULL AS TFloat)              AS Price
+           , tmpPrice.Price :: TFloat           AS Price
            , CAST (NULL AS TFloat)              AS Summ
            , CAST (NULL AS TDateTime)           AS PartionGoodsDate
            , CAST (NULL AS TVarChar)            AS PartionGoods
@@ -101,6 +107,8 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -115,7 +123,8 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
-           , MIFloat_Price.ValueData            AS Price
+           -- , MIFloat_Price.ValueData            AS Price
+           , tmpPrice.Price :: TFloat           AS Price
            , MIFloat_Summ.ValueData             AS Summ
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MIString_PartionGoods.ValueData    AS PartionGoods
@@ -196,11 +205,19 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
+
        ;
 
      ELSE
 
      RETURN QUERY
+       WITH tmpPrice AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                              , lfObjectHistory_PriceListItem.ValuePrice AS Price
+                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                              AS lfObjectHistory_PriceListItem
+                         WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+                        )
        SELECT
              MovementItem.Id                    AS Id
            , Object_Goods.Id                    AS GoodsId
@@ -212,7 +229,8 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
-           , MIFloat_Price.ValueData            AS Price
+           -- , MIFloat_Price.ValueData            AS Price
+           , tmpPrice.Price :: TFloat           AS Price
            , MIFloat_Summ.ValueData             AS Summ
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MIString_PartionGoods.ValueData    AS PartionGoods
@@ -292,6 +310,7 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
        ;
 
      END IF;

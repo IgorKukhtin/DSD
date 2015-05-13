@@ -1,19 +1,21 @@
 -- Function: gpInsertUpdate_Object_Personal()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
- INOUT ioId                  Integer   , -- ключ объекта <Сотрудники>
-    IN inMemberId            Integer   , -- ссылка на Физ.лица 
-    IN inPositionId          Integer   , -- ссылка на Должность
-    IN inPositionLevelId     Integer   , -- ссылка на Разряд должности
-    IN inUnitId              Integer   , -- ссылка на Подразделение
-    IN inPersonalGroupId     Integer   , -- Группировки Сотрудников
-    IN inDateIn              TDateTime , -- Дата принятия
-    IN inDateOut             TDateTime , -- Дата увольнения
-    IN inIsDateOut           Boolean   , -- Уволен
-    IN inIsMain              Boolean   , -- Основное место работы
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                        Integer   , -- ключ объекта <Сотрудники>
+    IN inMemberId                  Integer   , -- ссылка на Физ.лица 
+    IN inPositionId                Integer   , -- ссылка на Должность
+    IN inPositionLevelId           Integer   , -- ссылка на Разряд должности
+    IN inUnitId                    Integer   , -- ссылка на Подразделение
+    IN inPersonalGroupId           Integer   , -- Группировки Сотрудников
+    IN inPersonalServiceListId     Integer   , -- Ведомость начисления(главная)
+    IN inDateIn                    TDateTime , -- Дата принятия
+    IN inDateOut                   TDateTime , -- Дата увольнения
+    IN inIsDateOut                 Boolean   , -- Уволен
+    IN inIsMain                    Boolean   , -- Основное место работы
+    IN inSession                   TVarChar    -- сессия пользователя
 )
 RETURNS Integer
 AS
@@ -75,8 +77,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PositionLevel(), ioId, inPositionLevelId);
    -- сохранили связь с <подразделением>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Unit(), ioId, inUnitId);
-      -- сохранили связь с <Группировки Сотрудников>
+   -- сохранили связь с <Группировки Сотрудников>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalGroup(), ioId, inPersonalGroupId);
+   -- сохранили связь с <Прайслист>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), ioId, inPersonalServiceListId); 
    -- сохранили свойство <Дата принятия>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_In(), ioId, inDateIn);
 
@@ -97,12 +101,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07,05,15         * add PersonalServiceList
  12.09.14                                        * add inIsDateOut and inIsOfficial
  21.05.14                        * add inOfficial
  14.12.13                                        * add inAccessKeyId берем по другому

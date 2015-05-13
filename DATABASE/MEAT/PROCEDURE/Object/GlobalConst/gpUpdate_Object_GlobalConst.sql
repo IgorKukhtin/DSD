@@ -7,15 +7,24 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GlobalConst(
     IN inActualBankStatementDate  TDateTime ,    -- Дата
     IN inSession                  TVarChar       -- сессия пользователя
 )
- RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
+     vbUserId:= lpGetUserBySession (inSession);
 
-   -- сохранили <Дату разнесения выписок>
-   PERFORM lpInsertUpdate_ObjectDate(zc_ObjectDate_GlobalConst_ActualBankStatement(), ioId, inActualBankStatementDate);
+     -- проверка прав пользователя (конечно кроме пользователя Админа)
+     IF NOT EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId = ioId)
+        AND vbUserId <> zfCalc_UserAdmin() :: Integer
+     THEN
+          RAISE EXCEPTION 'Ошибка.Нет прав изменять параметр <%>.', lfGet_Object_ValueData (ioId);
+     END IF;
+
+   -- сохранили <Дату ...>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GlobalConst_ActualBankStatement(), ioId, inActualBankStatementDate);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -29,6 +38,7 @@ ALTER FUNCTION gpUpdate_Object_GlobalConst (Integer, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.04.15                                        * add проверка прав пользователя (конечно кроме пользователя Админа)
  07.06.15                         * 
 */
 

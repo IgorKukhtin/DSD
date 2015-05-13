@@ -5,7 +5,7 @@
   ClientWidth = 563
   AddOnFormData.isSingle = False
   ExplicitWidth = 569
-  ExplicitHeight = 338
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -447,11 +447,10 @@
         ParamType = ptInput
       end
       item
-        Name = 'inMovementId_Sale'
+        Name = 'inMovementId_Partion'
         Value = Null
         Component = SaleChoiceGuides
         ComponentItem = 'Key'
-        DataType = ftFloat
         ParamType = ptInput
       end>
     Left = 464
@@ -641,13 +640,13 @@
         DataType = ftString
       end
       item
-        Name = 'MovementId_Sale'
+        Name = 'MovementId_Partion'
         Value = Null
         Component = SaleChoiceGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'InvNumber_Sale'
+        Name = 'PartionMovementName'
         Value = Null
         Component = SaleChoiceGuides
         ComponentItem = 'TextValue'
@@ -800,6 +799,19 @@
         Name = 'PositionName'
         Value = ''
         Component = PersonalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'MovementId_Partion'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartionMovementName'
+        Value = Null
+        Component = SaleChoiceGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -1019,11 +1031,13 @@
       item
         Name = 'PartnerId'
         Value = ''
+        Component = ObjectlGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PartnerName'
         Value = ''
+        Component = ObjectlGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>

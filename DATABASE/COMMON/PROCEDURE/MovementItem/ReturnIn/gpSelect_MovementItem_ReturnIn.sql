@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat
-             , InvNumber_Sale TVarChar, MovementId_Sale TFloat
+             , MovementId_Partion Integer, PartionMovementName TVarChar
              , isErased Boolean
              )
 AS
@@ -36,32 +36,20 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       SELECT
-             0                          AS Id
-           , 0 :: Integer               AS LineNum
-           , tmpGoods.GoodsId           AS GoodsId
-           , tmpGoods.GoodsCode         AS GoodsCode
-           , tmpGoods.GoodsName         AS GoodsName
-           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-
-           , CAST (NULL AS TFloat)      AS Amount
-           , CAST (NULL AS TFloat)      AS AmountPartner
-           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
-           , CAST (NULL AS TFloat)      AS CountForPrice
-           , CAST (NULL AS TFloat)      AS HeadCount
-           , CAST (NULL AS TVarChar)    AS PartionGoods
-           , Object_GoodsKind.Id        AS GoodsKindId
-           , Object_GoodsKind.ValueData AS GoodsKindName
-           , Object_Measure.ValueData   AS MeasureName
-           , 0 ::Integer                AS AssetId
-           , '' ::TVarChar              AS AssetName
-           , CAST (NULL AS TFloat)      AS AmountSumm
-
-           , CAST (NULL AS TVarChar)  	AS InvNumber_Sale
-           , CAST (NULL AS TFloat)      AS MovementId_Sale
-           , FALSE                      AS isErased
-
-       FROM (SELECT Object_Goods.Id           AS GoodsId
+       WITH tmpMI AS (SELECT MovementItem.*
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = tmpIsErased.isErased
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     )
+       , tmpPrice AS (SELECT lfObjectHistory_PriceListItem.*
+                      FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfObjectHistory_PriceListItem
+                     )
+       , tmpGoods AS (SELECT Object_Goods.Id           AS GoodsId
                   , Object_Goods.ObjectCode   AS GoodsCode
                   , Object_Goods.ValueData    AS GoodsName
                   -- , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN zc_Enum_GoodsKind_Main() ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция + Доходы Мясное сырье
@@ -75,21 +63,39 @@ BEGIN
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье + Доходы Мясное сырье*/
              WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
-            ) AS tmpGoods
-            LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                             AND MovementItem.DescId     = zc_MI_Master()
-                                             AND MovementItem.isErased   = tmpIsErased.isErased
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
-                                AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
+            )
+
+       SELECT
+             0                          AS Id
+           , 0 :: Integer               AS LineNum
+           , tmpGoods.GoodsId           AS GoodsId
+           , tmpGoods.GoodsCode         AS GoodsCode
+           , tmpGoods.GoodsName         AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+
+           , CAST (NULL AS TFloat)      AS Amount
+           , CAST (NULL AS TFloat)      AS AmountPartner
+           , tmpPrice.ValuePrice        AS Price
+           , CAST (NULL AS TFloat)      AS CountForPrice
+           , CAST (NULL AS TFloat)      AS HeadCount
+           , CAST (NULL AS TVarChar)    AS PartionGoods
+           , Object_GoodsKind.Id        AS GoodsKindId
+           , Object_GoodsKind.ValueData AS GoodsKindName
+           , Object_Measure.ValueData   AS MeasureName
+           , 0 ::Integer                AS AssetId
+           , '' ::TVarChar              AS AssetName
+           , CAST (NULL AS TFloat)      AS AmountSumm
+
+           , CAST (0  AS Integer)       AS MovementId_Partion
+           , CAST ('' AS TVarChar)  	AS PartionMovementName
+
+           , FALSE                      AS isErased
+
+       FROM tmpGoods
+            LEFT JOIN tmpMI ON tmpMI.ObjectId    = tmpGoods.GoodsId
+                           AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
@@ -99,8 +105,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+       WHERE tmpMI.ObjectId IS NULL
 
-       WHERE tmpMI.GoodsId IS NULL
       UNION ALL
        SELECT
              MovementItem.Id			AS Id
@@ -129,15 +135,12 @@ BEGIN
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) 				AS AmountSumm
 
-           , CAST ('' || CAST (Movement_Sale.InvNumber AS TVarChar)
-                || ' oт '|| CAST (DATE(Movement_Sale.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Sale
-           , CAST (Movement_Sale.Id AS TFloat) 	AS MovementId_Sale
+           , MIFloat_MovementId.ValueData :: Integer      AS MovementId_Partion
+           , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
            , MovementItem.isErased		AS isErased
 
-       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Master()
+       FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -162,7 +165,11 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData :: Integer
+            LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
+                                   ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
+                                  AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
@@ -181,9 +188,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-                                  
-            ;
-
+           ;
      ELSE
 
      RETURN QUERY
@@ -211,9 +216,8 @@ BEGIN
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)			    AS AmountSumm
 
-           , CAST ('' || CAST (Movement_Sale.InvNumber AS TVarChar)
-                || ' oт '|| CAST (DATE(Movement_Sale.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Sale
-           , CAST (Movement_Sale.Id AS TFloat) 	AS MovementId_Sale
+           , MIFloat_MovementId.ValueData :: Integer      AS MovementId_Partion
+           , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
            , MovementItem.isErased              AS isErased
 
@@ -246,7 +250,11 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData :: Integer
+            LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
+                                   ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
+                                  AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
@@ -287,4 +295,4 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Integer, TDateTime, Bool
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inPriceListId:=18840, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inPriceListId:=18840, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= FALSE, inisErased:= FALSE, inSession:= '2')

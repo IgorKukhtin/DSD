@@ -491,6 +491,7 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Id'
           Value = Null
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
@@ -537,6 +538,7 @@ object JuridicalForm: TJuridicalForm
     object actChoiceRetailForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'RetailChoiceForm'
       FormName = 'TRetailForm'
       FormNameParam.Value = 'TRetailForm'
@@ -560,6 +562,7 @@ object JuridicalForm: TJuridicalForm
     object actChoiceRetailReportForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'RetailChoiceForm'
       FormName = 'TRetailReportForm'
       FormNameParam.Value = 'TRetailReportForm'
@@ -583,6 +586,7 @@ object JuridicalForm: TJuridicalForm
     object actChoicePriceListPromoForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PriceListPromoChoiceForm'
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
@@ -606,6 +610,7 @@ object JuridicalForm: TJuridicalForm
     object actChoicePriceListForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PriceListChoiceForm'
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
@@ -664,6 +669,7 @@ object JuridicalForm: TJuridicalForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -684,6 +690,7 @@ object JuridicalForm: TJuridicalForm
     object actChoiceJuridicalGroup: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PriceListChoiceForm'
       FormName = 'TJuridicalGroup_ObjectForm'
       FormNameParam.Value = 'TJuridicalGroup_ObjectForm'

@@ -1,8 +1,9 @@
--- Function: lfGet_Object_Partner_PriceList_record (Integer, TDateTime)
+-- Function: lfGet_Object_Partner_PriceList_record (Integer, Integer, TDateTime)
 
-DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_record (Integer, TDateTime);
+DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_record (Integer, Integer, TDateTime);
 
 CREATE OR REPLACE FUNCTION lfGet_Object_Partner_PriceList_record(
+    IN inContractId Integer, 
     IN inPartnerId Integer,
     IN inOperDate TDateTime)
 RETURNS Integer
@@ -12,7 +13,7 @@ $BODY$
 BEGIN
       SELECT PriceListId
              INTO vbPriceListId
-      FROM lfGet_Object_Partner_PriceList (inPartnerId:= inPartnerId, inOperDate:= inOperDate);
+      FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inPartnerId, inOperDate:= inOperDate);
 
       RETURN vbPriceListId;
 END;
@@ -26,4 +27,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lfGet_Object_Partner_PriceList_record (inPartnerId:= 79134, inOperDate:= '20.11.2014')
+-- SELECT * FROM lfGet_Object_Partner_PriceList_record (inContractId:= 1, inPartnerId:= 79134, inOperDate:= '20.11.2014')

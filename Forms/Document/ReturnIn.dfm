@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 668
   ClientWidth = 1139
   ExplicitWidth = 1155
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -209,9 +209,9 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 65
           end
-          object clInvNumber_Sale: TcxGridDBColumn
+          object clPartionMovementName: TcxGridDBColumn [14]
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'InvNumber_Sale'
+            DataBinding.FieldName = 'PartionMovementName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -219,6 +219,7 @@ inherited ReturnInForm: TReturnInForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 145
@@ -602,23 +603,23 @@ inherited ReturnInForm: TReturnInForm
       Left = 8
       Properties.ReadOnly = False
       ExplicitLeft = 8
-      ExplicitWidth = 74
-      Width = 74
+      ExplicitWidth = 114
+      Width = 114
     end
     inherited cxLabel1: TcxLabel
       Left = 8
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 236
+      Left = 276
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 236
+      ExplicitLeft = 276
     end
     inherited cxLabel2: TcxLabel
-      Left = 236
+      Left = 276
       Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
-      ExplicitLeft = 236
+      ExplicitLeft = 276
       ExplicitWidth = 71
     end
     inherited cxLabel15: TcxLabel
@@ -629,17 +630,17 @@ inherited ReturnInForm: TReturnInForm
       Top = 63
       TabOrder = 8
       ExplicitTop = 63
-      ExplicitWidth = 74
+      ExplicitWidth = 114
       ExplicitHeight = 22
-      Width = 74
+      Width = 114
     end
     object cxLabel3: TcxLabel
-      Left = 520
-      Top = 0
+      Left = 565
+      Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edTo: TcxButtonEdit
-      Left = 525
+      Left = 565
       Top = 23
       Properties.Buttons = <
         item
@@ -651,7 +652,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 132
     end
     object edFrom: TcxButtonEdit
-      Left = 344
+      Left = 384
       Top = 23
       Properties.Buttons = <
         item
@@ -663,12 +664,12 @@ inherited ReturnInForm: TReturnInForm
       Width = 170
     end
     object cxLabel4: TcxLabel
-      Left = 344
+      Left = 384
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edContract: TcxButtonEdit
-      Left = 788
+      Left = 826
       Top = 23
       Properties.Buttons = <
         item
@@ -681,17 +682,17 @@ inherited ReturnInForm: TReturnInForm
       Width = 98
     end
     object cxLabel9: TcxLabel
-      Left = 788
+      Left = 826
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object cxLabel6: TcxLabel
-      Left = 664
+      Left = 704
       Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 664
+      Left = 704
       Top = 23
       Properties.Buttons = <
         item
@@ -703,7 +704,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 118
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 344
+      Left = 384
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
@@ -711,7 +712,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 474
+      Left = 514
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -720,12 +721,12 @@ inherited ReturnInForm: TReturnInForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 474
+      Left = 514
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 525
+      Left = 565
       Top = 63
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
@@ -734,12 +735,12 @@ inherited ReturnInForm: TReturnInForm
       Width = 132
     end
     object cxLabel8: TcxLabel
-      Left = 525
+      Left = 565
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076' (+)% '#1053#1072#1094
     end
     object edOperDatePartner: TcxDateEdit
-      Left = 236
+      Left = 276
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -747,19 +748,19 @@ inherited ReturnInForm: TReturnInForm
       Width = 100
     end
     object cxLabel10: TcxLabel
-      Left = 236
+      Left = 276
       Top = 45
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edIsChecked: TcxCheckBox
-      Left = 664
+      Left = 704
       Top = 63
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 22
       Width = 118
     end
     object edPriceList: TcxButtonEdit
-      Left = 786
+      Left = 826
       Top = 63
       Properties.Buttons = <
         item
@@ -771,39 +772,39 @@ inherited ReturnInForm: TReturnInForm
       Width = 100
     end
     object cxLabel11: TcxLabel
-      Left = 788
+      Left = 826
       Top = 45
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
     object cxLabel12: TcxLabel
-      Left = 83
+      Left = 123
       Top = 5
       Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edInvNumberPartner: TcxTextEdit
-      Left = 83
+      Left = 123
       Top = 23
       TabOrder = 14
       Width = 84
     end
     object edInvNumberMark: TcxTextEdit
-      Left = 168
+      Left = 208
       Top = 23
       TabOrder = 26
       Width = 63
     end
     object cxLabel13: TcxLabel
-      Left = 168
+      Left = 208
       Top = 5
       Caption = #8470' '#1079'.'#1084'.'
     end
     object cxLabel20: TcxLabel
-      Left = 892
+      Left = 932
       Top = 5
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edContractTag: TcxButtonEdit
-      Left = 892
+      Left = 932
       Top = 23
       Properties.Buttons = <
         item
@@ -816,12 +817,12 @@ inherited ReturnInForm: TReturnInForm
       Width = 97
     end
     object cxLabel19: TcxLabel
-      Left = 83
+      Left = 123
       Top = 45
       Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
     end
     object edInvNumberSale: TcxButtonEdit
-      Left = 83
+      Left = 123
       Top = 63
       Properties.Buttons = <
         item
@@ -834,7 +835,7 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
-    Left = 892
+    Left = 932
     Top = 63
     Properties.Buttons = <
       item
@@ -846,17 +847,17 @@ inherited ReturnInForm: TReturnInForm
     Width = 97
   end
   object cxLabel5: TcxLabel [3]
-    Left = 892
+    Left = 932
     Top = 45
     Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
   end
   object cxLabel14: TcxLabel [4]
-    Left = 997
+    Left = 1037
     Top = 45
     Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
   end
   object edCurrencyDocument: TcxButtonEdit [5]
-    Left = 997
+    Left = 1037
     Top = 63
     Properties.Buttons = <
       item
@@ -869,12 +870,12 @@ inherited ReturnInForm: TReturnInForm
     Width = 78
   end
   object cxLabel16: TcxLabel [6]
-    Left = 1080
+    Left = 1120
     Top = 45
     Caption = #1050#1091#1088#1089
   end
   object edCurrencyValue: TcxCurrencyEdit [7]
-    Left = 1080
+    Left = 1120
     Top = 63
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -885,12 +886,12 @@ inherited ReturnInForm: TReturnInForm
     Width = 44
   end
   object cxLabel17: TcxLabel [8]
-    Left = 997
+    Left = 1037
     Top = 5
     Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
   end
   object edCurrencyPartner: TcxButtonEdit [9]
-    Left = 997
+    Left = 1037
     Top = 23
     Properties.Buttons = <
       item
@@ -1327,14 +1328,14 @@ inherited ReturnInForm: TReturnInForm
           Name = 'InvNumber_Full'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InvNumber_Sale'
+          ComponentItem = 'PartionMovementName'
           DataType = ftString
         end
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MovementId_Sale'
+          ComponentItem = 'MovementId_Partion'
         end
         item
           Name = 'PartnerId'
@@ -1928,6 +1929,19 @@ inherited ReturnInForm: TReturnInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MovementId_Partion'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartionMovementName'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 224
     Top = 248
@@ -2218,19 +2232,17 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
-        Name = 'inMovementId_Top'
+        Name = 'inMovementId_PartionTop'
         Value = Null
         Component = SaleChoiceGuides
         ComponentItem = 'Key'
-        DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inMovementId_MI'
+        Name = 'inMovementId_PartionMI'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MovementId_Sale'
-        DataType = ftFloat
+        ComponentItem = 'MovementId_Partion'
         ParamType = ptInput
       end
       item
@@ -2254,6 +2266,19 @@ inherited ReturnInForm: TReturnInForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
+      end
+      item
+        Name = 'outMovementId_Partion'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Partion'
+      end
+      item
+        Name = 'outPartionMovementName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionMovementName'
+        DataType = ftString
       end>
     Left = 160
     Top = 368

@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , MemberCode Integer, MemberName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , ContractCode Integer, ContractInvNumber TVarChar
              , UnitCode Integer, UnitName TVarChar
              , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
              , BranchCode Integer, BranchName TVarChar
@@ -65,6 +66,8 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
            , View_InfoMoney.InfoMoneyName_all
+           , View_Contract_InvNumber.ContractCode AS ContractCode
+           , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
            , Object_MoneyPlace.ObjectCode       AS MoneyPlaceCode
@@ -163,6 +166,12 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = tmpMovement.MovementItemId
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                         ON MILinkObject_Contract.MovementItemId = tmpMovement.MovementItemId
+                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpMovement.MovementItemId
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -188,6 +197,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Integer, 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.05.15         * add Contract
  08.04.15                                        * all
  15.09.14                                                        *
 */

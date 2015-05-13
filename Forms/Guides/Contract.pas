@@ -195,6 +195,10 @@ type
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
     isConnected: TcxGridDBColumn;
+    clGoodsPropertyName: TcxGridDBColumn;
+    clRetailName: TcxGridDBColumn;
+    GoodsPropertyChoiceForm: TOpenChoiceForm;
+
   private
     { Private declarations }
   public

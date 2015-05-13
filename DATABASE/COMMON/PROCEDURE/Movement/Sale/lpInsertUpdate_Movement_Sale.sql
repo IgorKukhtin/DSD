@@ -68,11 +68,12 @@ BEGIN
 
      -- ѕрайс-лист
      IF COALESCE (ioPriceListId, 0) = 0 -- OR COALESCE (ioId, 0) = 0
+        OR 1=1 -- !!!всегда расчет!!!
      THEN
          -- !!!расчет!!! эти параметры всегда из ѕрайс-листа !!!на дату inOperDatePartner!!!
          SELECT PriceListId, PriceListName, PriceWithVAT, VATPercent
                 INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
-         FROM lfGet_Object_Partner_PriceList (inPartnerId:= inToId, inOperDate:= inOperDatePartner);
+         FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inToId, inOperDate:= inOperDatePartner);
      ELSE
          SELECT Object_PriceList.ValueData                             AS PriceListName
               , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT

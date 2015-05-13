@@ -1385,7 +1385,7 @@ object MainForm: TMainForm
     end
     object cbDocERROR: TCheckBox
       Left = 166
-      Top = 454
+      Top = 430
       Width = 75
       Height = 31
       Caption = #1058#1086#1083#1100#1082#1086' c ERROR'
@@ -1396,6 +1396,21 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 46
+      WordWrap = True
+    end
+    object cbShowContract: TCheckBox
+      Left = 157
+      Top = 484
+      Width = 84
+      Height = 31
+      Caption = 'only Show Contract'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 47
       WordWrap = True
     end
   end

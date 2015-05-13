@@ -218,7 +218,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1053#1072#1095'. '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
@@ -232,7 +232,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'StartAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
@@ -246,7 +246,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'StartAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
@@ -260,7 +260,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1050#1072#1089#1089#1072' (+)'#1087#1088#1080#1093' (-)'#1074#1086#1079#1074#1088'.'
             DataBinding.FieldName = 'MoneySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
@@ -273,7 +273,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1056#1072#1089#1093#1086#1076#1099' ('#1072#1074#1072#1085#1089'. '#1086#1090#1095'.)'
             DataBinding.FieldName = 'ReportSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
@@ -286,6 +286,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1056#1072#1089#1095#1077#1090#1099' '#1089' '#1102#1088'.'#1083#1080#1094#1086#1084
             DataBinding.FieldName = 'AccountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
@@ -296,6 +297,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' (+)'#1087#1088#1080#1093' (-)'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'SendSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
@@ -306,7 +308,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
@@ -320,7 +322,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
@@ -334,7 +336,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1050#1086#1085'. '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
@@ -348,7 +350,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'EndAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0
@@ -362,7 +364,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'EndAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.MaxLength = 0

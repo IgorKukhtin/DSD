@@ -369,6 +369,7 @@ BEGIN
                                                                             , inObjectId_2        := _tmpItem.CurrencyId
                                                                              )
                                             WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
+                                             AND _tmpItem.ObjectDescId IN (zc_Object_Cash(), zc_Object_BankAccount())
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
@@ -506,6 +507,7 @@ BEGIN
                                                                             , inObjectId_2        := _tmpItem.CurrencyId
                                                                              )
                                             WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
+                                             AND _tmpItem.ObjectDescId IN (zc_Object_Cash(), zc_Object_BankAccount())
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_SummCurrency()
                                                                             , inParentId          := _tmpItem.ContainerId
                                                                             , inObjectId          := _tmpItem.AccountId

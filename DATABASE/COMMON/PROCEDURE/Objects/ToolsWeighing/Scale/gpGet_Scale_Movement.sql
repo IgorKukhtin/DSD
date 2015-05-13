@@ -18,8 +18,9 @@ RETURNS TABLE (MovementId       Integer
              , ToId           Integer, ToCode           Integer, ToName         TVarChar
              , PaidKindId     Integer, PaidKindName   TVarChar
 
-             , PriceListId    Integer, PriceListCode  Integer, PriceListName TVarChar
-             , ContractId     Integer, ContractCode   Integer, ContractNumber TVarChar, ContractTagName TVarChar
+             , PriceListId     Integer, PriceListCode     Integer, PriceListName     TVarChar
+             , ContractId      Integer, ContractCode      Integer, ContractNumber    TVarChar, ContractTagName TVarChar
+             , GoodsPropertyId Integer, GoodsPropertyCode Integer, GoodsPropertyName TVarChar
 
              , PartnerId_calc   Integer
              , PartnerCode_calc Integer
@@ -71,6 +72,10 @@ BEGIN
             , View_Contract_InvNumber.InvNumber              AS ContractNumber
             , View_Contract_InvNumber.ContractTagName        AS ContractTagName
 
+            , Object_GoodsProperty.Id                        AS GoodsPropertyId
+            , Object_GoodsProperty.ObjectCode                AS GoodsPropertyCode
+            , Object_GoodsProperty.ValueData                 AS GoodsPropertyName
+
             , Object_Partner.Id                              AS PartnerId_calc
             , Object_Partner.ObjectCode                      AS PartnerCode_calc
             , Object_Partner.ValueData                       AS PartnerName_calc
@@ -95,13 +100,13 @@ BEGIN
                   , MovementLinkObject_From.ObjectId     AS FromId
                   , MovementLinkObject_To.ObjectId       AS ToId
                   , CASE WHEN MovementLinkMovement_Order.MovementChildId <> 0 AND MovementFloat_MovementDesc.ValueData = zc_Movement_Sale()
-                              THEN MovementLinkObject_PriceList_Order.ObjectId
+                              THEN MovementLinkObject_PriceList_Order.ObjectId -- если по заявке и zc_Movement_Sale, тогда св-во из заявки
                          WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
-                              THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_To.ObjectId, inOperDate)
+                              THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_Contract.ObjectId /*MovementLinkObject_Contract_Order.ObjectId*/, MovementLinkObject_To.ObjectId, inOperDate) -- если zc_Movement_Sale или zc_Movement_ReturnOut, тогда определяется
                          WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_ReturnIn(), zc_Movement_Income())
-                              THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_From.ObjectId, inOperDate)
+                              THEN lfGet_Object_Partner_PriceList_record (MovementLinkObject_Contract.ObjectId /*MovementLinkObject_Contract_Order.ObjectId*/, MovementLinkObject_From.ObjectId, inOperDate) -- если zc_Movement_Income или zc_Movement_ReturnIn, тогда определяется
                          WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_SendOnPrice()
-                              THEN zc_PriceList_Basis()
+                              THEN zc_PriceList_Basis() -- для филиалов !!!всегда!!!
                          ELSE 0
                     END AS PriceListId
                   , CASE WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
@@ -110,37 +115,49 @@ BEGIN
                               THEN MovementLinkObject_From.ObjectId
                          ELSE 0
                     END AS PartnerId
+                  , MovementLinkObject_Contract.ObjectId AS ContractId -- значение - то что сохранилось при создании
+                  , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+
                   , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
-             FROM
-            (SELECT MAX (Movement.Id) AS Id
-             FROM Movement
-                  INNER JOIN MovementLinkObject
-                          AS MovementLinkObject_User
-                          ON MovementLinkObject_User.MovementId = Movement.Id
-                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-                         AND MovementLinkObject_User.ObjectId = vbUserId
-             WHERE Movement.DescId = zc_Movement_WeighingPartner()
-               AND Movement.StatusId = zc_Enum_Status_UnComplete()
-               AND Movement.OperDate BETWEEN inOperDate - INTERVAL '3 DAY' AND inOperDate + INTERVAL '3 DAY'
-            ) AS Movement_find
-              LEFT JOIN Movement ON Movement.Id = Movement_find.Id
-              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                           ON MovementLinkObject_From.MovementId = Movement.Id
-                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-              LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                           ON MovementLinkObject_To.MovementId = Movement.Id
-                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-              LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                             ON MovementLinkMovement_Order.MovementId = Movement.Id
-                                            AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-              LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList_Order
-                                           ON MovementLinkObject_PriceList_Order.MovementId = MovementLinkMovement_Order.MovementChildId
-                                          AND MovementLinkObject_PriceList_Order.DescId = zc_MovementLinkObject_PriceList()
 
-              LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
-                                      ON MovementFloat_MovementDesc.MovementId =  Movement.Id
-                                     AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
+             FROM (SELECT MAX (Movement.Id) AS Id
+                   FROM Movement
+                        INNER JOIN MovementLinkObject
+                                AS MovementLinkObject_User
+                                ON MovementLinkObject_User.MovementId = Movement.Id
+                               AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                               AND MovementLinkObject_User.ObjectId = vbUserId
+                   WHERE Movement.DescId = zc_Movement_WeighingPartner()
+                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                     AND Movement.OperDate BETWEEN inOperDate - INTERVAL '3 DAY' AND inOperDate + INTERVAL '3 DAY'
+                  ) AS Movement_find
+                  LEFT JOIN Movement ON Movement.Id = Movement_find.Id
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                               ON MovementLinkObject_From.MovementId = Movement.Id
+                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                               ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
 
+                  LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                       ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId -- !!!не ошибка, т.к. zfCalc_GoodsPropertyId используется только для zc_Movement_Sale!!!
+                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                 ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                                AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList_Order
+                                               ON MovementLinkObject_PriceList_Order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                              AND MovementLinkObject_PriceList_Order.DescId = zc_MovementLinkObject_PriceList()
+                  /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Order
+                                               ON MovementLinkObject_Contract_Order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                              AND MovementLinkObject_Contract_Order.DescId = zc_MovementLinkObject_Contract()*/
+                  LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
+                                          ON MovementFloat_MovementDesc.MovementId =  Movement.Id
+                                         AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
             ) AS Movement
 
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement.MovementId_Order
@@ -176,10 +193,8 @@ BEGIN
                                     ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = Movement.ContractId
+            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = Movement.GoodsPropertyId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id

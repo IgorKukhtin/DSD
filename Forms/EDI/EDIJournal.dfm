@@ -1,24 +1,25 @@
 inherited EDIJournalForm: TEDIJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EXITE>'
-  ClientHeight = 424
+  ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1292
-  ExplicitHeight = 451
+  ExplicitLeft = -302
+  ExplicitWidth = 1300
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
     Width = 1284
-    Height = 367
+    Height = 396
     ExplicitTop = 57
     ExplicitWidth = 1284
-    ExplicitHeight = 367
-    ClientRectBottom = 367
+    ExplicitHeight = 396
+    ClientRectBottom = 396
     ClientRectRight = 1284
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1284
-      ExplicitHeight = 367
+      ExplicitHeight = 396
       inherited cxGrid: TcxGrid
         Width = 1284
         Height = 209
@@ -302,6 +303,7 @@ inherited EDIJournalForm: TEDIJournalForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -313,6 +315,15 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object clGoodsPropertyName: TcxGridDBColumn
+            Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
+            DataBinding.FieldName = 'GoodsPropertyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object clTotalCountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' (EDI)'
@@ -396,7 +407,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Left = 0
         Top = 214
         Width = 1284
-        Height = 153
+        Height = 182
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
@@ -404,7 +415,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Left = 0
           Top = 0
           Width = 953
-          Height = 153
+          Height = 182
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 0
@@ -639,7 +650,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Left = 957
           Top = 0
           Width = 327
-          Height = 153
+          Height = 182
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
@@ -701,7 +712,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Left = 953
           Top = 0
           Width = 4
-          Height = 153
+          Height = 182
           Control = cxChildGrid
         end
       end
@@ -717,7 +728,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
-      EditValue = 42005d
+      EditValue = 42125d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -726,7 +737,7 @@ inherited EDIJournalForm: TEDIJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42005d
+      EditValue = 42125d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1

@@ -173,9 +173,9 @@ type
     cbAmount: TcxCheckBox;
     bbPartionGoods: TdxBarControlContainerItem;
     bbAmount: TdxBarControlContainerItem;
-    actPrint2: TdsdPrintAction;
+    actPrint_GP: TdsdPrintAction;
     bbPrint2: TdxBarButton;
-    actPrint3: TdsdPrintAction;
+    actPrint_Remains: TdsdPrintAction;
     bbPrint3: TdxBarButton;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
@@ -183,6 +183,26 @@ type
     edLocation_by: TcxButtonEdit;
     GuidesUnitGroup_by: TdsdGuides;
     GuidesLocation_by: TdsdGuides;
+    PriceListStart: TcxGridDBColumn;
+    PriceListEnd: TcxGridDBColumn;
+    CountEnd_calc: TcxGridDBColumn;
+    SummEnd_calc: TcxGridDBColumn;
+    CountProductionIn_by: TcxGridDBColumn;
+    SummProductionIn_by: TcxGridDBColumn;
+    CountIn_by: TcxGridDBColumn;
+    SummIn_by: TcxGridDBColumn;
+    CountOtherIn_by: TcxGridDBColumn;
+    SummOtherIn_by: TcxGridDBColumn;
+    CountOut_by: TcxGridDBColumn;
+    SummOut_by: TcxGridDBColumn;
+    CountOtherOut_by: TcxGridDBColumn;
+    SummOtherOut_by: TcxGridDBColumn;
+    CountEnd_calc_Weight: TcxGridDBColumn;
+    CountProductionIn_by_Weight: TcxGridDBColumn;
+    CountIn_by_Weight: TcxGridDBColumn;
+    CountOtherIn_by_Weight: TcxGridDBColumn;
+    CountOut_by_Weight: TcxGridDBColumn;
+    CountOtherOut_by_Weight: TcxGridDBColumn;
   private
   public
   end;

@@ -4,24 +4,25 @@ inherited CashJournalForm: TCashJournalForm
   ClientWidth = 959
   AddOnFormData.Params = FormParams
   ExplicitWidth = 975
-  ExplicitHeight = 589
+  ExplicitHeight = 586
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 959
     Height = 494
     TabOrder = 3
-    ExplicitWidth = 982
+    ExplicitWidth = 959
+    ExplicitHeight = 494
     ClientRectBottom = 494
     ClientRectRight = 959
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
+      ExplicitWidth = 959
+      ExplicitHeight = 494
       inherited cxGrid: TcxGrid
         Width = 959
         Height = 494
-        ExplicitLeft = -3
-        ExplicitTop = -3
-        ExplicitWidth = 982
+        ExplicitWidth = 959
+        ExplicitHeight = 494
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -188,6 +189,14 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object clPartionMovementName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'PartionMovementName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object clAmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
@@ -382,21 +391,13 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clInvNumber_Sale: TcxGridDBColumn
-            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'InvNumber_Sale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 130
-          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 959
-    ExplicitWidth = 982
+    ExplicitWidth = 959
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end

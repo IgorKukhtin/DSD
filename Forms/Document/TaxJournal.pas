@@ -47,7 +47,7 @@ type
     actPrintTax_Us: TdsdPrintAction;
     actPrintTax_Client: TdsdPrintAction;
     spGetReporNameTax: TdsdStoredProc;
-    actSPPrintTaxProcName: TdsdExecStoredProc;
+    actGetReporNameTax: TdsdExecStoredProc;
     mactPrint_Tax_Us: TMultiAction;
     mactPrint_Tax_Client: TMultiAction;
     bbPrintTax_Us: TdxBarButton;
@@ -64,7 +64,7 @@ type
     MedocAction: TMedocAction;
     bbMeDoc: TdxBarButton;
     mactMeDoc: TMultiAction;
-    actMedocProcedure: TdsdExecStoredProc;
+    actSelectTax_Medoc: TdsdExecStoredProc;
     actMovementCheck: TdsdOpenForm;
     bbMovementCheck: TdxBarButton;
     spChecked: TdsdStoredProc;
@@ -87,7 +87,7 @@ type
     actGetDirectory: TdsdExecStoredProc;
     mactMEDOCList: TMultiAction;
     EDIAction: TEDIAction;
-    spTaxPrint: TdsdExecStoredProc;
+    actSelectTax_Medoc_list: TdsdExecStoredProc;
     colIsMedoc: TcxGridDBColumn;
     spUpdateIsMedoc: TdsdStoredProc;
     MedocListAction: TMedocAction;
@@ -100,6 +100,7 @@ type
     cxTextEdit1: TcxTextEdit;
     cxDateEdit1: TcxDateEdit;
     spGetInfo: TdsdStoredProc;
+    spSelectTax_Medoc: TdsdStoredProc;
   private
     { Private declarations }
   public

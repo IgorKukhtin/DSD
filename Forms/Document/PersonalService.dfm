@@ -3,7 +3,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   ClientHeight = 662
   ClientWidth = 1112
   ExplicitWidth = 1128
-  ExplicitHeight = 697
+  ExplicitHeight = 700
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -362,7 +362,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object colComment: TcxGridDBColumn [23]
+          object colPersonalServiceListName: TcxGridDBColumn [23]
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'PersonalServiceListName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPersonalServiceListChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colComment: TcxGridDBColumn [24]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -550,6 +565,30 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     inherited actAddMask: TdsdExecStoredProc
       Enabled = False
+    end
+    object actPersonalServiceListChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PersonalServiceListForm'
+      FormName = 'TPersonalServiceListForm'
+      FormNameParam.Value = 'TPersonalServiceListForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalServiceListId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalServiceListName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
     object actMemberChoice: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1224,6 +1263,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MemberId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalServiceListId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalServiceListId'
         ParamType = ptInput
       end>
     Left = 160

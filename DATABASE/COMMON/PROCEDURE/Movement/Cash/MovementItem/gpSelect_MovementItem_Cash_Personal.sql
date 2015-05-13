@@ -82,7 +82,7 @@ BEGIN
                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                           AND MovementItem.DescId = zc_MI_Master()
                                                           AND MovementItem.isErased = FALSE
-                                                          AND MovementItem.Amount <> 0
+                                                          -- AND MovementItem.Amount <> 0
                                    LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
                                                                 ON MLO_PersonalServiceList.MovementId = Movement.Id
                                                                AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()

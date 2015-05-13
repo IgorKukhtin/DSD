@@ -160,8 +160,11 @@ BEGIN
                -- ћес€ц начислений: не используетс€
              , 0 AS ServiceDateId
 
-             , 0 AS ContractId -- нет
-             , 0 AS PaidKindId -- нет
+
+                -- нет
+             , (SELECT Object_Contract_View.ContractId FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId AND Object_Contract_View.PaidKindId = zc_Enum_PaidKind_SecondForm() AND Object_Contract_View.isErased = FALSE AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close() ORDER BY Object_Contract_View.ContractId DESC LIMIT 1) AS ContractId
+               -- нет
+             , zc_Enum_PaidKind_SecondForm() AS PaidKindId
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
@@ -175,6 +178,9 @@ BEGIN
 
              LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                  ON ObjectLink_Partner_Juridical.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , GoodsPropertyName TVarChar
 
              , MovementId_Sale Integer
              , OperDatePartner_Sale TDateTime, InvNumber_Sale TVarChar
@@ -76,8 +77,10 @@ BEGIN
            , View_Contract_InvNumber.InvNumber              AS ContractName
            , View_Contract_InvNumber.ContractTagName        AS ContractTagName
 
-           , Object_Unit.Id            AS UnitId
-           , Object_Unit.ValueData     AS UnitName
+           , Object_Unit.Id                         AS UnitId
+           , Object_Unit.ValueData                  AS UnitName
+
+           , Object_GoodsProperty.ValueData         AS GoodsPropertyName
 
            , COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId) :: Integer AS MovementId_Sale
            , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
@@ -190,6 +193,11 @@ BEGIN
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsProperty
+                                         ON MovementLinkObject_GoodsProperty.MovementId = Movement.Id
+                                        AND MovementLinkObject_GoodsProperty.DescId = zc_MovementLinkObject_GoodsProperty()
+            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = MovementLinkObject_GoodsProperty.ObjectId
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
@@ -275,4 +283,4 @@ ALTER FUNCTION gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar) OWNER TO p
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_EDI (inStartDate:= '23.03.2015', inEndDate:= '23.03.2015', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_EDI (inStartDate:= '23.03.2015', inEndDate:= '23.03.2015', inSession:= zfCalc_UserAdmin())

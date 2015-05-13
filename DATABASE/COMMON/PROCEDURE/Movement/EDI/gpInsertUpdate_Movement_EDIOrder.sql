@@ -79,10 +79,12 @@ BEGIN
         -- сохранили <ОКПО>
         PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO(), vbMovementId, (SELECT OKPO FROM ObjectHistory_JuridicalDetails_View WHERE JuridicalId = vbJuridicalId));
 
-        -- Возвращаем ссылку на классификатор товаров
-        vbGoodsPropertyID := (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Juridical_GoodsProperty() AND ObjectId = vbJuridicalId);
-
-        -- сохранили <классификатор>
+        -- Поиск <Классификатор товаров>
+        -- vbGoodsPropertyID := (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Juridical_GoodsProperty() AND ObjectId = vbJuridicalId);
+        vbGoodsPropertyId := zfCalc_GoodsPropertyId ((SELECT MLO_Contract.ObjectId FROM MovementLinkObject AS MLO_Contract WHERE MLO_Contract.MovementId = vbMovementId AND MLO_Contract.DescId = zc_MovementLinkObject_Contract())
+                                                   , vbJuridicalId
+                                                    );
+        -- сохранили <Классификатор товаров>
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsProperty(), vbMovementId, vbGoodsPropertyId);
 
      END IF;

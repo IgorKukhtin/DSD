@@ -65,7 +65,7 @@ BEGIN
      DELETE FROM _tmpItem;
 
      -- !!!все равно без партий!!!
-     vbPartionMovementId:= lpInsertFind_Object_PartionMovement (0);
+     vbPartionMovementId:= lpInsertFind_Object_PartionMovement (0, NULL);
 
      -- !!!УП должна соответствовать договору!!!
      UPDATE MovementItemLinkObject SET ObjectId = tmpUpdate.InfoMoneyId

@@ -56,7 +56,8 @@ BEGIN
           , ObjectLink_Partner_Route.ChildObjectId           AS RouteId
           , ObjectLink_Partner_RouteSorting.ChildObjectId    AS RouteSortingId
           , ObjectLink_Partner_MemberTake.ChildObjectId      AS MemberTakeId
-          , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+          -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
           , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
             INTO vbInvNumber, vbOperDate, vbOperDatePartner, vbPartnerId, vbJuridicalId, vbUnitId, vbContractId, vbPaidKindId, vbChangePercent
                , vbRouteId, vbRouteSortingId, vbMemberTakeId
@@ -125,9 +126,9 @@ BEGIN
                                  ON ObjectString_Juridical_GLNCode.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                 AND ObjectString_Juridical_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
-          LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+          /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()*/
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
 
      WHERE Movement.Id = inMovementId
@@ -234,7 +235,7 @@ BEGIN
      -- эти параметры всегда из Прайс-листа !!!на дату vbOperDatePartner!!!
      SELECT PriceListId, PriceWithVAT, VATPercent
             INTO vbPriceListId, vbPriceWithVAT, vbVATPercent
-     FROM lfGet_Object_Partner_PriceList (inPartnerId:= vbPartnerId, inOperDate:= vbOperDatePartner);
+     FROM lfGet_Object_Partner_PriceList (inContractId:= vbContractId, inPartnerId:= vbPartnerId, inOperDate:= vbOperDatePartner);
 
 
      -- только если не нашли по значению <Номер заявки у контрагента> + набирали вручную
@@ -399,4 +400,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_EDIComdoc_Order (inMovementId:= 0, inUserId:= 2)
+-- SELECT * FROM lpInsertUpdate_Movement_EDIComdoc_Order (inMovementId:= 0, inUserId:= zfCalc_UserAdmin())

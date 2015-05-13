@@ -129,6 +129,10 @@ begin
      ParamAdd(Params,'PaidKindId',ftInteger);
      ParamAdd(Params,'PaidKindName',ftString);
 
+     ParamAdd(Params,'InfoMoneyId',ftInteger);
+     ParamAdd(Params,'InfoMoneyCode',ftInteger);
+     ParamAdd(Params,'InfoMoneyName',ftString);
+
      ParamAdd(Params,'calcPartnerId',ftInteger);
      ParamAdd(Params,'calcPartnerCode',ftInteger);
      ParamAdd(Params,'calcPartnerName',ftString);
@@ -147,6 +151,10 @@ begin
      ParamAdd(Params,'ContractCode',ftInteger);
      ParamAdd(Params,'ContractNumber',ftString);
      ParamAdd(Params,'ContractTagName',ftString);
+
+     ParamAdd(Params,'GoodsPropertyId',ftInteger);
+     ParamAdd(Params,'GoodsPropertyCode',ftInteger);
+     ParamAdd(Params,'GoodsPropertyName',ftString);
 
      ParamAdd(Params,'PriceListId',ftInteger);
      ParamAdd(Params,'PriceListCode',ftInteger);

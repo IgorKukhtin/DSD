@@ -90,6 +90,13 @@ object BranchForm: TBranchForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
+      object clisPartionDoc: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1086#1085#1085#1099#1081' '#1091#1095#1077#1090' '#1076#1086#1083#1075#1086#1074
+        DataBinding.FieldName = 'isPartionDoc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

@@ -1,6 +1,5 @@
 -- Function: gpLoadSaleFrom1C()
 
-DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpLoadSaleFrom1C(
@@ -539,6 +538,7 @@ BEGIN
                                                                             ELSE 0
                                                                        END
                                                           , ioCountForPrice := 1 , inHeadCount := 0
+                                                          , inMovementId_Partion := 0
                                                           , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
 
           END LOOP; -- финиш цикла по курсору

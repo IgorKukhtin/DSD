@@ -112,6 +112,7 @@ BEGIN
                                                 , inCurrencyId           := NULL     -- Валюта 
                                                 , inCurrencyPartnerValue := NULL     -- Курс для расчета суммы операции
                                                 , inParPartnerValue      := NULL     -- Номинал для расчета суммы операции
+                                                , inMovementId_Partion   := 0
                                                 , inSession     := inSession         -- сессия пользователя
                                                  ) AS tmp;
    

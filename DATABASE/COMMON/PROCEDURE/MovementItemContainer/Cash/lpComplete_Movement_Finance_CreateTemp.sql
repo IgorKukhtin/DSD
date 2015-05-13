@@ -18,9 +18,9 @@ BEGIN
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
                                , UnitId Integer, PositionId Integer, PersonalServiceListId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
+                               , PartionMovementId Integer
                                , AnalyzerId Integer
                                , CurrencyId Integer
-                               , PartionMovementId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 

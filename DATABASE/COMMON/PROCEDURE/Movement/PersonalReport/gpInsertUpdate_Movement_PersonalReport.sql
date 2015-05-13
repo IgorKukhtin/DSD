@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_PersonalReport()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalReport (integer, tvarchar, TDateTime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalReport (integer, tvarchar, TDateTime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalReport(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -11,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalReport(
     IN inComment                  TVarChar  , -- Примечание
     IN inMemberId                 Integer   ,
     IN inInfoMoneyId              Integer   , -- Статьи назначения
+    IN inContractId               Integer   , -- Договора
     IN inUnitId                   Integer   ,
     IN inMoneyPlaceId             Integer   ,
     IN inCarId                    Integer   ,
@@ -72,6 +75,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
      -- сохранили связь с <Управленческие статьи>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
+     -- сохранили связь с <Договором>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
      -- сохранили связь с <Подразделением>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
      -- сохранили связь с <>
@@ -101,6 +106,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07,05,15         * add contract
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  15.09.14                                                        *
 */

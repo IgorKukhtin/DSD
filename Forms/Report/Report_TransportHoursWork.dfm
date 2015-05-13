@@ -249,7 +249,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075
         DataBinding.FieldName = 'Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -260,7 +261,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursWork'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -271,7 +273,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursAdd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -548,6 +551,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Component = BranchGuides
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 152
     Top = 248
   end
@@ -576,6 +580,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     Top = 64
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

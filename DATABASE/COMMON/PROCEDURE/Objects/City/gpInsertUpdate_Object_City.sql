@@ -29,7 +29,22 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_City());
 
    -- проверка уникальности дл€ свойства <Ќаименование> + <ќбласть>
---   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_City(), inName);
+   IF EXISTS (SELECT Object_City.ValueData
+              FROM Object AS Object_City
+                   LEFT JOIN ObjectLink AS ObjectLink_City_Region
+                                        ON ObjectLink_City_Region.ObjectId = Object_City.Id
+                                       AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
+              WHERE Object_City.ValueData = inName
+                AND Object_City.DescId = zc_Object_City();
+                AND COALESCE (ObjectLink_City_Region.ChildObjectId, 0) = COALESCE (inRegionId, 0)
+                AND Object_City.Id <> COALESCE (ioId, 0)
+             )
+   THEN
+       RAISE EXCEPTION '«начение <%> дл€ области <%> не уникально в справочнике <%>.'
+                    , inName
+                    , lfGet_Object_ValueData (inRegionId)
+                    , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_City());
+   END IF; 
 
    -- проверка уникальности дл€ свойства < од>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_City(), vbCode_calc);

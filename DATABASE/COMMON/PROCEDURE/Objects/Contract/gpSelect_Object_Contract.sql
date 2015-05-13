@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, RetailName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , JuridicalDocumentId Integer, JuridicalDocumentCode Integer, JuridicalDocumentName TVarChar
              
@@ -27,8 +27,10 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+             , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              
+             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+                          
              , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
              , PersonalCollationId Integer, PersonalCollationCode Integer, PersonalCollationName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
@@ -131,6 +133,7 @@ BEGIN
        , Object_Juridical.ObjectCode     AS JuridicalCode
        , Object_Juridical.ValueData      AS JuridicalName
        , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+       , Object_Retail.ValueData         AS RetailName
 
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
        , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
@@ -149,6 +152,9 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
+
+       , Object_GoodsProperty.Id            AS GoodsPropertyId
+       , Object_GoodsProperty.ValueData     AS GoodsPropertyName
 
        , Object_Personal_View.PersonalId    AS PersonalId
        , Object_Personal_View.PersonalCode  AS PersonalCode
@@ -266,6 +272,11 @@ BEGIN
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
         LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Contract_View.JuridicalId
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                              ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
@@ -300,6 +311,11 @@ BEGIN
                              ON ObjectLink_Contract_Bank.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_Bank.DescId = zc_ObjectLink_Contract_Bank()
         LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Contract_Bank.ChildObjectId   
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_GoodsProperty
+                             ON ObjectLink_Contract_GoodsProperty.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_GoodsProperty.DescId = zc_ObjectLink_Contract_GoodsProperty()
+        LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Contract_GoodsProperty.ChildObjectId 
 
         LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
                              ON ObjectDate_Protocol_Insert.ObjectId = Object_Contract_View.ContractId
@@ -363,6 +379,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.05.15         * add GoodsProperty
  12.02.15         * add StartPromo, EndPromo,
                         PriceList, PriceListPromo
  15.01.15         * add JuridicalDocument

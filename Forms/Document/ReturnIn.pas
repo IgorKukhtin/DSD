@@ -138,7 +138,7 @@ type
     cxLabel19: TcxLabel;
     edInvNumberSale: TcxButtonEdit;
     SaleChoiceGuides: TdsdGuides;
-    clInvNumber_Sale: TcxGridDBColumn;
+    clPartionMovementName: TcxGridDBColumn;
     actSaleJournalChoice: TOpenChoiceForm;
   private
     { Private declarations }

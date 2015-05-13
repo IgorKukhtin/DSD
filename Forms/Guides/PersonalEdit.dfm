@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <C'#1086#1090#1088#1091#1076#1085#1080#1082'>'
-  ClientHeight = 334
-  ClientWidth = 331
+  ClientHeight = 360
+  ClientWidth = 335
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 72
-    Top = 294
+    Top = 330
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,7 +28,7 @@
   end
   object cxButton2: TcxButton
     Left = 176
-    Top = 294
+    Top = 330
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -143,7 +143,7 @@
   object cxLabel1: TcxLabel
     Left = 16
     Top = 89
-    Caption = ' '#1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
+    Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
   end
   object cxLabel4: TcxLabel
     Left = 16
@@ -172,15 +172,31 @@
   end
   object cbMain: TcxCheckBox
     Left = 18
-    Top = 259
+    Top = 256
     Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
     Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088#1072#1073#1086#1090#1099
     TabOrder = 19
     Width = 186
   end
+  object cxLabel8: TcxLabel
+    Left = 16
+    Top = 276
+    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1075#1083#1072#1074#1085#1072#1103')'
+  end
+  object cePersonalServiceList: TcxButtonEdit
+    Left = 16
+    Top = 295
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 305
+  end
   object ActionList: TActionList
-    Left = 64
-    Top = 272
+    Top = 296
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -198,10 +214,12 @@
     end
     object dsdFormClose1: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -254,6 +272,13 @@
         Name = 'inPersonalGroupId'
         Value = ''
         Component = PersonalGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalServiceListId'
+        Value = Null
+        Component = PersonalServiceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -416,6 +441,19 @@
         Value = 'False'
         Component = cbMain
         DataType = ftBoolean
+      end
+      item
+        Name = 'PersonalServiceListId'
+        Value = Null
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalServiceListName'
+        Value = Null
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 96
@@ -433,12 +471,12 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 16
-    Top = 272
+    Left = 24
+    Top = 296
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 112
-    Top = 272
+    Left = 304
+    Top = 232
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -580,5 +618,32 @@
       end>
     Left = 287
     Top = 185
+  end
+  object PersonalServiceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalServiceList
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 239
+    Top = 289
   end
 end

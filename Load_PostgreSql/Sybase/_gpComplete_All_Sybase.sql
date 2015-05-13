@@ -26,9 +26,8 @@ BEGIN
      PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= zfCalc_UserAdmin() :: Integer);
 
 
-
      -- !!!0 - PriceCorrective!!!
-     IF vbMovementDescId = zc_Movement_PriceCorrective()
+     IF vbMovementDescId = zc_Movement_PriceCorrective() AND 1=0
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              PERFORM lpComplete_Movement_PriceCorrective_CreateTemp();
@@ -120,7 +119,7 @@ BEGIN
                                                            , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!10.1 - Cash!!!
-     IF vbMovementDescId = zc_Movement_Cash()
+     IF vbMovementDescId = zc_Movement_Cash() AND 1=0
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              -- PERFORM lpComplete_Movement_Finance_CreateTemp();
@@ -129,14 +128,14 @@ BEGIN
                                              , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!10.2 - BankAccount!!!
-     IF vbMovementDescId = zc_Movement_BankAccount()
+     IF vbMovementDescId = zc_Movement_BankAccount() AND 1=0
      THEN
              -- !!! проводим - BankAccount !!!
              PERFORM gpComplete_Movement_BankAccount (inMovementId     := inMovementId
                                                     , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!11. - SendDebt!!!
-     IF vbMovementDescId = zc_Movement_SendDebt()
+     IF vbMovementDescId = zc_Movement_SendDebt() AND 1=0
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              -- PERFORM lpComplete_Movement_Finance_CreateTemp();
@@ -145,7 +144,7 @@ BEGIN
                                                  , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!12. - Service!!!
-     IF vbMovementDescId = zc_Movement_Service()
+     IF vbMovementDescId = zc_Movement_Service() AND 1=0
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              -- PERFORM lpComplete_Movement_Finance_CreateTemp();
@@ -154,7 +153,7 @@ BEGIN
                                                 , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!13. - PersonalAccount!!!
-     IF vbMovementDescId = zc_Movement_PersonalAccount()
+     IF vbMovementDescId = zc_Movement_PersonalAccount() AND 1=0
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              -- PERFORM lpComplete_Movement_Finance_CreateTemp();
@@ -163,7 +162,7 @@ BEGIN
                                                         , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!14. - ProfitLossService!!!
-     IF vbMovementDescId = zc_Movement_ProfitLossService()
+     IF vbMovementDescId = zc_Movement_ProfitLossService() AND 1=0
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              -- PERFORM lpComplete_Movement_Finance_CreateTemp();
@@ -184,21 +183,30 @@ BEGIN
      ELSE
 
      -- !!!15.1 - TransferDebtIn!!!
-     IF vbMovementDescId = zc_Movement_TransferDebtIn()
+     IF vbMovementDescId = zc_Movement_TransferDebtIn() AND 1=0
      THEN
              -- !!! проводим - TransferDebtIn !!!
              PERFORM gpComplete_Movement_TransferDebtIn (inMovementId     := inMovementId
                                                        , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!15.2. - TransferDebtOut!!!
-     IF vbMovementDescId = zc_Movement_TransferDebtOut()
+     IF vbMovementDescId = zc_Movement_TransferDebtOut() AND 1=0
      THEN
              -- !!! проводим - TransferDebtOut !!!
              PERFORM gpComplete_Movement_TransferDebtOut (inMovementId     := inMovementId
                                                         , inSession        := zfCalc_UserAdmin());
      ELSE
 
+     -- !!!16 - Inventory!!!
+     IF vbMovementDescId = zc_Movement_Inventory() AND 1=0
+     THEN
+             -- !!! проводим - Inventory !!!
+             PERFORM gpComplete_Movement_Inventory (inMovementId     := inMovementId
+                                                  , inIsLastComplete := NULL
+                                                  , inSession        := zfCalc_UserAdmin());
+     ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
      END IF;
      END IF;
      END IF;

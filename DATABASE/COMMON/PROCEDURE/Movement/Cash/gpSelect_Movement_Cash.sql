@@ -28,8 +28,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , isLoad Boolean
-             , InvNumber_Sale TVarChar
-)
+             , PartionMovementName TVarChar
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -111,8 +111,7 @@ BEGIN
 
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) :: Boolean AS isLoad
 
-           , CAST ('' || CAST (Movement_Sale.InvNumber AS TVarChar)
-                || ' oт '|| CAST (DATE(Movement_Sale.OperDate)  AS TVarChar)  || ' ' AS TVarChar) AS InvNumber_Sale
+           , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
            
        FROM tmpMovement
             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
@@ -127,7 +126,11 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData :: Integer
+            LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
+                                   ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
+                                  AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
                                          ON MLO_PersonalServiceList.MovementId = tmpMovement.Id
@@ -223,6 +226,5 @@ ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 273734, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inCashId:= 1, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
---select * from gpSelect_Movement_Cash(inStartDate := ('01.12.2014')::TDateTime , inEndDate := ('15.01.2015')::TDateTime , inCashId := 296540 , inIsErased := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 14462, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2015', inEndDate:= '30.01.2015', inCashId:= 14462, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

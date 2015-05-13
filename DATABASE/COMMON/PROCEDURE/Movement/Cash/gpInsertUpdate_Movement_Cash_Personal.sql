@@ -47,6 +47,7 @@ BEGIN
                                                          , inParValue            := NULL
                                                          , inCurrencyPartnerValue:= NULL
                                                          , inParPartnerValue     := NULL
+                                                         , inMovementId_Partion  := 0
                                                          , inUserId      := vbUserId
                                                           )
                       FROM (SELECT ioMovementId AS MovementId) AS tmp

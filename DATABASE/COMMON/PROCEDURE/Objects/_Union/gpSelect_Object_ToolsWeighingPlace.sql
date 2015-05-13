@@ -26,7 +26,7 @@ BEGIN
     UNION ALL
      SELECT Object_PriceList.Id
           , Object_PriceList.ObjectCode AS Code     
-          , Object_PriceList.ValueData AS Name
+          , Object_PriceList.ValueData  AS Name
           , ObjectDesc.ItemName
           , Object_PriceList.isErased
      FROM Object AS Object_PriceList
@@ -36,7 +36,7 @@ BEGIN
     UNION ALL
      SELECT Object_PaidKind.Id
           , Object_PaidKind.ObjectCode AS Code     
-          , Object_PaidKind.ValueData AS Name
+          , Object_PaidKind.ValueData  AS Name
           , ObjectDesc.ItemName
           , Object_PaidKind.isErased
      FROM Object AS Object_PaidKind
@@ -46,12 +46,22 @@ BEGIN
     UNION ALL
      SELECT Object_GoodsKindWeighingGroup.Id
           , Object_GoodsKindWeighingGroup.ObjectCode AS Code     
-          , Object_GoodsKindWeighingGroup.ValueData AS Name
+          , Object_GoodsKindWeighingGroup.ValueData  AS Name
           , ObjectDesc.ItemName
           , Object_GoodsKindWeighingGroup.isErased
      FROM Object AS Object_GoodsKindWeighingGroup
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_GoodsKindWeighingGroup.DescId
      WHERE Object_GoodsKindWeighingGroup.DescId = zc_Object_GoodsKindWeighingGroup()
+
+    UNION ALL
+     SELECT Object_InfoMoney_View.InfoMoneyId       AS Id
+          , Object_InfoMoney_View.InfoMoneyCode     AS Code     
+          , Object_InfoMoney_View.InfoMoneyName_all AS Name
+          , ObjectDesc.ItemName
+          , Object_InfoMoney_View.isErased
+     FROM Object_InfoMoney_View
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_InfoMoney()
+     WHERE Object_InfoMoney_View.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000(), zc_Enum_InfoMoneyGroup_30000()) -- Основное сырье + Доходы
 
     UNION ALL
      SELECT MovementDesc.Id
