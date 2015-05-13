@@ -1054,6 +1054,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsUpakForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsUpakForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsUpakDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsUpakDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));
