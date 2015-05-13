@@ -31,6 +31,8 @@ BEGIN
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
+
 
 END;
 $BODY$

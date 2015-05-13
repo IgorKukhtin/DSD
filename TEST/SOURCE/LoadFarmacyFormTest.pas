@@ -21,6 +21,7 @@ type
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankStatementFormTest;
+    procedure LoadCheckFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
@@ -148,6 +149,14 @@ procedure TLoadFormTest.LoadCashFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMainCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMainCashForm');
+end;
+
+procedure TLoadFormTest.LoadCheckFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
 end;
 
 procedure TLoadFormTest.LoadContactPersonFormTest;
@@ -485,6 +494,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
 end;

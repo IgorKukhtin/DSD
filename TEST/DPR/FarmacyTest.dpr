@@ -286,8 +286,12 @@ uses
   MarginCategoryItem in '..\..\Forms\Guides\MarginCategoryItem.pas' {MarginCategoryItemForm: TParentForm},
   MarginCategoryLink in '..\..\Forms\Guides\MarginCategoryLink.pas' {MarginCategoryLinkForm: TParentForm},
   dsdException in '..\..\SOURCE\dsdException.pas',
-  MainCash in '..\..\FormsFarmacy\Cash\MainCash.pas' {MainCashForm: TParentForm},
-  MovementDescForms in '..\..\Forms\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm};
+  MovementDescForms in '..\..\Forms\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
+  IncomePharmacy in '..\..\FormsFarmacy\Document\IncomePharmacy.pas' {IncomePharmacyForm: TParentForm},
+  IncomePharmacyJournal in '..\..\FormsFarmacy\Document\IncomePharmacyJournal.pas' {IncomePharmacyJournalForm: TParentForm},
+  LoadFarmacyReportTest in '..\SOURCE\LoadFarmacyReportTest.pas',
+  CheckJournal in '..\..\Forms\Document\CheckJournal.pas' {CheckJournalForm: TParentForm},
+  Check in '..\..\Forms\Document\Check.pas' {CheckForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

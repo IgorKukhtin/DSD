@@ -25,6 +25,7 @@ SELECT       Movement.Id                                AS Id
            , Object_Contract.ValueData                  AS ContractName
            , MovementDate_Payment.ValueData             AS PaymentDate
            , Container.Amount                           AS PaySumm
+           , MovementFloat_TotalSummSale.ValueData      AS SaleSumm
 
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -36,6 +37,10 @@ SELECT       Movement.Id                                AS Id
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                    ON MovementFloat_TotalSummSale.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id

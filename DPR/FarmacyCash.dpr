@@ -53,7 +53,9 @@ uses
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  Updater in '..\SOURCE\COMPONENT\Updater.pas';
+  Updater in '..\SOURCE\COMPONENT\Updater.pas',
+  MainCash in '..\FormsFarmacy\Cash\MainCash.pas' {MainCashForm: TParentForm},
+  AncestorBase in '..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm};
 
 {$R *.res}
 
@@ -71,7 +73,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-     TParentForm(TdsdFormStorageFactory.GetStorage.Load('TMainCashForm')).Execute(nil, nil);
+  Application.CreateForm(TMainCashForm, MainCashForm);
   end;
   Application.Run;
 end.

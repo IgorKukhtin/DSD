@@ -45,7 +45,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 END;
 $BODY$

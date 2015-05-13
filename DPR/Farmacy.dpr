@@ -60,6 +60,7 @@ uses
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
+  FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   dsdException in '..\SOURCE\dsdException.pas';

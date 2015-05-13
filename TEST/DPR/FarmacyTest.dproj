@@ -842,13 +842,27 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\dsdException.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Cash\MainCash.pas">
-				<Form>MainCashForm</Form>
+			<DCCReference Include="..\..\Forms\System\MovementDescForms.pas">
+				<Form>MovementDescDataForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomePharmacy.pas">
+				<Form>IncomePharmacyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomePharmacyJournal.pas">
+				<Form>IncomePharmacyJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\LoadFarmacyReportTest.pas"/>
+			<DCCReference Include="..\..\Forms\Document\CheckJournal.pas">
+				<Form>CheckJournalForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\System\MovementDescForms.pas">
-				<Form>MovementDescDataForm</Form>
+			<DCCReference Include="..\..\Forms\Document\Check.pas">
+				<Form>CheckForm</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -139,6 +139,7 @@ type
   public
     constructor Create(ACollection: TCollection); override;
     destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
   published
     property Param: TdsdParam read FParam write FParam;
     property DataSummaryItemIndex: Integer read FDataSummaryItemIndex write SetDataSummaryItemIndex;
@@ -1996,6 +1997,14 @@ begin
 end;
 
 { TSummaryItemAddOn }
+
+procedure TSummaryItemAddOn.Assign(Source: TPersistent);
+begin
+  if Source is TSummaryItemAddOn then
+     Self.Param.Assign(TSummaryItemAddOn(Source).Param)
+  else
+    inherited Assign(Source);
+end;
 
 constructor TSummaryItemAddOn.Create(ACollection: TCollection);
 begin

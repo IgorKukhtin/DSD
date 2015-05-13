@@ -62,6 +62,7 @@ BEGIN
                     LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem_Income_View.GoodsId
          WHERE MovementId = inMovementId  AND MarginCondition.MinPrice < PriceWithVAT AND PriceWithVAT <= MarginCondition.MaxPrice);
 
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 END;

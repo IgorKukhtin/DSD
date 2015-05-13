@@ -45,6 +45,7 @@ type
     actGetDataForSendNew: TdsdExecStoredProc;
     spGetDataForSendNew: TdsdStoredProc;
     bbNewSend: TdxBarButton;
+    colSaleSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

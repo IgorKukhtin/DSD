@@ -2,7 +2,6 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1222
-  ExplicitLeft = -440
   ExplicitWidth = 1230
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -54,7 +53,6 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -88,7 +86,6 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumm
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -128,24 +125,6 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             HeaderAlignmentVert = vaCenter
             Options.IncSearch = False
             Width = 48
-          end
-          object coPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object colSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
-            DataBinding.FieldName = 'Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 122
           end
           object coJuridicalName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
@@ -387,6 +366,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
     object actGoodsKindChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -959,6 +939,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item

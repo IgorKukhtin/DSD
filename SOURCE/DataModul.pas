@@ -28,6 +28,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLookAndFeelController: TcxLookAndFeelController;
+    cxRemainsContentStyle: TcxStyle;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   end;
