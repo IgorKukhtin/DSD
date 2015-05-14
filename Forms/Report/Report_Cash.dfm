@@ -4,7 +4,7 @@ inherited Report_CashForm: TReport_CashForm
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 590
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -544,6 +544,11 @@ inherited Report_CashForm: TReport_CashForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'maintext'
+          Value = #1082#1072#1089#1089#1077
+          DataType = ftString
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
@@ -603,6 +608,11 @@ inherited Report_CashForm: TReport_CashForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'maintext'
+          Value = #1082#1072#1089#1089#1077
+          DataType = ftString
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
