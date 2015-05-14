@@ -18,6 +18,7 @@ type
 
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
+    function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
@@ -516,6 +517,45 @@ begin
          result.Id   := 0;
          result.Name := '';
          ShowMessage('Ошибка получения - gpGet_Scale_Partner');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_PartnerParams';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inPartnerId', ftInteger, ptInput, execParams.ParamByName('calcPartnerId').AsInteger);
+       Params.AddParam('inContractIdId', ftInteger, ptInput, execParams.ParamByName('ContractId').AsInteger);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount=1;
+
+       with execParams do
+       begin
+         if Result then
+         begin ParamByName('GoodsPropertyId').AsInteger:= DataSet.FieldByName('GoodsPropertyId').AsInteger;
+               ParamByName('GoodsPropertyCode').AsInteger:= DataSet.FieldByName('GoodsPropertyCode').AsInteger;
+               ParamByName('GoodsPropertyName').asString:= DataSet.FieldByName('GoodsPropertyName').asString;
+
+               ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
+               ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
+               ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
+         end
+         else ShowMessage('Ошибка.Параметры не определены.<gpGet_Scale_PartnerParams>');
+
+       end;
+
+       {except
+         result.Code := Code;
+         result.Id   := 0;
+         result.Name := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_PartnerParams');
        end;}
     end;
 end;

@@ -67,7 +67,8 @@ uses
   GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm},
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   dsdException in '..\SOURCE\dsdException.pas',
-  StatusXML in '..\SOURCE\EDI\StatusXML.pas';
+  StatusXML in '..\SOURCE\EDI\StatusXML.pas',
+  GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm};
 
 {$R *.res}
 
@@ -84,11 +85,12 @@ begin
          //TUpdater.AutomaticUpdateProgram;
          //
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  Application.CreateForm(TMainForm, MainForm);
   // !!!важно первым!!!
+  Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
          Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
+         Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
   end
   else
@@ -102,10 +104,12 @@ begin
          TUpdater.AutomaticUpdateProgram;
          //
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-         Application.CreateForm(TMainForm, MainForm); // !!!важно первым!!!
+  // !!!важно первым!!!
+  Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
          Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
+         Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
   end;
   //

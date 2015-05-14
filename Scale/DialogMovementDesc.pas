@@ -47,6 +47,8 @@ type
       Shift: TShiftState);
     procedure EdiBarCodeEnter(Sender: TObject);
     procedure EditPartnerCodeEnter(Sender: TObject);
+    procedure EditPartnerCodePropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
 
   private
     ChoiceNumber:Integer;
@@ -65,7 +67,7 @@ var
 
 implementation
 {$R *.dfm}
-uses DMMainScale;
+uses DMMainScale,GuidePartner;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
@@ -269,6 +271,10 @@ begin
                     end;
                     //
                     ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
+                    ParamsMovement_local.ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
+                    ParamsMovement_local.ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
+                    ParamsMovement_local.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
+
                     ChoiceNumber:=CDS.FieldByName('Number').asInteger;
                     // завершение
                     if   (CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Income)
@@ -368,6 +374,25 @@ begin
           then begin ActiveControl:=DBGrid;DBGridCellClick(DBGrid.Columns[0]);end
           else ActiveControl:=DBGrid;
 end;
+{------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.EditPartnerCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var Key:Word;
+begin
+    if ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger<>0
+    then begin
+              EdiBarCode.Text:=ParamsMovement_local.ParamByName('MovementDescNumber').AsString;
+              EdiBarCodeExit(Self);
+    end;
+
+    if GuidePartnerForm.Execute(ParamsMovement_local)
+    then begin
+              EditPartnerCode.Text:=IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);
+              PanelPartnerName.Caption:= ParamsMovement_local.ParamByName('calcPartnerName').AsString;
+              Key:=VK_RETURN;
+              EditPartnerCodeKeyDown(Sender,Key,[]);
+    end;
+end;
+
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.DBGridCellClick(Column: TColumn);
 begin
