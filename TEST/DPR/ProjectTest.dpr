@@ -671,7 +671,8 @@ uses
   RouteGroup in '..\..\Forms\Guides\RouteGroup.pas' {RouteGroupForm: TParentForm},
   RouteGroupEdit in '..\..\Forms\Guides\RouteGroupEdit.pas' {RouteGroupEditForm: TParentForm},
   Report_GoodsBalanceDialog in '..\..\Forms\Report\Report_GoodsBalanceDialog.pas' {Report_GoodsBalanceDialogForm: TParentForm},
-  Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm};
+  Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm},
+  Report_MotionGoodsUpak in '..\..\Forms\Report\Report_MotionGoodsUpak.pas' {Report_MotionGoodsUpakForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -566,6 +566,8 @@ type
     cxStyle1: TcxStyle;
     actReport_GoodsBalance: TdsdOpenForm;
     N58: TMenuItem;
+    actReport_MotionGoods_Upak: TdsdOpenForm;
+    N59: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
