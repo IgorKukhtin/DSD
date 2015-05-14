@@ -78,7 +78,7 @@ BEGIN
             , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'    ,               '0', inSession) AS FromId
             , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'      ,               '0', inSession) AS ToId
             , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'PaidKindId',               '0', inSession) AS PaidKindId
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'InfoMoneyId',zc_Enum_InfoMoney_30101() :: TVarChar, inSession) AS InfoMoneyId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'InfoMoneyId', zc_Enum_InfoMoney_30101() :: TVarChar, inSession) AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
             , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsKindWeighingGroupId', '345238', inSession) AS GoodsKindWeighingGroupId -- Продажа
             , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid' ,               '0', inSession) AS ColorGridValue
        FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp

@@ -183,6 +183,9 @@
 			<DCCReference Include="..\SOURCE\dsdApplication.pas"/>
 			<DCCReference Include="..\SOURCE\dsdException.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
+			<DCCReference Include="..\Scale\GuidePartner.pas">
+				<Form>GuidePartnerForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

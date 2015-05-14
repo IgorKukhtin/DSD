@@ -27,7 +27,7 @@ RETURNS TABLE (PartnerId    Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId     Integer;
+   DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpGetUserBySession (inSession);

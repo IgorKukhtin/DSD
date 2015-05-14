@@ -62,6 +62,7 @@ BEGIN
      FROM Object_InfoMoney_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_InfoMoney()
      WHERE Object_InfoMoney_View.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000(), zc_Enum_InfoMoneyGroup_30000()) -- Основное сырье + Доходы
+        OR Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()) -- Общефирменные + Ирна
 
     UNION ALL
      SELECT MovementDesc.Id

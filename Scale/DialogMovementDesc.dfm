@@ -108,10 +108,10 @@ object DialogMovementDescForm: TDialogMovementDescForm
           Properties.Buttons = <
             item
               Default = True
-              Enabled = False
               Kind = bkEllipsis
             end>
           Properties.ReadOnly = False
+          Properties.OnButtonClick = EditPartnerCodePropertiesButtonClick
           TabOrder = 0
           Text = 'EditPartnerCode'
           OnEnter = EditPartnerCodeEnter
