@@ -115,16 +115,25 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountProductionIn_by TFloat        -- приход с произв. (если с другого подр., т.е. не пересорт)
              , CountProductionIn_by_Weight TFloat --
              , SummProductionIn_by TFloat         -- приход с произв. (если с другого подр., т.е. не пересорт)
-             , CountIn_by TFloat                  -- приход с "выбранного" подр.
-             , CountIn_by_Weight TFloat           --
-             , SummIn_by TFloat                   -- приход с "выбранного" подр.
+            
+             , CountIn_by1 TFloat                  -- приход с "выбранного" подр1.
+             , CountIn_by1_Weight TFloat           --
+             , SummIn_by1 TFloat                   -- приход с "выбранного" подр1.
+             , CountIn_by2 TFloat                  -- приход с "выбранного" подр2.
+             , CountIn_by2_Weight TFloat           --
+             , SummIn_by2 TFloat                   -- приход с "выбранного" подр2.
+
              , CountOtherIn_by TFloat             -- приход другой
              , CountOtherIn_by_Weight TFloat      --
              , SummOtherIn_by TFloat              -- приход другой
 
-             , CountOut_by TFloat             -- расход на "выбранное" подр.
-             , CountOut_by_Weight TFloat      --
-             , SummOut_by TFloat              -- расход на "выбранное" подр.
+             , CountOut_by1 TFloat             -- расход на "выбранное" подр1.
+             , CountOut_by1_Weight TFloat      --
+             , SummOut_by1 TFloat              -- расход на "выбранное" подр1.
+             , CountOut_by2 TFloat             -- расход на "выбранное" подр2.
+             , CountOut_by2_Weight TFloat      --
+             , SummOut_by2 TFloat              -- расход на "выбранное" подр2.
+
              , CountOtherOut_by TFloat        -- расход другой
              , CountOtherOut_by_Weight TFloat --
              , SummOtherOut_by TFloat         -- расход другой
@@ -150,7 +159,7 @@ BEGIN
 
     -- таблица -
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpLocation_by (LocationId Integer, Number Integer) ON COMMIT DROP;
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
     IF inUnitGroupId <> 0
@@ -190,17 +199,11 @@ BEGIN
 
 
     -- группа подразделений или подразделение ...by
-    IF inUnitGroupId_by <> 0
-    THEN
-        INSERT INTO _tmpLocation_by (LocationId)
-           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitGroupId_by) AS lfSelect_Object_Unit_byGroup;
-    ELSE
-        IF inLocationId_by <> 0
-        THEN
-            INSERT INTO _tmpLocation_by (LocationId)
-               SELECT inLocationId;
-        END IF;
-    END IF;
+    INSERT INTO _tmpLocation_by (LocationId, Number)
+           SELECT 8458, 1               --"Склад База ГП"    32021
+          union
+           SELECT 8459, 2;              --"Склад Реализации" 32022
+
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpLocation_by;
 
@@ -386,16 +389,25 @@ BEGIN
         , tmpMIContainer_group.CountProductionIn_by :: TFloat  -- приход с произв. (если с другого подр., т.е. не пересорт)
         , (tmpMIContainer_group.CountProductionIn_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountProductionIn_by_Weight
         , tmpMIContainer_group.SummProductionIn_by  :: TFloat -- приход с произв. (если с другого подр., т.е. не пересорт)
-        , tmpMIContainer_group.CountIn_by           :: TFloat -- приход с "выбранного" подр.
-        , (tmpMIContainer_group.CountIn_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountIn_by_Weight
-        , tmpMIContainer_group.SummIn_by            :: TFloat -- приход с "выбранного" подр.
+        
+        , tmpMIContainer_group.CountIn_by1           :: TFloat -- приход с "выбранного" подр.
+        , (tmpMIContainer_group.CountIn_by1 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountIn_by1_Weight
+        , tmpMIContainer_group.SummIn_by1            :: TFloat -- приход с "выбранного" подр.
+        , tmpMIContainer_group.CountIn_by2           :: TFloat -- приход с "выбранного" подр.
+        , (tmpMIContainer_group.CountIn_by2 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountIn_by2_Weight
+        , tmpMIContainer_group.SummIn_by2            :: TFloat -- приход с "выбранного" подр.
+
         , tmpMIContainer_group.CountOtherIn_by      :: TFloat -- приход другой
         , (tmpMIContainer_group.CountOtherIn_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOtherIn_by_Weight
         , tmpMIContainer_group.SummOtherIn_by       :: TFloat -- приход другой
 
-        , tmpMIContainer_group.CountOut_by      :: TFloat -- расход на "выбранное" подр.
-        , (tmpMIContainer_group.CountOut_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOut_by_Weight
-        , tmpMIContainer_group.SummOut_by       :: TFloat -- расход на "выбранное" подр.
+        , tmpMIContainer_group.CountOut_by1      :: TFloat -- расход на "выбранное" подр.
+        , (tmpMIContainer_group.CountOut_by1 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOut_by1_Weight
+        , tmpMIContainer_group.SummOut_by1       :: TFloat -- расход на "выбранное" подр.
+        , tmpMIContainer_group.CountOut_by2      :: TFloat -- расход на "выбранное" подр.
+        , (tmpMIContainer_group.CountOut_by2 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOut_by2_Weight
+        , tmpMIContainer_group.SummOut_by2       :: TFloat -- расход на "выбранное" подр.
+
         , tmpMIContainer_group.CountOtherOut_by :: TFloat -- расход другой
         , (tmpMIContainer_group.CountOtherOut_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOtherOut_by_Weight
         , tmpMIContainer_group.SummOtherOut_by  :: TFloat -- расход другой
@@ -457,18 +469,33 @@ BEGIN
               , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.CountProductionIn ELSE 0 END) AS CountProductionIn_by -- приход с произв. (если с другого подр., т.е. не пересорт)
               , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.SummProductionIn  ELSE 0 END) AS SummProductionIn_by  -- приход с произв. (если с другого подр., т.е. не пересорт)
 
-              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 and _tmpLocation_by.Number = 1
                                THEN tmpMIContainer_all.CountSendIn
                                   + tmpMIContainer_all.CountProductionIn
                                   + tmpMIContainer_all.CountSendOnPriceIn
                           ELSE 0
-                     END) AS CountIn_by -- приход с "выбранного" подр.
-              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0
+                     END) AS CountIn_by1 -- приход с "выбранного" подр.
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 and _tmpLocation_by.Number = 1
                                THEN tmpMIContainer_all.SummSendIn
                                   + tmpMIContainer_all.SummProductionIn
                                   + tmpMIContainer_all.SummSendOnPriceIn
                           ELSE 0
-                     END) AS SummIn_by -- приход с "выбранного" подр.
+                     END) AS SummIn_by1 -- приход с "выбранного" подр.
+
+
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 and _tmpLocation_by.Number = 2
+                               THEN tmpMIContainer_all.CountSendIn
+                                  + tmpMIContainer_all.CountProductionIn
+                                  + tmpMIContainer_all.CountSendOnPriceIn
+                          ELSE 0
+                     END) AS CountIn_by2 -- приход с "выбранного" подр.
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 and _tmpLocation_by.Number = 2
+                               THEN tmpMIContainer_all.SummSendIn
+                                  + tmpMIContainer_all.SummProductionIn
+                                  + tmpMIContainer_all.SummSendOnPriceIn
+                          ELSE 0
+                     END) AS SummIn_by2 -- приход с "выбранного" подр.
+
 
               , SUM (CASE WHEN _tmpLocation.LocationId > 0 AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.CountProductionIn ELSE 0 END
                    + CASE WHEN _tmpLocation_by.LocationId IS NULL
@@ -487,18 +514,31 @@ BEGIN
                    + tmpMIContainer_all.SummIncome
                     ) AS SummOtherIn_by -- приход другой
 
-              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 and _tmpLocation_by.Number = 1
                                THEN tmpMIContainer_all.CountSendOut
                                   + tmpMIContainer_all.CountProductionOut
                                   + tmpMIContainer_all.CountSendOnPriceOut
                           ELSE 0
-                     END) AS CountOut_by -- расход на "выбранное" подр.
-              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0
+                     END) AS CountOut_by1 -- расход на "выбранное" подр.
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 and _tmpLocation_by.Number = 1
                                THEN tmpMIContainer_all.SummSendOut
                                   + tmpMIContainer_all.SummProductionOut
                                   + tmpMIContainer_all.SummSendOnPriceOut
                           ELSE 0
-                     END) AS SummOut_by -- расход на "выбранное" подр.
+                     END) AS SummOut_by1 -- расход на "выбранное" подр.
+
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 and _tmpLocation_by.Number = 2
+                               THEN tmpMIContainer_all.CountSendOut
+                                  + tmpMIContainer_all.CountProductionOut
+                                  + tmpMIContainer_all.CountSendOnPriceOut
+                          ELSE 0
+                     END) AS CountOut_by2 -- расход на "выбранное" подр.
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 and _tmpLocation_by.Number = 2
+                               THEN tmpMIContainer_all.SummSendOut
+                                  + tmpMIContainer_all.SummProductionOut
+                                  + tmpMIContainer_all.SummSendOnPriceOut
+                          ELSE 0
+                     END) AS SummOut_by2 -- расход на "выбранное" подр.
 
               , SUM (CASE WHEN _tmpLocation_by.LocationId IS NULL
                                THEN tmpMIContainer_all.CountSendOut

@@ -66,6 +66,14 @@ type
     ProfitLossGroupName: TcxGridDBColumn;
     ProfitLossDirectionCode: TcxGridDBColumn;
     ProfitLossDirectionName: TcxGridDBColumn;
+    actPrint_byElements: TdsdPrintAction;
+    actPrint_byElements_byComments: TdsdPrintAction;
+    bbPrint_byElements: TdxBarButton;
+    bbPrint_byElements_byComments: TdxBarButton;
+    CashName: TcxGridDBColumn;
+    GroupId: TcxGridDBColumn;
+    GroupName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

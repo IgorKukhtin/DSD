@@ -2036,10 +2036,6 @@
 				<Form>Report_GoodsBalanceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsUpakDialog.pas">
-				<Form>Report_MotionGoodsUpakDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsUpak.pas">
 				<Form>Report_MotionGoodsUpakForm</Form>
 				<DesignClass>TParentForm</DesignClass>

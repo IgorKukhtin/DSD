@@ -2,7 +2,7 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074' ('#1094#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')>'
-  ClientHeight = 670
+  ClientHeight = 669
   ClientWidth = 1344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,9 +22,10 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
     Left = 0
     Top = 80
     Width = 1344
-    Height = 590
+    Height = 589
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 590
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -1816,8 +1817,8 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
         VisibleForCustomization = False
         Width = 55
       end
-      object CountIn_by: TcxGridDBColumn
-        DataBinding.FieldName = 'CountIn_by'
+      object CountIn_by1: TcxGridDBColumn
+        DataBinding.FieldName = 'CountIn_by1'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1825,15 +1826,15 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
         VisibleForCustomization = False
         Width = 55
       end
-      object CountIn_by_Weight: TcxGridDBColumn
-        DataBinding.FieldName = 'CountIn_by_Weight'
+      object CountIn_by1_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountIn_by1_Weight'
         Visible = False
         Options.Editing = False
         VisibleForCustomization = False
         Width = 55
       end
-      object SummIn_by: TcxGridDBColumn
-        DataBinding.FieldName = 'SummIn_by'
+      object SummIn_by1: TcxGridDBColumn
+        DataBinding.FieldName = 'SummIn_by1'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1866,8 +1867,8 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
         VisibleForCustomization = False
         Width = 55
       end
-      object CountOut_by: TcxGridDBColumn
-        DataBinding.FieldName = 'CountOut_by'
+      object CountOut_by1: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOut_by1'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1875,15 +1876,15 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
         VisibleForCustomization = False
         Width = 55
       end
-      object CountOut_by_Weight: TcxGridDBColumn
-        DataBinding.FieldName = 'CountOut_by_Weight'
+      object CountOut_by1_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOut_by1_Weight'
         Visible = False
         Options.Editing = False
         VisibleForCustomization = False
         Width = 55
       end
-      object SummOut_by: TcxGridDBColumn
-        DataBinding.FieldName = 'SummOut_by'
+      object SummOut_by1: TcxGridDBColumn
+        DataBinding.FieldName = 'SummOut_by1'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1913,6 +1914,40 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountIn_by2: TcxGridDBColumn
+        DataBinding.FieldName = 'CountIn_by2'
+        Visible = False
+        Width = 55
+      end
+      object CountIn_by2_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountIn_by2_Weight'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummIn_by2: TcxGridDBColumn
+        DataBinding.FieldName = 'SummIn_by2'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountOut_by2: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOut_by2'
+        Visible = False
+        Width = 55
+      end
+      object CountOut_by2_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountOut_by2_Weight'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummOut_by2: TcxGridDBColumn
+        DataBinding.FieldName = 'SummOut_by2'
+        Visible = False
         VisibleForCustomization = False
         Width = 55
       end
@@ -2396,8 +2431,8 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_MotionGoodsUpakDialogForm'
-      FormNameParam.Value = 'TReport_MotionGoodsUpakDialogForm'
+      FormName = 'TReport_MotionGoodsDialogForm'
+      FormNameParam.Value = 'TReport_MotionGoodsDialogForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -2533,8 +2568,8 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1074#1089#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1074#1089#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
+      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -2751,8 +2786,8 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1082#1083#1072#1076' '#1043#1055')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1082#1083#1072#1076' '#1043#1055')'
+      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
       ImageIndex = 18
       ShortCut = 16464
       DataSets = <
@@ -2842,8 +2877,8 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1082#1083#1072#1076' '#1043#1055')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1082#1083#1072#1076' '#1043#1055')'
+      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
       ReportNameParam.DataType = ftString
     end
     object actPrint_Remains: TdsdPrintAction
