@@ -32,7 +32,7 @@ type
     Panel6: TPanel;
     DBGrid: TDBGrid;
     EditPartnerCode: TcxButtonEdit;
-    Label4: TLabel;
+    MessagePanel: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure EditPartnerCodeExit(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -47,12 +47,15 @@ type
       Shift: TShiftState);
     procedure EdiBarCodeEnter(Sender: TObject);
     procedure EditPartnerCodeEnter(Sender: TObject);
+    procedure EditPartnerCodePropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
 
   private
     ChoiceNumber:Integer;
 
-    IsOrderExternal: Boolean;
-    IsBarCodeMaster: Boolean;
+    isEditPartnerCodeExit: Boolean;
+    isOrderExternal: Boolean;
+    isBarCodeMaster: Boolean;
     ParamsMovement_local: TParams;
 
     function Checked: boolean; override;//Проверка корректного ввода в Edit
@@ -65,11 +68,28 @@ var
 
 implementation
 {$R *.dfm}
-uses DMMainScale;
+uses DMMainScale,GuidePartner;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
      CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
+
+     isEditPartnerCodeExit:= true;
+
+     if ParamsMovement_local.ParamByName('MovementId').AsInteger<>0
+     then begin
+               MessagePanel.Font.Style:=[fsBold];
+               MessagePanel.Caption:='Текущее взвешивание не закрыто.Будет создано <Новое> взвешивание.';
+               //
+               ParamsMovement_local.ParamByName('MovementDescId').AsInteger:=0;
+               ParamsMovement_local.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber');
+               ParamsMovement_local.ParamByName('OrderExternal_BarCode').AsString:='';
+               ParamsMovement_local.ParamByName('OrderExternal_InvNumber').AsString:='';
+               ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger:=0;
+               ParamsMovement_local.ParamByName('calcPartnerName').AsString:='';
+          end
+     else begin MessagePanel.Font.Style:=[];MessagePanel.Caption:='Новое взвешивание';end;
+
      if BarCode<>'' then ParamsMovement_local.ParamByName('OrderExternal_BarCode').AsString:=BarCode;
 
      IsBarCodeMaster:=BarCode<>'';
@@ -132,9 +152,14 @@ begin
                exit;
      end;
 
-
+     //
      with ParamsMovement_local do
      begin
+          //
+          if ParamByName('MovementId').AsInteger<>0
+          then ShowMessage('После завершения <Нового> взвешивания возврат к текущему будет произведен автоматически.');
+          ParamByName('MovementId').AsInteger:=0;
+          //
           ParamByName('ColorGridValue').AsInteger:=CDS.FieldByName('ColorGridValue').asInteger;
           ParamByName('MovementDescNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
           ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
@@ -269,6 +294,10 @@ begin
                     end;
                     //
                     ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
+                    ParamsMovement_local.ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
+                    ParamsMovement_local.ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
+                    ParamsMovement_local.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
+
                     ChoiceNumber:=CDS.FieldByName('Number').asInteger;
                     // завершение
                     if   (CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Income)
@@ -315,6 +344,9 @@ end;
 procedure TDialogMovementDescForm.EditPartnerCodeExit(Sender: TObject);
 var PartnerCode_int:Integer;
 begin
+     //!!!exit!!!
+     if isEditPartnerCodeExit = false then exit;
+
     //if CDS.Filtered then CDS.Filtered:=false;
     //
     try PartnerCode_int:= StrToInt(EditPartnerCode.Text);
@@ -368,6 +400,27 @@ begin
           then begin ActiveControl:=DBGrid;DBGridCellClick(DBGrid.Columns[0]);end
           else ActiveControl:=DBGrid;
 end;
+{------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.EditPartnerCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var Key:Word;
+begin
+    if ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger<>0
+    then begin
+              EdiBarCode.Text:=ParamsMovement_local.ParamByName('MovementDescNumber').AsString;
+              EdiBarCodeExit(Self);
+    end;
+
+    if GuidePartnerForm.Execute(ParamsMovement_local)
+    then begin
+              EditPartnerCode.Text:=IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);
+              PanelPartnerName.Caption:= ParamsMovement_local.ParamByName('calcPartnerName').AsString;
+              Key:=VK_RETURN;
+              isEditPartnerCodeExit:= false;
+              EditPartnerCodeKeyDown(Sender,Key,[]);
+              isEditPartnerCodeExit:= true;
+    end;
+end;
+
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.DBGridCellClick(Column: TColumn);
 begin

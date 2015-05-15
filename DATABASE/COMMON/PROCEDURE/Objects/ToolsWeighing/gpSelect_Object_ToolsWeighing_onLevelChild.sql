@@ -45,7 +45,16 @@ BEGIN
             , 0 AS Id
             , 0 AS Code
             , tmp.Name :: TVarChar AS Name
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, inLevelChild, '', tmp.Name, CASE WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is' THEN 'FALSE' ELSE '1' END, inSession) AS Value
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, inLevelChild, '', tmp.Name
+                                       , CASE WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
+                                                   THEN 'FALSE'
+                                              WHEN STRPOS (tmp.Name, 'InfoMoneyId_income') > 0
+                                                   THEN '0'
+                                              WHEN STRPOS (tmp.Name, 'InfoMoneyId_sale') > 0
+                                                   THEN zc_Enum_InfoMoney_30101() :: TVarChar -- Доходы + Продукция + Готовая продукция
+                                              ELSE '1'
+                                         END
+                                       , inSession) AS Value
        FROM (SELECT 'MovementNumber'         AS Name
        UNION SELECT 'TareCount'              AS Name
        UNION SELECT 'TareWeightNumber'       AS Name
@@ -56,6 +65,9 @@ BEGIN
        UNION SELECT 'isTareWeightEnter'      AS Name
 
        UNION SELECT 'DayPrior_PriceReturn' AS Name
+
+       UNION SELECT 'InfoMoneyId_income' AS Name
+       UNION SELECT 'InfoMoneyId_sale'   AS Name
             ) AS tmp
        ORDER BY 1
        ;

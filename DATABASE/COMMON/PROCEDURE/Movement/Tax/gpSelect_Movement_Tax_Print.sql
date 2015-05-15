@@ -24,6 +24,8 @@ $BODY$
     DECLARE vbStatusId_Tax Integer;
     DECLARE vbDocumentTaxKindId Integer;
 
+    DECLARE vbCurrencyPartnerId Integer;
+
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent TFloat;
     DECLARE vbNotNDSPayer_INN TVarChar;
@@ -36,16 +38,17 @@ BEGIN
      vbNotNDSPayer_INN := '100000000000';
 
      -- определ€етс€ <Ќалоговый документ> и его параметры
-     SELECT COALESCE (tmpMovement.MovementId_Tax, 0)                AS MovementId_Tax
-          , Movement_Tax.StatusId                                   AS StatusId_Tax
-          , MovementLinkObject_DocumentTaxKind.ObjectId             AS DocumentTaxKindId
-          , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
-          , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
+     SELECT COALESCE (tmpMovement.MovementId_Tax, 0)                  AS MovementId_Tax
+          , Movement_Tax.StatusId                                     AS StatusId_Tax
+          , MovementLinkObject_DocumentTaxKind.ObjectId               AS DocumentTaxKindId
+          , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)   AS PriceWithVAT
+          , COALESCE (MovementFloat_VATPercent.ValueData, 0)          AS VATPercent
+          , COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyPartnerId
           , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, MovementLinkObject_To.ObjectId) AS GoodsPropertyId
-          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis())        AS GoodsPropertyId_basis
-          -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
-          -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
-            INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
+          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis())          AS GoodsPropertyId_basis
+          -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId         AS GoodsPropertyId
+          -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
+            INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -57,6 +60,14 @@ BEGIN
            WHERE Movement.Id = inMovementId
           ) AS tmpMovement
           LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = tmpMovement.MovementId_Tax
+
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                         ON MovementLinkMovement_Master.MovementChildId = tmpMovement.MovementId_Tax
+                                        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                       ON MovementLinkObject_CurrencyPartner.MovementId = MovementLinkMovement_Master.MovementId
+                                      AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+
           LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                        ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.MovementId_Tax
                                       AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
@@ -135,10 +146,14 @@ BEGIN
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
 
-           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
-           , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS SummVAT
-           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN MovementFloat_TotalSummMVAT.ValueData ELSE 0 END AS TotalSummMVAT
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN MovementFloat_TotalSummPVAT.ValueData ELSE 0 END AS TotalSummPVAT
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) ELSE 0 END AS SummVAT
+           , MovementFloat_TotalSumm.ValueData AS TotalSumm
+
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT_11
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT_11
+           , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) END AS SummVAT_11
 
            , Object_From.ValueData             		    AS FromName
            , Object_To.ValueData               		    AS ToName
@@ -207,16 +222,21 @@ BEGIN
                   THEN 'X' ELSE '' END                  AS ERPN
 
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                    OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                   THEN 'X' ELSE '' END                  AS NotNDSPayer
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                   THEN TRUE ELSE FALSE END :: Boolean   AS isNotNDSPayer
 
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
-                  THEN '0' ELSE '' END                  AS NotNDSPayerC1
-           , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
-                  THEN '2' ELSE '' END                  AS NotNDSPayerC2
-
-
+           , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
+                       THEN '0'
+                  WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                       THEN '0'
+             END AS NotNDSPayerC1
+           , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
+                       THEN '7'
+                  WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                       THEN '2'
+             END AS NotNDSPayerC2
 
            , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
 
@@ -456,16 +476,28 @@ BEGIN
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
              AS PriceWVAT
 
-           , CAST (MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                              THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / 100))
-                                              ELSE MIFloat_Price.ValueData
-                                         END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                   AS NUMERIC (16, 2)) AS AmountSummNoVAT
+           , CAST (CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis()
+                             THEN MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                                                  THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / 100))
+                                                                  ELSE MIFloat_Price.ValueData
+                                                         END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                             ELSE 0
+                   END AS NUMERIC (16, 2)) AS AmountSummNoVAT
+           , CAST (CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
+                             THEN MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                                                  THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / 100))
+                                                                  ELSE MIFloat_Price.ValueData
+                                                         END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                             ELSE 0
+                   END AS NUMERIC (16, 2)) AS AmountSummNoVAT_11
+
            , CAST (MovementItem.Amount * CASE WHEN vbPriceWithVAT <> TRUE
                                               THEN MIFloat_Price.ValueData + MIFloat_Price.ValueData * (vbVATPercent / 100)
                                               ELSE MIFloat_Price.ValueData
                                          END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
+
+
 
        FROM MovementItem
             INNER JOIN MovementItemFloat AS MIFloat_Price

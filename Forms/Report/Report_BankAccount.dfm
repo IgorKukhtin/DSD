@@ -3,7 +3,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
   ClientHeight = 555
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 590
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -600,6 +600,30 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Options.Editing = False
             Width = 70
           end
+          object CashName: TcxGridDBColumn
+            DataBinding.FieldName = 'CashName'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object GroupId: TcxGridDBColumn
+            DataBinding.FieldName = 'GroupId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object GroupName: TcxGridDBColumn
+            DataBinding.FieldName = 'GroupName'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Comment: TcxGridDBColumn
+            DataBinding.FieldName = 'Comment'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
         end
       end
     end
@@ -766,6 +790,134 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint_byElements: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
+      Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'maintext'
+          Value = #1088'/'#1089#1095#1077#1090#1091
+          DataType = ftString
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_byElements_byComments: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
+      Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'cashname;GroupId;InfoMoneyName_all;MoneyPlaceName;Comment'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'maintext'
+          Value = #1088'/'#1089#1095#1077#1090#1091
+          DataType = ftString
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Top = 184
@@ -853,6 +1005,22 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_byElements'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_byElements_byComments'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -862,6 +1030,14 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbPrint_byElements: TdxBarButton
+      Action = actPrint_byElements
+      Category = 0
+    end
+    object bbPrint_byElements_byComments: TdxBarButton
+      Action = actPrint_byElements_byComments
       Category = 0
     end
   end

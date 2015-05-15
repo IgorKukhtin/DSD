@@ -199,16 +199,20 @@ begin
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.GetParams_MovementDesc(BarCode: String):Boolean;
+var MovementId_save:Integer;
 begin
+     MovementId_save:=ParamsMovement.ParamByName('MovementId').AsInteger;
+     //
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then if ParamsMovement.ParamByName('MovementDescId').AsInteger=0
           then ParamsMovement.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber')
           else
      else if (DMMainScaleForm.gpUpdate_Scale_Movement_check(ParamsMovement)=false)
           then begin
-               ShowMessage ('Ошибка.Документ взвешивания № <'+ParamsMovement.ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamsMovement.ParamByName('OperDate_Movement').AsDateTime)+'> не закрыт.'+#10+#13+'Изменение параметров не возможно.');
-               Result:=false;
-               exit;
+               //ShowMessage ('Ошибка.'+#10+#13+'Документ взвешивания № <'+ParamsMovement.ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamsMovement.ParamByName('OperDate_Movement').AsDateTime)+'> не закрыт.'+#10+#13+'Изменение параметров не возможно.');
+               //Result:=false;
+               if MessageDlg('Текущее взвешивание не закрыто.'+#10+#13+'Действительно перейти к созданию <Нового> взвешивания?',mtConfirmation,mbYesNoCancel,0) <> 6
+               then begin Result:=false;exit;end;
           end;
      //
      Result:=DialogMovementDescForm.Execute(BarCode);
@@ -218,6 +222,8 @@ begin
           then DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
           //
           WriteParamsMovement;
+          //
+          if MovementId_save <> 0 then RefreshDataSet;
      end;
      ActiveControl:=EnterGoodsCodeScanerEdit;
 end;

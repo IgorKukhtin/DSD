@@ -567,6 +567,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_InfoMoneyDestination_80500() RETURNS Integer 
 -- !!!
 -- !!! УП: Управленческие статьи назначения (1+2+3 уровень)
 -- !!!
+-- 10101; Основное сырье + Мясное сырье + Живой вес
+CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_10101() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_10101' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- 10105; Основное сырье + Мясное сырье + Прочее мясное сырье
 CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_10105() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_10105' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
