@@ -1,26 +1,25 @@
 inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
-  ClientWidth = 806
-  ExplicitTop = -76
-  ExplicitWidth = 814
+  ClientWidth = 864
+  ExplicitWidth = 872
   ExplicitHeight = 553
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 806
+    Width = 864
     Height = 400
     ExplicitTop = 126
     ExplicitWidth = 806
     ExplicitHeight = 400
     ClientRectBottom = 400
-    ClientRectRight = 806
+    ClientRectRight = 864
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 806
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
-        Width = 806
+        Width = 864
         Height = 376
         ExplicitWidth = 806
         ExplicitHeight = 376
@@ -236,7 +235,7 @@ inherited IncomeForm: TIncomeForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 806
+    Width = 864
     Height = 100
     TabOrder = 3
     ExplicitWidth = 806
@@ -253,14 +252,14 @@ inherited IncomeForm: TIncomeForm
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 114
+      Left = 116
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 114
+      ExplicitLeft = 116
     end
     inherited cxLabel2: TcxLabel
-      Left = 114
-      ExplicitLeft = 114
+      Left = 116
+      ExplicitLeft = 116
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -270,17 +269,17 @@ inherited IncomeForm: TIncomeForm
       Top = 63
       TabOrder = 8
       ExplicitTop = 63
-      ExplicitWidth = 206
+      ExplicitWidth = 208
       ExplicitHeight = 22
-      Width = 206
+      Width = 208
     end
     object cxLabel3: TcxLabel
-      Left = 217
+      Left = 327
       Top = 5
       Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 217
+      Left = 327
       Top = 23
       Properties.Buttons = <
         item
@@ -291,7 +290,7 @@ inherited IncomeForm: TIncomeForm
       Width = 174
     end
     object edTo: TcxButtonEdit
-      Left = 399
+      Left = 509
       Top = 23
       Properties.Buttons = <
         item
@@ -302,25 +301,25 @@ inherited IncomeForm: TIncomeForm
       Width = 184
     end
     object cxLabel4: TcxLabel
-      Left = 399
+      Left = 509
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 217
+      Left = 327
       Top = 64
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 11
       Width = 130
     end
     object cxLabel10: TcxLabel
-      Left = 345
+      Left = 455
       Top = 45
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 345
-      Top = 63
+      Left = 455
+      Top = 64
       Properties.Buttons = <
         item
           Default = True
@@ -330,12 +329,12 @@ inherited IncomeForm: TIncomeForm
       Width = 86
     end
     object cxLabel5: TcxLabel
-      Left = 590
+      Left = 699
       Top = 5
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
     end
     object edContract: TcxButtonEdit
-      Left = 592
+      Left = 701
       Top = 23
       Properties.Buttons = <
         item
@@ -346,20 +345,20 @@ inherited IncomeForm: TIncomeForm
       Width = 140
     end
     object edPaymentDate: TcxDateEdit
-      Left = 448
-      Top = 63
+      Left = 558
+      Top = 64
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 15
       Width = 100
     end
     object cxLabel6: TcxLabel
-      Left = 448
+      Left = 558
       Top = 45
       Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
     end
     object ceTotalSummMVAT: TcxCurrencyEdit
-      Left = 638
+      Left = 747
       Top = 50
       EditValue = 1111111.000000000000000000
       Enabled = False
@@ -381,7 +380,7 @@ inherited IncomeForm: TIncomeForm
       Width = 94
     end
     object ceTotalSummPVAT: TcxCurrencyEdit
-      Left = 638
+      Left = 747
       Top = 69
       EditValue = 1111111.000000000000000000
       Enabled = False
@@ -403,7 +402,7 @@ inherited IncomeForm: TIncomeForm
       Width = 94
     end
     object cxLabel7: TcxLabel
-      Left = 550
+      Left = 659
       Top = 51
       Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057':'
       ParentFont = False
@@ -415,7 +414,7 @@ inherited IncomeForm: TIncomeForm
       Style.IsFontAssigned = True
     end
     object cxLabel8: TcxLabel
-      Left = 564
+      Left = 673
       Top = 70
       Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057':'
       ParentFont = False
@@ -425,6 +424,32 @@ inherited IncomeForm: TIncomeForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
+    end
+    object cxLabel9: TcxLabel
+      Left = 220
+      Top = 46
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    end
+    object cxTextEdit1: TcxTextEdit
+      Left = 220
+      Top = 64
+      Properties.ReadOnly = False
+      TabOrder = 22
+      Width = 99
+    end
+    object cxLabel11: TcxLabel
+      Left = 219
+      Top = 5
+      Caption = #1044#1072#1090#1072
+    end
+    object cxDateEdit1: TcxDateEdit
+      Left = 219
+      Top = 23
+      EditValue = 42132d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 24
+      Width = 100
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1360,7 +1385,8 @@ inherited IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 304
+    Left = 328
+    Top = 16
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'

@@ -8,6 +8,10 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income
     (Integer, TVarChar, TDateTime, Boolean, 
      Integer, Integer, Integer, Integer, TDateTime, Integer);
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income 
+    (Integer, TVarChar, TDateTime, Boolean, 
+     Integer, Integer, Integer, Integer, TDateTime, Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -18,7 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inNDSKindId           Integer   , -- Типы НДС
     IN inContractId          Integer   , -- Договор
     IN inPaymentDate         TDateTime , -- Дата платежа
-    IN inUserId              Integer    -- сессия пользователя
+    IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$

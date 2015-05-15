@@ -26,6 +26,9 @@ SELECT       Movement.Id                                AS Id
            , MovementDate_Payment.ValueData             AS PaymentDate
            , Container.Amount                           AS PaySumm
            , MovementFloat_TotalSummSale.ValueData      AS SaleSumm
+           , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
+           , MovementDate_Branch.ValueData              AS BranchDate
+           , MovementBoolean_Checked.ValueData          AS Checked
 
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -78,9 +81,21 @@ SELECT       Movement.Id                                AS Id
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                      ON MovementBoolean_Checked.MovementId =  Movement.Id
+                                     AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
             LEFT JOIN MovementDate    AS MovementDate_Payment
                                       ON MovementDate_Payment.MovementId =  Movement.Id
                                      AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
+
+            LEFT JOIN MovementDate    AS MovementDate_Branch
+                                      ON MovementDate_Branch.MovementId = Movement.Id
+                                     AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+            LEFT JOIN MovementString  AS MovementString_InvNumberBranch
+                                      ON MovementString_InvNumberBranch.MovementId = Movement.Id
+                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
             -- Партия накладной
             LEFT JOIN Object AS Object_Movement
@@ -99,6 +114,7 @@ ALTER TABLE Movement_Income_View
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.05.15                        * 
  11.02.15                        * 
  04.02.15                        * 
  12.01.15                        * 

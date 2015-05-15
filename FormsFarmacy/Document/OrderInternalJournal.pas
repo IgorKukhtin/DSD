@@ -33,6 +33,7 @@ type
     actCalculateExternalZakaz: TdsdExecStoredProc;
     spCalculate: TdsdStoredProc;
     colOrderKind: TcxGridDBColumn;
+    mactCalculateExternalZakaz: TMultiAction;
   private
     { Private declarations }
   public

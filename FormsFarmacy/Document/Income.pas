@@ -70,6 +70,10 @@ type
     colSaleSumm: TcxGridDBColumn;
     colPercent: TcxGridDBColumn;
     colPriceWithVAT: TcxGridDBColumn;
+    cxLabel9: TcxLabel;
+    cxTextEdit1: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    cxDateEdit1: TcxDateEdit;
   private
     { Private declarations }
   public

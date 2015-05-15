@@ -1,4 +1,4 @@
-program ProFject;
+program Project;
 
 uses
   Windows,
