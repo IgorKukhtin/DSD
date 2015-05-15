@@ -105,7 +105,7 @@ BEGIN
         Operation.Summ_Currency :: TFloat                                                                             AS Summ_Currency,
         Operation.MovementId :: Integer                                                                               AS MovementId,
         
-        (Object_BankAccount_View.BankName ||'  '||COALESCE (Object_BankAccount_View.Name, Object_Juridical.ValueData)) :: TVarChar  AS CashName,
+        TRIM (COALESCE (Object_BankAccount_View.BankName, '' ) || '  ' || COALESCE (Object_BankAccount_View.Name, Object_Juridical.ValueData)) :: TVarChar  AS CashName,
         CASE WHEN Operation.ContainerId > 0 THEN 1          WHEN Operation.DebetSumm > 0 THEN 2               WHEN Operation.KreditSumm > 0 THEN 3           ELSE -1 END :: Integer AS GroupId,
         CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.KreditSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
         Operation.Comment :: TVarChar                                                               AS Comment
@@ -177,7 +177,7 @@ BEGIN
            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount_Currency, tmpContainer.ContainerId_Currency
           UNION ALL
            -- 2.1. движение в валюте баланса
-           SELECT tmpContainer.ContainerId
+           SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
                 , tmpContainer.AccountId
                 , tmpContainer.BankAccountId
                 , tmpContainer.CurrencyId
@@ -218,6 +218,7 @@ BEGIN
                 LEFT JOIN MovementItemString AS MIString_Comment
                                              ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
                                             AND MIString_Comment.DescId = zc_MIString_Comment()
+                                            AND inIsDetail = TRUE
 
            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
                   , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
@@ -226,7 +227,7 @@ BEGIN
                   , COALESCE (MIString_Comment.ValueData, '')
           UNION ALL
            -- 2.2. движение в валюте операции
-           SELECT tmpContainer.ContainerId
+           SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
                 , tmpContainer.AccountId
                 , tmpContainer.BankAccountId
                 , tmpContainer.CurrencyId
@@ -267,6 +268,7 @@ BEGIN
                 LEFT JOIN MovementItemString AS MIString_Comment
                                              ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
                                             AND MIString_Comment.DescId = zc_MIString_Comment()
+                                            AND inIsDetail = TRUE
 
            WHERE tmpContainer.ContainerId_Currency > 0
            GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
@@ -275,7 +277,7 @@ BEGIN
                   , COALESCE (MIString_Comment.ValueData, '')
           UNION ALL
            -- 2.2. курсовая разница (!!!только не для ввода курса!!!)
-           SELECT tmpContainer.ContainerId
+           SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
                 , tmpContainer.AccountId
                 , tmpContainer.BankAccountId
                 , tmpContainer.CurrencyId
@@ -325,6 +327,7 @@ BEGIN
                 LEFT JOIN MovementItemString AS MIString_Comment
                                              ON MIString_Comment.MovementItemId = MIReport.MovementItemId
                                             AND MIString_Comment.DescId = zc_MIString_Comment()
+                                            AND inIsDetail = TRUE
 
            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
                   , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId

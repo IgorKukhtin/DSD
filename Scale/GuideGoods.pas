@@ -7,12 +7,14 @@ uses
   Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons
  ,UtilScale, Datasnap.DBClient, dsdDB, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
-  dxSkinsDefaultPainters, cxTextEdit, cxCurrencyEdit;
+  dxSkinsDefaultPainters, cxTextEdit, cxCurrencyEdit,DataModul, cxStyles,
+  dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
+  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxClasses, cxGridCustomView, cxGrid, dsdAddOn;
 
 type
   TGuideGoodsForm = class(TForm)
     GridPanel: TPanel;
-    DBGrid: TDBGrid;
     ParamsPanel: TPanel;
     infoPanelTare: TPanel;
     rgTareWeight: TRadioGroup;
@@ -52,6 +54,22 @@ type
     CDS: TClientDataSet;
     gbWeightValue: TGroupBox;
     EditWeightValue: TcxCurrencyEdit;
+    DS: TDataSource;
+    cxDBGrid: TcxGrid;
+    cxDBGridDBTableView: TcxGridDBTableView;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Price_Return: TcxGridDBColumn;
+    Amount_Order: TcxGridDBColumn;
+    Amount_Weighing: TcxGridDBColumn;
+    Amount_diff: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    cxDBGridLevel: TcxGridLevel;
+    DBViewAddOn: TdsdDBViewAddOn;
+    Color_calc: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure ButtonRefreshClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
@@ -90,7 +108,6 @@ type
     procedure EditGoodsKindCodeKeyPress(Sender: TObject; var Key: Char);
     procedure EditTareWeightEnterExit(Sender: TObject);
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
-    procedure DBGridDblClick(Sender: TObject);
     procedure EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
     procedure DataSourceDataChange(Sender: TObject; Field: TField);
     procedure FormDestroy(Sender: TObject);
@@ -99,6 +116,7 @@ type
       Shift: TShiftState);
     procedure DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure cxDBGridDBTableViewDblClick(Sender: TObject);
   private
     fStartWrite:Boolean;
     fEnterGoodsCode:Boolean;
@@ -269,8 +287,8 @@ begin
 
                 else if (ActiveControl=EditGoodsName)
                      then ActiveControl:=EditGoodsCode
-                     else if (ActiveControl=DBGrid)and(CDS.RecordCount>0)
-                          then DBGridDblClick(DBGrid)
+                     else if (ActiveControl=cxDBGrid)and(CDS.RecordCount>0)
+                          then cxDBGridDBTableViewDblClick(cxDBGrid)
 
       else if ActiveControl=EditGoodsKindCode then ActiveControl:=EditTareCount
            else if ActiveControl=EditTareCount then ActiveControl:=EditTareWeightCode
@@ -551,7 +569,7 @@ end;
 procedure TGuideGoodsForm.EditGoodsKindCodeExit(Sender: TObject);
 begin
       if (fStartWrite=true)or(ActiveControl=EditGoodsCode)or(ActiveControl=EditGoodsName)
-      or(ActiveControl=DBGrid)or(ActiveControl=rgGoodsKind)or(ActiveControl.Name='') then exit;
+      or(ActiveControl=cxDBGrid)or(ActiveControl=rgGoodsKind)or(ActiveControl.Name='') then exit;
 //Focused
       if (rgGoodsKind.ItemIndex=-1)
       then begin ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');
@@ -599,7 +617,7 @@ var findIndex:Integer;
 begin
     findIndex:=GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex);
     EditGoodsKindCode.Text:=IntToStr(GoodsKind_Array[findIndex].Code);
-    if ActiveControl <> DBGrid then ActiveControl:=EditGoodsKindCode;
+    if ActiveControl <> cxDBGrid then ActiveControl:=EditGoodsKindCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareCountEnter(Sender: TObject);
@@ -821,7 +839,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.DBGridDblClick(Sender: TObject);
+procedure TGuideGoodsForm.cxDBGridDBTableViewDblClick(Sender: TObject);
 begin
      EditGoodsCode.Text:=CDS.FieldByName('GoodsCode').AsString;
      fEnterGoodsCode:=true;
@@ -843,7 +861,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.DBGridDrawColumnCell(Sender: TObject;const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
 begin
-     if (AnsiUpperCase(Column.Field.FieldName)=AnsiUpperCase('Amount_diff'))
+{     if (AnsiUpperCase(Column.Field.FieldName)=AnsiUpperCase('Amount_diff'))
        and((CDS.FieldByName('Amount_diff').AsFloat>0)or(CDS.FieldByName('isTax_diff').AsBoolean = true))
      then
      with (Sender as TDBGrid).Canvas do
@@ -855,7 +873,7 @@ begin
           if (Column.Alignment=taLeftJustify)or(Rect.Left>=Rect.Right - LengTh(Column.Field.Text))
           then TextOut(Rect.Left+2, Rect.Top+2, Column.Field.Text)
           else TextOut(Rect.Right - TextWidth(Column.Field.Text) - 2, Rect.Top+2 , Column.Field.Text);
-     end;
+     end;}
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.ButtonRefreshClick(Sender: TObject);

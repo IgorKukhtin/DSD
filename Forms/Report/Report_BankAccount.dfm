@@ -3,7 +3,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
   ClientHeight = 555
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -207,6 +207,14 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object GroupName: TcxGridDBColumn
+            Caption = #1042#1080#1076
+            DataBinding.FieldName = 'GroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
@@ -561,6 +569,14 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Options.Editing = False
             Width = 70
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object ProfitLossGroupCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1075#1088'. ('#1076#1083#1103' '#1087#1086#1076#1088'. )'
             DataBinding.FieldName = 'ProfitLossGroupCode'
@@ -608,18 +624,6 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
           end
           object GroupId: TcxGridDBColumn
             DataBinding.FieldName = 'GroupId'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 55
-          end
-          object GroupName: TcxGridDBColumn
-            DataBinding.FieldName = 'GroupName'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 55
-          end
-          object Comment: TcxGridDBColumn
-            DataBinding.FieldName = 'Comment'
             Visible = False
             VisibleForCustomization = False
             Width = 55

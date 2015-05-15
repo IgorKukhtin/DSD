@@ -648,8 +648,8 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -904,6 +904,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
@@ -1069,6 +1070,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

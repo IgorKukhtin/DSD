@@ -119,9 +119,10 @@ BEGIN
       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
         AND (MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg
           OR Movement.DescId = zc_Movement_Tax()
+          OR inStartDateReg > inEndDateReg
             )
-        AND (Movement.DescId = zc_Movement_Tax() AND inIsTaxCorrectiveOnly = FALSE
-          OR Movement.DescId = zc_Movement_TaxCorrective()
+        AND ((Movement.DescId = zc_Movement_Tax() AND inIsTaxCorrectiveOnly = FALSE)
+           OR Movement.DescId = zc_Movement_TaxCorrective()
             )
         AND Movement.StatusId = zc_Enum_Status_Complete()
         AND (View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)

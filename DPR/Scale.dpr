@@ -68,7 +68,9 @@ uses
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   dsdException in '..\SOURCE\dsdException.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
-  GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm};
+  GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm},
+  DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
+  GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm};
 
 {$R *.res}
 
@@ -85,6 +87,7 @@ begin
          //TUpdater.AutomaticUpdateProgram;
          //
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+  Application.CreateForm(TdmMain, dmMain);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -92,6 +95,7 @@ begin
          Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
          Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
+         Application.CreateForm(TGuideMovementForm, GuideMovementForm);
   end
   else
 
@@ -111,6 +115,7 @@ begin
          Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
          Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
+         Application.CreateForm(TGuideMovementForm, GuideMovementForm);
   end;
   //
   Application.Run;
