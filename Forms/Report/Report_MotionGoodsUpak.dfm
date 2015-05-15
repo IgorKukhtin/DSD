@@ -25,7 +25,6 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
     Height = 589
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 590
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -1920,6 +1919,7 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
       object CountIn_by2: TcxGridDBColumn
         DataBinding.FieldName = 'CountIn_by2'
         Visible = False
+        VisibleForCustomization = False
         Width = 55
       end
       object CountIn_by2_Weight: TcxGridDBColumn
@@ -1937,6 +1937,7 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
       object CountOut_by2: TcxGridDBColumn
         DataBinding.FieldName = 'CountOut_by2'
         Visible = False
+        VisibleForCustomization = False
         Width = 55
       end
       object CountOut_by2_Weight: TcxGridDBColumn
