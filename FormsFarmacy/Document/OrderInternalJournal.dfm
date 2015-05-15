@@ -2,6 +2,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072'>'
   ClientHeight = 535
   ClientWidth = 828
+  ExplicitTop = -179
   ExplicitWidth = 836
   ExplicitHeight = 562
   PixelsPerInch = 96
