@@ -69,6 +69,8 @@ type
   private
     FColor: TColor;
     FValue: Variant;
+  public
+    procedure Assign(Source: TPersistent); override;
   published
     property Color: TColor read FColor write FColor;
     property Value: Variant read FValue write FValue;
@@ -85,6 +87,7 @@ type
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
   published
     // Какую ячейку раскрашивать. Если ColorColumn не указан, то будет меняться цвет у всей строки
     property ColorColumn: TcxGridColumn read FColorColumn write FColorColumn;
@@ -1882,6 +1885,20 @@ end;
 
 { TColorRule }
 
+procedure TColorRule.Assign(Source: TPersistent);
+begin
+  if Source is TColorRule then
+    with TColorRule(Source) do
+    begin
+      Self.ColorColumn := ColorColumn;
+      Self.ValueColumn := ValueColumn;
+      Self.ColorInValueColumn := ColorInValueColumn;
+      Self.ColorValueList.Assign(ColorValueList);
+    end
+  else
+    inherited Assign(Source);
+end;
+
 constructor TColorRule.Create(Collection: TCollection);
 begin
   inherited Create(Collection);
@@ -2038,6 +2055,20 @@ begin
         if TdsdDBViewAddOn(Collection.Owner).View.DataController.Summary.FooterSummaryItems.Count > Value then
            TdsdDBViewAddOn(Collection.Owner).View.DataController.Summary.FooterSummaryItems[Value].OnGetText := onGetText;
      end;
+end;
+
+{ TColorValue }
+
+procedure TColorValue.Assign(Source: TPersistent);
+begin
+  if Source is TColorValue then
+    with TColorValue(Source) do
+    begin
+      Self.Color := Color;
+      Self.Value := Value;
+    end
+  else
+    inherited Assign(Source);
 end;
 
 end.

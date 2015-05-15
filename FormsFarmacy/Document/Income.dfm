@@ -2,6 +2,8 @@ inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 864
+  ExplicitLeft = -82
+  ExplicitTop = -170
   ExplicitWidth = 872
   ExplicitHeight = 553
   PixelsPerInch = 96
@@ -11,17 +13,17 @@ inherited IncomeForm: TIncomeForm
     Width = 864
     Height = 400
     ExplicitTop = 126
-    ExplicitWidth = 806
+    ExplicitWidth = 864
     ExplicitHeight = 400
     ClientRectBottom = 400
     ClientRectRight = 864
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 806
+      ExplicitWidth = 864
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 864
         Height = 376
-        ExplicitWidth = 806
+        ExplicitWidth = 864
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -238,7 +240,7 @@ inherited IncomeForm: TIncomeForm
     Width = 864
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 806
+    ExplicitWidth = 864
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8

@@ -99,7 +99,6 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alClient
       TabOrder = 1
       object cxDBGridDBTableView: TcxGridDBTableView
-        OnDblClick = cxDBGridDBTableViewDblClick
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
         DataController.Summary.DefaultGroupSummaryItems = <>
@@ -587,14 +586,16 @@ object GuideGoodsForm: TGuideGoodsForm
     Top = 424
   end
   object DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxDBGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ColorColumn = Color_calc
-        ValueColumn = Amount_diff
+        ColorColumn = Amount_diff
+        ValueColumn = Color_calc
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
