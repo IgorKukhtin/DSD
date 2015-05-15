@@ -24,6 +24,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , Price_Return TFloat
              , CountForPrice         TFloat
              , CountForPrice_Return  TFloat
+             , Color_calc            Integer
               )
 AS
 $BODY$
@@ -124,6 +125,19 @@ BEGIN
             , 0 :: TFloat                     AS Price_Return
             , tmpMI.CountForPrice :: TFloat   AS CountForPrice
             , 0 :: TFloat                     AS CountForPrice_Return
+
+            , CASE WHEN (tmpMI.Amount_Order - tmpMI.Amount_Weighing) > 0
+                        THEN 1118719 -- clRed
+                   WHEN tmpMI.Amount_Weighing > tmpMI.Amount_Order
+                        THEN CASE WHEN tmpMI.Amount_Order = 0
+                                       THEN 16711680 -- clBlue
+                                  WHEN (tmpMI.Amount_Weighing / tmpMI.Amount_Order * 100 - 100) > 2
+                                       THEN 16711680 -- clBlue
+                                  ELSE 0 -- clBlack
+                             END
+                   ELSE 0 -- clBlack
+              END :: Integer AS Color_calc
+
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   , SUM (tmpMI.Amount_Order)    AS Amount_Order
@@ -172,9 +186,9 @@ BEGIN
             , FALSE :: Boolean AS isTax_diff
             , lfObjectHistory_PriceListItem.ValuePrice :: TFloat                        AS Price
             , lfObjectHistory_PriceListItem_Return.ValuePrice :: TFloat                 AS Price_Return
-            , 1 :: TFloat                     AS CountForPrice
-            , 1 :: TFloat                     AS CountForPrice_Return
-
+            , 1 :: TFloat                 AS CountForPrice
+            , 1 :: TFloat                 AS CountForPrice_Return
+            , 0                           AS Color_calc -- clBlack
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
