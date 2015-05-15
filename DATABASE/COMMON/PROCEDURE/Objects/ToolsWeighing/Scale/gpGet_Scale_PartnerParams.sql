@@ -1,0 +1,69 @@
+-- Function: gpGet_Scale_PartnerParams()
+
+DROP FUNCTION IF EXISTS gpGet_Scale_PartnerParams (TDateTime, Integer, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpGet_Scale_PartnerParams(
+    IN inOperDate     TDateTime   ,
+    IN inPartnerId    Integer     ,
+    IN inContractId   Integer     ,
+    IN inSession      TVarChar      -- сессия пользователя
+)
+RETURNS TABLE (PartnerId       Integer, PartnerCode       Integer, PartnerName       TVarChar
+             , PriceListId     Integer, PriceListCode     Integer, PriceListName     TVarChar
+             , GoodsPropertyId Integer, GoodsPropertyCode Integer, GoodsPropertyName TVarChar
+              )
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   -- vbUserId:= lpGetUserBySession (inSession);
+
+
+    -- Результат
+    RETURN QUERY
+       WITH tmpPartner AS (SELECT Object_Partner.Id             AS PartnerId
+                                    , Object_Partner.ObjectCode     AS PartnerCode
+                                    , Object_Partner.ValueData      AS PartnerName
+                                    , lfGet_Object_Partner_PriceList_record (inContractId, Object_Partner.Id, inOperDate) AS PriceListId
+                                    , zfCalc_GoodsPropertyId (inContractId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+                               FROM Object AS Object_Partner
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                WHERE Object_Partner.Id = inPartnerId
+                                  AND Object_Partner.DescId = zc_Object_Partner()
+                                  AND Object_Partner.isErased = FALSE
+                              )
+
+       SELECT tmpPartner.PartnerId
+            , tmpPartner.PartnerCode
+            , tmpPartner.PartnerName
+
+            , Object_PriceList.Id                  AS PriceListId
+            , Object_PriceList.ObjectCode          AS PriceListCode
+            , Object_PriceList.ValueData           AS PriceListName
+
+            , Object_GoodsProperty.Id              AS GoodsPropertyId
+            , Object_GoodsProperty.ObjectCode      AS GoodsPropertyCode
+            , Object_GoodsProperty.ValueData       AS GoodsPropertyName
+
+       FROM tmpPartner
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpPartner.PriceListId
+            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpPartner.GoodsPropertyId
+      ;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Scale_PartnerParams (TDateTime, Integer, TVarChar) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.05.15                                        *
+*/
+
+-- тест
+-- SELECT * FROM gpGet_Scale_PartnerParams ('01.01.2015', 1, 1, zfCalc_UserAdmin())

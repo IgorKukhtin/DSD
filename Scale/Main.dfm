@@ -285,7 +285,7 @@ object MainForm: TMainForm
       end
       object ButtonRefreshZakaz: TSpeedButton
         Left = 599
-        Top = 6
+        Top = 1
         Width = 31
         Height = 29
         Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
@@ -376,6 +376,7 @@ object MainForm: TMainForm
           9188888888888888898888888888888888988888888888888888}
         ParentShowHint = False
         ShowHint = True
+        Visible = False
       end
     end
     object infoPanelTotalSumm: TPanel
