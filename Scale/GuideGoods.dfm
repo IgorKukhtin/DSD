@@ -3,7 +3,7 @@ object GuideGoodsForm: TGuideGoodsForm
   Top = 242
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
   ClientHeight = 572
-  ClientWidth = 867
+  ClientWidth = 982
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,115 +20,19 @@ object GuideGoodsForm: TGuideGoodsForm
   object GridPanel: TPanel
     Left = 0
     Top = 256
-    Width = 867
+    Width = 982
     Height = 271
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    object DBGrid: TDBGrid
-      Left = 0
-      Top = 33
-      Width = 867
-      Height = 238
-      Align = alClient
-      DataSource = DataSource
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -12
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit]
-      ParentFont = False
-      TabOrder = 0
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'Tahoma'
-      TitleFont.Style = []
-      OnDrawColumnCell = DBGridDrawColumnCell
-      OnDblClick = DBGridDblClick
-      Columns = <
-        item
-          Expanded = False
-          FieldName = 'GoodsCode'
-          Title.Alignment = taCenter
-          Title.Caption = #1050#1086#1076
-          Width = 70
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'GoodsName'
-          Title.Alignment = taCenter
-          Title.Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-          Width = 300
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'GoodsKindName'
-          Title.Caption = #1042#1080#1076
-          Visible = False
-        end
-        item
-          Expanded = False
-          FieldName = 'MeasureName'
-          Title.Alignment = taCenter
-          Title.Caption = #1045#1076'.'#1080#1079#1084'.'
-          Width = 45
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'Price'
-          Title.Alignment = taCenter
-          Title.Caption = #1062#1077#1085#1072
-          Width = 55
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'Price_Return'
-          Title.Alignment = taCenter
-          Title.Caption = #1062#1077#1085#1072'('#1074#1086#1079#1074#1088')'
-          Width = 70
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'Amount_Order'
-          Title.Caption = #1047#1072#1103#1074#1082#1072
-          Visible = False
-        end
-        item
-          Expanded = False
-          FieldName = 'Amount_Weighing'
-          Title.Caption = #1054#1090#1075#1088#1091#1079#1082#1072
-          Visible = False
-        end
-        item
-          Expanded = False
-          FieldName = 'Amount_diff'
-          Title.Caption = #1056#1072#1079#1085#1080#1094#1072
-          Visible = False
-        end
-        item
-          Expanded = False
-          FieldName = 'GoodsGroupNameFull'
-          Title.Alignment = taCenter
-          Title.Caption = #1043#1088#1091#1087#1087#1072
-          Width = 300
-          Visible = True
-        end>
-    end
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 867
+      Width = 982
       Height = 33
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 1
+      TabOrder = 0
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -187,17 +91,130 @@ object GuideGoodsForm: TGuideGoodsForm
         OnClick = ButtonSaveAllItemClick
       end
     end
+    object cxDBGrid: TcxGrid
+      Left = 0
+      Top = 33
+      Width = 982
+      Height = 238
+      Align = alClient
+      TabOrder = 1
+      object cxDBGridDBTableView: TcxGridDBTableView
+        OnDblClick = cxDBGridDBTableViewDblClick
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = DS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnMoving = False
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.ColumnAutoWidth = True
+        OptionsView.GroupByBox = False
+        OptionsView.HeaderAutoHeight = True
+        OptionsView.Indicator = True
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object GoodsCode: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'GoodsCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 45
+        end
+        object GoodsName: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'GoodsName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 100
+        end
+        object GoodsKindName: TcxGridDBColumn
+          Caption = #1042#1080#1076
+          DataBinding.FieldName = 'GoodsKindName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object MeasureName: TcxGridDBColumn
+          Caption = #1045#1076'. '#1080#1079#1084'.'
+          DataBinding.FieldName = 'MeasureName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 30
+        end
+        object Price: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072
+          DataBinding.FieldName = 'Price'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 50
+        end
+        object Price_Return: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' ('#1074#1086#1079#1074#1088'.)'
+          DataBinding.FieldName = 'Price_Return'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 50
+        end
+        object Amount_Order: TcxGridDBColumn
+          Caption = #1047#1072#1103#1074#1082#1072
+          DataBinding.FieldName = 'Amount_Order'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          VisibleForCustomization = False
+          Width = 60
+        end
+        object Amount_Weighing: TcxGridDBColumn
+          Caption = #1054#1090#1075#1088#1091#1079#1082#1072
+          DataBinding.FieldName = 'Amount_Weighing'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          VisibleForCustomization = False
+          Width = 60
+        end
+        object Amount_diff: TcxGridDBColumn
+          Caption = #1056#1072#1079#1085#1080#1094#1072
+          DataBinding.FieldName = 'Amount_diff'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          VisibleForCustomization = False
+          Width = 60
+        end
+        object GoodsGroupNameFull: TcxGridDBColumn
+          Caption = #1043#1088#1091#1087#1087#1072
+          DataBinding.FieldName = 'GoodsGroupNameFull'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 150
+        end
+        object Color_calc: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_calc'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 55
+        end
+      end
+      object cxDBGridLevel: TcxGridLevel
+        GridView = cxDBGridDBTableView
+      end
+    end
   end
   object ParamsPanel: TPanel
     Left = 0
     Top = 0
-    Width = 867
+    Width = 982
     Height = 256
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
     object infoPanelTare: TPanel
-      Left = 387
+      Left = 502
       Top = 0
       Width = 230
       Height = 256
@@ -338,7 +355,7 @@ object GuideGoodsForm: TGuideGoodsForm
       end
     end
     object infoPanelPriceList: TPanel
-      Left = 617
+      Left = 732
       Top = 0
       Width = 250
       Height = 256
@@ -483,7 +500,7 @@ object GuideGoodsForm: TGuideGoodsForm
     object infoPanelGoodsKind: TPanel
       Left = 135
       Top = 0
-      Width = 252
+      Width = 367
       Height = 256
       Align = alClient
       BevelOuter = bvNone
@@ -491,7 +508,7 @@ object GuideGoodsForm: TGuideGoodsForm
       object rgGoodsKind: TRadioGroup
         Left = 0
         Top = 41
-        Width = 252
+        Width = 367
         Height = 215
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
@@ -510,7 +527,7 @@ object GuideGoodsForm: TGuideGoodsForm
       object gbGoodsKindCode: TGroupBox
         Left = 0
         Top = 0
-        Width = 252
+        Width = 367
         Height = 41
         Align = alTop
         Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
@@ -533,7 +550,7 @@ object GuideGoodsForm: TGuideGoodsForm
   object SummPanel: TPanel
     Left = 0
     Top = 527
-    Width = 867
+    Width = 982
     Height = 45
     Align = alBottom
     BevelOuter = bvNone
@@ -554,8 +571,8 @@ object GuideGoodsForm: TGuideGoodsForm
       end>
     Params = <>
     PackSize = 1
-    Left = 264
-    Top = 296
+    Left = 224
+    Top = 344
   end
   object CDS: TClientDataSet
     Aggregates = <>
@@ -563,5 +580,27 @@ object GuideGoodsForm: TGuideGoodsForm
     OnFilterRecord = CDSFilterRecord
     Left = 272
     Top = 384
+  end
+  object DS: TDataSource
+    DataSet = CDS
+    Left = 192
+    Top = 424
+  end
+  object DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorColumn = Color_calc
+        ValueColumn = Amount_diff
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 408
+    Top = 392
   end
 end

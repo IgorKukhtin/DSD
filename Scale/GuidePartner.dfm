@@ -3,7 +3,7 @@ object GuidePartnerForm: TGuidePartnerForm
   Top = 242
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
   ClientHeight = 572
-  ClientWidth = 1054
+  ClientWidth = 962
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,127 +20,21 @@ object GuidePartnerForm: TGuidePartnerForm
   object GridPanel: TPanel
     Left = 0
     Top = 41
-    Width = 1054
+    Width = 962
     Height = 486
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 256
-    ExplicitWidth = 867
-    ExplicitHeight = 271
-    object DBGrid: TDBGrid
-      Left = 0
-      Top = 33
-      Width = 1054
-      Height = 453
-      Align = alClient
-      DataSource = DataSource
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -12
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit]
-      ParentFont = False
-      TabOrder = 0
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'Tahoma'
-      TitleFont.Style = []
-      OnDblClick = DBGridDblClick
-      Columns = <
-        item
-          Expanded = False
-          FieldName = 'PartnerCode'
-          Title.Alignment = taCenter
-          Title.Caption = #1050#1086#1076
-          Width = 70
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'PartnerName'
-          Title.Alignment = taCenter
-          Title.Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-          Width = 400
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'PaidKindName'
-          Title.Alignment = taCenter
-          Title.Caption = #1060#1086#1088#1084'.'#1086#1087#1083'.'
-          Title.Color = 55
-          Width = 55
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'ContractCode'
-          Title.Alignment = taCenter
-          Title.Caption = #1050#1086#1076' '#1076#1086#1075'.'
-          Width = 55
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'ContractNumber'
-          Title.Alignment = taCenter
-          Title.Caption = #8470' '#1076#1086#1075'.'
-          Width = 55
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'ContractTagName'
-          Title.Alignment = taCenter
-          Title.Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-          Width = 70
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'ChangePercent'
-          Title.Alignment = taCenter
-          Title.Caption = '% '#1089#1082'.'
-          Width = 40
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'ChangePercentAmount'
-          Title.Alignment = taCenter
-          Title.Caption = '% '#1089#1082'. '#1074#1077#1089
-          Width = 55
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'InfoMoneyCode'
-          Title.Alignment = taCenter
-          Title.Caption = #1050#1086#1076' '#1059#1055
-          Width = 55
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'InfoMoneyName'
-          Title.Alignment = taCenter
-          Title.Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
-          Width = 150
-          Visible = True
-        end>
-    end
+    ExplicitWidth = 1054
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 1054
+      Width = 962
       Height = 33
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 1
-      ExplicitWidth = 867
+      TabOrder = 0
+      ExplicitWidth = 1054
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -199,16 +93,120 @@ object GuidePartnerForm: TGuidePartnerForm
         OnClick = ButtonChoiceItemClick
       end
     end
+    object cxDBGrid: TcxGrid
+      Left = 0
+      Top = 33
+      Width = 962
+      Height = 453
+      Align = alClient
+      TabOrder = 1
+      ExplicitLeft = -6
+      ExplicitTop = 27
+      ExplicitWidth = 848
+      object cxDBGridDBTableView: TcxGridDBTableView
+        OnDblClick = cxDBGridDBTableViewDblClick
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = DS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnMoving = False
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.ColumnAutoWidth = True
+        OptionsView.GroupByBox = False
+        OptionsView.HeaderAutoHeight = True
+        OptionsView.Indicator = True
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object PartnerCode: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'PartnerCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
+        object PartnerName: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'PartnerName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 350
+        end
+        object PaidKindName: TcxGridDBColumn
+          Caption = #1060#1086#1088#1084'. '#1086#1087#1083'.'
+          DataBinding.FieldName = 'PaidKindName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object ContractCode: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1076#1086#1075'.'
+          DataBinding.FieldName = 'ContractCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 60
+        end
+        object ContractNumber: TcxGridDBColumn
+          Caption = #8470' '#1076#1086#1075'.'
+          DataBinding.FieldName = 'ContractNumber'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 80
+        end
+        object ContractTagName: TcxGridDBColumn
+          Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+          DataBinding.FieldName = 'ContractTagName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 100
+        end
+        object ChangePercent: TcxGridDBColumn
+          Caption = '% '#1089#1082'.'
+          DataBinding.FieldName = 'ChangePercent'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 45
+        end
+        object ChangePercentAmount: TcxGridDBColumn
+          Caption = '% '#1089#1082'. '#1074#1077#1089
+          DataBinding.FieldName = 'ChangePercentAmount'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 45
+        end
+        object InfoMoneyCode: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1059#1055
+          DataBinding.FieldName = 'InfoMoneyCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
+        object InfoMoneyName: TcxGridDBColumn
+          Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+          DataBinding.FieldName = 'InfoMoneyName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 150
+        end
+      end
+      object cxDBGridLevel: TcxGridLevel
+        GridView = cxDBGridDBTableView
+      end
+    end
   end
   object ParamsPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1054
+    Width = 962
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 867
+    ExplicitWidth = 1054
     object gbPartnerCode: TGroupBox
       Left = 0
       Top = 0
@@ -217,7 +215,6 @@ object GuidePartnerForm: TGuidePartnerForm
       Align = alLeft
       Caption = #1050#1086#1076
       TabOrder = 0
-      ExplicitHeight = 256
       object EditPartnerCode: TEdit
         Left = 5
         Top = 17
@@ -234,14 +231,12 @@ object GuidePartnerForm: TGuidePartnerForm
     object gbPartnerName: TGroupBox
       Left = 137
       Top = 0
-      Width = 917
+      Width = 825
       Height = 41
       Align = alClient
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       TabOrder = 1
-      ExplicitLeft = 0
-      ExplicitWidth = 41
-      ExplicitHeight = 867
+      ExplicitWidth = 917
       object EditPartnerName: TEdit
         Left = 5
         Top = 17
@@ -259,13 +254,13 @@ object GuidePartnerForm: TGuidePartnerForm
   object SummPanel: TPanel
     Left = 0
     Top = 527
-    Width = 1054
+    Width = 962
     Height = 45
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitWidth = 867
+    ExplicitWidth = 1054
   end
   object DataSource: TDataSource
     DataSet = CDS
@@ -289,5 +284,10 @@ object GuidePartnerForm: TGuidePartnerForm
     OnFilterRecord = CDSFilterRecord
     Left = 272
     Top = 384
+  end
+  object DS: TDataSource
+    DataSet = CDS
+    Left = 192
+    Top = 424
   end
 end

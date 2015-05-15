@@ -7,12 +7,14 @@ uses
   Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons
  ,UtilScale, Datasnap.DBClient, dsdDB, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
-  dxSkinsDefaultPainters, cxTextEdit, cxCurrencyEdit;
+  dxSkinsDefaultPainters, cxTextEdit, cxCurrencyEdit, cxStyles,
+  dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
+  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxClasses, cxGridCustomView, cxGrid,DataModul;
 
 type
   TGuidePartnerForm = class(TForm)
     GridPanel: TPanel;
-    DBGrid: TDBGrid;
     ParamsPanel: TPanel;
     SummPanel: TPanel;
     DataSource: TDataSource;
@@ -26,6 +28,20 @@ type
     EditPartnerCode: TEdit;
     gbPartnerName: TGroupBox;
     EditPartnerName: TEdit;
+    DS: TDataSource;
+    cxDBGrid: TcxGrid;
+    cxDBGridDBTableView: TcxGridDBTableView;
+    cxDBGridLevel: TcxGridLevel;
+    PartnerCode: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    ContractNumber: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    ChangePercentAmount: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure ButtonRefreshClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
@@ -42,9 +58,9 @@ type
     procedure EditPartnerNameChange(Sender: TObject);
     procedure EditPartnerCodeEnter(Sender: TObject);
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
-    procedure DBGridDblClick(Sender: TObject);
     procedure EditPartnerNameKeyPress(Sender: TObject; var Key: Char);
     procedure FormDestroy(Sender: TObject);
+    procedure cxDBGridDBTableViewDblClick(Sender: TObject);
   private
     fEnterPartnerCode:Boolean;
     fEnterPartnerName:Boolean;
@@ -95,7 +111,7 @@ procedure TGuidePartnerForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TS
 begin
     if Key=13
     then
-        if (ActiveControl=DBGrid)and(CDS.RecordCount>0)
+        if (ActiveControl=cxDBGrid)and(CDS.RecordCount>0)
         then ButtonChoiceItemClick(Self)
         else begin
                   if (CDS.RecordCount=1)
@@ -216,7 +232,7 @@ end;
 procedure TGuidePartnerForm.EditPartnerNameKeyPress(Sender: TObject; var Key: Char);
 begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
-procedure TGuidePartnerForm.DBGridDblClick(Sender: TObject);
+procedure TGuidePartnerForm.cxDBGridDBTableViewDblClick(Sender: TObject);
 begin
      ButtonChoiceItemClick(Self);
 end;
