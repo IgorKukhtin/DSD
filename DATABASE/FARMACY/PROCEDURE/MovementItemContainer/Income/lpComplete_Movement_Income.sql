@@ -128,7 +128,9 @@ BEGIN
                           inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
                           inObjectCostId       := NULL,
                           inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
-                          inObjectId_1        := _tmpItem.UnitId) 
+                          inObjectId_1        := _tmpItem.UnitId,
+                          inDescId_2          := zc_ContainerLinkObject_PartionMovementItem(), -- DescId для 2-ой Аналитики
+                          inObjectId_2        := lpInsertFind_Object_PartionMovementItem(_tmpItem.MovementItemId)) 
               , AccountId
               , OperSumm
               , OperDate

@@ -86,6 +86,10 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_PartionMovement() RETURNS Inte
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_PartionMovement', 'Партии накладной', zc_Object_PartionMovement() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PartionMovement');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_PartionMovementItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PartionMovementItem'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_PartionMovementItem', 'Партии накладной', zc_Object_PartionMovementItem() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PartionMovementItem');
+
 CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Business() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Business'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_Business', 'Бизнесы', zc_Object_Business() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Business');

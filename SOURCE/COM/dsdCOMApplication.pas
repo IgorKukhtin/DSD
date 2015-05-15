@@ -5,7 +5,7 @@ unit dsdCOMApplication;
 interface
 
 uses
-  ComObj, ActiveX, ProjectCom_TLB, StdVcl, dsdDB;
+  ComObj, ActiveX, Project_TLB, StdVcl, dsdDB;
 
 type
   TdsdCOMApplication = class(TAutoObject, IdsdCOMApplication)

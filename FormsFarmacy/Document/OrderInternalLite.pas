@@ -34,10 +34,8 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colSumm: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
     coJuridicalName: TcxGridDBColumn;
-    coPrice: TcxGridDBColumn;
     colisCalculated: TcxGridDBColumn;
     clPartionGoodsDate: TcxGridDBColumn;
     clPartionGoodsDateColor: TcxGridDBColumn;

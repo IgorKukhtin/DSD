@@ -372,10 +372,13 @@ begin
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N82', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('ContractSigningDate').AsDateTime));
   //Форма проведення розрахунків
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N9', HeaderDataSet.FieldByName('N9').AsString);
+
   //Усього по розділу I (колонка 12 "Загальна сума коштів, що підлягає сплаті")
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_11', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
   //Усього по розділу I (колонка 8 "основна ставка")
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_7', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //III НДС (колонка 9 «0% экспорт»)
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_9', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
   //ІІІ ПДВ (колонка 12 "Загальна сума коштів, що підлягає сплаті")
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A6_11', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
   //III ПДВ (колонка 8 "основна ставка" )
@@ -384,6 +387,8 @@ begin
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A7_11', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
   //Загальна сума з ПДВ ("основна ставка")
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A7_7', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //Общая сумма с НДС (0% процентов (экспорт))
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A7_9', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
   //Усього по розділу I (колонка 10 "нульова ставка експорт")
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_9', '0.00');
 
@@ -409,7 +414,7 @@ begin
            //Обсяги постачання без урахування ПДВ ("основна ставка")
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A17', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання без урахування ПДВ (нульова ставка експорт)
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A19', '0.00');
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A19', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
            inc(i);
          end;
          Next;

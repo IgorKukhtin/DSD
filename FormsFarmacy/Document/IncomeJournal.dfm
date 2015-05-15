@@ -2,6 +2,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 469
   ClientWidth = 807
+  ExplicitLeft = -25
+  ExplicitTop = -113
   ExplicitWidth = 815
   ExplicitHeight = 496
   PixelsPerInch = 96
@@ -202,6 +204,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentVert = vaCenter
             Width = 50
+          end
+          object colSaleSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            DataBinding.FieldName = 'SaleSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Options.Editing = False
+            Width = 79
           end
           object colPaymentDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099

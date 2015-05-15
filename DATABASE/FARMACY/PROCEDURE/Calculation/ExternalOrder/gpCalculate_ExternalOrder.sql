@@ -131,7 +131,6 @@ ALTER FUNCTION gpcalculate_externalorder(integer, tvarchar)
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  19.09.14                         *
-
 */
 
 -- тест

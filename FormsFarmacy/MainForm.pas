@@ -140,6 +140,10 @@ type
     N45: TMenuItem;
     N46: TMenuItem;
     N47: TMenuItem;
+    actIncomePharmacy: TdsdOpenForm;
+    N48: TMenuItem;
+    actCheck: TdsdOpenForm;
+    N49: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

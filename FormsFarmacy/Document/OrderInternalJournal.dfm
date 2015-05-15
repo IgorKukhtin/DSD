@@ -2,7 +2,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072'>'
   ClientHeight = 535
   ClientWidth = 828
-  ExplicitLeft = -46
   ExplicitWidth = 836
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -11,7 +10,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Width = 828
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 828
     ExplicitHeight = 478
     ClientRectBottom = 478
@@ -301,16 +299,28 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     object actCalculateExternalZakaz: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spCalculate
       StoredProcList = <
         item
           StoredProc = spCalculate
         end>
+    end
+    object mactCalculateExternalZakaz: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCalculateExternalZakaz
+        end
+        item
+          Action = actComplete
+        end>
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1079#1072#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084'?'
+      InfoAfterExecute = #1047#1072#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084' '#1089#1086#1079#1076#1072#1085#1099'!'
       Caption = #1056#1072#1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
       Hint = #1056#1072#1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
       ImageIndex = 41
-      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1079#1072#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084'?'
-      InfoAfterExecute = #1047#1072#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084' '#1089#1086#1079#1076#1072#1085#1099'!'
     end
   end
   inherited MasterDS: TDataSource
@@ -442,7 +452,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         end>
     end
     object bbTax: TdxBarButton
-      Action = actCalculateExternalZakaz
+      Action = mactCalculateExternalZakaz
       Category = 0
     end
     object bbPrint: TdxBarButton

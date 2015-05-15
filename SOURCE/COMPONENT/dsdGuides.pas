@@ -518,6 +518,8 @@ end;
 procedure TCustomGuides.SetLookupControl(const Value: TWinControl);
 begin
   FLookupControl := Value;
+  if not Assigned(FLookupControl) then
+     exit;
   TAccessControl(FLookupControl).OnDblClick := OnDblClick;
   if FLookupControl is TcxButtonEdit then
      (LookupControl as TcxButtonEdit).Properties.OnButtonClick := OnButtonClick;
@@ -631,10 +633,10 @@ begin
   inherited;
   if csDestroying in ComponentState then
      exit;
-    if (Operation = opRemove) then begin
+  if (Operation = opRemove) then begin
       if (AComponent = FLookupControl) then
          FLookupControl := nil;
-    end;
+  end;
 end;
 
 procedure TCustomGuides.SetFormName(const Value: string);
