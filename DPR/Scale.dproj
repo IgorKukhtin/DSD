@@ -193,6 +193,16 @@
 			<DCCReference Include="..\Scale\GuideMovement.pas">
 				<Form>GuideMovementForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\Scale\DialogWeight.pas">
+				<Form>DialogWeightForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\Scale\DialogNumberValue.pas">
+				<Form>DialogNumberValueForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\Scale\DialogPersonalComplete.pas">
+				<Form>DialogPersonalCompleteForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

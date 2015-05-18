@@ -28,7 +28,7 @@ type
     PanelPartnerName: TPanel;
     Panel5: TPanel;
     ScaleLabel: TLabel;
-    EdiBarCode: TEdit;
+    EditBarCode: TEdit;
     Panel6: TPanel;
     DBGrid: TDBGrid;
     EditPartnerCode: TcxButtonEdit;
@@ -40,12 +40,12 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure DBGridCellClick(Column: TColumn);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure EdiBarCodeExit(Sender: TObject);
-    procedure EdiBarCodeChange(Sender: TObject);
+    procedure EditBarCodeExit(Sender: TObject);
+    procedure EditBarCodeChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure EditPartnerCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure EdiBarCodeEnter(Sender: TObject);
+    procedure EditBarCodeEnter(Sender: TObject);
     procedure EditPartnerCodeEnter(Sender: TObject);
     procedure EditPartnerCodePropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
@@ -85,6 +85,7 @@ begin
                ParamsMovement_local.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber');
                ParamsMovement_local.ParamByName('OrderExternal_BarCode').AsString:='';
                ParamsMovement_local.ParamByName('OrderExternal_InvNumber').AsString:='';
+               ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
                ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger:=0;
                ParamsMovement_local.ParamByName('calcPartnerName').AsString:='';
           end
@@ -102,16 +103,16 @@ begin
      begin
           CDS.Locate('Number',ParamByName('MovementDescNumber').AsString,[]);
           if ParamByName('OrderExternal_BarCode').AsString<>''
-          then EdiBarCode.Text:=ParamByName('OrderExternal_BarCode').AsString
-          else EdiBarCode.Text:=ParamByName('OrderExternal_InvNumber').AsString;
+          then EditBarCode.Text:=ParamByName('OrderExternal_BarCode').AsString
+          else EditBarCode.Text:=ParamByName('OrderExternal_InvNumber').AsString;
 
           EditPartnerCode.Text:= IntToStr(ParamByName('calcPartnerCode').AsInteger);
           PanelPartnerName.Caption:= ParamByName('calcPartnerName').AsString;
      end;
 
-     ActiveControl:=EdiBarCode;
+     ActiveControl:=EditBarCode;
 
-     if BarCode<>'' then begin EdiBarCodeExit(EdiBarCode);Result:=true;end
+     if BarCode<>'' then begin EditBarCodeExit(EditBarCode);Result:=true;end
      else Result:=(ShowModal=mrOk);
 end;
 {------------------------------------------------------------------------}
@@ -145,8 +146,8 @@ begin
        and(ParamsMovement_local.ParamByName('PaidKindId').AsInteger>0)
      then begin
                ShowMessage('Ошибка.Выберите значение <Форма оплаты> = <'+ParamsMovement_local.ParamByName('PaidKindName').asString+'>.');
-               if(Length(trim(EdiBarCode.Text))=1)or(Length(trim(EdiBarCode.Text))=2)
-               then ActiveControl:=EdiBarCode
+               if(Length(trim(EditBarCode.Text))=1)or(Length(trim(EditBarCode.Text))=2)
+               then ActiveControl:=EditBarCode
                else ActiveControl:=DBGrid;
                Result:=false;
                exit;
@@ -156,8 +157,8 @@ begin
      with ParamsMovement_local do
      begin
           //
-          if ParamByName('MovementId').AsInteger<>0
-          then ShowMessage('После завершения <Нового> взвешивания возврат к текущему будет произведен автоматически.');
+          //if ParamByName('MovementId').AsInteger<>0
+          //then ShowMessage('После завершения <Нового> взвешивания возврат к текущему будет произведен автоматически.');
           ParamByName('MovementId').AsInteger:=0;
           //
           ParamByName('ColorGridValue').AsInteger:=CDS.FieldByName('ColorGridValue').asInteger;
@@ -236,34 +237,41 @@ begin
 
     end;
 
-    if(Length(trim(EdiBarCode.Text))<=2)
-    then EdiBarCode.Text:=CDS.FieldByName('Number').asString;
+    if(Length(trim(EditBarCode.Text))<=2)
+    then EditBarCode.Text:=CDS.FieldByName('Number').asString;
 
     CopyValuesParamsFrom(ParamsMovement_local,ParamsMovement);
 
     MyDelay(400);
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EdiBarCodeEnter(Sender: TObject);
+procedure TDialogMovementDescForm.EditBarCodeEnter(Sender: TObject);
 begin
     if CDS.Filtered then CDS.Filtered:=false;
     CDS.Locate('Number',ParamsMovement_local.ParamByName('MovementDescNumber').AsString,[]);
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EdiBarCodeExit(Sender: TObject);
+procedure TDialogMovementDescForm.EditBarCodeExit(Sender: TObject);
 var Number:Integer;
     fOK:Boolean;
 begin
     if CDS.Filtered then CDS.Filtered:=false;
     //
-    if Length(trim(EdiBarCode.Text))>2
+    if Length(trim(EditBarCode.Text))>2
     then begin
+               //Проверка <Контрольная сумма>
+               if (Length(trim(EditBarCode.Text))>=13)and(CheckBarCode(trim(EditBarCode.Text)) = FALSE)
+               then begin
+                  EditBarCode.Text:='';
+                  ActiveControl:=EditBarCode;
+                  exit;
+               end;
               //поиск по номеру или ш-к
-              isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EdiBarCode.Text);
+              isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text);
               if isOrderExternal=false then
               begin
                    ShowMessage('Ошибка.Значение <Штрих код/Номер заявки> не найдено.');
-                   ActiveControl:=EdiBarCode;
+                   ActiveControl:=EditBarCode;
                    exit;
               end
               else begin
@@ -277,7 +285,7 @@ begin
                ParamsMovement_local.ParamByName('OrderExternal_BarCode').asString :='';
                ParamsMovement_local.ParamByName('OrderExternal_InvNumber').asString :='';
                //
-               try Number:=StrToInt(trim(EdiBarCode.Text)) except Number:=0;end;
+               try Number:=StrToInt(trim(EditBarCode.Text)) except Number:=0;end;
                // если это код операции
                if Number>0 then
                begin
@@ -289,7 +297,7 @@ begin
                     if not fOK then
                     begin
                          if not IsBarCodeMaster then ShowMessage('Ошибка.Значение <Вид документа> не определено.');
-                         ActiveControl:=EdiBarCode;
+                         ActiveControl:=EditBarCode;
                          exit;
                     end;
                     //
@@ -321,7 +329,7 @@ begin
               if CDS.RecordCount<>2 then
               begin
                    ShowMessage('Ошибка.Значение <Вид документа> не определено.');
-                   ActiveControl:=EdiBarCode;
+                   ActiveControl:=EditBarCode;
                    isOrderExternal:=false;
                    exit;
               end;
@@ -331,9 +339,9 @@ begin
          end;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EdiBarCodeChange(Sender: TObject);
+procedure TDialogMovementDescForm.EditBarCodeChange(Sender: TObject);
 begin
-    if (Length(trim(EdiBarCode.Text))>=13)and(not IsBarCodeMaster) then EdiBarCodeExit(Self);
+    if (Length(trim(EditBarCode.Text))>=13)and(not IsBarCodeMaster) then EditBarCodeExit(Self);
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodeEnter(Sender: TObject);
@@ -406,8 +414,8 @@ var Key:Word;
 begin
     if ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger<>0
     then begin
-              EdiBarCode.Text:=ParamsMovement_local.ParamByName('MovementDescNumber').AsString;
-              EdiBarCodeExit(Self);
+              EditBarCode.Text:=ParamsMovement_local.ParamByName('MovementDescNumber').AsString;
+              EditBarCodeExit(Self);
     end;
 
     if GuidePartnerForm.Execute(ParamsMovement_local)
@@ -504,7 +512,7 @@ end;
 procedure TDialogMovementDescForm.FormKeyDown(Sender: TObject; var Key: Word;  Shift: TShiftState);
 begin
      if Key = VK_RETURN
-     then if (ActiveControl=EdiBarCode)
+     then if (ActiveControl=EditBarCode)
           then ActiveControl:=EditPartnerCode
           else if (ActiveControl=EditPartnerCode)
                then ActiveControl:=DBGrid

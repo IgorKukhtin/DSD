@@ -1,9 +1,13 @@
 -- Function: gpGet_Scale_Movement()
 
-DROP FUNCTION IF EXISTS gpGet_Scale_Movement (TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_Movement (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_Movement (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_Movement (Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_Movement(
+    IN inMovementId            Integer     , --
     IN inOperDate              TDateTime   , --
+    IN inIsNext                Boolean     , --
     IN inSession               TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (MovementId       Integer
@@ -47,14 +51,50 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       SELECT Movement.Id                                    AS MovementId
+       WITH tmpMovement_find AS (-- или последний не закрытый
+                                 SELECT MAX (Movement.Id) AS Id
+                                 FROM (SELECT (inOperDate - INTERVAL '3 DAY') AS StartDate, (inOperDate + INTERVAL '3 DAY') AS EndDate WHERE COALESCE (inMovementId, 0) = 0) AS tmp
+                                      INNER JOIN Movement
+                                              ON Movement.DescId = zc_Movement_WeighingPartner()
+                                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                             AND Movement.OperDate BETWEEN tmp.StartDate AND tmp.EndDate
+                                      INNER JOIN MovementLinkObject
+                                              AS MovementLinkObject_User
+                                              ON MovementLinkObject_User.MovementId = Movement.Id
+                                             AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                                             AND MovementLinkObject_User.ObjectId = vbUserId
+                                UNION
+                                 -- или "следующий" не закрытый
+                                 SELECT Movement.Id AS Id
+                                 FROM (SELECT (inOperDate - INTERVAL '1 DAY') AS StartDate, (inOperDate + INTERVAL '1 DAY') AS EndDate WHERE inIsNext = TRUE) AS tmp
+                                      INNER JOIN Movement
+                                              ON Movement.DescId = zc_Movement_WeighingPartner()
+                                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                             AND Movement.OperDate BETWEEN tmp.StartDate AND tmp.EndDate
+                                      INNER JOIN MovementLinkObject
+                                              AS MovementLinkObject_User
+                                              ON MovementLinkObject_User.MovementId = Movement.Id
+                                             AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                                             AND MovementLinkObject_User.ObjectId = vbUserId
+                                 WHERE Movement.Id <> inMovementId
+                                 -- LIMIT 2 -- если больше 1-ого то типа ошибка
+                                UNION
+                                 -- или inMovementId если он тоже не закрытый
+                                 SELECT Movement.Id
+                                 FROM (SELECT inMovementId AS MovementId WHERE inMovementId > 0 AND inIsNext = FALSE) AS tmp
+                                      INNER JOIN Movement
+                                              ON Movement.Id = tmp.MovementId
+                                             AND Movement.DescId = zc_Movement_WeighingPartner()
+                                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                )
+       SELECT tmpMovement.Id                                 AS MovementId
             , '' ::TVarChar                                  AS BarCode
-            , Movement.InvNumber                             AS InvNumber
-            , Movement.OperDate                              AS OperDate
+            , tmpMovement.InvNumber                          AS InvNumber
+            , tmpMovement.OperDate                           AS OperDate
 
             , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
 
-            , Movement.MovementDescId :: Integer             AS MovementDescId
+            , tmpMovement.MovementDescId :: Integer             AS MovementDescId
             , Object_From.Id                                 AS FromId
             , Object_From.ObjectCode                         AS FromCode
             , Object_From.ValueData                          AS FromName
@@ -86,14 +126,14 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
-            , Movement.MovementId_Order AS MovementId_Order
+            , tmpMovement.MovementId_Order AS MovementId_Order
             , Movement_Order.InvNumber  AS InvNumber_Order
 
             , ('№ <' || Movement_Order.InvNumber || '>' || ' от <' || DATE (Movement_Order.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 
             , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
-       FROM (SELECT Movement_find.Id
+       FROM (SELECT tmpMovement_find.Id
                   , Movement.InvNumber
                   , Movement.OperDate
                   , MovementFloat_MovementDesc.ValueData AS MovementDescId
@@ -120,18 +160,8 @@ BEGIN
 
                   , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
 
-             FROM (SELECT MAX (Movement.Id) AS Id
-                   FROM Movement
-                        INNER JOIN MovementLinkObject
-                                AS MovementLinkObject_User
-                                ON MovementLinkObject_User.MovementId = Movement.Id
-                               AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-                               AND MovementLinkObject_User.ObjectId = vbUserId
-                   WHERE Movement.DescId = zc_Movement_WeighingPartner()
-                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                     AND Movement.OperDate BETWEEN inOperDate - INTERVAL '3 DAY' AND inOperDate + INTERVAL '3 DAY'
-                  ) AS Movement_find
-                  LEFT JOIN Movement ON Movement.Id = Movement_find.Id
+             FROM tmpMovement_find
+                  LEFT JOIN Movement ON Movement.Id = tmpMovement_find.Id
                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -158,51 +188,52 @@ BEGIN
                   LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                           ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                          AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
-            ) AS Movement
+             WHERE tmpMovement_find.Id > 0
+            ) AS tmpMovement
 
-            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement.MovementId_Order
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = tmpMovement.MovementId_Order
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                           ON MovementLinkMovement_Order.MovementId = Movement.MovementId_Order
+                                           ON MovementLinkMovement_Order.MovementId = tmpMovement.MovementId_Order
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
-            LEFT JOIN Object AS Object_From ON Object_From.Id = Movement.FromId
-            LEFT JOIN Object AS Object_To ON Object_To.Id = Movement.ToId
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Movement.PartnerId
-            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = Movement.PriceListId
+            LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
+            LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpMovement.PartnerId
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMovement.PriceListId
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
-                                    ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  Movement.PartnerId
+                                    ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  tmpMovement.PartnerId
                                    AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
                                    AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice
-                                    ON ObjectBoolean_Partner_EdiInvoice.ObjectId =  Movement.PartnerId
+                                    ON ObjectBoolean_Partner_EdiInvoice.ObjectId =  tmpMovement.PartnerId
                                    AND ObjectBoolean_Partner_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
                                    AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv
-                                    ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  Movement.PartnerId
+                                    ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  tmpMovement.PartnerId
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
                                    AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSumm.MovementId =  tmpMovement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                    ON MovementFloat_ChangePercent.MovementId =  tmpMovement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
-                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                    ON MovementFloat_MovementDescNumber.MovementId =  tmpMovement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
 
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = Movement.ContractId
-            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = Movement.GoodsPropertyId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpMovement.ContractId
+            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpMovement.GoodsPropertyId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                         ON MovementLinkObject_PaidKind.MovementId = tmpMovement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
-                                         ON MovementLinkObject_Personal.MovementId = Movement.MovementId_Order
+                                         ON MovementLinkObject_Personal.MovementId = tmpMovement.MovementId_Order
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
       ;
@@ -210,7 +241,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_Movement (TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Scale_Movement (Integer, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -220,4 +251,5 @@ ALTER FUNCTION gpGet_Scale_Movement (TDateTime, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Movement (CURRENT_TIMESTAMP, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Movement (0, CURRENT_TIMESTAMP, TRUE, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Movement (0, CURRENT_TIMESTAMP, FALSE, zfCalc_UserAdmin())

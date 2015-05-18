@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1069#1082#1089#1087#1077#1076#1080#1094#1080#1103
-  ClientHeight = 700
+  ClientHeight = 651
   ClientWidth = 984
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,6 +14,7 @@ object MainForm: TMainForm
   OldCreateOrder = False
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnKeyPress = FormKeyPress
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -21,172 +22,10 @@ object MainForm: TMainForm
     Left = 133
     Top = 66
     Width = 851
-    Height = 634
+    Height = 585
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    object DBGrid: TDBGrid
-      Left = 0
-      Top = 33
-      Width = 851
-      Height = 560
-      Align = alClient
-      DataSource = DataSource
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
-      TabOrder = 0
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'Tahoma'
-      TitleFont.Style = []
-      OnDrawColumnCell = DBGridDrawColumnCell
-      Columns = <
-        item
-          Expanded = False
-          FieldName = 'GoodsCode'
-          Title.Caption = #1050#1086#1076
-          Width = 55
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'GoodsName'
-          Title.Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-          Width = 250
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'GoodsKindName'
-          Title.Caption = #1042#1080#1076' '#1091#1087#1072#1082'.'
-          Width = 100
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'MeasureName'
-          Title.Caption = #1045#1076'.'#1080#1079#1084'.'
-          Width = 40
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'PartionString'
-          Title.Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
-          Visible = False
-        end
-        item
-          Expanded = False
-          FieldName = 'PartionDate'
-          Title.Caption = #1055#1072#1088#1090#1080#1103' '#1044#1040#1058#1040
-          Visible = False
-        end
-        item
-          Expanded = False
-          FieldName = 'PriceListName'
-          Title.Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
-          Width = 70
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'Price'
-          Title.Caption = #1062#1077#1085#1072
-          Width = 50
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'ChangePercentAmount'
-          Title.Caption = '%'#1057#1082#1076
-          Width = 35
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'AmountPartner'
-          Title.Caption = #1050#1086#1083'.'#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-          Width = 70
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'Amount'
-          Title.Caption = #1050#1086#1083'.'#1089#1082#1083#1072#1076
-          Width = 55
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'RealWeight'
-          Title.Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
-          Width = 70
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'WeightTareTotal'
-          Title.Caption = #1042#1077#1089' '#1090#1072#1088#1099
-          Width = 50
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'WeightTare'
-          Title.Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099
-          Width = 50
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'CountTare'
-          Title.Caption = #1050#1086#1083'.'#1090#1072#1088#1099
-          Width = 44
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'LevelNumber'
-          Title.Caption = #8470' '#1096'.'
-          Width = 30
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'BoxNumber'
-          Title.Caption = #8470' '#1103#1097'.'
-          Width = 35
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'BoxName'
-          Title.Caption = #1053#1072#1079#1074'.'#1075#1086#1092#1088#1086
-          Width = 70
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'BoxCount'
-          Title.Caption = #1050#1086#1083'.'#1075#1086#1092#1088#1086
-          Width = 45
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'InsertDate'
-          Title.Caption = #1044#1072#1090#1072'('#1074#1088') '#1089#1086#1079#1076#1072#1085#1080#1103
-          Width = 80
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'UpdateDate'
-          Title.Caption = #1044#1072#1090#1072'('#1074#1088') '#1080#1079#1084'.'
-          Width = 80
-          Visible = True
-        end>
-    end
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -194,10 +33,10 @@ object MainForm: TMainForm
       Height = 33
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 1
-      object ButtonDeleteItem: TSpeedButton
-        Left = 148
-        Top = 3
+      TabOrder = 0
+      object bbDeleteItem: TSpeedButton
+        Left = 180
+        Top = 5
         Width = 31
         Height = 29
         Hint = #1091#1076#1072#1083#1080#1090#1100'/'#1074#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -243,9 +82,9 @@ object MainForm: TMainForm
           FFFFFFFFFFFFFFFFFFFF}
         ParentShowHint = False
         ShowHint = True
-        OnClick = ButtonDeleteItemClick
+        OnClick = bbDeleteItemClick
       end
-      object ButtonExit: TSpeedButton
+      object bbExit: TSpeedButton
         Left = 489
         Top = 3
         Width = 31
@@ -262,9 +101,9 @@ object MainForm: TMainForm
           8888888888884444888888888888488488888888888844448888}
         ParentShowHint = False
         ShowHint = True
-        OnClick = ButtonExitClick
+        OnClick = bbExitClick
       end
-      object ButtonRefresh: TSpeedButton
+      object bbRefresh: TSpeedButton
         Left = 370
         Top = 3
         Width = 31
@@ -281,11 +120,11 @@ object MainForm: TMainForm
           0FF07770B00FFFFF0F077709070FFFFF00777770770000000777}
         ParentShowHint = False
         ShowHint = True
-        OnClick = ButtonRefreshClick
+        OnClick = bbRefreshClick
       end
-      object ButtonRefreshZakaz: TSpeedButton
+      object bbRefreshZakaz: TSpeedButton
         Left = 599
-        Top = 1
+        Top = -2
         Width = 31
         Height = 29
         Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
@@ -302,12 +141,12 @@ object MainForm: TMainForm
         ShowHint = True
         Visible = False
       end
-      object ButtonChangeNumberTare: TSpeedButton
-        Left = 50
-        Top = 3
+      object bbChangeNumberTare: TSpeedButton
+        Left = 70
+        Top = 5
         Width = 31
         Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1086#1084#1077#1088' '#1071#1097#1080#1082#1072'>'
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1071#1097#1080#1082#1072'>'
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
@@ -319,14 +158,14 @@ object MainForm: TMainForm
           F708888888888880FF0888888888888800808888888888888808}
         ParentShowHint = False
         ShowHint = True
-        Visible = False
+        OnClick = bbChangeNumberTareClick
       end
-      object ButtonChangeNumberLevel: TSpeedButton
-        Left = 82
-        Top = 3
+      object bbChangeLevelNumber: TSpeedButton
+        Left = 101
+        Top = 5
         Width = 31
         Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1086#1084#1077#1088' '#1057#1083#1086#1103'>'
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1064#1072#1088'>'
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
@@ -338,11 +177,11 @@ object MainForm: TMainForm
           9088888888888819990888888888888199888888888888881888}
         ParentShowHint = False
         ShowHint = True
-        Visible = False
+        OnClick = bbChangeLevelNumberClick
       end
-      object ButtonChangeMember: TSpeedButton
-        Left = 114
-        Top = 3
+      object bbChangeMember: TSpeedButton
+        Left = 132
+        Top = 5
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
@@ -359,9 +198,9 @@ object MainForm: TMainForm
         ShowHint = True
         Visible = False
       end
-      object ButtonExportToEDI: TSpeedButton
-        Left = 271
-        Top = 2
+      object bbExportToEDI: TSpeedButton
+        Left = 658
+        Top = 5
         Width = 31
         Height = 29
         Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' EDI'
@@ -378,15 +217,100 @@ object MainForm: TMainForm
         ShowHint = True
         Visible = False
       end
+      object bbChoice_UnComlete: TSpeedButton
+        Left = 249
+        Top = 5
+        Width = 31
+        Height = 29
+        Hint = #1042#1077#1088#1085#1091#1090#1100#1089#1103' '#1082' '#1085#1077' '#1079#1072#1082#1088#1099#1090#1086#1084#1091' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102
+        Glyph.Data = {
+          06020000424D0602000000000000760000002800000019000000190000000100
+          0400000000009001000000000000000000001000000000000000000000000000
+          80000080000000808000800000008000800080800000C0C0C000808080000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00777777777777
+          7777777777777000000077777777777777777777777770000000777777777777
+          7777777777777000000077777777777777777777777770000000777777777778
+          8888877777777000000077777777700000388877777770000000777777770BBB
+          B0308887777770000000777777770BBBB030888777777000000077777770BBBB
+          0333088777777000000077777770BBBB03330887777770000000777777700000
+          0333088777777000000077777777778033330887777770000000777777777000
+          33330887777770000000777777770BB03333088777777000000077777770BBBB
+          033308877777700000007777770BBBBBB0330887777770000000777770BBBBBB
+          BB03088777777000000077777000BBBB0003088777777000000077777770BBBB
+          03330877777770000000777777770BBBB0308777777770000000777777770BBB
+          B030777777777000000077777777700000377777777770000000777777777777
+          7777777777777000000077777777777777777777777770000000777777777777
+          77777777777770000000}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChoice_UnComleteClick
+      end
+      object bbView_all: TSpeedButton
+        Left = 286
+        Top = 3
+        Width = 31
+        Height = 29
+        Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1042#1057#1045#1061'> '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          80000080000000808000800000008000800080800000C0C0C000808080000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00777777777777
+          777777777707C077777777770777CCC0777777077777CCCCC0777777FC77CCCC
+          CC07777FCC777FCCCC07777CC0CCC77FCC0777FCCCC777777F077777CCC07777
+          FC77777777CC0CFC777777777777777777777777777777777777777777777777
+          7777777777777777777777777777777777777777777777777777}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbView_allClick
+      end
+      object bbChangeCount: TSpeedButton
+        Left = 37
+        Top = 5
+        Width = 31
+        Height = 29
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1072#1082#1077#1090#1086#1074'>'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888808800000000000888F0888888888888880F808888888888888FF0088888
+          888888800B308888888888880BB308888888888880BB308888888888880BB308
+          888888888880BB308888888888880BB308888888888880BB0088888888888800
+          0508888888888880FD0888888888888800888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChangeCountClick
+      end
+      object bbChangeHeadCount: TSpeedButton
+        Left = 5
+        Top = 5
+        Width = 31
+        Height = 29
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074'>'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888808800000000000888F0888888888888880F808888888888888FF0088888
+          888888800B308888888888880BB308888888888880BB308888888888880BB308
+          888888888880BB308888888888880BB308888888888880BB0088888888888800
+          0508888888888880FD0888888888888800888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChangeHeadCountClick
+      end
     end
     object infoPanelTotalSumm: TPanel
       Left = 0
-      Top = 593
+      Top = 544
       Width = 851
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
-      TabOrder = 2
+      TabOrder = 1
       object gbRealWeight: TGroupBox
         Left = 249
         Top = 0
@@ -513,12 +437,332 @@ object MainForm: TMainForm
         end
       end
     end
+    object cxDBGrid: TcxGrid
+      Left = 0
+      Top = 33
+      Width = 851
+      Height = 511
+      Align = alClient
+      TabOrder = 2
+      object cxDBGridDBTableView: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = DS
+        DataController.Summary.DefaultGroupSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = AmountPartner
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = WeightTareTotal
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = BoxCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Count
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = HeadCount
+          end>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = AmountPartner
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = WeightTareTotal
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = BoxCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Count
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = HeadCount
+          end>
+        DataController.Summary.SummaryGroups = <>
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnMoving = False
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.Footer = True
+        OptionsView.GroupByBox = False
+        OptionsView.GroupSummaryLayout = gslAlignWithColumns
+        OptionsView.HeaderAutoHeight = True
+        OptionsView.Indicator = True
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object GoodsCode: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'GoodsCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object GoodsName: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'GoodsName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 200
+        end
+        object GoodsKindName: TcxGridDBColumn
+          Caption = #1042#1080#1076' '#1091#1087#1072#1082'.'
+          DataBinding.FieldName = 'GoodsKindName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
+        object MeasureName: TcxGridDBColumn
+          Caption = #1045#1076'. '#1080#1079#1084'.'
+          DataBinding.FieldName = 'MeasureName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object PartionGoods: TcxGridDBColumn
+          Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
+          DataBinding.FieldName = 'PartionGoods'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 90
+        end
+        object PartionGoodsDate: TcxGridDBColumn
+          Caption = #1055#1072#1088#1090#1080#1103' '#1044#1040#1058#1040
+          DataBinding.FieldName = 'PartionGoodsDate'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object PriceListName: TcxGridDBColumn
+          Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+          DataBinding.FieldName = 'PriceListName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 75
+        end
+        object Price: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072
+          DataBinding.FieldName = 'Price'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 50
+        end
+        object ChangePercentAmount: TcxGridDBColumn
+          Caption = '% '#1057#1082#1076
+          DataBinding.FieldName = 'ChangePercentAmount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 35
+        end
+        object HeadCount: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
+          DataBinding.FieldName = 'HeadCount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object AmountPartner: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+          DataBinding.FieldName = 'AmountPartner'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object Amount: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1089#1082#1083#1072#1076
+          DataBinding.FieldName = 'Amount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object RealWeight: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
+          DataBinding.FieldName = 'RealWeight'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object Count: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1087#1072#1082#1077#1090#1086#1074
+          DataBinding.FieldName = 'Count'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object WeightTareTotal: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1090#1072#1088#1099
+          DataBinding.FieldName = 'WeightTareTotal'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object WeightTare: TcxGridDBColumn
+          Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099
+          DataBinding.FieldName = 'WeightTare'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 50
+        end
+        object CountTare: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1090#1072#1088#1099
+          DataBinding.FieldName = 'CountTare'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 50
+        end
+        object LevelNumber: TcxGridDBColumn
+          Caption = #8470' '#1096#1088'.'
+          DataBinding.FieldName = 'LevelNumber'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object BoxNumber: TcxGridDBColumn
+          Caption = #8470' '#1103#1097'.'
+          DataBinding.FieldName = 'BoxNumber'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object BoxName: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1086#1092#1088#1086'-'#1090#1072#1088#1099
+          DataBinding.FieldName = 'BoxName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 80
+        end
+        object BoxCount: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1075#1086#1092#1088#1086'-'#1090'.'
+          DataBinding.FieldName = 'BoxCount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 58
+        end
+        object InsertDate: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072'('#1074#1088') '#1089#1086#1079#1076#1072#1085#1080#1103
+          DataBinding.FieldName = 'InsertDate'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 80
+        end
+        object UpdateDate: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072'('#1074#1088') '#1080#1079#1084'.'
+          DataBinding.FieldName = 'UpdateDate'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 80
+        end
+        object isErased: TcxGridDBColumn
+          Caption = #1059#1076#1072#1083#1077#1085
+          DataBinding.FieldName = 'isErased'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+      end
+      object cxDBGridLevel: TcxGridLevel
+        GridView = cxDBGridDBTableView
+      end
+    end
   end
   object PanelSaveItem: TPanel
     Left = 0
     Top = 66
     Width = 133
-    Height = 634
+    Height = 585
     Align = alLeft
     BevelOuter = bvNone
     Font.Charset = RUSSIAN_CHARSET
@@ -528,9 +772,9 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
-    object EnterGoodsCodeScanerPanel: TPanel
+    object BarCodePanel: TPanel
       Left = 0
-      Top = 42
+      Top = 83
       Width = 133
       Height = 41
       Align = alTop
@@ -541,30 +785,33 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
-      object EnterGoodsCodeScanerLabel: TLabel
+      ExplicitTop = 42
+      object BarCodeLabel: TLabel
         Left = 1
         Top = 1
         Width = 131
         Height = 14
         Align = alTop
         Alignment = taCenter
-        Caption = #1050#1086#1076' '#1089#1086' '#1089#1082#1072#1085#1077#1088#1072
+        Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
         Font.Charset = RUSSIAN_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 85
+        ExplicitWidth = 59
       end
-      object EnterGoodsCodeScanerEdit: TEdit
-        Left = 5
-        Top = 14
-        Width = 110
-        Height = 24
+      object EditBarCode: TcxCurrencyEdit
+        Left = 3
+        Top = 15
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DecimalPlaces = 0
+        Properties.OnChange = EditBarCodePropertiesChange
         TabOrder = 0
-        Text = 'EnterGoodsCodeScanerEdit'
-        OnChange = EnterGoodsCodeScanerEditChange
+        Width = 126
       end
     end
     object gbOperDate: TGroupBox
@@ -601,11 +848,12 @@ object MainForm: TMainForm
     end
     object infoPanel_Scale: TPanel
       Left = 0
-      Top = 200
+      Top = 241
       Width = 133
       Height = 29
       Align = alTop
       TabOrder = 2
+      ExplicitTop = 200
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -642,7 +890,7 @@ object MainForm: TMainForm
     end
     object rgScale: TRadioGroup
       Left = 0
-      Top = 83
+      Top = 124
       Width = 133
       Height = 117
       Align = alTop
@@ -651,13 +899,137 @@ object MainForm: TMainForm
       ParentColor = False
       TabOrder = 3
       OnClick = rgScaleClick
+      ExplicitTop = 83
+    end
+    object CountPanel: TPanel
+      Left = 0
+      Top = 270
+      Width = 133
+      Height = 41
+      Align = alTop
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 4
+      ExplicitTop = 42
+      object CountLabel: TLabel
+        Left = 1
+        Top = 1
+        Width = 131
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 87
+      end
+      object EditCount: TcxCurrencyEdit
+        Left = 3
+        Top = 15
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DecimalPlaces = 0
+        Properties.OnChange = EditBarCodePropertiesChange
+        TabOrder = 0
+        Width = 126
+      end
+    end
+    object HeadCountPanel: TPanel
+      Left = 0
+      Top = 311
+      Width = 133
+      Height = 41
+      Align = alTop
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 5
+      ExplicitTop = 42
+      object HeadCountLabel: TLabel
+        Left = 1
+        Top = 1
+        Width = 131
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 75
+      end
+      object EditHeadCount: TcxCurrencyEdit
+        Left = 3
+        Top = 15
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DecimalPlaces = 0
+        Properties.OnChange = EditBarCodePropertiesChange
+        TabOrder = 0
+        Width = 126
+      end
+    end
+    object PartionGoodsPanel: TPanel
+      Left = 0
+      Top = 42
+      Width = 133
+      Height = 41
+      Align = alTop
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 6
+      object PartionGoodsLabel: TLabel
+        Left = 1
+        Top = 1
+        Width = 131
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1042#1074#1086#1076' '#1055#1040#1056#1058#1048#1071' '#1057#1067#1056#1068#1071
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 119
+      end
+      object EditPartionGoods: TEdit
+        Left = 5
+        Top = 17
+        Width = 125
+        Height = 22
+        TabOrder = 0
+        Text = 'EditPartionGoods'
+        OnExit = EditPartionGoodsExit
+      end
     end
   end
   object PanelInfoItem: TPanel
     Left = 133
     Top = 66
     Width = 0
-    Height = 634
+    Height = 585
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
@@ -916,7 +1288,7 @@ object MainForm: TMainForm
     end
     object infoPanelTotalWeight: TPanel
       Left = 0
-      Top = 597
+      Top = 548
       Width = 0
       Height = 37
       Align = alBottom
@@ -1314,7 +1686,7 @@ object MainForm: TMainForm
     Left = 224
     Top = 384
   end
-  object DataSource: TDataSource
+  object DS: TDataSource
     DataSet = CDS
     Left = 320
     Top = 400
@@ -1325,5 +1697,21 @@ object MainForm: TMainForm
     AfterOpen = CDSAfterOpen
     Left = 304
     Top = 448
+  end
+  object DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxDBGridDBTableView
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 408
+    Top = 392
   end
 end

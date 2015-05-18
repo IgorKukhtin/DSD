@@ -12,21 +12,24 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, dsdDB, Datasnap.DBClient, dxSkinsCore,
   dxSkinsDefaultPainters
- ,SysScalesLib_TLB;
+ ,SysScalesLib_TLB
+ ,UtilScale,DataModul, cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter,
+  cxData, cxDataStorage, cxDBData, dsdAddOn, cxGridLevel, cxGridCustomTableView,
+  cxGridTableView, cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid,
+  cxCurrencyEdit;
 
 type
   TMainForm = class(TForm)
     GridPanel: TPanel;
-    DBGrid: TDBGrid;
     ButtonPanel: TPanel;
-    ButtonDeleteItem: TSpeedButton;
-    ButtonExit: TSpeedButton;
-    ButtonRefresh: TSpeedButton;
-    ButtonRefreshZakaz: TSpeedButton;
-    ButtonChangeNumberTare: TSpeedButton;
-    ButtonChangeNumberLevel: TSpeedButton;
-    ButtonChangeMember: TSpeedButton;
-    ButtonExportToEDI: TSpeedButton;
+    bbDeleteItem: TSpeedButton;
+    bbExit: TSpeedButton;
+    bbRefresh: TSpeedButton;
+    bbRefreshZakaz: TSpeedButton;
+    bbChangeNumberTare: TSpeedButton;
+    bbChangeLevelNumber: TSpeedButton;
+    bbChangeMember: TSpeedButton;
+    bbExportToEDI: TSpeedButton;
     infoPanelTotalSumm: TPanel;
     gbRealWeight: TGroupBox;
     PanelRealWeight: TPanel;
@@ -37,9 +40,8 @@ type
     gbTotalSumm: TGroupBox;
     PanelTotalSumm: TPanel;
     PanelSaveItem: TPanel;
-    EnterGoodsCodeScanerPanel: TPanel;
-    EnterGoodsCodeScanerLabel: TLabel;
-    EnterGoodsCodeScanerEdit: TEdit;
+    BarCodePanel: TPanel;
+    BarCodeLabel: TLabel;
     gbOperDate: TGroupBox;
     infoPanel_Scale: TPanel;
     ScaleLabel: TLabel;
@@ -115,7 +117,7 @@ type
     miScaleRun_BI_R: TMenuItem;
     OperDateEdit: TcxDateEdit;
     spSelect: TdsdStoredProc;
-    DataSource: TDataSource;
+    DS: TDataSource;
     CDS: TClientDataSet;
     infoPanelContract: TPanel;
     LabelContract: TLabel;
@@ -123,18 +125,68 @@ type
     gbAmountWeight: TGroupBox;
     PanelAmountWeight: TPanel;
     rgScale: TRadioGroup;
+    bbChoice_UnComlete: TSpeedButton;
+    bbView_all: TSpeedButton;
+    cxDBGrid: TcxGrid;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
+    PriceListName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    ChangePercentAmount: TcxGridDBColumn;
+    AmountPartner: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    RealWeight: TcxGridDBColumn;
+    WeightTareTotal: TcxGridDBColumn;
+    WeightTare: TcxGridDBColumn;
+    CountTare: TcxGridDBColumn;
+    LevelNumber: TcxGridDBColumn;
+    BoxNumber: TcxGridDBColumn;
+    BoxName: TcxGridDBColumn;
+    BoxCount: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
+    cxDBGridDBTableView: TcxGridDBTableView;
+    cxDBGridLevel: TcxGridLevel;
+    DBViewAddOn: TdsdDBViewAddOn;
+    isErased: TcxGridDBColumn;
+    Count: TcxGridDBColumn;
+    bbChangeCount: TSpeedButton;
+    bbChangeHeadCount: TSpeedButton;
+    HeadCount: TcxGridDBColumn;
+    EditBarCode: TcxCurrencyEdit;
+    CountPanel: TPanel;
+    CountLabel: TLabel;
+    EditCount: TcxCurrencyEdit;
+    HeadCountPanel: TPanel;
+    HeadCountLabel: TLabel;
+    EditHeadCount: TcxCurrencyEdit;
+    PartionGoodsPanel: TPanel;
+    PartionGoodsLabel: TLabel;
+    EditPartionGoods: TEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
-    procedure ButtonExitClick(Sender: TObject);
+    procedure bbExitClick(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CDSAfterOpen(DataSet: TDataSet);
-    procedure ButtonRefreshClick(Sender: TObject);
-    procedure ButtonDeleteItemClick(Sender: TObject);
+    procedure bbRefreshClick(Sender: TObject);
+    procedure bbDeleteItemClick(Sender: TObject);
     procedure DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure rgScaleClick(Sender: TObject);
-    procedure EnterGoodsCodeScanerEditChange(Sender: TObject);
+    procedure bbChoice_UnComleteClick(Sender: TObject);
+    procedure bbView_allClick(Sender: TObject);
+    procedure bbChangeNumberTareClick(Sender: TObject);
+    procedure bbChangeLevelNumberClick(Sender: TObject);
+    procedure bbChangeCountClick(Sender: TObject);
+    procedure bbChangeHeadCountClick(Sender: TObject);
+    procedure EditBarCodePropertiesChange(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure EditPartionGoodsExit(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -144,11 +196,13 @@ type
     function GetParams_Goods(isRetail:Boolean;BarCode: String):Boolean;
     procedure Create_Scale;
     procedure Initialize_Scale;
-    function fGetScale_CurrentWeight:Double;
     procedure RefreshDataSet;
     procedure WriteParamsMovement;
+    procedure Initialize_afterSave_all;
+    procedure Initialize_afterSave_MI;
+    procedure myActiveControl;
   public
-    { Public declarations }
+    function fGetScale_CurrentWeight:Double;
   end;
 
 var
@@ -157,8 +211,30 @@ var
 
 implementation
 {$R *.dfm}
-uses DMMainScale, UtilScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint
-,UnilWin;
+uses DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint
+    ,UnilWin,GuideMovement, DialogNumberValue;
+//------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.Initialize_afterSave_all;
+begin
+     EditPartionGoods.Text:='';
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.Initialize_afterSave_MI;
+begin
+     EditCount.Text:='';
+     EditHeadCount.Text:='';
+     EditBarCode.Text:='';
+     myActiveControl;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.myActiveControl;
+begin
+     if PartionGoodsPanel.Visible
+     then ActiveControl:=EditPartionGoods
+     else ActiveControl:=EditBarCode;
+end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_all:Boolean;
 begin
@@ -190,8 +266,13 @@ begin
           if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then EDI_Desadv (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
 
           //Initialize or Empty
-          DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement);
+          //НЕ будем автоматов открывать предыдущий док.
+          //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!может и ненадо!!!
+          DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
           gpInitialize_MovementDesc;
+          //
+          Initialize_afterSave_all;
+          Initialize_afterSave_MI;
           //
           RefreshDataSet;
           WriteParamsMovement;
@@ -223,52 +304,79 @@ begin
           //
           WriteParamsMovement;
           //
-          if MovementId_save <> 0 then RefreshDataSet;
+          if MovementId_save <> 0 then
+          begin
+               RefreshDataSet;
+               Initialize_afterSave_all;
+               Initialize_afterSave_MI;
+          end;
      end;
-     ActiveControl:=EnterGoodsCodeScanerEdit;
+     myActiveControl;
 end;
 {------------------------------------------------------------------------}
 function TMainForm.GetParams_Goods(isRetail:Boolean;BarCode: String):Boolean;
-var GoodsWeight_two,GoodsWeight_set:Double;
-    calcClientId:Integer;
 begin
      Result:=false;
      //
      if ParamsMovement.ParamByName('MovementDescId').asInteger=0
      then if GetParams_MovementDesc('')=false then exit;
      //
+     //если партия с ошибкой
+     if Recalc_PartionGoods(EditPartionGoods) = FALSE then
+     begin
+          PanelMovementDesc.Caption:='Ошибка.Не определена <ПАРТИЯ СЫРЬЯ>';
+          ActiveControl:=EditPartionGoods;
+          exit;
+     end
+     else WriteParamsMovement;
      //
-     if BarCode<>'' then
-        if isRetail=true then
+     //если есть ШК - параметры товара определяются из него
+     if trim(BarCode) <> ''
+     then
+        if isRetail = TRUE then
         begin
+             //в ШК - закодированый товар + кол-во, т.е. для Retail
              Result:=DMMainScaleForm.gpGet_Scale_GoodsRetail(ParamsMovement,ParamsMI,BarCode);
-             if Result then Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
              if Result then
              begin
+                   ParamsMI.ParamByName('Count').AsFloat:=0;
+                   ParamsMI.ParamByName('HeadCount').AsFloat:=0;
+                   ParamsMI.ParamByName('PartionGoods').AsString:='';
+                   //сохранение MovementItem
+                   DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
+                   Initialize_afterSave_MI;
                    RefreshDataSet;
                    WriteParamsMovement;
                    CDS.First;
              end;
-             exit;//!!!выход!!!
+             myActiveControl;
+             exit;//!!!выход!!! т.к. открывать диалог для параметров товара и проверять есть ли там сканируемый товар - пока не надо
         end
         else
             begin
+                 //в ШК - Id товара или товар+вид товара
                  DMMainScaleForm.gpGet_Scale_Goods(ParamsMI,BarCode);
                  if ParamsMI.ParamByName('GoodsId').AsInteger=0 then
                  begin
                       ShowMessage('Ошибка.Товар не найден.');
                       Result:=false;
+                      myActiveControl;
                       exit;
                  end;
             end
-     else EmptyValuesParams(ParamsMI);
+     else EmptyValuesParams(ParamsMI); //очистили предыдущие и откроем диалог для ввода всех параметров товара
+
 
      //
      ParamsMI.ParamByName('RealWeight_Get').AsFloat:=fGetScale_CurrentWeight;
+     try ParamsMI.ParamByName('Count').AsFloat:=StrToFloat(EditCount.Text);except ParamsMI.ParamByName('Count').AsFloat:=0;end;
+     try ParamsMI.ParamByName('HeadCount').AsFloat:=StrToFloat(EditHeadCount.Text);except ParamsMI.ParamByName('HeadCount').AsFloat:=0;end;
+     ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      //
      if ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0
      then
-         if GuideGoodsMovementForm.Execute(ParamsMovement)=true
+         // Диалог для параметров товара из списка заявки + в нем сохранение MovementItem
+         if GuideGoodsMovementForm.Execute(ParamsMovement) = TRUE
          then begin
                     Result:=true;
                     RefreshDataSet;
@@ -277,17 +385,143 @@ begin
               end
          else
      else
-         if GuideGoodsForm.Execute(ParamsMovement)=true
+         // Диалог для параметров товара из списка всех товаров + в нем сохранение MovementItem
+         if GuideGoodsForm.Execute(ParamsMovement) = TRUE
          then begin
                     Result:=true;
                     RefreshDataSet;
                     WriteParamsMovement;
                     CDS.First;
               end;
-     ActiveControl:=EnterGoodsCodeScanerEdit;
+     Initialize_afterSave_MI;
 end;
 //------------------------------------------------------------------------------------------------
-procedure TMainForm.ButtonRefreshClick(Sender: TObject);
+procedure TMainForm.bbChangeCountClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIFloat_Count');
+
+     with DialogNumberValueForm do
+     begin
+          NumberValueLabel.Caption:='Количество пакетов';
+          ActiveControl:=NumberValueEdit;
+          NumberValueEdit.Text:=CDS.FieldByName('Count').AsString;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbChangeHeadCountClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIFloat_HeadCount');
+
+     with DialogNumberValueForm do
+     begin
+          NumberValueLabel.Caption:='№ Шар';
+          ActiveControl:=NumberValueEdit;
+          NumberValueEdit.Text:=CDS.FieldByName('HeadCount').AsString;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbChangeLevelNumberClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIFloat_LevelNumber');
+
+     with DialogNumberValueForm do
+     begin
+          NumberValueLabel.Caption:='№ Шар';
+          ActiveControl:=NumberValueEdit;
+          NumberValueEdit.Text:=CDS.FieldByName('LevelNumber').AsString;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbChangeNumberTareClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIFloat_BoxNumber');
+
+     with DialogNumberValueForm do
+     begin
+          NumberValueLabel.Caption:='№ Ящика';
+          ActiveControl:=NumberValueEdit;
+          NumberValueEdit.Text:=CDS.FieldByName('BoxNumber').AsString;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbChoice_UnComleteClick(Sender: TObject);
+begin
+     if GuideMovementForm.Execute(ParamsMovement,TRUE)//isChoice=TRUE
+     then begin
+               WriteParamsMovement;
+               RefreshDataSet;
+               CDS.First;
+          end;
+     myActiveControl;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbView_allClick(Sender: TObject);
+begin
+     GuideMovementForm.Execute(ParamsMovement,FALSE);//isChoice=FALSE
+     myActiveControl;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbRefreshClick(Sender: TObject);
 begin
     RefreshDataSet;
     WriteParamsMovement;
@@ -341,33 +575,53 @@ begin
      end;
 end;
 //---------------------------------------------------------------------------------------------
-procedure TMainForm.EnterGoodsCodeScanerEditChange(Sender: TObject);
+procedure TMainForm.EditBarCodePropertiesChange(Sender: TObject);
 begin
-     EnterGoodsCodeScanerEdit.Text:=trim(EnterGoodsCodeScanerEdit.Text);
-     if Length(EnterGoodsCodeScanerEdit.Text)>=13
-     then
-         if Pos(zc_BarCodePref_Object,EnterGoodsCodeScanerEdit.Text)=1
-         then begin
-                   GetParams_Goods(false,EnterGoodsCodeScanerEdit.Text);
-                   EnterGoodsCodeScanerEdit.Text:='';
-              end
-         else
-             if Pos(zc_BarCodePref_Movement,EnterGoodsCodeScanerEdit.Text)=1
-             then begin
-                       GetParams_MovementDesc(EnterGoodsCodeScanerEdit.Text);
-                       EnterGoodsCodeScanerEdit.Text:='';
-                  end
-             else begin
-                       GetParams_Goods(true,EnterGoodsCodeScanerEdit.Text);
-                       EnterGoodsCodeScanerEdit.Text:='';
-                  end;
-
+     EditBarCode.Text:=trim(EditBarCode.Text);
+     if Length(EditBarCode.Text)>=13
+     then begin
+               //Проверка <Контрольная сумма>
+               if CheckBarCode(trim(EditBarCode.Text)) = FALSE
+               then begin
+                  EditBarCode.Text:='';
+                  ActiveControl:=EditBarCode;
+                  exit;
+               end;
+               //если в ШК - Id товара или товар+вид товара
+               if Pos(zc_BarCodePref_Object,EditBarCode.Text)=1
+               then begin
+                         GetParams_Goods(FALSE,EditBarCode.Text);//isRetail=FALSE
+                         EditBarCode.Text:='';
+                    end
+               else
+                   //если в ШК - Id документа заявки
+                   if Pos(zc_BarCodePref_Movement,EditBarCode.Text)=1
+                   then begin
+                             GetParams_MovementDesc(EditBarCode.Text);
+                             EditBarCode.Text:='';
+                        end
+                   else begin
+                            //если в ШК - закодированый товар + кол-во, т.е. для Retail
+                             GetParams_Goods(TRUE,EditBarCode.Text);//isRetail=TRUE
+                             EditBarCode.Text:='';
+                        end;
+     end;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.EditPartionGoodsExit(Sender: TObject);
+begin
+     //если партия с ошибкой
+     if Recalc_PartionGoods(EditPartionGoods) = FALSE then
+     begin
+          PanelMovementDesc.Caption:='Ошибка.Не определена <ПАРТИЯ СЫРЬЯ>';
+          ActiveControl:=EditPartionGoods;
+     end
+     else WriteParamsMovement;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   Caption:='Экспедиция ('+GetFileVersionString(ParamStr(0))+') - <'+DMMainScaleForm.gpGet_Scale_User+'>';
-  EnterGoodsCodeScanerEdit.Text:='';
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
@@ -386,6 +640,13 @@ begin
   //
   //local Movement Initialize
   OperDateEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime);
+  //local Control Form
+  Initialize_afterSave_all;
+  Initialize_afterSave_MI;
+  //local visible
+  PartionGoodsPanel.Visible:=StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_sale')) = zc_Enum_InfoMoney_30201; // Доходы + Мясное сырье + Мясное сырье
+  HeadCountPanel.Visible:=PartionGoodsPanel.Visible;
+  BarCodePanel.Visible:=not PartionGoodsPanel.Visible;
   //
   with spSelect do
   begin
@@ -511,7 +772,7 @@ end;
 procedure TMainForm.rgScaleClick(Sender: TObject);
 begin
      Initialize_Scale;
-     ActiveControl:=EnterGoodsCodeScanerEdit;
+     myActiveControl;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.PanelWeight_ScaleDblClick(Sender: TObject);
@@ -547,7 +808,7 @@ procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftStat
 begin
      if Key = VK_F5 then Save_Movement_all;
      if Key = VK_F2 then GetParams_MovementDesc('');
-     if Key = VK_SPACE then GetParams_Goods(false,'');
+     if Key = VK_SPACE then begin Key:= 0; GetParams_Goods(FALSE,''); end;//isRetail=FALSE
      //
      if ShortCut(Key, Shift) = 24659 then
      begin
@@ -558,14 +819,19 @@ begin
      end;
 end;
 {------------------------------------------------------------------------}
+procedure TMainForm.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+     if Key=#32 then Key:=#0;
+end;
+{------------------------------------------------------------------------}
 procedure TMainForm.FormShow(Sender: TObject);
 begin
      RefreshDataSet;
      WriteParamsMovement;
-     ActiveControl:=EnterGoodsCodeScanerEdit;
+     myActiveControl;
 end;
 {------------------------------------------------------------------------}
-procedure TMainForm.ButtonDeleteItemClick(Sender: TObject);
+procedure TMainForm.bbDeleteItemClick(Sender: TObject);
 begin
      if CDS.FieldByName('isErased').AsBoolean=false
      then
@@ -588,7 +854,7 @@ begin
               end
 end;
 {------------------------------------------------------------------------}
-procedure TMainForm.ButtonExitClick(Sender: TObject);
+procedure TMainForm.bbExitClick(Sender: TObject);
 begin Close;end;
 {------------------------------------------------------------------------}
 end.

@@ -24,17 +24,18 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , Price_Return TFloat
              , CountForPrice         TFloat
              , CountForPrice_Return  TFloat
+             , Color_calc            Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId     Integer;
+   DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpGetUserBySession (inSession);
 
    IF inOrderExternalId <> 0
    THEN
-    -- Результат
+    -- Результат - по заявке
     RETURN QUERY
        WITH tmpMI_Order AS (SELECT MovementItem.ObjectId                                                AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId
@@ -98,6 +99,7 @@ BEGIN
                                  , tmpMI.CountForPrice
                             FROM tmpMI_Weighing AS tmpMI
                            )
+       -- Результат - по заявке
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Goods.Id             AS GoodsId
             , Object_Goods.ObjectCode     AS GoodsCode
@@ -124,6 +126,19 @@ BEGIN
             , 0 :: TFloat                     AS Price_Return
             , tmpMI.CountForPrice :: TFloat   AS CountForPrice
             , 0 :: TFloat                     AS CountForPrice_Return
+
+            , CASE WHEN (tmpMI.Amount_Order - tmpMI.Amount_Weighing) > 0
+                        THEN 1118719 -- clRed
+                   WHEN tmpMI.Amount_Weighing > tmpMI.Amount_Order
+                        THEN CASE WHEN tmpMI.Amount_Order = 0
+                                       THEN 16711680 -- clBlue
+                                  WHEN (tmpMI.Amount_Weighing / tmpMI.Amount_Order * 100 - 100) > 2
+                                       THEN 16711680 -- clBlue
+                                  ELSE 0 -- clBlack
+                             END
+                   ELSE 0 -- clBlack
+              END :: Integer AS Color_calc
+
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   , SUM (tmpMI.Amount_Order)    AS Amount_Order
@@ -154,7 +169,7 @@ BEGIN
               -- , ObjectString_Goods_GoodsGroupFull.ValueData
       ;
    ELSE
-    -- Результат
+    -- Результат - все товары
     RETURN QUERY
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpGoods.GoodsId            AS GoodsId
@@ -172,9 +187,9 @@ BEGIN
             , FALSE :: Boolean AS isTax_diff
             , lfObjectHistory_PriceListItem.ValuePrice :: TFloat                        AS Price
             , lfObjectHistory_PriceListItem_Return.ValuePrice :: TFloat                 AS Price_Return
-            , 1 :: TFloat                     AS CountForPrice
-            , 1 :: TFloat                     AS CountForPrice_Return
-
+            , 1 :: TFloat                 AS CountForPrice
+            , 1 :: TFloat                 AS CountForPrice_Return
+            , 0                           AS Color_calc -- clBlack
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
