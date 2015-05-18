@@ -568,6 +568,8 @@ type
     N58: TMenuItem;
     actReport_MotionGoods_Upak: TdsdOpenForm;
     N59: TMenuItem;
+    actReport_MotionGoods_Ceh: TdsdOpenForm;
+    N60: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
