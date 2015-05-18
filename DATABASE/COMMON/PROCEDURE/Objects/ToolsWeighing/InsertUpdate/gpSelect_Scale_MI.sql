@@ -13,7 +13,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , BoxNumber TFloat, LevelNumber TFloat
              , ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat
-             , PartionDate TDateTime, PartionString TVarChar
+             , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , GoodsKindName TVarChar
              , BoxName TVarChar
              , PriceListName  TVarChar
@@ -57,8 +57,8 @@ BEGIN
            , tmpMI.Price         :: TFloat AS Price
            , tmpMI.CountForPrice :: TFloat AS CountForPrice
            
-           , tmpMI.PartionDate :: TDateTime  AS PartionDate
-           , tmpMI.PartionString :: TVarChar AS PartionString
+           , tmpMI.PartionGoods :: TVarChar       AS PartionGoods
+           , tmpMI.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
 
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Box.ValueData            AS BoxName
@@ -90,8 +90,8 @@ BEGIN
                   , COALESCE (MIFloat_Price.ValueData, 0) 		  AS Price
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	  AS CountForPrice
            
-                  , MIDate_PartionGoods.ValueData     AS PartionDate
-                  , MIString_PartionGoods.ValueData   AS PartionString
+                  , MIString_PartionGoods.ValueData   AS PartionGoods
+                  , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
 
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , COALESCE (MILinkObject_Box.ObjectId, 0)       AS BoxId

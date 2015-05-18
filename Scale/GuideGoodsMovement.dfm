@@ -26,8 +26,4 @@ inherited GuideGoodsMovementForm: TGuideGoodsMovementForm
       end
     end
   end
-  inherited spSelect: TdsdStoredProc
-    Left = 240
-    Top = 336
-  end
 end

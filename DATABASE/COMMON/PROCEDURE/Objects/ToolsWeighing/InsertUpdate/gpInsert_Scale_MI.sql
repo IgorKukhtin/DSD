@@ -1,9 +1,11 @@
 -- Function: gpInsert_Scale_MI()
-
+/*
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -19,7 +21,10 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inCountForPrice         TFloat    , -- Цена за количество
     IN inCountForPrice_Return  TFloat    , -- Цена за количество
     IN inDayPrior_PriceReturn  Integer,
-    IN inPriceListId           Integer   , -- 
+    IN inCount                 TFloat    , -- Количество пакетов или Количество батонов
+    IN inHeadCount             TFloat    , -- Вес 1-ой тары
+    IN inPartionGoods          TVarChar  , -- Партия
+    IN inPriceListId           Integer   , -- Количество голов
     IN inSession               TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
@@ -52,8 +57,8 @@ BEGIN
                                                        , inChangePercentAmount := inChangePercentAmount
                                                        , inCountTare           := inCountTare
                                                        , inWeightTare          := inWeightTare
-                                                       , inCount               := 0
-                                                       , inHeadCount           := 0
+                                                       , inCount               := inCount
+                                                       , inHeadCount           := inHeadCount
                                                        , inBoxCount            := 0
                                                        , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
                                                        , inLevelNumber         := 0
@@ -67,6 +72,7 @@ BEGIN
                                                                                        ELSE 0
                                                                                   END*/
                                                        , inCountForPrice       := CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN inCountForPrice_Return ELSE inCountForPrice END
+                                                       , inPartionGoods        := inPartionGoods
                                                        , inPartionGoodsDate    := NULL
                                                        , inGoodsKindId         := inGoodsKindId
                                                        , inPriceListId         := inPriceListId

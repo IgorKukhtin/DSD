@@ -28,14 +28,14 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId     Integer;
+   DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpGetUserBySession (inSession);
 
    IF inOrderExternalId <> 0
    THEN
-    -- Результат
+    -- Результат - по заявке
     RETURN QUERY
        WITH tmpMI_Order AS (SELECT MovementItem.ObjectId                                                AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId
@@ -99,6 +99,7 @@ BEGIN
                                  , tmpMI.CountForPrice
                             FROM tmpMI_Weighing AS tmpMI
                            )
+       -- Результат - по заявке
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Goods.Id             AS GoodsId
             , Object_Goods.ObjectCode     AS GoodsCode
@@ -168,7 +169,7 @@ BEGIN
               -- , ObjectString_Goods_GoodsGroupFull.ValueData
       ;
    ELSE
-    -- Результат
+    -- Результат - все товары
     RETURN QUERY
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpGoods.GoodsId            AS GoodsId

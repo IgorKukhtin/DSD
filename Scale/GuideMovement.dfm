@@ -38,7 +38,7 @@ object GuideMovementForm: TGuideMovementForm
         Top = 3
         Width = 31
         Height = 29
-        Hint = #1042#1099#1093#1086#1076
+        Action = actExit
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
@@ -50,14 +50,13 @@ object GuideMovementForm: TGuideMovementForm
           8888888888884444888888888888488488888888888844448888}
         ParentShowHint = False
         ShowHint = True
-        OnClick = ButtonExitClick
       end
-      object ButtonRefresh: TSpeedButton
+      object bbRefresh: TSpeedButton
         Left = 306
         Top = 3
         Width = 31
         Height = 29
-        Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+        Action = actRefresh
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
@@ -69,14 +68,13 @@ object GuideMovementForm: TGuideMovementForm
           0FF07770B00FFFFF0F077709070FFFFF00777770770000000777}
         ParentShowHint = False
         ShowHint = True
-        OnClick = ButtonRefreshClick
       end
-      object ButtonChoiceItem: TSpeedButton
+      object bbChoice: TSpeedButton
         Left = 67
         Top = 3
         Width = 31
         Height = 29
-        Hint = #1042#1099#1073#1088#1072#1090#1100
+        Action = actChoice
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
@@ -88,7 +86,6 @@ object GuideMovementForm: TGuideMovementForm
           9188888888888888898888888888888888988888888888888888}
         ParentShowHint = False
         ShowHint = True
-        OnClick = ButtonChoiceItemClick
       end
     end
     object cxDBGrid: TcxGrid
@@ -99,7 +96,6 @@ object GuideMovementForm: TGuideMovementForm
       Align = alClient
       TabOrder = 1
       object cxDBGridDBTableView: TcxGridDBTableView
-        OnDblClick = cxDBGridDBTableViewDblClick
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
         DataController.Summary.DefaultGroupSummaryItems = <>
@@ -362,9 +358,10 @@ object GuideMovementForm: TGuideMovementForm
         Left = 7
         Top = 16
         EditValue = 42005d
-        Properties.ReadOnly = True
+        Properties.ReadOnly = False
         Properties.SaveTime = False
         Properties.ShowTime = False
+        Properties.OnChange = deEndPropertiesChange
         TabOrder = 0
         Width = 110
       end
@@ -381,9 +378,10 @@ object GuideMovementForm: TGuideMovementForm
         Left = 7
         Top = 16
         EditValue = 42005d
-        Properties.ReadOnly = True
+        Properties.ReadOnly = False
         Properties.SaveTime = False
         Properties.ShowTime = False
+        Properties.OnChange = deStartPropertiesChange
         TabOrder = 0
         Width = 110
       end
@@ -426,5 +424,41 @@ object GuideMovementForm: TGuideMovementForm
     DataSet = CDS
     Left = 192
     Top = 424
+  end
+  object DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxDBGridDBTableView
+    OnDblClickActionList = <
+      item
+        Action = actChoice
+      end>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 408
+    Top = 392
+  end
+  object ActionList: TActionList
+    Left = 384
+    Top = 168
+    object actRefresh: TAction
+      Category = 'ScaleLib'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      OnExecute = actRefreshExecute
+    end
+    object actChoice: TAction
+      Category = 'ScaleLib'
+      Hint = #1042#1099#1073#1086#1088' '#1079#1085#1072#1095#1077#1085#1080#1103
+      OnExecute = actChoiceExecute
+    end
+    object actExit: TAction
+      Category = 'ScaleLib'
+      Hint = #1042#1099#1093#1086#1076
+      OnExecute = actExitExecute
+    end
   end
 end

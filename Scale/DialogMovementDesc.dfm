@@ -26,7 +26,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 651
     object Panel1: TPanel
       Left = 0
       Top = 25
@@ -36,8 +35,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
       Alignment = taLeftJustify
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitTop = 27
-      ExplicitHeight = 44
       object Panel5: TPanel
         Left = 0
         Top = 0
@@ -47,8 +44,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 0
-        ExplicitWidth = 179
-        ExplicitHeight = 44
         object ScaleLabel: TLabel
           Left = 1
           Top = 1
@@ -56,20 +51,18 @@ object DialogMovementDescForm: TDialogMovementDescForm
           Height = 16
           Align = alTop
           Caption = '  '#1053#1086#1084#1077#1088' '#1079#1072#1103#1074#1082#1080' / '#1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080
-          ExplicitLeft = 0
-          ExplicitTop = 3
-          ExplicitWidth = 207
+          ExplicitWidth = 183
         end
-        object EdiBarCode: TEdit
+        object EditBarCode: TEdit
           Left = 7
           Top = 19
           Width = 176
           Height = 24
           TabOrder = 0
-          Text = 'EdiBarCode'
-          OnChange = EdiBarCodeChange
-          OnEnter = EdiBarCodeEnter
-          OnExit = EdiBarCodeExit
+          Text = 'EditBarCode'
+          OnChange = EditBarCodeChange
+          OnEnter = EditBarCodeEnter
+          OnExit = EditBarCodeExit
         end
       end
     end
@@ -82,10 +75,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
       Alignment = taLeftJustify
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 264
-      ExplicitTop = 27
-      ExplicitWidth = 658
-      ExplicitHeight = 44
       object Panel3: TPanel
         Left = 0
         Top = 0
@@ -95,7 +84,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 0
-        ExplicitHeight = 44
         object Label2: TLabel
           Left = 1
           Top = 1
@@ -103,8 +91,7 @@ object DialogMovementDescForm: TDialogMovementDescForm
           Height = 16
           Align = alTop
           Caption = '  '#1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-          ExplicitLeft = 6
-          ExplicitTop = -3
+          ExplicitWidth = 105
         end
         object EditPartnerCode: TcxButtonEdit
           Left = 6
@@ -133,8 +120,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 1
-        ExplicitWidth = 363
-        ExplicitHeight = 44
         object Label3: TLabel
           Left = 1
           Top = 1
@@ -161,8 +146,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 361
-          ExplicitHeight = 26
         end
       end
     end
@@ -183,7 +166,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 2
-      ExplicitTop = -5
     end
   end
   object Panel6: TPanel
@@ -195,7 +177,6 @@ object DialogMovementDescForm: TDialogMovementDescForm
     Alignment = taLeftJustify
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 651
     object DBGrid: TDBGrid
       Left = 0
       Top = 0

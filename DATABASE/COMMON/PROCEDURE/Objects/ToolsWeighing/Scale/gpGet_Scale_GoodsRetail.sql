@@ -1,0 +1,204 @@
+-- Function: gpGet_Scale_GoodsRetail()
+
+DROP FUNCTION IF EXISTS gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpGet_Scale_GoodsRetail(
+    IN inBarCode               TVarChar,
+    IN inGoodsPropertyId       Integer,
+    IN inOperDate              TDateTime,
+    IN inOrderExternalId       Integer,
+    IN inPriceListId           Integer,
+    IN inSession               TVarChar      -- сессия пользователя
+)
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
+             , MeasureId Integer, MeasureName TVarChar
+             , RealWeight TFloat
+             , ChangePercentAmount TFloat
+             , CountTare TFloat
+             , WeightTare TFloat
+             , Price TFloat
+             , CountForPrice TFloat
+             , Price_Return TFloat
+             , CountForPrice_Return TFloat
+              )
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   -- vbUserId:= lpGetUserBySession (inSession);
+
+    -- Результат - по заявке
+    RETURN QUERY
+       WITH tmpGoodsProperty AS (SELECT Object_GoodsProperty.Id            AS GoodsPropertyId
+                                      , ObjectFloat_StartPosInt.ValueData  AS StartPosInt
+                                      , ObjectFloat_EndPosInt.ValueData    AS EndPosInt
+                                      , ObjectFloat_StartPosFrac.ValueData AS StartPosFrac
+                                      , ObjectFloat_EndPosFrac.ValueData   AS EndPosFrac
+                                      , zfFormat_BarCodeShort (inBarCode)  AS BarCodeShort_sht
+                                      , zfFormat_BarCodeShort (SUBSTRING (inBarCode FROM 1 FOR (ObjectFloat_StartPosInt.ValueData - 1) :: Integer)) AS BarCodeShort
+                                 FROM Object AS Object_GoodsProperty
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_StartPosInt
+                                                            ON ObjectFloat_StartPosInt.ObjectId = Object_GoodsProperty.Id
+                                                           AND ObjectFloat_StartPosInt.DescId = zc_ObjectFloat_GoodsProperty_StartPosInt()
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_EndPosInt
+                                                            ON ObjectFloat_EndPosInt.ObjectId = Object_GoodsProperty.Id
+                                                           AND ObjectFloat_EndPosInt.DescId = zc_ObjectFloat_GoodsProperty_EndPosInt()
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_StartPosFrac
+                                                            ON ObjectFloat_StartPosFrac.ObjectId = Object_GoodsProperty.Id
+                                                           AND ObjectFloat_StartPosFrac.DescId = zc_ObjectFloat_GoodsProperty_StartPosFrac()
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_EndPosFrac
+                                                            ON ObjectFloat_EndPosFrac.ObjectId = Object_GoodsProperty.Id
+                                                           AND ObjectFloat_EndPosFrac.DescId = zc_ObjectFloat_GoodsProperty_EndPosFrac()
+                                 WHERE Object_GoodsProperty.Id = inGoodsPropertyId
+                                   AND Object_GoodsProperty.DescId = zc_Object_GoodsProperty()
+                                )
+       , tmpGoodsPropertyValue_sht AS (SELECT tmpGoodsProperty.StartPosInt
+                                            , tmpGoodsProperty.EndPosInt
+                                            , tmpGoodsProperty.StartPosFrac
+                                            , tmpGoodsProperty.EndPosFrac
+                                            , ObjectString_BarCodeShort.ObjectId AS Id
+                                       FROM tmpGoodsProperty
+                                            INNER JOIN ObjectString AS ObjectString_BarCodeShort
+                                                                    ON ObjectString_BarCodeShort.ValueData = tmpGoodsProperty.BarCodeShort_sht
+                                                                   AND ObjectString_BarCodeShort.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeShort()
+                                            INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                  ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectString_BarCodeShort.ObjectId
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                       LIMIT 1
+                                      )
+        , tmpGoodsPropertyValue_kg AS (SELECT tmpGoodsProperty.StartPosInt
+                                            , tmpGoodsProperty.EndPosInt
+                                            , tmpGoodsProperty.StartPosFrac
+                                            , tmpGoodsProperty.EndPosFrac
+                                            , ObjectString_BarCodeShort.ObjectId AS Id
+                                       FROM tmpGoodsProperty
+                                            INNER JOIN ObjectString AS ObjectString_BarCodeShort
+                                                                    ON ObjectString_BarCodeShort.ValueData = tmpGoodsProperty.BarCodeShort
+                                                                   AND ObjectString_BarCodeShort.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeShort()
+                                            INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                  ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectString_BarCodeShort.ObjectId
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                       LIMIT 1
+                                      )
+           , tmpGoodsPropertyValue AS (SELECT tmpGoodsPropertyValue_sht.StartPosInt
+                                            , tmpGoodsPropertyValue_sht.EndPosInt
+                                            , tmpGoodsPropertyValue_sht.StartPosFrac
+                                            , tmpGoodsPropertyValue_sht.EndPosFrac
+                                            , tmpGoodsPropertyValue_sht.Id
+                                            , ObjectLink_Goods.ChildObjectId         AS GoodsId
+                                            , ObjectLink_Goods_Measure.ChildObjectId AS MeasureId
+                                       FROM tmpGoodsPropertyValue_sht
+                                            LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                                 ON ObjectLink_Goods.ObjectId = tmpGoodsPropertyValue_sht.Id
+                                                                AND ObjectLink_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                                 ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                       WHERE ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                      UNION ALL
+                                       SELECT tmpGoodsPropertyValue_kg.StartPosInt
+                                            , tmpGoodsPropertyValue_kg.EndPosInt
+                                            , tmpGoodsPropertyValue_kg.StartPosFrac
+                                            , tmpGoodsPropertyValue_kg.EndPosFrac
+                                            , tmpGoodsPropertyValue_kg.Id
+                                            , ObjectLink_Goods.ChildObjectId         AS GoodsId
+                                            , ObjectLink_Goods_Measure.ChildObjectId AS MeasureId
+                                       FROM tmpGoodsPropertyValue_kg
+                                            LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                                 ON ObjectLink_Goods.ObjectId = tmpGoodsPropertyValue_kg.Id
+                                                                AND ObjectLink_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                                 ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                       WHERE COALESCE (ObjectLink_Goods_Measure.ChildObjectId, 0) <> zc_Measure_Sh()
+                                      )
+
+           , tmpGoods AS (SELECT tmpGoodsPropertyValue.GoodsId
+                               , tmpGoodsPropertyValue.MeasureId
+                               , COALESCE (ObjectLink_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                               , CASE WHEN tmpGoodsPropertyValue.MeasureId = zc_Measure_Sh()
+                                           THEN ObjectFloat_Amount.ValueData :: TVarChar
+                                      ELSE SUBSTRING (inBarCode FROM tmpGoodsPropertyValue.StartPosInt :: Integer FOR (1 + tmpGoodsPropertyValue.EndPosInt - tmpGoodsPropertyValue.StartPosInt) :: Integer)
+                                        || '.'
+                                        || SUBSTRING (inBarCode FROM tmpGoodsPropertyValue.StartPosFrac :: Integer FOR (1 + tmpGoodsPropertyValue.EndPosFrac - tmpGoodsPropertyValue.StartPosFrac) :: Integer)
+                                 END AS RealWeight_str
+                          FROM tmpGoodsPropertyValue
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                                     ON ObjectFloat_Amount.ObjectId = tmpGoodsPropertyValue.Id
+                                                    AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+                               LEFT JOIN ObjectLink AS ObjectLink_GoodsKind
+                                                    ON ObjectLink_GoodsKind.ObjectId = tmpGoodsPropertyValue.Id
+                                                   AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                         )
+
+          , tmpMI_Order AS (SELECT MovementItem.ObjectId                 AS GoodsId
+                                 , COALESCE (MIFloat_Price.ValueData, 0) AS Price
+                                 , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+                            FROM MovementItem
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                 INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+                                                    AND tmpGoods.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                             ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                            WHERE MovementItem.MovementId = inOrderExternalId
+                              AND MovementItem.DescId     = zc_MI_Master()
+                              AND MovementItem.isErased   = FALSE
+                            LIMIT 1
+                           )
+             , tmpPrice AS (SELECT tmp.GoodsId
+                                 , tmp.ValuePrice AS Price
+                                 , 1              AS CountForPrice
+                            FROM lpGet_ObjectHistory_PriceListItem (inOperDate    := inOperDate
+                                                                  , inPriceListId := inPriceListId
+                                                                  , inGoodsId     := (SELECT tmpGoods.GoodsId FROM tmpGoods LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmpGoods.GoodsId WHERE tmpMI_Order.GoodsId IS NULL)
+                                                                   ) AS tmp
+                           )
+       -- Результат - по заявке
+       SELECT Object_Goods.Id                   AS GoodsId
+            , Object_Goods.ObjectCode           AS GoodsCode
+            , Object_Goods.ValueData            AS GoodsName
+            , Object_GoodsKind.Id               AS GoodsKindId
+            , Object_GoodsKind.ObjectCode       AS GoodsKindCode
+            , Object_GoodsKind.ValueData        AS GoodsKindName
+            , Object_Measure.Id                 AS MeasureId
+            , Object_Measure.ValueData          AS MeasureName
+            , tmpGoods.RealWeight_str :: TFloat AS RealWeight
+            , 0 :: TFloat                       AS ChangePercentAmount
+            , 0 :: TFloat                       AS CountTare
+            , 0 :: TFloat                       AS WeightTare
+            , COALESCE (tmpMI_Order.Price, tmpPrice.Price)                 :: TFloat AS Price
+            , COALESCE (tmpMI_Order.CountForPrice, tmpPrice.CountForPrice) :: TFloat AS CountForPrice
+            , 0 :: TFloat                       AS Price_Return
+            , 0 :: TFloat                       AS CountForPrice_Return
+       FROM tmpGoods
+            LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpGoods.MeasureId
+      ;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.05.15                                        *
+*/
+
+-- тест
+-- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036501886', inGoodsPropertyId:=83956, inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inSession:=zfCalc_UserAdmin())

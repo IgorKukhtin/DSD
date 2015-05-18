@@ -23,7 +23,7 @@ type
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
 
-    function gpGet_Scale_Movement(var execParamsMovement:TParams): Boolean;
+    function gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
 
     function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
     function gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
@@ -32,6 +32,8 @@ type
     function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
 
     function gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
+
+    function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
   end;
 
   function gpInitialize_OperDate(var execParams:TParams):TDateTime;
@@ -60,10 +62,10 @@ begin
     //
     gpInitialize_OperDate(ParamsMovement);
     //
-    Result:=DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement);
+    Result:=DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpGet_Scale_Movement(var execParamsMovement:TParams): Boolean;
+function TDMMainScaleForm.gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
 begin
     Result:=false;
 
@@ -72,20 +74,29 @@ begin
        StoredProcName:='gpGet_Scale_Movement';
        OutputType:=otDataSet;
        Params.Clear;
+
+       if (isLast = FALSE) or (isNext = TRUE)
+       then Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger)
+       else Params.AddParam('inMovementId', ftInteger, ptInput, 0);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inIsNext', ftBoolean, ptInput, isNext);
 
        //try
          Execute;
 
+       //!!!выход, пока обрабатывается эта ошибка только в одном месте!!!
+       if DataSet.RecordCount<>1 then begin Result:=false;exit;end;
+
+
        with execParamsMovement do
        begin
-         ParamsMovement.ParamByName('MovementId_begin').AsInteger:= 0;
+         ParamByName('MovementId_begin').AsInteger:= 0;
 
-         ParamsMovement.ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
-         ParamsMovement.ParamByName('InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
-         ParamsMovement.ParamByName('OperDate_Movement').asDateTime:= DataSet.FieldByName('OperDate').asDateTime;
+         ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+         ParamByName('InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
+         ParamByName('OperDate_Movement').asDateTime:= DataSet.FieldByName('OperDate').asDateTime;
 
-         ParamsMovement.ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
+         ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
          ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
          ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
@@ -164,7 +175,7 @@ end;
 function TDMMainScaleForm.gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
-    if ParamsMovement.ParamByName('MovementId').AsInteger<>0 then
+    if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
     with spSelect do begin
        StoredProcName:='gpUpdate_Scale_Movement_check';
        OutputType:=otDataSet;
@@ -178,6 +189,27 @@ begin
          ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
        end;}
     end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_MIFloat';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, execParams.ParamByName('inMovementItemId').AsInteger);
+       Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
+       Params.AddParam('inValueData', ftFloat, ptInput, execParams.ParamByName('inValueData').AsFloat);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MIFloat');
+       end;}
+    end;
+    Result:=true;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
@@ -256,6 +288,9 @@ begin
        Params.AddParam('inCountForPrice', ftFloat, ptInput, execParamsMI.ParamByName('CountForPrice').AsFloat);
        Params.AddParam('inCountForPrice_Return', ftFloat, ptInput, execParamsMI.ParamByName('CountForPrice_Return').AsFloat);
        Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn')));
+       Params.AddParam('inCount', ftFloat, ptInput, execParamsMI.ParamByName('Count').AsFloat);
+       Params.AddParam('inHeadCount', ftFloat, ptInput, execParamsMI.ParamByName('HeadCount').AsFloat);
+       Params.AddParam('inPartionGoods', ftString, ptInput, execParamsMI.ParamByName('PartionGoods').AsString);
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        //try
          Execute;
@@ -329,6 +364,10 @@ begin
        //try
          Execute;
          Result := DataSet.FieldByName('UserName').asString;
+         //
+         UserId_begin := DataSet.FieldByName('UserId').asInteger;
+         UserName_begin := DataSet.FieldByName('UserName').asString;
+
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
@@ -389,6 +428,7 @@ function TDMMainScaleForm.gpGet_Scale_Goods(var execParams:TParams;inBarCode:Str
 begin
     with spSelect do
     begin
+       //в ШК - Id товара или товар+вид товара
        StoredProcName:='gpGet_Scale_Goods';
        OutputType:=otDataSet;
        Params.Clear;
@@ -421,15 +461,25 @@ function TDMMainScaleForm.gpGet_Scale_GoodsRetail(var execParamsMovement:TParams
 begin
     with spSelect do
     begin
+       //в ШК - закодированый товар + кол-во, т.е. для Retail
        StoredProcName:='gpGet_Scale_GoodsRetail';
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
        Params.AddParam('inGoodsPropertyId', ftInteger, ptInput, execParamsMovement.ParamByName('GoodsPropertyId').AsInteger);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inOrderExternalId', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
+       Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        //try
          Execute;
          //
          Result:=DataSet.RecordCount<>0;
+         if not Result then
+         begin
+              ShowMessage('Ошибка.'+#10+#13+'Данные для <'+execParamsMovement.ParamByName('GoodsPropertyName').AsString+'> по штих коду <'+inBarCode+'> не определены.');
+              exit;
+         end;
+
        with execParams do
        begin
          ParamByName('GoodsId').AsInteger  := DataSet.FieldByName('GoodsId').AsInteger;
@@ -716,6 +766,12 @@ begin
          Params.ParamByName('inSqlText').Value:='SELECT zc_BarCodePref_MI() :: TVarChar';
          Execute;
          zc_BarCodePref_MI:=DataSet.FieldByName('Value').asString;
+
+         // Доходы + Мясное сырье + Мясное сырье
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_InfoMoney_30201() :: TVarChar';
+         Execute;
+         zc_Enum_InfoMoney_30201:=DataSet.FieldByName('Value').asInteger;
+
 
        {except
          result.Code := Code;
