@@ -323,7 +323,7 @@ begin
           if PriceWithVAT then
              Price := gfStrToFloat(ElementList[19])
           else
-             Price := gfStrToFloat(ElementList[20]) / gfStrToFloat(ElementList[15]);
+             Price := gfStrToFloat(AnsiReplaceStr(ElementList[20], ' ', '')) / gfStrToFloat(AnsiReplaceStr(ElementList[15], ' ', ''));
           ElementList[13] := trim(ElementList[13]);
           if (ElementList[13] = '') or (ElementList[13] = '.  .') then
              ExpirationDate := OperDate + 365
@@ -361,7 +361,7 @@ begin
             else
                FieldByName('FEA').AsString := ElementList[21]; // КВЭД
             FieldByName('MeasureName').AsString := ElementList[14]; // Ед Изм
-            FieldByName('Amount').AsFloat := gfStrToFloat(ElementList[15]);    // Количество
+            FieldByName('Amount').AsFloat := gfStrToFloat(ReplaceStr(ElementList[15], ' ', ''));    // Количество
             FieldByName('Price').AsFloat  := Price;    // Цена Отпускная (для аптеки это закупочная)
             Post;
           end;
