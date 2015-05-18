@@ -189,26 +189,20 @@ type
     SummEnd_calc: TcxGridDBColumn;
     CountProductionIn_by: TcxGridDBColumn;
     SummProductionIn_by: TcxGridDBColumn;
-    CountIn_by1: TcxGridDBColumn;
-    SummIn_by1: TcxGridDBColumn;
+    CountIn_by: TcxGridDBColumn;
+    SummIn_by: TcxGridDBColumn;
     CountOtherIn_by: TcxGridDBColumn;
     SummOtherIn_by: TcxGridDBColumn;
-    CountOut_by1: TcxGridDBColumn;
-    SummOut_by1: TcxGridDBColumn;
+    CountOut_by: TcxGridDBColumn;
+    SummOut_by: TcxGridDBColumn;
     CountOtherOut_by: TcxGridDBColumn;
     SummOtherOut_by: TcxGridDBColumn;
     CountEnd_calc_Weight: TcxGridDBColumn;
     CountProductionIn_by_Weight: TcxGridDBColumn;
-    CountIn_by1_Weight: TcxGridDBColumn;
+    CountIn_by_Weight: TcxGridDBColumn;
     CountOtherIn_by_Weight: TcxGridDBColumn;
-    CountOut_by1_Weight: TcxGridDBColumn;
+    CountOut_by_Weight: TcxGridDBColumn;
     CountOtherOut_by_Weight: TcxGridDBColumn;
-    CountIn_by2: TcxGridDBColumn;
-    CountIn_by2_Weight: TcxGridDBColumn;
-    SummIn_by2: TcxGridDBColumn;
-    CountOut_by2: TcxGridDBColumn;
-    CountOut_by2_Weight: TcxGridDBColumn;
-    SummOut_by2: TcxGridDBColumn;
   private
   public
   end;
