@@ -4,13 +4,15 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons
- ,UtilScale, Datasnap.DBClient, dsdDB, cxGraphics, cxControls, cxLookAndFeels,
+  Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons,
+  Datasnap.DBClient, dsdDB, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
   dxSkinsDefaultPainters, cxTextEdit, cxCurrencyEdit, cxStyles,
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxClasses, cxGridCustomView, cxGrid,DataModul;
+  cxClasses, cxGridCustomView, cxGrid,dsdAddOn, Vcl.ActnList,
+  dsdAction
+ ,UtilScale,DataModul;
 
 type
   TGuidePartnerForm = class(TForm)
@@ -19,9 +21,9 @@ type
     SummPanel: TPanel;
     DataSource: TDataSource;
     ButtonPanel: TPanel;
-    ButtonExit: TSpeedButton;
-    ButtonRefresh: TSpeedButton;
-    ButtonChoiceItem: TSpeedButton;
+    bbExit: TSpeedButton;
+    bbRefresh: TSpeedButton;
+    bbChoice: TSpeedButton;
     spSelect: TdsdStoredProc;
     CDS: TClientDataSet;
     gbPartnerCode: TGroupBox;
@@ -42,13 +44,15 @@ type
     ChangePercentAmount: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
+    DBViewAddOn: TdsdDBViewAddOn;
+    ActionList: TActionList;
+    actRefresh: TAction;
+    actChoice: TAction;
+    actExit: TAction;
     procedure FormCreate(Sender: TObject);
-    procedure ButtonRefreshClick(Sender: TObject);
-    procedure ButtonExitClick(Sender: TObject);
     procedure EditPartnerNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure ButtonChoiceItemClick(Sender: TObject);
     procedure EditPartnerCodeKeyPress(Sender: TObject; var Key: Char);
     procedure EditPartnerCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -60,7 +64,9 @@ type
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure EditPartnerNameKeyPress(Sender: TObject; var Key: Char);
     procedure FormDestroy(Sender: TObject);
-    procedure cxDBGridDBTableViewDblClick(Sender: TObject);
+    procedure actRefreshExecute(Sender: TObject);
+    procedure actChoiceExecute(Sender: TObject);
+    procedure actExitExecute(Sender: TObject);
   private
     fEnterPartnerCode:Boolean;
     fEnterPartnerName:Boolean;
@@ -112,17 +118,17 @@ begin
     if Key=13
     then
         if (ActiveControl=cxDBGrid)and(CDS.RecordCount>0)
-        then ButtonChoiceItemClick(Self)
+        then actChoiceExecute(Self)
         else begin
                   if (CDS.RecordCount=1)
-                  then ButtonChoiceItemClick(Self)
+                  then actChoiceExecute(Self)
                   else if (ActiveControl=EditPartnerCode)
                        then ActiveControl:=EditPartnerName
                        else if (ActiveControl=EditPartnerName)
                             then ActiveControl:=EditPartnerCode;
         end;
 
-    if Key=27 then Close;
+    if Key=27 then actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuidePartnerForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
@@ -232,12 +238,7 @@ end;
 procedure TGuidePartnerForm.EditPartnerNameKeyPress(Sender: TObject; var Key: Char);
 begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
-procedure TGuidePartnerForm.cxDBGridDBTableViewDblClick(Sender: TObject);
-begin
-     ButtonChoiceItemClick(Self);
-end;
-{------------------------------------------------------------------------------}
-procedure TGuidePartnerForm.ButtonRefreshClick(Sender: TObject);
+procedure TGuidePartnerForm.actRefreshExecute(Sender: TObject);
 var PartnerId:String;
 begin
     with spSelect do begin
@@ -248,13 +249,15 @@ begin
     end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuidePartnerForm.ButtonChoiceItemClick(Sender: TObject);
+procedure TGuidePartnerForm.actChoiceExecute(Sender: TObject);
 begin
      if Checked then ModalResult:=mrOK;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuidePartnerForm.ButtonExitClick(Sender: TObject);
-begin Close end;
+procedure TGuidePartnerForm.actExitExecute(Sender: TObject);
+begin
+     Close;
+end;
 {------------------------------------------------------------------------------}
 procedure TGuidePartnerForm.FormCreate(Sender: TObject);
 var i:Integer;

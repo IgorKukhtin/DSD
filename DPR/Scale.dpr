@@ -70,7 +70,10 @@ uses
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm},
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm};
+  GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
+  DialogWeight in '..\Scale\DialogWeight.pas' {DialogWeightForm},
+  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm: TParentForm},
+  DialogPersonalComplete in '..\Scale\DialogPersonalComplete.pas' {DialogPersonalCompleteForm};
 
 {$R *.res}
 
@@ -86,8 +89,8 @@ begin
          TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
          //TUpdater.AutomaticUpdateProgram;
          //
-         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  Application.CreateForm(TdmMain, dmMain);
+         Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -96,6 +99,8 @@ begin
          Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
+         Application.CreateForm(TDialogWeightForm, DialogWeightForm);
+         Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
   end
   else
 
@@ -107,6 +112,7 @@ begin
     begin
          TUpdater.AutomaticUpdateProgram;
          //
+         Application.CreateForm(TdmMain, dmMain);
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
@@ -116,6 +122,8 @@ begin
          Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
+         Application.CreateForm(TDialogWeightForm, DialogWeightForm);
+         Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
   end;
   //
   Application.Run;

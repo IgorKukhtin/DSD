@@ -4,13 +4,14 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons
- ,UtilScale, Datasnap.DBClient, dsdDB, cxGraphics, cxControls, cxLookAndFeels,
+  Dialogs, DB, DBTables, StdCtrls, ExtCtrls, Grids, DBGrids, Buttons,
+  Datasnap.DBClient, dsdDB, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
-  dxSkinsDefaultPainters, cxTextEdit, cxCurrencyEdit,DataModul, cxStyles,
+  dxSkinsDefaultPainters, cxTextEdit, cxCurrencyEdit,cxStyles,
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxClasses, cxGridCustomView, cxGrid, dsdAddOn;
+  cxClasses, cxGridCustomView, cxGrid, dsdAddOn, Vcl.ActnList, dsdAction
+ ,UtilScale,DataModul;
 
 type
   TGuideGoodsForm = class(TForm)
@@ -41,9 +42,9 @@ type
     gbChangePercentAmountCode: TGroupBox;
     EditChangePercentAmountCode: TEdit;
     ButtonPanel: TPanel;
-    ButtonExit: TSpeedButton;
-    ButtonRefresh: TSpeedButton;
-    ButtonSaveAllItem: TSpeedButton;
+    bbExit: TSpeedButton;
+    bbRefresh: TSpeedButton;
+    bbSave: TSpeedButton;
     infoPanelGoodsKind: TPanel;
     rgGoodsKind: TRadioGroup;
     gbGoodsKindCode: TGroupBox;
@@ -70,13 +71,15 @@ type
     cxDBGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
     Color_calc: TcxGridDBColumn;
+    ActionList: TActionList;
+    actRefresh: TAction;
+    actChoice: TAction;
+    actExit: TAction;
+    actSave: TAction;
     procedure FormCreate(Sender: TObject);
-    procedure ButtonRefreshClick(Sender: TObject);
-    procedure ButtonExitClick(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure ButtonSaveAllItemClick(Sender: TObject);
     procedure EditGoodsCodeKeyPress(Sender: TObject; var Key: Char);
     procedure EditGoodsCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -116,7 +119,10 @@ type
       Shift: TShiftState);
     procedure DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
-    procedure cxDBGridDBTableViewDblClick(Sender: TObject);
+    procedure actRefreshExecute(Sender: TObject);
+    procedure actChoiceExecute(Sender: TObject);
+    procedure actExitExecute(Sender: TObject);
+    procedure actSaveExecute(Sender: TObject);
   private
     fStartWrite:Boolean;
     fEnterGoodsCode:Boolean;
@@ -130,7 +136,7 @@ type
     procedure InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
     procedure InitializePriceList(execParams:TParams);
   public
-    GoodsWeight:Double;
+    //GoodsWeight:Double;
     function Execute(execParamsMovement:TParams): boolean;
   end;
 
@@ -141,7 +147,7 @@ implementation
 
 {$R *.dfm}
 
- uses dmMainScale;
+ uses dmMainScale, Main,DialogWeight;
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Execute(execParamsMovement:TParams): boolean;
 begin
@@ -288,7 +294,7 @@ begin
                 else if (ActiveControl=EditGoodsName)
                      then ActiveControl:=EditGoodsCode
                      else if (ActiveControl=cxDBGrid)and(CDS.RecordCount>0)
-                          then cxDBGridDBTableViewDblClick(cxDBGrid)
+                          then actChoiceExecute(cxDBGrid)
 
       else if ActiveControl=EditGoodsKindCode then ActiveControl:=EditTareCount
            else if ActiveControl=EditTareCount then ActiveControl:=EditTareWeightCode
@@ -296,15 +302,15 @@ begin
                                                         then ActiveControl:=EditTareWeightEnter
                                                         else ActiveControl:=EditChangePercentAmountCode
                      else if ActiveControl=EditTareWeightEnter then ActiveControl:=EditChangePercentAmountCode
-                          else if ActiveControl=EditChangePercentAmountCode then ButtonSaveAllItemClick(Self) //ActiveControl:=EditPriceListCode
-                               else if ActiveControl=EditPriceListCode then ButtonSaveAllItemClick(Self);
+                          else if ActiveControl=EditChangePercentAmountCode then actSaveExecute(Self) //ActiveControl:=EditPriceListCode
+                               else if ActiveControl=EditPriceListCode then actSaveExecute(Self);
     end;
     //
     {if Key=32 then
       if ActiveControl=EditGoodsCode then ActiveControl:=EditGoodsName
       else if ActiveControl=EditGoodsName then ActiveControl:=EditGoodsCode;}
     //
-    if Key=27 then Close;
+    if Key=27 then actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
@@ -344,6 +350,7 @@ begin
 end;
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Checked: boolean; //Проверка корректного ввода в Edit
+var WeightReal_check:Double;
 begin
      Result:=(CDS.RecordCount=1)
           and(rgGoodsKind.ItemIndex>=0)
@@ -401,7 +408,41 @@ begin
      end;
      //
      //Save MI
-     if Result then Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
+     if Result = TRUE then
+     begin
+          //если не ШТ, проверка стабильности - т.е. вес такой же как и был
+          if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Sh
+          then begin
+                    //получили еще раз
+                    WeightReal_check:=MainForm.fGetScale_CurrentWeight;
+                    //если вдруг погрешность больше 0.1
+                    if abs(WeightReal_check-ParamsMI.ParamByName('RealWeight').AsFloat)>0.1
+                    then
+                        with DialogWeightForm do
+                        begin
+                             rgWeight.Items.Add(FloatToStr(ParamsMI.ParamByName('RealWeight').AsFloat)+' кг');
+                             rgWeight.Items.Add(FloatToStr(WeightReal_check)+' кг');
+                             rgWeight.ItemIndex:=1;
+                             if Execute then
+                               if rgWeight.ItemIndex=1
+                               then begin
+                                         //ПРОВЕРКА WeightReal_check - Количество (склад) с учетом тары
+                                         Result:=(WeightReal_check-ParamsMI.ParamByName('CountTare').AsFloat*ParamsMI.ParamByName('WeightTare').AsFloat)>0;
+                                         if not Result then
+                                         begin
+                                              ShowMessage('Ошибка.Количество за минусом тары не может быть меньше 0.');
+                                              exit;
+                                         end;
+                                         //!!!меняется на новый "стабильный" вес!!!
+                                         ParamsMI.ParamByName('RealWeight').AsFloat:=WeightReal_check;
+                                    end
+                                else // ничего не делаем, остался 1-ый выриант
+                             else begin Result:=FALSE; exit;end; // из двух вариантов ничего не выбрали, остаемся в форме
+                        end;
+          end;
+          //сохранение MovementItem
+          Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeChange(Sender: TObject);
@@ -839,7 +880,35 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.cxDBGridDBTableViewDblClick(Sender: TObject);
+procedure TGuideGoodsForm.DBGridDrawColumnCell(Sender: TObject;const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+{     if (AnsiUpperCase(Column.Field.FieldName)=AnsiUpperCase('Amount_diff'))
+       and((CDS.FieldByName('Amount_diff').AsFloat>0)or(CDS.FieldByName('isTax_diff').AsBoolean = true))
+     then
+     with (Sender as TDBGrid).Canvas do
+     begin
+          if CDS.FieldByName('isTax_diff').AsBoolean = true then Font.Color:=clBlue;
+          if CDS.FieldByName('Amount_diff').AsFloat > 0 then Font.Color:=clRed;
+
+          FillRect(Rect);
+          if (Column.Alignment=taLeftJustify)or(Rect.Left>=Rect.Right - LengTh(Column.Field.Text))
+          then TextOut(Rect.Left+2, Rect.Top+2, Column.Field.Text)
+          else TextOut(Rect.Right - TextWidth(Column.Field.Text) - 2, Rect.Top+2 , Column.Field.Text);
+     end;}
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.actRefreshExecute(Sender: TObject);
+var GoodsCode:String;
+begin
+    with spSelect do begin
+        GoodsCode:= DataSet.FieldByName('GoodsCode').AsString;
+        Execute;
+        if GoodsCode <> '' then
+          DataSet.Locate('GoodsCode',GoodsCode,[loCaseInsensitive]);
+    end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.actChoiceExecute(Sender: TObject);
 begin
      EditGoodsCode.Text:=CDS.FieldByName('GoodsCode').AsString;
      fEnterGoodsCode:=true;
@@ -859,41 +928,13 @@ begin
           else ActiveControl:=EditTareCount;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.DBGridDrawColumnCell(Sender: TObject;const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
-begin
-{     if (AnsiUpperCase(Column.Field.FieldName)=AnsiUpperCase('Amount_diff'))
-       and((CDS.FieldByName('Amount_diff').AsFloat>0)or(CDS.FieldByName('isTax_diff').AsBoolean = true))
-     then
-     with (Sender as TDBGrid).Canvas do
-     begin
-          if CDS.FieldByName('isTax_diff').AsBoolean = true then Font.Color:=clBlue;
-          if CDS.FieldByName('Amount_diff').AsFloat > 0 then Font.Color:=clRed;
-
-          FillRect(Rect);
-          if (Column.Alignment=taLeftJustify)or(Rect.Left>=Rect.Right - LengTh(Column.Field.Text))
-          then TextOut(Rect.Left+2, Rect.Top+2, Column.Field.Text)
-          else TextOut(Rect.Right - TextWidth(Column.Field.Text) - 2, Rect.Top+2 , Column.Field.Text);
-     end;}
-end;
+procedure TGuideGoodsForm.actExitExecute(Sender: TObject);
+begin Close;end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.ButtonRefreshClick(Sender: TObject);
-var GoodsCode:String;
-begin
-    with spSelect do begin
-        GoodsCode:= DataSet.FieldByName('GoodsCode').AsString;
-        Execute;
-        if GoodsCode <> '' then
-          DataSet.Locate('GoodsCode',GoodsCode,[loCaseInsensitive]);
-    end;
-end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.ButtonSaveAllItemClick(Sender: TObject);
+procedure TGuideGoodsForm.actSaveExecute(Sender: TObject);
 begin
      if Checked then ModalResult:=mrOK;
 end;
-{------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.ButtonExitClick(Sender: TObject);
-begin Close end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.FormCreate(Sender: TObject);
 var i:Integer;

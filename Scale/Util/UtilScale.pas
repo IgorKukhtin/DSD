@@ -3,7 +3,7 @@ unit UtilScale;
 interface
 
 uses
-  System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient, Vcl.Dialogs,Forms;
+  System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient, Vcl.Dialogs,Forms,Vcl.StdCtrls;
 type
 
   TDBObject = record
@@ -39,6 +39,7 @@ type
     IndexScale_old:Integer;
   end;
 
+  function Recalc_PartionGoods(Edit:TEdit):Boolean;
 
   function GetArrayList_Value_byName   (ArrayList:TArrayList;Name:String):String;
   function GetArrayList_Index_byNumber (ArrayList:TArrayList;Number:Integer):Integer;
@@ -67,7 +68,12 @@ type
   procedure CopyValuesParamsFrom(var fromParams,toParams:TParams);
   procedure EmptyValuesParams(var execParams:TParams);
 
+  function CheckBarCode(BarCode:String):Boolean;
+
 var
+  UserId_begin : Integer;
+  UserName_begin : String;
+
   SettingMain   : TSettingMain;
   ParamsMovement: TParams;
   ParamsMI: TParams;
@@ -94,6 +100,8 @@ var
   zc_Movement_Inventory: Integer;
   zc_Movement_ProductionUnion: Integer;
   zc_Movement_ProductionSeparate: Integer;
+
+  zc_Enum_InfoMoney_30201: Integer; // Доходы + Мясное сырье + Мясное сырье
 
   zc_Measure_Sh: Integer;
   zc_Measure_Kg: Integer;
@@ -164,6 +172,8 @@ begin
 
      ParamAdd(Params,'MovementDescName_master',ftString);
 
+     ParamAdd(Params,'isComlete',ftString);//локальный параметр
+
      ParamAdd(Params,'TotalSumm',ftFloat);
 
 end;
@@ -184,8 +194,11 @@ begin
      ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва
      ParamAdd(Params,'Price',ftFloat);          //
      ParamAdd(Params,'Price_Return',ftFloat);          //
-     ParamAdd(Params,'CountForPrice',ftFloat);  //
-     ParamAdd(Params,'CountForPrice_Return',ftFloat);  //
+     ParamAdd(Params,'CountForPrice',ftFloat);         //
+     ParamAdd(Params,'CountForPrice_Return',ftFloat); //
+     ParamAdd(Params,'Count',ftFloat);                // Количество пакетов или Количество батонов
+     ParamAdd(Params,'HeadCount',ftFloat);            // Количество голов
+     ParamAdd(Params,'PartionGoods',ftString);        //
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_Value_byName(ArrayList:TArrayList;Name:String):String;
@@ -359,6 +372,146 @@ begin
          if execParams[i].DataType=ftString then execParams.ParamByName(Items[i].Name).AsString:='';
          if execParams[i].DataType=ftInteger then execParams.ParamByName(Items[i].Name).AsInteger:=0;
     end;
+end;
+{------------------------------------------------------------------------------}
+function CheckBarCode(BarCode:String):Boolean;
+var Summ:Integer;
+    Summ_show:String;
+begin
+     try Summ:=   StrToInt(BarCode[1])+StrToInt(BarCode[3])+StrToInt(BarCode[5])+StrToInt(BarCode[7])+StrToInt(BarCode[9])+StrToInt(BarCode[11])
+              +3*(StrToInt(BarCode[2])+StrToInt(BarCode[4])+StrToInt(BarCode[6])+StrToInt(BarCode[8])+StrToInt(BarCode[10])+StrToInt(BarCode[12]));
+     except Summ:=0;end;
+     Result:=(Summ<>0)and(LengTh(BarCode)=13);
+     if not Result then exit;
+     Summ:=Summ mod 10;
+     if Summ<>0 then Summ:=10-Summ;
+     Result:=BarCode[13]=IntToStr(Summ);
+
+     if UserId_begin = 5
+     then Summ_show:=IntToStr(Summ)
+     else Summ_show:='';
+
+     if not Result then ShowMessage('Ошибка в значении <Штрих код> = <'+BarCode+'>.('+Summ_show+')');
+end;
+{------------------------------------------------------------------------------}
+{------------------------------------------------------------------------------}
+{------------------------------------------------------------------------------}
+function zf_Calc_Word_bySeparate(myStr,Sep1,Sep2:String;myWordNumber:smallint):String;
+var i,finSeparate:Integer;
+    findIndex,findIndex_next:Integer;
+begin
+     if myWordNumber<=0 then begin Result:='';exit;end;
+     //
+     finSeparate:=0;
+     findIndex:=0;
+     findIndex_next:=0;
+     for i:=1 to LengTh(myStr) do begin
+        if (myStr[i]=Sep1)or(myStr[i]=Sep2) then finSeparate:=finSeparate+1;
+        if (finSeparate=myWordNumber-1)and(findIndex=0) then findIndex:=i;
+        if (finSeparate=myWordNumber)and(findIndex_next=0) then findIndex_next:=i;
+     end;
+     try
+        if myWordNumber=1 then if findIndex_next=0 then Result:=myStr else Result:=System.Copy(myStr,findIndex,findIndex_next-1)
+        else if (myWordNumber>finSeparate+1) then Result:=''
+             else if findIndex_next=0 then Result:=System.Copy(myStr,findIndex+1,LengTh(myStr)-findIndex)
+                  else Result:=System.Copy(myStr,findIndex+1,findIndex_next-findIndex-1);
+        except ShowMessage('zf_Calc_Word_bySeparate<'+myStr+'><'+IntToStr(myWordNumber)+'>');
+               Result:='';
+     end;
+end;
+{------------------------------------------------------------------------------}
+function zf_Calc_WordCount_bySeparate(myStr,Sep1,Sep2:String):smallint;
+var i:Integer;
+begin
+     Result:=0;
+     for i:=1 to LengTh(myStr) do
+        if (myStr[i]=Sep1)or(myStr[i]=Sep2) then Result:=Result+1;
+     //
+     if trim(myStr)<>'' then Result:=Result+1;
+end;
+{------------------------------------------------------------------------------}
+function myCalcPartionGoods(PartionStr:String):String;
+var myPartionDate,myClientStr,myGoodsMainStr,myOperInfoStr:String;
+    myDay_str,myMonth_str,myYear_str:String;
+    myDay,myMonth,myYear:Word;
+    myBillDate:TDateTime;
+    Year, Month, Day: Word;
+    myWordCount,myWordCountD:smallint;
+begin
+     PartionStr:=trim(PartionStr);
+     //
+     myWordCountD:=zf_Calc_WordCount_bySeparate(PartionStr,'.','xxxxxxxxx');
+     if myWordCountD=1 then
+     try
+         myWordCountD:=zf_Calc_WordCount_bySeparate(PartionStr,'-','xxxxxxxxx');
+         myMonth:=StrToInt(zf_Calc_Word_bySeparate(PartionStr,'-','.',myWordCountD));
+         myBillDate:=ParamsMovement.ParamByName('OperDate').AsDateTime;
+         DecodeDate(myBillDate, Year, Month, Day);
+         if Month>=myMonth then myYear:=Year else myYear:=Year-1;
+         PartionStr:=PartionStr+'-'+IntToStr(myYear)
+     except
+     end;
+     //
+     myWordCount:=zf_Calc_WordCount_bySeparate(PartionStr,'-','.');
+     //
+     myClientStr:=zf_Calc_Word_bySeparate(PartionStr,'-','.',myWordCount-3);//System.Copy(PartionStr,1,3);
+
+     myOperInfoStr:='';
+     if myWordCount=4
+     then myGoodsMainStr:=''
+     else if myWordCount=5
+          then myGoodsMainStr:=zf_Calc_Word_bySeparate(PartionStr,'-','.',1)
+          else if myWordCount=6
+               then begin myGoodsMainStr:=zf_Calc_Word_bySeparate(PartionStr,'-','.',2);
+                          myOperInfoStr:=zf_Calc_Word_bySeparate(PartionStr,'-','.',1);
+                    end
+          else begin Result:='';exit;end;
+     //
+     try
+         myDay:=StrToInt(zf_Calc_Word_bySeparate(PartionStr,'-','.',myWordCount-2));//StrToInt(System.Copy(PartionStr,5,2));
+         myMonth:=StrToInt(zf_Calc_Word_bySeparate(PartionStr,'-','.',myWordCount-1));//StrToInt(System.Copy(PartionStr,8,2));
+         myBillDate:=ParamsMovement.ParamByName('OperDate').AsDateTime;
+         DecodeDate(myBillDate, Year, Month, Day);
+         if Month>=myMonth then myYear:=Year else myYear:=Year-1;
+     except
+           myBillDate:=StrToDate('01.01.2000');
+           myMonth:=0;
+           myYear:=0;
+     end;
+     //
+     if myDay  <10  then myDay_str:=  '0'  +IntToStr(myDay)   else myDay_str:=   IntToStr(myDay);
+     if myMonth<10  then myMonth_str:='0'  +IntToStr(myMonth) else myMonth_str:= IntToStr(myMonth);
+     if myYear <100 then myYear_str:= '20' +IntToStr(myYear)  else myYear_str:=  IntToStr(myYear);
+     if myYear <10  then myYear_str:= '200'+IntToStr(myYear)  else myYear_str:=  IntToStr(myYear);
+
+     myPartionDate:=myDay_str+'.'+myMonth_str+'.'+myYear_str;
+     //
+     try if (StrToDate(myPartionDate)>myBillDate)//or(abs(StrToDate(myPartionDate)-myBillDate)>31)
+         then Result:=''
+         else if myOperInfoStr<>'' then Result:=myOperInfoStr+'-'+myGoodsMainStr+'-'+myClientStr+'-'+myPartionDate
+              else if myGoodsMainStr<>'' then Result:=myGoodsMainStr+'-'+myClientStr+'-'+myPartionDate
+                   else Result:=myClientStr+'-'+myPartionDate;//ReplaceStr(myPartionDate,'.','.')
+     except Result:=''
+     end;
+end;
+//------------------------------------------------------------------------------------------------
+function Recalc_PartionGoods(Edit:TEdit):Boolean;
+var PartionGoods:String;
+begin
+        if  (trim(Edit.Text)<>'')
+        and((ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Sale)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ReturnIn)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Loss)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory))
+        then begin
+                  PartionGoods:=myCalcPartionGoods(Edit.Text);
+                  Result:=PartionGoods<>'';
+                  if Result then Edit.Text:=PartionGoods;
+        end
+        else begin
+                  Result:=true;
+                  Edit.Text:='';
+             end;
 end;
 {------------------------------------------------------------------------------}
 end.
