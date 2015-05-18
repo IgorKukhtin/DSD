@@ -1036,6 +1036,7 @@ end;
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridTableView);
 begin
   FView := Value;
+  if csDesigning  in ComponentState then Exit;
   if Assigned(FView) then begin
     if FView.Control is TcxGrid then begin
        FOnExit := TcxGrid(FView.Control).OnExit;

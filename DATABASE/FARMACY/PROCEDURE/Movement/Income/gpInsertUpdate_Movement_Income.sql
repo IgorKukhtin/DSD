@@ -18,11 +18,18 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbOldContractId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
      vbUserId := inSession;
+     -- Получаем старый договор. Если он отличается от текущего, то берем новую дату платежа
+
+     SELECT INTO vbOldContractId FROM Movement_Income_View WHERE Movement_Income_View.Id = ioId;
+     IF vbOldContractId <> inContractId THEN 
+
+     END IF;
 
      ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inOperDate, inPriceWithVAT
                                           , inFromId, inToId, inNDSKindId, inContractId, inPaymentDate, vbUserId);
