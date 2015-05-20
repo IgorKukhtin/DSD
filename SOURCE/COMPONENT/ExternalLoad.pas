@@ -513,6 +513,7 @@ var i: integer;
     D: TDateTime;
     Value: OleVariant;
     Ft: double;
+    Field: TField;
     vbFieldName: string;
 begin
   with AImportSettings do begin
@@ -528,10 +529,13 @@ begin
              else begin
                if TImportSettingsItems(Items[i]).ItemName <> '' then begin
                   vbFieldName := GetFieldName(TImportSettingsItems(Items[i]).ItemName, AImportSettings);
+                  Field := AExternalLoad.FDataSet.FindField(vbFieldName);
+                  if not Assigned(Field) then
+                     raise Exception.Create('Не найдено значение для ячейки ' + TImportSettingsItems(Items[i]).ItemName);
                   case StoredProc.Params[i].DataType of
                     ftDateTime: begin
                        try
-                         Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
+                         Value := Field.Value;
                          D := VarToDateTime(Value);
                          StoredProc.Params.Items[i].Value := D;
                        except
@@ -543,7 +547,7 @@ begin
                     end;
                     ftFloat: begin
                        try
-                         Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
+                         Value := Field.Value;
                          Ft := gfStrToFloat(Value);
                          StoredProc.Params.Items[i].Value := Ft;
                        except
@@ -554,10 +558,10 @@ begin
                        end;
                     end
                     else
-                      if VarIsNULL(AExternalLoad.FDataSet.FieldByName(vbFieldName).Value) then
+                      if VarIsNULL(Field.Value) then
                          StoredProc.Params.Items[i].Value := ''
                       else
-                         StoredProc.Params.Items[i].Value := trim(AExternalLoad.FDataSet.FieldByName(vbFieldName).Value);
+                         StoredProc.Params.Items[i].Value := trim(Field.Value);
                   end;
                end;
           end;

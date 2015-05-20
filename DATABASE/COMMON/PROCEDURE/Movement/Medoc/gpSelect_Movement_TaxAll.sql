@@ -20,25 +20,27 @@ BEGIN
      SELECT
              Movement.Id                                AS Id
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
-           , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
-           , MovementFloat_MedocCode.ValueData::Integer     AS MedocCode
+           , CASE 
+               WHEN Movement_Medoc.isIncome THEN 'income'::TVarChar
+               ELSE MovementString_InvNumberRegistered.ValueData   
+             END AS InvNumberRegistered
+           , Movement_Medoc.InvNumber::Integer     AS MedocCode
 
-       FROM  Movement 
+       FROM  Movement_Medoc_View AS Movement_Medoc
+
+            LEFT JOIN Movement 
+                   ON Movement_Medoc.ParentId = Movement.Id AND Movement.StatusId <> zc_Enum_Status_Erased() 
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
 
-            JOIN MovementFloat AS MovementFloat_MedocCode
-                               ON MovementFloat_MedocCode.MovementId =  Movement.Id
-                              AND MovementFloat_MedocCode.DescId = zc_MovementFloat_MedocCode()
-
             LEFT JOIN MovementString AS MovementString_InvNumberRegistered
                                      ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                     AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
-          WHERE (Movement.StatusId <> zc_Enum_Status_Erased()) AND Movement.DescId in (zc_Movement_Tax(), zc_Movement_TaxCorrective())
-                 AND Movement.OperDate >=  inPeriodDate AND Movement.OperDate < (inPeriodDate + INTERVAL '1 month');
-
+                                    
+         WHERE Movement_Medoc.OperDate >=  inPeriodDate AND Movement_Medoc.OperDate < (inPeriodDate + INTERVAL '1 month');
+          
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -47,6 +49,7 @@ ALTER FUNCTION gpSelect_Movement_TaxAll (TDateTime, TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 18.05.15                        * 
  18.04.15                        * 
 */
 

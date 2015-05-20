@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsert_Movement_TaxCorrectiveMedoc(
     IN inVATPercent          TFloat    , -- % НДС
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inContract            TVarChar  , -- Договор
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -17,6 +18,7 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbBranchId Integer;
+   DECLARE vbContractId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
@@ -24,6 +26,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     SELECT Object_Contract_View.ContractId INTO vbContractId 
+       FROM Object_Contract_View 
+      WHERE Object_Contract_View.JuridicalId = inFromId AND Object_Contract_View.InvNumber = inContract;
 
      SELECT ObjectId INTO vbBranchId 
         FROM ObjectString AS ObjectString_InvNumber
@@ -54,7 +59,7 @@ BEGIN
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), outId, inToId);
      -- сохранили связь с <Тип формирования налогового документа>
---     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKindId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), outId, vbContractId);
 
      -- сохранили связь с <филиал>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), outId, vbBranchId);
