@@ -115,7 +115,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountProductionIn_by TFloat        -- приход с произв. (если с другого подр., т.е. не пересорт)
              , CountProductionIn_by_Weight TFloat --
              , SummProductionIn_by TFloat         -- приход с произв. (если с другого подр., т.е. не пересорт)
-            
+
              , CountIn_by TFloat                  -- приход с "выбранного" подр1.
              , CountIn_by_Weight TFloat           --
              , SummIn_by TFloat                   -- приход с "выбранного" подр1.
@@ -132,6 +132,11 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountOtherOut_by_Weight TFloat --
              , SummOtherOut_by TFloat         -- расход другой
 
+             , CountProductionOut_Norm TFloat        -- Расход с произв. норма
+             , CountProductionOut_Fact2 TFloat        -- 
+             , SummProductionOut_Norm TFloat        -- Расход с произв. норма
+             , SummProductionOut_Fact2 TFloat        --
+          
              , PriceListStart TFloat
              , PriceListEnd TFloat
 
@@ -403,6 +408,12 @@ BEGIN
         , tmpMIContainer_group.CountOtherOut_by :: TFloat -- расход другой
         , (tmpMIContainer_group.CountOtherOut_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOtherOut_by_Weight
         , tmpMIContainer_group.SummOtherOut_by  :: TFloat -- расход другой
+
+
+        , 0::TFloat AS CountProductionOut_Norm
+        , 0::TFloat AS CountProductionOut_Fact2
+        , 0::TFloat AS SummProductionOut_Norm
+        , 0::TFloat AS SummProductionOut_Fact2
 
         , tmpPriceStart.Price AS PriceListStart
         , tmpPriceEnd.Price   AS PriceListEnd
