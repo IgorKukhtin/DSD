@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TaxFromMedoc(
     IN inGoodsName           TVarChar  , -- Товары
     IN inMeasureName         TVarChar  , -- Единица измерения
     IN inAmount              TFloat    , -- Количество
-    IN inSumm                TFloat    , -- Сумма по позиции
+    IN inPrice               TFloat    , -- Сумма по позиции
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -26,30 +26,16 @@ BEGIN
         vbGoodsExternalId := lpInsertUpdate_Object (vbGoodsExternalId, zc_Object_GoodsExternal(), 0, inGoodsName);
      END IF;
 
-     IF inAmount = 0 THEN 
-        -- сохранили <Элемент документа>
-        PERFORM lpInsertUpdate_MovementItem_Tax (ioId              := 0
-                                         , inMovementId         := inMovementId
-                                         , inGoodsId            := vbGoodsExternalId
-                                         , inAmount             := 0
-                                         , inPrice              := inSumm
-                                         , ioCountForPrice      := 1
-                                         , inGoodsKindId        := NULL
-                                         , inUserId             := vbUserId
-                                          );
-     ELSE
-
-        -- сохранили <Элемент документа>
-        PERFORM lpInsertUpdate_MovementItem_Tax (ioId              := 0
+      -- сохранили <Элемент документа>
+      PERFORM lpInsertUpdate_MovementItem_Tax (ioId              := 0
                                          , inMovementId         := inMovementId
                                          , inGoodsId            := vbGoodsExternalId
                                          , inAmount             := inAmount
-                                         , inPrice              := (inSumm / inAmount)
+                                         , inPrice              := inPrice
                                          , ioCountForPrice      := 1
                                          , inGoodsKindId        := NULL
                                          , inUserId             := vbUserId
                                           );
-    END IF;
 
 END;
 $BODY$

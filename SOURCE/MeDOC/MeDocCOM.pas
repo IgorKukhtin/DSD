@@ -130,6 +130,8 @@ begin
     FspUpdate_IsElectronFromMedoc.Params.AddParam('inInvNumberRegistered', ftString, ptInput, '');
     FspUpdate_IsElectronFromMedoc.Params.AddParam('inDateRegistered', ftDateTime, ptInput, '');
     FspUpdate_IsElectronFromMedoc.Params.AddParam('inDocKind', ftString, ptInput, '');
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inContract', ftString, ptInput, '');
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inTotalSumm', ftFloat, ptInput, 0);
   end;
 
   FspInsertUpdate_MovementItem_TaxFromMedoc := TdsdStoredProc.Create(nil);
@@ -140,7 +142,7 @@ begin
      Params.AddParam('inGoodsName', ftString, ptInput, '');
      Params.AddParam('inMeasureName', ftString, ptInput, '');
      Params.AddParam('inAmount', ftFloat, ptInput, 0);
-     Params.AddParam('inSumm', ftFloat, ptInput, 0);
+     Params.AddParam('inPrice', ftFloat, ptInput, 0);
   end;
 
   FTaxBill := TClientDataSet.Create(nil);
@@ -189,7 +191,7 @@ begin
                MedocCode := DocumentList.Fields['CODE'].Value;
                //сначала проверяем, а не зарегистрировали мы ее УЖЕ
                if FTaxBill.Locate('MedocCode', MedocCode, []) then
-                  if FTaxBill.FieldByName('InvNumberRegistered').AsString <> '' then begin
+                  if (FTaxBill.FieldByName('InvNumberRegistered').AsString <> '') then begin
                      Application.ProcessMessages;
                      DocumentList.Next;
                      IncProgress;
@@ -222,11 +224,17 @@ begin
                        ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N2_11'].Value;
                        ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N11'].Value);
                        ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N2_13'].Value;
+                       ParamByName('inContract').Value := HeaderDataSet.Fields['N81'].Value;
+                       ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A7_7'].Value +
+                                                           HeaderDataSet.Fields['A7_8'].Value +
+                                                           HeaderDataSet.Fields['A7_9'].Value;
                     end
                     else begin
                        ParamByName('inInvNumber').Value := HeaderDataSet.Fields['N1_11'].Value;
                        ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N15'].Value);
                        ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N1_13'].Value;
+                       ParamByName('inContract').Value := HeaderDataSet.Fields['N2_3'].Value;
+                       ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A2_9'].Value;
                     end;
                     ParamByName('inInvNumberRegistered').Value := HeaderDataSet.Fields['SEND_DPA_RN'].Value;
                     SEND_DPA_DATE := HeaderDataSet.Fields['SEND_DPA_DATE'].Value;
@@ -247,18 +255,13 @@ begin
                             ParamByName('inGoodsName').Value := LineDataSet.Fields['TAB1_A13'].Value;
                             ParamByName('inMeasureName').Value := LineDataSet.Fields['TAB1_A14'].Value;
                             ParamByName('inAmount').Value := LineDataSet.Fields['TAB1_A15'].Value;
-                            ParamByName('inSumm').Value := LineDataSet.Fields['TAB1_A17'].Value
-                                                         + LineDataSet.Fields['TAB1_A18'].Value
-                                                         + LineDataSet.Fields['TAB1_A19'].Value
-                                                         + LineDataSet.Fields['TAB1_A110'].Value;
+                            ParamByName('inPrice').Value := LineDataSet.Fields['TAB1_A16'].Value;
                          end
                          else begin
                             ParamByName('inGoodsName').Value := LineDataSet.Fields['TAB1_A3'].Value;
                             ParamByName('inMeasureName').Value := LineDataSet.Fields['TAB1_A4'].Value;
-                            ParamByName('inAmount').Value := - LineDataSet.Fields['TAB1_A5'].Value;
-                            ParamByName('inSumm').Value := - (LineDataSet.Fields['TAB1_A9'].Value
-                                                           + LineDataSet.Fields['TAB1_A11'].Value
-                                                           + LineDataSet.Fields['TAB1_A10'].Value);
+                            ParamByName('inAmount').Value := - (LineDataSet.Fields['TAB1_A5'].Value + LineDataSet.Fields['TAB1_A8'].Value);
+                            ParamByName('inPrice').Value := (LineDataSet.Fields['TAB1_A6'].Value + LineDataSet.Fields['TAB1_A7'].Value);
                          end;
                          Execute;
                          LineDataSet.Next;

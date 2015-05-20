@@ -42,10 +42,10 @@ var
   i: integer;
   s, Form: string;
 begin
-{
+
   MedocCom := TMedocCOM.Create;
   res := MedocCom.GetDocumentList('F1201007', StrToDate('01.03.2015'));
-  if not res.Eof then begin
+{  if not res.Eof then begin
      Params := MedocCom.GetDocumentByCode(res.Fields['CODE'].Value, res.Fields['FORM'].Value);
   end;
   s := Form;
