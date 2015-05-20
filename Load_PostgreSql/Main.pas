@@ -186,6 +186,7 @@ type
     fromQueryDate: TADOQuery;
     cbDocERROR: TCheckBox;
     cbShowContract: TCheckBox;
+    cbPrintKindItem: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -4693,6 +4694,78 @@ begin
      end;
      //
      myDisabledCB(cbPartnerIntUpdate);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_PrintKindItem;
+var PartnerId_pg:Integer;
+begin
+     if (not cbPrintKindItem.Checked)or(not cbPrintKindItem.Enabled) then exit;
+     //
+     myEnabledCB(cbPrintKindItem);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+                  Add('select fIsClient_Kachestvo_onSaveAll(Unit.Id) as isKachestvo'
+                    + '     , fIsClient_TransportNew(Unit.Id) as isTransport'
+                    + '     , fIsClient_byNumberTare(Bill.ToId) as isPack'
+                    + '     , fIsClient_byNumberTare(Bill.ToId) as isSpec'
+                    + '     , _pgPartner.JuridicalId_pg as Id_pg'
+                    + ' from dba.Unit'
+                    + '      join dba._pgPartner on _pgPartner.UnitId = Unit.Id'
+                    + '                         and _pgPartner.JuridicalId_pg <> 0'
+                    + ' where fIsClient_Kachestvo_onSaveAll(Unit.Id) = zc_rvYes()'
+                    + '    or fIsClient_TransportNew(Unit.Id) = zc_rvYes()'
+                    + '    or fIsClient_byNumberTare(Bill.ToId) = zc_rvYes()'
+                    + ' geroup by fIsClient_Kachestvo_onSaveAll(Unit.Id) '
+                    + '     , fIsClient_TransportNew(Unit.Id) '
+                    + '     , fIsClient_byNumberTare(Bill.ToId) '
+                    + '     , fIsClient_byNumberTare(Bill.ToId) '
+                    + '     , _pgPartner.JuridicalId_pg'
+                    );
+                  Add('order by Id_pg');
+
+        Open;
+        cbPartnerIntUpdate.Caption:='2.9.('+IntToStr(RecordCount)+')PrintKindItem';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             //!!!
+             fOpenSqToQuery (' select lpInsertUpdate_ObjectString (zc_ObjectString_Partner_NameInteger()'
+                            +'                                 ,'+ IntToStr(FieldByName('PartnerId_pg').AsInteger)
+                            +'                                 ,cast (case when ObjectString.ValueData <> '+FormatToVarCharServer_notNULL('')
+                            +'                                            then ObjectString.ValueData || '+FormatToVarCharServer_notNULL(' *** ')
+                            +'                                       else '+FormatToVarCharServer_notNULL('')
+                            +'                                  end || ' +FormatToVarCharServer_notNULL(FieldByName('UnitName').AsString)
+                            +'                                   as TVarChar)  '
+                            +'                                  )'
+                            +' from Object'
+                            +'      LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail'
+                            +'                            ON ObjectLink_Juridical_Retail.ObjectId = Object.Id'
+                            +'                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                            +'      LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail'
+                            +'                            ON ObjectLink_Juridical_Retail.ObjectId = Object.Id'
+                            +'                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                            +' where Object.Id = '+IntToStr(FieldByName('JuridicalId_pg').AsInteger));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbPrintKindItem);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner1CLink_Fl;

@@ -203,7 +203,7 @@ object MainForm: TMainForm
     object cbContractKind: TCheckBox
       Tag = 10
       Left = 15
-      Top = 128
+      Top = 126
       Width = 138
       Height = 17
       Caption = '2.2. '#1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
@@ -213,7 +213,7 @@ object MainForm: TMainForm
     object cbContractFl: TCheckBox
       Tag = 10
       Left = 15
-      Top = 148
+      Top = 144
       Width = 138
       Height = 17
       Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072' Fl'
@@ -438,7 +438,7 @@ object MainForm: TMainForm
     object cbRouteSorting: TCheckBox
       Tag = 10
       Left = 151
-      Top = 168
+      Top = 163
       Width = 168
       Height = 17
       Caption = '2.7. '#1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1052#1072#1088#1096#1088#1091#1090#1086#1074
@@ -585,7 +585,7 @@ object MainForm: TMainForm
     object cbPartnerInt: TCheckBox
       Tag = 10
       Left = 156
-      Top = 145
+      Top = 144
       Width = 146
       Height = 17
       Caption = '2.6. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Int'
@@ -658,7 +658,7 @@ object MainForm: TMainForm
     end
     object cbContractConditionDocument: TCheckBox
       Left = 15
-      Top = 187
+      Top = 192
       Width = 266
       Height = 17
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' - '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1053#1040#1051
@@ -691,11 +691,20 @@ object MainForm: TMainForm
     object cbPartnerIntUpdate: TCheckBox
       Tag = 10
       Left = 15
-      Top = 167
+      Top = 162
       Width = 135
       Height = 17
       Caption = '2.8. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Udate'
       TabOrder = 52
+    end
+    object cbPrintKindItem: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 179
+      Width = 135
+      Height = 17
+      Caption = '2.9. PrintKindItem'
+      TabOrder = 53
     end
   end
   object DocumentPanel: TPanel

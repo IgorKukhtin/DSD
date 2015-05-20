@@ -12,8 +12,6 @@ union select '222587' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as
 union select '229622' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '211817' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 
- от 01042015 и № от 02042015 
-
 union select '201775' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '199470' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '202242' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
