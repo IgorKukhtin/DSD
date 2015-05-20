@@ -292,7 +292,14 @@
 
       if ($AutoWidth)
       {
-         return ClientDataSetFillDataSetBinaryAutoWidth($dataset);
+         if ($isDateField)
+         {  
+            return ClientDataSetFillDataSetAutoWidth($dataset);
+         }
+         else
+         {
+           return ClientDataSetFillDataSetBinaryAutoWidth($dataset);
+         }
       }
       else
       { 

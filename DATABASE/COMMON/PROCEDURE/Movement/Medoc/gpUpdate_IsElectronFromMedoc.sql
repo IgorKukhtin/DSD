@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc
+       (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_IsElectronFromMedoc(
    OUT outId                 Integer    ,
@@ -15,6 +17,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_IsElectronFromMedoc(
     IN inInvNumberRegistered TVarChar   , -- Номер
     IN inDateRegistered      TDateTime  , -- Дата
     IN inDocKind             TVarChar   , -- Тип документа
+    IN inContract            TVarChar   , -- Договор
+    IN inTotalSumm           TFloat     , -- Сумма документа
     IN inSession             TVarChar     -- Пользователь
 )                              
 RETURNS integer AS
@@ -25,6 +29,7 @@ $BODY$
    DECLARE vbToId Integer;
    DECLARE vbIsBranch_Medoc boolean;
    DECLARE vbAccessKey Integer;
+   DECLARE vbMedocId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
@@ -39,11 +44,52 @@ BEGIN
         ELSE  vbAccessKey := 0;
    END CASE;
 
+   -- Нашли ключ Медок 
+   SELECT Movement_Medoc_View.Id INTO vbMedocId 
+     FROM Movement_Medoc_View 
+    WHERE zfConvert_StringToNumber(InvNumber) = inMedocCode; 
 
-   CASE inDocKind 
-        WHEN 'Tax' THEN
+   -- Если ключ пустой, то добавили новый ключ МЕДОК
+   IF COALESCE(vbMedocId, 0) = 0 THEN 
+      vbMedocId := lpInsertUpdate_Movement_Medoc(vbMedocId, inMedocCode, inInvNumber, inOperDate,
+                           inFromINN, inToINN, inInvNumberBranch, inInvNumberRegistered, inDateRegistered, inDocKind, inContract, 
+                           inTotalSumm, vbUserId);
+      -- если приход, то вышли
+      IF (SELECT Movement_Medoc_View.isIncome 
+            FROM Movement_Medoc_View WHERE Movement_Medoc_View.Id = vbMedocId) THEN 
+         outId := 0;   	
+         RETURN;
+      END IF;
+      -- Если это филиал, то добавили документ
+      IF vbAccessKey <> 0 THEN 
+         IF inDocKind = 'Tax' THEN
+            SELECT JuridicalId INTO vbFromId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inFromINN;
+            SELECT JuridicalId INTO vbToId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inToINN;
+            vbMovementId := lpInsert_Movement_TaxMedoc(inInvNumber, inInvNumberBranch, 
+                                 inOperDate, 20::TFloat, vbFromId, vbToId, inContract, vbUserId);                       
+            update Movement set AccessKeyId = vbAccessKey where Id = vbMovementId;
+            outId := vbMovementId;
+         ELSE
+            SELECT JuridicalId INTO vbToId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inFromINN;
+            SELECT JuridicalId INTO vbFromId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inToINN;
+            vbMovementId := lpInsert_Movement_TaxCorrectiveMedoc(inInvNumber, inInvNumberBranch, 
+                                  inOperDate, 20::TFloat, vbFromId, vbToId, inContract, vbUserId);
+            update Movement set AccessKeyId = vbAccessKey where Id = vbMovementId;
+            outId := vbMovementId;
+         END IF;
+      END IF;
+   END IF;
+
+   -- Если это Днепр или Запорожье (вносят сами)
+   IF vbAccessKey = 0 THEN 
+      IF inDocKind = 'Tax' THEN
              SELECT Movement.Id INTO vbMovementId 
                     FROM Movement 
+
+                         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                 ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                       ON MovementLinkObject_From.MovementId = Movement.Id
                                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -57,21 +103,19 @@ BEGIN
                          LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                   ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-              WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.INN = inFromINN  
-                AND JuridicalTo.INN = inToINN AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Tax()
-                AND Movement.StatusId <> zc_Enum_Status_Erased() ;
-
-              IF COALESCE(vbMovementId, 0) = 0 AND COALESCE(vbAccessKey, 0) <> 0 THEN 
-                 SELECT JuridicalId INTO vbFromId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inFromINN;
-                 SELECT JuridicalId INTO vbToId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inToINN;
-                 vbMovementId := lpInsert_Movement_TaxMedoc(inInvNumber, inInvNumberBranch, 
-                                       inOperDate, 20::TFloat, vbFromId, vbToId, vbUserId);                       
-                 update Movement set AccessKeyId = vbAccessKey where Id = vbMovementId;
-                 outId := vbMovementId;
-              END IF; 
-        WHEN 'TaxCorrective' THEN
+              WHERE MovementString_InvNumberPartner.ValueData = inInvNumber 
+                AND JuridicalFrom.INN = inFromINN AND JuridicalTo.INN = inToINN
+                AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Tax()
+                AND Movement.StatusId <> zc_Enum_Status_Erased() 
+                AND abs(MovementFloat_TotalSumm.ValueData) = abs(inTotalSumm);
+        ELSE
              SELECT Movement.Id INTO vbMovementId 
                     FROM Movement 
+
+                         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                 ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                       ON MovementLinkObject_From.MovementId = Movement.Id
                                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -86,24 +130,16 @@ BEGIN
                                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
               WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.INN = inToINN  
                 AND JuridicalTo.INN = inFromINN AND Movement.StatusId <> zc_Enum_Status_Erased()
-                AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective();
-
-              IF COALESCE(vbMovementId, 0) = 0 AND COALESCE(vbAccessKey, 0) <> 0 THEN 
-                 SELECT JuridicalId INTO vbToId 
-                   FROM ObjectHistory_JuridicalDetails_View 
-                  WHERE ObjectHistory_JuridicalDetails_View.INN = inFromINN;
-                 SELECT JuridicalId INTO vbFromId 
-                   FROM ObjectHistory_JuridicalDetails_View 
-                  WHERE ObjectHistory_JuridicalDetails_View.INN = inToINN;
-                 vbMovementId := lpInsert_Movement_TaxCorrectiveMedoc(inInvNumber, inInvNumberBranch, 
-                                       inOperDate, 20::TFloat, vbFromId, vbToId, vbUserId);
-                 update Movement set AccessKeyId = vbAccessKey where Id = vbMovementId;
-                 outId := vbMovementId;
-              END IF; 
-   END CASE;
-   IF (COALESCE(vbMovementId, 0)) <> 0 THEN
-       PERFORM lpInsertUpdate_MovementFloat(zc_MovementFloat_MedocCode(), vbMovementId, inMedocCode);
+                AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective()
+                AND abs(MovementFloat_TotalSumm.ValueData) = abs(inTotalSumm);         
+      END IF;
+      -- Если нашли, то установили связь
+      IF (COALESCE(vbMovementId, 0)) <> 0 THEN
+          UPDATE Movement SET ParentId = vbMovementId WHERE Id = vbMedocId;
+      END IF;
    END IF;
+
+   -- Установили регистрацию
    IF (COALESCE(vbMovementId, 0)) <> 0 AND (COALESCE(inInvNumberRegistered, '') <> '') THEN
       PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, true);
       PERFORM lpInsertUpdate_MovementString(zc_MovementString_InvNumberRegistered(), vbMovementId, inInvNumberRegistered);
@@ -120,7 +156,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 19.05.15                         * 
  21.04.15                         * 
  02.04.15                         * 
  31.03.15                         * 
