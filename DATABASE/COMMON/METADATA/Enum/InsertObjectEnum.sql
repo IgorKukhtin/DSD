@@ -178,6 +178,15 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_CheckDocument(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 2, inName:= 'Проверка документов', inEnumName:= 'zc_Enum_ContactPersonKind_CheckDocument');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_AktSverki(), inDescId:= zc_Object_ContactPersonKind(), inCode:= 3, inName:= 'Акты сверки и выполенных работ', inEnumName:= 'zc_Enum_ContactPersonKind_AktSverki');
 
+     -- !!! Типы печати документа
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Movement(), inDescId:= zc_Object_PrintKind(), inCode:= 1, inName:= 'Накладная', inEnumName:= 'zc_Enum_PrintKind_Movement');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Account(), inDescId:= zc_Object_PrintKind(), inCode:= 2, inName:= 'Счет', inEnumName:= 'zc_Enum_PrintKind_Account');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Transport(), inDescId:= zc_Object_PrintKind(), inCode:= 3, inName:= 'ТТН', inEnumName:= 'zc_Enum_PrintKind_Transport');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Quality(), inDescId:= zc_Object_PrintKind(), inCode:= 4, inName:= 'Качественное', inEnumName:= 'zc_Enum_PrintKind_Quality');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Pack(), inDescId:= zc_Object_PrintKind(), inCode:= 5, inName:= 'Упаковочный', inEnumName:= 'zc_Enum_PrintKind_Pack');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Spec(), inDescId:= zc_Object_PrintKind(), inCode:= 6, inName:= 'Спецификация', inEnumName:= 'zc_Enum_PrintKind_Spec');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Tax(), inDescId:= zc_Object_PrintKind(), inCode:= 7, inName:= 'Налоговая', inEnumName:= 'zc_Enum_PrintKind_Tax');
+
      -- !!! Типы счетов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Active(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Активный', inEnumName:= 'zc_Enum_AccountKind_Active');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Passive(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Пассивный', inEnumName:= 'zc_Enum_AccountKind_Passive');
@@ -359,6 +368,8 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 90400,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_90400');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100400,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_100400');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 110300,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_110300');
 
      -- !!!
      -- !!! Баланс: Управленческие Счета (1+2+3 уровень)

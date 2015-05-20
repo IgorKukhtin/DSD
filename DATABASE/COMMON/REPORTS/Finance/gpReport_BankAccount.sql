@@ -40,7 +40,7 @@ BEGIN
 
      -- Результат
   RETURN QUERY
-     WITH tmpAccount AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_40000()) -- Денежные средства
+     WITH tmpAccount AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_40000() OR AccountDirectionId = zc_Enum_AccountDirection_110300()) -- Денежные средства OR Транзит + расчетный счет
         , tmpContainer AS (SELECT Container.Id                            AS ContainerId
                                 , Container_Currency.Id                   AS ContainerId_Currency
                                 , Container.ObjectId                      AS AccountId

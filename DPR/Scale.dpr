@@ -30,8 +30,7 @@ uses
   UnilWin in '..\SOURCE\UnilWin.pas',
   Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
   ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
-  DialogMovementDesc in '..\Scale\DialogMovementDesc.pas' {DialogMovementDescForm},
-  AncestorDialog in '..\Scale\Ancestor\AncestorDialog.pas' {AncestorDialogForm},
+  AncestorDialogScale in '..\Scale\Ancestor\AncestorDialogScale.pas' {AncestorDialogScaleForm},
   UtilScale in '..\Scale\Util\UtilScale.pas',
   dmMainScale in '..\Scale\Util\dmMainScale.pas' {DMMainScaleForm: TDataModule},
   GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm},
@@ -73,7 +72,9 @@ uses
   GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
   DialogWeight in '..\Scale\DialogWeight.pas' {DialogWeightForm},
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm: TParentForm},
-  DialogPersonalComplete in '..\Scale\DialogPersonalComplete.pas' {DialogPersonalCompleteForm};
+  DialogPersonalComplete in '..\Scale\DialogPersonalComplete.pas' {DialogPersonalCompleteForm},
+  DialogMovementDesc in '..\Scale\DialogMovementDesc.pas' {DialogMovementDescForm},
+  GuidePersonal in '..\Scale\GuidePersonal.pas' {GuidePersonalForm};
 
 {$R *.res}
 
@@ -90,7 +91,7 @@ begin
          //TUpdater.AutomaticUpdateProgram;
          //
          Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -101,6 +102,8 @@ begin
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
          Application.CreateForm(TDialogWeightForm, DialogWeightForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
+         Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
+         Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
   end
   else
 
@@ -124,6 +127,9 @@ begin
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
          Application.CreateForm(TDialogWeightForm, DialogWeightForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
+         Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
+         Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
+
   end;
   //
   Application.Run;

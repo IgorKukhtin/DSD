@@ -28,7 +28,6 @@ type
     bbRefreshZakaz: TSpeedButton;
     bbChangeNumberTare: TSpeedButton;
     bbChangeLevelNumber: TSpeedButton;
-    bbChangeMember: TSpeedButton;
     bbExportToEDI: TSpeedButton;
     infoPanelTotalSumm: TPanel;
     gbRealWeight: TGroupBox;
@@ -202,6 +201,7 @@ type
     procedure Initialize_afterSave_MI;
     procedure myActiveControl;
   public
+    function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
     function fGetScale_CurrentWeight:Double;
   end;
 
@@ -211,8 +211,8 @@ var
 
 implementation
 {$R *.dfm}
-uses DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint
-    ,UnilWin,GuideMovement, DialogNumberValue;
+uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint
+    ,GuideMovement, DialogNumberValue,DialogPersonalComplete;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -237,6 +237,7 @@ begin
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_all:Boolean;
+var execParams:TParams;
 begin
      Result:=false;
      //
@@ -247,6 +248,17 @@ begin
 
      if DMMainScaleForm.gpInsert_Movement_all(ParamsMovement) then
      begin
+          //
+          Create_ParamsPersonalComplete(execParams);
+          execParams.ParamByName('MovementId').AsInteger:=ParamsMovement.ParamByName('MovementId').AsInteger;
+          execParams.ParamByName('InvNumber').AsString:=ParamsMovement.ParamByName('InvNumber').AsString;
+          execParams.ParamByName('OperDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime;
+          execParams.ParamByName('MovementDescId').AsInteger:=ParamsMovement.ParamByName('MovementDescId').AsInteger;
+          execParams.ParamByName('FromName').AsString:=ParamsMovement.ParamByName('FromName').AsString;
+          execParams.ParamByName('ToName').AsString:=ParamsMovement.ParamByName('ToName').AsString;
+          Save_Movement_PersonalComplete(execParams);
+          execParams.Free;
+          //
           try
              //Print
              if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_Sale
@@ -255,9 +267,9 @@ begin
                   then Print_ReturnIn(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
                   else if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_SendOnPrice
                        then Print_SendOnPrice(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
-             else ShowMessage ('Ошибка.Документ сохранен.Форма печати не найдена.');
+                       else ShowMessage ('Ошибка.Документ сохранен.Форма печати не найдена.');
           except
-                ShowMessage ('Ошибка.Документ сохранен.Печать не сформирована.')
+                ShowMessage('Ошибка.Документ сохранен.Печать не сформирована.')
           end;
 
           //EDI
@@ -276,6 +288,19 @@ begin
           //
           RefreshDataSet;
           WriteParamsMovement;
+     end;
+end;
+//------------------------------------------------------------------------------------------------
+function TMainForm.Save_Movement_PersonalComplete(execParams:TParams):Boolean;
+begin
+     Result:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete') = AnsiUpperCase('TRUE');
+     if Result then
+     begin
+          Result:= DialogPersonalCompleteForm.Execute(execParams);
+          if Result then
+          begin
+               DMMainScaleForm.gpUpdate_Scale_Movement_PersonalComlete(execParams)
+          end;
      end;
 end;
 //------------------------------------------------------------------------------------------------

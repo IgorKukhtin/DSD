@@ -1293,6 +1293,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    AutoWidth = True
     Left = 112
     Top = 187
   end

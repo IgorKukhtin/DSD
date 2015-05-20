@@ -19,7 +19,6 @@ type
     ParamsPanel: TPanel;
     infoPanelTare: TPanel;
     rgTareWeight: TRadioGroup;
-    SummPanel: TPanel;
     infoPanelPriceList: TPanel;
     rgPriceList: TRadioGroup;
     PanelTare: TPanel;
@@ -64,9 +63,9 @@ type
     MeasureName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     Price_Return: TcxGridDBColumn;
-    Amount_Order: TcxGridDBColumn;
-    Amount_Weighing: TcxGridDBColumn;
-    Amount_diff: TcxGridDBColumn;
+    Amount_OrderWeight: TcxGridDBColumn;
+    Amount_WeighingWeight: TcxGridDBColumn;
+    Amount_diffWeight: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     cxDBGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
@@ -76,6 +75,9 @@ type
     actChoice: TAction;
     actExit: TAction;
     actSave: TAction;
+    Amount_Order: TcxGridDBColumn;
+    Amount_Weighing: TcxGridDBColumn;
+    Amount_diff: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;

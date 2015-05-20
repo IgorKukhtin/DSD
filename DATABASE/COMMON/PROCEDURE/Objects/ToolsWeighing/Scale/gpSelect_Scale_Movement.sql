@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Movement(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
-             , MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
+             , MovementDescId Integer, MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
              , ChangePercent TFloat
              , TotalCount TFloat, TotalCountTare TFloat
              , TotalSumm TFloat
@@ -19,6 +19,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindName TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , PersonalId1 Integer, PersonalCode1 Integer, PersonalName1 TVarChar
+             , PersonalId2 Integer, PersonalCode2 Integer, PersonalName2 TVarChar
+             , PersonalId3 Integer, PersonalCode3 Integer, PersonalName3 TVarChar
+             , PersonalId4 Integer, PersonalCode4 Integer, PersonalName4 TVarChar
+             , PositionId1 Integer, PositionCode1 Integer, PositionName1 TVarChar
+             , PositionId2 Integer, PositionCode2 Integer, PositionName2 TVarChar
+             , PositionId3 Integer, PositionCode3 Integer, PositionName3 TVarChar
+             , PositionId4 Integer, PositionCode4 Integer, PositionName4 TVarChar
              , UserName TVarChar
               )
 AS
@@ -49,6 +57,7 @@ BEGIN
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
+             , MovementDesc.Id                            AS MovementDescId
              , MovementDesc.ItemName                      AS MovementDescName
              , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
              , MovementString_PartionGoods.ValueData      AS PartionGoods
@@ -70,6 +79,16 @@ BEGIN
 
              , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
              , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+
+             , Object_Personal1.Id AS PersonalId1, Object_Personal1.ObjectCode AS PersonalCode1, Object_Personal1.ValueData AS PersonalName1
+             , Object_Personal2.Id AS PersonalId2, Object_Personal2.ObjectCode AS PersonalCode2, Object_Personal2.ValueData AS PersonalName2
+             , Object_Personal3.Id AS PersonalId3, Object_Personal3.ObjectCode AS PersonalCode3, Object_Personal3.ValueData AS PersonalName3
+             , Object_Personal4.Id AS PersonalId4, Object_Personal4.ObjectCode AS PersonalCode4, Object_Personal4.ValueData AS PersonalName4
+
+             , Object_Position1.Id AS PositionId1, Object_Position1.ObjectCode AS PositionCode1, Object_Position1.ValueData AS PositionName1
+             , Object_Position2.Id AS PositionId2, Object_Position2.ObjectCode AS PositionCode2, Object_Position2.ValueData AS PositionName2
+             , Object_Position3.Id AS PositionId3, Object_Position3.ObjectCode AS PositionCode3, Object_Position3.ValueData AS PositionName3
+             , Object_Position4.Id AS PositionId4, Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
 
              , Object_User.ValueData              AS UserName
 
@@ -147,7 +166,43 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
-       ORDER BY MovementDate_EndWeighing.ValueData DESC
+
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1
+                                         ON MovementLinkObject_Personal1.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal1.DescId = zc_MovementLinkObject_PersonalComplete1()
+            LEFT JOIN Object AS Object_Personal1 ON Object_Personal1.Id = MovementLinkObject_Personal1.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal2
+                                         ON MovementLinkObject_Personal2.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal2.DescId = zc_MovementLinkObject_PersonalComplete2()
+            LEFT JOIN Object AS Object_Personal2 ON Object_Personal2.Id = MovementLinkObject_Personal2.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal3
+                                         ON MovementLinkObject_Personal3.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal3.DescId = zc_MovementLinkObject_PersonalComplete3()
+            LEFT JOIN Object AS Object_Personal3 ON Object_Personal3.Id = MovementLinkObject_Personal3.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal4
+                                         ON MovementLinkObject_Personal4.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal4.DescId = zc_MovementLinkObject_PersonalComplete4()
+            LEFT JOIN Object AS Object_Personal4 ON Object_Personal4.Id = MovementLinkObject_Personal4.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1
+                                         ON MovementLinkObject_Position1.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position1.DescId = zc_MovementLinkObject_PositionComplete1()
+            LEFT JOIN Object AS Object_Position1 ON Object_Position1.Id = MovementLinkObject_Position1.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position2
+                                         ON MovementLinkObject_Position2.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position2.DescId = zc_MovementLinkObject_PositionComplete2()
+            LEFT JOIN Object AS Object_Position2 ON Object_Position2.Id = MovementLinkObject_Position2.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position3
+                                         ON MovementLinkObject_Position3.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position3.DescId = zc_MovementLinkObject_PositionComplete3()
+            LEFT JOIN Object AS Object_Position3 ON Object_Position3.Id = MovementLinkObject_Position3.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position4
+                                         ON MovementLinkObject_Position4.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position4.DescId = zc_MovementLinkObject_PositionComplete4()
+            LEFT JOIN Object AS Object_Position4 ON Object_Position4.Id = MovementLinkObject_Position4.ObjectId
+
+       ORDER BY COALESCE (MovementDate_EndWeighing.ValueData, MovementDate_StartWeighing.ValueData) DESC
               , MovementDate_StartWeighing.ValueData DESC
       ;
   

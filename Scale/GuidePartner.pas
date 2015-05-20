@@ -18,7 +18,6 @@ type
   TGuidePartnerForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
-    SummPanel: TPanel;
     DataSource: TDataSource;
     ButtonPanel: TPanel;
     bbExit: TSpeedButton;
@@ -152,7 +151,7 @@ begin
      Result:=(CDS.RecordCount>0);
      //
      if not Result
-     then ActiveControl:=EditPartnerCode
+     then ActiveControl:=EditPartnerName
      else with ParamsMovement_local do
           begin
                ParamByName('calcPartnerId').AsInteger:= CDS.FieldByName('PartnerId').AsInteger;
@@ -260,7 +259,6 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuidePartnerForm.FormCreate(Sender: TObject);
-var i:Integer;
 begin
   Create_ParamsMovement(ParamsMovement_local);
 

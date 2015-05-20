@@ -4,35 +4,25 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
   Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#8470
   ClientHeight = 250
   ClientWidth = 506
-  KeyPreview = True
   OldCreateOrder = True
   Position = poScreenCenter
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   ExplicitWidth = 522
   ExplicitHeight = 285
   PixelsPerInch = 96
   TextHeight = 14
-  inherited BottomPanel: TPanel
+  inherited bbPanel: TPanel
     Top = 209
     Width = 506
     TabOrder = 4
-    ExplicitTop = 289
+    ExplicitTop = 209
     ExplicitWidth = 506
     inherited bbOk: TBitBtn
-      Left = 145
-      Top = 9
       Default = False
-      ExplicitLeft = 145
-      ExplicitTop = 9
-    end
-    inherited bbCancel: TBitBtn
-      Left = 229
-      Top = 9
-      ExplicitLeft = 229
-      ExplicitTop = 9
     end
   end
-  object infoPanelMember1: TPanel
+  object infoPanelPersona1: TPanel
     Left = 0
     Top = 0
     Width = 506
@@ -48,8 +38,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 280
-      ExplicitWidth = 226
       object LabelPositionName1: TLabel
         Left = 0
         Top = 0
@@ -73,9 +61,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 3
-        ExplicitTop = 7
-        ExplicitWidth = 226
         object PanelPositionName1: TPanel
           Left = 2
           Top = 16
@@ -91,11 +76,10 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 177
         end
       end
     end
-    object PanelMember1: TPanel
+    object PanelPersonal1: TPanel
       Left = 0
       Top = 0
       Width = 320
@@ -103,7 +87,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      object LabelMemberName1: TLabel
+      object LabelPersonalName1: TLabel
         Left = 0
         Top = 0
         Width = 320
@@ -119,7 +103,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         ParentFont = False
         ExplicitWidth = 108
       end
-      object gbMemberCode1: TGroupBox
+      object gbPersonalCode1: TGroupBox
         Left = 0
         Top = 13
         Width = 67
@@ -128,17 +112,21 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Caption = #1050#1086#1076
         TabOrder = 0
         object EditPersonalCode1: TcxCurrencyEdit
+          Tag = 1
           Left = 5
-          Top = 15
+          Top = 14
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditPersonalCode1PropertiesChange
           TabOrder = 0
+          OnExit = EditPersonalCode1Exit
+          OnKeyDown = EditPersonalCode1KeyDown
           Width = 55
         end
       end
-      object gbMemberName1: TGroupBox
+      object gbPersonalName1: TGroupBox
         Left = 67
         Top = 13
         Width = 253
@@ -146,10 +134,8 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Align = alClient
         Caption = #1060#1048#1054
         TabOrder = 1
-        ExplicitLeft = 66
-        ExplicitTop = 7
-        ExplicitWidth = 213
         object EditPersonalName1: TcxButtonEdit
+          Tag = 1
           Left = 5
           Top = 14
           Properties.Buttons = <
@@ -158,14 +144,16 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
               Kind = bkEllipsis
             end>
           Properties.ReadOnly = True
+          Properties.OnButtonClick = EditPersonalName1PropertiesButtonClick
           TabOrder = 0
           Text = 'EditPersonalName1'
+          OnKeyDown = EditPersonalName1KeyDown
           Width = 245
         end
       end
     end
   end
-  object infoPanelMember2: TPanel
+  object infoPanelPersona2: TPanel
     Left = 0
     Top = 52
     Width = 506
@@ -181,8 +169,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 280
-      ExplicitWidth = 226
       object LabelPositionName2: TLabel
         Left = 0
         Top = 0
@@ -206,8 +192,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 45
-        ExplicitWidth = 181
         object PanelPositionName2: TPanel
           Left = 2
           Top = 16
@@ -223,11 +207,10 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 177
         end
       end
     end
-    object PanelMember2: TPanel
+    object PanelPersonal2: TPanel
       Left = 0
       Top = 0
       Width = 320
@@ -235,7 +218,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      object LabelMemberName2: TLabel
+      object LabelPersonalName2: TLabel
         Left = 0
         Top = 0
         Width = 320
@@ -251,7 +234,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         ParentFont = False
         ExplicitWidth = 108
       end
-      object gbMemberCode2: TGroupBox
+      object gbPersonalCode2: TGroupBox
         Left = 0
         Top = 13
         Width = 67
@@ -260,17 +243,21 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Caption = #1050#1086#1076
         TabOrder = 0
         object EditPersonalCode2: TcxCurrencyEdit
+          Tag = 2
           Left = 5
-          Top = 15
+          Top = 14
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditPersonalCode1PropertiesChange
           TabOrder = 0
+          OnExit = EditPersonalCode1Exit
+          OnKeyDown = EditPersonalCode1KeyDown
           Width = 55
         end
       end
-      object gbMemberName2: TGroupBox
+      object gbPersonalName2: TGroupBox
         Left = 67
         Top = 13
         Width = 253
@@ -278,8 +265,8 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Align = alClient
         Caption = #1060#1048#1054
         TabOrder = 1
-        ExplicitWidth = 213
         object EditPersonalName2: TcxButtonEdit
+          Tag = 2
           Left = 5
           Top = 14
           Properties.Buttons = <
@@ -288,14 +275,16 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
               Kind = bkEllipsis
             end>
           Properties.ReadOnly = True
+          Properties.OnButtonClick = EditPersonalName1PropertiesButtonClick
           TabOrder = 0
           Text = 'EditPersonalName2'
+          OnKeyDown = EditPersonalName1KeyDown
           Width = 245
         end
       end
     end
   end
-  object infoPanelMember3: TPanel
+  object infoPanelPersona3: TPanel
     Left = 0
     Top = 104
     Width = 506
@@ -311,8 +300,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 280
-      ExplicitWidth = 226
       object LabelPositionName3: TLabel
         Left = 0
         Top = 0
@@ -336,8 +323,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 45
-        ExplicitWidth = 181
         object PanelPositionName3: TPanel
           Left = 2
           Top = 16
@@ -353,11 +338,10 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 177
         end
       end
     end
-    object PanelMember3: TPanel
+    object PanelPersonal3: TPanel
       Left = 0
       Top = 0
       Width = 320
@@ -365,7 +349,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      object LabelMemberName3: TLabel
+      object LabelPersonalName3: TLabel
         Left = 0
         Top = 0
         Width = 320
@@ -381,7 +365,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         ParentFont = False
         ExplicitWidth = 108
       end
-      object gbMemberCode3: TGroupBox
+      object gbPersonalCode3: TGroupBox
         Left = 0
         Top = 13
         Width = 67
@@ -390,17 +374,21 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Caption = #1050#1086#1076
         TabOrder = 0
         object EditPersonalCode3: TcxCurrencyEdit
+          Tag = 3
           Left = 5
-          Top = 15
+          Top = 14
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditPersonalCode1PropertiesChange
           TabOrder = 0
+          OnExit = EditPersonalCode1Exit
+          OnKeyDown = EditPersonalCode1KeyDown
           Width = 55
         end
       end
-      object gbMemberName3: TGroupBox
+      object gbPersonalName3: TGroupBox
         Left = 67
         Top = 13
         Width = 253
@@ -408,8 +396,8 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Align = alClient
         Caption = #1060#1048#1054
         TabOrder = 1
-        ExplicitWidth = 213
         object EditPersonalName3: TcxButtonEdit
+          Tag = 3
           Left = 5
           Top = 14
           Properties.Buttons = <
@@ -418,14 +406,16 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
               Kind = bkEllipsis
             end>
           Properties.ReadOnly = True
+          Properties.OnButtonClick = EditPersonalName1PropertiesButtonClick
           TabOrder = 0
           Text = 'EditPersonalName3'
+          OnKeyDown = EditPersonalName1KeyDown
           Width = 245
         end
       end
     end
   end
-  object infoPanelMember4: TPanel
+  object infoPanelPersona4: TPanel
     Left = 0
     Top = 156
     Width = 506
@@ -441,8 +431,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 280
-      ExplicitWidth = 226
       object LabelPositionName4: TLabel
         Left = 0
         Top = 0
@@ -466,8 +454,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 45
-        ExplicitWidth = 181
         object PanelPositionName4: TPanel
           Left = 2
           Top = 16
@@ -483,11 +469,10 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 177
         end
       end
     end
-    object PanelMember4: TPanel
+    object PanelPersonal4: TPanel
       Left = 0
       Top = 0
       Width = 320
@@ -495,7 +480,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      object LabelMemberName4: TLabel
+      object LabePersonalName4: TLabel
         Left = 0
         Top = 0
         Width = 320
@@ -511,7 +496,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         ParentFont = False
         ExplicitWidth = 108
       end
-      object gbMemberCode4: TGroupBox
+      object gbPersonalCode4: TGroupBox
         Left = 0
         Top = 13
         Width = 67
@@ -520,17 +505,20 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Caption = #1050#1086#1076
         TabOrder = 0
         object EditPersonalCode4: TcxCurrencyEdit
-          Left = 5
-          Top = 15
+          Tag = 4
+          Left = 6
+          Top = 14
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
           TabOrder = 0
+          OnExit = EditPersonalCode1Exit
+          OnKeyDown = EditPersonalCode1KeyDown
           Width = 55
         end
       end
-      object gbMemberName4: TGroupBox
+      object gbPersonalName4: TGroupBox
         Left = 67
         Top = 13
         Width = 253
@@ -538,8 +526,8 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Align = alClient
         Caption = #1060#1048#1054
         TabOrder = 1
-        ExplicitWidth = 213
         object EditPersonalName4: TcxButtonEdit
+          Tag = 4
           Left = 5
           Top = 14
           Properties.Buttons = <
@@ -548,8 +536,10 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
               Kind = bkEllipsis
             end>
           Properties.ReadOnly = True
+          Properties.OnButtonClick = EditPersonalName1PropertiesButtonClick
           TabOrder = 0
           Text = 'EditPersonalName4'
+          OnKeyDown = EditPersonalName1KeyDown
           Width = 245
         end
       end

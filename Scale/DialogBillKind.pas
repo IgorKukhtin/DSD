@@ -5,13 +5,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  AncestorDialog, dsdDB, Data.DB, Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids,
+  AncestorDialogScale, dsdDB, Data.DB, Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids,
   Data.Bind.EngExt, Vcl.Bind.DBEngExt, System.Rtti, System.Bindings.Outputs,
   Vcl.Bind.Editors, Data.Bind.Components, dsdAddOn, Util, Data.FMTBcd,
   Data.SqlExpr;
 
 type
-  TDialogBillKindForm = class(TAncestorDialogForm)
+  TDialogBillKindForm = class(TAncestorDialogScaleForm)
     gbPartnerAll: TGroupBox;
     PanelPartner: TPanel;
     gbPartnerCode: TGroupBox;

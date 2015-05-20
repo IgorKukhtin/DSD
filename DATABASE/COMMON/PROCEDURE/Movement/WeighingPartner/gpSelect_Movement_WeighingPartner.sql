@@ -23,6 +23,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractName TVarChar, ContractTagName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteSortingName TVarChar
+             , PersonalCode1 Integer, PersonalName1 TVarChar
+             , PersonalCode2 Integer, PersonalName2 TVarChar
+             , PersonalCode3 Integer, PersonalName3 TVarChar
+             , PersonalCode4 Integer, PersonalName4 TVarChar
+             , PositionCode1 Integer, PositionName1 TVarChar
+             , PositionCode2 Integer, PositionName2 TVarChar
+             , PositionCode3 Integer, PositionName3 TVarChar
+             , PositionCode4 Integer, PositionName4 TVarChar
              , UserName TVarChar
               )
 AS
@@ -90,6 +98,17 @@ BEGIN
              , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
              , Object_RouteSorting.ValueData      AS RouteSortingName
+
+             , Object_Personal1.ObjectCode AS PersonalCode1, Object_Personal1.ValueData AS PersonalName1
+             , Object_Personal2.ObjectCode AS PersonalCode2, Object_Personal2.ValueData AS PersonalName2
+             , Object_Personal3.ObjectCode AS PersonalCode3, Object_Personal3.ValueData AS PersonalName3
+             , Object_Personal4.ObjectCode AS PersonalCode4, Object_Personal4.ValueData AS PersonalName4
+
+             , Object_Position1.ObjectCode AS PositionCode1, Object_Position1.ValueData AS PositionName1
+             , Object_Position2.ObjectCode AS PositionCode2, Object_Position2.ValueData AS PositionName2
+             , Object_Position3.ObjectCode AS PositionCode3, Object_Position3.ValueData AS PositionName3
+             , Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
+
              , Object_User.ValueData              AS UserName
 
        FROM tmpStatus
@@ -182,11 +201,45 @@ BEGIN
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1
+                                         ON MovementLinkObject_Personal1.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal1.DescId = zc_MovementLinkObject_PersonalComplete1()
+            LEFT JOIN Object AS Object_Personal1 ON Object_Personal1.Id = MovementLinkObject_Personal1.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal2
+                                         ON MovementLinkObject_Personal2.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal2.DescId = zc_MovementLinkObject_PersonalComplete2()
+            LEFT JOIN Object AS Object_Personal2 ON Object_Personal2.Id = MovementLinkObject_Personal2.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal3
+                                         ON MovementLinkObject_Personal3.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal3.DescId = zc_MovementLinkObject_PersonalComplete3()
+            LEFT JOIN Object AS Object_Personal3 ON Object_Personal3.Id = MovementLinkObject_Personal3.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal4
+                                         ON MovementLinkObject_Personal4.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal4.DescId = zc_MovementLinkObject_PersonalComplete4()
+            LEFT JOIN Object AS Object_Personal4 ON Object_Personal4.Id = MovementLinkObject_Personal4.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1
+                                         ON MovementLinkObject_Position1.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position1.DescId = zc_MovementLinkObject_PositionComplete1()
+            LEFT JOIN Object AS Object_Position1 ON Object_Position1.Id = MovementLinkObject_Position1.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position2
+                                         ON MovementLinkObject_Position2.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position2.DescId = zc_MovementLinkObject_PositionComplete2()
+            LEFT JOIN Object AS Object_Position2 ON Object_Position2.Id = MovementLinkObject_Position2.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position3
+                                         ON MovementLinkObject_Position3.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position3.DescId = zc_MovementLinkObject_PositionComplete3()
+            LEFT JOIN Object AS Object_Position3 ON Object_Position3.Id = MovementLinkObject_Position3.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position4
+                                         ON MovementLinkObject_Position4.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position4.DescId = zc_MovementLinkObject_PositionComplete4()
+            LEFT JOIN Object AS Object_Position4 ON Object_Position4.Id = MovementLinkObject_Position4.ObjectId
+
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                          ON MovementLinkObject_User.MovementId = Movement.Id
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
-            
       ;
   
 END;
@@ -202,4 +255,4 @@ ALTER FUNCTION gpSelect_Movement_WeighingPartner (TDateTime, TDateTime, Boolean,
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.01.2014', inEndDate:= '01.02.2014', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

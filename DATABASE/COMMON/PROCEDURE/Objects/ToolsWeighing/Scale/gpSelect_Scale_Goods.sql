@@ -17,8 +17,11 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , ChangePercentAmount TFloat
              , Amount_Order TFloat
+             , Amount_OrderWeight TFloat
              , Amount_Weighing TFloat
+             , Amount_WeighingWeight TFloat
              , Amount_diff TFloat
+             , Amount_diffWeight TFloat
              , isTax_diff Boolean
              , Price TFloat
              , Price_Return TFloat
@@ -111,8 +114,11 @@ BEGIN
             , Object_Measure.ValueData    AS MeasureName
             , CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1 ELSE 0 END :: TFloat AS ChangePercentAmount
             , tmpMI.Amount_Order :: TFloat    AS Amount_Order
+            , (tmpMI.Amount_Order * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat    AS Amount_OrderWeight
             , tmpMI.Amount_Weighing :: TFloat AS Amount_Weighing
+            , (tmpMI.Amount_Weighing * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_WeighingWeight
             , (tmpMI.Amount_Order - tmpMI.Amount_Weighing) :: TFloat AS Amount_diff
+            , ((tmpMI.Amount_Order - tmpMI.Amount_Weighing)  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_diffWeight
             , CASE WHEN tmpMI.Amount_Weighing > tmpMI.Amount_Order
                         THEN CASE WHEN tmpMI.Amount_Order = 0
                                        THEN TRUE
@@ -159,6 +165,9 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -182,8 +191,11 @@ BEGIN
             , Object_Measure.ValueData    AS MeasureName
             , CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1 ELSE 0 END :: TFloat AS ChangePercentAmount
             , 0 :: TFloat AS Amount_Order
+            , 0 :: TFloat AS Amount_OrderWeight
             , 0 :: TFloat AS Amount_Weighing
+            , 0 :: TFloat AS Amount_WeighingWeight
             , 0 :: TFloat AS Amount_diff
+            , 0 :: TFloat AS Amount_diffWeight
             , FALSE :: Boolean AS isTax_diff
             , lfObjectHistory_PriceListItem.ValuePrice :: TFloat                        AS Price
             , lfObjectHistory_PriceListItem_Return.ValuePrice :: TFloat                 AS Price_Return

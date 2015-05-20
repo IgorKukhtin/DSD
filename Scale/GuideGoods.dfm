@@ -2,7 +2,7 @@ object GuideGoodsForm: TGuideGoodsForm
   Left = 578
   Top = 242
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
-  ClientHeight = 572
+  ClientHeight = 646
   ClientWidth = 982
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object GuideGoodsForm: TGuideGoodsForm
     Left = 0
     Top = 256
     Width = 982
-    Height = 271
+    Height = 390
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -92,14 +92,44 @@ object GuideGoodsForm: TGuideGoodsForm
       Left = 0
       Top = 33
       Width = 982
-      Height = 238
+      Height = 357
       Align = alClient
       TabOrder = 1
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.DefaultGroupSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_OrderWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_WeighingWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_diffWeight
+          end>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_OrderWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_WeighingWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_diffWeight
+          end>
         DataController.Summary.SummaryGroups = <>
         OptionsCustomize.ColumnHiding = True
         OptionsCustomize.ColumnMoving = False
@@ -109,6 +139,7 @@ object GuideGoodsForm: TGuideGoodsForm
         OptionsData.Editing = False
         OptionsData.Inserting = False
         OptionsView.ColumnAutoWidth = True
+        OptionsView.Footer = True
         OptionsView.GroupByBox = False
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
@@ -130,8 +161,10 @@ object GuideGoodsForm: TGuideGoodsForm
         object GoodsKindName: TcxGridDBColumn
           Caption = #1042#1080#1076
           DataBinding.FieldName = 'GoodsKindName'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          VisibleForCustomization = False
           Width = 55
         end
         object MeasureName: TcxGridDBColumn
@@ -144,6 +177,9 @@ object GuideGoodsForm: TGuideGoodsForm
         object Price: TcxGridDBColumn
           Caption = #1062#1077#1085#1072
           DataBinding.FieldName = 'Price'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 50
@@ -151,6 +187,9 @@ object GuideGoodsForm: TGuideGoodsForm
         object Price_Return: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' ('#1074#1086#1079#1074#1088'.)'
           DataBinding.FieldName = 'Price_Return'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 50
@@ -158,29 +197,38 @@ object GuideGoodsForm: TGuideGoodsForm
         object Amount_Order: TcxGridDBColumn
           Caption = #1047#1072#1103#1074#1082#1072
           DataBinding.FieldName = 'Amount_Order'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           VisibleForCustomization = False
-          Width = 60
+          Width = 50
         end
         object Amount_Weighing: TcxGridDBColumn
           Caption = #1054#1090#1075#1088#1091#1079#1082#1072
           DataBinding.FieldName = 'Amount_Weighing'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           VisibleForCustomization = False
-          Width = 60
+          Width = 50
         end
         object Amount_diff: TcxGridDBColumn
           Caption = #1056#1072#1079#1085#1080#1094#1072
           DataBinding.FieldName = 'Amount_diff'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           VisibleForCustomization = False
-          Width = 60
+          Width = 50
         end
         object GoodsGroupNameFull: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072
@@ -188,6 +236,42 @@ object GuideGoodsForm: TGuideGoodsForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 150
+        end
+        object Amount_OrderWeight: TcxGridDBColumn
+          Caption = #1047#1072#1103#1074#1082#1072' ('#1074#1077#1089')'
+          DataBinding.FieldName = 'Amount_OrderWeight'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          VisibleForCustomization = False
+          Width = 50
+        end
+        object Amount_WeighingWeight: TcxGridDBColumn
+          Caption = #1054#1090#1075#1088#1091#1079#1082#1072' ('#1074#1077#1089')'
+          DataBinding.FieldName = 'Amount_Weighing'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          VisibleForCustomization = False
+          Width = 50
+        end
+        object Amount_diffWeight: TcxGridDBColumn
+          Caption = #1056#1072#1079#1085#1080#1094#1072' ('#1074#1077#1089')'
+          DataBinding.FieldName = 'Amount_diff'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          VisibleForCustomization = False
+          Width = 50
         end
         object Color_calc: TcxGridDBColumn
           DataBinding.FieldName = 'Color_calc'
@@ -543,16 +627,6 @@ object GuideGoodsForm: TGuideGoodsForm
       end
     end
   end
-  object SummPanel: TPanel
-    Left = 0
-    Top = 527
-    Width = 982
-    Height = 45
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 2
-    Visible = False
-  end
   object DataSource: TDataSource
     DataSet = CDS
     OnDataChange = DataSourceDataChange
@@ -595,6 +669,11 @@ object GuideGoodsForm: TGuideGoodsForm
     ColorRuleList = <
       item
         ColorColumn = Amount_diff
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount_diffWeight
         ValueColumn = Color_calc
         ColorValueList = <>
       end>

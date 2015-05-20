@@ -179,25 +179,6 @@ object MainForm: TMainForm
         ShowHint = True
         OnClick = bbChangeLevelNumberClick
       end
-      object bbChangeMember: TSpeedButton
-        Left = 132
-        Top = 5
-        Width = 31
-        Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          88888888488884088888848C88884870888884C888848C4708888C448848CCC4
-          70888888888CCCCC470888888888CCCCC488888108888CCCCC888818708888CC
-          C88881891708888C888818999170888888888999991708811188889999918888
-          9188888999998889818888889998889888888888898888888888}
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-      end
       object bbExportToEDI: TSpeedButton
         Left = 658
         Top = 5
@@ -785,7 +766,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
-      ExplicitTop = 42
       object BarCodeLabel: TLabel
         Left = 1
         Top = 1
@@ -853,7 +833,6 @@ object MainForm: TMainForm
       Height = 29
       Align = alTop
       TabOrder = 2
-      ExplicitTop = 200
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -899,7 +878,6 @@ object MainForm: TMainForm
       ParentColor = False
       TabOrder = 3
       OnClick = rgScaleClick
-      ExplicitTop = 83
     end
     object CountPanel: TPanel
       Left = 0
@@ -914,7 +892,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 4
-      ExplicitTop = 42
       object CountLabel: TLabel
         Left = 1
         Top = 1
@@ -956,7 +933,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 5
-      ExplicitTop = 42
       object HeadCountLabel: TLabel
         Left = 1
         Top = 1
@@ -1018,7 +994,7 @@ object MainForm: TMainForm
         Left = 5
         Top = 17
         Width = 125
-        Height = 22
+        Height = 24
         TabOrder = 0
         Text = 'EditPartionGoods'
         OnExit = EditPartionGoodsExit

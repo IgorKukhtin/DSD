@@ -4,10 +4,13 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, AncestorDialog, StdCtrls, Buttons, ExtCtrls;
+  Dialogs, AncestorDialogScale, StdCtrls, Buttons, ExtCtrls, cxGraphics,
+  cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dxSkinsCore,
+  dxSkinsDefaultPainters, dsdDB, Vcl.ActnList, dsdAction, cxPropertiesStore,
+  dsdAddOn, cxButtons;
 
 type
-  TDialogWeightForm = class(TAncestorDialogForm)
+  TDialogWeightForm = class(TAncestorDialogScaleForm)
     rgWeight: TRadioGroup;
     procedure FormShow(Sender: TObject);
   private

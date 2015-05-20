@@ -129,12 +129,8 @@
 			<DCCReference Include="..\SOURCE\UnilWin.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\Defaults.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
-			<DCCReference Include="..\Scale\DialogMovementDesc.pas">
-				<Form>DialogMovementDescForm</Form>
-				<FormType>dfm</FormType>
-			</DCCReference>
-			<DCCReference Include="..\Scale\Ancestor\AncestorDialog.pas">
-				<Form>AncestorDialogForm</Form>
+			<DCCReference Include="..\Scale\Ancestor\AncestorDialogScale.pas">
+				<Form>AncestorDialogScaleForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\Scale\Util\UtilScale.pas"/>
 			<DCCReference Include="..\Scale\Util\dmMainScale.pas">
@@ -202,6 +198,12 @@
 			</DCCReference>
 			<DCCReference Include="..\Scale\DialogPersonalComplete.pas">
 				<Form>DialogPersonalCompleteForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\Scale\DialogMovementDesc.pas">
+				<Form>DialogMovementDescForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\Scale\GuidePersonal.pas">
+				<Form>GuidePersonalForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

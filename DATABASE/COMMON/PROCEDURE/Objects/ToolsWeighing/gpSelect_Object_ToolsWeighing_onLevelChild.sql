@@ -63,6 +63,7 @@ BEGIN
 
        UNION SELECT 'isPreviewPrint'         AS Name
        UNION SELECT 'isTareWeightEnter'      AS Name
+       UNION SELECT 'isPersonalComplete'     AS Name
 
        UNION SELECT 'DayPrior_PriceReturn' AS Name
 

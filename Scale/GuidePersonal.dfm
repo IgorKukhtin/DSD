@@ -1,9 +1,9 @@
-object GuidePartnerForm: TGuidePartnerForm
+object GuidePersonalForm: TGuidePersonalForm
   Left = 578
   Top = 242
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
   ClientHeight = 572
-  ClientWidth = 962
+  ClientWidth = 731
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object GuidePartnerForm: TGuidePartnerForm
   object GridPanel: TPanel
     Left = 0
     Top = 41
-    Width = 962
+    Width = 731
     Height = 531
     Align = alClient
     BevelOuter = bvNone
@@ -28,7 +28,7 @@ object GuidePartnerForm: TGuidePartnerForm
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 962
+      Width = 731
       Height = 33
       Align = alTop
       BevelOuter = bvNone
@@ -91,7 +91,7 @@ object GuidePartnerForm: TGuidePartnerForm
     object cxDBGrid: TcxGrid
       Left = 0
       Top = 33
-      Width = 962
+      Width = 731
       Height = 498
       Align = alClient
       TabOrder = 1
@@ -113,75 +113,57 @@ object GuidePartnerForm: TGuidePartnerForm
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object PartnerCode: TcxGridDBColumn
+        object PersonalCode: TcxGridDBColumn
           Caption = #1050#1086#1076
-          DataBinding.FieldName = 'PartnerCode'
+          DataBinding.FieldName = 'PersonalCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 35
+        end
+        object PersonalName: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'PersonalName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 150
+        end
+        object PositionCode: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1076#1086#1083#1078#1085'.'
+          DataBinding.FieldName = 'PositionCode'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 35
+        end
+        object PositionName: TcxGridDBColumn
+          Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+          DataBinding.FieldName = 'PositionName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
         end
-        object PartnerName: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-          DataBinding.FieldName = 'PartnerName'
+        object UnitCode: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
+          DataBinding.FieldName = 'UnitCode'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 350
+          Width = 40
         end
-        object PaidKindName: TcxGridDBColumn
-          Caption = #1060#1086#1088#1084'. '#1086#1087#1083'.'
-          DataBinding.FieldName = 'PaidKindName'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 55
-        end
-        object ContractCode: TcxGridDBColumn
-          Caption = #1050#1086#1076' '#1076#1086#1075'.'
-          DataBinding.FieldName = 'ContractCode'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 60
-        end
-        object ContractNumber: TcxGridDBColumn
-          Caption = #8470' '#1076#1086#1075'.'
-          DataBinding.FieldName = 'ContractNumber'
+        object UnitName: TcxGridDBColumn
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          DataBinding.FieldName = 'UnitName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 80
         end
-        object ContractTagName: TcxGridDBColumn
-          Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-          DataBinding.FieldName = 'ContractTagName'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 100
-        end
-        object ChangePercent: TcxGridDBColumn
-          Caption = '% '#1089#1082'.'
-          DataBinding.FieldName = 'ChangePercent'
+        object IsErased: TcxGridDBColumn
+          Caption = #1059#1076#1072#1083#1077#1085
+          DataBinding.FieldName = 'IsErased'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 45
-        end
-        object ChangePercentAmount: TcxGridDBColumn
-          Caption = '% '#1089#1082'. '#1074#1077#1089
-          DataBinding.FieldName = 'ChangePercentAmount'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 45
-        end
-        object InfoMoneyCode: TcxGridDBColumn
-          Caption = #1050#1086#1076' '#1059#1055
-          DataBinding.FieldName = 'InfoMoneyCode'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 70
-        end
-        object InfoMoneyName: TcxGridDBColumn
-          Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
-          DataBinding.FieldName = 'InfoMoneyName'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 150
         end
       end
       object cxDBGridLevel: TcxGridLevel
@@ -192,12 +174,12 @@ object GuidePartnerForm: TGuidePartnerForm
   object ParamsPanel: TPanel
     Left = 0
     Top = 0
-    Width = 962
+    Width = 731
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    object gbPartnerCode: TGroupBox
+    object gbPersonalCode: TGroupBox
       Left = 0
       Top = 0
       Width = 137
@@ -205,38 +187,38 @@ object GuidePartnerForm: TGuidePartnerForm
       Align = alLeft
       Caption = #1050#1086#1076
       TabOrder = 0
-      object EditPartnerCode: TEdit
+      object EditPersonalCode: TEdit
         Left = 5
         Top = 17
         Width = 125
         Height = 22
         TabOrder = 0
-        Text = 'EditPartnerCode'
-        OnChange = EditPartnerCodeChange
-        OnEnter = EditPartnerCodeEnter
-        OnKeyDown = EditPartnerCodeKeyDown
-        OnKeyPress = EditPartnerCodeKeyPress
+        Text = 'EditPersonalCode'
+        OnChange = EditPersonalCodeChange
+        OnEnter = EditPersonalCodeEnter
+        OnKeyDown = EditPersonalCodeKeyDown
+        OnKeyPress = EditPersonalCodeKeyPress
       end
     end
-    object gbPartnerName: TGroupBox
+    object gbPersonalName: TGroupBox
       Left = 137
       Top = 0
-      Width = 825
+      Width = 594
       Height = 41
       Align = alClient
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       TabOrder = 1
-      object EditPartnerName: TEdit
+      object EditPersonalName: TEdit
         Left = 5
         Top = 17
         Width = 332
         Height = 22
         TabOrder = 0
-        Text = 'EditPartnerName'
-        OnChange = EditPartnerNameChange
-        OnEnter = EditPartnerNameEnter
-        OnKeyDown = EditPartnerNameKeyDown
-        OnKeyPress = EditPartnerNameKeyPress
+        Text = 'EditPersonalName'
+        OnChange = EditPersonalNameChange
+        OnEnter = EditPersonalNameEnter
+        OnKeyDown = EditPersonalNameKeyDown
+        OnKeyPress = EditPersonalNameKeyPress
       end
     end
   end

@@ -3645,6 +3645,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    AutoWidth = True
     Left = 112
     Top = 192
   end

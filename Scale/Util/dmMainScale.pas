@@ -22,12 +22,15 @@ type
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
+    function gpGet_Scale_Personal(var execParams:TParams;inPersonalCode:Integer): Boolean;
 
     function gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
 
     function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
     function gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
     function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
+
+    function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
 
     function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
 
@@ -170,6 +173,31 @@ begin
           end
           else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Нажмите на клавиатуре клавишу <F2>.';
    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
+begin
+    Result:=false;
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_Movement_PersonalComlete';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inPersonalId1', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId1').AsInteger);
+       Params.AddParam('inPersonalId2', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId2').AsInteger);
+       Params.AddParam('inPersonalId3', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId3').AsInteger);
+       Params.AddParam('inPersonalId4', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId4').AsInteger);
+       Params.AddParam('inPositionId1', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId1').AsInteger);
+       Params.AddParam('inPositionId2', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId2').AsInteger);
+       Params.AddParam('inPositionId3', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId3').AsInteger);
+       Params.AddParam('inPositionId4', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId4').AsInteger);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_Movement_PersonalComlete');
+       end;}
+    end;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
@@ -523,6 +551,7 @@ begin
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inPartnerCode', ftInteger, ptInput, inPartnerCode);
        Params.AddParam('inInfoMoneyId', ftInteger, ptInput, execParams.ParamByName('InfoMoneyId').AsInteger);
+       Params.AddParam('inPaidKindId', ftInteger, ptInput, execParams.ParamByName('PaidKindId').AsInteger);
        //try
          Execute;
          //
@@ -606,6 +635,43 @@ begin
          result.Id   := 0;
          result.Name := '';
          ShowMessage('Ошибка получения - gpGet_Scale_PartnerParams');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Personal(var execParams:TParams;inPersonalCode:Integer): Boolean;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_Personal';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inPersonalCode', ftInteger, ptInput, inPersonalCode);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount=1;
+
+       with execParams
+       do
+         if Result then
+         begin ParamByName('PersonalId').AsInteger:= DataSet.FieldByName('PersonalId').AsInteger;
+               ParamByName('PersonalCode').AsInteger:= DataSet.FieldByName('PersonalCode').AsInteger;
+               ParamByName('PersonalName').asString:= DataSet.FieldByName('PersonalName').asString;
+
+               ParamByName('PositionId').AsInteger   := DataSet.FieldByName('PositionId').asInteger;
+               ParamByName('PositionCode').AsInteger := DataSet.FieldByName('PositionCode').asInteger;
+               ParamByName('PositionName').asString  := DataSet.FieldByName('PositionName').asString;
+         end
+         else // вот так "хитро" вернули кол-во записей для "нормального" сообщения
+              ParamByName('PersonalId').AsInteger:= -1 * DataSet.RecordCount;
+
+       {except
+         result.Code := Code;
+         result.Id   := 0;
+         result.Name := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Personal');
        end;}
     end;
 end;
