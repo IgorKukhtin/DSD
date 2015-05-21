@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_Juridical()
+-- Function: gpSelect_Object_Juridical_PrintKindItem()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical_PrintKindItem (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical_PrintKindItem(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
@@ -18,6 +18,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
+
+               isMovement boolean, isAccount boolean, isTransport boolean,
+               isQuality boolean, isPack boolean, isSpec boolean, isTax boolean,   
+
                isErased Boolean
               )
 AS
@@ -71,6 +75,13 @@ BEGIN
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                      GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     )
+
+  , tmpPrintKindItem AS( SELECT tmp.Id
+                              , tmp.isMovement, tmp.isAccount, tmp.isTransport
+                              , tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax
+                         FROM lpSelect_Object_PrintKindItem(inSession) AS tmp
+                                )
+
    SELECT 
          Object_Juridical.Id             AS Id 
        , Object_Juridical.ObjectCode     AS Code
@@ -111,7 +122,15 @@ BEGIN
        , Object_PriceListPromo.ValueData  AS PriceListPromoName 
        
        , ObjectDate_StartPromo.ValueData AS StartPromo
-       , ObjectDate_EndPromo.ValueData   AS EndPromo       
+       , ObjectDate_EndPromo.ValueData   AS EndPromo  
+
+       , COALESCE (tmpPrintKindItem.isMovement, CAST (False AS Boolean))   AS isMovement
+       , COALESCE (tmpPrintKindItem.isAccount, CAST (False AS Boolean))    AS isAccount
+       , COALESCE (tmpPrintKindItem.isTransport, CAST (False AS Boolean))  AS isTransport
+       , COALESCE (tmpPrintKindItem.isQuality, CAST (False AS Boolean))    AS isQuality
+       , COALESCE (tmpPrintKindItem.isPack, CAST (False AS Boolean))       AS isPack
+       , COALESCE (tmpPrintKindItem.isSpec, CAST (False AS Boolean))       AS isSpec
+       , COALESCE (tmpPrintKindItem.isTax, CAST (False AS Boolean))        AS isTax     
 
        , Object_Juridical.isErased AS isErased
        
@@ -172,6 +191,11 @@ BEGIN
                             AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
         LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Juridical_PriceListPromo.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_PrintKindItem
+                             ON ObjectLink_Juridical_PrintKindItem.ObjectId = Object_Juridical.Id 
+                            AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
+	LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id =  ObjectLink_Juridical_PrintKindItem.ChildObjectId
+
     WHERE Object_Juridical.DescId = zc_Object_Juridical()
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR tmpListBranch_Constraint.JuridicalId > 0
@@ -181,28 +205,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Juridical (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Juridical_PrintKindItem (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 21.05.15         * add isTaxSummary
- 02.02.15                                        * add tmpListBranch_Constraint
- 20.11.14         *
- 07.11.14         * изменено RetailReport
- 08.09.14                                        * add Object_RoleAccessKeyGuide_View
- 29.08.14                                        * add InfoMoneyName_all
- 23.05.14         * add Retail
- 12.01.14         * add PriceList,
-                        PriceListPromo,
-                        StartPromo,
-                        EndPromo               
- 28.12.13                                         * add ObjectHistory_JuridicalDetails_View
- 20.10.13                                         * add Object_InfoMoney_View
- 03.07.13         * +GoodsProperty, InfoMoney               
- 14.05.13                                        *
+ 21.05.15         *
+
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical ('2')
+-- SELECT * FROM gpSelect_Object_Juridical_PrintKindItem ('2')

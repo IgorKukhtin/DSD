@@ -26,8 +26,6 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 659
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -67,6 +65,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         DataBinding.FieldName = 'GLNCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object GLNCodeCorporate: TcxGridDBColumn
@@ -74,6 +73,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         DataBinding.FieldName = 'GLNCodeCorporate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object GoodsPropertyName: TcxGridDBColumn
@@ -89,6 +89,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object clOperDateOrder: TcxGridDBColumn

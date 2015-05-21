@@ -572,6 +572,8 @@ type
     N60: TMenuItem;
     actRetail_PrintKindItem: TdsdOpenForm;
     N61: TMenuItem;
+    actJuridical_PrintKindItem: TdsdOpenForm;
+    N62: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

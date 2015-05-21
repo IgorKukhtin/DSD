@@ -1,4 +1,4 @@
-unit Juridical;
+unit Juridical_PrintKindItem;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   cxGrid, cxSplitter, cxButtonEdit;
 
 type
-  TJuridicalForm = class(TParentForm)
+  TJuridical_PrintKindItemForm = class(TParentForm)
     cxSplitter: TcxSplitter;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
@@ -67,7 +67,6 @@ type
     clOKPO: TcxGridDBColumn;
     clIsCorporate: TcxGridDBColumn;
     clJuridicalGroupName: TcxGridDBColumn;
-    spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     clPriceListName: TcxGridDBColumn;
     actChoicePriceListForm: TOpenChoiceForm;
@@ -85,6 +84,14 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
     clisTaxSummary: TcxGridDBColumn;
+    spUpdate: TdsdStoredProc;
+    isMovement: TcxGridDBColumn;
+    isAccount: TcxGridDBColumn;
+    isTransport: TcxGridDBColumn;
+    isQuality: TcxGridDBColumn;
+    isPack: TcxGridDBColumn;
+    isSpec: TcxGridDBColumn;
+    isTax: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -96,5 +103,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TJuridicalForm);
+  RegisterClass(TJuridical_PrintKindItemForm);
 end.

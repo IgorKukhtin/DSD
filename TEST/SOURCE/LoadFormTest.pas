@@ -833,6 +833,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGLNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalGLNForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_PrintKindItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridical_PrintKindItemForm');
 end;
 procedure TLoadFormTest.LoadProductionSeparateFormTest;
 begin
