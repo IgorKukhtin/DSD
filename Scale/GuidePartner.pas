@@ -48,6 +48,13 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
+    isMovement: TcxGridDBColumn;
+    isAccount: TcxGridDBColumn;
+    isTransport: TcxGridDBColumn;
+    isQuality: TcxGridDBColumn;
+    isPack: TcxGridDBColumn;
+    isSpec: TcxGridDBColumn;
+    isTax: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditPartnerNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;

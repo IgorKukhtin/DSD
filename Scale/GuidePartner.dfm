@@ -34,8 +34,8 @@ object GuidePartnerForm: TGuidePartnerForm
       BevelOuter = bvNone
       TabOrder = 0
       object bbExit: TSpeedButton
-        Left = 511
-        Top = 3
+        Left = 443
+        Top = 4
         Width = 31
         Height = 29
         Action = actExit
@@ -52,7 +52,7 @@ object GuidePartnerForm: TGuidePartnerForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 306
+        Left = 194
         Top = 3
         Width = 31
         Height = 29
@@ -182,6 +182,62 @@ object GuidePartnerForm: TGuidePartnerForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 150
+        end
+        object isMovement: TcxGridDBColumn
+          Caption = #1076#1086#1082
+          DataBinding.FieldName = 'isMovement'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object isAccount: TcxGridDBColumn
+          Caption = #1089#1095
+          DataBinding.FieldName = 'isAccount'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object isTransport: TcxGridDBColumn
+          Caption = #1090#1090#1085
+          DataBinding.FieldName = 'isTransport'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object isQuality: TcxGridDBColumn
+          Caption = #1082#1072#1095
+          DataBinding.FieldName = 'isQuality'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object isPack: TcxGridDBColumn
+          Caption = #1091#1087#1072#1082
+          DataBinding.FieldName = 'isPack'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object isSpec: TcxGridDBColumn
+          Caption = #1089#1087#1077#1094
+          DataBinding.FieldName = 'isSpec'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object isTax: TcxGridDBColumn
+          Caption = #1085#1072#1083#1086#1075
+          DataBinding.FieldName = 'isTax'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 45
         end
       end
       object cxDBGridLevel: TcxGridLevel

@@ -21,6 +21,13 @@ RETURNS TABLE (PartnerId     Integer
              , isEdiOrdspr   Boolean
              , isEdiInvoice  Boolean
              , isEdiDesadv   Boolean
+             , isMovement   Boolean   -- Накладная
+             , isAccount    Boolean   -- Счет
+             , isTransport  Boolean   -- ТТН
+             , isQuality    Boolean   -- Качественное
+             , isPack       Boolean   -- Упаковочный
+             , isSpec       Boolean   -- Спецификация
+             , isTax        Boolean   -- Налоговая
               )
 AS
 $BODY$
@@ -122,6 +129,7 @@ BEGIN
                                   , View_Contract.PaidKindId
                                   , tmpInfoMoney.InfoMoneyId
                           )
+          , tmpPrintKindItem AS (SELECT tmp.Id, tmp.isMovement, tmp.isAccount, tmp.isTransport, tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax FROM lpSelect_Object_PrintKindItem (inSession) AS tmp)
 
        SELECT tmpPartner.PartnerId
             , tmpPartner.PartnerCode
@@ -145,7 +153,26 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
+            , COALESCE (tmpPrintKindItem.isMovement, FALSE)  :: Boolean AS isMovement
+            , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount
+            , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport
+            , COALESCE (tmpPrintKindItem.isQuality, FALSE)   :: Boolean AS isQuality
+            , COALESCE (tmpPrintKindItem.isPack, FALSE)      :: Boolean AS isPack
+            , COALESCE (tmpPrintKindItem.isSpec, FALSE)      :: Boolean AS isSpec
+            , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax
+
        FROM tmpPartner
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = tmpPartner.JuridicalId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectLink AS ObjectLink_Retail_PrintKindItem
+                                 ON ObjectLink_Retail_PrintKindItem.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                AND ObjectLink_Retail_PrintKindItem.DescId = zc_ObjectLink_Retail_PrintKindItem()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_PrintKindItem
+                                 ON ObjectLink_Juridical_PrintKindItem.ObjectId = tmpPartner.JuridicalId
+                                AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
+            LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id = COALESCE (ObjectLink_Retail_PrintKindItem.ChildObjectId, ObjectLink_Juridical_PrintKindItem.ChildObjectId)
+
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpPartner.InfoMoneyId
             LEFT JOIN Object_ContractCondition_PercentView ON Object_ContractCondition_PercentView.ContractId = tmpPartner.ContractId
 

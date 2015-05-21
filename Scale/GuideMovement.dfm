@@ -25,7 +25,6 @@ object GuideMovementForm: TGuideMovementForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1054
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -34,7 +33,6 @@ object GuideMovementForm: TGuideMovementForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 1054
       object ButtonExit: TSpeedButton
         Left = 286
         Top = 4
@@ -134,7 +132,6 @@ object GuideMovementForm: TGuideMovementForm
       Height = 498
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 1054
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -459,7 +456,6 @@ object GuideMovementForm: TGuideMovementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1054
     object gbPartnerCode: TGroupBox
       Left = 280
       Top = 0

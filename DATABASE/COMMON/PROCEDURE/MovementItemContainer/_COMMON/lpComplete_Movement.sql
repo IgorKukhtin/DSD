@@ -79,6 +79,11 @@ BEGIN
   END IF;
 
 
+  -- !!!временно!!!
+  IF inUserId = 128491 -- Хохлова Е.Ю. !!!временно!!!
+  THEN RETURN;
+  END IF;
+
   -- !!!временно если ФИЛИАЛ НАЛ + БН!!!
   IF EXISTS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
   THEN

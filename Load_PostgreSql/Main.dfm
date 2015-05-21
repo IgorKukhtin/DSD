@@ -223,7 +223,7 @@ object MainForm: TMainForm
     object cbJuridicalBranchNal: TCheckBox
       Tag = 10
       Left = 15
-      Top = 224
+      Top = 227
       Width = 225
       Height = 17
       Caption = '3.2.2. '#1070#1088'.'#1083#1080#1094#1072' '#1060#1080#1083#1080#1072#1083'-'#1053#1072#1083
@@ -233,7 +233,7 @@ object MainForm: TMainForm
     object cbPartnerBranchNal: TCheckBox
       Tag = 10
       Left = 15
-      Top = 240
+      Top = 242
       Width = 194
       Height = 17
       Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1060#1080#1083#1072#1083'-'#1053#1072#1083
@@ -557,7 +557,7 @@ object MainForm: TMainForm
     object cbData1CLink: TCheckBox
       Tag = 10
       Left = 196
-      Top = 240
+      Top = 242
       Width = 172
       Height = 17
       Caption = '3.5. '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' 1'#1057' '#1092#1080#1083#1080#1072#1083#1099
@@ -603,7 +603,7 @@ object MainForm: TMainForm
     object cb1Find2InsertPartner1C_BranchNal: TCheckBox
       Tag = 10
       Left = 15
-      Top = 209
+      Top = 212
       Width = 290
       Height = 17
       Caption = '3.2.1. 1Find+2Insert : Partner1C_BranchNal'
@@ -613,7 +613,7 @@ object MainForm: TMainForm
     object cbJuridicalGroup: TCheckBox
       Tag = 10
       Left = 196
-      Top = 224
+      Top = 227
       Width = 225
       Height = 17
       Caption = '3.1. '#1043#1088#1091#1087#1087#1099' '#1102#1088'. '#1083#1080#1094
@@ -658,7 +658,7 @@ object MainForm: TMainForm
     end
     object cbContractConditionDocument: TCheckBox
       Left = 15
-      Top = 192
+      Top = 195
       Width = 266
       Height = 17
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' - '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1053#1040#1051
