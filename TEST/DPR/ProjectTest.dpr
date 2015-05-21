@@ -676,7 +676,9 @@ uses
   MedocJournal in '..\..\Forms\Document\MedocJournal.pas' {MedocJournalForm: TParentForm},
   Report_MotionGoodsCeh in '..\..\Forms\Report\Report_MotionGoodsCeh.pas' {Report_MotionGoodsCehForm: TParentForm},
   Retail_PrintKindItem in '..\..\Forms\Guides\Retail_PrintKindItem.pas' {Retail_PrintKindItemForm: TParentForm},
-  Juridical_PrintKindItem in '..\..\Forms\Guides\Juridical_PrintKindItem.pas' {Juridical_PrintKindItemForm: TParentForm};
+  Juridical_PrintKindItem in '..\..\Forms\Guides\Juridical_PrintKindItem.pas' {Juridical_PrintKindItemForm: TParentForm},
+  QualityDoc in '..\..\Forms\Document\QualityDoc.pas' {QualityDocForm: TParentForm},
+  QualityDocJournal in '..\..\Forms\Document\QualityDocJournal.pas' {QualityDocJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -40,7 +40,7 @@ BEGIN
            , MS_QualityNumber.ValueData                         AS QualityNumber
            , MB_Comment.ValueData                               AS Comment
            , Object_Quality.Id                                  AS QualityId
-           , Object_Quality.ValueData   		                AS QualityName
+           , Object_Quality.ValueData   		        AS QualityName
 
 
        FROM (SELECT Movement.Id

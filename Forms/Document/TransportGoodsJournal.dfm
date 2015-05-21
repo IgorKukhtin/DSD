@@ -266,7 +266,6 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTransportGoodsForm'
-      FormNameParam.Name = 'TFounderServiceForm'
       FormNameParam.Value = 'TTransportGoodsForm'
       GuiParams = <
         item
@@ -519,40 +518,16 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_TransportGoods'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
     Left = 80
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_TransportGoods'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
     Left = 80
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_TransportGoods'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
     Left = 208
     Top = 376
   end
@@ -608,7 +583,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_FounderService_Print'
+    StoredProcName = 'gpSelect_Movement_TransportGoods_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

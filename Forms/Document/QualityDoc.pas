@@ -13,51 +13,25 @@ uses
 type
   TQualityDocForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
-    Код: TcxLabel;
-    edOperDate: TcxDateEdit;
+    edOperDateOut: TcxDateEdit;
     edInvNumber_Sale: TcxButtonEdit;
     GuideSaleJournalChoice: TdsdGuides;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
-    edInvNumber: TcxTextEdit;
     edOperDate_Sale: TcxDateEdit;
-    edRoute: TcxButtonEdit;
-    GuideRoute: TdsdGuides;
-    cxLabel67: TcxLabel;
     cxLabel2: TcxLabel;
     edFrom: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel9: TcxLabel;
     edCar: TcxButtonEdit;
     GuideCar: TdsdGuides;
-    cxLabel5: TcxLabel;
-    edPersonalDriver: TcxButtonEdit;
-    GuidePersonalDriver: TdsdGuides;
-    cxLabel7: TcxLabel;
-    edCarTrailer: TcxButtonEdit;
-    GuideCarTrailer: TdsdGuides;
     cxLabel4: TcxLabel;
     edCarModel: TcxButtonEdit;
-    cxLabel8: TcxLabel;
-    edCarTrailerModel: TcxButtonEdit;
     cxLabel10: TcxLabel;
     edTo: TcxButtonEdit;
-    cxLabel14: TcxLabel;
-    edMember1: TcxButtonEdit;
-    GuideMember1: TdsdGuides;
-    cxLabel11: TcxLabel;
-    edMember2: TcxButtonEdit;
-    GuideMember2: TdsdGuides;
     GuideCarModel: TdsdGuides;
-    GuideCarTrailerModel: TdsdGuides;
-    edInvNumberMark: TcxTextEdit;
-    cxLabel12: TcxLabel;
-    cxLabel13: TcxLabel;
-    edMember3: TcxButtonEdit;
-    GuideMember3: TdsdGuides;
-    edMember4: TcxButtonEdit;
-    cxLabel15: TcxLabel;
-    GuideMember4: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edOperDateIn: TcxDateEdit;
   private
     { Private declarations }
   public

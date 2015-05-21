@@ -1,6 +1,6 @@
--- Function: gpSelect_Movement_TransportGoods()
+-- Function: gpSelect_Movement_QualityDoc()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_TransportGoods (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_QualityDoc (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_QualityDoc(
     IN inStartDate   TDateTime , --
@@ -10,21 +10,18 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_QualityDoc(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , InvNumberMark TVarChar
+             , OperDateIn TDateTime, OperDateOut TDateTime
+             , CarName TVarChar, CarModelName TVarChar
+
+             , MovementId_Quality Integer, InvNumber_Quality TVarChar, OperDate_Quality TDateTime
+             , OperDateCertificate TDateTime, CertificateNumber TVarChar, CertificateSeries TVarChar, CertificateSeriesNumber TVarChar
+             , QualityNumber TVarChar, QualityName TVarChar
+
              , MovementId_Sale Integer, InvNumber_Sale TVarChar, OperDate_Sale TDateTime
              , InvNumberPartner_Sale TVarChar, OperDatePartner_Sale TDateTime
-             , RouteName TVarChar
-             , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
-             , PersonalDriverName TVarChar
-             , MemberName1 TVarChar
-             , MemberName2 TVarChar
-             , MemberName3 TVarChar
-             , MemberName4 TVarChar
-             , MemberName5 TVarChar
-             , MemberName6 TVarChar
-             , MemberName7 TVarChar
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
+
              , TotalCountSh TFloat, TotalCountKg TFloat, TotalSumm TFloat
               )
 AS
@@ -32,7 +29,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransportGoods());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_QualityDoc());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
@@ -59,7 +56,21 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , MovementString_InvNumberMark.ValueData  AS InvNumberMark
+           , MovementDate_OperDateIn.ValueData AS OperDateIn
+           , MovementDate_OperDateOut.ValueData AS OperDateOut
+
+           , Object_Car.ValueData             AS CarName
+           , Object_CarModel.ValueData        AS CarModelName
+
+           , Movement_Quality.Id                   AS MovementId_Quality
+           , Movement_Quality.InvNumber            AS InvNumber_Quality
+           , Movement_Quality.OperDate             AS OperDate_Quality
+           , MD_OperDateCertificate.ValueData      AS OperDateCertificate
+           , MS_CertificateNumber.ValueData        AS CertificateNumber
+           , MS_CertificateSeries.ValueData        AS CertificateSeries
+           , MS_CertificateSeriesNumber.ValueData  AS CertificateSeriesNumber
+           , MS_QualityNumber.ValueData            AS QualityNumber
+           , Object_Quality.ValueData   	   AS QualityName
 
            , Movement_Sale.Id        AS MovementId_Sale
            , Movement_Sale.InvNumber AS InvNumber_Sale
@@ -67,20 +78,6 @@ BEGIN
            , MovementString_InvNumberPartner_Sale.ValueData AS InvNumberPartner_Sale
            , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
 
-           , Object_Route.ValueData          AS RouteName
-           , Object_Car.ValueData            AS CarName
-           , Object_CarModel.ValueData       AS CarModelName
-           , Object_CarTrailer.ValueData     AS CarTrailerName
-           , Object_PersonalDriver.ValueData AS PersonalDriverName
-
-           , Object_Member1.ValueData AS MemberName1
-           , Object_Member2.ValueData AS MemberName2
-           , Object_Member3.ValueData AS MemberName3
-           , Object_Member4.ValueData AS MemberName4
-           , Object_Member5.ValueData AS MemberName5
-           , Object_Member6.ValueData AS MemberName6
-           , Object_Member7.ValueData AS MemberName7
- 
            , Object_From.ValueData                AS FromName
            , Object_To.ValueData                  AS ToName
            , Object_PaidKind.ValueData            AS PaidKindName
@@ -89,21 +86,19 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData    AS TotalSumm
 
        FROM tmpStatus
-            JOIN Movement ON Movement.DescId = zc_Movement_TransportGoods()
+            JOIN Movement ON Movement.DescId = zc_Movement_QualityDoc()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                          AND Movement.StatusId = tmpStatus.StatusId
             JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementString AS MovementString_InvNumberMark
-                                     ON MovementString_InvNumberMark.MovementId =  Movement.Id
-                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
-                                         ON MovementLinkObject_Route.MovementId = Movement.Id
-                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+            LEFT JOIN MovementDate AS MovementDate_OperDateIn
+                                   ON MovementDate_OperDateIn.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateIn.DescId = zc_MovementDate_OperDateIn()
+            LEFT JOIN MovementDate AS MovementDate_OperDateOut
+                                   ON MovementDate_OperDateOut.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateOut.DescId = zc_MovementDate_OperDateOut()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
@@ -113,76 +108,59 @@ BEGIN
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
-                                         ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
-                                        AND MovementLinkObject_CarTrailer.DescId = zc_MovementLinkObject_CarTrailer()
-            LEFT JOIN Object AS Object_CarTrailer ON Object_CarTrailer.Id = MovementLinkObject_CarTrailer.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
-    
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member1
-                                         ON MovementLinkObject_Member1.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member1.DescId = zc_MovementLinkObject_Member1()
-            LEFT JOIN Object AS Object_Member1 ON Object_Member1.Id = MovementLinkObject_Member1.ObjectId
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                           ON MovementLinkMovement_Master.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Quality ON Movement_Quality.Id = MovementLinkMovement_Master.MovementChildId
+                                                  AND Movement_Quality.StatusId = zc_Enum_Status_Complete()
+            LEFT JOIN MovementDate AS MD_OperDateCertificate
+                                   ON MD_OperDateCertificate.MovementId =  Movement_Quality.Id
+                                  AND MD_OperDateCertificate.DescId = zc_MovementDate_OperDateCertificate()
+            LEFT JOIN MovementString AS MS_CertificateNumber
+                                     ON MS_CertificateNumber.MovementId =  Movement_Quality.Id
+                                    AND MS_CertificateNumber.DescId = zc_MovementString_CertificateNumber()
+            LEFT JOIN MovementString AS MS_CertificateSeries
+                                     ON MS_CertificateSeries.MovementId =  Movement_Quality.Id
+                                    AND MS_CertificateSeries.DescId = zc_MovementString_CertificateSeries()
+            LEFT JOIN MovementString AS MS_CertificateSeriesNumber
+                                     ON MS_CertificateSeriesNumber.MovementId =  Movement_Quality.Id
+                                    AND MS_CertificateSeriesNumber.DescId = zc_MovementString_CertificateSeriesNumber()
+            LEFT JOIN MovementString AS MS_QualityNumber
+                                     ON MS_QualityNumber.MovementId =  Movement_Quality.Id
+                                    AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
+            LEFT JOIN MovementBlob AS MB_Comment
+                                   ON MB_Comment.MovementId =  Movement_Quality.Id
+                                  AND MB_Comment.DescId = zc_MovementBlob_Comment()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Quality
+                                         ON MovementLinkObject_Quality.MovementId = Movement_Quality.Id
+                                        AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
+            LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = MovementLinkObject_Quality.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member2
-                                         ON MovementLinkObject_Member2.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member2.DescId = zc_MovementLinkObject_Member2()
-            LEFT JOIN Object AS Object_Member2 ON Object_Member2.Id = MovementLinkObject_Member2.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member3
-                                         ON MovementLinkObject_Member3.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member3.DescId = zc_MovementLinkObject_Member3()
-            LEFT JOIN Object AS Object_Member3 ON Object_Member3.Id = MovementLinkObject_Member3.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member4
-                                         ON MovementLinkObject_Member4.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member4.DescId = zc_MovementLinkObject_Member4()
-            LEFT JOIN Object AS Object_Member4 ON Object_Member4.Id = MovementLinkObject_Member4.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member5
-                                         ON MovementLinkObject_Member5.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member5.DescId = zc_MovementLinkObject_Member5()
-            LEFT JOIN Object AS Object_Member5 ON Object_Member5.Id = MovementLinkObject_Member5.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member6
-                                         ON MovementLinkObject_Member6.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member6.DescId = zc_MovementLinkObject_Member6()
-            LEFT JOIN Object AS Object_Member6 ON Object_Member6.Id = MovementLinkObject_Member6.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member7
-                                         ON MovementLinkObject_Member7.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member7.DescId = zc_MovementLinkObject_Member7()
-            LEFT JOIN Object AS Object_Member7 ON Object_Member7.Id = MovementLinkObject_Member7.ObjectId
-
-
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
-                                           ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id 
-                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_TransportGoods.MovementId
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                           ON MovementLinkMovement_Child.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Child.MovementChildId
                                                AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Sale
-                                     ON MovementString_InvNumberPartner_Sale.MovementId =  MovementLinkMovement_TransportGoods.MovementId
+                                     ON MovementString_InvNumberPartner_Sale.MovementId =  Movement_Sale.Id
                                     AND MovementString_InvNumberPartner_Sale.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Sale
-                                   ON MovementDate_OperDatePartner_Sale.MovementId =  MovementLinkMovement_TransportGoods.MovementId
+                                   ON MovementDate_OperDatePartner_Sale.MovementId =  Movement_Sale.Id
                                   AND MovementDate_OperDatePartner_Sale.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = MovementLinkMovement_TransportGoods.MovementId
+                                         ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = MovementLinkMovement_TransportGoods.MovementId
+                                         ON MovementLinkObject_To.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = MovementLinkMovement_TransportGoods.MovementId
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
@@ -200,13 +178,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TransportGoods (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_QualityDoc (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 28.03.15                                        *
+ 21.05.15                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportGoods (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_QualityDoc (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())

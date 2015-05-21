@@ -41,18 +41,19 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     CarModelName: TcxGridDBColumn;
     CarName: TcxGridDBColumn;
-    CarTrailerName: TcxGridDBColumn;
-    PersonalDriverName: TcxGridDBColumn;
     InvNumber_Sale: TcxGridDBColumn;
     OperDate_Sale: TcxGridDBColumn;
     InvNumberPartner_Sale: TcxGridDBColumn;
     OperDatePartner_Sale: TcxGridDBColumn;
-    RouteName: TcxGridDBColumn;
     TotalCountKg: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
+    OperDateIn: TcxGridDBColumn;
+    OperDateOut: TcxGridDBColumn;
+    InvNumber_Quality: TcxGridDBColumn;
+    OperDate_Quality: TcxGridDBColumn;
   private
     { Private declarations }
   public
