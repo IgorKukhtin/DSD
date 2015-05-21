@@ -102,6 +102,7 @@ type
     ParamsMovement_local: TParams;
     isChoice_local:Boolean;
 
+    procedure CancelCxFilter;
     function Checked: boolean;
     procedure RefreshDataSet;
   public
@@ -137,6 +138,7 @@ begin
      deEnd.Text:=DateToStr(ParamsMovement_local.ParamByName('OperDate').AsDateTime);
      fStartWrite:=false;
 
+     CancelCxFilter;
      RefreshDataSet;
      CDS.Filtered:=false;
 
@@ -169,14 +171,23 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideMovementForm.CancelCxFilter;
+begin
+     if cxDBGridDBTableView.DataController.Filter.Active
+     then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideMovementForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
     if Key=13
     then
         if ((ActiveControl=cxDBGrid)and(CDS.RecordCount>0))or(CDS.RecordCount=1)
         then actChoiceExecute(Self);
-
-    if Key=27 then actExitExecute(Self);
+    //
+    if (Key=27) then
+      if cxDBGridDBTableView.DataController.Filter.Active
+      then CancelCxFilter
+      else actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);

@@ -98,6 +98,7 @@ object GuideGoodsForm: TGuideGoodsForm
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
             Format = ',0.####'
@@ -663,7 +664,11 @@ object GuideGoodsForm: TGuideGoodsForm
       item
         Action = actChoice
       end>
-    ActionItemList = <>
+    ActionItemList = <
+      item
+        Action = actChoice
+        ShortCut = 13
+      end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <

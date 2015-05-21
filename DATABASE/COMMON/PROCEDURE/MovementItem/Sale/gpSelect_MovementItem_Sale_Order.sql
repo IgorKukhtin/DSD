@@ -443,5 +443,5 @@ ALTER FUNCTION gpSelect_MovementItem_Sale_Order (Integer, Integer, TDateTime, Bo
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Sale_Order (inMovementId:= 4229, inPriceListId:=0, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
- --SELECT * FROM gpSelect_MovementItem_Sale_Order (inMovementId:= 4229, inPriceListId:=0, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= FALSE, inisErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Sale_Order (inMovementId:= 1257078, inPriceListId:= zc_PriceList_Basis(), inOperDate:= CURRENT_TIMESTAMP, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Sale_Order (inMovementId:= 1257078, inPriceListId:= zc_PriceList_Basis(), inOperDate:= CURRENT_TIMESTAMP, inShowAll:= FALSE, inisErased:= TRUE, inSession:= '2')
