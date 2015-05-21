@@ -2043,9 +2043,14 @@
 			<DCCReference Include="..\..\Forms\Document\MedocJournal.pas">
 				<Form>MedocJournalForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsCeh.pas">
 				<Form>Report_MotionGoodsCehForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Retail_PrintKindItem.pas">
+				<Form>Retail_PrintKindItemForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -1708,6 +1708,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailReportEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportEditForm');
+  // Торговая сеть  (элементы печати)
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetail_PrintKindItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetail_PrintKindItemForm');
 end;
 
 procedure TLoadFormTest.LoadReceiptFormTest;
