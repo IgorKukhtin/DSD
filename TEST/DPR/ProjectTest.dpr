@@ -675,7 +675,8 @@ uses
   Report_MotionGoodsUpak in '..\..\Forms\Report\Report_MotionGoodsUpak.pas' {Report_MotionGoodsUpakForm: TParentForm},
   MedocJournal in '..\..\Forms\Document\MedocJournal.pas' {MedocJournalForm: TParentForm},
   Report_MotionGoodsCeh in '..\..\Forms\Report\Report_MotionGoodsCeh.pas' {Report_MotionGoodsCehForm: TParentForm},
-  Retail_PrintKindItem in '..\..\Forms\Guides\Retail_PrintKindItem.pas' {Retail_PrintKindItemForm: TParentForm};
+  Retail_PrintKindItem in '..\..\Forms\Guides\Retail_PrintKindItem.pas' {Retail_PrintKindItemForm: TParentForm},
+  Juridical_PrintKindItem in '..\..\Forms\Guides\Juridical_PrintKindItem.pas' {Juridical_PrintKindItemForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
