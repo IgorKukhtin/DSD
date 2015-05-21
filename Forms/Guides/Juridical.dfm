@@ -196,6 +196,15 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 40
       end
+      object clisTaxSummary: TcxGridDBColumn
+        Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
+        DataBinding.FieldName = 'isTaxSummary'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
       object clPriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         DataBinding.FieldName = 'PriceListName'

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
                GLNCode TVarChar,
-               isCorporate Boolean, 
+               isCorporate Boolean,  isTaxSummary Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,  
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                RetailId Integer, RetailName TVarChar,
@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
                StartPromo TDateTime, EndPromo TDateTime
+
                ) AS
 $BODY$
 BEGIN
@@ -35,7 +36,8 @@ BEGIN
            
            , CAST ('' as TVarChar)    AS GLNCode
            , CAST (false as Boolean)  AS isCorporate
-           
+           , CAST (false as Boolean)  AS isTaxSummary
+
            , CAST (0 as Integer)    AS JuridicalGroupId
            , CAST ('' as TVarChar)  AS JuridicalGroupName
            
@@ -70,7 +72,8 @@ BEGIN
            
            , ObjectString_GLNCode.ValueData      AS GLNCode
            , ObjectBoolean_isCorporate.ValueData AS isCorporate
-           
+           , COALESCE (ObjectBoolean_isTaxSummary.ValueData, False::Boolean)  AS isTaxSummary           
+
            , Object_JuridicalGroup.Id         AS JuridicalGroupId
            , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
            
@@ -103,6 +106,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                    ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id 
                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isTaxSummary
+                                ON ObjectBoolean_isTaxSummary.ObjectId = Object_Juridical.Id 
+                               AND ObjectBoolean_isTaxSummary.DescId = zc_ObjectBoolean_Juridical_isTaxSummary()
            
            LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                                 ON ObjectDate_StartPromo.ObjectId = Object_Juridical.Id
@@ -158,6 +165,7 @@ ALTER FUNCTION gpGet_Object_Juridical (Integer, TVarChar, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.05.15         * add  isTaxSummary
  20,11,14         * add  Retail
  07.11.14         * ËÁÏÂÌÂÌÓ RetailReport
  23.05.14         * add Retail

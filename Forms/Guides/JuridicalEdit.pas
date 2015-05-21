@@ -128,6 +128,7 @@ type
     cxLabel20: TcxLabel;
     ceRetail: TcxButtonEdit;
     RetailGuides: TdsdGuides;
+    cbisTaxSummary: TcxCheckBox;
   private
     { Private declarations }
   public

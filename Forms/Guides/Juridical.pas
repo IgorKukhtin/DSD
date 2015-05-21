@@ -84,6 +84,7 @@ type
     InfoMoneyName_all: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
+    clisTaxSummary: TcxGridDBColumn;
   private
     { Private declarations }
   public
