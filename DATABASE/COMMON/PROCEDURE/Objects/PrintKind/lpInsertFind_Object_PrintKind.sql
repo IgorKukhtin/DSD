@@ -34,10 +34,10 @@ BEGIN
                   );
 
      -- !!!добавляется разделитель!!!
-     vbKeyValue:= CASE WHEN vbKeyValue <> '' THEN ';' || vbKeyValue || ';' ELSE vbKeyValue END;
+     vbKeyValue:= CASE WHEN vbKeyValue <> '' THEN ';' || vbKeyValue || ';' ELSE COALESCE (vbKeyValue, '') END;
 
      -- Находим 
-     vbPrintKindItemId:= (SELECT Object.Id FROM Object WHERE Object.ValueData = vbKeyValue AND Object.DescId = zc_Object_Object_PrintKindItem());
+     vbPrintKindItemId:= (SELECT Object.Id FROM Object WHERE Object.ValueData = vbKeyValue AND Object.DescId = zc_Object_PrintKindItem());
 
      IF COALESCE (vbPrintKindItemId, 0) = 0
      THEN
