@@ -34,7 +34,7 @@ object GuidePersonalForm: TGuidePersonalForm
       BevelOuter = bvNone
       TabOrder = 0
       object bbExit: TSpeedButton
-        Left = 511
+        Left = 443
         Top = 3
         Width = 31
         Height = 29
@@ -52,7 +52,7 @@ object GuidePersonalForm: TGuidePersonalForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 306
+        Left = 241
         Top = 3
         Width = 31
         Height = 29
@@ -98,6 +98,7 @@ object GuidePersonalForm: TGuidePersonalForm
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -257,7 +258,11 @@ object GuidePersonalForm: TGuidePersonalForm
       item
         Action = actChoice
       end>
-    ActionItemList = <>
+    ActionItemList = <
+      item
+        Action = actChoice
+        ShortCut = 13
+      end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>

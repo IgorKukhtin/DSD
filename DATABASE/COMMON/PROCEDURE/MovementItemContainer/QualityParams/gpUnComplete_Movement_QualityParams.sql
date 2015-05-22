@@ -1,8 +1,8 @@
--- Function: gpUnComplete_Movement_GoodsQuality (Integer, TVarChar)
+-- Function: gpUnComplete_Movement_QualityParams (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUnComplete_Movement_GoodsQuality (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUnComplete_Movement_QualityParams (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUnComplete_Movement_GoodsQuality(
+CREATE OR REPLACE FUNCTION gpUnComplete_Movement_QualityParams(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
@@ -12,10 +12,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_GoodsQuality());
-
-     -- проверка - если <Master> Удален, то <Ошибка>
-     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
+     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_QualityParams());
 
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
@@ -28,8 +25,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.05.15                                        *
  09.02.15                                                        *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement_GoodsQuality (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUnComplete_Movement_QualityParams (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())

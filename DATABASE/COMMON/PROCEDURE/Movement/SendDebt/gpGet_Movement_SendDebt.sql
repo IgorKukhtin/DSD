@@ -144,7 +144,7 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                        
             LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = Movement.Id
-                                         AND MI_Master.DescId     = zc_MI_Master()
+                                               AND MI_Master.DescId     = zc_MI_Master()
 
             LEFT JOIN ObjectLink AS ObjectLink_PartnerFrom_Juridical
                                  ON ObjectLink_PartnerFrom_Juridical.ObjectId = MI_Master.ObjectId

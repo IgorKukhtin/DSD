@@ -69,6 +69,7 @@ type
 
     ParamsPersonal_local: TParams;
 
+    procedure CancelCxFilter;
     function Checked: boolean;
   public
     function Execute(var execParamsPersonal:TParams): boolean;
@@ -81,7 +82,7 @@ implementation
 
 {$R *.dfm}
 
- uses dmMainScale;
+uses dmMainScale;
 {------------------------------------------------------------------------------}
 function TGuidePersonalForm.Execute(var execParamsPersonal:TParams): boolean;
 begin
@@ -90,6 +91,7 @@ begin
      EditPersonalCode.Text:='';
      EditPersonalName.Text:='';
 
+     CancelCxFilter;
      CDS.Filtered:=false;
      CDS.Filtered:=true;
 
@@ -110,6 +112,12 @@ begin
      if result then CopyValuesParamsFrom(ParamsPersonal_local,execParamsPersonal);
 end;
 {------------------------------------------------------------------------------}
+procedure TGuidePersonalForm.CancelCxFilter;
+begin
+     if cxDBGridDBTableView.DataController.Filter.Active
+     then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
+end;
+{------------------------------------------------------------------------------}
 procedure TGuidePersonalForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
     if Key=13
@@ -124,8 +132,11 @@ begin
                        else if (ActiveControl=EditPersonalName)
                             then ActiveControl:=EditPersonalCode;
         end;
-
-    if Key=27 then actExitExecute(Self);
+    //
+    if (Key=27) then
+      if cxDBGridDBTableView.DataController.Filter.Active
+      then CancelCxFilter
+      else actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuidePersonalForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);

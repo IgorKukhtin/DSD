@@ -14,7 +14,7 @@ BEGIN
    (SELECT D.FieldXML
     FROM
    (SELECT '<Field FieldName = "№ документа" FieldValue = "' || zfStrToXmlStr(Movement.InvNumber) || '"/>'
-        || '<Field FieldName = "Дата документа" FieldValue = "' || Movement.OperDate || '"/>'
+        || '<Field FieldName = "Дата документа" FieldValue = "' || DATE (Movement.OperDate) || '"/>'
         || '<Field FieldName = "Статус" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>'
            AS FieldXML 
          , 1 AS GroupId
@@ -30,7 +30,7 @@ BEGIN
          INNER JOIN MovementFloatDesc ON MovementFloatDesc.Id = MovementFloat.DescId
     WHERE MovementFloat.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementDateDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr(MovementDateDesc.ItemName) || '" FieldValue = "' || COALESCE (DATE (MovementDate.ValueData) :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 3 AS GroupId
          , MovementDate.DescId
     FROM MovementDate

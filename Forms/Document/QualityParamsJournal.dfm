@@ -310,13 +310,13 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_QualityParams'
-    Left = 816
-    Top = 176
+    Left = 136
+    Top = 416
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_QualityParams'
-    Left = 776
-    Top = 296
+    Left = 24
+    Top = 400
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_QualityParams'
@@ -325,11 +325,16 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
       item
         DataSet = MasterCDS
       end>
-    Left = 672
-    Top = 208
+    Left = 48
+    Top = 296
   end
   inherited FormParams: TdsdFormParams
     Left = 384
     Top = 208
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_QualityParams'
+    Left = 128
+    Top = 344
   end
 end
