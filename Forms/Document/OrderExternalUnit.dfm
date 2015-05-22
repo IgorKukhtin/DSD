@@ -1,27 +1,27 @@
 inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
-  ClientWidth = 1280
-  ExplicitWidth = 1296
+  ClientWidth = 1419
+  ExplicitWidth = 1435
   ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1280
+    Width = 1419
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1280
+    ExplicitWidth = 1364
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1280
+    ClientRectRight = 1419
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1280
+      ExplicitWidth = 1364
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1280
+        Width = 1419
         Height = 518
-        ExplicitWidth = 1280
+        ExplicitWidth = 1364
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -354,10 +354,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1280
+    Width = 1419
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1280
+    ExplicitWidth = 1364
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -486,13 +486,13 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 1235
-      Top = 45
+      Left = 1337
+      Top = 41
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1235
+      Left = 1337
       Top = 63
       Properties.Buttons = <
         item
@@ -677,6 +677,41 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       TabOrder = 41
       Width = 89
     end
+    object edPartner: TcxButtonEdit
+      Left = 1235
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 42
+      Text = ' '
+      Width = 168
+    end
+    object edRetail: TcxButtonEdit
+      Left = 1235
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 43
+      Width = 168
+    end
+  end
+  object cxLabel21: TcxLabel [2]
+    Left = 1235
+    Top = 5
+    Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+  end
+  object cxLabel22: TcxLabel [3]
+    Left = 1235
+    Top = 45
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1426,6 +1461,32 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
+      end
+      item
+        Name = 'PartnerId'
+        Value = 0
+        Component = PartnerGuides
+        ComponentItem = 'PartnerId'
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'RetailId'
+        Value = Null
+        Component = RetailGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RetailName'
+        Value = Null
+        Component = RetailGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1575,6 +1636,20 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -2007,8 +2082,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1256
-    Top = 56
+    Left = 1336
+    Top = 72
   end
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
@@ -2257,5 +2332,91 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     PackSize = 1
     Left = 960
     Top = 208
+  end
+  object PartnerGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'RetailId'
+        Value = 'False'
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'RetailName'
+        Value = 0.000000000000000000
+        Component = RetailGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1268
+    Top = 4
+  end
+  object RetailGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1276
+    Top = 52
   end
 end

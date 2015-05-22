@@ -199,6 +199,13 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Options.Editing = False
         Width = 50
       end
+      object clRetailName: TcxGridDBColumn
+        Caption = #1058#1086#1075#1088#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 94
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -417,6 +424,19 @@ object Partner_ObjectForm: TPartner_ObjectForm
           Name = 'ContractName'
           Value = ''
           DataType = ftString
+        end
+        item
+          Name = 'RetailName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RetailName'
+          DataType = ftString
+        end
+        item
+          Name = 'RetailId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RetailId'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
