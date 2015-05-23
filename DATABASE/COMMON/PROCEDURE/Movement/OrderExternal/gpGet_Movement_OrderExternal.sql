@@ -21,6 +21,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , RetailId Integer, RetailName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , DayCount TFloat
              , isPrinted Boolean
@@ -60,19 +62,25 @@ BEGIN
              , Object_To.ValueData 				AS FromName_OrderUnit
              , Object_StoreMain.Id             	                AS ToId_OrderUnit
              , Object_StoreMain.ValueData                       AS ToName_OrderUnit
-             , 0                     				            AS PersonalId
-             , CAST ('' AS TVarChar) 				            AS PersonalName
-             , 0                     				            AS RouteId
-             , CAST ('' AS TVarChar) 				            AS RouteName
-             , 0                     				            AS RouteSortingId
-             , CAST ('' AS TVarChar) 				            AS RouteSortingName
-             , 0                     				            AS PaidKindId
-             , CAST ('' AS TVarChar) 				            AS PaidKindName
-             , 0                     				            AS ContractId
-             , CAST ('' AS TVarChar) 				            AS ContractName
-             , CAST ('' AS TVarChar) 				            AS ContractTagName
-             , CAST (0  AS INTEGER)                             AS PriceListId
-             , CAST ('' AS TVarChar) 			                AS PriceListName
+             , 0                     				AS PersonalId
+             , CAST ('' AS TVarChar) 				AS PersonalName
+             , 0                     				AS RouteId
+             , CAST ('' AS TVarChar) 				AS RouteName
+             , 0                     				AS RouteSortingId
+             , CAST ('' AS TVarChar) 				AS RouteSortingName
+             , 0                     				AS PaidKindId
+             , CAST ('' AS TVarChar) 				AS PaidKindName
+             , 0                     				AS ContractId
+             , CAST ('' AS TVarChar) 				AS ContractName
+             , CAST ('' AS TVarChar) 				AS ContractTagName
+             , CAST (0  AS Integer)                             AS PriceListId
+             , CAST ('' AS TVarChar) 			        AS PriceListName
+
+             , CAST (0  AS Integer)                             AS RetailId
+             , CAST ('' AS TVarChar)                            AS RetailName
+             , CAST (0  AS Integer)                             AS PartnerId
+             , CAST ('' AS TVarChar)                            AS PartnerName
+
              , CAST (FALSE AS Boolean)                          AS PriceWithVAT
              , CAST (20 AS TFloat)                              AS VATPercent
              , CAST (0 AS TFloat)                               AS ChangePercent
@@ -126,6 +134,12 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName    AS ContractTagName
            , Object_PriceList.id                        AS PriceListId
            , Object_PriceList.ValueData                 AS PriceListName
+
+           , Object_Retail.id                               AS RetailId
+           , Object_Retail.ValueData                        AS RetailName
+           , Object_Partner.id                              AS PartnerId
+           , Object_Partner.ValueData                       AS PartnerName
+
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)  AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
@@ -219,7 +233,15 @@ BEGIN
            LEFT JOIN MovementBoolean AS MovementBoolean_Print
                                      ON MovementBoolean_Print.MovementId =  Movement.Id
                                     AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                        ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                       AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MovementLinkObject_Retail.ObjectId
 
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                        ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                       AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal();
@@ -235,6 +257,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.05.15         * add Retail, Partner
  09.02.15         * add DayCount
  06.02.15                                                        *
  26.08.14                                                        *

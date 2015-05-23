@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean,
 
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, /*GLNCode_Juridical TVarChar,*/
-               RetailName TVarChar,
+               RetailId Integer, RetailName TVarChar,
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
 
@@ -108,6 +108,7 @@ BEGIN
          , Object_Juridical.ValueData      AS JuridicalName
          , Object_JuridicalGroup.ValueData AS JuridicalGroupName
          
+         , Object_Retail.Id                AS RetailId
          , Object_Retail.ValueData         AS RetailName
 
          , Object_Route.Id           AS RouteId

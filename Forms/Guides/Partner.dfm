@@ -700,6 +700,7 @@ object PartnerForm: TPartnerForm
     object actUpdateEdiDesadv: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateEdiDesadv
       StoredProcList = <
         item
@@ -712,6 +713,7 @@ object PartnerForm: TPartnerForm
     object actUpdateEdiInvoice: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateEdiInvoice
       StoredProcList = <
         item
@@ -724,6 +726,7 @@ object PartnerForm: TPartnerForm
     object actUpdateEdiOrdspr: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateEdiOrdspr
       StoredProcList = <
         item
@@ -767,6 +770,7 @@ object PartnerForm: TPartnerForm
     object actChoicePriceListPromoForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PriceListPromoChoiceForm'
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
@@ -790,6 +794,7 @@ object PartnerForm: TPartnerForm
     object actChoicePriceListForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PriceListChoiceForm'
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
@@ -858,6 +863,7 @@ object PartnerForm: TPartnerForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -869,6 +875,7 @@ object PartnerForm: TPartnerForm
     object actChoiceRoute: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Route_ObjectForm'
       FormName = 'TRoute_ObjectForm'
       FormNameParam.Value = 'TRoute_ObjectForm'
@@ -892,6 +899,7 @@ object PartnerForm: TPartnerForm
     object actChoiceRouteSorting: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'RouteSorting_ObjectForm'
       FormName = 'TRouteSorting_ObjectForm'
       FormNameParam.Value = 'TRouteSorting_ObjectForm'
@@ -915,6 +923,7 @@ object PartnerForm: TPartnerForm
     object actChoiceMemberTake: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Member_ObjectForm'
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
@@ -938,6 +947,7 @@ object PartnerForm: TPartnerForm
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Personal_ObjectForm'
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -961,6 +971,7 @@ object PartnerForm: TPartnerForm
     object PersonalTradeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Personal_ObjectForm'
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -984,6 +995,7 @@ object PartnerForm: TPartnerForm
     object actChoiceUnit: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Route_ObjectForm'
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'

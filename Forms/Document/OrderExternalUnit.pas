@@ -110,6 +110,12 @@ type
     AmountForecastOrder: TcxGridDBColumn;
     AmountCalcOrder: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    cxLabel21: TcxLabel;
+    edPartner: TcxButtonEdit;
+    PartnerGuides: TdsdGuides;
+    cxLabel22: TcxLabel;
+    edRetail: TcxButtonEdit;
+    RetailGuides: TdsdGuides;
   private
     { Private declarations }
   public
