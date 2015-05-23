@@ -43,6 +43,7 @@ inherited QualityDocForm: TQualityDocForm
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -185,12 +186,6 @@ inherited QualityDocForm: TQualityDocForm
         Name = 'MovementId_Sale'
         Value = '0'
         ParamType = ptInput
-      end
-      item
-        Name = 'OperDate'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
       end>
     Left = 27
     Top = 169
@@ -297,9 +292,16 @@ inherited QualityDocForm: TQualityDocForm
         DataType = ftString
       end
       item
+        Name = 'ToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
         Name = 'ToName'
         Value = ''
-        Component = edTo
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -364,24 +366,44 @@ inherited QualityDocForm: TQualityDocForm
         Component = edFrom
       end
       item
+        Name = 'ToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
         Name = 'ToName'
         Value = Null
-        Component = edTo
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
       end
       item
         Name = 'inStartDate'
         Value = Null
-        Component = edOperDateOut
+        Component = edOperDate_Sale
         DataType = ftDateTime
       end
       item
         Name = 'inEndDate'
         Value = Null
-        Component = edOperDateOut
+        Component = edOperDate_Sale
         DataType = ftDateTime
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 344
-    Top = 31
+    Left = 96
+    Top = 23
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -457,5 +479,36 @@ inherited QualityDocForm: TQualityDocForm
       end>
     Left = 72
     Top = 100
+  end
+  object GuidesTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTo
+    FormNameParam.Value = 'TForm_NULL'
+    FormNameParam.DataType = ftString
+    FormName = 'TForm_NULL'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CarModelName'
+        Value = ''
+        Component = GuideCarModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 352
+    Top = 50
   end
 end

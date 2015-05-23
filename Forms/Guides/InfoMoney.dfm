@@ -25,7 +25,6 @@ object InfoMoneyForm: TInfoMoneyForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 597
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -287,6 +286,7 @@ object InfoMoneyForm: TInfoMoneyForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -334,18 +334,21 @@ object InfoMoneyForm: TInfoMoneyForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'NameAll'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
         end>
@@ -357,6 +360,7 @@ object InfoMoneyForm: TInfoMoneyForm
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -371,6 +375,7 @@ object InfoMoneyForm: TInfoMoneyForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 256
     Top = 184
   end
@@ -385,10 +390,12 @@ object InfoMoneyForm: TInfoMoneyForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 168
     Top = 120
   end

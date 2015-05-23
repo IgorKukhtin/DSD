@@ -330,7 +330,6 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
         item
           Name = 'MovementId_Sale'
           Value = 0
-          DataType = ftBoolean
         end
         item
           Name = 'OperDate'

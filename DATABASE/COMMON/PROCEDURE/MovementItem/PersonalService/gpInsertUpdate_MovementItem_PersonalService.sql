@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inUnitId              Integer   , -- Подразделение
     IN inPositionId          Integer   , -- Должность
     IN inMemberId            Integer   , -- юр.лицо
-    IN inPersonalServiceListId   Integer   , -- Ведомость начисления
+    IN inPersonalServiceListId Integer   , -- Ведомость начисления
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS

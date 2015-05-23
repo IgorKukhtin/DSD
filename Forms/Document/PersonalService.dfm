@@ -3,7 +3,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   ClientHeight = 662
   ClientWidth = 1112
   ExplicitWidth = 1128
-  ExplicitHeight = 700
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -363,7 +363,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 80
           end
           object colPersonalServiceListName: TcxGridDBColumn [23]
-            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1041#1053')'
             DataBinding.FieldName = 'PersonalServiceListName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -375,7 +375,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 140
           end
           object colComment: TcxGridDBColumn [24]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

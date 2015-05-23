@@ -275,7 +275,6 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
         item
           Name = 'MovementId_Sale'
           Value = 0
-          DataType = ftBoolean
         end
         item
           Name = 'OperDate'

@@ -21,8 +21,21 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- параметр из документа
-     vbOperDate := (SELECT OperDate FROM Movement WHERE Id = inMovementId);
+     -- параметр из документа - !!!временно!!!
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
+     -- !!!временно!!!
+     IF NOT EXISTS (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child()) -- 1=1 OR vbUserId = 5
+     THEN PERFORM gpInsertUpdate_Movement_QualityDoc (ioId             := 0
+                                                    , inMovementId_Sale:= inMovementId
+                                                    , inOperDateIn     := Movement.OperDate
+                                                    , inOperDateOut    := Movement.OperDate
+                                                    , inCarId          := NULL
+                                                    , inSession        := inSession
+                                                     )
+          FROM Movement
+          WHERE Movement.Id = inMovementId;
+     END IF;
 
 
      -- Данные: заголовок + строчная часть для ФОРМЫ 1

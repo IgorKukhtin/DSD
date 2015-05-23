@@ -153,12 +153,14 @@ type
     ScaleAction: TScaleAction;
     bbScale: TdxBarButton;
     spSelectPrintQuality: TdsdStoredProc;
-    actPrint_Quality: TdsdPrintAction;
+    actPrint_QualityDoc: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;
     colLineNum: TcxGridDBColumn;
     actDialog_TTN: TdsdOpenForm;
     mactPrint_TTN: TMultiAction;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
   private
     { Private declarations }
   public

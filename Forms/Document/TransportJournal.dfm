@@ -61,6 +61,8 @@ object TransportJournalForm: TTransportJournalForm
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
+    ExplicitLeft = 120
+    ExplicitTop = 55
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

@@ -1,160 +1,120 @@
--- Function: gpInsertUpdate_Movement_QualityDoc (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer)
+-- Function: gpInsertUpdate_Movement_QualityDoc (Integer, Integer, TDateTime, TDateTime, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_QualityDoc (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_QualityDoc (Integer, Integer, TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_QualityDoc(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
     IN inMovementId_Sale     Integer   , -- 
-    IN inInvNumberMark       TVarChar  , -- 
+    IN inOperDateIn          TDateTime , -- Дата 
+    IN inOperDateOut         TDateTime , -- Дата 
     IN inCarId               Integer   , -- Автомобиль
-    IN inCarTrailerId        Integer   , -- Автомобиль (прицеп)
-    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
-    IN inPersonalDriverName  TVarChar  , -- Сотрудник (водитель)
-    IN inRouteId             Integer   , -- 
-    IN inMemberId1           Integer   , -- отримав водій/експедитор
-    IN inMemberName1         TVarChar  , -- отримав водій/експедитор
-    IN inMemberId2           Integer   , -- Бухгалтер (відповідальна особа вантажовідправника)
-    IN inMemberName2         TVarChar  , -- Бухгалтер (відповідальна особа вантажовідправника)
-    IN inMemberId3           Integer   , -- Відпуск дозволив
-    IN inMemberName3         TVarChar  , -- Відпуск дозволив
-    IN inMemberId4           Integer   , -- Здав (відповідальна особа вантажовідправника)
-    IN inMemberName4         TVarChar  , -- Здав (відповідальна особа вантажовідправника)
-    IN inMemberId5           Integer   , -- Прийняв водій/експедитор
-    IN inMemberName5         TVarChar  , -- Прийняв водій/експедитор
-    IN inMemberId6           Integer   , -- Здав водій/експедитор
-    IN inMemberName6         TVarChar  , -- Здав водій/експедитор
-    IN inMemberId7           Integer   , -- Прийняв (відповідальна особа вантажоодержувача) 
-    IN inMemberName7         TVarChar  , -- Прийняв (відповідальна особа вантажоодержувача) 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_QualityDoc());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_QualityDoc());
 
 
-     -- нашли <Сотрудник (водитель)>
-     inPersonalDriverId:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inPersonalDriverName) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
-     IF COALESCE (inPersonalDriverId, 0) = 0 AND TRIM (inPersonalDriverName) <> ''
-     THEN
-         -- создание
-         inPersonalDriverId:= lpInsertUpdate_Object_MemberExternal (ioId    := inPersonalDriverId
-                                                                  , inCode  := 0
-                                                                  , inName  := inPersonalDriverName
-                                                                  , inUserId:= vbUserId
-                                                                   );
-     END IF;
+     -- параметр из документа - !!!временно!!!
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Sale);
 
-     -- нашли <отримав водій/експедитор>
-     inMemberId1:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName1) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
-     IF COALESCE (inMemberId1, 0) = 0 AND TRIM (inMemberName1) <> ''
-     THEN
-         -- создание
-         inMemberId1:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId1
-                                                           , inCode  := 0
-                                                           , inName  := inMemberName1
-                                                           , inUserId:= vbUserId
-                                                            );
-     END IF;
+     -- таблица - по 
+     CREATE TEMP TABLE _tmpMovement_QualityDoc (MovementId Integer, MovementId_master Integer, MovementId_child Integer) ON COMMIT DROP;
 
-     -- нашли <Бухгалтер (відповідальна особа вантажовідправника)>
-     inMemberId2:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName2) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
-     IF COALESCE (inMemberId2, 0) = 0 AND TRIM (inMemberName2) <> ''
-     THEN
-         -- создание
-         inMemberId2:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId2
-                                                           , inCode  := 0
-                                                           , inName  := inMemberName2
-                                                           , inUserId:= vbUserId
-                                                            );
-     END IF;
+       WITH -- элементы документа inMovementId_Sale
+            tmpMI AS (SELECT MovementItem.*
+                      FROM MovementItem
+                           INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                       AND MIFloat_Price.ValueData <> 0
+                           INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                                       AND MIFloat_AmountPartner.ValueData <> 0
+                      WHERE MovementItem.MovementId =  inMovementId_Sale
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                     )
+            -- получили список Goods
+          , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
+            -- получили список Quality
+          , tmpQuality AS (SELECT ObjectLink_GoodsQuality_Quality.ChildObjectId AS QualityId
+                           FROM tmpMIGoods
+                                INNER JOIN ObjectLink AS ObjectLink_GoodsQuality_Goods
+                                                      ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
+                                                     AND ObjectLink_GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
+                                LEFT JOIN ObjectLink AS ObjectLink_GoodsQuality_Quality
+                                                     ON ObjectLink_GoodsQuality_Quality.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
+                                                    AND ObjectLink_GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
+                                INNER JOIN ObjectFloat AS ObjectFloat_Quality_NumberPrint
+                                                       ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
+                                                      AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
+                                                      AND ObjectFloat_Quality_NumberPrint.ValueData = 1 -- !!!так захардкодил!!!, вообще их пока 2: вторая для консервов, первая все остальное
+                           GROUP BY ObjectLink_GoodsQuality_Quality.ChildObjectId
+                          )
 
-     -- нашли <Відпуск дозволив>
-     inMemberId3:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName3) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
-     IF COALESCE (inMemberId3, 0) = 0 AND TRIM (inMemberName3) <> ''
-     THEN
-         -- создание
-         inMemberId3:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId3
-                                                           , inCode  := 0
-                                                           , inName  := inMemberName3
-                                                           , inUserId:= vbUserId
-                                                            );
-     END IF;
-
-     -- нашли <Здав (відповідальна особа вантажовідправника)>
-     inMemberId4:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName4) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
-     IF COALESCE (inMemberId4, 0) = 0 AND TRIM (inMemberName4) <> ''
-     THEN
-         -- создание
-         inMemberId4:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId4
-                                                           , inCode  := 0
-                                                           , inName  := inMemberName4
-                                                           , inUserId:= vbUserId
-                                                            );
-     END IF;
-
-     -- нашли <Прийняв водій/експедитор>
-     inMemberId5:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName5) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
-     IF COALESCE (inMemberId5, 0) = 0 AND TRIM (inMemberName5) <> ''
-     THEN
-         -- создание
-         inMemberId5:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId5
-                                                           , inCode  := 0
-                                                           , inName  := inMemberName5
-                                                           , inUserId:= vbUserId
-                                                            );
-     END IF;
-
-     -- нашли <Здав водій/експедитор>
-     inMemberId6:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName6) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
-     IF COALESCE (inMemberId6, 0) = 0 AND TRIM (inMemberName6) <> ''
-     THEN
-         -- создание
-         inMemberId6:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId6
-                                                           , inCode  := 0
-                                                           , inName  := inMemberName6
-                                                           , inUserId:= vbUserId
-                                                            );
-     END IF;
-
-     -- нашли <Прийняв (відповідальна особа вантажоодержувача)>
-     inMemberId7:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName7) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
-     IF COALESCE (inMemberId7, 0) = 0 AND TRIM (inMemberName7) <> ''
-     THEN
-         -- создание
-         inMemberId7:= lpInsertUpdate_Object_MemberExternal (ioId    := inMemberId7
-                                                           , inCode  := 0
-                                                           , inName  := inMemberName7
-                                                           , inUserId:= vbUserId
-                                                            );
-     END IF;
+            -- получили список всех zc_Movement_QualityParams для каждого Quality !!!с датой <= vbOperDate!!!
+          , tmpMovementQualityParams_list AS (SELECT tmpQuality.QualityId, Movement.Id AS MovementId, Movement.OperDate
+                                              FROM tmpQuality
+                                                   INNER JOIN MovementLinkObject AS MLO_Quality
+                                                                                 ON MLO_Quality.ObjectId = tmpQuality.QualityId
+                                                                                AND MLO_Quality.DescId = zc_MovementLinkObject_Quality()
+                                                   INNER JOIN Movement ON Movement.Id = MLO_Quality.MovementId
+                                                                      AND Movement.DescId = zc_Movement_QualityParams()
+                                                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                      AND Movement.OperDate <= vbOperDate
+                                             )
+            -- для каждого Quality выбрали с MAX (OperDate) !!!это и будет последний!!!, кстати к этим док-там и должен быть привязан inMovementId_Sale
+          , tmpMovementQualityParams_max AS (SELECT tmp.QualityId, MAX (tmpMovementQualityParams_list.MovementId) AS MovementId
+                                             FROM (SELECT tmpMovementQualityParams_list.QualityId, MAX (tmpMovementQualityParams_list.OperDate) AS OperDate FROM tmpMovementQualityParams_list GROUP BY tmpMovementQualityParams_list.QualityId) AS tmp
+                                                  INNER JOIN tmpMovementQualityParams_list ON tmpMovementQualityParams_list.QualityId = tmp.QualityId
+                                                                                          AND tmpMovementQualityParams_list.OperDate = tmp.OperDate
+                                             GROUP BY tmp.QualityId
+                                            )
+            -- документ inMovementId_Sale разложенный на !!!все!!! существующие MovementId + MovementId_master
+          , tmpMovementQualityDoc AS (SELECT MovementLinkMovement_Child.MovementId       AS MovementId
+                                           , MovementLinkMovement_Master.MovementChildId AS MovementId_master
+                                      FROM Movement
+                                           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                                                          ON MovementLinkMovement_Child.MovementChildId = Movement.Id 
+                                                                         AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                                           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                                                          ON MovementLinkMovement_Master.MovementId = MovementLinkMovement_Child.MovementId
+                                                                         AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                                           LEFT JOIN Movement AS Movement_QualityDoc ON Movement_QualityDoc.Id = MovementLinkMovement_Child.MovementId
+                                      WHERE Movement.Id = inMovementId_Sale
+                                     )
+     -- получили "ненужный" список 
+     INSERT INTO _tmpMovement_QualityDoc (MovementId)
+        SELECT CASE WHEN tmpResult.MovementId_master <> 0
+                         THEN lpInsertUpdate_Movement_QualityDoc (ioId               := tmpResult.MovementId
+                                                                , inMovementId_master:= tmpResult.MovementId_master
+                                                                , inMovementId_child := inMovementId_Sale
+                                                                , inOperDateIn       := inOperDateIn
+                                                                , inOperDateOut      := inOperDateOut
+                                                                , inCarId            := inCarId
+                                                                , inUserId           := vbUserId
+                                                                 )
+                    WHEN tmpResult.MovementId <> 0
+                         THEN lpSetErased_Movement_QualityDoc (inMovementId := tmpResult.MovementId
+                                                             , inUserId     := vbUserId
+                                                              )
+                    ELSE 0
+               END
+        FROM (SELECT COALESCE (tmpMovementQualityDoc.MovementId, 0)        AS MovementId         -- если не был выписан MovementId то будем создавать, иначе его Update or Delete
+                   , COALESCE (tmpMovementQualityParams_max.MovementId, 0) AS MovementId_master  -- если 0 то создавать его не надо или надо удалить
+               FROM tmpMovementQualityDoc
+                    FULL JOIN tmpMovementQualityParams_max ON tmpMovementQualityParams_max.MovementId = tmpMovementQualityDoc.MovementId_master
+             ) AS tmpResult
+    ;
 
 
-     -- сохранили <Документ>
-     ioId:= lpInsertUpdate_Movement_QualityDoc (ioId              := ioId
-                                                  , inInvNumber       := inInvNumber
-                                                  , inOperDate        := inOperDate
-                                                  , inMovementId_Sale := inMovementId_Sale
-                                                  , inInvNumberMark   := inInvNumberMark
-                                                  , inCarId           := inCarId
-                                                  , inCarTrailerId    := inCarTrailerId
-                                                  , inPersonalDriverId:= inPersonalDriverId
-                                                  , inRouteId         := inRouteId
-                                                  , inMemberId1       := inMemberId1
-                                                  , inMemberId2       := inMemberId2
-                                                  , inMemberId3       := inMemberId3
-                                                  , inMemberId4       := inMemberId4
-                                                  , inMemberId5       := inMemberId5
-                                                  , inMemberId6       := inMemberId6
-                                                  , inMemberId7       := inMemberId7
-                                                  , inUserId          := vbUserId
-                                                   );
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -162,7 +122,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 30.03.15                                        *
+ 22.05.15                                        *
 */
 
 -- тест

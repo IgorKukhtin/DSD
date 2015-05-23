@@ -32,6 +32,7 @@ type
     GuideCarModel: TdsdGuides;
     cxLabel8: TcxLabel;
     edOperDateIn: TcxDateEdit;
+    GuidesTo: TdsdGuides;
   private
     { Private declarations }
   public

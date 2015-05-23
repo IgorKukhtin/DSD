@@ -580,9 +580,16 @@
         DataType = ftString
       end
       item
+        Name = 'ToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
         Name = 'ToName'
         Value = ''
-        Component = edTo
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -749,11 +756,20 @@
         Name = 'FromName'
         Value = Null
         Component = edFrom
+        DataType = ftString
+      end
+      item
+        Name = 'ToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
         Value = Null
-        Component = edTo
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'inStartDate'
@@ -766,6 +782,19 @@
         Value = Null
         Component = edOperDate
         DataType = ftDateTime
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 344
     Top = 23
@@ -1071,5 +1100,36 @@
       end>
     Left = 422
     Top = 253
+  end
+  object GuidesTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTo
+    FormNameParam.Value = 'TForm_NULL'
+    FormNameParam.DataType = ftString
+    FormName = 'TForm_NULL'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CarModelName'
+        Value = ''
+        Component = GuideCarModel
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 400
+    Top = 74
   end
 end

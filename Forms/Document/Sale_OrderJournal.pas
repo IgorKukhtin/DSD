@@ -125,7 +125,7 @@ type
     clEdiInvoice: TcxGridDBColumn;
     clEdiDesadv: TcxGridDBColumn;
     spSelectPrintQuality: TdsdStoredProc;
-    actPrint_Quality: TdsdPrintAction;
+    actPrint_QualityDoc: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;
     PersonalName: TcxGridDBColumn;
     mactPrint_TTN: TMultiAction;
@@ -136,6 +136,8 @@ type
     OperDate_TransportGoods: TcxGridDBColumn;
     colPaymentDate: TcxGridDBColumn;
     colInsertDate: TcxGridDBColumn;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
   private
     { Private declarations }
   public

@@ -29,7 +29,7 @@ BEGIN
      END IF;
 
      -- Проверка
-     IF inMovementId > 0 AND NOT EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Loss()))
+     IF inMovementId > 0 AND NOT EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_QualityDoc())
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не найден.Обратитесь к разработчику.';
      END IF;

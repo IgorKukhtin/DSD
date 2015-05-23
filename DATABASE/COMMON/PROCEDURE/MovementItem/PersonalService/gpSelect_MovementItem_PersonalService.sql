@@ -144,7 +144,7 @@ BEGIN
             , tmpAll.isErased
          
        FROM tmpAll 
-            LEFT JOIN MovementItemString AS MIString_Comment 
+            LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpAll.MovementItemId
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
                                         
