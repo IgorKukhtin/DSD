@@ -76,14 +76,18 @@ type
     PositionName3: TcxGridDBColumn;
     PositionName4: TcxGridDBColumn;
     bbPrint: TSpeedButton;
-    CheckBox1: TCheckBox;
-    CheckBox2: TCheckBox;
-    CheckBox3: TCheckBox;
-    CheckBox4: TCheckBox;
-    CheckBox5: TCheckBox;
-    CheckBox6: TCheckBox;
-    CheckBox7: TCheckBox;
+    cbPrintMovement: TCheckBox;
+    cbPrintTransport: TCheckBox;
+    cbPrintQuality: TCheckBox;
+    cbPrintAccount: TCheckBox;
+    cbPrintPack: TCheckBox;
+    cbPrintSpec: TCheckBox;
+    cbPrintTax: TCheckBox;
     CheckBox8: TCheckBox;
+    InvNumber_parent: TcxGridDBColumn;
+    OperDate_parent: TcxGridDBColumn;
+    InvNumber_TransportGoods: TcxGridDBColumn;
+    OperDate_TransportGoods: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -96,6 +100,7 @@ type
     procedure deStartPropertiesChange(Sender: TObject);
     procedure deEndPropertiesChange(Sender: TObject);
     procedure bbChangeMemberClick(Sender: TObject);
+    procedure bbPrintClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -116,7 +121,7 @@ implementation
 
 {$R *.dfm}
 
- uses dmMainScale,UtilScale,Main;
+ uses dmMainScale,UtilScale,UtilPrint,Main;
 {------------------------------------------------------------------------------}
 function TGuideMovementForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
 begin
@@ -330,6 +335,74 @@ end;
 procedure TGuideMovementForm.FormDestroy(Sender: TObject);
 begin
   ParamsMovement_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbPrintClick(Sender: TObject);
+begin
+     //
+     if    not(cbPrintMovement.Checked)
+       and not(cbPrintTax.Checked)
+       and not(cbPrintAccount.Checked)
+       and not(cbPrintPack.Checked)
+       and not(cbPrintSpec.Checked)
+       and not(cbPrintTransport.Checked)
+       and not(cbPrintQuality.Checked)
+     then begin
+               ShowMessage('Ошибка.Не выбран вариант печати.');
+               exit;
+     end;
+
+     //
+     if cbPrintMovement.Checked
+     then Print_Movemenet (CDS.FieldByName('MovementDescId').AsInteger
+                         , CDS.FieldByName('MovementId_parent').AsInteger
+                         , 1    // myPrintCount
+                         , TRUE // isPreview
+                          );
+     //
+     if cbPrintTax.Checked
+     then Print_Tax (CDS.FieldByName('MovementDescId').AsInteger
+                   , CDS.FieldByName('MovementId_parent').AsInteger
+                   , 1    // myPrintCount
+                   , TRUE // isPreview
+                    );
+     //
+     if cbPrintAccount.Checked
+     then Print_Account (CDS.FieldByName('MovementDescId').AsInteger
+                       , CDS.FieldByName('MovementId_parent').AsInteger
+                       , 1    // myPrintCount
+                       , TRUE // isPreview
+                        );
+     //
+     if cbPrintPack.Checked
+     then Print_Pack (CDS.FieldByName('MovementDescId').AsInteger
+                    , CDS.FieldByName('MovementId_parent').AsInteger
+                    , 1    // myPrintCount
+                    , TRUE // isPreview
+                     );
+     //
+     if cbPrintSpec.Checked
+     then Print_Spec (CDS.FieldByName('MovementDescId').AsInteger
+                    , CDS.FieldByName('MovementId_parent').AsInteger
+                    , 1    // myPrintCount
+                    , TRUE // isPreview
+                     );
+     //
+     if cbPrintTransport.Checked
+     then Print_Transport (CDS.FieldByName('MovementDescId').AsInteger
+                         , CDS.FieldByName('MovementId_TransportGoods').AsInteger // MovementId
+                         , CDS.FieldByName('MovementId_parent').AsInteger        // MovementId_sale
+                         , CDS.FieldByName('OperDate_parent').AsDateTime
+                         , 1    // myPrintCount
+                         , TRUE // isPreview
+                          );
+     //
+     if cbPrintQuality.Checked
+     then Print_Quality (CDS.FieldByName('MovementDescId').AsInteger
+                       , CDS.FieldByName('MovementId_parent').AsInteger
+                       , 1    // myPrintCount
+                       , TRUE // isPreview
+                        );
 end;
 {------------------------------------------------------------------------------}
 end.

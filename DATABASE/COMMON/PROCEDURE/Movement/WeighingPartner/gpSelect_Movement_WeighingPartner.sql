@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
+             , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
              , PriceWithVAT Boolean
@@ -63,6 +64,10 @@ BEGIN
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
              , Movement_Parent.InvNumber         AS InvNumber_parent
+
+             , Movement_TransportGoods.Id            AS MovementId_TransportGoods
+             , Movement_TransportGoods.InvNumber     AS InvNumber_TransportGoods
+             , Movement_TransportGoods.OperDate      AS OperDate_TransportGoods
 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
@@ -118,6 +123,11 @@ BEGIN
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement_Parent.Id
+                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+            LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
 
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
                                    ON MovementDate_StartWeighing.MovementId =  Movement.Id

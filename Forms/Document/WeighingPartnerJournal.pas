@@ -102,6 +102,8 @@ type
     PositionName4: TcxGridDBColumn;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    colInvNumber_TransportGoods: TcxGridDBColumn;
+    colOperDate_TransportGoods: TcxGridDBColumn;
   private
   public
   end;

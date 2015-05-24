@@ -19,26 +19,30 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalService());
      vbUserId:= lpGetUserBySession (inSession);
 
-       IF EXISTS (select Id FROM MovementItem WHERE isErased = FALSE AND DescId = zc_MI_Master() AND MovementId = inMovementId)  
-        THEN RAISE EXCEPTION 'Ошибка. Документ не пустой.'; 
-       END IF;
+
+      -- Проверка - что б не копировали два раза
+      IF EXISTS (select Id FROM MovementItem WHERE isErased = FALSE AND DescId = zc_MI_Master() AND MovementId = inMovementId)  
+         THEN RAISE EXCEPTION 'Ошибка.В документе уже есть данные по начислениям.'; 
+      END IF;
+
 
       -- Результат
        CREATE TEMP TABLE tmpMI (MovementItemId Integer, PersonalId Integer, isMain Boolean
-             , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer
+             , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer, PersonalServiceListId Integer
              , Amount TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat) ON COMMIT DROP;
        
-       INSERT INTO tmpMI  (MovementItemId , PersonalId , isMain , UnitId , PositionId 
-             , InfoMoneyId , MemberId , Amount , SummService , SummCard , SummCardRecalc , SummMinus , SummAdd 
-             , SummSocialIn , SummSocialAdd , SummChild )
-       SELECT MovementItem.Id                          AS MovementItemId
-            , MovementItem.ObjectId                    AS PersonalId
-            , COALESCE (MIBoolean_Main.ValueData, False) :: Boolean   AS isMain
-            , MILinkObject_Unit.ObjectId               AS UnitId
-            , MILinkObject_Position.ObjectId           AS PositionId
-            , MILinkObject_InfoMoney.ObjectId          AS InfoMoneyId
-            , MILinkObject_Member.ObjectId             AS MemberId
+       INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
+                         , Amount, SummService, SummCard, SummCardRecalc, SummMinus, SummAdd 
+                         , SummSocialIn, SummSocialAdd, SummChild)
+       SELECT MovementItem.Id                           AS MovementItemId
+            , MovementItem.ObjectId                     AS PersonalId
+            , COALESCE (MIBoolean_Main.ValueData, FALSE) :: Boolean   AS isMain
+            , MILinkObject_Unit.ObjectId                AS UnitId
+            , MILinkObject_Position.ObjectId            AS PositionId
+            , MILinkObject_InfoMoney.ObjectId           AS InfoMoneyId
+            , MILinkObject_Member.ObjectId              AS MemberId
+            , MILinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
             , COALESCE (MovementItem.Amount, 0):: TFloat 
             , COALESCE (MIFloat_SummService.ValueData, 0):: TFloat     AS SummService
             , COALESCE (MIFloat_SummCard.ValueData, 0):: TFloat        AS SummCard
@@ -47,7 +51,7 @@ BEGIN
             , COALESCE (MIFloat_SummAdd.ValueData, 0):: TFloat         AS SummAdd
             , COALESCE (MIFloat_SummSocialIn.ValueData, 0):: TFloat    AS SummSocialIn
             , COALESCE (MIFloat_SummSocialAdd.ValueData, 0):: TFloat   AS SummSocialAdd
-            , COALESCE (MIFloat_SummChild.ValueData, 0):: TFloat     AS SummChild
+            , COALESCE (MIFloat_SummChild.ValueData, 0):: TFloat       AS SummChild
        FROM MovementItem 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -61,6 +65,10 @@ BEGIN
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
                                                   ON MILinkObject_Member.MovementItemId = MovementItem.Id
                                                  AND MILinkObject_Member.DescId = zc_MILinkObject_Member()                                                           
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                                                  ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList() 
+
                  LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
                                              ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
@@ -110,12 +118,13 @@ BEGIN
                                                         , inSummSocialIn       := SummSocialIn
                                                         , inSummSocialAdd      := SummSocialAdd
                                                         , inSummChild          := SummChild
-                                                        , inComment            := '+'
+                                                        , inComment            := 'копирование из другой ведомости'
                                                         , inInfoMoneyId        := InfoMoneyId
                                                         , inUnitId             := UnitId
                                                         , inPositionId         := PositionId
                                                         , inMemberId           := MemberId
-                                                        , inUserId              := vbUserId             
+                                                        , inPersonalServiceListId:= PersonalServiceListId
+                                                        , inUserId             := vbUserId             
                                                          )
                                                    
      FROM tmpMI
@@ -125,13 +134,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpUpdate_MI_PersonalService_isMask (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.05.15                                        *
  24.10.14         * 
-
 */
 
 -- тест

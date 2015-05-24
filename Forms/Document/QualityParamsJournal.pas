@@ -21,6 +21,7 @@ type
     CertificateSeriesNumber: TcxGridDBColumn;
     ExpertPrior: TcxGridDBColumn;
     N13: TMenuItem;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

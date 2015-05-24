@@ -1,8 +1,9 @@
--- Function: gpSelect_Movement_Sale_Invoice_Print()
+-- Function: gpSelect_Movement_Sale_ExpInvoice_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Invoice_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_ExpInvoice_Print (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Invoice_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_ExpInvoice_Print(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -587,7 +588,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Sale_Invoice_Print (Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Sale_ExpInvoice_Print (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -597,4 +598,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Invoice_Print (Integer,TVarChar) OWNER TO 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Invoice_Print (inMovementId := 570596, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Sale_ExpInvoice_Print (inMovementId := 570596, inSession:= '5');

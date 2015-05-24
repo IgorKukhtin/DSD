@@ -12,9 +12,9 @@ $BODY$
    DECLARE vbMovementId_check Integer;
 BEGIN
      -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime) ON COMMIT DROP;
      -- таблица - по элементам, для lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, MovementItemId_to Integer, SummCardRecalc TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, isMovementInsert Boolean) ON COMMIT DROP;
 
 
      -- Проверка - других быть не должно
@@ -50,8 +50,19 @@ BEGIN
 
 
      -- распределение !!!если это БН!!! - <Сумма на карточку (БН) для распределения>
-     PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := inMovementId
-                                                       , inUserId     := inUserId);
+     IF EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
+                FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                     INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                          AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                  AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+               )
+     THEN
+          PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := inMovementId
+                                                            , inUserId     := inUserId);
+     END IF;
 
 
      -- !!!обязательно!!! очистили таблицу проводок
@@ -360,7 +371,7 @@ BEGIN
                                 , inDescId     := zc_Movement_PersonalService()
                                 , inUserId     := inUserId
                                  );
-
+/*
      -- 6. ФИНИШ - распределение !!!если это НЕ БН!!! и находим !!!ведомости БН!!!
      PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := tmpMovement.MovementId
                                                        , inUserId     := inUserId)
@@ -396,7 +407,7 @@ BEGIN
           LIMIT 1
           ) AS tmpMovement
     ;
-
+*/
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

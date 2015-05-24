@@ -54,6 +54,7 @@ type
     OperDateOut: TcxGridDBColumn;
     InvNumber_Quality: TcxGridDBColumn;
     OperDate_Quality: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

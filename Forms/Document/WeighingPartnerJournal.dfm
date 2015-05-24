@@ -203,6 +203,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object colOperDate_TransportGoods: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1058#1058#1053
+        DataBinding.FieldName = 'OperDate_TransportGoods'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object colWeighingNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1074#1079#1074#1077#1096'.'
         DataBinding.FieldName = 'WeighingNumber'
@@ -239,6 +247,13 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
+      end
+      object colInvNumber_TransportGoods: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1058#1058#1053
+        DataBinding.FieldName = 'InvNumber_TransportGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object colInvNumberTransport: TcxGridDBColumn

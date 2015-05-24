@@ -21,7 +21,12 @@ BEGIN
 
 
      -- параметр из документа - !!!временно!!!
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Sale);
+     vbOperDate := (SELECT COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                    FROM Movement
+                         LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                    WHERE Movement.Id = inMovementId_Sale);
 
      -- таблица - по 
      CREATE TEMP TABLE _tmpMovement_QualityDoc (MovementId Integer, MovementId_master Integer, MovementId_child Integer) ON COMMIT DROP;
@@ -58,9 +63,21 @@ BEGIN
                                                       AND ObjectFloat_Quality_NumberPrint.ValueData = 1 -- !!!так захардкодил!!!, вообще их пока 2: вторая для консервов, первая все остальное
                            GROUP BY ObjectLink_GoodsQuality_Quality.ChildObjectId
                           )
+             -- получили список Retail для inMovementId_Sale
+           , tmpRetail AS (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                           FROM MovementLinkObject AS MovementLinkObject_To
+                                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                     ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                     ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                           WHERE MovementLinkObject_To.MovementId = inMovementId_Sale
+                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                          )
 
-            -- получили список всех zc_Movement_QualityParams для каждого Quality !!!с датой <= vbOperDate!!!
-          , tmpMovementQualityParams_list AS (SELECT tmpQuality.QualityId, Movement.Id AS MovementId, Movement.OperDate
+             -- получили список всех zc_Movement_QualityParams для каждого Quality !!!с датой <= vbOperDate!!!
+           , tmpMovementQualityParams_all AS (SELECT tmpQuality.QualityId, Movement.Id AS MovementId, Movement.OperDate, COALESCE (MovementLinkObject_Retail.ObjectId, 0) AS RetailId
                                               FROM tmpQuality
                                                    INNER JOIN MovementLinkObject AS MLO_Quality
                                                                                  ON MLO_Quality.ObjectId = tmpQuality.QualityId
@@ -69,12 +86,32 @@ BEGIN
                                                                       AND Movement.DescId = zc_Movement_QualityParams()
                                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                                                                       AND Movement.OperDate <= vbOperDate
+                                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                                                                ON MovementLinkObject_Retail.MovementId = MLO_Quality.MovementId
+                                                                               AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+                                             )
+            -- получили список всех zc_Movement_QualityParams для каждого Quality !!!+ условие по RetailId!!!
+          , tmpMovementQualityParams_list AS (SELECT tmpQuality.QualityId
+                                                   , COALESCE (tmpMovementQualityParams_all.MovementId, tmpMovementQualityParams_all_two.MovementId) AS MovementId
+                                                   , COALESCE (tmpMovementQualityParams_all.OperDate, tmpMovementQualityParams_all_two.OperDate)     AS OperDate
+                                              FROM tmpQuality
+                                                   LEFT JOIN tmpRetail ON 1 = 1
+                                                   LEFT JOIN tmpMovementQualityParams_all ON tmpMovementQualityParams_all.QualityId = tmpQuality.QualityId
+                                                                                         AND tmpMovementQualityParams_all.RetailId = tmpRetail.RetailId
+                                                   LEFT JOIN tmpMovementQualityParams_all AS tmpMovementQualityParams_all_two
+                                                                                         ON tmpMovementQualityParams_all_two.QualityId = tmpQuality.QualityId
+                                                                                        AND tmpMovementQualityParams_all_two.RetailId = 0
+                                                                                        AND tmpMovementQualityParams_all.QualityId IS NULL
                                              )
             -- для каждого Quality выбрали с MAX (OperDate) !!!это и будет последний!!!, кстати к этим док-там и должен быть привязан inMovementId_Sale
           , tmpMovementQualityParams_max AS (SELECT tmp.QualityId, MAX (tmpMovementQualityParams_list.MovementId) AS MovementId
-                                             FROM (SELECT tmpMovementQualityParams_list.QualityId, MAX (tmpMovementQualityParams_list.OperDate) AS OperDate FROM tmpMovementQualityParams_list GROUP BY tmpMovementQualityParams_list.QualityId) AS tmp
+                                             FROM (SELECT tmpMovementQualityParams_list.QualityId
+                                                        , MAX (tmpMovementQualityParams_list.OperDate) AS OperDate
+                                                   FROM tmpMovementQualityParams_list
+                                                   GROUP BY tmpMovementQualityParams_list.QualityId
+                                                  ) AS tmp
                                                   INNER JOIN tmpMovementQualityParams_list ON tmpMovementQualityParams_list.QualityId = tmp.QualityId
-                                                                                          AND tmpMovementQualityParams_list.OperDate = tmp.OperDate
+                                                                                          AND tmpMovementQualityParams_list.OperDate  = tmp.OperDate
                                              GROUP BY tmp.QualityId
                                             )
             -- документ inMovementId_Sale разложенный на !!!все!!! существующие MovementId + MovementId_master

@@ -68,6 +68,13 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
             Options.Editing = False
             Width = 150
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object CertificateNumber: TcxGridDBColumn
             Caption = #1042#1077#1090'. '#1089#1074#1110#1076'. '#8470
             DataBinding.FieldName = 'CertificateNumber'

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_QualityParams()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_QualityParams (Integer, TVarChar, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_QualityParams (Integer, TVarChar, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_QualityParams(
  INOUT ioId                         Integer   , -- Ключ объекта <Документ Перемещение>
@@ -15,11 +16,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_QualityParams(
     IN inQualityNumber              TVarChar  , --
     IN inComment                    TBlob     , --
     IN inQualityId                  Integer   ,
+    IN inRetailId                   Integer   , -- Торговая сеть
     IN inSession                    TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbOperDate_find TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_QualityParams());
@@ -32,15 +35,47 @@ BEGIN
      END IF;
 
      -- Проверка - в один день может быть только один документ для одного <Качественное удостоверение>
-     IF EXISTS (SELECT Movement.OperDate FROM Movement INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality() AND MovementLinkObject.ObjectId = inQualityId WHERE Movement.DescId = zc_Movement_QualityParams() AND Movement.OperDate = inOperDate AND Movement.Id <> COALESCE (ioId, 0))
+     IF EXISTS (SELECT Movement.OperDate
+                FROM Movement
+                     INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                                  AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality()
+                                                  AND MovementLinkObject.ObjectId = inQualityId
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                                  ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+                WHERE Movement.DescId = zc_Movement_QualityParams()
+                  AND Movement.OperDate = inOperDate
+                  AND MovementLinkObject_Retail.ObjectId = COALESCE (inRetailId, 0)
+                  AND Movement.Id <> COALESCE (ioId, 0))
      THEN
-         RAISE EXCEPTION 'Ошибка.Такое качественное удостоверение <%> за <%> уже существует.Дублирование запрещено.', lfGet_Object_ValueData (inQualityId), DATE (inOperDate);
+         IF inRetailId <> 0
+         THEN RAISE EXCEPTION 'Ошибка.Такое качественное удостоверение <%> за <%> для торговой сети <%> уже существует.Дублирование запрещено.', lfGet_Object_ValueData (inQualityId), DATE (inOperDate), lfGet_Object_ValueData (inRetailId);
+         ELSE RAISE EXCEPTION 'Ошибка.Такое качественное удостоверение <%> за <%> уже существует.Дублирование запрещено.', lfGet_Object_ValueData (inQualityId), DATE (inOperDate);
+         END IF;
      END IF;
 
+     -- поиск "последней" даты для проверки
+     vbOperDate_find:= (SELECT Movement.OperDate
+                        FROM Movement
+                             INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                                          AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality()
+                                                          AND MovementLinkObject.ObjectId = inQualityId
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                                          ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                                         AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+                        WHERE Movement.DescId = zc_Movement_QualityParams()
+                          AND MovementLinkObject_Retail.ObjectId = COALESCE (inRetailId, 0)
+                        ORDER BY Movement.OperDate DESC
+                        LIMIT 1
+                       );
      -- Проверка - новый документ должен быть датой вперед для одного <Качественное удостоверение>
-     IF COALESCE (ioId, 0) = 0 AND inOperDate <= (SELECT Movement.OperDate FROM Movement INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality() AND MovementLinkObject.ObjectId = inQualityId WHERE Movement.DescId = zc_Movement_QualityParams() ORDER BY Movement.OperDate DESC LIMIT 1)
+     IF COALESCE (ioId, 0) = 0 AND inOperDate <= vbOperDate_find
      THEN
-         RAISE EXCEPTION 'Ошибка.Новое качественное удостоверение <%> должно быть позже <%>.', lfGet_Object_ValueData (inQualityId), DATE ((SELECT Movement.OperDate FROM Movement INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.DescId = zc_MovementLinkObject_Quality() AND MovementLinkObject.ObjectId = inQualityId WHERE Movement.DescId = zc_Movement_QualityParams() ORDER BY Movement.OperDate DESC LIMIT 1));
+         IF inRetailId <> 0
+         THEN RAISE EXCEPTION 'Ошибка.Новое качественное удостоверение <%> для торговой сети <%> должно быть позже <%>.', lfGet_Object_ValueData (inQualityId), DATE (vbOperDate_find), lfGet_Object_ValueData (inRetailId);
+         ELSE RAISE EXCEPTION 'Ошибка.Новое качественное удостоверение <%> должно быть позже <%>.', lfGet_Object_ValueData (inQualityId), DATE (vbOperDate_find);
+         END IF;
+         
      END IF;
 
 
@@ -67,6 +102,8 @@ BEGIN
 
      -- сохранили связь с Quality
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Quality(), ioId, inQualityId);
+     -- сохранили связь с <Торговая сеть>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Retail(), ioId, inRetailId);
 
      -- 5.2. проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := ioId

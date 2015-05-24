@@ -26,7 +26,8 @@ BEGIN
   -- определ€ем <—татус>
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы »змен€ть нельз€
-  IF vbStatusId <> zc_Enum_Status_UnComplete() -- AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+  IF vbStatusId <> zc_Enum_Status_UnComplete()
+     AND inUserId <> 5 -- !!!временно дл€ загрузки из Sybase!!!
   THEN
       IF vbStatusId = zc_Enum_Status_Erased() 
       THEN

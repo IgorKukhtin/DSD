@@ -26,6 +26,7 @@ $BODY$
    DECLARE vbInfoMoneyId_def Integer;
    DECLARE vbInfoMoneyName TVarChar;
    DECLARE vbInfoMoneyName_all TVarChar;
+   DECLARE vbIsSummCardRecalc Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalService());
@@ -34,6 +35,16 @@ BEGIN
 
      -- определяется Дефолт
      vbInfoMoneyId_def:= (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101()); -- 60101 Заработная плата + Заработная плата
+     -- определяется
+     vbIsSummCardRecalc:= EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
+                                  FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                       INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                             ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                                            AND ObjectLink_PersonalServiceList_PaidKind.DescId = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                                            AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                  WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                                    AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                 );
 
      -- Результат
      RETURN QUERY
@@ -81,7 +92,7 @@ BEGIN
                                  , vbInfoMoneyId_def         AS InfoMoneyId
                                  , View_Personal.MemberId    AS MemberId_Personal
                                  , 0     AS MemberId
-                                 , ObjectLink_Personal_PersonalServiceList.ChildObjectId  AS PersonalServiceListId
+                                 , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId -- !!!берем это поле т.к. есть ограничение по БН!!!
                                  , FALSE AS isErased
                             FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE
                                  UNION
@@ -93,6 +104,7 @@ BEGIN
                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                       ON ObjectLink_Personal_PersonalServiceList.ObjectId = View_Personal.PersonalId
                                                      AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                                     AND vbIsSummCardRecalc = TRUE -- !!!т.е. если это БН!!!
 
                                  LEFT JOIN tmpMI ON tmpMI.PersonalId = View_Personal.PersonalId
                                                 AND tmpMI.UnitId     = View_Personal.UnitId

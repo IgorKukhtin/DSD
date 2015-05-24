@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 
              , MovementId_Quality Integer, InvNumber_Quality TVarChar, OperDate_Quality TDateTime
              , OperDateCertificate TDateTime, CertificateNumber TVarChar, CertificateSeries TVarChar, CertificateSeriesNumber TVarChar
-             , QualityNumber TVarChar, QualityName TVarChar
+             , QualityNumber TVarChar, QualityName TVarChar, RetailName TVarChar
 
              , MovementId_Sale Integer, InvNumber_Sale TVarChar, OperDate_Sale TDateTime
              , InvNumberPartner_Sale TVarChar, OperDatePartner_Sale TDateTime
@@ -56,7 +56,7 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , MovementDate_OperDateIn.ValueData AS OperDateIn
+           , MovementDate_OperDateIn.ValueData  AS OperDateIn
            , MovementDate_OperDateOut.ValueData AS OperDateOut
 
            , Object_Car.ValueData             AS CarName
@@ -71,6 +71,7 @@ BEGIN
            , MS_CertificateSeriesNumber.ValueData  AS CertificateSeriesNumber
            , MS_QualityNumber.ValueData            AS QualityNumber
            , Object_Quality.ValueData   	   AS QualityName
+           , Object_Retail.ValueData               AS RetailName
 
            , Movement_Sale.Id        AS MovementId_Sale
            , Movement_Sale.InvNumber AS InvNumber_Sale
@@ -136,6 +137,10 @@ BEGIN
                                          ON MovementLinkObject_Quality.MovementId = Movement_Quality.Id
                                         AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
             LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = MovementLinkObject_Quality.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                         ON MovementLinkObject_Retail.MovementId = Movement_Quality.Id
+                                        AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MovementLinkObject_Retail.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                            ON MovementLinkMovement_Child.MovementId = Movement.Id 

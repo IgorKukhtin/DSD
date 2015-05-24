@@ -499,6 +499,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       RefreshOnTabSetChanges = True
     end
+    inherited actMISetErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end>
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
+        end>
+    end
     object actUpdateIsMain: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
@@ -546,22 +558,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
       ReportNameParam.Value = 'PrintMovement_PersonalService'
       ReportNameParam.ParamType = ptInput
-    end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end>
-    end
-    inherited actCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end>
     end
     inherited actAddMask: TdsdExecStoredProc
       Enabled = False
@@ -881,11 +877,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
   inherited StatusGuides: TdsdGuides
     Left = 24
     Top = 16
-  end
-  inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_PersonalService'
-    Left = 160
-    Top = 8
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalService'

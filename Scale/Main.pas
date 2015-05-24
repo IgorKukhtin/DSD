@@ -259,23 +259,17 @@ begin
           Save_Movement_PersonalComplete(execParams);
           execParams.Free;
           //
-          try
              //Print
-             if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_Sale
-             then Print_Sale(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
-             else if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_ReturnIn
-                  then Print_ReturnIn(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
-                  else if ParamsMovement.ParamByName('MovementDescId').AsInteger=zc_Movement_SendOnPrice
-                       then Print_SendOnPrice(ParamsMovement.ParamByName('MovementId_begin').AsInteger)
-                       else ShowMessage ('Ошибка.Документ сохранен.Форма печати не найдена.');
-          except
-                ShowMessage('Ошибка.Документ сохранен.Печать не сформирована.')
-          end;
-
+             Print_Movemenet (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                            , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                            , 1    // myPrintCount
+                            , TRUE // isPreview
+                              );
+          //
           //EDI
-          if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then EDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
-          if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then EDI_OrdSpr (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
-          if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then EDI_Desadv (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then SendEDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then SendEDI_OrdSpr (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then SendEDI_Desadv (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
 
           //Initialize or Empty
           //НЕ будем автоматов открывать предыдущий док.

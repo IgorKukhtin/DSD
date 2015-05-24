@@ -159,6 +159,23 @@
     Top = 77
     Caption = '-'
   end
+  object cxLabel22: TcxLabel [24]
+    Left = 623
+    Top = 7
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+  end
+  object edRetail: TcxButtonEdit [25]
+    Left = 623
+    Top = 27
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 25
+    Width = 369
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 379
     Top = 440
@@ -278,6 +295,13 @@
         Component = GuidesQuality
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 488
     Top = 340
@@ -340,6 +364,19 @@
         Name = 'QualityName'
         Value = ''
         Component = GuidesQuality
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'RetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RetailName'
+        Value = Null
+        Component = GuidesRetail
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -409,8 +446,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 296
-    Top = 113
+    Left = 480
+    Top = 9
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -424,5 +461,45 @@
     ActionItemList = <>
     Left = 248
     Top = 342
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 842
+    Top = 20
   end
 end

@@ -24,12 +24,12 @@ inherited QualityDocForm: TQualityDocForm
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
-    Left = 427
+    Left = 165
     Top = 7
     Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
   end
   object edOperDateOut: TcxDateEdit [3]
-    Left = 427
+    Left = 165
     Top = 27
     EditValue = 42092d
     Properties.SaveTime = False
@@ -38,7 +38,7 @@ inherited QualityDocForm: TQualityDocForm
     Width = 90
   end
   object edInvNumber_Sale: TcxButtonEdit [4]
-    Left = 6
+    Left = 270
     Top = 27
     Properties.Buttons = <
       item
@@ -51,12 +51,12 @@ inherited QualityDocForm: TQualityDocForm
     Width = 145
   end
   object cxLabel6: TcxLabel [5]
-    Left = 6
+    Left = 270
     Top = 7
     Caption = #8470' '#1076#1086#1082'. ('#1089#1082#1083#1072#1076')'
   end
   object edOperDate_Sale: TcxDateEdit [6]
-    Left = 165
+    Left = 427
     Top = 27
     EditValue = 42092d
     Properties.ReadOnly = True
@@ -66,12 +66,12 @@ inherited QualityDocForm: TQualityDocForm
     Width = 90
   end
   object cxLabel2: TcxLabel [7]
-    Left = 165
+    Left = 427
     Top = 7
     Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
   end
   object edFrom: TcxButtonEdit [8]
-    Left = 8
+    Left = 270
     Top = 77
     Properties.Buttons = <
       item
@@ -84,17 +84,17 @@ inherited QualityDocForm: TQualityDocForm
     Width = 247
   end
   object cxLabel3: TcxLabel [9]
-    Left = 8
+    Left = 270
     Top = 57
     Caption = #1054#1090' '#1082#1086#1075#1086
   end
   object cxLabel9: TcxLabel [10]
-    Left = 270
+    Left = 8
     Top = 107
     Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
   end
   object edCar: TcxButtonEdit [11]
-    Left = 270
+    Left = 8
     Top = 127
     Properties.Buttons = <
       item
@@ -107,12 +107,12 @@ inherited QualityDocForm: TQualityDocForm
   end
   object cxLabel4: TcxLabel [12]
     Left = 8
-    Top = 107
+    Top = 57
     Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
   end
   object edCarModel: TcxButtonEdit [13]
     Left = 8
-    Top = 127
+    Top = 77
     Properties.Buttons = <
       item
         Default = True
@@ -124,12 +124,12 @@ inherited QualityDocForm: TQualityDocForm
   end
   object cxLabel10: TcxLabel [14]
     Left = 270
-    Top = 57
+    Top = 107
     Caption = #1050#1086#1084#1091
   end
   object edTo: TcxButtonEdit [15]
     Left = 270
-    Top = 77
+    Top = 127
     Properties.Buttons = <
       item
         Default = True
@@ -141,12 +141,12 @@ inherited QualityDocForm: TQualityDocForm
     Width = 247
   end
   object cxLabel8: TcxLabel [16]
-    Left = 270
-    Top = 9
+    Left = 8
+    Top = 7
     Caption = #1044#1072#1090#1072' '#1080' '#1074#1088'. '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
   end
   object edOperDateIn: TcxDateEdit [17]
-    Left = 270
+    Left = 8
     Top = 27
     EditValue = 42145d
     Properties.DateButtons = [btnClear, btnToday]
@@ -477,8 +477,8 @@ inherited QualityDocForm: TQualityDocForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 72
-    Top = 100
+    Left = 408
+    Top = 52
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -508,7 +508,7 @@ inherited QualityDocForm: TQualityDocForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 352
-    Top = 50
+    Left = 128
+    Top = 90
   end
 end

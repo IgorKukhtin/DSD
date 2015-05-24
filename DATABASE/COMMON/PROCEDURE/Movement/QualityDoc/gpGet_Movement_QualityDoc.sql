@@ -141,7 +141,7 @@ BEGIN
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
        WHERE Movement.Id = inMovementId_Sale
-         AND Movement.DescId = zc_Movement_QualityDoc()
+         -- AND Movement.DescId IN zc_Movement_Sale()
       ;
      END IF;
   

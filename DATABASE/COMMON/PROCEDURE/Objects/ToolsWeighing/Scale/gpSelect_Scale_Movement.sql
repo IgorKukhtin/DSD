@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Movement(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
+             , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDescId Integer, MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
              , ChangePercent TFloat
@@ -37,6 +39,13 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingPartner());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- !!!временно!!! менется параметр
+     IF EXISTS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = vbUserId)
+     THEN vbUserId:= 0;
+     END IF;
+
+
      -- Результат
      RETURN QUERY 
      /*WITH tmpUserAdmin AS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = vbUserId)
@@ -53,6 +62,15 @@ BEGIN
              , Movement.OperDate
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
+
+
+             , Movement_Parent.Id                AS MovementId_parent
+             , Movement_Parent.OperDate          AS OperDate_parent
+             , Movement_Parent.InvNumber         AS InvNumber_parent
+
+             , Movement_TransportGoods.Id            AS MovementId_TransportGoods
+             , Movement_TransportGoods.InvNumber     AS InvNumber_TransportGoods
+             , Movement_TransportGoods.OperDate      AS OperDate_TransportGoods
 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
@@ -100,10 +118,17 @@ BEGIN
             INNER JOIN MovementLinkObject AS MovementLinkObject_User
                                           ON MovementLinkObject_User.MovementId = Movement.Id
                                          AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-                                         AND MovementLinkObject_User.ObjectId = vbUserId
+                                         AND (MovementLinkObject_User.ObjectId = vbUserId OR vbUserId = 0)
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement_Parent.Id
+                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+            LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
 
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
                                    ON MovementDate_StartWeighing.MovementId =  Movement.Id

@@ -100,7 +100,7 @@
     Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
   end
   object edFrom: TcxButtonEdit [12]
-    Left = 8
+    Left = 270
     Top = 77
     Properties.Buttons = <
       item
@@ -110,21 +110,21 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 12
-    Width = 247
+    Width = 267
   end
   object cxLabel3: TcxLabel [13]
-    Left = 8
+    Left = 270
     Top = 57
     Caption = #1054#1090' '#1082#1086#1075#1086
   end
   object cxLabel9: TcxLabel [14]
     Left = 135
-    Top = 107
+    Top = 57
     Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
   end
   object edCar: TcxButtonEdit [15]
     Left = 135
-    Top = 127
+    Top = 77
     Properties.Buttons = <
       item
         Default = True
@@ -152,13 +152,13 @@
     Width = 267
   end
   object cxLabel7: TcxLabel [18]
-    Left = 407
+    Left = 135
     Top = 107
     Caption = #1055#1088#1080#1094#1077#1087
   end
   object edCarTrailer: TcxButtonEdit [19]
-    Left = 407
-    Top = 125
+    Left = 135
+    Top = 127
     Properties.Buttons = <
       item
         Default = True
@@ -166,16 +166,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 19
-    Width = 130
+    Width = 120
   end
   object cxLabel4: TcxLabel [20]
     Left = 8
-    Top = 107
+    Top = 57
     Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
   end
   object edCarModel: TcxButtonEdit [21]
     Left = 8
-    Top = 125
+    Top = 77
     Properties.Buttons = <
       item
         Default = True
@@ -186,12 +186,12 @@
     Width = 120
   end
   object cxLabel8: TcxLabel [22]
-    Left = 270
+    Left = 8
     Top = 107
     Caption = #1052#1072#1088#1082#1072' '#1087#1088#1080#1094#1077#1087#1072
   end
   object edCarTrailerModel: TcxButtonEdit [23]
-    Left = 270
+    Left = 8
     Top = 127
     Properties.Buttons = <
       item
@@ -200,16 +200,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 23
-    Width = 130
+    Width = 120
   end
   object cxLabel10: TcxLabel [24]
     Left = 270
-    Top = 57
+    Top = 107
     Caption = #1050#1086#1084#1091
   end
   object edTo: TcxButtonEdit [25]
     Left = 270
-    Top = 77
+    Top = 127
     Properties.Buttons = <
       item
         Default = True
@@ -874,7 +874,7 @@
         DataType = ftString
       end>
     Left = 200
-    Top = 106
+    Top = 74
   end
   object GuidePersonalDriver: TdsdGuides
     KeyField = 'Id'
@@ -932,8 +932,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 466
-    Top = 99
+    Left = 178
+    Top = 123
   end
   object GuideMember1: TdsdGuides
     KeyField = 'Id'
@@ -1015,8 +1015,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 72
-    Top = 98
+    Left = 64
+    Top = 58
   end
   object GuideCarTrailerModel: TdsdGuides
     KeyField = 'Id'
@@ -1046,8 +1046,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 344
-    Top = 98
+    Left = 88
+    Top = 114
   end
   object GuideMember3: TdsdGuides
     KeyField = 'Id'
@@ -1130,6 +1130,6 @@
         DataType = ftString
       end>
     Left = 400
-    Top = 74
+    Top = 98
   end
 end
