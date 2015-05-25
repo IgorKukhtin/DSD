@@ -88,8 +88,22 @@ type
     colOperDate_parent: TcxGridDBColumn;
     colWeighingNumber: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
+    PersonalName1: TcxGridDBColumn;
+    PersonalName2: TcxGridDBColumn;
+    PersonalName3: TcxGridDBColumn;
+    PersonalName4: TcxGridDBColumn;
+    PersonalCode1: TcxGridDBColumn;
+    PersonalCode2: TcxGridDBColumn;
+    PersonalCode3: TcxGridDBColumn;
+    PersonalCode4: TcxGridDBColumn;
+    PositionName1: TcxGridDBColumn;
+    PositionName2: TcxGridDBColumn;
+    PositionName3: TcxGridDBColumn;
+    PositionName4: TcxGridDBColumn;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    colInvNumber_TransportGoods: TcxGridDBColumn;
+    colOperDate_TransportGoods: TcxGridDBColumn;
   private
   public
   end;

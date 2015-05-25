@@ -1,9 +1,8 @@
--- Function: gpGet_Object_Retail()
+-- Function: gpSelect_Object_Retail()
 
-DROP FUNCTION IF EXISTS gpGet_Object_Retail(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Retail( TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Object_Retail(
-    IN inId          Integer,       -- ключ объекта <Торговая сеть>
+CREATE OR REPLACE FUNCTION gpSelect_Object_Retail(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -16,20 +15,6 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
-   IF COALESCE (inId, 0) = 0
-   THEN
-       RETURN QUERY 
-       SELECT
-             CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode(0, zc_Object_Retail()) AS Code
-           , CAST ('' as TVarChar)  AS NAME
-           , CAST (NULL AS Boolean) AS OperDateOrder
-           , CAST ('' as TVarChar)  AS GLNCode
-           , CAST ('' as TVarChar)  AS GLNCodeCorporate
-           , CAST (0 as Integer)    AS GoodsPropertyId 
-           , CAST ('' as TVarChar)  AS GoodsPropertyName           
-           , CAST (NULL AS Boolean) AS isErased;
-   ELSE
        RETURN QUERY 
        SELECT 
              Object_Retail.Id         AS Id
@@ -60,9 +45,8 @@ BEGIN
                             AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
         LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Retail_GoodsProperty.ChildObjectId
                               
-       WHERE Object_Retail.Id = inId;
-   END IF; 
-  
+       WHERE Object_Retail.DescId = zc_Object_Retail();
+   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -70,6 +54,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.05.15         *
  02.04.15         * add OperDateOrder
  19.02.15         * add GoodsProperty               
  10.11.14         * add GLNCode
@@ -77,4 +62,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Retail (0, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Retail ( zfCalc_UserAdmin())

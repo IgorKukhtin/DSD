@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_QualityParams(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar,
                OperDateCertificate TDateTime, CertificateNumber TVarChar, CertificateSeries TVarChar, CertificateSeriesNumber TVarChar,
-               ExpertPrior TVarChar, ExpertLast TVarChar, QualityNumber TVarChar, Comment TBlob, QualityId Integer, QualityName TVarChar
+               ExpertPrior TVarChar, ExpertLast TVarChar, QualityNumber TVarChar, Comment TBlob
+             , QualityId Integer, QualityName TVarChar
+             , RetailId Integer, RetailName TVarChar
               )
 AS
 $BODY$
@@ -41,6 +43,8 @@ BEGIN
              , CAST ('' AS TBlob) 				AS Comment
              , CAST (0  AS Integer)                             AS QualityId
              , CAST ('' AS TVarChar) 				AS QualityName
+             , CAST (0  AS Integer)                             AS RetailId
+             , CAST ('' AS TVarChar) 				AS RetailName
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -63,6 +67,8 @@ BEGIN
            , MB_Comment.ValueData                               AS Comment
            , Object_Quality.Id                                  AS QualityId
            , Object_Quality.ValueData   		        AS QualityName
+           , Object_Retail.id                               AS RetailId
+           , Object_Retail.ValueData                        AS RetailName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -97,6 +103,10 @@ BEGIN
                                         AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
             LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = MovementLinkObject_Quality.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                         ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                        AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MovementLinkObject_Retail.ObjectId
 
        WHERE Movement.Id =  inMovementId_Value
          AND Movement.DescId = zc_Movement_QualityParams();
@@ -111,6 +121,7 @@ ALTER FUNCTION gpGet_Movement_QualityParams (Integer, Integer, TDateTime, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.05.15                                        * add Retail...
  02.04.15                                        * all
  09.02.15                                                        *
 */

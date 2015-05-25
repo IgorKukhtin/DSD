@@ -69,6 +69,7 @@ type
     GLNCodeCorporate: TcxGridDBColumn;
     DocumentDayCount: TcxGridDBColumn;
     PrepareDayCount: TcxGridDBColumn;
+    clRetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -68,6 +68,13 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
             Options.Editing = False
             Width = 150
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object CertificateNumber: TcxGridDBColumn
             Caption = #1042#1077#1090'. '#1089#1074#1110#1076'. '#8470
             DataBinding.FieldName = 'CertificateNumber'
@@ -310,13 +317,13 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_QualityParams'
-    Left = 816
-    Top = 176
+    Left = 136
+    Top = 416
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_QualityParams'
-    Left = 776
-    Top = 296
+    Left = 24
+    Top = 400
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_QualityParams'
@@ -325,11 +332,16 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
       item
         DataSet = MasterCDS
       end>
-    Left = 672
-    Top = 208
+    Left = 48
+    Top = 296
   end
   inherited FormParams: TdsdFormParams
     Left = 384
     Top = 208
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_QualityParams'
+    Left = 128
+    Top = 344
   end
 end

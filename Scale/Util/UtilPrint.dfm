@@ -187,8 +187,8 @@ object UtilPrintForm: TUtilPrintForm
     Left = 175
     Top = 256
   end
-  object spSelectPrintInvoice: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
+  object spSelectPrint_ExpInvoice: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_ExpInvoice_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -210,7 +210,7 @@ object UtilPrintForm: TUtilPrintForm
     Left = 455
     Top = 24
   end
-  object spSelectPrintTTN: TdsdStoredProc
+  object spSelectPrint_TTN: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TTN_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -230,11 +230,11 @@ object UtilPrintForm: TUtilPrintForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 695
-    Top = 24
+    Left = 687
+    Top = 80
   end
-  object spSelectPrintPack22: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print22'
+  object spSelectPrint_ExpPack: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_ExpPack_Print'
     DataSet = PrintItemsCDS
     DataSets = <
       item
@@ -250,30 +250,10 @@ object UtilPrintForm: TUtilPrintForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 583
-    Top = 72
+    Left = 447
+    Top = 80
   end
-  object spSelectPrintPack21: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print21'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 583
-    Top = 120
-  end
-  object spSelectPrintPack: TdsdStoredProc
+  object spSelectPrint_Pack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'
     DataSet = PrintItemsCDS
     DataSets = <
@@ -288,6 +268,36 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_by'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 583
+    Top = 120
+  end
+  object spSelectPrint_Spec: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Spec_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_by'
+        Value = '0'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 583
@@ -301,18 +311,6 @@ object UtilPrintForm: TUtilPrintForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end
-      item
         Name = 'ReportNameSale'
         Value = Null
         DataType = ftString
@@ -323,6 +321,15 @@ object UtilPrintForm: TUtilPrintForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        DataType = ftDateTime
+      end
+      item
+        Name = 'MovementId_TransportGoods'
+        Value = Null
       end>
     Left = 40
     Top = 16
@@ -331,285 +338,97 @@ object UtilPrintForm: TUtilPrintForm
     Images = dmMain.ImageList
     Left = 39
     Top = 74
-    object mactPrint_Sale: TMultiAction
-      Category = 'DSDLib'
+    object mactPrint_QualityDoc: TMultiAction
+      Category = 'Print_QualityDoc'
       MoveParams = <>
       ActionList = <
         item
-          Action = actPrintReportName_Sale
+          Action = actDialog_QualityDoc
         end
         item
-          Action = actPrint_Sale
+          Action = actPrint_QualityDoc
         end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-    end
-    object actPrint_Sale: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint_Sale
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Sale
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrintReportName_Sale: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGetReportName_Sale
-      StoredProcList = <
-        item
-          StoredProc = spGetReportName_Sale
-        end>
-      Caption = 'actPrintReportName_Sale'
-    end
-    object mactPrint_ReturnIn: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actPrintReportName_ReturnIn
-        end
-        item
-          Action = actPrint_ReturnIn
-        end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-      ShortCut = 16464
-    end
-    object actPrint_ReturnIn: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint_ReturnIn
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_ReturnIn
-        end>
-      Caption = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = ''
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrintReportName_ReturnIn: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGetReportName_ReturnIn
-      StoredProcList = <
-        item
-          StoredProc = spGetReportName_ReturnIn
-        end>
-      Caption = 'actSPPrintProcName'
-    end
-    object mactPrint_Bill: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleBillProcName
-        end
-        item
-          Action = actPrint_Bill
-        end>
-      Caption = #1057#1095#1077#1090
-      Hint = #1057#1095#1077#1090
-      ImageIndex = 21
-    end
-    object mactPrint_Tax_Us: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleTaxProcName
-        end
-        item
-          Action = actPrintTax_Us
-        end>
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
     end
-    object mactPrint_Tax_Client: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <
+    object actDialog_QualityDoc: TdsdOpenForm
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      Caption = 'actDialog_QualityDoc'
+      Hint = 'actDialog_QualityDoc'
+      FormName = 'TQualityDocForm'
+      FormNameParam.Value = 'TQualityDocForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
         item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
+          Name = 'Id'
+          Value = 0
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
         end>
+      isShowModal = True
+    end
+    object mactPrint_TTN: TMultiAction
+      Category = 'Print_TTN'
+      MoveParams = <>
       ActionList = <
         item
-          Action = actSPPrintSaleTaxProcName
+          Action = actDialog_TTN
         end
         item
-          Action = actPrintTax_Client
+          Action = actPrint_TTN
         end>
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      ImageIndex = 18
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 15
     end
-    object actPrintTax_Us: TdsdPrintAction
-      Category = 'DSDLib'
+    object actDialog_TTN: TdsdOpenForm
+      Category = 'Print_TTN'
       MoveParams = <>
-      StoredProc = spSelectTax_Us
-      StoredProcList = <
-        item
-          StoredProc = spSelectTax_Us
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
+      Caption = 'actDialog_TTN'
+      Hint = 'actDialog_TTN'
+      FormName = 'TTransportGoodsForm'
+      FormNameParam.Value = 'TTransportGoodsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
         item
           Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_TransportGoods'
+        end
+        item
+          Name = 'MovementId_Sale'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrintTax_Client: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectTax_Client
-      StoredProcList = <
-        item
-          StoredProc = spSelectTax_Client
-        end>
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      ImageIndex = 3
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
         end
         item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
+          Name = 'OperDate'
           Value = Null
           Component = FormParams
-          ComponentItem = 'Id'
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
         end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
+      isShowModal = True
     end
-    object actPrint_Bill: TdsdPrintAction
-      Category = 'DSDLib'
+    object actPrint_ExpInvoice: TdsdPrintAction
+      Category = 'Print_Export'
       MoveParams = <>
-      StoredProc = spSelectPrint_Sale
+      StoredProc = spSelectPrint_ExpInvoice
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_Sale
+          StoredProc = spSelectPrint_ExpInvoice
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      ImageIndex = 3
+      Caption = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
+      Hint = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
+      ImageIndex = 22
       ShortCut = 16464
       DataSets = <
         item
@@ -619,6 +438,7 @@ object UtilPrintForm: TUtilPrintForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -627,53 +447,33 @@ object UtilPrintForm: TUtilPrintForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1057#1095#1077#1090
-      ReportNameParam.Value = ''
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleBill'
+      ReportName = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Name = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Value = 'PrintMovement_SaleInvoice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actSPPrintSaleTaxProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actPrint_Tax_ReportName: TdsdExecStoredProc
+      Category = 'Print_Tax'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
           StoredProc = spGetReporNameTax
         end>
-      Caption = 'actSPPrintSaleTaxProcName'
+      Caption = 'actPrint_Tax_ReportName'
     end
-    object actSPPrintSaleBillProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actPrint_ExpSpec: TdsdPrintAction
+      Category = 'Print_Export'
       MoveParams = <>
-      StoredProc = spGetReporNameBill
+      StoredProc = spSelectPrint_ExpInvoice
       StoredProcList = <
         item
-          StoredProc = spGetReporNameBill
+          StoredProc = spSelectPrint_ExpInvoice
         end>
-      Caption = 'actSPPrintSaleBillProcName'
-    end
-    object actPrint_Spec: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintInvoice
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintInvoice
-        end>
-      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
-      Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
+      Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 22
       ShortCut = 16464
       DataSets = <
@@ -700,69 +500,16 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Invoice: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintInvoice
+    object actPrint_ExpPack: TdsdPrintAction
+      Category = 'Print_Export'
+      MoveParams = <>
+      StoredProc = spSelectPrint_ExpPack
       StoredProcList = <
         item
-          StoredProc = spSelectPrintInvoice
+          StoredProc = spSelectPrint_ExpPack
         end>
-      Caption = #1048#1085#1074#1086#1081#1089
-      Hint = #1048#1085#1074#1086#1081#1089
-      ImageIndex = 22
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_SaleInvoice'
-      ReportNameParam.Name = 'PrintMovement_SaleInvoice'
-      ReportNameParam.Value = 'PrintMovement_SaleInvoice'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrint_Pack: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintPack
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintPack
-        end>
-      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090
-      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 20
       ShortCut = 16464
       DataSets = <
@@ -781,135 +528,6 @@ object UtilPrintForm: TUtilPrintForm
       ReportName = 'PrintMovement_SalePack'
       ReportNameParam.Name = 'PrintMovement_SalePack'
       ReportNameParam.Value = 'PrintMovement_SalePack'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrint_Pack22: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintPack22
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintPack22
-        end>
-      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.2'
-      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.2'
-      ImageIndex = 17
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'goodsname_two'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_SalePack22'
-      ReportNameParam.Value = 'PrintMovement_SalePack22'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrint_Pack21: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintPack21
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintPack21
-        end>
-      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.1'
-      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.1'
-      ImageIndex = 23
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_SalePack21'
-      ReportNameParam.Value = 'PrintMovement_SalePack21'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actInvoice: TEDIAction
-      Category = 'EDI'
-      MoveParams = <>
-      StartDateParam.Value = Null
-      EndDateParam.Value = Null
-      EDI = EDI
-      EDIDocType = ediInvoice
-      HeaderDataSet = PrintHeaderCDS
-      ListDataSet = PrintItemsCDS
-    end
-    object actPrint_TTN: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintTTN
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintTTN
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      Hint = #1058#1058#1053
-      ImageIndex = 15
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_TTN'
-      ReportNameParam.Value = 'PrintMovement_TTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -944,6 +562,392 @@ object UtilPrintForm: TUtilPrintForm
       ReportName = 'PrintMovement_Sale2'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_Sale: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrint_Sale_ReportName
+        end
+        item
+          Action = actPrint_Sale
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+    end
+    object actPrint_Sale_ReportName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName_Sale
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName_Sale
+        end>
+      Caption = 'actPrint_Sale_ReportName'
+    end
+    object actPrint_Sale: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Sale
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Sale
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_ReturnIn: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrint_ReturnIn_ReportName
+        end
+        item
+          Action = actPrint_ReturnIn
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+      ShortCut = 16464
+    end
+    object actPrint_ReturnIn_ReportName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName_ReturnIn
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName_ReturnIn
+        end>
+      Caption = 'actSPPrintProcName'
+    end
+    object actPrint_ReturnIn: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_ReturnIn
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_ReturnIn
+        end>
+      Caption = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_Account: TMultiAction
+      Category = 'Print_Account'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrint_Account_ReportName
+        end
+        item
+          Action = actPrint_Account
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      ImageIndex = 21
+    end
+    object actPrint_Account_ReportName: TdsdExecStoredProc
+      Category = 'Print_Account'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameBill
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameBill
+        end>
+      Caption = 'actPrint_Account_ReportName'
+    end
+    object actPrint_Account: TdsdPrintAction
+      Category = 'Print_Account'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Sale
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Sale
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1057#1095#1077#1090
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSaleBill'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_Tax_Us: TMultiAction
+      Category = 'Print_Tax'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrint_Tax_ReportName
+        end
+        item
+          Action = actPrintTax_Us
+        end>
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ImageIndex = 16
+    end
+    object actPrintTax_Us: TdsdPrintAction
+      Category = 'Print_Tax'
+      MoveParams = <>
+      StoredProc = spSelectTax_Us
+      StoredProcList = <
+        item
+          StoredProc = spSelectTax_Us
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_Tax_Client: TMultiAction
+      Category = 'Print_Tax'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrint_Tax_ReportName
+        end
+        item
+          Action = actPrintTax_Client
+        end>
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      ImageIndex = 18
+    end
+    object actPrintTax_Client: TdsdPrintAction
+      Category = 'Print_Tax'
+      MoveParams = <>
+      StoredProc = spSelectTax_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectTax_Client
+        end>
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_Pack: TdsdPrintAction
+      Category = 'Print_Fozzy'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Pack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack
+        end>
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
+      ImageIndex = 23
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SalePack21'
+      ReportNameParam.Value = 'PrintMovement_SalePack21'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_Spec: TdsdPrintAction
+      Category = 'Print_Fozzy'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Spec
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Spec
+        end>
+      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
+      Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
+      ImageIndex = 17
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'goodsname_two'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SalePack22'
+      ReportNameParam.Value = 'PrintMovement_SalePack22'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actInvoice: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediInvoice
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actPrint_TTN: TdsdPrintAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1058#1058#1053
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = 'PrintMovement_TTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -1027,6 +1031,7 @@ object UtilPrintForm: TUtilPrintForm
     object actUpdateEdiDesadvTrue: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateEdiDesadv
       StoredProcList = <
         item
@@ -1037,6 +1042,7 @@ object UtilPrintForm: TUtilPrintForm
     object actUpdateEdiInvoiceTrue: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateEdiInvoice
       StoredProcList = <
         item
@@ -1047,6 +1053,7 @@ object UtilPrintForm: TUtilPrintForm
     object actUpdateEdiOrdsprTrue: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateEdiOrdspr
       StoredProcList = <
         item
@@ -1057,6 +1064,7 @@ object UtilPrintForm: TUtilPrintForm
     object actExecPrintStoredProc: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectPrint_Sale
       StoredProcList = <
         item
@@ -1067,12 +1075,47 @@ object UtilPrintForm: TUtilPrintForm
     object actSetDefaults: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetDefaultEDI
       StoredProcList = <
         item
           StoredProc = spGetDefaultEDI
         end>
       Caption = 'actSetDefaults'
+    end
+    object actPrint_QualityDoc: TdsdPrintAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Quality
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Quality
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Quality'
+      ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
     end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
@@ -1255,5 +1298,28 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 616
     Top = 448
+  end
+  object spSelectPrint_Quality: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Quality_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 687
+    Top = 128
   end
 end

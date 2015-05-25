@@ -84,7 +84,7 @@ type
     actPrintTax_Us: TdsdPrintAction;
     spGetReporNameTax: TdsdStoredProc;
     bbPrintTax: TdxBarButton;
-    actSPPrintSaleTaxProcName: TdsdExecStoredProc;
+    actPrint_Tax_ReportName: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
     edDocumentTaxKind: TcxButtonEdit;
     cxLabel14: TcxLabel;
@@ -100,9 +100,9 @@ type
     bbPrintTax_Client: TdxBarButton;
     spSelectTax_Us: TdsdStoredProc;
     spGetReporNameBill: TdsdStoredProc;
-    mactPrint_Bill: TMultiAction;
-    actSPPrintSaleBillProcName: TdsdExecStoredProc;
-    actPrint_Bill: TdsdPrintAction;
+    mactPrint_Account: TMultiAction;
+    actPrint_Account_ReportName: TdsdExecStoredProc;
+    actPrint_Account: TdsdPrintAction;
     bbPrint_Bill: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
@@ -115,8 +115,8 @@ type
     cxLabel18: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
     cxLabel19: TcxLabel;
-    actPrint_Invoice: TdsdPrintAction;
-    actPrint_Pack: TdsdPrintAction;
+    actPrint_ExpInvoice: TdsdPrintAction;
+    actPrint_ExpPack: TdsdPrintAction;
     bbPrint_Invoice: TdxBarButton;
     bbPrint_Pack: TdxBarButton;
     BoxName: TcxGridDBColumn;
@@ -134,31 +134,33 @@ type
     cbCalcAmountPartner: TcxCheckBox;
     cxLabel21: TcxLabel;
     edParPartnerValue: TcxCurrencyEdit;
-    spSelectPrintInvoice: TdsdStoredProc;
-    spSelectPrintPack: TdsdStoredProc;
-    spSelectPrintPack21: TdsdStoredProc;
-    spSelectPrintPack22: TdsdStoredProc;
-    actPrint_Spec: TdsdPrintAction;
+    spSelectPrint_ExpInvoice: TdsdStoredProc;
+    spSelectPrint_ExpPack: TdsdStoredProc;
+    spSelectPrint_Pack: TdsdStoredProc;
+    spSelectPrint_Spec: TdsdStoredProc;
+    actPrint_ExpSpec: TdsdPrintAction;
     bbPrint_Spec: TdxBarButton;
-    actPrint_Pack21: TdsdPrintAction;
-    actPrint_Pack22: TdsdPrintAction;
+    actPrint_Pack: TdsdPrintAction;
+    actPrint_Spec: TdsdPrintAction;
     bbPrint_Pack21: TdxBarButton;
     bbPrint_Pack22: TdxBarButton;
     spUpdatePriceCurrency: TdsdStoredProc;
     actUpdatePriceCurrency: TdsdExecStoredProc;
     bbUpdatePriceCurrency: TdxBarButton;
-    spSelectPrintTTN: TdsdStoredProc;
+    spSelectPrint_TTN: TdsdStoredProc;
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
     ScaleAction: TScaleAction;
     bbScale: TdxBarButton;
-    spSelectPrintQuality: TdsdStoredProc;
-    actPrint_Quality: TdsdPrintAction;
+    spSelectPrint_Quality: TdsdStoredProc;
+    actPrint_QualityDoc: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;
     colLineNum: TcxGridDBColumn;
     actDialog_TTN: TdsdOpenForm;
     mactPrint_TTN: TMultiAction;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
   private
     { Private declarations }
   public

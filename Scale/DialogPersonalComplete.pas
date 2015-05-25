@@ -4,22 +4,22 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, AncestorDialog, StdCtrls, Buttons, ExtCtrls, Mask, ToolEdit,
-  CurrEdit,Db, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  Dialogs, AncestorDialogScale, StdCtrls, Buttons, ExtCtrls,
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
   cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxTextEdit,
-  cxCurrencyEdit, cxMaskEdit, cxButtonEdit;
+  cxCurrencyEdit, cxMaskEdit, cxButtonEdit, Vcl.Menus, dsdDB, Vcl.ActnList,
+  dsdAction, cxPropertiesStore, dsdAddOn, cxButtons,DB;
 
 type
-  TDialogPersonalCompleteForm = class(TAncestorDialogForm)
-
-    infoPanelMember1: TPanel;
-    infoPanelMember2: TPanel;
-    infoPanelMember3: TPanel;
-    infoPanelMember4: TPanel;
-    PanelMember1: TPanel;
-    PanelMember2: TPanel;
-    PanelMember3: TPanel;
-    PanelMember4: TPanel;
+  TDialogPersonalCompleteForm = class(TAncestorDialogScaleForm)
+    infoPanelPersona1: TPanel;
+    infoPanelPersona2: TPanel;
+    infoPanelPersona3: TPanel;
+    infoPanelPersona4: TPanel;
+    PanelPersonal1: TPanel;
+    PanelPersonal2: TPanel;
+    PanelPersonal3: TPanel;
+    PanelPersonal4: TPanel;
     PanelPosition1: TPanel;
     PanelPosition2: TPanel;
     PanelPosition3: TPanel;
@@ -28,24 +28,22 @@ type
     PanelPositionName2: TPanel;
     PanelPositionName3: TPanel;
     PanelPositionName4: TPanel;
-
-    LabelMemberName1: TLabel;
-    LabelMemberName2: TLabel;
-    LabelMemberName3: TLabel;
-    LabelMemberName4: TLabel;
+    LabelPersonalName1: TLabel;
+    LabelPersonalName2: TLabel;
+    LabelPersonalName3: TLabel;
+    LabePersonalName4: TLabel;
     LabelPositionName1: TLabel;
     LabelPositionName2: TLabel;
     LabelPositionName3: TLabel;
     LabelPositionName4: TLabel;
-
-    gbMemberCode2: TGroupBox;
-    gbMemberCode1: TGroupBox;
-    gbMemberCode3: TGroupBox;
-    gbMemberCode4: TGroupBox;
-    gbMemberName1: TGroupBox;
-    gbMemberName2: TGroupBox;
-    gbMemberName3: TGroupBox;
-    gbMemberName4: TGroupBox;
+    gbPersonalCode2: TGroupBox;
+    gbPersonalCode1: TGroupBox;
+    gbPersonalCode3: TGroupBox;
+    gbPersonalCode4: TGroupBox;
+    gbPersonalName1: TGroupBox;
+    gbPersonalName2: TGroupBox;
+    gbPersonalName3: TGroupBox;
+    gbPersonalName4: TGroupBox;
     gbPositionName1: TGroupBox;
     gbPositionName2: TGroupBox;
     gbPositionName3: TGroupBox;
@@ -60,459 +58,343 @@ type
     EditPersonalName4: TcxButtonEdit;
 
     procedure FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
-    procedure EditPositionCode1Exit(Sender: TObject);
-    procedure EditMemberCode1Exit(Sender: TObject);
-    procedure EditPositionCode1Enter(Sender: TObject);
-    procedure EditPositionCode2Enter(Sender: TObject);
-    procedure EditPositionCode3Enter(Sender: TObject);
-    procedure EditPositionCode4Enter(Sender: TObject);
-    procedure EditMemberCode2Exit(Sender: TObject);
-    procedure EditPositionCode2Exit(Sender: TObject);
-    procedure EditMemberCode3Exit(Sender: TObject);
-    procedure EditMemberCode4Exit(Sender: TObject);
-    procedure EditMemberCode1Enter(Sender: TObject);
-    procedure EditPositionCode3Exit(Sender: TObject);
-    procedure EditPositionCode4Exit(Sender: TObject);
-    procedure EditMemberName1ButtonClick(Sender: TObject);
-    procedure EditMemberName2ButtonClick(Sender: TObject);
-    procedure EditMemberName3ButtonClick(Sender: TObject);
-    procedure EditMemberName4ButtonClick(Sender: TObject);
+    procedure EditPersonalCode1Exit(Sender: TObject);
+
+    procedure EditPersonalCode1Enter(Sender: TObject);
+    procedure EditPersonalCode1PropertiesChange(Sender: TObject);
+    procedure EditPersonalName1PropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
+
+    procedure FormCreate(Sender: TObject);
+    procedure EditPersonalCode1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditPersonalName1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
+    fStartWrite:Boolean;
+    fChangePersonalCode:Boolean;
+
+    ParamsPersonalComplete_local: TParams;
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
-    isCheckZakaz:Smallint;
-    BillDate:TDateTime;
-    FromId,ToId:Integer;
+    function Execute(var execParamsPersonalComplete:TParams): boolean;virtual;
   end;
 
+var
+  DialogPersonalCompleteForm: TDialogPersonalCompleteForm;
+
 implementation
-uses ConstFromServer,UtilDB,MessageShow,GuideMemberProduction;
+uses UtilScale,DMMainScale,GuidePersonal;
 {$R *.dfm}
-{------------------------------------------------------------------------------}
+{------------------------------------------------------------------------}
+function TDialogPersonalCompleteForm.Execute(var execParamsPersonalComplete:TParams): Boolean; //Проверка корректного ввода в Edit
+begin
+     if execParamsPersonalComplete.ParamByName('MovementDescId').AsInteger<>zc_Movement_Sale
+     then begin
+               Result:=false;
+               exit;
+     end;
+     //
+     CopyValuesParamsFrom(execParamsPersonalComplete,ParamsPersonalComplete_local);
+     //
+     fStartWrite:=true;
+     with ParamsPersonalComplete_local do
+     begin
+          if execParamsPersonalComplete.ParamByName('MovementDescId').AsInteger=zc_Movement_Sale
+          then Caption:='Изменить для Накладной № <'+execParamsPersonalComplete.ParamByName('InvNumber').AsString+'> от<'+execParamsPersonalComplete.ParamByName('OperDate').AsString+'>'+'<'+execParamsPersonalComplete.ParamByName('ToName').AsString+'>'
+          else Caption:='Изменить для Накладной № <'+execParamsPersonalComplete.ParamByName('InvNumber').AsString+'> от<'+execParamsPersonalComplete.ParamByName('OperDate').AsString+'>'+'<'+execParamsPersonalComplete.ParamByName('FromName').AsString+'>';
+          //
+          EditPersonalCode1.Text:=ParamByName('PersonalCode1').AsString;
+          EditPersonalName1.Text:=ParamByName('PersonalName1').AsString;
+          PanelPositionName1.Caption:=ParamByName('PositionName1').AsString;
+
+          EditPersonalCode2.Text:=ParamByName('PersonalCode2').AsString;
+          EditPersonalName2.Text:=ParamByName('PersonalName2').AsString;
+          PanelPositionName2.Caption:=ParamByName('PositionName2').AsString;
+
+          EditPersonalCode3.Text:=ParamByName('PersonalCode3').AsString;
+          EditPersonalName3.Text:=ParamByName('PersonalName3').AsString;
+          PanelPositionName3.Caption:=ParamByName('PositionName3').AsString;
+
+          EditPersonalCode4.Text:=ParamByName('PersonalCode4').AsString;
+          EditPersonalName4.Text:=ParamByName('PersonalName4').AsString;
+          PanelPositionName4.Caption:=ParamByName('PositionName4').AsString;
+     end;
+     ActiveControl:=EditPersonalCode1;
+     fStartWrite:=false;
+     fChangePersonalCode:=false;
+
+     result:=ShowModal=mrOk;
+     if result then CopyValuesParamsFrom(ParamsPersonalComplete_local,execParamsPersonalComplete);
+
+end;
+{------------------------------------------------------------------------}
 function TDialogPersonalCompleteForm.Checked: boolean; //Проверка корректного ввода в Edit
-var MemberCode1,PositionCode1:Integer;
-    MemberCode2,PositionCode2:Integer;
-    MemberCode3,PositionCode3:Integer;
-    MemberCode4,PositionCode4:Integer;
+var PersonalCode1:Integer;
+    PersonalCode2:Integer;
+    PersonalCode3:Integer;
+    PersonalCode4:Integer;
 begin
      Result:=false;
      //
-     try MemberCode1:=StrToInt(EditMemberCode1.Text) except MemberCode1:=0 end;
-     try PositionCode1:=StrToInt(EditPositionCode1.Text) except PositionCode1:=0 end;
-     try MemberCode2:=StrToInt(EditMemberCode2.Text) except MemberCode2:=0 end;
-     try PositionCode2:=StrToInt(EditPositionCode2.Text) except PositionCode2:=0 end;
-     try MemberCode3:=StrToInt(EditMemberCode3.Text) except MemberCode3:=0 end;
-     try PositionCode3:=StrToInt(EditPositionCode3.Text) except PositionCode3:=0 end;
-     try MemberCode4:=StrToInt(EditMemberCode4.Text) except MemberCode4:=0 end;
-     try PositionCode4:=StrToInt(EditPositionCode4.Text) except PositionCode4:=0 end;
+     try PersonalCode1:= StrToInt(EditPersonalCode1.Text); except PersonalCode1:= 0;end;
+     try PersonalCode2:= StrToInt(EditPersonalCode2.Text); except PersonalCode2:= 0;end;
+     try PersonalCode3:= StrToInt(EditPersonalCode3.Text); except PersonalCode3:= 0;end;
+     try PersonalCode4:= StrToInt(EditPersonalCode4.Text); except PersonalCode4:= 0;end;
      //
-     EditPositionCode1Exit(EditPositionCode1);
-     Result:=(trim(EditMemberName1.Text)<>'')and(trim(EditMemberName1.Text)<>_strNotFindValue)and(PanelPositionName1.Caption<>_strNotFindValue);
+     EditPersonalCode1Exit(EditPersonalCode1);
+     EditPersonalCode1Exit(EditPersonalCode2);
+     EditPersonalCode1Exit(EditPersonalCode3);
+     EditPersonalCode1Exit(EditPersonalCode4);
+     //
+     //
+     Result:=(PersonalCode1<>0)and(trim(EditPersonalName1.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId1').AsInteger<>0);
      if not Result then
-     begin if (MemberCode1=0)and(trim(EditMemberName1.Text)='') then begin ActiveControl:=EditMemberCode1;ShowMessage('Введите Код для Комплектовщик 1.');end
-           else if (trim(EditMemberName1.Text)='')or(trim(EditMemberName1.Text)=_strNotFindValue)then begin ActiveControl:=EditMemberCode1;ShowMessage('Введите Код для Комплектовщик 1.');end
-                else begin ActiveControl:=EditPositionCode1;ShowMessage('Введите Код должности для Комплектовщик 1.');end;
+     begin
+           ActiveControl:=EditPersonalCode1;
+           ShowMessage('Введите Комплектовщик 1.');
            exit;
      end;
      //
-     if (trim(EditMemberName2.Text)<>'')or(MemberCode2<>0)or(trim(EditMemberName3.Text)<>'')or(MemberCode3<>0)or(trim(EditMemberName4.Text)<>'')or(MemberCode4<>0)then
+     //
+     Result:=((PersonalCode2<>0)and(trim(EditPersonalName2.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId2').AsInteger<>0))
+          or ((PersonalCode2=0)and(trim(EditPersonalName2.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId2').AsInteger=0)
+              and(PersonalCode3=0)and(PersonalCode4=0)
+             );
+     if not Result then
      begin
-          EditPositionCode2Exit(EditPositionCode2);
-          Result:=(trim(EditMemberName2.Text)<>'')and(trim(EditMemberName2.Text)<>_strNotFindValue)and(PanelPositionName2.Caption<>_strNotFindValue);
-          if not Result then
-          begin if (MemberCode2=0)and(trim(EditMemberName2.Text)='') then begin ActiveControl:=EditMemberCode2;ShowMessage('Введите Код для Комплектовщик 2.');end
-                else if (trim(EditMemberName2.Text)='')or(trim(EditMemberName2.Text)=_strNotFindValue)then begin ActiveControl:=EditMemberCode2;ShowMessage('Введите Код для Комплектовщик 2.');end
-                     else begin ActiveControl:=EditPositionCode2;ShowMessage('Введите Код должности для Комплектовщик 2.');end;
-                exit;
-          end;
+           ActiveControl:=EditPersonalCode2;
+           ShowMessage('Введите Комплектовщик 2.');
+           exit;
      end;
      //
-     if (trim(EditMemberName3.Text)<>'')or(MemberCode3<>0)or(trim(EditMemberName4.Text)<>'')or(MemberCode4<>0)then
+     //
+     Result:=((PersonalCode3<>0)and(trim(EditPersonalName3.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId3').AsInteger<>0))
+          or ((PersonalCode3=0)and(trim(EditPersonalName3.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId3').AsInteger=0)
+              and(PersonalCode4=0)
+             );
+     if not Result then
      begin
-          EditPositionCode3Exit(EditPositionCode3);
-          Result:=(trim(EditMemberName3.Text)<>'')and(trim(EditMemberName3.Text)<>_strNotFindValue)and(PanelPositionName3.Caption<>_strNotFindValue);
-          if not Result then
-          begin if (MemberCode3=0)and(trim(EditMemberName3.Text)='') then begin ActiveControl:=EditMemberCode3;ShowMessage('Введите Код для Комплектовщик 3.');end
-                else if (trim(EditMemberName3.Text)='')or(trim(EditMemberName3.Text)=_strNotFindValue)then begin ActiveControl:=EditMemberCode3;ShowMessage('Введите Код для Комплектовщик 3.');end
-                     else begin ActiveControl:=EditPositionCode3;ShowMessage('Введите Код должности для Комплектовщик 3.');end;
-                exit;
-          end;
+           ActiveControl:=EditPersonalCode3;
+           ShowMessage('Введите Код для Комплектовщик 3.');
+           exit;
      end;
      //
-     if (trim(EditMemberName4.Text)<>'')or(MemberCode4<>0) then
+     //
+     Result:=((PersonalCode4<>0)and(trim(EditPersonalName4.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId4').AsInteger<>0))
+          or ((PersonalCode4=0)and(trim(EditPersonalName4.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId4').AsInteger=0)
+             );
+     if not Result then
      begin
-          EditPositionCode4Exit(EditPositionCode4);
-          Result:=(trim(EditMemberName4.Text)<>'')and(trim(EditMemberName4.Text)<>_strNotFindValue)and(PanelPositionName4.Caption<>_strNotFindValue);
-          if not Result then
-          begin if (MemberCode4=0)and(trim(EditMemberName4.Text)='') then begin ActiveControl:=EditMemberCode4;ShowMessage('Введите Код для Комплектовщик 4.');end
-                else if (trim(EditMemberName4.Text)='')or(trim(EditMemberName4.Text)=_strNotFindValue)then begin ActiveControl:=EditMemberCode4;ShowMessage('Введите Код для Комплектовщик 4.');end
-                     else begin ActiveControl:=EditPositionCode4;ShowMessage('Введите Код должности для Комплектовщик 4.');end;
-                exit;
-          end;
+           ActiveControl:=EditPersonalCode4;
+           ShowMessage('Введите Комплектовщик 4.');
+           exit;
      end;
      //
-     if isCheckZakaz=zc_rvYes then
-     begin
-          Result:=0<>StrToInt(GetStringValue('select fGet_BillId_byZakaz_find('+FormatToDateServer(BillDate)+','+IntToStr(FromID)+','+IntToStr(ToID)+','+FormatToVarCharServer(trim(EditInvNumberZakaz.Text))+')as RetV'));
-          if not Result
-          then
-              if TypeShowMessage ('Ошибка.№ заявки введен неправильно.Продолжить?', mtConfirmation, mbYesNoCancel, 0) <> 6
-              then Result:=false
-              else if TypeShowMessage ('Ошибка.№ заявки введен неправильно.Продолжить?', mtConfirmation, mbYesNoCancel, 0) <> 6
-                   then Result:=false
-                   else if TypeShowMessage ('Ошибка.№ заявки введен неправильно.Продолжить?', mtConfirmation, mbYesNoCancel, 0) <> 6
-                        then Result:=false
-                        else Result:=true;
-          if not Result then begin ActiveControl:=EditInvNumberZakaz;exit;end;
-     end;
+     //
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogPersonalCompleteForm.FormCreate(Sender: TObject);
+begin
+    Create_ParamsPersonalComplete(ParamsPersonalComplete_local);
+    fStartWrite:=true;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPersonalCompleteForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
     if Key=13 then
-      if (ActiveControl=EditMemberCode1)then ActiveControl:=EditMemberName1
-      else if (ActiveControl=EditMemberName1)then ActiveControl:=EditPositionCode1
-           else if (ActiveControl=EditPositionCode1)then ActiveControl:=EditMemberCode2
-                else if (ActiveControl=EditMemberCode2)then ActiveControl:=EditMemberName2
-                     else if ActiveControl=EditMemberName2 then ActiveControl:=EditPositionCode2
-                          else if ActiveControl=EditPositionCode2 then ActiveControl:=EditMemberCode3
-                               else if ActiveControl=EditMemberCode3 then ActiveControl:=EditMemberName3
-                                    else if ActiveControl=EditMemberName3 then ActiveControl:=EditPositionCode3
-                                         else if ActiveControl=EditPositionCode3 then ActiveControl:=EditMemberCode4
-                                              else if ActiveControl=EditMemberCode4 then ActiveControl:=EditMemberName4
-                                                   else if ActiveControl=EditMemberName4 then ActiveControl:=EditPositionCode4
-                                                         else if ActiveControl=EditPositionCode4 then bbOkClick(self);
+      if (ActiveControl=EditPersonalCode1)or(ActiveControl=EditPersonalName1)then ActiveControl:=EditPersonalCode2
+      else if (ActiveControl=EditPersonalCode2)or(ActiveControl=EditPersonalName2)then ActiveControl:=EditPersonalCode3
+           else if (ActiveControl=EditPersonalCode3)or(ActiveControl=EditPersonalName3)then ActiveControl:=EditPersonalCode4
+                else if (ActiveControl=EditPersonalCode4)or(ActiveControl=EditPersonalName4) then bbOkClick(self);
 end;
 {------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditMemberCode1Enter(Sender: TObject);
+procedure TDialogPersonalCompleteForm.EditPersonalCode1KeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
+var Value:Integer;
+begin
+    if Key=13 then
+    begin
+         try Value:= StrToInt((TcxCurrencyEdit(Sender).Text)); except Value:= 0; end;
+         //
+         if (TcxCurrencyEdit(Sender).Tag = 1) then if Value = 0 then ActiveControl:=EditPersonalName1 else ActiveControl:=EditPersonalCode2
+         else if (TcxCurrencyEdit(Sender).Tag = 2) then if Value = 0 then ActiveControl:=EditPersonalName2 else ActiveControl:=EditPersonalCode3
+              else if (TcxCurrencyEdit(Sender).Tag = 3) then if Value = 0 then ActiveControl:=EditPersonalName3 else ActiveControl:=EditPersonalCode4
+                   else if (TcxCurrencyEdit(Sender).Tag = 4) then if Value = 0 then ActiveControl:=EditPersonalName4 else bbOkClick(self);
+    end;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogPersonalCompleteForm.EditPersonalName1KeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
+begin
+    if Key=13 then
+    begin
+         if (TcxCurrencyEdit(Sender).Tag = 1) then ActiveControl:=EditPersonalCode2
+         else if (TcxCurrencyEdit(Sender).Tag = 2) then ActiveControl:=EditPersonalCode3
+              else if (TcxCurrencyEdit(Sender).Tag = 3) then ActiveControl:=EditPersonalCode4
+                   else if (TcxCurrencyEdit(Sender).Tag = 4) then bbOkClick(self);
+    end;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogPersonalCompleteForm.EditPersonalCode1Enter(Sender: TObject);
 begin TEdit(Sender).SelectAll;end;
 {------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditPositionCode1Enter(Sender: TObject);
-begin
-  try
-     //if StrToInt(EditMemberCode1.Text)>0 then ActiveControl:=EditMemberCode2
-     //else
-     TEdit(Sender).SelectAll;
-  except TEdit(Sender).SelectAll;
-  end;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditPositionCode2Enter(Sender: TObject);
-begin
-  try
-     //if StrToInt(EditMemberCode2.Text)>0 then ActiveControl:=EditMemberCode3
-     //else
-     TEdit(Sender).SelectAll;
-  except TEdit(Sender).SelectAll;
-  end;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditPositionCode3Enter(Sender: TObject);
-begin
-  try
-     //if StrToInt(EditMemberCode3.Text)>0 then ActiveControl:=EditMemberCode4
-     //else
-     TEdit(Sender).SelectAll;
-  except TEdit(Sender).SelectAll;
-  end;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditPositionCode4Enter(Sender: TObject);
-begin
-  try
-     //if StrToInt(EditMemberCode4.Text)>0 then ActiveControl:=bbOk
-     //else
-     TEdit(Sender).SelectAll;
-  except TEdit(Sender).SelectAll;
-  end;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditMemberCode1Exit(Sender: TObject);
-var ParamsMember:TParams;
-    MemberCode,PositionCode:Integer;
-begin
-     try MemberCode:=StrToInt(trim(EditMemberCode1.Text));except MemberCode:=0;end;
-     try PositionCode:=StrToInt(trim(EditPositionCode1.Text));except PositionCode:=0;end;
-     //
-     if MemberCode <> 0 then
-     begin
-          ParamsMember:=GetAllFieldsQueryValue(' select MemberProductionName as MemberName, isnull(PositionMemberCode,0) as PositionCode, isnull(PositionMemberName,'+FormatToVarCharServer('')+')as PositionName'
-                                              +' from dba.MemberProduction'
-                                              +'      left outer join dba.PositionMember on PositionMember.Id = MemberProduction.PositionMemberId'
-                                              +' where MemberProductionCode = '+IntToStr(MemberCode));
-          if not Assigned(ParamsMember) then
-          begin
-               ActiveControl:=EditMemberCode1;
-               EditMemberName1.Text:=_strNotFindValue;
-               exit;
-          end;
-          EditMemberName1.Text:=ParamsMember.ParamByName('MemberName').AsString;
-          EditPositionCode1.Text:=ParamsMember.ParamByName('PositionCode').AsString;
-          if ParamsMember.ParamByName('PositionCode').AsInteger>0
-          then PanelPositionName1.Caption:=ParamsMember.ParamByName('PositionName').AsString
-          else PanelPositionName1.Caption:=_strNotFindValue;
-          ParamsMember.Free;
-     end;
-     //else begin EditMemberName1.Text:='';EditPositionCode1.Text:='0';PanelPositionName1.Caption:=_strNotFindValue;end;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditMemberCode2Exit(Sender: TObject);
-var ParamsMember:TParams;
-    MemberCode,PositionCode:Integer;
-begin
-     try MemberCode:=StrToInt(trim(EditMemberCode2.Text));except MemberCode:=0;end;
-     try PositionCode:=StrToInt(trim(EditPositionCode2.Text));except PositionCode:=0;end;
-     //
-     if MemberCode <> 0 then
-     begin
-          ParamsMember:=GetAllFieldsQueryValue(' select MemberProductionName as MemberName, isnull(PositionMemberCode,0) as PositionCode, isnull(PositionMemberName,'+FormatToVarCharServer('')+')as PositionName'
-                                              +' from dba.MemberProduction'
-                                              +'      left outer join dba.PositionMember on PositionMember.Id = MemberProduction.PositionMemberId'
-                                              +' where MemberProductionCode = '+IntToStr(MemberCode));
-          if not Assigned(ParamsMember) then
-          begin
-               ActiveControl:=EditMemberCode2;
-               EditMemberName2.Text:=_strNotFindValue;
-               exit;
-          end;
-          EditMemberName2.Text:=ParamsMember.ParamByName('MemberName').AsString;
-          EditPositionCode2.Text:=ParamsMember.ParamByName('PositionCode').AsString;
-          if ParamsMember.ParamByName('PositionCode').AsInteger>0
-          then PanelPositionName2.Caption:=ParamsMember.ParamByName('PositionName').AsString
-          else PanelPositionName2.Caption:=_strNotFindValue;
-          ParamsMember.Free;
-     end;
-     //else begin EditMemberName2.Text:='';EditPositionCode2.Text:='0';PanelPositionName2.Caption:=_strNotFindValue;end;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditMemberCode3Exit(Sender: TObject);
-var ParamsMember:TParams;
-    MemberCode,PositionCode:Integer;
-begin
-     try MemberCode:=StrToInt(trim(EditMemberCode3.Text));except MemberCode:=0;end;
-     try PositionCode:=StrToInt(trim(EditPositionCode3.Text));except PositionCode:=0;end;
-     //
-     if MemberCode <> 0 then
-     begin
-          ParamsMember:=GetAllFieldsQueryValue(' select MemberProductionName as MemberName, isnull(PositionMemberCode,0) as PositionCode, isnull(PositionMemberName,'+FormatToVarCharServer('')+')as PositionName'
-                                              +' from dba.MemberProduction'
-                                              +'      left outer join dba.PositionMember on PositionMember.Id = MemberProduction.PositionMemberId'
-                                              +' where MemberProductionCode = '+IntToStr(MemberCode));
-          if not Assigned(ParamsMember) then
-          begin
-               ActiveControl:=EditMemberCode3;
-               EditMemberName3.Text:=_strNotFindValue;
-               exit;
-          end;
-          EditMemberName3.Text:=ParamsMember.ParamByName('MemberName').AsString;
-          EditPositionCode3.Text:=ParamsMember.ParamByName('PositionCode').AsString;
-          if ParamsMember.ParamByName('PositionCode').AsInteger>0
-          then PanelPositionName3.Caption:=ParamsMember.ParamByName('PositionName').AsString
-          else PanelPositionName3.Caption:=_strNotFindValue;
-          ParamsMember.Free;
-     end;
-     //else begin EditMemberName3.Text:='';EditPositionCode3.Text:='0';PanelPositionName3.Caption:=_strNotFindValue;end;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditMemberCode4Exit(Sender: TObject);
-var ParamsMember:TParams;
-    MemberCode,PositionCode:Integer;
-begin
-     try MemberCode:=StrToInt(trim(EditMemberCode4.Text));except MemberCode:=0;end;
-     try PositionCode:=StrToInt(trim(EditPositionCode4.Text));except PositionCode:=0;end;
-     //
-     if MemberCode <> 0 then
-     begin
-          ParamsMember:=GetAllFieldsQueryValue(' select MemberProductionName as MemberName, isnull(PositionMemberCode,0) as PositionCode, isnull(PositionMemberName,'+FormatToVarCharServer('')+')as PositionName'
-                                              +' from dba.MemberProduction'
-                                              +'      left outer join dba.PositionMember on PositionMember.Id = MemberProduction.PositionMemberId'
-                                              +' where MemberProductionCode = '+IntToStr(MemberCode));
-          if not Assigned(ParamsMember) then
-          begin
-               ActiveControl:=EditMemberCode3;
-               EditMemberName4.Text:=_strNotFindValue;
-               exit;
-          end;
-          EditMemberName4.Text:=ParamsMember.ParamByName('MemberName').AsString;
-          EditPositionCode4.Text:=ParamsMember.ParamByName('PositionCode').AsString;
-          if ParamsMember.ParamByName('PositionCode').AsInteger>0
-          then PanelPositionName4.Caption:=ParamsMember.ParamByName('PositionName').AsString
-          else PanelPositionName4.Caption:=_strNotFindValue;
-          ParamsMember.Free;
-     end;
-     //else begin EditMemberName4.Text:='';EditPositionCode4.Text:='0';PanelPositionName4.Caption:=_strNotFindValue;end;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditPositionCode1Exit(Sender: TObject);
-var PositionCode:Integer;
-begin
-     try PositionCode:=StrToInt(trim(EditPositionCode1.Text));except PositionCode:=0;end;
-     //
-     if PositionCode <> 0 then PanelPositionName1.Caption:=GetStringValue('select PositionMemberName as RetV from dba.PositionMember where Id<100 and PositionMemberCode = '+IntToStr(PositionCode))
-     else PanelPositionName1.Caption:=_strNotFindValue;
-     if PanelPositionName1.Caption='' then PanelPositionName1.Caption:=_strNotFindValue;
-     //
-     if (PanelPositionName1.Caption=_strNotFindValue)and(PositionCode<>0)
-     then ActiveControl:=EditPositionCode1;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditPositionCode2Exit(Sender: TObject);
-var PositionCode:Integer;
-begin
-     try PositionCode:=StrToInt(trim(EditPositionCode2.Text));except PositionCode:=0;end;
-     //
-     if PositionCode <> 0 then PanelPositionName2.Caption:=GetStringValue('select PositionMemberName as RetV from dba.PositionMember where Id<100 and PositionMemberCode = '+IntToStr(PositionCode))
-     else PanelPositionName2.Caption:=_strNotFindValue;
-     if PanelPositionName2.Caption='' then PanelPositionName2.Caption:=_strNotFindValue;
-     //
-     if (PanelPositionName2.Caption=_strNotFindValue)and(PositionCode<>0)
-     then ActiveControl:=EditPositionCode2;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditPositionCode3Exit(Sender: TObject);
-var PositionCode:Integer;
-begin
-     try PositionCode:=StrToInt(trim(EditPositionCode3.Text));except PositionCode:=0;end;
-     //
-     if PositionCode <> 0 then PanelPositionName3.Caption:=GetStringValue('select PositionMemberName as RetV from dba.PositionMember where Id<100 and PositionMemberCode = '+IntToStr(PositionCode))
-     else PanelPositionName3.Caption:=_strNotFindValue;
-     if PanelPositionName3.Caption='' then PanelPositionName3.Caption:=_strNotFindValue;
-     //
-     if (PanelPositionName3.Caption=_strNotFindValue)and(PositionCode<>0)
-     then ActiveControl:=EditPositionCode3;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditPositionCode4Exit(Sender: TObject);
-var PositionCode:Integer;
-begin
-     try PositionCode:=StrToInt(trim(EditPositionCode4.Text));except PositionCode:=0;end;
-     //
-     if PositionCode <> 0 then PanelPositionName4.Caption:=GetStringValue('select PositionMemberName as RetV from dba.PositionMember where Id<100 and PositionMemberCode = '+IntToStr(PositionCode))
-     else PanelPositionName4.Caption:=_strNotFindValue;
-     if PanelPositionName4.Caption='' then PanelPositionName4.Caption:=_strNotFindValue;
-     //
-     if (PanelPositionName4.Caption=_strNotFindValue)and(PositionCode<>0)
-     then ActiveControl:=EditPositionCode4;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditMemberName1ButtonClick(Sender: TObject);
+procedure TDialogPersonalCompleteForm.EditPersonalCode1Exit(Sender: TObject);
 var execParams:TParams;
-    MemberCode:Integer;
+    PersonalCode:Integer;
+    idx:String;
 begin
-    try MemberCode:=StrToInt(trim(EditMemberCode1.Text))except MemberCode:=0;end;
-    execParams:=nil;
-    ParamAddValue(execParams,'MemberId',ftInteger,0);
-    ParamAddValue(execParams,'MemberCode',ftInteger,MemberCode);
-    ParamAddValue(execParams,'MemberName',ftString,'');
-    ParamAddValue(execParams,'PositionId',ftInteger,0);
-    ParamAddValue(execParams,'PositionCode',ftInteger,0);
-    ParamAddValue(execParams,'PositionName',ftString,'');
+    idx:=IntToStr(TcxButtonEdit(Sender).Tag);
     //
-     with TGuideMemberProductionForm.Create(nil) do begin
-         Execute(execParams);
-         Free;
+    if idx = '1' then try PersonalCode:= StrToInt(EditPersonalCode1.Text); except PersonalCode:= 0;end;
+    if idx = '2' then try PersonalCode:= StrToInt(EditPersonalCode2.Text); except PersonalCode:= 0;end;
+    if idx = '3' then try PersonalCode:= StrToInt(EditPersonalCode3.Text); except PersonalCode:= 0;end;
+    if idx = '4' then try PersonalCode:= StrToInt(EditPersonalCode4.Text); except PersonalCode:= 0;end;
+    //
+    if PersonalCode = 0 then
+    begin
+         ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=0;
+         ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger:=0;
+         ParamsPersonalComplete_local.ParamByName('PersonalName'+idx).AsString:='';
+         ParamsPersonalComplete_local.ParamByName('PositionId'+idx).AsInteger:=0;
+         ParamsPersonalComplete_local.ParamByName('PositionCode'+idx).AsInteger:=0;
+         ParamsPersonalComplete_local.ParamByName('PositionName'+idx).AsString:='';
+         //
+         fStartWrite:=true;
+         if idx = '1' then begin EditPersonalName1.Text:=''; PanelPositionName1.Caption:=''; end;
+         if idx = '2' then begin EditPersonalName2.Text:=''; PanelPositionName2.Caption:=''; end;
+         if idx = '3' then begin EditPersonalName3.Text:=''; PanelPositionName3.Caption:=''; end;
+         if idx = '4' then begin EditPersonalName4.Text:=''; PanelPositionName4.Caption:=''; end;
+         fStartWrite:=false;
+         //
+         fChangePersonalCode:=false;
+    end
+    else if fChangePersonalCode = true then
+         begin
+              Create_ParamsPersonal(execParams,'');
+              //
+              if DMMainScaleForm.gpGet_Scale_Personal(execParams,PersonalCode) = true
+              then begin
+                        ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
+                        ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
+                        ParamsPersonalComplete_local.ParamByName('PersonalName'+idx).AsString:=execParams.ParamByName('PersonalName').AsString;
+                        ParamsPersonalComplete_local.ParamByName('PositionId'+idx).AsInteger:=execParams.ParamByName('PositionId').AsInteger;
+                        ParamsPersonalComplete_local.ParamByName('PositionCode'+idx).AsInteger:=execParams.ParamByName('PositionCode').AsInteger;
+                        ParamsPersonalComplete_local.ParamByName('PositionName'+idx).AsString:=execParams.ParamByName('PositionName').AsString;
+                        //
+                        fStartWrite:=true;
+                        //
+                         if idx = '1' then
+                         begin
+                              EditPersonalCode1.Text:=execParams.ParamByName('PersonalCode').AsString;
+                              EditPersonalName1.Text:=execParams.ParamByName('PersonalName').AsString;
+                              PanelPositionName1.Caption:=execParams.ParamByName('PositionName').AsString;
+                         end;
+                         if idx = '2' then
+                         begin
+                              EditPersonalCode2.Text:=execParams.ParamByName('PersonalCode').AsString;
+                              EditPersonalName2.Text:=execParams.ParamByName('PersonalName').AsString;
+                              PanelPositionName2.Caption:=execParams.ParamByName('PositionName').AsString;
+                         end;
+                         if idx = '3' then
+                         begin
+                              EditPersonalCode3.Text:=execParams.ParamByName('PersonalCode').AsString;
+                              EditPersonalName3.Text:=execParams.ParamByName('PersonalName').AsString;
+                              PanelPositionName3.Caption:=execParams.ParamByName('PositionName').AsString;
+                         end;
+                         if idx = '4' then
+                         begin
+                              EditPersonalCode4.Text:=execParams.ParamByName('PersonalCode').AsString;
+                              EditPersonalName4.Text:=execParams.ParamByName('PersonalName').AsString;
+                              PanelPositionName4.Caption:=execParams.ParamByName('PositionName').AsString;
+                         end;
+                        //
+                        fStartWrite:=false;
+                        //
+                        fChangePersonalCode:=false;
+                   end
+              else begin
+                        if execParams.ParamByName('PersonalId').AsInteger>1
+                        then ShowMessage('Ошибка.У сотрудника с кодом <'+IntToStr(PersonalCode)+'> нельзя определить <Должность>.'+#10+#13+'Попробуйте выбрать его из <Справочника>.')
+                        else ShowMessage('Ошибка.Не найден сотрудник с кодом <'+IntToStr(PersonalCode)+'>.');
+                        ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=0;
+                        //
+                        fStartWrite:=true;
+                        if idx = '1' then begin EditPersonalName1.Text:=''; PanelPositionName1.Caption:=''; ActiveControl:=EditPersonalCode1; end;
+                        if idx = '2' then begin EditPersonalName2.Text:=''; PanelPositionName2.Caption:=''; ActiveControl:=EditPersonalCode2; end;
+                        if idx = '3' then begin EditPersonalName3.Text:=''; PanelPositionName3.Caption:=''; ActiveControl:=EditPersonalCode3; end;
+                        if idx = '4' then begin EditPersonalName4.Text:=''; PanelPositionName4.Caption:=''; ActiveControl:=EditPersonalCode4; end;
+                        fStartWrite:=false;
+                        //
+                   end;
+              //
+              execParams.Free;
+         end;
+     //
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogPersonalCompleteForm.EditPersonalCode1PropertiesChange(Sender: TObject);
+begin
+   if fStartWrite=false
+   then fChangePersonalCode:=true;
+end;
+{------------------------------------------------------------------------------}
+procedure TDialogPersonalCompleteForm.EditPersonalName1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var execParams:TParams;
+    idx:String;
+begin
+     Create_ParamsPersonal(execParams,'');
+     //
+     idx:=IntToStr(TcxButtonEdit(Sender).Tag);
+     //
+     with execParams do
+     begin
+          ParamByName('PersonalId').AsInteger:=ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger;
+          ParamByName('PersonalCode').AsInteger:=ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger;
      end;
      //
-     if execParams.ParamByName('MemberCode').AsInteger<>0
+     if GuidePersonalForm.Execute(execParams)
      then begin
-               EditMemberCode1.Text:=execParams.ParamByName('MemberCode').AsString;
-               EditMemberName1.Text:=execParams.ParamByName('MemberName').AsString;
-               EditPositionCode1.Text:=execParams.ParamByName('PositionCode').AsString;
-               PanelPositionName1.Caption:=execParams.ParamByName('PositionName').AsString;
+               ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
+               ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
+               ParamsPersonalComplete_local.ParamByName('PersonalName'+idx).AsString:=execParams.ParamByName('PersonalName').AsString;
+               ParamsPersonalComplete_local.ParamByName('PositionId'+idx).AsInteger:=execParams.ParamByName('PositionId').AsInteger;
+               ParamsPersonalComplete_local.ParamByName('PositionCode'+idx).AsInteger:=execParams.ParamByName('PositionCode').AsInteger;
+               ParamsPersonalComplete_local.ParamByName('PositionName'+idx).AsString:=execParams.ParamByName('PositionName').AsString;
+               //
+               fStartWrite:=true;
+               //
+               if idx = '1' then
+               begin
+                    EditPersonalCode1.Text:=execParams.ParamByName('PersonalCode').AsString;
+                    EditPersonalName1.Text:=execParams.ParamByName('PersonalName').AsString;
+                    PanelPositionName1.Caption:=execParams.ParamByName('PositionName').AsString;
+                    ActiveControl:=EditPersonalCode2;
+               end;
+               if idx = '2' then
+               begin
+                    EditPersonalCode2.Text:=execParams.ParamByName('PersonalCode').AsString;
+                    EditPersonalName2.Text:=execParams.ParamByName('PersonalName').AsString;
+                    PanelPositionName2.Caption:=execParams.ParamByName('PositionName').AsString;
+                    ActiveControl:=EditPersonalCode3;
+               end;
+               if idx = '3' then
+               begin
+                    EditPersonalCode3.Text:=execParams.ParamByName('PersonalCode').AsString;
+                    EditPersonalName3.Text:=execParams.ParamByName('PersonalName').AsString;
+                    PanelPositionName3.Caption:=execParams.ParamByName('PositionName').AsString;
+                    ActiveControl:=EditPersonalCode4;
+               end;
+               if idx = '4' then
+               begin
+                    EditPersonalCode4.Text:=execParams.ParamByName('PersonalCode').AsString;
+                    EditPersonalName4.Text:=execParams.ParamByName('PersonalName').AsString;
+                    PanelPositionName4.Caption:=execParams.ParamByName('PositionName').AsString;
+                    ActiveControl:=bbOk;
+               end;
+               //
+               fStartWrite:=false;
+               //
      end;
      //
      execParams.Free;
-     ActiveControl:=EditMemberCode2;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditMemberName2ButtonClick(Sender: TObject);
-var execParams:TParams;
-    MemberCode:Integer;
-begin
-    try MemberCode:=StrToInt(trim(EditMemberCode2.Text))except MemberCode:=0;end;
-    execParams:=nil;
-    ParamAddValue(execParams,'MemberId',ftInteger,0);
-    ParamAddValue(execParams,'MemberCode',ftInteger,MemberCode);
-    ParamAddValue(execParams,'MemberName',ftString,'');
-    ParamAddValue(execParams,'PositionId',ftInteger,0);
-    ParamAddValue(execParams,'PositionCode',ftInteger,0);
-    ParamAddValue(execParams,'PositionName',ftString,'');
-    //
-     with TGuideMemberProductionForm.Create(nil) do begin
-         Execute(execParams);
-         Free;
-     end;
-     //
-     if execParams.ParamByName('MemberCode').AsInteger<>0
-     then begin
-               EditMemberCode2.Text:=execParams.ParamByName('MemberCode').AsString;
-               EditMemberName2.Text:=execParams.ParamByName('MemberName').AsString;
-               EditPositionCode2.Text:=execParams.ParamByName('PositionCode').AsString;
-               PanelPositionName2.Caption:=execParams.ParamByName('PositionName').AsString;
-     end;
-     //
-     execParams.Free;
-     ActiveControl:=EditMemberCode3;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditMemberName3ButtonClick(Sender: TObject);
-var execParams:TParams;
-    MemberCode:Integer;
-begin
-    try MemberCode:=StrToInt(trim(EditMemberCode3.Text))except MemberCode:=0;end;
-    execParams:=nil;
-    ParamAddValue(execParams,'MemberId',ftInteger,0);
-    ParamAddValue(execParams,'MemberCode',ftInteger,MemberCode);
-    ParamAddValue(execParams,'MemberName',ftString,'');
-    ParamAddValue(execParams,'PositionId',ftInteger,0);
-    ParamAddValue(execParams,'PositionCode',ftInteger,0);
-    ParamAddValue(execParams,'PositionName',ftString,'');
-    //
-     with TGuideMemberProductionForm.Create(nil) do begin
-         Execute(execParams);
-         Free;
-     end;
-     //
-     if execParams.ParamByName('MemberCode').AsInteger<>0
-     then begin
-               EditMemberCode3.Text:=execParams.ParamByName('MemberCode').AsString;
-               EditMemberName3.Text:=execParams.ParamByName('MemberName').AsString;
-               EditPositionCode3.Text:=execParams.ParamByName('PositionCode').AsString;
-               PanelPositionName3.Caption:=execParams.ParamByName('PositionName').AsString;
-     end;
-     //
-     execParams.Free;
-     ActiveControl:=EditMemberCode4;
-end;
-{------------------------------------------------------------------------------}
-procedure TDialogPersonalCompleteForm.EditMemberName4ButtonClick(Sender: TObject);
-var execParams:TParams;
-    MemberCode:Integer;
-begin
-    try MemberCode:=StrToInt(trim(EditMemberCode4.Text))except MemberCode:=0;end;
-    execParams:=nil;
-    ParamAddValue(execParams,'MemberId',ftInteger,0);
-    ParamAddValue(execParams,'MemberCode',ftInteger,MemberCode);
-    ParamAddValue(execParams,'MemberName',ftString,'');
-    ParamAddValue(execParams,'PositionId',ftInteger,0);
-    ParamAddValue(execParams,'PositionCode',ftInteger,0);
-    ParamAddValue(execParams,'PositionName',ftString,'');
-    //
-     with TGuideMemberProductionForm.Create(nil) do begin
-         Execute(execParams);
-         Free;
-     end;
-     //
-     if execParams.ParamByName('MemberCode').AsInteger<>0
-     then begin
-               EditMemberCode4.Text:=execParams.ParamByName('MemberCode').AsString;
-               EditMemberName4.Text:=execParams.ParamByName('MemberName').AsString;
-               EditPositionCode4.Text:=execParams.ParamByName('PositionCode').AsString;
-               PanelPositionName4.Caption:=execParams.ParamByName('PositionName').AsString;
-     end;
-     //
-     execParams.Free;
-     ActiveControl:=bbOk;
 end;
 {------------------------------------------------------------------------------}
 end.

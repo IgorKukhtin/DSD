@@ -278,6 +278,12 @@ BEGIN
   END IF;
 
 
+  -- !!!временно!!!
+  IF inUserId = 128491 -- Хохлова Е.Ю. !!!временно!!!
+  THEN RETURN;
+  END IF;
+
+
   -- 3.0.1. определяется дата
   vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
   -- 3.0.2. определяется 

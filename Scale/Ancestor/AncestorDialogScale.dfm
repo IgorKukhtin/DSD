@@ -1,4 +1,4 @@
-object AncestorDialogForm: TAncestorDialogForm
+object AncestorDialogScaleForm: TAncestorDialogScaleForm
   Left = 1106
   Top = 458
   ClientHeight = 83
@@ -9,11 +9,12 @@ object AncestorDialogForm: TAncestorDialogForm
   Font.Height = -11
   Font.Name = 'Arial'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 14
-  object BottomPanel: TPanel
+  object bbPanel: TPanel
     Left = 0
     Top = 42
     Width = 292
@@ -23,7 +24,7 @@ object AncestorDialogForm: TAncestorDialogForm
     Caption = ' '
     TabOrder = 0
     object bbOk: TBitBtn
-      Left = 33
+      Left = 36
       Top = 12
       Width = 79
       Height = 25
@@ -46,13 +47,12 @@ object AncestorDialogForm: TAncestorDialogForm
         3338F38F000033333333333333A223333333333333338F830000333333333333
         333A333333333333333338330000333333333333333333333333333333333333
         0000}
-      ModalResult = 1
       NumGlyphs = 2
       TabOrder = 0
       OnClick = bbOkClick
     end
     object bbCancel: TBitBtn
-      Left = 117
+      Left = 120
       Top = 12
       Width = 79
       Height = 25

@@ -35,7 +35,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- пытаемся еайти по продаже
+     -- пытаемся найти по продаже
      IF inMovementId_Sale <> 0 AND COALESCE (inMovementId, 0) = 0
      THEN
          inMovementId:= (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId_Sale AND DescId = zc_MovementLinkMovement_TransportGoods());

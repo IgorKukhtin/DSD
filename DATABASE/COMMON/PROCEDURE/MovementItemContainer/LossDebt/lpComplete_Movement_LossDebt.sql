@@ -9,7 +9,6 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_LossDebt(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbPartionMovementId Integer;
    DECLARE vbOperDate TDateTime;
    DECLARE vbIsLossOnly Boolean;
 BEGIN
@@ -64,8 +63,6 @@ BEGIN
      -- !!!об€зательно!!! очистили таблицу - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      DELETE FROM _tmpItem;
 
-     -- !!!все равно без партий!!!
-     vbPartionMovementId:= lpInsertFind_Object_PartionMovement (0, NULL);
 
      -- !!!”ѕ должна соответствовать договору!!!
      UPDATE MovementItemLinkObject SET ObjectId = tmpUpdate.InfoMoneyId
@@ -145,7 +142,7 @@ BEGIN
                                      END AS BranchId
                                    , COALESCE (MILinkObject_Contract.ObjectId, 0)  AS ContractId
                                    , COALESCE (MILinkObject_PaidKind.ObjectId, 0)  AS PaidKindId
-                                   , lpInsertFind_Object_PartionMovement (COALESCE (MIFloat_MovementId.ValueData, 0) :: Integer) AS PartionMovementId
+                                   , lpInsertFind_Object_PartionMovement (COALESCE (MIFloat_MovementId.ValueData, 0), NULL) AS PartionMovementId
                                    , MIBoolean_Calculated.ValueData AS isCalculated
                               FROM tmpMovement
                                    JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId

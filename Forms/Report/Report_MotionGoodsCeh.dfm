@@ -1916,6 +1916,30 @@ object Report_MotionGoodsCehForm: TReport_MotionGoodsCehForm
         VisibleForCustomization = False
         Width = 55
       end
+      object CountProductionOut_Norm: TcxGridDBColumn
+        DataBinding.FieldName = 'CountProductionOut_Norm'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object CountProductionOut_Fact2: TcxGridDBColumn
+        DataBinding.FieldName = 'CountProductionOut_Fact2'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummProductionOut_Norm: TcxGridDBColumn
+        DataBinding.FieldName = 'SummProductionOut_Norm'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummProductionOut_Fact2: TcxGridDBColumn
+        DataBinding.FieldName = 'SummProductionOut_Fact2'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

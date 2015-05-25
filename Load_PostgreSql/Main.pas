@@ -186,6 +186,7 @@ type
     fromQueryDate: TADOQuery;
     cbDocERROR: TCheckBox;
     cbShowContract: TCheckBox;
+    cbPrintKindItem: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -374,6 +375,7 @@ type
     procedure pLoadGuide_ReceiptChild;
     procedure pLoadGuide_Quality;
     procedure pLoadGuide_GoodsQuality;
+    procedure pLoadGuide_PrintKindItem;
 
     procedure pLoadGuide_1Find2InsertPartner1C_BranchNal;
     procedure pLoadGuide_Juridical1C_BranchNal;
@@ -1816,6 +1818,7 @@ begin
      //
      if not fStop then pLoadGuide_Quality;
      if not fStop then pLoadGuide_GoodsQuality;
+     if not fStop then pLoadGuide_PrintKindItem;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -4693,6 +4696,119 @@ begin
      end;
      //
      myDisabledCB(cbPartnerIntUpdate);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_PrintKindItem;
+var PartnerId_pg:Integer;
+begin
+     if (not cbPrintKindItem.Checked)or(not cbPrintKindItem.Enabled) then exit;
+     //
+     myEnabledCB(cbPrintKindItem);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+                  Add('select 1 as MyNumber'
+                    + '     , fIsClient_Kachestvo_onSaveAll(0, zc_bkSaleToClient(), zc_UnitId_StoreSale(), Unit.Id) as isQuality'
+                    + '     , fIsClient_TransportNew(Unit.Id) as isTransport'
+                    + '     , fIsClient_byNumberTare(Unit.Id) as isPack'
+                    + '     , fIsClient_byNumberTare(Unit.Id) as isSpec'
+                    + '     , zc_rvNo() as isTaxSummary'
+                    + '     , _pgPartner.JuridicalId_pg as Id_pg'
+                    + ' from dba.Unit'
+                    + '      join dba._pgPartner on _pgPartner.UnitId = Unit.Id'
+                    + '                         and _pgPartner.JuridicalId_pg <> 0'
+                    + ' where fIsClient_Kachestvo_onSaveAll(0, zc_bkSaleToClient(), zc_UnitId_StoreSale(), Unit.Id) = zc_rvYes()'
+                    + '    or fIsClient_TransportNew(Unit.Id) = zc_rvYes()'
+                    + '    or fIsClient_byNumberTare(Unit.Id) = zc_rvYes()'
+                    + ' group by fIsClient_Kachestvo_onSaveAll(0, zc_bkSaleToClient(), zc_UnitId_StoreSale(), Unit.Id) '
+                    + '     , fIsClient_TransportNew(Unit.Id) '
+                    + '     , fIsClient_byNumberTare(Unit.Id) '
+                    + '     , _pgPartner.JuridicalId_pg'
+                    + ' union all'
+                    + ' select 2 as MyNumber'
+                    + '     , zc_rvNo() as isQuality'
+                    + '     , zc_rvNo() as isTransport'
+                    + '     , zc_rvNo() as isPack'
+                    + '     , zc_rvNo() as isSpec'
+                    + '     , zc_rvYes() as isTaxSummary'
+                    + '     , _pgPartner.JuridicalId_pg as Id_pg'
+                    + ' from dba.Unit'
+                    + '      join dba._pgPartner on _pgPartner.UnitId = Unit.Id'
+                    + '                         and _pgPartner.JuridicalId_pg <> 0'
+                    + ' where isnull(Unit.isTotalBillNalog_byUnit,zc_rvNo())=zc_rvYes() or isnull(Unit.isTotalBillNalog,zc_rvNo())=zc_rvYes()'
+                    + ' group by _pgPartner.JuridicalId_pg'
+                    );
+                  Add('order by Id_pg');
+
+        Open;
+        cbPartnerIntUpdate.Caption:='2.9.('+IntToStr(RecordCount)+')PrintKindItem';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             //!!!
+             if FieldByName('MyNumber').AsInteger = 1
+             then
+             fOpenSqToQuery (' select case when ObjectLink_Juridical_Retail.ChildObjectId > 0'
+                            +'                  then lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PrintKindItem()'
+                            +'                                                , ObjectLink_Juridical_Retail.ChildObjectId'
+                            +'                                                , (select lpInsertFind_Object_PrintKindItem(true'
+                            +'                                                                                           ,false' // inIsAccount
+                            +'                                                                                           ,'+FieldByName('isTransport').AsString+' = ' + IntToStr(zc_rvYes)
+                            +'                                                                                           ,'+FieldByName('isQuality').AsString+' = ' + IntToStr(zc_rvYes)
+                            +'                                                                                           ,'+FieldByName('isPack').AsString+' = ' + IntToStr(zc_rvYes)
+                            +'                                                                                           ,'+FieldByName('isSpec').AsString+' = ' + IntToStr(zc_rvYes)
+                            +'                                                                                           ,tmp.isTax'
+                            +'                                                                                           ))'
+                            +'                                                 )'
+                            +'                  else lpInsertUpdate_ObjectLink (zc_ObjectLink_Juridical_PrintKindItem()'
+                            +'                                                , Object.Id'
+                            +'                                                , (select lpInsertFind_Object_PrintKindItem(true'
+                            +'                                                                                           ,false' // inIsAccount
+                            +'                                                                                           ,'+FieldByName('isTransport').AsString+' = ' + IntToStr(zc_rvYes)
+                            +'                                                                                           ,'+FieldByName('isQuality').AsString+' = ' + IntToStr(zc_rvYes)
+                            +'                                                                                           ,'+FieldByName('isPack').AsString+' = ' + IntToStr(zc_rvYes)
+                            +'                                                                                           ,'+FieldByName('isSpec').AsString+' = ' + IntToStr(zc_rvYes)
+                            +'                                                                                           ,tmp.isTax'
+                            +'                                                                                           ))'
+                            +'                                                 )'
+                            +'        end'
+                            +' from Object'
+                            +'      LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail'
+                            +'                            ON ObjectLink_Juridical_Retail.ObjectId = Object.Id'
+                            +'                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()'
+                            +'      LEFT JOIN ObjectLink AS ObjectLink_Retail_PrintKindItem'
+                            +'                            ON ObjectLink_Retail_PrintKindItem.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId'
+                            +'                           AND ObjectLink_Retail_PrintKindItem.DescId = zc_ObjectLink_Retail_PrintKindItem()'
+                            +'      LEFT JOIN ObjectLink AS ObjectLink_Juridical_PrintKindItem'
+                            +'                           ON ObjectLink_Juridical_PrintKindItem.ObjectId = Object.Id'
+                            +'                          AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()'
+                            +'      LEFT JOIN lpGet_Object_Juridical_PrintKindItem ('+IntToStr(FieldByName('Id_pg').AsInteger)+') AS tmp ON tmp.Id = Object.Id'
+
+                            +' where Object.Id = '+IntToStr(FieldByName('Id_pg').AsInteger))
+             else
+             fOpenSqToQuery (' select lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Juridical_isTaxSummary()'
+                            +'                                    , ' + IntToStr(FieldByName('Id_pg').AsInteger)
+                            +'                                    , TRUE)');
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbPrintKindItem);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner1CLink_Fl;

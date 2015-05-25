@@ -723,10 +723,22 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           DataType = ftDateTime
         end
         item
+          Name = 'FromId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromId'
+        end
+        item
           Name = 'FromName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FromName'
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToId'
         end
         item
           Name = 'ToName'

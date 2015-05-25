@@ -1,4 +1,4 @@
-unit AncestorDialog;
+unit AncestorDialogScale;
 
 interface
 
@@ -7,8 +7,8 @@ uses
   Dialogs, StdCtrls, ExtCtrls, Buttons,Db;
 
 type
-  TAncestorDialogForm = class(TForm)
-    BottomPanel: TPanel;
+  TAncestorDialogScaleForm = class(TForm)
+    bbPanel: TPanel;
     bbOk: TBitBtn;
     bbCancel: TBitBtn;
     procedure bbOkClick(Sender: TObject);
@@ -22,25 +22,27 @@ type
 implementation
 {$R *.dfm}
 {------------------------------------------------------------------------------}
-function TAncestorDialogForm.Execute: boolean;
+function TAncestorDialogScaleForm.Execute: boolean;
 begin
      result:=(ShowModal=mrOk);
 end;
 {------------------------------------------------------------------------------}
-function TAncestorDialogForm.Checked;
+function TAncestorDialogScaleForm.Checked;
 begin result:=false;end;
 {------------------------------------------------------------------------------}
-procedure TAncestorDialogForm.bbOkClick(Sender: TObject);
-begin if Checked then ModalResult:=mrOk;end;
+procedure TAncestorDialogScaleForm.bbOkClick(Sender: TObject);
+begin if Checked
+then ModalResult:=mrOk;
+end;
 {------------------------------------------------------------------------------}
-procedure TAncestorDialogForm.FormResize(Sender: TObject);
+procedure TAncestorDialogScaleForm.FormResize(Sender: TObject);
 begin
- bbOk.Top:=(BottomPanel.Height-bbOk.Height) div 2;
+ bbOk.Top:=(bbPanel.Height-bbOk.Height) div 2;
  bbCancel.Top:=bbOk.Top;
- bbOK.Left:=((BottomPanel.Width div 2)*9) div 10 -bbOK.width;
+ bbOK.Left:=((bbPanel.Width div 2)*9) div 10 -bbOK.width;
  if bbOK.Visible
- then bbCancel.Left:=((BottomPanel.Width div 2)*11)div 10
- else bbCancel.Left:=(BottomPanel.Width div 2)-(bbCancel.Width div 2);
+ then bbCancel.Left:=((bbPanel.Width div 2)*11)div 10
+ else bbCancel.Left:=(bbPanel.Width div 2)-(bbCancel.Width div 2);
 end;
 {------------------------------------------------------------------------------}
 

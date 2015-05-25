@@ -5,7 +5,6 @@
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -388
   ExplicitWidth = 1386
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -1605,6 +1604,7 @@
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    AutoWidth = True
     Left = 176
     Top = 200
   end

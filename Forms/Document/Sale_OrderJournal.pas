@@ -78,14 +78,14 @@ type
     actPrintTax_Client: TdsdPrintAction;
     actPrint: TdsdPrintAction;
     actSPPrintSaleProcName: TdsdExecStoredProc;
-    actSPPrintSaleTaxProcName: TdsdExecStoredProc;
+    actPrint_Tax_ReportName: TdsdExecStoredProc;
     bbPrint: TdxBarButton;
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     spGetReporNameBill: TdsdStoredProc;
-    actSPPrintSaleBillProcName: TdsdExecStoredProc;
-    actPrint_Bill: TdsdPrintAction;
-    mactPrint_Bill: TMultiAction;
+    actPrint_Account_ReportName: TdsdExecStoredProc;
+    actPrint_Account: TdsdPrintAction;
+    mactPrint_Account: TMultiAction;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colIsError: TcxGridDBColumn;
@@ -98,8 +98,8 @@ type
     clRouteName: TcxGridDBColumn;
     colCurrencyDocumentName: TcxGridDBColumn;
     colCurrencyPartnerName: TcxGridDBColumn;
-    actPrint_Invoice: TdsdPrintAction;
-    actPrint_Pack: TdsdPrintAction;
+    actPrint_ExpInvoice: TdsdPrintAction;
+    actPrint_ExpPack: TdsdPrintAction;
     bbPrint_Invoice: TdxBarButton;
     bbPrint_Pack: TdxBarButton;
     TotalSummCurrency: TcxGridDBColumn;
@@ -107,25 +107,25 @@ type
     ParValue: TcxGridDBColumn;
     CurrencyPartnerValue: TcxGridDBColumn;
     ParPartnerValue: TcxGridDBColumn;
-    spSelectPrintInvoice: TdsdStoredProc;
-    actPrint_Spec: TdsdPrintAction;
+    spSelectPrint_ExpInvoice: TdsdStoredProc;
+    actPrint_ExpSpec: TdsdPrintAction;
     bbPrint_Spec: TdxBarButton;
-    spSelectPrintPack: TdsdStoredProc;
-    spSelectPrintPack22: TdsdStoredProc;
-    spSelectPrintPack21: TdsdStoredProc;
-    actPrint_Pack21: TdsdPrintAction;
-    actPrint_Pack22: TdsdPrintAction;
+    spSelectPrint_ExpPack: TdsdStoredProc;
+    spSelectPrint_Spec: TdsdStoredProc;
+    spSelectPrint_Pack: TdsdStoredProc;
+    actPrint_Pack: TdsdPrintAction;
+    actPrint_Spec: TdsdPrintAction;
     bbPrint_Pack21: TdxBarButton;
     bbPrint_Pack22: TdxBarButton;
     colIsMedoc: TcxGridDBColumn;
-    spSelectPrintTTN: TdsdStoredProc;
+    spSelectPrint_TTN: TdsdStoredProc;
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
     clEdiOrdspr: TcxGridDBColumn;
     clEdiInvoice: TcxGridDBColumn;
     clEdiDesadv: TcxGridDBColumn;
-    spSelectPrintQuality: TdsdStoredProc;
-    actPrint_Quality: TdsdPrintAction;
+    spSelectPrint_Quality: TdsdStoredProc;
+    actPrint_QualityDoc: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;
     PersonalName: TcxGridDBColumn;
     mactPrint_TTN: TMultiAction;
@@ -136,6 +136,8 @@ type
     OperDate_TransportGoods: TcxGridDBColumn;
     colPaymentDate: TcxGridDBColumn;
     colInsertDate: TcxGridDBColumn;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
   private
     { Private declarations }
   public

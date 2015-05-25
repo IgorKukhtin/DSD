@@ -21,8 +21,37 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- параметр из документа
-     vbOperDate := (SELECT OperDate FROM Movement WHERE Id = inMovementId);
+     -- параметр из документа - !!!временно!!!
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
+     -- !!!временно!!!
+     IF NOT EXISTS (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child()) -- 1=1 OR vbUserId = 5
+     THEN PERFORM gpInsertUpdate_Movement_QualityDoc (ioId             := 0
+                                                    , inMovementId_Sale:= inMovementId
+                                                    , inOperDateIn     := Movement.OperDate
+                                                    , inOperDateOut    := Movement.OperDate
+                                                    , inCarId          := NULL
+                                                    , inSession        := inSession
+                                                     )
+          FROM Movement
+          WHERE Movement.Id = inMovementId;
+     END IF;
+
+
+    -- очень важная проверка
+    IF COALESCE ((SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId), 0) <> zc_Enum_Status_Complete()
+    THEN
+        IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Erased()
+        THEN
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId)), (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), (SELECT DATE (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId);
+        END IF;
+        IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_UnComplete()
+        THEN
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId)), (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), (SELECT DATE (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId);
+        END IF;
+        -- это уже странная ошибка
+        RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId));
+    END IF;
 
 
      -- Данные: заголовок + строчная часть для ФОРМЫ 1
@@ -80,7 +109,7 @@ BEGIN
                    INNER JOIN ObjectFloat AS ObjectFloat_Quality_NumberPrint
                                           ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                          AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
-                                         AND ObjectFloat_Quality_NumberPrint.ValueData = 1 -- !!!так захардкодил!!!
+                                         AND ObjectFloat_Quality_NumberPrint.ValueData = 1 -- !!!так захардкодил!!!, вообще их пока 2: вторая для консервов, первая все остальное
 
                    LEFT JOIN ObjectString AS ObjectString_Value1
                                           ON ObjectString_Value1.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
@@ -120,7 +149,7 @@ BEGIN
 */
             )
 
-          , tmpMovement_list AS
+          /*, tmpMovement_list AS
             (SELECT tmp.QualityId, Movement.OperDate, Movement.Id AS MovementId
              FROM (SELECT QualityId FROM tmpGoodsQuality GROUP BY QualityId) AS tmp
                   INNER JOIN MovementLinkObject AS MLO_Quality
@@ -137,6 +166,34 @@ BEGIN
                   INNER JOIN tmpMovement_list ON tmpMovement_list.QualityId = tmp.QualityId
                                              AND tmpMovement_list.OperDate = tmp.OperDate
              GROUP BY tmp.QualityId
+            )*/
+          , tmpMovement_find AS
+            (SELECT MovementLinkObject_Quality.ObjectId         AS QualityId
+                  , MovementLinkMovement_Master.MovementChildId AS MovementId
+                  , MovementDate_OperDateIn.ValueData           AS OperDateIn
+                  , MovementDate_OperDateOut.ValueData          AS OperDateOut
+                  , MovementLinkObject_Car.ObjectId             AS CarId
+             FROM MovementLinkMovement AS MovementLinkMovement_Child
+                  INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementId
+                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                  LEFT JOIN MovementDate AS MovementDate_OperDateIn
+                                         ON MovementDate_OperDateIn.MovementId =  MovementLinkMovement_Child.MovementId
+                                        AND MovementDate_OperDateIn.DescId = zc_MovementDate_OperDateIn()
+                  LEFT JOIN MovementDate AS MovementDate_OperDateOut
+                                         ON MovementDate_OperDateOut.MovementId =  MovementLinkMovement_Child.MovementId
+                                        AND MovementDate_OperDateOut.DescId = zc_MovementDate_OperDateOut()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                               ON MovementLinkObject_Car.MovementId = MovementLinkMovement_Child.MovementId
+                                              AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+
+                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                                 ON MovementLinkMovement_Master.MovementId = MovementLinkMovement_Child.MovementId
+                                                AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Quality
+                                               ON MovementLinkObject_Quality.MovementId = MovementLinkMovement_Master.MovementChildId
+                                              AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
+             WHERE MovementLinkMovement_Child.MovementChildId = inMovementId
+               AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
             )
           , tmpMovement_QualityParams AS
             (SELECT tmpMovement_find.QualityId
@@ -152,6 +209,9 @@ BEGIN
                   , MS_QualityNumber.ValueData                         AS QualityNumber
                   , MB_Comment.ValueData                               AS Comment
                   , 0                                                  AS ReportType
+                  , tmpMovement_find.OperDateIn                        AS OperDateIn
+                  , tmpMovement_find.OperDateOut                       AS OperDateOut
+                  , tmpMovement_find.CarId                             AS CarId
              FROM tmpMovement_find
                   LEFT JOIN Movement ON Movement.Id = tmpMovement_find.MovementId
                   LEFT JOIN MovementDate AS MD_OperDateCertificate
@@ -200,10 +260,10 @@ BEGIN
            , 0                                                                                                  AS Amount9
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END AS TFloat) AS Amount13
 
-           , Movement.OperDate AS OperDateIn
-           , Movement.OperDate AS OperDateOut
-           , '' :: TVarChar AS CarModelName
-           , '' :: TVarChar AS CarName
+           , tmpMovement_QualityParams.OperDateIn
+           , tmpMovement_QualityParams.OperDateOut
+           , Object_CarModel.ValueData  AS CarModelName
+           , Object_Car.ValueData       AS CarName
            , TRUE :: Boolean AS isJuridicalBasis
 
            , tmpGoodsQuality.QualityCode
@@ -282,6 +342,11 @@ BEGIN
                                                                 ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, MovementLinkObject_From.ObjectId)
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpMovement_QualityParams.CarId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
       ORDER BY tmpGoodsQuality.QualityCode
              , Object_GoodsGroup.ValueData
@@ -386,7 +451,7 @@ BEGIN
 */
             )
 
-          , tmpMovement_list AS
+          /*, tmpMovement_list AS
             (SELECT tmp.QualityId, Movement.OperDate, Movement.Id AS MovementId
              FROM (SELECT QualityId FROM tmpGoodsQuality GROUP BY QualityId) AS tmp
                   INNER JOIN MovementLinkObject AS MLO_Quality
@@ -403,6 +468,21 @@ BEGIN
                   INNER JOIN tmpMovement_list ON tmpMovement_list.QualityId = tmp.QualityId
                                              AND tmpMovement_list.OperDate = tmp.OperDate
              GROUP BY tmp.QualityId
+            )*/
+          , tmpMovement_find AS
+            (SELECT MovementLinkObject_Quality.ObjectId         AS QualityId
+                  , MovementLinkMovement_Master.MovementChildId AS MovementId
+             FROM MovementLinkMovement AS MovementLinkMovement_Child
+                  INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementId
+                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                                 ON MovementLinkMovement_Master.MovementId = MovementLinkMovement_Child.MovementId
+                                                AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Quality
+                                               ON MovementLinkObject_Quality.MovementId = MovementLinkMovement_Master.MovementChildId
+                                              AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
+             WHERE MovementLinkMovement_Child.MovementChildId = inMovementId
+               AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
             )
           , tmpMovement_QualityParams AS
             (SELECT tmpMovement_find.QualityId

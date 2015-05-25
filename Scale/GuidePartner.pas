@@ -18,7 +18,6 @@ type
   TGuidePartnerForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
-    SummPanel: TPanel;
     DataSource: TDataSource;
     ButtonPanel: TPanel;
     bbExit: TSpeedButton;
@@ -49,6 +48,13 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
+    isMovement: TcxGridDBColumn;
+    isAccount: TcxGridDBColumn;
+    isTransport: TcxGridDBColumn;
+    isQuality: TcxGridDBColumn;
+    isPack: TcxGridDBColumn;
+    isSpec: TcxGridDBColumn;
+    isTax: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditPartnerNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -73,6 +79,7 @@ type
 
     ParamsMovement_local: TParams;
 
+    procedure CancelCxFilter;
     function Checked: boolean;
   public
     function Execute(var execParamsMovement:TParams): boolean;
@@ -94,6 +101,7 @@ begin
      EditPartnerCode.Text:='';
      EditPartnerName.Text:='';
 
+     CancelCxFilter;
      CDS.Filter:='InfoMoneyId='+ParamsMovement_local.ParamByName('InfoMoneyId').AsString;
      CDS.Filtered:=false;
      CDS.Filtered:=true;
@@ -113,6 +121,12 @@ begin
      if result then CopyValuesParamsFrom(ParamsMovement_local,execParamsMovement);
 end;
 {------------------------------------------------------------------------------}
+procedure TGuidePartnerForm.CancelCxFilter;
+begin
+     if cxDBGridDBTableView.DataController.Filter.Active
+     then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
+end;
+{------------------------------------------------------------------------------}
 procedure TGuidePartnerForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
     if Key=13
@@ -127,8 +141,11 @@ begin
                        else if (ActiveControl=EditPartnerName)
                             then ActiveControl:=EditPartnerCode;
         end;
-
-    if Key=27 then actExitExecute(Self);
+    //
+    if (Key=27) then
+      if cxDBGridDBTableView.DataController.Filter.Active
+      then CancelCxFilter
+      else actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuidePartnerForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
@@ -152,7 +169,7 @@ begin
      Result:=(CDS.RecordCount>0);
      //
      if not Result
-     then ActiveControl:=EditPartnerCode
+     then ActiveControl:=EditPartnerName
      else with ParamsMovement_local do
           begin
                ParamByName('calcPartnerId').AsInteger:= CDS.FieldByName('PartnerId').AsInteger;
@@ -260,7 +277,6 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuidePartnerForm.FormCreate(Sender: TObject);
-var i:Integer;
 begin
   Create_ParamsMovement(ParamsMovement_local);
 

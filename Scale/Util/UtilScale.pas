@@ -57,6 +57,8 @@ type
 
   procedure Create_ParamsMovement(var Params:TParams);
   procedure Create_ParamsMI(var Params:TParams);
+  procedure Create_ParamsPersonal(var Params:TParams; idx:String);
+  procedure Create_ParamsPersonalComplete(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
   procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
@@ -200,6 +202,34 @@ begin
      ParamAdd(Params,'HeadCount',ftFloat);            // Количество голов
      ParamAdd(Params,'PartionGoods',ftString);        //
 end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsPersonal(var Params:TParams;idx:String);
+begin
+     if (idx = '') or (idx = '1') then Params:=nil;
+
+     ParamAdd(Params,'PersonalId'+idx, ftInteger);   //
+     ParamAdd(Params,'PersonalCode'+idx, ftInteger); //
+     ParamAdd(Params,'PersonalName'+idx, ftString);  //
+     ParamAdd(Params,'PositionId'+idx, ftInteger);   //
+     ParamAdd(Params,'PositionCode'+idx, ftInteger); //
+     ParamAdd(Params,'PositionName'+idx, ftString);  //
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsPersonalComplete(var Params:TParams);
+begin
+     Create_ParamsPersonal(Params, '1');
+     Create_ParamsPersonal(Params, '2');
+     Create_ParamsPersonal(Params, '3');
+     Create_ParamsPersonal(Params, '4');
+     ParamAdd(Params,'MovementId', ftInteger);
+     ParamAdd(Params,'InvNumber',ftString);
+     ParamAdd(Params,'OperDate',ftDateTime);
+     ParamAdd(Params,'MovementDescId',ftInteger);
+     ParamAdd(Params,'FromName',ftString);
+     ParamAdd(Params,'ToName',ftString);
+end;
+{------------------------------------------------------------------------}
+{------------------------------------------------------------------------}
 {------------------------------------------------------------------------}
 function GetArrayList_Value_byName(ArrayList:TArrayList;Name:String):String;
 var i: Integer;

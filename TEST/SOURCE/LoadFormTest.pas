@@ -833,6 +833,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGLNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalGLNForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_PrintKindItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridical_PrintKindItemForm');
 end;
 procedure TLoadFormTest.LoadProductionSeparateFormTest;
 begin
@@ -1708,6 +1711,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailReportEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportEditForm');
+  // Торговая сеть  (элементы печати)
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetail_PrintKindItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetail_PrintKindItemForm');
 end;
 
 procedure TLoadFormTest.LoadReceiptFormTest;

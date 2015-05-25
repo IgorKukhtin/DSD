@@ -46,6 +46,9 @@ type
     cxLabel8: TcxLabel;
     edQualityNumber: TcxTextEdit;
     cxLabel5: TcxLabel;
+    cxLabel22: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public

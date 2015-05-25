@@ -19,7 +19,6 @@ type
     ParamsPanel: TPanel;
     infoPanelTare: TPanel;
     rgTareWeight: TRadioGroup;
-    SummPanel: TPanel;
     infoPanelPriceList: TPanel;
     rgPriceList: TRadioGroup;
     PanelTare: TPanel;
@@ -64,9 +63,9 @@ type
     MeasureName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     Price_Return: TcxGridDBColumn;
-    Amount_Order: TcxGridDBColumn;
-    Amount_Weighing: TcxGridDBColumn;
-    Amount_diff: TcxGridDBColumn;
+    Amount_OrderWeight: TcxGridDBColumn;
+    Amount_WeighingWeight: TcxGridDBColumn;
+    Amount_diffWeight: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     cxDBGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
@@ -76,6 +75,9 @@ type
     actChoice: TAction;
     actExit: TAction;
     actSave: TAction;
+    Amount_Order: TcxGridDBColumn;
+    Amount_Weighing: TcxGridDBColumn;
+    Amount_diff: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -132,6 +134,7 @@ type
     GoodsCode_FilterValue:String;
     GoodsName_FilterValue:String;
 
+    procedure CancelCxFilter;
     function Checked: boolean;
     procedure InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
     procedure InitializePriceList(execParams:TParams);
@@ -155,6 +158,7 @@ begin
      fEnterGoodsName:=false;
      fEnterGoodsKindCode:=false;
 
+     CancelCxFilter;
      fStartWrite:=true;
 
      if execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0 then
@@ -264,6 +268,12 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.CancelCxFilter;
+begin
+     if cxDBGridDBTableView.DataController.Filter.Active
+     then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 var findTareCode:Integer;
 begin
@@ -310,7 +320,10 @@ begin
       if ActiveControl=EditGoodsCode then ActiveControl:=EditGoodsName
       else if ActiveControl=EditGoodsName then ActiveControl:=EditGoodsCode;}
     //
-    if Key=27 then actExitExecute(Self);
+    if (Key=27) then
+      if cxDBGridDBTableView.DataController.Filter.Active
+      then CancelCxFilter
+      else actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);

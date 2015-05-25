@@ -35,7 +35,7 @@ BEGIN
                                         ON ObjectLink_City_Region.ObjectId = Object_City.Id
                                        AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
               WHERE Object_City.ValueData = inName
-                AND Object_City.DescId = zc_Object_City();
+                AND Object_City.DescId = zc_Object_City()
                 AND COALESCE (ObjectLink_City_Region.ChildObjectId, 0) = COALESCE (inRegionId, 0)
                 AND Object_City.Id <> COALESCE (ioId, 0)
              )

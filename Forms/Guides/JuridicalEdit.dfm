@@ -3,7 +3,7 @@
   ClientHeight = 535
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 560
+  ExplicitHeight = 563
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -59,7 +59,7 @@
   end
   object cbisCorporate: TcxCheckBox [8]
     Left = 166
-    Top = 114
+    Top = 108
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083'.'
     TabOrder = 2
     Width = 111
@@ -125,7 +125,6 @@
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 15
-    ExplicitHeight = 524
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
@@ -135,14 +134,12 @@
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ExplicitHeight = 524
       ClientRectBottom = 535
       ClientRectRight = 841
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitHeight = 500
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -174,7 +171,6 @@
           Height = 511
           Align = alRight
           TabOrder = 8
-          ExplicitHeight = 500
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -307,7 +303,6 @@
       object PartnerTS: TcxTabSheet
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
         ImageIndex = 1
-        ExplicitHeight = 500
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -323,7 +318,6 @@
           Height = 485
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 474
           object PartnerGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PartnerDS
@@ -364,7 +358,6 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitHeight = 500
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -380,7 +373,6 @@
           Height = 485
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 474
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -689,6 +681,13 @@
     Properties.ReadOnly = True
     TabOrder = 31
     Width = 272
+  end
+  object cbisTaxSummary: TcxCheckBox [28]
+    Left = 167
+    Top = 132
+    Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
+    TabOrder = 32
+    Width = 111
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1048,6 +1047,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inisTaxSummary'
+        Value = Null
+        Component = cbisTaxSummary
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'inJuridicalGroupId'
         Value = ''
         Component = JuridicalGroupGuides
@@ -1151,6 +1157,12 @@
         Name = 'isCorporate'
         Value = 'False'
         Component = cbisCorporate
+      end
+      item
+        Name = 'isTaxSummary'
+        Value = Null
+        Component = cbisTaxSummary
+        DataType = ftBoolean
       end
       item
         Name = 'JuridicalGroupId'

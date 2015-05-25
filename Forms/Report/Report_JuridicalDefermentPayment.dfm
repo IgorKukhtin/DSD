@@ -1402,6 +1402,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    AutoWidth = True
     Left = 112
     Top = 187
   end

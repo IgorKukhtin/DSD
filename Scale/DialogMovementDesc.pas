@@ -5,16 +5,16 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  AncestorDialog, dsdDB, Data.DB, Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids,
+  AncestorDialogScale, dsdDB, Data.DB, Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids,
   Data.Bind.EngExt, Vcl.Bind.DBEngExt, System.Rtti, System.Bindings.Outputs,
   Vcl.Bind.Editors, Data.Bind.Components, dsdAddOn, Data.FMTBcd,
   Data.SqlExpr, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
   cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxTextEdit,
   cxMaskEdit, cxButtonEdit
-, UtilScale;
+, UtilScale, Vcl.Buttons;
 
 type
-  TDialogMovementDescForm = class(TAncestorDialogForm)
+  TDialogMovementDescForm = class(TAncestorDialogScaleForm)
     CDS: TClientDataSet;
     DataSource: TDataSource;
     spSelect: TdsdStoredProc;
@@ -367,6 +367,10 @@ begin
     if (PartnerCode_int=0)
     then exit;//!!!выход в этом случае!!!
 
+     //переопределяется PaidKindId, т.к. он используется в Get
+     if CDS.RecordCount = 2
+     then ParamsMovement_local.ParamByName('PaidKindId').AsInteger:=CDS.FieldByName('PaidKindId').asInteger
+     else ParamsMovement_local.ParamByName('PaidKindId').AsInteger:=0;
      //заполняются параметры
      if DMMainScaleForm.gpGet_Scale_Partner(ParamsMovement_local,PartnerCode_int) = true then
      begin
@@ -406,7 +410,7 @@ begin
      if Key = VK_RETURN
      then if CDS.RecordCount=2
           then begin ActiveControl:=DBGrid;DBGridCellClick(DBGrid.Columns[0]);end
-          else ActiveControl:=DBGrid;
+          else ActiveControl:=EditBarCode;
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);

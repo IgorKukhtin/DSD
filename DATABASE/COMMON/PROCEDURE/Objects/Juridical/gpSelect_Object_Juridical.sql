@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               GLNCode TVarChar, isCorporate Boolean,
+               GLNCode TVarChar, isCorporate Boolean,isTaxSummary Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                RetailId Integer, RetailName TVarChar,
@@ -79,6 +79,8 @@ BEGIN
        , ObjectString_GLNCode.ValueData      AS GLNCode
        , ObjectBoolean_isCorporate.ValueData AS isCorporate
 
+       , COALESCE (ObjectBoolean_isTaxSummary.ValueData, False::Boolean)  AS isTaxSummary
+
        , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)  AS JuridicalGroupId
        , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
 
@@ -121,6 +123,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                 ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id 
                                AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isTaxSummary
+                                ON ObjectBoolean_isTaxSummary.ObjectId = Object_Juridical.Id 
+                               AND ObjectBoolean_isTaxSummary.DescId = zc_ObjectBoolean_Juridical_isTaxSummary()
+
         LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                              ON ObjectDate_StartPromo.ObjectId = Object_Juridical.Id
                             AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
@@ -181,6 +187,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.05.15         * add isTaxSummary
  02.02.15                                        * add tmpListBranch_Constraint
  20.11.14         *
  07.11.14         * изменено RetailReport

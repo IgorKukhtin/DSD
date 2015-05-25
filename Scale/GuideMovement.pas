@@ -12,13 +12,12 @@ uses
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridLevel,
   cxClasses, cxGridCustomView, cxGrid, cxImageComboBox, dsdAddOn, Vcl.ActnList
- ,UtilScale,DataModul;
+ ,DataModul;
 
 type
   TGuideMovementForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
-    SummPanel: TPanel;
     DataSource: TDataSource;
     ButtonPanel: TPanel;
     ButtonExit: TSpeedButton;
@@ -63,6 +62,32 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
+    bbChangeMember: TSpeedButton;
+    PersonalName1: TcxGridDBColumn;
+    PersonalName2: TcxGridDBColumn;
+    PersonalName3: TcxGridDBColumn;
+    PersonalName4: TcxGridDBColumn;
+    PersonalCode1: TcxGridDBColumn;
+    PersonalCode2: TcxGridDBColumn;
+    PersonalCode3: TcxGridDBColumn;
+    PersonalCode4: TcxGridDBColumn;
+    PositionName1: TcxGridDBColumn;
+    PositionName2: TcxGridDBColumn;
+    PositionName3: TcxGridDBColumn;
+    PositionName4: TcxGridDBColumn;
+    bbPrint: TSpeedButton;
+    cbPrintMovement: TCheckBox;
+    cbPrintTransport: TCheckBox;
+    cbPrintQuality: TCheckBox;
+    cbPrintAccount: TCheckBox;
+    cbPrintPack: TCheckBox;
+    cbPrintSpec: TCheckBox;
+    cbPrintTax: TCheckBox;
+    CheckBox8: TCheckBox;
+    InvNumber_parent: TcxGridDBColumn;
+    OperDate_parent: TcxGridDBColumn;
+    InvNumber_TransportGoods: TcxGridDBColumn;
+    OperDate_TransportGoods: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -74,12 +99,15 @@ type
     procedure actExitExecute(Sender: TObject);
     procedure deStartPropertiesChange(Sender: TObject);
     procedure deEndPropertiesChange(Sender: TObject);
+    procedure bbChangeMemberClick(Sender: TObject);
+    procedure bbPrintClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
     ParamsMovement_local: TParams;
     isChoice_local:Boolean;
 
+    procedure CancelCxFilter;
     function Checked: boolean;
     procedure RefreshDataSet;
   public
@@ -93,7 +121,7 @@ implementation
 
 {$R *.dfm}
 
- uses dmMainScale;
+ uses dmMainScale,UtilScale,UtilPrint,Main;
 {------------------------------------------------------------------------------}
 function TGuideMovementForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
 begin
@@ -110,13 +138,15 @@ begin
 
      EditInvNumber.Text:='';
 
-     RefreshDataSet;
-     CDS.Filtered:=false;
-
      fStartWrite:=true;
      deStart.Text:=DateToStr(ParamsMovement_local.ParamByName('OperDate').AsDateTime);
      deEnd.Text:=DateToStr(ParamsMovement_local.ParamByName('OperDate').AsDateTime);
      fStartWrite:=false;
+
+     CancelCxFilter;
+     RefreshDataSet;
+     CDS.Filtered:=false;
+
 
      if ParamsMovement_local.ParamByName('MovementId').AsInteger<>0
      then CDS.Locate('Id',ParamsMovement_local.ParamByName('MovementId').AsString,[]);
@@ -146,14 +176,23 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideMovementForm.CancelCxFilter;
+begin
+     if cxDBGridDBTableView.DataController.Filter.Active
+     then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideMovementForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
     if Key=13
     then
         if ((ActiveControl=cxDBGrid)and(CDS.RecordCount>0))or(CDS.RecordCount=1)
         then actChoiceExecute(Self);
-
-    if Key=27 then actExitExecute(Self);
+    //
+    if (Key=27) then
+      if cxDBGridDBTableView.DataController.Filter.Active
+      then CancelCxFilter
+      else actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
@@ -214,6 +253,58 @@ begin
         CDS.Locate('Id',MovementId,[loCaseInsensitive]);
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbChangeMemberClick(Sender: TObject);
+var execParams:TParams;
+begin
+    Create_ParamsPersonalComplete(execParams);
+    //
+    if CDS.RecordCount=0 then
+    begin
+         ShowMessage('Ошибка.Документ не выбран.');
+         exit;
+    end;
+    //
+    execParams.ParamByName('PersonalId1').AsInteger:=CDS.FieldByName('PersonalId1').AsInteger;
+    execParams.ParamByName('PersonalCode1').AsInteger:=CDS.FieldByName('PersonalCode1').AsInteger;
+    execParams.ParamByName('PersonalName1').AsString:=CDS.FieldByName('PersonalName1').AsString;
+    execParams.ParamByName('PositionId1').AsInteger:=CDS.FieldByName('PositionId1').AsInteger;
+    execParams.ParamByName('PositionCode1').AsInteger:=CDS.FieldByName('PositionCode1').AsInteger;
+    execParams.ParamByName('PositionName1').AsString:=CDS.FieldByName('PositionName1').AsString;
+    //
+    execParams.ParamByName('PersonalId2').AsInteger:=CDS.FieldByName('PersonalId2').AsInteger;
+    execParams.ParamByName('PersonalCode2').AsInteger:=CDS.FieldByName('PersonalCode2').AsInteger;
+    execParams.ParamByName('PersonalName2').AsString:=CDS.FieldByName('PersonalName2').AsString;
+    execParams.ParamByName('PositionId2').AsInteger:=CDS.FieldByName('PositionId2').AsInteger;
+    execParams.ParamByName('PositionCode2').AsInteger:=CDS.FieldByName('PositionCode2').AsInteger;
+    execParams.ParamByName('PositionName2').AsString:=CDS.FieldByName('PositionName2').AsString;
+    //
+    execParams.ParamByName('PersonalId3').AsInteger:=CDS.FieldByName('PersonalId3').AsInteger;
+    execParams.ParamByName('PersonalCode3').AsInteger:=CDS.FieldByName('PersonalCode3').AsInteger;
+    execParams.ParamByName('PersonalName3').AsString:=CDS.FieldByName('PersonalName3').AsString;
+    execParams.ParamByName('PositionId3').AsInteger:=CDS.FieldByName('PositionId3').AsInteger;
+    execParams.ParamByName('PositionCode3').AsInteger:=CDS.FieldByName('PositionCode3').AsInteger;
+    execParams.ParamByName('PositionName3').AsString:=CDS.FieldByName('PositionName3').AsString;
+    //
+    execParams.ParamByName('PersonalId4').AsInteger:=CDS.FieldByName('PersonalId4').AsInteger;
+    execParams.ParamByName('PersonalCode4').AsInteger:=CDS.FieldByName('PersonalCode4').AsInteger;
+    execParams.ParamByName('PersonalName4').AsString:=CDS.FieldByName('PersonalName4').AsString;
+    execParams.ParamByName('PositionId4').AsInteger:=CDS.FieldByName('PositionId4').AsInteger;
+    execParams.ParamByName('PositionCode4').AsInteger:=CDS.FieldByName('PositionCode4').AsInteger;
+    execParams.ParamByName('PositionName4').AsString:=CDS.FieldByName('PositionName4').AsString;
+    //
+    execParams.ParamByName('MovementId').AsInteger:=CDS.FieldByName('Id').AsInteger;
+    execParams.ParamByName('InvNumber').AsString:=CDS.FieldByName('InvNumber').AsString;
+    execParams.ParamByName('OperDate').AsDateTime:=CDS.FieldByName('OperDate').AsDateTime;
+    execParams.ParamByName('MovementDescId').AsInteger:=CDS.FieldByName('MovementDescId').AsInteger;
+    execParams.ParamByName('FromName').AsString:=CDS.FieldByName('FromName').AsString;
+    execParams.ParamByName('ToName').AsString:=CDS.FieldByName('ToName').AsString;
+    //
+    if MainForm.Save_Movement_PersonalComplete(execParams)
+    then actRefreshExecute(Self);
+    //
+    execParams.Free;
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideMovementForm.actChoiceExecute(Sender: TObject);
 begin
      if Checked then ModalResult:=mrOK;
@@ -225,8 +316,9 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.FormCreate(Sender: TObject);
-var i:Integer;
 begin
+  bbChangeMember.Visible:=GetArrayList_Value_byName(Default_Array,'isPersonalComplete') = AnsiUpperCase('TRUE');
+
   Create_ParamsMovement(ParamsMovement_local);
 
   with spSelect do
@@ -243,6 +335,74 @@ end;
 procedure TGuideMovementForm.FormDestroy(Sender: TObject);
 begin
   ParamsMovement_local.Free;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbPrintClick(Sender: TObject);
+begin
+     //
+     if    not(cbPrintMovement.Checked)
+       and not(cbPrintTax.Checked)
+       and not(cbPrintAccount.Checked)
+       and not(cbPrintPack.Checked)
+       and not(cbPrintSpec.Checked)
+       and not(cbPrintTransport.Checked)
+       and not(cbPrintQuality.Checked)
+     then begin
+               ShowMessage('Ошибка.Не выбран вариант печати.');
+               exit;
+     end;
+
+     //
+     if cbPrintMovement.Checked
+     then Print_Movemenet (CDS.FieldByName('MovementDescId').AsInteger
+                         , CDS.FieldByName('MovementId_parent').AsInteger
+                         , 1    // myPrintCount
+                         , TRUE // isPreview
+                          );
+     //
+     if cbPrintTax.Checked
+     then Print_Tax (CDS.FieldByName('MovementDescId').AsInteger
+                   , CDS.FieldByName('MovementId_parent').AsInteger
+                   , 1    // myPrintCount
+                   , TRUE // isPreview
+                    );
+     //
+     if cbPrintAccount.Checked
+     then Print_Account (CDS.FieldByName('MovementDescId').AsInteger
+                       , CDS.FieldByName('MovementId_parent').AsInteger
+                       , 1    // myPrintCount
+                       , TRUE // isPreview
+                        );
+     //
+     if cbPrintPack.Checked
+     then Print_Pack (CDS.FieldByName('MovementDescId').AsInteger
+                    , CDS.FieldByName('MovementId_parent').AsInteger
+                    , 1    // myPrintCount
+                    , TRUE // isPreview
+                     );
+     //
+     if cbPrintSpec.Checked
+     then Print_Spec (CDS.FieldByName('MovementDescId').AsInteger
+                    , CDS.FieldByName('MovementId_parent').AsInteger
+                    , 1    // myPrintCount
+                    , TRUE // isPreview
+                     );
+     //
+     if cbPrintTransport.Checked
+     then Print_Transport (CDS.FieldByName('MovementDescId').AsInteger
+                         , CDS.FieldByName('MovementId_TransportGoods').AsInteger // MovementId
+                         , CDS.FieldByName('MovementId_parent').AsInteger        // MovementId_sale
+                         , CDS.FieldByName('OperDate_parent').AsDateTime
+                         , 1    // myPrintCount
+                         , TRUE // isPreview
+                          );
+     //
+     if cbPrintQuality.Checked
+     then Print_Quality (CDS.FieldByName('MovementDescId').AsInteger
+                       , CDS.FieldByName('MovementId_parent').AsInteger
+                       , 1    // myPrintCount
+                       , TRUE // isPreview
+                        );
 end;
 {------------------------------------------------------------------------------}
 end.

@@ -686,11 +686,210 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   inherited ActionList: TActionList
     Left = 31
     Top = 186
+    object actPrint_ExpInvoice: TdsdPrintAction [0]
+      Category = 'Print_Export'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint_ExpInvoice
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_ExpInvoice
+        end>
+      Caption = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
+      Hint = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Name = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Value = 'PrintMovement_SaleInvoice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_Tax_ReportName: TdsdExecStoredProc [1]
+      Category = 'Print_Tax'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTax
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTax
+        end>
+      Caption = 'actPrint_Tax_ReportName'
+    end
+    object actPrint_ExpSpec: TdsdPrintAction [2]
+      Category = 'Print_Export'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint_ExpInvoice
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_ExpInvoice
+        end>
+      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
+      Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
+            ';GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SaleSpec'
+      ReportNameParam.Value = 'PrintMovement_SaleSpec'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_Tax_Us: TMultiAction [3]
+      Category = 'Print_Tax'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Tax_ReportName
+        end
+        item
+          Action = actPrintTax_Us
+        end>
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ImageIndex = 16
+    end
+    object mactPrint_Account: TMultiAction [4]
+      Category = 'Print_Account'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Account_ReportName
+        end
+        item
+          Action = actPrint_Account
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      ImageIndex = 21
+    end
+    object actPrintTax_Us: TdsdPrintAction [5]
+      Category = 'Print_Tax'
+      MoveParams = <>
+      StoredProc = spSelectTax_Us
+      StoredProcList = <
+        item
+          StoredProc = spSelectTax_Us
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_Account_ReportName: TdsdExecStoredProc [7]
+      Category = 'Print_Account'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameBill
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameBill
+        end>
+      Caption = 'actPrint_Account_ReportName'
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSale_OrderForm'
       FormNameParam.Value = 'TSale_OrderForm'
     end
-    object actChecked: TdsdExecStoredProc [4]
+    object actChecked: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -726,7 +925,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           DataType = ftDateTime
         end>
     end
-    object actMovementCheck: TdsdOpenForm [13]
+    object actMovementCheck: TdsdOpenForm [20]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -780,60 +979,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           Action = actPrint
         end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
-    object mactPrint_Bill: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleBillProcName
-        end
-        item
-          Action = actPrint_Bill
-        end>
-      Caption = #1057#1095#1077#1090
-      Hint = #1057#1095#1077#1090
-      ImageIndex = 21
-    end
-    object mactPrint_Tax_Us: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleTaxProcName
-        end
-        item
-          Action = actPrintTax_Us
-        end>
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      ImageIndex = 16
-    end
     object mactPrint_Tax_Client: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Print_Tax'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -847,7 +998,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       ActionList = <
         item
-          Action = actSPPrintSaleTaxProcName
+          Action = actPrint_Tax_ReportName
         end
         item
           Action = actPrintTax_Client
@@ -856,47 +1007,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object actPrintTax_Us: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectTax_Us
-      StoredProcList = <
-        item
-          StoredProc = spSelectTax_Us
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
     object actPrintTax_Client: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
       StoredProcList = <
@@ -905,7 +1017,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      ImageIndex = 3
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -944,7 +1055,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
@@ -970,8 +1080,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Bill: TdsdPrintAction
-      Category = 'DSDLib'
+    object actPrint_Account: TdsdPrintAction
+      Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -980,7 +1090,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
@@ -1017,30 +1126,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       Caption = 'actSPPrintSaleProcName'
     end
-    object actSPPrintSaleTaxProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReporNameTax
-      StoredProcList = <
-        item
-          StoredProc = spGetReporNameTax
-        end>
-      Caption = 'actSPPrintSaleTaxProcName'
-    end
-    object actSPPrintSaleBillProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReporNameBill
-      StoredProcList = <
-        item
-          StoredProc = spGetReporNameBill
-        end>
-      Caption = 'actSPPrintSaleBillProcName'
-    end
-    object actPrint_Invoice: TdsdPrintAction
-      Category = 'DSDLib'
+    object actPrint_ExpPack: TdsdPrintAction
+      Category = 'Print_Export'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1052,58 +1139,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
         end>
-      StoredProc = spSelectPrintInvoice
+      StoredProc = spSelectPrint_ExpPack
       StoredProcList = <
         item
-          StoredProc = spSelectPrintInvoice
+          StoredProc = spSelectPrint_ExpPack
         end>
-      Caption = #1048#1085#1074#1086#1081#1089
-      Hint = #1048#1085#1074#1086#1081#1089
-      ImageIndex = 22
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_SaleInvoice'
-      ReportNameParam.Name = 'PrintMovement_SaleInvoice'
-      ReportNameParam.Value = 'PrintMovement_SaleInvoice'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrint_Pack: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintPack
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintPack
-        end>
-      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090
-      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 20
       ShortCut = 16464
       DataSets = <
@@ -1125,8 +1167,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Spec: TdsdPrintAction
-      Category = 'DSDLib'
+    object actPrint_Pack: TdsdPrintAction
+      Category = 'Print_Fozzy'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1138,59 +1180,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
         end>
-      StoredProc = spSelectPrintInvoice
+      StoredProc = spSelectPrint_Pack
       StoredProcList = <
         item
-          StoredProc = spSelectPrintInvoice
+          StoredProc = spSelectPrint_Pack
         end>
-      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
-      Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
-      ImageIndex = 22
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
-            ';GoodsKindName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_SaleSpec'
-      ReportNameParam.Value = 'PrintMovement_SaleSpec'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrint_Pack21: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintPack21
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintPack21
-        end>
-      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.1'
-      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.1'
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 23
       ShortCut = 16464
       DataSets = <
@@ -1211,8 +1207,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Pack22: TdsdPrintAction
-      Category = 'DSDLib'
+    object actPrint_Spec: TdsdPrintAction
+      Category = 'Print_Fozzy'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1224,13 +1220,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
         end>
-      StoredProc = spSelectPrintPack22
+      StoredProc = spSelectPrint_Spec
       StoredProcList = <
         item
-          StoredProc = spSelectPrintPack22
+          StoredProc = spSelectPrint_Spec
         end>
-      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.2'
-      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.2'
+      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
+      Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 17
       ShortCut = 16464
       DataSets = <
@@ -1251,53 +1247,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Quality: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrintQuality
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintQuality
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-      ImageIndex = 16
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
-        end
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDMaster2'
-          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_Quality'
-      ReportNameParam.Value = 'PrintMovement_Quality'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
     object mactPrint_TTN: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1324,7 +1275,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ImageIndex = 15
     end
     object actDialog_TTN: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       Caption = 'actDialog_TTN'
       Hint = 'actDialog_TTN'
@@ -1355,7 +1306,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       isShowModal = True
     end
     object actGet_TTN: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGet_TTN
@@ -1367,12 +1318,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = 'actGet_TTN'
     end
     object actPrint_TTN: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print_TTN'
       MoveParams = <>
-      StoredProc = spSelectPrintTTN
+      StoredProc = spSelectPrint_TTN
       StoredProcList = <
         item
-          StoredProc = spSelectPrintTTN
+          StoredProc = spSelectPrint_TTN
         end>
       Caption = 'actPrint_TTN'
       Hint = 'actPrint_TTN'
@@ -1394,6 +1345,85 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       ReportName = 'PrintMovement_TTN'
       ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_QualityDoc: TMultiAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actDialog_QualityDoc
+        end
+        item
+          Action = actPrint_QualityDoc
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ImageIndex = 16
+    end
+    object actDialog_QualityDoc: TdsdOpenForm
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      Caption = 'actDialog_QualityDoc'
+      Hint = 'actDialog_QualityDoc'
+      FormName = 'TQualityDocForm'
+      FormNameParam.Value = 'TQualityDocForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end>
+      isShowModal = True
+    end
+    object actPrint_QualityDoc: TdsdPrintAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Quality
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Quality
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Quality'
+      ReportNameParam.Value = 'PrintMovement_Quality'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -1629,7 +1659,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Category = 0
     end
     object bbPrint_Bill: TdxBarButton
-      Action = mactPrint_Bill
+      Action = mactPrint_Account
       Category = 0
     end
     object bbMovementCheck: TdxBarButton
@@ -1642,23 +1672,23 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Category = 0
     end
     object bbPrint_Invoice: TdxBarButton
-      Action = actPrint_Invoice
+      Action = actPrint_ExpInvoice
       Category = 0
     end
     object bbPrint_Pack: TdxBarButton
-      Action = actPrint_Pack
+      Action = actPrint_ExpPack
       Category = 0
     end
     object bbPrint_Spec: TdxBarButton
-      Action = actPrint_Spec
+      Action = actPrint_ExpSpec
       Category = 0
     end
     object bbPrint_Pack21: TdxBarButton
-      Action = actPrint_Pack21
+      Action = actPrint_Pack
       Category = 0
     end
     object bbPrint_Pack22: TdxBarButton
-      Action = actPrint_Pack22
+      Action = actPrint_Spec
       Category = 0
     end
     object bbPrint_TTN: TdxBarButton
@@ -1666,7 +1696,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Category = 0
     end
     object bbPrint_Quality: TdxBarButton
-      Action = actPrint_Quality
+      Action = mactPrint_QualityDoc
       Category = 0
     end
   end
@@ -1690,8 +1720,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       item
         Component = edIsPartnerDate
       end>
-    Left = 408
-    Top = 344
+    Left = 496
+    Top = 152
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Sale'
@@ -2065,8 +2095,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Left = 320
     Top = 435
   end
-  object spSelectPrintInvoice: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
+  object spSelectPrint_ExpInvoice: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_ExpInvoice_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -2085,10 +2115,55 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 447
-    Top = 416
+    Left = 376
+    Top = 267
   end
-  object spSelectPrintPack: TdsdStoredProc
+  object spSelectPrint_ExpPack: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_ExpPack_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 375
+    Top = 288
+  end
+  object spSelectPrint_Spec: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Spec_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_by'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 343
+    Top = 392
+  end
+  object spSelectPrint_Pack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'
     DataSet = PrintItemsCDS
     DataSets = <
@@ -2103,52 +2178,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 367
-    Top = 272
-  end
-  object spSelectPrintPack22: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print22'
-    DataSet = PrintItemsCDS
-    DataSets = <
+      end
       item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
+        Name = 'inMovementId_by'
+        Value = 0
         ParamType = ptInput
       end>
     PackSize = 1
     Left = 343
-    Top = 392
+    Top = 368
   end
-  object spSelectPrintPack21: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print21'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 343
-    Top = 344
-  end
-  object spSelectPrintTTN: TdsdStoredProc
+  object spSelectPrint_TTN: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TTN_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -2171,7 +2211,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Left = 607
     Top = 384
   end
-  object spSelectPrintQuality: TdsdStoredProc
+  object spSelectPrint_Quality: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Quality_Print'
     DataSet = PrintItemsCDS
     DataSets = <

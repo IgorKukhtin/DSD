@@ -18,29 +18,29 @@ type
     spSelectTax_Us: TdsdStoredProc;
     spSelectTax_Client: TdsdStoredProc;
     spSelectPrint_Sale: TdsdStoredProc;
-    spSelectPrintInvoice: TdsdStoredProc;
-    spSelectPrintTTN: TdsdStoredProc;
-    spSelectPrintPack22: TdsdStoredProc;
-    spSelectPrintPack21: TdsdStoredProc;
-    spSelectPrintPack: TdsdStoredProc;
+    spSelectPrint_ExpInvoice: TdsdStoredProc;
+    spSelectPrint_TTN: TdsdStoredProc;
+    spSelectPrint_ExpPack: TdsdStoredProc;
+    spSelectPrint_Pack: TdsdStoredProc;
+    spSelectPrint_Spec: TdsdStoredProc;
     FormParams: TdsdFormParams;
     ActionList: TActionList;
     mactPrint_Sale: TMultiAction;
-    mactPrint_Bill: TMultiAction;
+    mactPrint_Account: TMultiAction;
     mactPrint_Tax_Us: TMultiAction;
     mactPrint_Tax_Client: TMultiAction;
     actPrintTax_Us: TdsdPrintAction;
     actPrintTax_Client: TdsdPrintAction;
     actPrint_Sale: TdsdPrintAction;
-    actPrint_Bill: TdsdPrintAction;
-    actPrintReportName_Sale: TdsdExecStoredProc;
-    actSPPrintSaleTaxProcName: TdsdExecStoredProc;
-    actSPPrintSaleBillProcName: TdsdExecStoredProc;
+    actPrint_Account: TdsdPrintAction;
+    actPrint_Sale_ReportName: TdsdExecStoredProc;
+    actPrint_Tax_ReportName: TdsdExecStoredProc;
+    actPrint_Account_ReportName: TdsdExecStoredProc;
+    actPrint_ExpSpec: TdsdPrintAction;
+    actPrint_ExpInvoice: TdsdPrintAction;
+    actPrint_ExpPack: TdsdPrintAction;
     actPrint_Spec: TdsdPrintAction;
-    actPrint_Invoice: TdsdPrintAction;
     actPrint_Pack: TdsdPrintAction;
-    actPrint_Pack22: TdsdPrintAction;
-    actPrint_Pack21: TdsdPrintAction;
     actPrint_TTN: TdsdPrintAction;
     actPrint_ReturnIn: TdsdPrintAction;
     spSelectPrint_ReturnIn: TdsdStoredProc;
@@ -48,7 +48,7 @@ type
     actPrint_SendOnPrice: TdsdPrintAction;
     spGetReportName_ReturnIn: TdsdStoredProc;
     mactPrint_ReturnIn: TMultiAction;
-    actPrintReportName_ReturnIn: TdsdExecStoredProc;
+    actPrint_ReturnIn_ReportName: TdsdExecStoredProc;
     EDI: TEDI;
     actInvoice: TEDIAction;
     actOrdSpr: TEDIAction;
@@ -65,21 +65,32 @@ type
     actExecPrintStoredProc: TdsdExecStoredProc;
     spGetDefaultEDI: TdsdStoredProc;
     actSetDefaults: TdsdExecStoredProc;
+    actDialog_TTN: TdsdOpenForm;
+    mactPrint_TTN: TMultiAction;
+    spSelectPrint_Quality: TdsdStoredProc;
+    actPrint_QualityDoc: TdsdPrintAction;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
   private
   end;
 
-  procedure Print_Sale (MovementId: Integer);
-  procedure Print_ReturnIn (MovementId: Integer);
-  procedure Print_SendOnPrice (MovementId: Integer);
+  function Print_Movemenet(MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Tax      (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Account  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Spec     (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Pack     (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Transport(MovementDescId,MovementId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
 
-  procedure EDI_Invoice (MovementId: Integer);
-  procedure EDI_OrdSpr (MovementId: Integer);
-  procedure EDI_Desadv (MovementId: Integer);
+  procedure SendEDI_Invoice (MovementId: Integer);
+  procedure SendEDI_OrdSpr (MovementId: Integer);
+  procedure SendEDI_Desadv (MovementId: Integer);
 
 var
   UtilPrintForm: TUtilPrintForm;
 
 implementation
+uses UtilScale;
 {$R *.dfm}
 //------------------------------------------------------------------------------------------------
 procedure Print_Sale (MovementId: Integer);
@@ -100,9 +111,163 @@ begin
   UtilPrintForm.actPrint_SendOnPrice.Execute;
 end;
 //------------------------------------------------------------------------------------------------
+procedure Print_TaxDocument (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.mactPrint_Tax_Client.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_AccountDocument (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.mactPrint_Account.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_PackDocument (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_Pack.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_SpecDocument (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_Spec.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_TransportDocument (MovementId,MovementId_sale: Integer;OperDate:TDateTime);
+begin
+  UtilPrintForm.FormParams.ParamByName('MovementId_TransportGoods').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId_sale;
+  UtilPrintForm.FormParams.ParamByName('OperDate').Value := OperDate;
+  UtilPrintForm.mactPrint_TTN.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_QualityDocument (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.mactPrint_QualityDoc.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Movemenet (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+begin
+     Result:=false;
+          //
+          try
+             //Print
+             if MovementDescId = zc_Movement_Sale
+             then Print_Sale(MovementId)
+             else if MovementDescId = zc_Movement_ReturnIn
+                  then Print_ReturnIn(MovementId)
+                  else if MovementDescId = zc_Movement_SendOnPrice
+                       then Print_SendOnPrice(MovementId)
+                       else begin ShowMessage ('Ошибка.Документ сохранен.Форма печати не найдена.');exit;end;
+          except
+                ShowMessage('Ошибка.Документ сохранен.Печать не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Tax (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+begin
+     Result:=false;
+          //
+          try
+             //Print
+             if MovementDescId = zc_Movement_Sale
+             then Print_TaxDocument(MovementId)
+             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Account (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+begin
+     Result:=false;
+          //
+          try
+             //Print
+             if MovementDescId = zc_Movement_Sale
+             then Print_AccountDocument(MovementId)
+             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Spec (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+begin
+     Result:=false;
+          //
+          try
+             //Print
+             if MovementDescId = zc_Movement_Sale
+             then Print_SpecDocument(MovementId)
+             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Pack (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+begin
+     Result:=false;
+          //
+          try
+             //Print
+             if MovementDescId = zc_Movement_Sale
+             then Print_PackDocument(MovementId)
+             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Transport (MovementDescId,MovementId,MovementId_sale: Integer;OperDate:TDateTime;myPrintCount:Integer;isPreview:Boolean):Boolean;
+begin
+     Result:=false;
+          //
+          try
+             //Print
+             if MovementDescId = zc_Movement_Sale
+             then Print_TransportDocument(MovementId,MovementId_sale,OperDate)
+             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Quality(MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+begin
+     Result:=false;
+          //
+          try
+             //Print
+             if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_Loss)
+             then Print_QualityDocument(MovementId)
+             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
-procedure EDI_Invoice (MovementId: Integer);
+//------------------------------------------------------------------------------------------------
+procedure SendEDI_Invoice (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   try UtilPrintForm.mactInvoice.Execute;
@@ -113,7 +278,7 @@ begin
   ShowMessage('Документ <Счет> отправлен успешно в EXITE.');
 end;
 //------------------------------------------------------------------------------------------------
-procedure EDI_OrdSpr (MovementId: Integer);
+procedure SendEDI_OrdSpr (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   try UtilPrintForm.mactOrdSpr.Execute;
@@ -124,7 +289,7 @@ begin
   ShowMessage('Документ <Подтверждение отгрузки> отправлен успешно в EXITE.');
 end;
 //------------------------------------------------------------------------------------------------
-procedure EDI_Desadv (MovementId: Integer);
+procedure SendEDI_Desadv (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   try UtilPrintForm.mactDesadv.Execute;

@@ -4,14 +4,14 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, AncestorDialog, StdCtrls, Mask, Buttons,
+  Dialogs, AncestorDialogScale, StdCtrls, Mask, Buttons,
   ExtCtrls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus,
   dxSkinsCore, dxSkinsDefaultPainters, cxControls, cxContainer, cxEdit,
   cxTextEdit, cxCurrencyEdit, dsdDB, Vcl.ActnList, dsdAction, cxPropertiesStore,
   dsdAddOn, cxButtons;
 
 type
-  TDialogNumberValueForm = class(TAncestorDialogForm)
+  TDialogNumberValueForm = class(TAncestorDialogScaleForm)
     NumberValuePanel: TPanel;
     NumberValueEdit: TcxCurrencyEdit;
     NumberValueLabel: TLabel;

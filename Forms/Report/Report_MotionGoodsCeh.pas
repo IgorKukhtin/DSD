@@ -203,6 +203,10 @@ type
     CountOtherIn_by_Weight: TcxGridDBColumn;
     CountOut_by_Weight: TcxGridDBColumn;
     CountOtherOut_by_Weight: TcxGridDBColumn;
+    CountProductionOut_Norm: TcxGridDBColumn;
+    CountProductionOut_Fact2: TcxGridDBColumn;
+    SummProductionOut_Norm: TcxGridDBColumn;
+    SummProductionOut_Fact2: TcxGridDBColumn;
   private
   public
   end;

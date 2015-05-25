@@ -1,6 +1,7 @@
 -- Function: gpGet_Scale_Goods()
 
 DROP FUNCTION IF EXISTS gpGet_Scale_Goods (TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_Goods (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_Goods(
     IN inBarCode   TVarChar     ,

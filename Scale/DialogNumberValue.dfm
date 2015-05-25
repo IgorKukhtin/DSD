@@ -8,7 +8,7 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
   ExplicitHeight = 125
   PixelsPerInch = 96
   TextHeight = 14
-  inherited BottomPanel: TPanel
+  inherited bbPanel: TPanel
     Top = 49
     Width = 237
   end
@@ -20,8 +20,6 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 292
-    ExplicitHeight = 96
     object NumberValueLabel: TLabel
       Left = 0
       Top = 0

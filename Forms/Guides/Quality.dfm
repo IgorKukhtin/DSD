@@ -6,31 +6,26 @@ inherited QualityForm: TQualityForm
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 901
-  ExplicitHeight = 412
+  ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 885
     Height = 348
-    ExplicitWidth = 773
+    ExplicitWidth = 885
     ExplicitHeight = 348
     ClientRectBottom = 348
     ClientRectRight = 885
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 773
+      ExplicitWidth = 885
       ExplicitHeight = 348
       inherited cxGrid: TcxGrid
         Width = 885
         Height = 348
         PopupMenu = nil
-        ExplicitWidth = 773
+        ExplicitWidth = 885
         ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
-          OnDblClick = nil
-          OnKeyDown = nil
-          OnKeyPress = nil
-          OnCustomDrawCell = nil
-          DataController.Filter.OnChanged = nil
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -41,8 +36,6 @@ inherited QualityForm: TQualityForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          OnColumnHeaderClick = nil
-          OnCustomDrawColumnHeader = nil
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
@@ -107,6 +100,7 @@ inherited QualityForm: TQualityForm
           object clRetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -222,7 +216,6 @@ inherited QualityForm: TQualityForm
     Top = 72
   end
   inherited MasterCDS: TClientDataSet
-    AfterInsert = nil
     Left = 24
     Top = 128
   end

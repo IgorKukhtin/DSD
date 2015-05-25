@@ -37,7 +37,7 @@ BEGIN
            WHERE ObjectFloat.ObjectId = inObjectId
              AND inIsErased IS NULL
           UNION
-           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectDateDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectDateDesc.ItemName) || '" FieldValue = "' || COALESCE (DATE (ObjectDate.ValueData) :: TVarChar, 'NULL') || '"/>' AS FieldXML 
                 , 3 AS GroupId
                 , ObjectDate.DescId
            FROM ObjectDate

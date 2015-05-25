@@ -65,6 +65,8 @@ type
     clOperDateStart: TcxGridDBColumn;
     clOperDateEnd: TcxGridDBColumn;
     DayCount: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public
