@@ -21,6 +21,7 @@ type
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankStatementFormTest;
+    procedure LoadCashRegisterFormTest;
     procedure LoadCheckFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadContractFormTest;
@@ -149,6 +150,18 @@ procedure TLoadFormTest.LoadCashFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMainCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMainCashForm');
+end;
+
+procedure TLoadFormTest.LoadCashRegisterFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashRegisterForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashRegisterEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashRegisterKindForm');
 end;
 
 procedure TLoadFormTest.LoadCheckFormTest;

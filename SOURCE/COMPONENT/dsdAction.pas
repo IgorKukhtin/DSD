@@ -1548,13 +1548,6 @@ begin
         Free;
       end;
   finally
-    for i := 0 to DataSets.Count - 1 do
-      if Assigned(Self.DataSets[i].DataSet) then begin
-         if Self.DataSets[i].DataSet is TClientDataSet then
-            if TAddOnDataSet(Self.DataSets[i]).IndexFieldNames <> '' then
-               TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :='';
-         Self.DataSets[i].DataSet.Close;
-      end;
     for i := 0 to MemTableList.Count - 1 do
       TObject(MemTableList[i]).Free;
     MemTableList.Free;

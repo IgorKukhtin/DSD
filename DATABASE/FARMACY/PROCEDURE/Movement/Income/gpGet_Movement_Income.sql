@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , NDSKindId Integer, NDSKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaymentDate TDateTime
+             , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean 
               )
 AS
 $BODY$
@@ -43,6 +44,9 @@ BEGIN
              , 0                     			        AS ContractId
              , CAST ('' AS TVarChar) 				AS ContractName
              , CURRENT_DATE::TDateTime                          AS PaymentDate
+             , ''::TVarChar                                     AS InvNumberBranch
+             , CURRENT_DATE::TDateTime                          AS BranchDate
+             , false                                            AS Checked
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -64,6 +68,9 @@ BEGIN
            , Movement_Income_View.ContractId
            , Movement_Income_View.ContractName
            , Movement_Income_View.PaymentDate 
+           , Movement_Income_View.InvNumberBranch
+           , Movement_Income_View.BranchDate
+           , COALESCE(Movement_Income_View.Checked, false)
 
        FROM Movement_Income_View       
       WHERE Movement_Income_View.Id = inMovementId;
@@ -79,6 +86,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.05.15                         *
  03.07.14                                                        *
 */
 

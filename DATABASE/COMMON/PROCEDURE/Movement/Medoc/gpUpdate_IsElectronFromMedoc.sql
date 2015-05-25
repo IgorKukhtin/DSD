@@ -103,11 +103,15 @@ BEGIN
                          LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                   ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                         LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                  ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                                 AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
               WHERE MovementString_InvNumberPartner.ValueData = inInvNumber 
                 AND JuridicalFrom.INN = inFromINN AND JuridicalTo.INN = inToINN
                 AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Tax()
-                AND Movement.StatusId <> zc_Enum_Status_Erased() 
-                AND abs(MovementFloat_TotalSumm.ValueData) = abs(inTotalSumm);
+                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                AND abs(inTotalSumm) = abs(MovementFloat_TotalSumm.ValueData)
+                AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '');
         ELSE
              SELECT Movement.Id INTO vbMovementId 
                     FROM Movement 
@@ -128,10 +132,14 @@ BEGIN
                          LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                   ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                         LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                  ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                                 AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
               WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.INN = inToINN  
                 AND JuridicalTo.INN = inFromINN AND Movement.StatusId <> zc_Enum_Status_Erased()
+                AND abs(inTotalSumm) = abs(MovementFloat_TotalSumm.ValueData)
                 AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective()
-                AND abs(MovementFloat_TotalSumm.ValueData) = abs(inTotalSumm);         
+                AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '');         
       END IF;
       -- Если нашли, то установили связь
       IF (COALESCE(vbMovementId, 0)) <> 0 THEN

@@ -46,6 +46,9 @@ type
     spGetDataForSendNew: TdsdStoredProc;
     bbNewSend: TdxBarButton;
     colSaleSumm: TcxGridDBColumn;
+    colInvNumberBranch: TcxGridDBColumn;
+    colBranchDate: TcxGridDBColumn;
+    colChecked: TcxGridDBColumn;
   private
     { Private declarations }
   public

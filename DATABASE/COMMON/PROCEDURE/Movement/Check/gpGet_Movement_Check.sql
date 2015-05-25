@@ -1,13 +1,10 @@
--- Function: gpGet_Movement_OrderInternal()
+-- Function: gpGet_Movement_Check()
 
--- DROP FUNCTION gpGet_Movement_OrderInternal (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Check (Integer, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_OrderInternal(
+CREATE OR REPLACE FUNCTION gpGet_Movement_Check(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -21,7 +18,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderInternal());
+     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Check());
      vbUserId := inSession;
 
      IF COALESCE (inMovementId, 0) = 0
@@ -29,7 +26,7 @@ BEGIN
      RETURN QUERY
          SELECT
                0 AS Id
-             , CAST (NEXTVAL ('movement_orderinternal_seq') AS TVarChar) AS InvNumber
+             , CAST (NEXTVAL ('movement_Check_seq') AS TVarChar) AS InvNumber
              , inOperDate                                       AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
@@ -95,22 +92,21 @@ BEGIN
 
 
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_OrderInternal();
+         AND Movement.DescId = zc_Movement_Check();
 
        END IF;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Check (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 02.03.15         * add OperDatePartner, OperDateStart, OperDateEnd, DayCount               
- 06.06.14                                                        *
+ 23.05.15                         *  add OperDatePartner, OperDateStart, OperDateEnd, DayCount               
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderInternal (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_Check (inMovementId:= 1, inSession:= '9818')

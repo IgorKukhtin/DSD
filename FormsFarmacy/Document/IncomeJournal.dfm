@@ -1,26 +1,26 @@
 inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 469
-  ClientWidth = 807
-  ExplicitLeft = -25
+  ClientWidth = 831
+  ExplicitLeft = -49
   ExplicitTop = -113
-  ExplicitWidth = 815
+  ExplicitWidth = 839
   ExplicitHeight = 496
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 807
+    Width = 831
     Height = 412
     TabOrder = 3
     ExplicitWidth = 807
     ExplicitHeight = 412
     ClientRectBottom = 412
-    ClientRectRight = 807
+    ClientRectRight = 831
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 807
       ExplicitHeight = 412
       inherited cxGrid: TcxGrid
-        Width = 807
+        Width = 831
         Height = 412
         ExplicitWidth = 807
         ExplicitHeight = 412
@@ -210,6 +210,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 79
           end
@@ -226,12 +227,33 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 70
           end
+          object colInvNumberBranch: TcxGridDBColumn
+            Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
+            DataBinding.FieldName = 'InvNumberBranch'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 47
+          end
+          object colBranchDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074' '#1072#1087#1090#1077#1082#1077
+            DataBinding.FieldName = 'BranchDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object colChecked: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
+            DataBinding.FieldName = 'Checked'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 807
+    Width = 831
     ExplicitWidth = 807
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

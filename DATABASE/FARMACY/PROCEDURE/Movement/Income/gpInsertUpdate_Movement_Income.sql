@@ -13,12 +13,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inNDSKindId           Integer   , -- Типы НДС
     IN inContractId          Integer   , -- Договор
     IN inPaymentDate         TDateTime , -- Дата платежа
+    IN inInvNumberBranch     TVarChar  , -- Номер документа
+    IN inOperDateBranch      TDateTime , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS TABLE(Id Integer, InvNumberBranch TVarChar) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbOldContractId Integer;
+   DECLARE vbDeferment Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -26,14 +29,21 @@ BEGIN
      vbUserId := inSession;
      -- Получаем старый договор. Если он отличается от текущего, то берем новую дату платежа
 
-     SELECT INTO vbOldContractId FROM Movement_Income_View WHERE Movement_Income_View.Id = ioId;
-     IF vbOldContractId <> inContractId THEN 
+     SELECT ContractId INTO vbOldContractId FROM Movement_Income_View WHERE Movement_Income_View.Id = ioId;
 
+     IF COALESCE(vbOldContractId, 0) <> inContractId THEN 
+        SELECT Deferment INTO vbDeferment 
+          FROM Object_Contract_View WHERE Object_Contract_View.Id = inContractId;
+        inPaymentDate := inOperDate + vbDeferment * interval '1 day';  
      END IF;
 
      ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inOperDate, inPriceWithVAT
                                           , inFromId, inToId, inNDSKindId, inContractId, inPaymentDate, vbUserId);
 
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), inId, inInvNumberBranch);
+
+     -- 
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inId, inOperDateBranch);
 
 END;
 $BODY$
@@ -43,6 +53,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.05.15                         *
  24.12.14                         *
  02.12.14                                                        *
  10.07.14                                                        *
