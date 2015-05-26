@@ -1,23 +1,23 @@
 inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 662
-  ClientWidth = 1112
-  ExplicitWidth = 1128
-  ExplicitHeight = 697
+  ClientWidth = 1345
+  ExplicitWidth = 1361
+  ExplicitHeight = 700
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1112
+    Width = 1345
     Height = 576
     ExplicitWidth = 1112
     ExplicitHeight = 576
     ClientRectBottom = 576
-    ClientRectRight = 1112
+    ClientRectRight = 1345
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1112
       ExplicitHeight = 552
       inherited cxGrid: TcxGrid
-        Width = 1112
+        Width = 1345
         Height = 552
         ExplicitWidth = 1112
         ExplicitHeight = 552
@@ -389,7 +389,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1112
+    Width = 1345
     TabOrder = 3
     ExplicitWidth = 1112
     inherited edInvNumber: TcxTextEdit
