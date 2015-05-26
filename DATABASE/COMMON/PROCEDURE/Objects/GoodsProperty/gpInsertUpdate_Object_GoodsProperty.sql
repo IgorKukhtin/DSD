@@ -1,11 +1,17 @@
 -- Function: gpInsertUpdate_Object_GoodsProperty()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsProperty(
  INOUT ioId                  Integer   ,   	-- ключ объекта <Классификатор свойств товаров> 
     IN inCode                Integer   ,    -- Код объекта <Классификатор свойств товаров> 
     IN inName                TVarChar  ,    -- Название объекта <Классификатор свойств товаров> 
+    IN inStartPosInt         TFloat    ,    -- Целая часть веса в штрих коде(начальная позиция)
+    IN inEndPosInt           TFloat    ,    -- Целая часть веса в штрих коде(последняя позиция)
+    IN inStartPosFrac        TFloat    ,    -- Дробная часть веса в штрих коде(начальная позиция)
+    IN inEndPosFrac          TFloat    ,    -- Дробная часть веса в штрих коде(последняя позиция)
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -28,21 +34,31 @@ BEGIN
    -- сохранили <Объект>  
    ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsProperty(), inCode, inName);
    
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_StartPosInt(), ioId, inStartPosInt);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_EndPosInt(), ioId, inEndPosInt);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_StartPosFrac(), ioId, inStartPosFrac);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_EndPosFrac(), ioId, inEndPosFrac);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
     
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TVarChar)  OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TVarChar)  OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.05.15         * add Float
  12.02.15                                        *
- 12.06.13          *
+ 12.06.13         *
 */
 
 -- тест
