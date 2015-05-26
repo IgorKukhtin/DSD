@@ -85,6 +85,9 @@ type
     mactPrint_Order: TMultiAction;
     cbPrinted: TcxCheckBox;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    cxLabel21: TcxLabel;
+    edPartner: TcxButtonEdit;
+    PartnerGuides: TdsdGuides;
   private
     { Private declarations }
   public

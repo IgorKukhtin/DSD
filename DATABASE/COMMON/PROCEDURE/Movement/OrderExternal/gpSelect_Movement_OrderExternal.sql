@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceWithVAT Boolean, isPrinted Boolean,VATPercent TFloat, ChangePercent TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -74,6 +75,8 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName        AS ContractTagName
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.ValueData                     AS PriceListName
+           , Object_Partner.id                              AS PartnerId
+           , Object_Partner.ValueData                       AS PartnerName
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
@@ -195,9 +198,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+       
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+         
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
        WHERE COALESCE (Object_From.DescId, 0) <> zc_Object_Unit();
 
@@ -209,6 +218,7 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.05.15         * add Partner
  20.10.14                                        * add isEDI
  26.08.14                                                        *
  18.08.14                                                        *

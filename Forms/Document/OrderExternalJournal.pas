@@ -66,6 +66,7 @@ type
     mactSilentList: TMultiAction;
     mactSilentPrint: TMultiAction;
     N13: TMenuItem;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

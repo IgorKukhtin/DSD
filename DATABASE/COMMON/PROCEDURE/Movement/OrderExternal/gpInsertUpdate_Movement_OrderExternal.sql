@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_OrderExternal()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -21,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
     IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
+    IN inPartnerId           Integer   , -- Контрагент
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -81,6 +84,7 @@ BEGIN
                                                  , inRouteSortingId      := inRouteSortingId
                                                  , inPersonalId          := inPersonalId
                                                  , inPriceListId         := ioPriceListId
+                                                 , inPartnerId           := inPartnerId
                                                  , inUserId              := vbUserId
                                                   );
 
@@ -91,6 +95,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.05.15         * add inPartnerId
  18.08.14                                        * add lpInsertUpdate_Movement_OrderExternal
  26.08.14                                                        *
  25.08.14                                        * all
