@@ -1,26 +1,26 @@
 inherited QualityDocForm: TQualityDocForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'>'
-  ClientHeight = 226
-  ClientWidth = 530
+  ClientHeight = 304
+  ClientWidth = 561
   AddOnFormData.isSingle = False
-  ExplicitWidth = 536
-  ExplicitHeight = 251
+  ExplicitWidth = 567
+  ExplicitHeight = 332
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 161
-    Top = 173
+    Left = 165
+    Top = 268
     Height = 26
-    ExplicitLeft = 161
-    ExplicitTop = 173
+    ExplicitLeft = 165
+    ExplicitTop = 268
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 302
-    Top = 173
+    Left = 306
+    Top = 268
     Height = 26
-    ExplicitLeft = 302
-    ExplicitTop = 173
+    ExplicitLeft = 306
+    ExplicitTop = 268
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -157,17 +157,75 @@ inherited QualityDocForm: TQualityDocForm
     TabOrder = 17
     Width = 145
   end
+  object cxLabel5: TcxLabel [18]
+    Left = 8
+    Top = 158
+    Caption = #1044#1077#1082#1083#1072#1088#1072#1094#1110#1103' '#1074#1080#1088#1086#1073#1085#1080#1082#1072' '#8470
+  end
+  object edQualityNumber: TcxTextEdit [19]
+    Left = 8
+    Top = 181
+    TabOrder = 19
+    Width = 247
+  end
+  object cxLabel11: TcxLabel [20]
+    Left = 270
+    Top = 158
+    Caption = #1042#1077#1090#1077#1088#1080#1085#1072#1088#1085#1077' '#1089#1074#1110#1076#1086#1094#1090#1074#1086' '#8470
+  end
+  object edCertificateNumber: TcxTextEdit [21]
+    Left = 270
+    Top = 181
+    TabOrder = 21
+    Width = 247
+  end
+  object cxLabel7: TcxLabel [22]
+    Left = 8
+    Top = 208
+    Caption = #1042#1077#1090#1077#1088#1080#1085#1072#1088#1085#1077' '#1089#1074#1110#1076#1086#1094#1090#1074#1086' <'#1044#1072#1090#1072'>'
+  end
+  object ceOperDateCertificate: TcxDateEdit [23]
+    Left = 8
+    Top = 231
+    EditValue = 42125d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 23
+    Width = 247
+  end
+  object cxLabel12: TcxLabel [24]
+    Left = 270
+    Top = 208
+    Caption = #1042#1077#1090#1077#1088#1080#1085#1072#1088#1085#1077' '#1089#1074#1110#1076#1086#1094#1090#1074#1086' <'#1057#1077#1088#1110#1103'> '#1110' <'#8470'>'
+  end
+  object edCertificateSeries: TcxTextEdit [25]
+    Left = 270
+    Top = 231
+    TabOrder = 25
+    Width = 72
+  end
+  object cxLabel13: TcxLabel [26]
+    Left = 353
+    Top = 235
+    Caption = '-'
+  end
+  object edCertificateSeriesNumber: TcxTextEdit [27]
+    Left = 376
+    Top = 231
+    TabOrder = 27
+    Width = 100
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 74
-    Top = 154
+    Left = 78
+    Top = 249
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 111
-    Top = 168
+    Left = 115
+    Top = 263
   end
   inherited ActionList: TActionList
-    Left = 246
-    Top = 172
+    Left = 250
+    Top = 251
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -187,8 +245,8 @@ inherited QualityDocForm: TQualityDocForm
         Value = '0'
         ParamType = ptInput
       end>
-    Left = 27
-    Top = 169
+    Left = 31
+    Top = 264
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_QualityDoc'
@@ -227,9 +285,44 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCar
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inQualityNumber'
+        Value = Null
+        Component = edQualityNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCertificateNumber'
+        Value = Null
+        Component = edCertificateNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDateCertificate'
+        Value = Null
+        Component = ceOperDateCertificate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCertificateSeries'
+        Value = Null
+        Component = edCertificateSeries
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCertificateSeriesNumber'
+        Value = Null
+        Component = edCertificateSeriesNumber
+        DataType = ftString
+        ParamType = ptInput
       end>
-    Left = 391
-    Top = 163
+    Left = 395
+    Top = 258
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_QualityDoc'
@@ -329,9 +422,39 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'QualityNumber'
+        Value = Null
+        Component = edQualityNumber
+        DataType = ftString
+      end
+      item
+        Name = 'CertificateNumber'
+        Value = Null
+        Component = edCertificateNumber
+        DataType = ftString
+      end
+      item
+        Name = 'CertificateSeries'
+        Value = Null
+        Component = edCertificateSeries
+        DataType = ftString
+      end
+      item
+        Name = 'CertificateSeriesNumber'
+        Value = Null
+        Component = edCertificateSeriesNumber
+        DataType = ftString
+      end
+      item
+        Name = 'OperDateCertificate'
+        Value = 42125d
+        Component = ceOperDateCertificate
+        DataType = ftDateTime
       end>
-    Left = 287
-    Top = 139
+    Left = 499
+    Top = 218
   end
   object GuideSaleJournalChoice: TdsdGuides
     KeyField = 'Id'
@@ -415,8 +538,8 @@ inherited QualityDocForm: TQualityDocForm
         Guides = GuideSaleJournalChoice
       end>
     ActionItemList = <>
-    Left = 471
-    Top = 163
+    Left = 475
+    Top = 258
   end
   object GuideCar: TdsdGuides
     KeyField = 'Id'
@@ -477,7 +600,7 @@ inherited QualityDocForm: TQualityDocForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 408
+    Left = 344
     Top = 52
   end
   object GuidesTo: TdsdGuides

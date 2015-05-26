@@ -33,6 +33,16 @@ type
     cxLabel8: TcxLabel;
     edOperDateIn: TcxDateEdit;
     GuidesTo: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edQualityNumber: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    edCertificateNumber: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    ceOperDateCertificate: TcxDateEdit;
+    cxLabel12: TcxLabel;
+    edCertificateSeries: TcxTextEdit;
+    cxLabel13: TcxLabel;
+    edCertificateSeriesNumber: TcxTextEdit;
   private
     { Private declarations }
   public
