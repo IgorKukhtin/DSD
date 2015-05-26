@@ -1,11 +1,11 @@
--- Function: gpUpdate_Scale_MIFloat()
+-- Function: gpUpdate_Scale_MILinkObject()
 
-DROP FUNCTION IF EXISTS gpUpdate_Scale_MIFloat (Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Scale_MILinkObject (Integer, TVarChar, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Scale_MIFloat(
+CREATE OR REPLACE FUNCTION gpUpdate_Scale_MILinkObject(
     IN inMovementItemId        Integer   , -- Ключ объекта <Элемент документа>
     IN inDescCode              TVarChar  , -- 
-    IN inValueData             TFloat    , -- 
+    IN inObjectId              Integer   , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
@@ -19,9 +19,9 @@ BEGIN
 
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (MovementItemFloatDesc.Id, inMovementItemId, inValueData)
+     PERFORM lpInsertUpdate_MovementItemLinkObject (MovementItemLinkObjectDesc.Id, inMovementItemId, inObjectId)
      FROM (SELECT inDescCode AS DescCode WHERE TRIM (inDescCode) <> '') AS tmp
-          LEFT JOIN MovementItemFloatDesc ON MovementItemFloatDesc.Code = tmp.DescCode;
+          LEFT JOIN MovementItemLinkObjectDesc ON MovementItemLinkObjectDesc.Code = tmp.DescCode;
 
 
      -- сохранили свойство <Дата/время>
@@ -38,8 +38,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 17.05.15                                        *
+ 25.05.15                                        *
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Scale_MIFloat (inMovementItemId:= 0, inItemName:= 'zc_MIFloat_BoxNumber', inValueData:= 1, inSession:= '5')
+-- SELECT * FROM gpUpdate_Scale_MILinkObject (inMovementItemId:= 0, inItemName:= 'zc_MILinkObject_BoxNumber', inValueData:= 1, inSession:= '5')

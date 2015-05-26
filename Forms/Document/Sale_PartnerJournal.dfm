@@ -708,6 +708,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
       Params = <
         item
@@ -946,7 +947,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -985,7 +985,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      ImageIndex = 3
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1230,7 +1229,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'goodsname_two'
+          IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
       Params = <
         item

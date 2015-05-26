@@ -64,11 +64,16 @@ BEGIN
        UNION SELECT 'isPreviewPrint'         AS Name
        UNION SELECT 'isTareWeightEnter'      AS Name
        UNION SELECT 'isPersonalComplete'     AS Name
+       UNION SELECT 'isTax'                  AS Name
 
        UNION SELECT 'DayPrior_PriceReturn' AS Name
 
        UNION SELECT 'InfoMoneyId_income' AS Name
        UNION SELECT 'InfoMoneyId_sale'   AS Name
+
+       UNION SELECT 'isBox'              AS Name
+       UNION SELECT 'BoxCount'           AS Name
+       UNION SELECT 'BoxCode'            AS Name
             ) AS tmp
        ORDER BY 1
        ;

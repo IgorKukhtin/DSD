@@ -26,7 +26,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -36,7 +36,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41670d
+      EditValue = 42005d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -469,8 +469,8 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -594,6 +594,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -607,6 +608,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -615,6 +617,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TIncomeForm'
@@ -633,9 +636,11 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TWeighingProductionForm'
@@ -644,6 +649,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
         end
@@ -656,9 +662,11 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -672,6 +680,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -685,6 +694,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -698,6 +708,8 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     end
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
@@ -732,6 +744,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 48
     Top = 184
   end
@@ -742,6 +755,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -752,6 +766,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 64
     Top = 232
   end
@@ -773,10 +788,12 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 72
     Top = 272
   end
@@ -791,10 +808,12 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 72
     Top = 320
   end
@@ -818,6 +837,8 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 248
     Top = 216
   end
@@ -828,6 +849,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -855,6 +877,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 256
     Top = 288
   end

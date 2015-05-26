@@ -77,8 +77,8 @@ type
   function Print_Movemenet(MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Tax      (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Account  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
-  function Print_Spec     (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
-  function Print_Pack     (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Spec     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Pack     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Transport(MovementDescId,MovementId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
 
@@ -123,21 +123,23 @@ begin
   UtilPrintForm.mactPrint_Account.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_PackDocument (MovementId: Integer);
+procedure Print_PackDocument (MovementId,MovementId_by:Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
   UtilPrintForm.actPrint_Pack.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_SpecDocument (MovementId: Integer);
+procedure Print_SpecDocument (MovementId,MovementId_by:Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
   UtilPrintForm.actPrint_Spec.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_TransportDocument (MovementId,MovementId_sale: Integer;OperDate:TDateTime);
 begin
-  UtilPrintForm.FormParams.ParamByName('MovementId_TransportGoods').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId;
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId_sale;
   UtilPrintForm.FormParams.ParamByName('OperDate').Value := OperDate;
   UtilPrintForm.mactPrint_TTN.Execute;
@@ -201,14 +203,14 @@ begin
      Result:=true;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_Spec (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+function Print_Spec (MovementDescId,MovementId,MovementId_by:Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
 begin
      Result:=false;
           //
           try
              //Print
              if MovementDescId = zc_Movement_Sale
-             then Print_SpecDocument(MovementId)
+             then Print_SpecDocument(MovementId,MovementId_by)
              else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать не сформирована.');
@@ -217,14 +219,14 @@ begin
      Result:=true;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_Pack (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+function Print_Pack (MovementDescId,MovementId,MovementId_by:Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
 begin
      Result:=false;
           //
           try
              //Print
              if MovementDescId = zc_Movement_Sale
-             then Print_PackDocument(MovementId)
+             then Print_PackDocument(MovementId,MovementId_by)
              else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать не сформирована.');

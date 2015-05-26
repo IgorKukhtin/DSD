@@ -272,6 +272,8 @@ object UtilPrintForm: TUtilPrintForm
       item
         Name = 'inMovementId_by'
         Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_by'
         ParamType = ptInput
       end>
     PackSize = 1
@@ -297,6 +299,8 @@ object UtilPrintForm: TUtilPrintForm
       item
         Name = 'inMovementId_by'
         Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_by'
         ParamType = ptInput
       end>
     PackSize = 1
@@ -328,7 +332,7 @@ object UtilPrintForm: TUtilPrintForm
         DataType = ftDateTime
       end
       item
-        Name = 'MovementId_TransportGoods'
+        Name = 'MovementId_by'
         Value = Null
       end>
     Left = 40
@@ -400,7 +404,7 @@ object UtilPrintForm: TUtilPrintForm
           Name = 'Id'
           Value = '0'
           Component = FormParams
-          ComponentItem = 'MovementId_TransportGoods'
+          ComponentItem = 'MovementId_by'
         end
         item
           Name = 'MovementId_Sale'
@@ -866,6 +870,9 @@ object UtilPrintForm: TUtilPrintForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'WeighingNumber;GoodsGroupNameFull;GoodsName_two;GoodsKindName;Nu' +
+            'mOrder'
         end>
       Params = <
         item
@@ -895,7 +902,7 @@ object UtilPrintForm: TUtilPrintForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'goodsname_two'
+          IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
       Params = <
         item

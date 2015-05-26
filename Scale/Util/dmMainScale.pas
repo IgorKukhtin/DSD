@@ -37,6 +37,7 @@ type
     function gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
 
     function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
   end;
 
   function gpInitialize_OperDate(var execParams:TParams):TDateTime;
@@ -170,8 +171,8 @@ begin
                         ParamsMovement.ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
                         ParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                   end;
-          end
-          else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Нажмите на клавиатуре клавишу <F2>.';
+        end
+        else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Нажмите на клавиатуре клавишу <F2>.';
    end;
 end;
 {------------------------------------------------------------------------}
@@ -225,11 +226,32 @@ begin
 
     with spSelect do begin
        StoredProcName:= 'gpUpdate_Scale_MIFloat';
-       OutputType:=otDataSet;
+       OutputType:=otResult;
        Params.Clear;
        Params.AddParam('inMovementItemId', ftInteger, ptInput, execParams.ParamByName('inMovementItemId').AsInteger);
        Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
        Params.AddParam('inValueData', ftFloat, ptInput, execParams.ParamByName('inValueData').AsFloat);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MIFloat');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_MILinkObject';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, execParams.ParamByName('inMovementItemId').AsInteger);
+       Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
+       Params.AddParam('inObjectId', ftInteger, ptInput, execParams.ParamByName('inObjectId').AsInteger);
        //try
          Execute;
        {except
@@ -318,6 +340,8 @@ begin
        Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn')));
        Params.AddParam('inCount', ftFloat, ptInput, execParamsMI.ParamByName('Count').AsFloat);
        Params.AddParam('inHeadCount', ftFloat, ptInput, execParamsMI.ParamByName('HeadCount').AsFloat);
+       Params.AddParam('inBoxCount', ftFloat, ptInput, execParamsMI.ParamByName('BoxCount').AsFloat);
+       Params.AddParam('inBoxCode', ftInteger, ptInput, execParamsMI.ParamByName('BoxCode').AsInteger);
        Params.AddParam('inPartionGoods', ftString, ptInput, execParamsMI.ParamByName('PartionGoods').AsString);
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        //try

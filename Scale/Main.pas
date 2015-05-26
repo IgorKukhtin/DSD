@@ -16,7 +16,7 @@ uses
  ,UtilScale,DataModul, cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxDBData, dsdAddOn, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid,
-  cxCurrencyEdit;
+  cxCurrencyEdit, Vcl.ActnList, cxButtonEdit, dsdAction;
 
 type
   TMainForm = class(TForm)
@@ -166,13 +166,25 @@ type
     PartionGoodsPanel: TPanel;
     PartionGoodsLabel: TLabel;
     EditPartionGoods: TEdit;
+    ActionList: TActionList;
+    actRefresh: TAction;
+    actExit: TAction;
+    actChoiceBox: TOpenChoiceForm;
+    actUpdateBox: TAction;
+    bbChangeBoxCount: TSpeedButton;
+    PanelBox: TPanel;
+    Label1: TLabel;
+    Panel2: TPanel;
+    Label2: TLabel;
+    EditBoxCount: TcxCurrencyEdit;
+    Panel3: TPanel;
+    Label3: TLabel;
+    EditBoxCode: TcxCurrencyEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
-    procedure bbExitClick(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CDSAfterOpen(DataSet: TDataSet);
-    procedure bbRefreshClick(Sender: TObject);
     procedure bbDeleteItemClick(Sender: TObject);
     procedure DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
@@ -186,6 +198,10 @@ type
     procedure EditBarCodePropertiesChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure EditPartionGoodsExit(Sender: TObject);
+    procedure actRefreshExecute(Sender: TObject);
+    procedure actExitExecute(Sender: TObject);
+    procedure actUpdateBoxExecute(Sender: TObject);
+    procedure bbChangeBoxCountClick(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -219,6 +235,7 @@ uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMo
 procedure TMainForm.Initialize_afterSave_all;
 begin
      EditPartionGoods.Text:='';
+     EditBoxCode.Text:=GetArrayList_Value_byName(Default_Array,'BoxCode');
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_afterSave_MI;
@@ -226,6 +243,7 @@ begin
      EditCount.Text:='';
      EditHeadCount.Text:='';
      EditBarCode.Text:='';
+     EditBoxCount.Text:=GetArrayList_Value_byName(Default_Array,'BoxCount');
      myActiveControl;
 end;
 //------------------------------------------------------------------------------------------------
@@ -361,6 +379,8 @@ begin
                    ParamsMI.ParamByName('Count').AsFloat:=0;
                    ParamsMI.ParamByName('HeadCount').AsFloat:=0;
                    ParamsMI.ParamByName('PartionGoods').AsString:='';
+                   try ParamsMI.ParamByName('BoxCount').AsFloat:=StrToFloat(EditBoxCount.Text);except ParamsMI.ParamByName('BoxCount').AsFloat:=0;end;
+                   try ParamsMI.ParamByName('BoxCode').AsFloat:=StrToFloat(EditBoxCode.Text);except ParamsMI.ParamByName('BoxCode').AsFloat:=0;end;
                    //сохранение MovementItem
                    DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
                    Initialize_afterSave_MI;
@@ -390,6 +410,9 @@ begin
      ParamsMI.ParamByName('RealWeight_Get').AsFloat:=fGetScale_CurrentWeight;
      try ParamsMI.ParamByName('Count').AsFloat:=StrToFloat(EditCount.Text);except ParamsMI.ParamByName('Count').AsFloat:=0;end;
      try ParamsMI.ParamByName('HeadCount').AsFloat:=StrToFloat(EditHeadCount.Text);except ParamsMI.ParamByName('HeadCount').AsFloat:=0;end;
+     try ParamsMI.ParamByName('BoxCount').AsFloat:=StrToFloat(EditBoxCount.Text);except ParamsMI.ParamByName('BoxCount').AsFloat:=0;end;
+     try ParamsMI.ParamByName('BoxCode').AsFloat:=StrToFloat(EditBoxCode.Text);except ParamsMI.ParamByName('BoxCode').AsFloat:=0;end;
+
      ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      //
      if ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0
@@ -419,7 +442,11 @@ procedure TMainForm.bbChangeCountClick(Sender: TObject);
 var execParams:TParams;
 begin
      // выход
-     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('ќшибка.Ёлемент взвешивани€ не выбран.');
+          exit;
+     end;
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
@@ -446,7 +473,11 @@ procedure TMainForm.bbChangeHeadCountClick(Sender: TObject);
 var execParams:TParams;
 begin
      // выход
-     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('ќшибка.Ёлемент взвешивани€ не выбран.');
+          exit;
+     end;
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
@@ -454,9 +485,40 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='є Ўар';
+          NumberValueLabel.Caption:=' оличество голов';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('HeadCount').AsString;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbChangeBoxCountClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('ќшибка.Ёлемент взвешивани€ не выбран.');
+          exit;
+     end;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIFloat_BoxCount');
+
+     with DialogNumberValueForm do
+     begin
+          NumberValueLabel.Caption:=' оличество упак.тары';
+          ActiveControl:=NumberValueEdit;
+          NumberValueEdit.Text:=CDS.FieldByName('BoxCount').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
           ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
@@ -473,7 +535,11 @@ procedure TMainForm.bbChangeLevelNumberClick(Sender: TObject);
 var execParams:TParams;
 begin
      // выход
-     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('ќшибка.Ёлемент взвешивани€ не выбран.');
+          exit;
+     end;
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
@@ -500,7 +566,11 @@ procedure TMainForm.bbChangeNumberTareClick(Sender: TObject);
 var execParams:TParams;
 begin
      // выход
-     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('ќшибка.Ёлемент взвешивани€ не выбран.');
+          exit;
+     end;
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
@@ -540,10 +610,40 @@ begin
      myActiveControl;
 end;
 {------------------------------------------------------------------------}
-procedure TMainForm.bbRefreshClick(Sender: TObject);
+procedure TMainForm.actRefreshExecute(Sender: TObject);
 begin
     RefreshDataSet;
     WriteParamsMovement;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.actUpdateBoxExecute(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('ќшибка.Ёлемент взвешивани€ не выбран.');
+          exit;
+     end;
+     //
+     actChoiceBox.GuiParams.ParamByName('Key').Value:=CDS.FieldByName('BoxId').AsString;
+     actChoiceBox.GuiParams.ParamByName('TextValue').Value:=CDS.FieldByName('BoxName').AsString;
+     //
+     if actChoiceBox.Execute
+     then begin
+               execParams:=nil;
+               ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+               ParamAddValue(execParams,'inDescCode',ftString,'zc_MILinkObject_Box');
+               ParamAddValue(execParams,'inObjectId',ftInteger,actChoiceBox.GuiParams.ParamByName('Key').Value);
+               if DMMainScaleForm.gpUpdate_Scale_MILinkObject(execParams) then
+               begin
+                    CDS.Edit;
+                    CDS.FieldByName('BoxId').AsString:=actChoiceBox.GuiParams.ParamByName('Key').Value;
+                    CDS.FieldByName('BoxName').AsString:=actChoiceBox.GuiParams.ParamByName('TextValue').Value;
+                    CDS.Post;
+               end;
+               execParams.Free;
+     end;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.CDSAfterOpen(DataSet: TDataSet);
@@ -666,6 +766,10 @@ begin
   PartionGoodsPanel.Visible:=StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_sale')) = zc_Enum_InfoMoney_30201; // ƒоходы + ћ€сное сырье + ћ€сное сырье
   HeadCountPanel.Visible:=PartionGoodsPanel.Visible;
   BarCodePanel.Visible:=not PartionGoodsPanel.Visible;
+  PanelBox.Visible:=GetArrayList_Value_byName(Default_Array,'isBox') = AnsiUpperCase('TRUE');
+
+  bbChangeHeadCount.Visible:=HeadCountPanel.Visible;
+  bbChangeCount.Visible:=not bbChangeHeadCount.Visible;
   //
   with spSelect do
   begin
@@ -852,6 +956,13 @@ end;
 {------------------------------------------------------------------------}
 procedure TMainForm.bbDeleteItemClick(Sender: TObject);
 begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('ќшибка.Ёлемент взвешивани€ не выбран.');
+          exit;
+     end;
+     //
      if CDS.FieldByName('isErased').AsBoolean=false
      then
          if MessageDlg('ƒействительно удалить? ('+CDS.FieldByName('GoodsName').AsString+' '+CDS.FieldByName('GoodsKindName').AsString+') вес=('+CDS.FieldByName('RealWeight').AsString+')'
@@ -873,7 +984,7 @@ begin
               end
 end;
 {------------------------------------------------------------------------}
-procedure TMainForm.bbExitClick(Sender: TObject);
+procedure TMainForm.actExitExecute(Sender: TObject);
 begin Close;end;
 {------------------------------------------------------------------------}
 end.

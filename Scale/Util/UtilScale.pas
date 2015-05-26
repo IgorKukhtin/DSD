@@ -200,7 +200,10 @@ begin
      ParamAdd(Params,'CountForPrice_Return',ftFloat); //
      ParamAdd(Params,'Count',ftFloat);                // Количество пакетов или Количество батонов
      ParamAdd(Params,'HeadCount',ftFloat);            // Количество голов
+     ParamAdd(Params,'BoxCount',ftFloat);            //
+     ParamAdd(Params,'BoxCode',ftInteger);            //
      ParamAdd(Params,'PartionGoods',ftString);        //
+
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsPersonal(var Params:TParams;idx:String);

@@ -16,6 +16,7 @@ $BODY$
    DECLARE vbMovementId_begin Integer;
    DECLARE vbMovementDescId Integer;
 
+   DECLARE vbOperDate_scale TDateTime;
    DECLARE vbTmpId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -31,6 +32,8 @@ BEGIN
 
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
+     -- !!!сохранили!!
+     vbOperDate_scale:= inOperDate;
      -- !!!для заявки дата берется из неё!!
      inOperDate:= COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()) AND DescId = zc_MovementDate_OperDatePartner())
                            , inOperDate);
@@ -337,7 +340,7 @@ BEGIN
 
 
      -- финиш - сохранили <Документ> - <Взвешивание (контрагент)>
-     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, vbMovementId_begin, Movement.AccessKeyId)
+     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, vbOperDate_scale, vbMovementId_begin, Movement.AccessKeyId)
      FROM Movement
      WHERE Id = inMovementId ;
 

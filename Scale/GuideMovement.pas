@@ -133,8 +133,8 @@ begin
           if TRUE = DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement_local,FALSE,TRUE)//isLast=FALSE,isNext=TRUE
           then begin CopyValuesParamsFrom(ParamsMovement_local,execParamsMovement);exit;end;}
 
-     isChoice_local:=isChoice;
-     bbChoice.Enabled:=isChoice_local;
+     isChoice_local:=(isChoice);
+     bbChoice.Enabled:=(isChoice_local) or (UserId_begin=5);
 
      EditInvNumber.Text:='';
 
@@ -158,7 +158,11 @@ begin
      Application.ProcessMessages;
 
      result:=ShowModal=mrOk;
-     if result then CopyValuesParamsFrom(ParamsMovement_local,execParamsMovement);
+     if result then
+     begin
+          CopyValuesParamsFrom(ParamsMovement_local,execParamsMovement);
+          gpInitialize_MovementDesc;
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.RefreshDataSet;
@@ -205,7 +209,7 @@ end;
 {------------------------------------------------------------------------------}
 function TGuideMovementForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
-     Result:=(CDS.RecordCount>0)and(isChoice_local=TRUE)and(CDS.FieldByName('Id').AsInteger>0);
+     Result:=(CDS.RecordCount>0)and(bbChoice.Enabled=TRUE)and(CDS.FieldByName('Id').AsInteger>0);
      if Result then
      begin
          ParamsMovement_local.ParamByName('MovementId').AsInteger:=CDS.FieldByName('Id').AsInteger;
@@ -376,14 +380,16 @@ begin
      //
      if cbPrintPack.Checked
      then Print_Pack (CDS.FieldByName('MovementDescId').AsInteger
-                    , CDS.FieldByName('MovementId_parent').AsInteger
+                    , CDS.FieldByName('MovementId_parent').AsInteger// MovementId
+                    , CDS.FieldByName('Id').AsInteger               // MovementId_by
                     , 1    // myPrintCount
                     , TRUE // isPreview
                      );
      //
      if cbPrintSpec.Checked
      then Print_Spec (CDS.FieldByName('MovementDescId').AsInteger
-                    , CDS.FieldByName('MovementId_parent').AsInteger
+                    , CDS.FieldByName('MovementId_parent').AsInteger// MovementId
+                    , CDS.FieldByName('Id').AsInteger               // MovementId_by
                     , 1    // myPrintCount
                     , TRUE // isPreview
                      );
@@ -391,7 +397,7 @@ begin
      if cbPrintTransport.Checked
      then Print_Transport (CDS.FieldByName('MovementDescId').AsInteger
                          , CDS.FieldByName('MovementId_TransportGoods').AsInteger // MovementId
-                         , CDS.FieldByName('MovementId_parent').AsInteger        // MovementId_sale
+                         , CDS.FieldByName('MovementId_parent').AsInteger         // MovementId_sale
                          , CDS.FieldByName('OperDate_parent').AsDateTime
                          , 1    // myPrintCount
                          , TRUE // isPreview

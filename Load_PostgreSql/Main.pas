@@ -187,6 +187,7 @@ type
     cbDocERROR: TCheckBox;
     cbShowContract: TCheckBox;
     cbPrintKindItem: TCheckBox;
+    cbShowAll: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -474,13 +475,14 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('1.1.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   //
                   // повторно
                   if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
-                  // !!!1.1. для НАЛ поиск среди БН!!!
+                  // !!!1.1.2. для НАЛ поиск среди БН!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId)
@@ -492,7 +494,7 @@ begin
                                  )
                   else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
                   then
-                  // !!!1.1. для БН поиск среди НАЛ!!!
+                  // !!!1.1.2. для БН поиск среди НАЛ!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId)
@@ -505,7 +507,8 @@ begin
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('1.1.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   end;
              end;
              //1.2. если не нашли, находим договор: статья + без условия даты + не "закрыт" + не "удален"
@@ -522,13 +525,14 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('1.2.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   //
                   // повторно
                   if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
-                  //1.2. !!!для НАЛ поиск среди БН!!!
+                  //1.2.2. !!!для НАЛ поиск среди БН!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId)
@@ -539,7 +543,7 @@ begin
                                  )
                   else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
                   then
-                  //1.2. !!!для БН поиск среди НАЛ!!!
+                  //1.2.2. !!!для БН поиск среди НАЛ!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId)
@@ -551,10 +555,11 @@ begin
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('1.2.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   end;
              end;
-             //1.3. если не нашли, находим договор: статья + без условия даты + не "удален"
+             //1.3.1. если не нашли, находим договор: статья + без условия даты + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)then
              begin
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
@@ -568,13 +573,14 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('1.3.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   //
                   // повторно
                   if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
-                  // !!!1.3. для НАЛ поиск среди БН!!!
+                  // !!!1.3.2. для НАЛ поиск среди БН!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId)
@@ -584,7 +590,7 @@ begin
                                  )
                   else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
                   then
-                  // !!!1.3. для БН поиск среди НАЛ!!!
+                  // !!!1.3.2. для БН поиск среди НАЛ!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId)
@@ -595,12 +601,13 @@ begin
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('1.3.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   end;
              end;
 
 
-             //2.1. если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты + не "закрыт" + не "удален"
+             //2.1.1. если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты + не "закрыт" + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
               and ((IMCode = 10101)
                 or (IMCode = 10102)
@@ -620,13 +627,14 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.1.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('2.1.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   //
                   // повторно
                   if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
-                  // !!!2.1. для НАЛ поиск среди БН!!!
+                  // !!!2.1.2. для НАЛ поиск среди БН!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -638,7 +646,7 @@ begin
                                  )
                   else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
                   then
-                  // !!!2.1. для БН поиск среди НАЛ!!!
+                  // !!!2.1.2. для БН поиск среди НАЛ!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -651,10 +659,11 @@ begin
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.1.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.1.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('2.1.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   end;
              end;
-             //2.2. если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты + не "удален"
+             //2.2.1. если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
               and ((IMCode = 10101)
                 or (IMCode = 10102)
@@ -674,13 +683,14 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.2.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('2.2.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   //
                   // повторно
                   if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
-                  // !!!2.2. для НАЛ поиск среди БН!!!
+                  // !!!2.2.2. для НАЛ поиск среди БН!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -691,7 +701,7 @@ begin
                                  )
                   else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
                   then
-                  // !!!2.2. для БН поиск среди НАЛ!!!
+                  // !!!2.2.2. для БН поиск среди НАЛ!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -703,11 +713,12 @@ begin
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.2.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('2.2.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   end;
              end;
 
-             //3.1. если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты + не "закрыт" + не "удален"
+             //3.1.1. если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты + не "закрыт" + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
               and ((IMCode = 10201)
                 or (IMCode = 10202)
@@ -726,13 +737,14 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.1.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('3.1.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   //
                   // повторно
                   if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
-                  // !!!3.1. для НАЛ поиск среди БН!!!
+                  // !!!3.1.2. для НАЛ поиск среди БН!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -744,7 +756,7 @@ begin
                                  )
                   else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
                   then
-                  // !!!3.1. для БН поиск среди НАЛ!!!
+                  // !!!3.1.2. для БН поиск среди НАЛ!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -757,7 +769,8 @@ begin
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.1.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.1.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('3.1.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   end;
              end;
              //3.2. если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты + не "удален"
@@ -779,13 +792,14 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.2.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('3.2.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   //
                   // повторно
                   if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
-                  // !!!3.2. для НАЛ поиск среди БН!!!
+                  // !!!3.2.2. для НАЛ поиск среди БН!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -796,7 +810,7 @@ begin
                                  )
                   else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
                   then
-                  // !!!3.2. для БН поиск среди НАЛ!!!
+                  // !!!3.2.2. для БН поиск среди НАЛ!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -808,7 +822,8 @@ begin
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('3.2.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('3.2.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   end;
              end;
 
@@ -832,13 +847,14 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.1.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('4.1.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   //
                   // повторно
                   if (Result=0) then begin
                   if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
                   then
-                  // !!!4. для НАЛ поиск среди БН!!!
+                  // !!!4.2. для НАЛ поиск среди БН!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -856,7 +872,7 @@ begin
                                  )
                   else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
                   then
-                  // !!!4. для БН поиск среди НАЛ!!!
+                  // !!!4.2. для БН поиск среди НАЛ!!!
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
@@ -875,7 +891,8 @@ begin
                   ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked then ShowMessage('4.2.+'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
                   end;
              end;
 end;
@@ -909,7 +926,8 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked  then ShowMessage('1.1'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
 
              end;
              // В 1.2.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + УП статье + закрыт!!!
@@ -932,7 +950,8 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked  then ShowMessage('1.2'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
              //
              //
@@ -965,7 +984,8 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked  then ShowMessage('1.3'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
              // В 1.4.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + без УП статьи + закрыт!!!
              if (Result=0){and(myContractNumber<>'')} then
@@ -990,7 +1010,8 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.4'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.4'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked  then ShowMessage('1.4'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
              //
              // Во 2-ой раз Пытаемся найти <Договор> !!!по УП статье + не закрыт!!!
@@ -1011,7 +1032,8 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked  then ShowMessage('2.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
              // В 3-ий раз Пытаемся найти <Договор> !!!с "похожими" статьями!!!
              {if (Result=0)
@@ -1055,7 +1077,8 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
                   //
-                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked  then ShowMessage('4.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
 
 end;

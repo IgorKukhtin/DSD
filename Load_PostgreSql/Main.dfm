@@ -1055,8 +1055,8 @@ object MainForm: TMainForm
     end
     object cbDeleteFl: TCheckBox
       Tag = 20
-      Left = 175
-      Top = 515
+      Left = 199
+      Top = 552
       Width = 235
       Height = 17
       Caption = '3.0.1.'#1059#1076#1072#1083#1077#1085#1080#1077' Fl'
@@ -1103,7 +1103,7 @@ object MainForm: TMainForm
     object cbClearDelete: TCheckBox
       Left = 3
       Top = 550
-      Width = 235
+      Width = 190
       Height = 17
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1088#1086#1090#1086#1082#1086#1083' '#1091#1076#1072#1083#1077#1085#1080#1103
       Enabled = False
@@ -1131,7 +1131,7 @@ object MainForm: TMainForm
     end
     object cbErr: TCheckBox
       Left = 175
-      Top = 475
+      Top = 462
       Width = 63
       Height = 17
       Caption = 'Error'
@@ -1162,8 +1162,8 @@ object MainForm: TMainForm
       Visible = False
     end
     object cblTaxPF: TCheckBox
-      Left = 175
-      Top = 501
+      Left = 169
+      Top = 369
       Width = 63
       Height = 17
       Caption = 'PF'
@@ -1409,7 +1409,7 @@ object MainForm: TMainForm
     end
     object cbShowContract: TCheckBox
       Left = 157
-      Top = 484
+      Top = 478
       Width = 84
       Height = 31
       Caption = 'only Show Contract'
@@ -1420,6 +1420,21 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 47
+      WordWrap = True
+    end
+    object cbShowAll: TCheckBox
+      Left = 169
+      Top = 508
+      Width = 70
+      Height = 14
+      Caption = 'Show All'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 48
       WordWrap = True
     end
   end
