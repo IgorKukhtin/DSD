@@ -2,8 +2,8 @@ object GoodsPropertyForm: TGoodsPropertyForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 376
-  ClientWidth = 390
+  ClientHeight = 372
+  ClientWidth = 667
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object GoodsPropertyForm: TGoodsPropertyForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 390
-    Height = 350
+    Width = 667
+    Height = 346
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -68,6 +68,38 @@ object GoodsPropertyForm: TGoodsPropertyForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
+      object clStartPosInt: TcxGridDBColumn
+        Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1082#1075' '
+        DataBinding.FieldName = 'StartPosInt'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clEndPosInt: TcxGridDBColumn
+        Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1082#1075
+        DataBinding.FieldName = 'EndPosInt'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clStartPosFrac: TcxGridDBColumn
+        Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
+        DataBinding.FieldName = 'StartPosFrac'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clEndPosFrac: TcxGridDBColumn
+        Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
+        DataBinding.FieldName = 'EndPosFrac'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -102,8 +134,8 @@ object GoodsPropertyForm: TGoodsPropertyForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
