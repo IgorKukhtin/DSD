@@ -205,6 +205,9 @@
 			<DCCReference Include="..\Scale\GuidePersonal.pas">
 				<Form>GuidePersonalForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\Scale\DialogPrint.pas">
+				<Form>DialogPrintForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

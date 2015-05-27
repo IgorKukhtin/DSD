@@ -7,7 +7,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
   Font.Charset = RUSSIAN_CHARSET
   Font.Height = -13
   Font.Name = 'Tahoma'
-  KeyPreview = True
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
@@ -20,6 +19,8 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
     Top = 640
     Width = 662
     TabOrder = 2
+    ExplicitTop = 640
+    ExplicitWidth = 662
     inherited bbOk: TBitBtn
       Visible = False
     end

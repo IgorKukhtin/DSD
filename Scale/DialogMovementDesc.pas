@@ -440,6 +440,7 @@ begin
      then CDS.Next
      else begin
                ChoiceNumber:=CDS.FieldByName('Number').AsInteger;
+               ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger:=CDS.FieldByName('Number').AsInteger;
                DBGrid.Repaint;
                bbOkClick(Self);
      end;

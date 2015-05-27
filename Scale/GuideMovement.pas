@@ -12,13 +12,13 @@ uses
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridLevel,
   cxClasses, cxGridCustomView, cxGrid, cxImageComboBox, dsdAddOn, Vcl.ActnList
- ,DataModul;
+ ,DataModul, dsdAction;
 
 type
   TGuideMovementForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
-    DataSource: TDataSource;
+    DS: TDataSource;
     ButtonPanel: TPanel;
     ButtonExit: TSpeedButton;
     bbRefresh: TSpeedButton;
@@ -31,7 +31,6 @@ type
     GroupBox2: TGroupBox;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    DS: TDataSource;
     cxDBGrid: TcxGrid;
     cxDBGridDBTableView: TcxGridDBTableView;
     Status: TcxGridDBColumn;
@@ -83,11 +82,14 @@ type
     cbPrintPack: TCheckBox;
     cbPrintSpec: TCheckBox;
     cbPrintTax: TCheckBox;
-    CheckBox8: TCheckBox;
+    cbPrintPreview: TCheckBox;
     InvNumber_parent: TcxGridDBColumn;
     OperDate_parent: TcxGridDBColumn;
     InvNumber_TransportGoods: TcxGridDBColumn;
     OperDate_TransportGoods: TcxGridDBColumn;
+    bbViewMI: TSpeedButton;
+    FormParams: TdsdFormParams;
+    actViewMI: TdsdInsertUpdateAction;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -101,11 +103,27 @@ type
     procedure deEndPropertiesChange(Sender: TObject);
     procedure bbChangeMemberClick(Sender: TObject);
     procedure bbPrintClick(Sender: TObject);
+    procedure bbViewMIClick(Sender: TObject);
+    procedure cbPrintTransportClick(Sender: TObject);
+    procedure cbPrintQualityClick(Sender: TObject);
+    procedure cbPrintTaxClick(Sender: TObject);
+    procedure cbPrintPackClick(Sender: TObject);
+    procedure cbPrintSpecClick(Sender: TObject);
+    procedure cbPrintAccountClick(Sender: TObject);
+    procedure cbPrintMovementClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
     ParamsMovement_local: TParams;
     isChoice_local:Boolean;
+
+    procedure myCheckPrintMovement;
+    procedure myCheckPrintTransport;
+    procedure myCheckPrintQuality;
+    procedure myCheckPrintTax;
+    procedure myCheckPrintAccount;
+    procedure myCheckPrintPack;
+    procedure myCheckPrintSpec;
 
     procedure CancelCxFilter;
     function Checked: boolean;
@@ -118,10 +136,8 @@ var
   GuideMovementForm: TGuideMovementForm;
 
 implementation
-
 {$R *.dfm}
-
- uses dmMainScale,UtilScale,UtilPrint,Main;
+uses dmMainScale,UtilScale,UtilPrint,Main;
 {------------------------------------------------------------------------------}
 function TGuideMovementForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
 begin
@@ -137,6 +153,7 @@ begin
      bbChoice.Enabled:=(isChoice_local) or (UserId_begin=5);
 
      EditInvNumber.Text:='';
+     cbPrintPreview.Checked:=true;
 
      fStartWrite:=true;
      deStart.Text:=DateToStr(ParamsMovement_local.ParamByName('OperDate').AsDateTime);
@@ -147,6 +164,13 @@ begin
      RefreshDataSet;
      CDS.Filtered:=false;
 
+     cbPrintMovement.Checked:=false;
+     cbPrintTransport.Checked:=false;
+     cbPrintQuality.Checked:=false;
+     cbPrintTax.Checked:=false;
+     cbPrintAccount.Checked:=false;
+     cbPrintPack.Checked:=false;
+     cbPrintSpec.Checked:=false;
 
      if ParamsMovement_local.ParamByName('MovementId').AsInteger<>0
      then CDS.Locate('Id',ParamsMovement_local.ParamByName('MovementId').AsString,[]);
@@ -185,6 +209,94 @@ begin
      if cxDBGridDBTableView.DataController.Filter.Active
      then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
 end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckPrintMovement;
+begin
+     if cbPrintMovement.Checked
+     then
+         if (CDS.RecordCount=0)or(isChoice_local=true)
+         then cbPrintMovement.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckPrintTransport;
+begin
+     if cbPrintTransport.Checked
+     then
+         if ((CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+          and(CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
+            )
+          or(CDS.RecordCount=0)or(isChoice_local=true)
+         then cbPrintTransport.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckPrintQuality;
+begin
+     if cbPrintQuality.Checked
+     then
+         if ((CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+          and(CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
+            )
+          or(CDS.RecordCount=0)or(isChoice_local=true)
+         then cbPrintQuality.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckPrintTax;
+begin
+     if cbPrintTax.Checked
+     then
+         if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+          or (GetArrayList_Value_byName(Default_Array,'isTax') <> AnsiUpperCase('TRUE'))
+          or (CDS.RecordCount=0)or(isChoice_local=true)
+         then cbPrintTax.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckPrintAccount;
+begin
+     if cbPrintAccount.Checked
+     then
+         if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+          or (CDS.RecordCount=0)or(isChoice_local=true)
+         then cbPrintAccount.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckPrintPack;
+begin
+     if cbPrintPack.Checked
+     then
+         if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+          or (CDS.RecordCount=0)//or(isChoice_local=true)
+         then cbPrintPack.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.myCheckPrintSpec;
+begin
+     if cbPrintSpec.Checked
+     then
+         if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+          or (CDS.RecordCount=0)//or(isChoice_local=true)
+         then cbPrintSpec.Checked:=false;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbPrintMovementClick(Sender: TObject);
+begin myCheckPrintMovement;end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbPrintTransportClick(Sender: TObject);
+begin myCheckPrintTransport;end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbPrintQualityClick(Sender: TObject);
+begin myCheckPrintQuality;end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbPrintTaxClick(Sender: TObject);
+begin myCheckPrintTax;end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbPrintAccountClick(Sender: TObject);
+begin myCheckPrintAccount;end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbPrintPackClick(Sender: TObject);
+begin myCheckPrintPack;end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.cbPrintSpecClick(Sender: TObject);
+begin myCheckPrintSpec;end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
@@ -309,6 +421,18 @@ begin
     execParams.Free;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbViewMIClick(Sender: TObject);
+begin
+    if CDS.FieldByName('Id').AsInteger = 0 then
+    begin
+         ShowMessage('Ошибка.Документ не выбран.');
+         exit;
+    end;
+    //
+    FormParams.ParamByName('Id').Value := CDS.FieldByName('Id').AsInteger;
+    actViewMI.Execute;
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideMovementForm.actChoiceExecute(Sender: TObject);
 begin
      if Checked then ModalResult:=mrOK;
@@ -321,7 +445,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.FormCreate(Sender: TObject);
 begin
-  bbChangeMember.Visible:=GetArrayList_Value_byName(Default_Array,'isPersonalComplete') = AnsiUpperCase('TRUE');
+  bbChangeMember.Enabled:=GetArrayList_Value_byName(Default_Array,'isPersonalComplete') = AnsiUpperCase('TRUE');
 
   Create_ParamsMovement(ParamsMovement_local);
 
@@ -343,6 +467,14 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbPrintClick(Sender: TObject);
 begin
+     //
+     myCheckPrintMovement;
+     myCheckPrintTransport;
+     myCheckPrintQuality;
+     myCheckPrintTax;
+     myCheckPrintAccount;
+     myCheckPrintPack;
+     myCheckPrintSpec;
      //
      if    not(cbPrintMovement.Checked)
        and not(cbPrintTax.Checked)

@@ -79,7 +79,7 @@ BEGIN
   , tmpPrintKindItem AS( SELECT tmp.Id
                               , tmp.isMovement, tmp.isAccount, tmp.isTransport
                               , tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax
-                         FROM lpSelect_Object_PrintKindItem(inSession) AS tmp
+                         FROM lpSelect_Object_PrintKindItem() AS tmp
                                 )
 
    SELECT 

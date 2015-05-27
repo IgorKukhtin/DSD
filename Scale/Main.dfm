@@ -980,7 +980,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 5
-      ExplicitTop = 311
       object HeadCountLabel: TLabel
         Left = 1
         Top = 1
@@ -1091,10 +1090,6 @@ object MainForm: TMainForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = 65
-        ExplicitTop = 11
-        ExplicitWidth = 64
-        ExplicitHeight = 57
         object Label2: TLabel
           Left = 0
           Top = 0
@@ -1109,8 +1104,6 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitLeft = 1
-          ExplicitTop = 1
           ExplicitWidth = 36
         end
         object EditBoxCount: TcxCurrencyEdit
@@ -1139,7 +1132,6 @@ object MainForm: TMainForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 1
-        ExplicitHeight = 57
         object Label3: TLabel
           Left = 0
           Top = 0
@@ -1154,8 +1146,6 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitLeft = 1
-          ExplicitTop = 1
           ExplicitWidth = 19
         end
         object EditBoxCode: TcxCurrencyEdit

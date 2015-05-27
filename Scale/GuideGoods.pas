@@ -28,7 +28,7 @@ type
     EditTareWeightCode: TEdit;
     gbPriceListCode: TGroupBox;
     EditPriceListCode: TEdit;
-    DataSource: TDataSource;
+    DS: TDataSource;
     infoPanelGoods: TPanel;
     gbGoodsName: TGroupBox;
     EditGoodsName: TEdit;
@@ -54,7 +54,6 @@ type
     CDS: TClientDataSet;
     gbWeightValue: TGroupBox;
     EditWeightValue: TcxCurrencyEdit;
-    DS: TDataSource;
     cxDBGrid: TcxGrid;
     cxDBGridDBTableView: TcxGridDBTableView;
     GoodsCode: TcxGridDBColumn;
@@ -114,7 +113,7 @@ type
     procedure EditTareWeightEnterExit(Sender: TObject);
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
-    procedure DataSourceDataChange(Sender: TObject; Field: TField);
+    procedure DSDataChange(Sender: TObject; Field: TField);
     procedure FormDestroy(Sender: TObject);
     procedure EditWeightValueExit(Sender: TObject);
     procedure EditWeightValueKeyDown(Sender: TObject; var Key: Word;
@@ -881,7 +880,7 @@ begin
     ActiveControl:=EditPriceListCode;}
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsForm.DataSourceDataChange(Sender: TObject; Field: TField);
+procedure TGuideGoodsForm.DSDataChange(Sender: TObject; Field: TField);
 begin
      with ParamsMI do begin
         if CDS.RecordCount=1 then

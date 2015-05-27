@@ -163,9 +163,9 @@ begin
                   then Print_ReturnIn(MovementId)
                   else if MovementDescId = zc_Movement_SendOnPrice
                        then Print_SendOnPrice(MovementId)
-                       else begin ShowMessage ('Ошибка.Документ сохранен.Форма печати не найдена.');exit;end;
+                       else begin ShowMessage ('Ошибка.Форма печати <Накладная> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Документ сохранен.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Накладная> не сформирована.');
                 exit;
           end;
      Result:=true;
@@ -179,9 +179,9 @@ begin
              //Print
              if MovementDescId = zc_Movement_Sale
              then Print_TaxDocument(MovementId)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <Налоговая> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Налоговая> не сформирована.');
                 exit;
           end;
      Result:=true;
@@ -195,9 +195,9 @@ begin
              //Print
              if MovementDescId = zc_Movement_Sale
              then Print_AccountDocument(MovementId)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <Счет> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Счет> не сформирована.');
                 exit;
           end;
      Result:=true;
@@ -211,9 +211,9 @@ begin
              //Print
              if MovementDescId = zc_Movement_Sale
              then Print_SpecDocument(MovementId,MovementId_by)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <Спецификация> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Спецификация> не сформирована.');
                 exit;
           end;
      Result:=true;
@@ -227,9 +227,9 @@ begin
              //Print
              if MovementDescId = zc_Movement_Sale
              then Print_PackDocument(MovementId,MovementId_by)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <Упаковочный лист> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать не <Упаковочный лист> сформирована.');
                 exit;
           end;
      Result:=true;
@@ -243,9 +243,9 @@ begin
              //Print
              if MovementDescId = zc_Movement_Sale
              then Print_TransportDocument(MovementId,MovementId_sale,OperDate)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <ТТН> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <ТТН> не сформирована.');
                 exit;
           end;
      Result:=true;
@@ -259,9 +259,9 @@ begin
              //Print
              if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_Loss)
              then Print_QualityDocument(MovementId)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <Качественное> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Качественное> не сформирована.');
                 exit;
           end;
      Result:=true;

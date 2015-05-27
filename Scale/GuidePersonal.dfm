@@ -223,10 +223,10 @@ object GuidePersonalForm: TGuidePersonalForm
       end
     end
   end
-  object DataSource: TDataSource
+  object DS: TDataSource
     DataSet = CDS
-    Left = 320
-    Top = 336
+    Left = 168
+    Top = 360
   end
   object spSelect: TdsdStoredProc
     DataSet = CDS
@@ -245,11 +245,6 @@ object GuidePersonalForm: TGuidePersonalForm
     OnFilterRecord = CDSFilterRecord
     Left = 272
     Top = 384
-  end
-  object DS: TDataSource
-    DataSet = CDS
-    Left = 192
-    Top = 424
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

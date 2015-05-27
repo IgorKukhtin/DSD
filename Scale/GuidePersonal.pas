@@ -18,7 +18,7 @@ type
   TGuidePersonalForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
-    DataSource: TDataSource;
+    DS: TDataSource;
     ButtonPanel: TPanel;
     bbExit: TSpeedButton;
     bbRefresh: TSpeedButton;
@@ -29,7 +29,6 @@ type
     EditPersonalCode: TEdit;
     gbPersonalName: TGroupBox;
     EditPersonalName: TEdit;
-    DS: TDataSource;
     cxDBGrid: TcxGrid;
     cxDBGridDBTableView: TcxGridDBTableView;
     cxDBGridLevel: TcxGridLevel;

@@ -207,6 +207,7 @@ type
     Scale_DB: TCasDB;
 
     function Save_Movement_all:Boolean;
+    function Print_Movement_afterSave:Boolean;
     function GetParams_MovementDesc(BarCode: String):Boolean;
     function GetParams_Goods(isRetail:Boolean;BarCode: String):Boolean;
     procedure Create_Scale;
@@ -228,7 +229,7 @@ var
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint
-    ,GuideMovement, DialogNumberValue,DialogPersonalComplete;
+    ,GuideMovement, DialogNumberValue,DialogPersonalComplete,DialogPrint;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -261,9 +262,32 @@ begin
      //
      OperDateEdit.Text:=DateToStr(gpInitialize_OperDate(ParamsMovement));
      //
+     if ParamsMovement.ParamByName('MovementId').AsInteger=0
+     then begin
+         ShowMessage('Ошибка.Продукция не взвешена.');
+         exit;
+     end;
+     //
      if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
      then exit;
 
+
+     //параметры для печати
+     if not DialogPrintForm.Execute(ParamsMovement.ParamByName('isMovement').asBoolean
+                                   ,ParamsMovement.ParamByName('isAccount').asBoolean
+                                   ,ParamsMovement.ParamByName('isTransport').asBoolean
+                                   ,ParamsMovement.ParamByName('isQuality').asBoolean
+                                   ,ParamsMovement.ParamByName('isPack').asBoolean
+                                   ,ParamsMovement.ParamByName('isSpec').asBoolean
+                                   ,ParamsMovement.ParamByName('isTax').asBoolean
+                                   )
+     then begin
+         //!!!без печати ничего не надо делать!!!
+         ShowMessage('Параметры печати не определены.'+#10+#13+'Документ НЕ будет закрыт.');
+         exit;
+     end;
+
+     //!!!Сохранили документ!!!
      if DMMainScaleForm.gpInsert_Movement_all(ParamsMovement) then
      begin
           //
@@ -277,12 +301,8 @@ begin
           Save_Movement_PersonalComplete(execParams);
           execParams.Free;
           //
-             //Print
-             Print_Movemenet (ParamsMovement.ParamByName('MovementDescId').AsInteger
-                            , ParamsMovement.ParamByName('MovementId_begin').AsInteger
-                            , 1    // myPrintCount
-                            , TRUE // isPreview
-                              );
+          //Print
+          Print_Movement_afterSave;
           //
           //EDI
           if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then SendEDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
@@ -291,7 +311,7 @@ begin
 
           //Initialize or Empty
           //НЕ будем автоматов открывать предыдущий док.
-          //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!может и ненадо!!!
+          ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!может и ненадо!!!
           DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
           gpInitialize_MovementDesc;
           //
@@ -301,6 +321,74 @@ begin
           RefreshDataSet;
           WriteParamsMovement;
      end;
+end;
+//------------------------------------------------------------------------------------------------
+function TMainForm.Print_Movement_afterSave:Boolean;
+begin
+     Result:=true;
+     //
+     //Movement
+     if DialogPrintForm.cbPrintMovement.Checked
+     then Result:=Print_Movemenet (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                                 , DialogPrintForm.cbPrintPreview.Checked
+                                  );
+     //
+     //Tax
+     if (DialogPrintForm.cbPrintTax.Checked) and (Result = TRUE)
+     then Result:=Print_Tax (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                           , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                           , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                           , DialogPrintForm.cbPrintPreview.Checked
+                            );
+     //
+     //Account
+     if (DialogPrintForm.cbPrintAccount.Checked) and (Result = TRUE)
+     then Result:=Print_Account (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                               , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                               , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                               , DialogPrintForm.cbPrintPreview.Checked
+                                );
+     //
+     //Pack
+     if (DialogPrintForm.cbPrintPack.Checked) and (Result = TRUE)
+     then Result:=Print_Pack (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                            , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
+                            , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
+                            , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                            , DialogPrintForm.cbPrintPreview.Checked
+                             );
+     //
+     //Spec
+     if (DialogPrintForm.cbPrintSpec.Checked) and (Result = TRUE)
+     then Result:=Print_Spec (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                            , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
+                            , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
+                            , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                            , DialogPrintForm.cbPrintPreview.Checked
+                             );
+     //
+     //Transport
+     if (DialogPrintForm.cbPrintTransport.Checked) and (Result = TRUE)
+     then Result:=Print_Transport (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                 , 0                                                        // MovementId
+                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId_sale
+                                 , ParamsMovement.ParamByName('OperDate').AsDateTime
+                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                                 , DialogPrintForm.cbPrintPreview.Checked
+                                  );
+     //
+     //Quality
+     if (DialogPrintForm.cbPrintQuality.Checked) and (Result = TRUE)
+     then Result:=Print_Quality (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                               , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                               , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                               , DialogPrintForm.cbPrintPreview.Checked
+                                );
+     //
+     if not Result then ShowMessage('Документ сохранен.');
+;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_PersonalComplete(execParams:TParams):Boolean;

@@ -46,12 +46,14 @@ BEGIN
             , 0 AS Code
             , tmp.Name :: TVarChar AS Name
             , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, inLevelChild, '', tmp.Name
-                                       , CASE WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
-                                                   THEN 'FALSE'
-                                              WHEN STRPOS (tmp.Name, 'InfoMoneyId_income') > 0
+                                       , CASE WHEN STRPOS (tmp.Name, 'InfoMoneyId_income') > 0
                                                    THEN '0'
                                               WHEN STRPOS (tmp.Name, 'InfoMoneyId_sale') > 0
                                                    THEN zc_Enum_InfoMoney_30101() :: TVarChar -- Доходы + Продукция + Готовая продукция
+                                              WHEN STRPOS (tmp.Name, 'isPrintPreview') > 0
+                                                   THEN 'TRUE'
+                                              WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
+                                                   THEN 'FALSE'
                                               ELSE '1'
                                          END
                                        , inSession) AS Value
@@ -61,7 +63,9 @@ BEGIN
        UNION SELECT 'ChangePercentAmountNumber' AS Name
        UNION SELECT 'PriceListNumber'        AS Name
 
-       UNION SELECT 'isPreviewPrint'         AS Name
+       UNION SELECT 'PrintCount'             AS Name
+       UNION SELECT 'isPrintPreview'         AS Name
+
        UNION SELECT 'isTareWeightEnter'      AS Name
        UNION SELECT 'isPersonalComplete'     AS Name
        UNION SELECT 'isTax'                  AS Name

@@ -148,9 +148,18 @@ begin
      ParamAdd(Params,'calcPartnerName',ftString);
      ParamAdd(Params,'ChangePercentAmount',ftFloat);
      ParamAdd(Params,'ChangePercent',ftFloat);
-     ParamAdd(Params,'isEdiOrdspr',ftBoolean);//Подтверждение
+
+     ParamAdd(Params,'isEdiOrdspr',ftBoolean); //Подтверждение
      ParamAdd(Params,'isEdiInvoice',ftBoolean);//Счет
-     ParamAdd(Params,'isEdiDesadv',ftBoolean);//уведомление
+     ParamAdd(Params,'isEdiDesadv',ftBoolean); //уведомление
+
+     ParamAdd(Params,'isMovement',ftBoolean);  //Накладная
+     ParamAdd(Params,'isAccount',ftBoolean);   //Счет
+     ParamAdd(Params,'isTransport',ftBoolean); //ТТН
+     ParamAdd(Params,'isQuality',ftBoolean);   //Качественное
+     ParamAdd(Params,'isPack',ftBoolean);      //Упаковочный
+     ParamAdd(Params,'isSpec',ftBoolean);      //Спецификация
+     ParamAdd(Params,'isTax',ftBoolean);       //Налоговая
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_BarCode',ftString);

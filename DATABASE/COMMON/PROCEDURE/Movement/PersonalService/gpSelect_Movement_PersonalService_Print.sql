@@ -36,7 +36,7 @@ BEGIN
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
            , Object_Juridical.Id                        AS JuridicalId
            , Object_Juridical.ValueData                 AS JuridicalName
-           , MovementFloat_TotalSummService .ValueData  AS TotalSummService 
+           , (COALESCE (MovementFloat_TotalSummService.ValueData, 0) + COALESCE (MovementFloat_TotalSummAdd.ValueData, 0) /*+ COALESCE (MovementFloat_TotalSummSocialAdd.ValueData, 0)*/) :: TFloat AS TotalSummService
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummCash
@@ -75,6 +75,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMinus
                                     ON MovementFloat_TotalSummMinus.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummMinus.DescId = zc_MovementFloat_TotalSummMinus()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
+                                    ON MovementFloat_TotalSummAdd.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChild
                                     ON MovementFloat_TotalSummChild.MovementId =  Movement.Id

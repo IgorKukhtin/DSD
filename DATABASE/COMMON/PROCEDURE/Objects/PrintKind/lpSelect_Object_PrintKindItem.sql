@@ -1,9 +1,9 @@
--- Function: lpSelect_Object_PrintKindItem_all (TVarChar)
+-- Function: lpSelect_Object_PrintKindItem ()
 
 DROP FUNCTION IF EXISTS lpSelect_Object_PrintKindItem (TVarChar);
+DROP FUNCTION IF EXISTS lpSelect_Object_PrintKindItem ();
 
 CREATE OR REPLACE FUNCTION lpSelect_Object_PrintKindItem(
-    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isMovement   Boolean   -- Накладная
@@ -16,11 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isErased     Boolean
              ) AS
 $BODY$
-   DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_PrintKindItem());
-     vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
      RETURN QUERY 
@@ -46,7 +42,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpSelect_Object_PrintKindItem (TVarChar) OWNER TO postgres;
+ALTER FUNCTION lpSelect_Object_PrintKindItem () OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -55,4 +51,4 @@ ALTER FUNCTION lpSelect_Object_PrintKindItem (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM lpSelect_Object_PrintKindItem (zfCalc_UserAdmin())
+-- SELECT * FROM lpSelect_Object_PrintKindItem ()

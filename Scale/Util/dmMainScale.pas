@@ -117,9 +117,18 @@ begin
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
          ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
          ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
+
          ParamByName('isEdiOrdspr').asBoolean:= DataSet.FieldByName('isEdiOrdspr').asBoolean;
          ParamByName('isEdiInvoice').asBoolean:= DataSet.FieldByName('isEdiInvoice').asBoolean;
          ParamByName('isEdiDesadv').asBoolean:= DataSet.FieldByName('isEdiDesadv').asBoolean;
+
+         ParamByName('isMovement').asBoolean:= DataSet.FieldByName('isMovement').asBoolean;
+         ParamByName('isAccount').asBoolean:= DataSet.FieldByName('isAccount').asBoolean;
+         ParamByName('isTransport').asBoolean:= DataSet.FieldByName('isTransport').asBoolean;
+         ParamByName('isQuality').asBoolean:= DataSet.FieldByName('isQuality').asBoolean;
+         ParamByName('isPack').asBoolean:= DataSet.FieldByName('isPack').asBoolean;
+         ParamByName('isSpec').asBoolean:= DataSet.FieldByName('isSpec').asBoolean;
+         ParamByName('isTax').asBoolean:= DataSet.FieldByName('isTax').asBoolean;
 
          ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId_Order').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
@@ -587,9 +596,18 @@ begin
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName').asString;
          ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
          ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
+
          ParamByName('isEdiOrdspr').asBoolean:= DataSet.FieldByName('isEdiOrdspr').asBoolean;
          ParamByName('isEdiInvoice').asBoolean:= DataSet.FieldByName('isEdiInvoice').asBoolean;
          ParamByName('isEdiDesadv').asBoolean:= DataSet.FieldByName('isEdiDesadv').asBoolean;
+
+         ParamByName('isMovement').asBoolean:= DataSet.FieldByName('isMovement').asBoolean;
+         ParamByName('isAccount').asBoolean:= DataSet.FieldByName('isAccount').asBoolean;
+         ParamByName('isTransport').asBoolean:= DataSet.FieldByName('isTransport').asBoolean;
+         ParamByName('isQuality').asBoolean:= DataSet.FieldByName('isQuality').asBoolean;
+         ParamByName('isPack').asBoolean:= DataSet.FieldByName('isPack').asBoolean;
+         ParamByName('isSpec').asBoolean:= DataSet.FieldByName('isSpec').asBoolean;
+         ParamByName('isTax').asBoolean:= DataSet.FieldByName('isTax').asBoolean;
 
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
@@ -730,9 +748,18 @@ begin
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
          ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
          ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
+
          ParamByName('isEdiOrdspr').asBoolean:= DataSet.FieldByName('isEdiOrdspr').asBoolean;
          ParamByName('isEdiInvoice').asBoolean:= DataSet.FieldByName('isEdiInvoice').asBoolean;
          ParamByName('isEdiDesadv').asBoolean:= DataSet.FieldByName('isEdiDesadv').asBoolean;
+
+         ParamByName('isMovement').asBoolean:= DataSet.FieldByName('isMovement').asBoolean;
+         ParamByName('isAccount').asBoolean:= DataSet.FieldByName('isAccount').asBoolean;
+         ParamByName('isTransport').asBoolean:= DataSet.FieldByName('isTransport').asBoolean;
+         ParamByName('isQuality').asBoolean:= DataSet.FieldByName('isQuality').asBoolean;
+         ParamByName('isPack').asBoolean:= DataSet.FieldByName('isPack').asBoolean;
+         ParamByName('isSpec').asBoolean:= DataSet.FieldByName('isSpec').asBoolean;
+         ParamByName('isTax').asBoolean:= DataSet.FieldByName('isTax').asBoolean;
 
          ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
@@ -767,7 +794,7 @@ function gpInitialize_OperDate(var execParams:TParams):TDateTime;
 begin
     with DMMainScaleForm.spSelect do
     begin
-       StoredProcName:='gpSelect_Scale_OperDate';
+       StoredProcName:='gpGet_Scale_OperDate';
        OutputType:=otDataSet;
        Params.Clear;
        //try

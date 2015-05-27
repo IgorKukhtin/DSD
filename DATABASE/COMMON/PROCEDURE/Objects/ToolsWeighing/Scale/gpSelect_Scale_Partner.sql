@@ -18,16 +18,18 @@ RETURNS TABLE (PartnerId     Integer
              , InfoMoneyName TVarChar
              , ChangePercent TFloat
              , ChangePercentAmount TFloat
+
              , isEdiOrdspr   Boolean
              , isEdiInvoice  Boolean
              , isEdiDesadv   Boolean
-             , isMovement   Boolean   -- Накладная
-             , isAccount    Boolean   -- Счет
-             , isTransport  Boolean   -- ТТН
-             , isQuality    Boolean   -- Качественное
-             , isPack       Boolean   -- Упаковочный
-             , isSpec       Boolean   -- Спецификация
-             , isTax        Boolean   -- Налоговая
+
+             , isMovement    Boolean   -- Накладная
+             , isAccount     Boolean   -- Счет
+             , isTransport   Boolean   -- ТТН
+             , isQuality     Boolean   -- Качественное
+             , isPack        Boolean   -- Упаковочный
+             , isSpec        Boolean   -- Спецификация
+             , isTax         Boolean   -- Налоговая
               )
 AS
 $BODY$
@@ -129,7 +131,7 @@ BEGIN
                                   , View_Contract.PaidKindId
                                   , tmpInfoMoney.InfoMoneyId
                           )
-          , tmpPrintKindItem AS (SELECT tmp.Id, tmp.isMovement, tmp.isAccount, tmp.isTransport, tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax FROM lpSelect_Object_PrintKindItem (inSession) AS tmp)
+          , tmpPrintKindItem AS (SELECT tmp.Id, tmp.isMovement, tmp.isAccount, tmp.isTransport, tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax FROM lpSelect_Object_PrintKindItem() AS tmp)
 
        SELECT tmpPartner.PartnerId
             , tmpPartner.PartnerCode

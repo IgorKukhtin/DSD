@@ -18,7 +18,7 @@ type
   TGuidePartnerForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
-    DataSource: TDataSource;
+    DS: TDataSource;
     ButtonPanel: TPanel;
     bbExit: TSpeedButton;
     bbRefresh: TSpeedButton;
@@ -29,7 +29,6 @@ type
     EditPartnerCode: TEdit;
     gbPartnerName: TGroupBox;
     EditPartnerName: TEdit;
-    DS: TDataSource;
     cxDBGrid: TcxGrid;
     cxDBGridDBTableView: TcxGridDBTableView;
     cxDBGridLevel: TcxGridLevel;
@@ -177,9 +176,18 @@ begin
                ParamByName('calcPartnerName').asString:= CDS.FieldByName('PartnerName').asString;
                ParamByName('ChangePercent').asFloat:= CDS.FieldByName('ChangePercent').asFloat;
                ParamByName('ChangePercentAmount').asFloat:= CDS.FieldByName('ChangePercentAmount').asFloat;
+
                ParamByName('isEdiOrdspr').asBoolean:= CDS.FieldByName('isEdiOrdspr').asBoolean;
                ParamByName('isEdiInvoice').asBoolean:= CDS.FieldByName('isEdiInvoice').asBoolean;
                ParamByName('isEdiDesadv').asBoolean:= CDS.FieldByName('isEdiDesadv').asBoolean;
+
+               ParamByName('isMovement').asBoolean:= CDS.FieldByName('isMovement').asBoolean;
+               ParamByName('isAccount').asBoolean:= CDS.FieldByName('isAccount').asBoolean;
+               ParamByName('isTransport').asBoolean:= CDS.FieldByName('isTransport').asBoolean;
+               ParamByName('isQuality').asBoolean:= CDS.FieldByName('isQuality').asBoolean;
+               ParamByName('isPack').asBoolean:= CDS.FieldByName('isPack').asBoolean;
+               ParamByName('isSpec').asBoolean:= CDS.FieldByName('isSpec').asBoolean;
+               ParamByName('isTax').asBoolean:= CDS.FieldByName('isTax').asBoolean;
 
                ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
                ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;
