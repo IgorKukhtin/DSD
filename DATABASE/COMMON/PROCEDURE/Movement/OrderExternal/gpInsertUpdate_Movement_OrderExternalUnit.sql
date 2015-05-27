@@ -92,6 +92,7 @@ BEGIN
                                                  , inRouteSortingId      := inRouteSortingId
                                                  , inPersonalId          := inPersonalId
                                                  , inPriceListId         := ioPriceListId
+                                                 , inPartnerId           := inPartnerId
                                                  , inUserId              := vbUserId
                                                   );
 
@@ -102,8 +103,6 @@ BEGIN
  
      -- сохранили связь с <Торговая сеть>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Retail(), ioId, inRetailId);
-     -- сохранили связь с <Контрагент>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);                                     
 
 END;
 $BODY$

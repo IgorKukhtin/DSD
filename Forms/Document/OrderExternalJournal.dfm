@@ -3,7 +3,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   ClientHeight = 661
   ClientWidth = 1064
   ExplicitWidth = 1080
-  ExplicitHeight = 696
+  ExplicitHeight = 699
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -18,7 +18,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ExplicitWidth = 1064
       ExplicitHeight = 604
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1064
         Height = 604
         ExplicitWidth = 1064
         ExplicitHeight = 604
@@ -382,6 +382,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           object isPrinted: TcxGridDBColumn
             Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085
             DataBinding.FieldName = 'isPrinted'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80

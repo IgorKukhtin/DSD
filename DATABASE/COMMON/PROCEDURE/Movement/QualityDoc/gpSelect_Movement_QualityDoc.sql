@@ -116,19 +116,19 @@ BEGIN
             LEFT JOIN Movement AS Movement_Quality ON Movement_Quality.Id = MovementLinkMovement_Master.MovementChildId
                                                   AND Movement_Quality.StatusId = zc_Enum_Status_Complete()
             LEFT JOIN MovementDate AS MD_OperDateCertificate
-                                   ON MD_OperDateCertificate.MovementId =  Movement_Quality.Id
+                                   ON MD_OperDateCertificate.MovementId = Movement.Id   -- Movement_Quality.Id
                                   AND MD_OperDateCertificate.DescId = zc_MovementDate_OperDateCertificate()
             LEFT JOIN MovementString AS MS_CertificateNumber
-                                     ON MS_CertificateNumber.MovementId =  Movement_Quality.Id
+                                     ON MS_CertificateNumber.MovementId = Movement.Id   -- Movement_Quality.Id
                                     AND MS_CertificateNumber.DescId = zc_MovementString_CertificateNumber()
             LEFT JOIN MovementString AS MS_CertificateSeries
-                                     ON MS_CertificateSeries.MovementId =  Movement_Quality.Id
+                                     ON MS_CertificateSeries.MovementId = Movement.Id   -- Movement_Quality.Id
                                     AND MS_CertificateSeries.DescId = zc_MovementString_CertificateSeries()
             LEFT JOIN MovementString AS MS_CertificateSeriesNumber
-                                     ON MS_CertificateSeriesNumber.MovementId =  Movement_Quality.Id
+                                     ON MS_CertificateSeriesNumber.MovementId = Movement.Id   -- Movement_Quality.Id
                                     AND MS_CertificateSeriesNumber.DescId = zc_MovementString_CertificateSeriesNumber()
             LEFT JOIN MovementString AS MS_QualityNumber
-                                     ON MS_QualityNumber.MovementId =  Movement_Quality.Id
+                                     ON MS_QualityNumber.MovementId = Movement.Id   -- Movement_Quality.Id
                                     AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
             LEFT JOIN MovementBlob AS MB_Comment
                                    ON MB_Comment.MovementId =  Movement_Quality.Id

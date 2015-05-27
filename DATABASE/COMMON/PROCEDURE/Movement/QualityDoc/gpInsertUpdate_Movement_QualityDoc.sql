@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_QualityDoc (Integer, Integer, TDateTime, TDateTime, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_QualityDoc (Integer, Integer, TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_QualityDoc (Integer, Integer, TDateTime, TDateTime, Integer, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_QualityDoc(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -8,6 +10,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_QualityDoc(
     IN inOperDateIn          TDateTime , -- Дата 
     IN inOperDateOut         TDateTime , -- Дата 
     IN inCarId               Integer   , -- Автомобиль
+    IN inQualityNumber              TVarChar  , --
+    IN inCertificateNumber          TVarChar  , --
+    IN inOperDateCertificate        TDateTime , --
+    IN inCertificateSeries          TVarChar  , --
+    IN inCertificateSeriesNumber    TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -132,12 +139,17 @@ BEGIN
      INSERT INTO _tmpMovement_QualityDoc (MovementId)
         SELECT CASE WHEN tmpResult.MovementId_master <> 0
                          THEN lpInsertUpdate_Movement_QualityDoc (ioId               := tmpResult.MovementId
-                                                                , inMovementId_master:= tmpResult.MovementId_master
-                                                                , inMovementId_child := inMovementId_Sale
-                                                                , inOperDateIn       := inOperDateIn
-                                                                , inOperDateOut      := inOperDateOut
-                                                                , inCarId            := inCarId
-                                                                , inUserId           := vbUserId
+                                                                , inMovementId_master      := tmpResult.MovementId_master
+                                                                , inMovementId_child       := inMovementId_Sale
+                                                                , inOperDateIn             := inOperDateIn
+                                                                , inOperDateOut            := inOperDateOut
+                                                                , inCarId                  := inCarId
+                                                                , inQualityNumber          := inQualityNumber
+                                                                , inCertificateNumber      := inCertificateNumber
+                                                                , inOperDateCertificate    := inCarId
+                                                                , inCertificateSeries      := inCertificateSeries
+                                                                , inCertificateSeriesNumber:= inCertificateSeriesNumber
+                                                                , inUserId                 := vbUserId
                                                                  )
                     WHEN tmpResult.MovementId <> 0
                          THEN lpSetErased_Movement_QualityDoc (inMovementId := tmpResult.MovementId
@@ -160,6 +172,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.05.15         * 
  22.05.15                                        *
 */
 
