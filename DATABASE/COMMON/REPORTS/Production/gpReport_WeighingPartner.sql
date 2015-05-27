@@ -14,8 +14,9 @@ CREATE OR REPLACE FUNCTION gpReport_WeighingPartner(
 RETURNS TABLE ( OperDate TDateTime
              , PersonalCode Integer, PersonalName TVarChar
              , PositionCode Integer, PositionName TVarChar
-             , TotalCount TFloat, TotalCountPartner TFloat --, TotalCountTare TFloat
+             , TotalCount TFloat, TotalCountPartner TFloat, TotalCountKg TFloat --
              , CountMI TFloat
+             , CountMovement TFloat
             
               )
 AS
@@ -84,20 +85,24 @@ BEGIN
               , tmp.PositionCode
               , tmp.PositionName
                    
-              , SUM(tmp.TotalCount)::TFloat as TotalCount 
+              , SUM(tmp.TotalCount)::TFloat        as TotalCount 
               , SUM(tmp.TotalCountPartner)::TFloat as TotalCountPartner 
+              , SUM(tmp.TotalCountKg)::TFloat      as TotalCountKg 
+               
               , SUM(tmp.CountMI)::TFloat as CountMI 
-           
+              , SUM(tmp.CountMovement)::TFloat as CountMovement
+              
         FROM ( SELECT CASE WHEN inIsDay = TRUE THEN tmpMovement.OperDate ELSE inEndDate END AS OperDate
            
-             ,( CASE WHEN COALESCE(tmpMovement.CountPersonal,0) > 0 THEN MovementFloat_TotalCount.ValueData/tmpMovement.CountPersonal ELSE MovementFloat_TotalCount.ValueData END) ::TFloat  AS TotalCount   --/ COALESCE(tmpMovement.CountPersonal,1))
+             ,( CASE WHEN COALESCE(tmpMovement.CountPersonal,0) > 0 THEN MovementFloat_TotalCount.ValueData/tmpMovement.CountPersonal ELSE MovementFloat_TotalCount.ValueData END) ::TFloat                      AS TotalCount  
              ,( CASE WHEN COALESCE(tmpMovement.CountPersonal,0) > 0 THEN MovementFloat_TotalCountPartner.ValueData /tmpMovement.CountPersonal ELSE MovementFloat_TotalCountPartner.ValueData  END )::TFloat      AS TotalCountPartner
-      
+             ,( CASE WHEN COALESCE(tmpMovement.CountPersonal,0) > 0 THEN MovementFloat_TotalCountKg.ValueData/tmpMovement.CountPersonal ELSE MovementFloat_TotalCountKg.ValueData  END )::TFloat                 AS TotalCountKg
+             
              , Object_Personal.ObjectCode AS PersonalCode, Object_Personal.ValueData AS PersonalName
              , Object_Position.ObjectCode AS PositionCode, Object_Position.ValueData AS PositionName
 
              , (CASE WHEN COALESCE(tmpMovement.CountPersonal,0) > 0 THEN tmpMI.CountMI/tmpMovement.CountPersonal ELSE tmpMI.CountMI END )::TFloat AS CountMI
-            
+             , 1 AS CountMovement
        FROM tmpMovement 
             LEFT JOIN tmpListDesc on  tmpListDesc.CountDesc  = tmpMovement.CountPersonal
 
@@ -110,7 +115,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
                                     ON MovementFloat_TotalCountTare.MovementId = tmpMovement.MovementId
                                    AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
-
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  tmpMovement.MovementId
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+                                   
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = tmpMovement.MovementId
                                         AND MovementLinkObject_Personal.DescId = tmpListDesc.PersonalDescId
@@ -150,5 +158,5 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpReport_WeighingPartner (inStartDate:= '01.12.2014', inEndDate:= '02.12.2014', inPersonalId:=0, inPositionId:=0, inIsDay:=False, inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpReport_WeighingPartner (inStartDate:= '01.12.2014', inEndDate:= '02.12.2014', inPersonalId:=0, inPositionId:=0, inIsDay:=False, inSession:= zfCalc_UserAdmin())
  --SELECT * FROM gpReport_WeighingPartner (inStartDate:= '01.12.2014', inEndDate:= '02.12.2014', inPersonalId:=0, inPositionId:=0, inIsDay:=True, inSession:= zfCalc_UserAdmin())
