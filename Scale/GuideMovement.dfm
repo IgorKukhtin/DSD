@@ -34,8 +34,8 @@ object GuideMovementForm: TGuideMovementForm
       BevelOuter = bvNone
       TabOrder = 0
       object ButtonExit: TSpeedButton
-        Left = 286
-        Top = 3
+        Left = 326
+        Top = 4
         Width = 31
         Height = 29
         Action = actExit
@@ -124,6 +124,25 @@ object GuideMovementForm: TGuideMovementForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbPrintClick
+      end
+      object bbViewMI: TSpeedButton
+        Left = 248
+        Top = 3
+        Width = 31
+        Height = 29
+        Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888880000000000000888FBFBFBFBFBFB088878BFBFBFBFBF088808FBFBFBFB
+          FB0888FFBFBFBFBFBF088878FBFBFBFBFB088808BFBFBFBFBF0888FBFBFBFBFB
+          FB088878BFBFBFBFBF088808FBFBFBFBFB0888FFBFBFBFBFBF088878FBFBFBFB
+          FB088808BFBFBFBFBF0888FBFBFBFBFBFB088877777777777778}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbViewMIClick
       end
     end
     object cxDBGrid: TcxGrid
@@ -549,75 +568,124 @@ object GuideMovementForm: TGuideMovementForm
     object cbPrintMovement: TCheckBox
       Left = 433
       Top = 23
-      Width = 81
+      Width = 86
       Height = 17
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 3
+      OnClick = cbPrintMovementClick
     end
     object cbPrintTransport: TCheckBox
-      Left = 581
+      Left = 526
       Top = 23
       Width = 48
       Height = 17
       Caption = #1058#1058#1053
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 4
+      OnClick = cbPrintTransportClick
     end
     object cbPrintQuality: TCheckBox
-      Left = 633
+      Left = 584
       Top = 23
-      Width = 100
+      Width = 103
       Height = 17
       Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 5
+      OnClick = cbPrintQualityClick
     end
     object cbPrintAccount: TCheckBox
-      Left = 524
+      Left = 1025
       Top = 23
       Width = 53
       Height = 17
       Caption = #1057#1095#1077#1090
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 6
+      OnClick = cbPrintAccountClick
     end
     object cbPrintPack: TCheckBox
-      Left = 740
+      Left = 790
       Top = 23
-      Width = 98
+      Width = 100
       Height = 17
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 7
+      OnClick = cbPrintPackClick
     end
     object cbPrintSpec: TCheckBox
-      Left = 843
+      Left = 904
       Top = 23
-      Width = 108
+      Width = 110
       Height = 17
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 8
+      OnClick = cbPrintSpecClick
     end
     object cbPrintTax: TCheckBox
-      Left = 957
+      Left = 694
       Top = 23
       Width = 85
       Height = 17
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 9
+      OnClick = cbPrintTaxClick
     end
-    object CheckBox8: TCheckBox
+    object cbPrintPreview: TCheckBox
       Left = 433
       Top = 3
-      Width = 152
+      Width = 128
       Height = 17
-      Caption = #1055#1077#1095#1072#1090#1100' '#1041#1045#1047' '#1087#1088#1086#1089#1084#1086#1090#1088#1072
-      Font.Charset = DEFAULT_CHARSET
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1077#1095#1072#1090#1080
+      Font.Charset = RUSSIAN_CHARSET
       Font.Color = clBlue
-      Font.Height = -12
-      Font.Name = 'Tahoma'
-      Font.Style = []
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 10
     end
   end
-  object DataSource: TDataSource
+  object DS: TDataSource
     DataSet = CDS
     Left = 320
     Top = 336
@@ -639,11 +707,6 @@ object GuideMovementForm: TGuideMovementForm
     OnFilterRecord = CDSFilterRecord
     Left = 272
     Top = 384
-  end
-  object DS: TDataSource
-    DataSet = CDS
-    Left = 192
-    Top = 424
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -680,5 +743,40 @@ object GuideMovementForm: TGuideMovementForm
       Hint = #1042#1099#1093#1086#1076
       OnExecute = actExitExecute
     end
+    object actViewMI: TdsdInsertUpdateAction
+      Category = 'ScaleLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      FormName = 'TWeighingPartnerForm'
+      FormNameParam.Value = 'TWeighingPartnerForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end>
+    Left = 112
+    Top = 184
   end
 end

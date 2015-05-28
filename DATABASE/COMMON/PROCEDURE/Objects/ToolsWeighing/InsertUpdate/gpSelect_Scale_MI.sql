@@ -15,7 +15,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , Price TFloat, CountForPrice TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , GoodsKindName TVarChar
-             , BoxName TVarChar
+             , BoxId Integer, BoxName TVarChar
              , PriceListName  TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -61,6 +61,7 @@ BEGIN
            , tmpMI.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
 
            , Object_GoodsKind.ValueData      AS GoodsKindName
+           , Object_Box.Id                   AS BoxId
            , Object_Box.ValueData            AS BoxName
            , Object_PriceList.ValueData      AS PriceListName
            

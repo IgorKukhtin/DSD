@@ -16,7 +16,7 @@ uses
  ,UtilScale,DataModul, cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxDBData, dsdAddOn, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid,
-  cxCurrencyEdit;
+  cxCurrencyEdit, Vcl.ActnList, cxButtonEdit, dsdAction;
 
 type
   TMainForm = class(TForm)
@@ -166,13 +166,25 @@ type
     PartionGoodsPanel: TPanel;
     PartionGoodsLabel: TLabel;
     EditPartionGoods: TEdit;
+    ActionList: TActionList;
+    actRefresh: TAction;
+    actExit: TAction;
+    actChoiceBox: TOpenChoiceForm;
+    actUpdateBox: TAction;
+    bbChangeBoxCount: TSpeedButton;
+    PanelBox: TPanel;
+    Label1: TLabel;
+    Panel2: TPanel;
+    Label2: TLabel;
+    EditBoxCount: TcxCurrencyEdit;
+    Panel3: TPanel;
+    Label3: TLabel;
+    EditBoxCode: TcxCurrencyEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
-    procedure bbExitClick(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CDSAfterOpen(DataSet: TDataSet);
-    procedure bbRefreshClick(Sender: TObject);
     procedure bbDeleteItemClick(Sender: TObject);
     procedure DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
@@ -186,11 +198,16 @@ type
     procedure EditBarCodePropertiesChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure EditPartionGoodsExit(Sender: TObject);
+    procedure actRefreshExecute(Sender: TObject);
+    procedure actExitExecute(Sender: TObject);
+    procedure actUpdateBoxExecute(Sender: TObject);
+    procedure bbChangeBoxCountClick(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
 
     function Save_Movement_all:Boolean;
+    function Print_Movement_afterSave:Boolean;
     function GetParams_MovementDesc(BarCode: String):Boolean;
     function GetParams_Goods(isRetail:Boolean;BarCode: String):Boolean;
     procedure Create_Scale;
@@ -212,13 +229,14 @@ var
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint
-    ,GuideMovement, DialogNumberValue,DialogPersonalComplete;
+    ,GuideMovement, DialogNumberValue,DialogPersonalComplete,DialogPrint;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_afterSave_all;
 begin
      EditPartionGoods.Text:='';
+     EditBoxCode.Text:=GetArrayList_Value_byName(Default_Array,'BoxCode');
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_afterSave_MI;
@@ -226,6 +244,7 @@ begin
      EditCount.Text:='';
      EditHeadCount.Text:='';
      EditBarCode.Text:='';
+     EditBoxCount.Text:=GetArrayList_Value_byName(Default_Array,'BoxCount');
      myActiveControl;
 end;
 //------------------------------------------------------------------------------------------------
@@ -243,12 +262,36 @@ begin
      //
      OperDateEdit.Text:=DateToStr(gpInitialize_OperDate(ParamsMovement));
      //
+     if ParamsMovement.ParamByName('MovementId').AsInteger=0
+     then begin
+         ShowMessage('Ошибка.Продукция не взвешена.');
+         exit;
+     end;
+     //
      if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
      then exit;
 
+
+     //параметры для печати
+     if not DialogPrintForm.Execute(ParamsMovement.ParamByName('isMovement').asBoolean
+                                   ,ParamsMovement.ParamByName('isAccount').asBoolean
+                                   ,ParamsMovement.ParamByName('isTransport').asBoolean
+                                   ,ParamsMovement.ParamByName('isQuality').asBoolean
+                                   ,ParamsMovement.ParamByName('isPack').asBoolean
+                                   ,ParamsMovement.ParamByName('isSpec').asBoolean
+                                   ,ParamsMovement.ParamByName('isTax').asBoolean
+                                   )
+     then begin
+         //!!!без печати ничего не надо делать!!!
+         ShowMessage('Параметры печати не определены.'+#10+#13+'Документ НЕ будет закрыт.');
+         exit;
+     end;
+
+     //!!!Сохранили документ!!!
      if DMMainScaleForm.gpInsert_Movement_all(ParamsMovement) then
      begin
           //
+          //Комплектовщики
           Create_ParamsPersonalComplete(execParams);
           execParams.ParamByName('MovementId').AsInteger:=ParamsMovement.ParamByName('MovementId').AsInteger;
           execParams.ParamByName('InvNumber').AsString:=ParamsMovement.ParamByName('InvNumber').AsString;
@@ -259,22 +302,19 @@ begin
           Save_Movement_PersonalComplete(execParams);
           execParams.Free;
           //
-             //Print
-             Print_Movemenet (ParamsMovement.ParamByName('MovementDescId').AsInteger
-                            , ParamsMovement.ParamByName('MovementId_begin').AsInteger
-                            , 1    // myPrintCount
-                            , TRUE // isPreview
-                              );
+          //Print and Create Quality + Transport + Tax
+          Print_Movement_afterSave;
           //
           //EDI
           if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then SendEDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then SendEDI_OrdSpr (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then SendEDI_Desadv (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
-
+          //
           //Initialize or Empty
-          //НЕ будем автоматов открывать предыдущий док.
-          //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!может и ненадо!!!
-          DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
+             //НЕ будем автоматов открывать предыдущий док.
+          //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!нельзя обнулять, т.к. это будет значить isLast=TRUE!!!
+          //DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
+          EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
           gpInitialize_MovementDesc;
           //
           Initialize_afterSave_all;
@@ -283,6 +323,74 @@ begin
           RefreshDataSet;
           WriteParamsMovement;
      end;
+end;
+//------------------------------------------------------------------------------------------------
+function TMainForm.Print_Movement_afterSave:Boolean;
+begin
+     Result:=true;
+     //
+     //Movement
+     if DialogPrintForm.cbPrintMovement.Checked
+     then Result:=Print_Movemenet (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                                 , DialogPrintForm.cbPrintPreview.Checked
+                                  );
+     //
+     //Tax
+     if (DialogPrintForm.cbPrintTax.Checked) and (Result = TRUE)
+     then Result:=Print_Tax (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                           , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                           , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                           , DialogPrintForm.cbPrintPreview.Checked
+                            );
+     //
+     //Account
+     if (DialogPrintForm.cbPrintAccount.Checked) and (Result = TRUE)
+     then Result:=Print_Account (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                               , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                               , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                               , DialogPrintForm.cbPrintPreview.Checked
+                                );
+     //
+     //Pack
+     if (DialogPrintForm.cbPrintPack.Checked) and (Result = TRUE)
+     then Result:=Print_Pack (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                            , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
+                            , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
+                            , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                            , DialogPrintForm.cbPrintPreview.Checked
+                             );
+     //
+     //Spec
+     if (DialogPrintForm.cbPrintSpec.Checked) and (Result = TRUE)
+     then Result:=Print_Spec (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                            , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
+                            , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
+                            , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                            , DialogPrintForm.cbPrintPreview.Checked
+                             );
+     //
+     //Transport
+     if (DialogPrintForm.cbPrintTransport.Checked) and (Result = TRUE)
+     then Result:=Print_Transport (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                 , 0                                                        // MovementId
+                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId_sale
+                                 , ParamsMovement.ParamByName('OperDate').AsDateTime
+                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                                 , DialogPrintForm.cbPrintPreview.Checked
+                                  );
+     //
+     //Quality
+     if (DialogPrintForm.cbPrintQuality.Checked) and (Result = TRUE)
+     then Result:=Print_Quality (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                               , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                               , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                               , DialogPrintForm.cbPrintPreview.Checked
+                                );
+     //
+     if not Result then ShowMessage('Документ сохранен.');
+;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_PersonalComplete(execParams:TParams):Boolean;
@@ -305,7 +413,7 @@ begin
      //
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then if ParamsMovement.ParamByName('MovementDescId').AsInteger=0
-          then ParamsMovement.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber')
+          then ParamsMovement.ParamByName('MovementDescNumber').AsInteger:=StrToInt(GetArrayList_Value_byName(Default_Array,'MovementNumber'))
           else
      else if (DMMainScaleForm.gpUpdate_Scale_Movement_check(ParamsMovement)=false)
           then begin
@@ -361,6 +469,8 @@ begin
                    ParamsMI.ParamByName('Count').AsFloat:=0;
                    ParamsMI.ParamByName('HeadCount').AsFloat:=0;
                    ParamsMI.ParamByName('PartionGoods').AsString:='';
+                   try ParamsMI.ParamByName('BoxCount').AsFloat:=StrToFloat(EditBoxCount.Text);except ParamsMI.ParamByName('BoxCount').AsFloat:=0;end;
+                   try ParamsMI.ParamByName('BoxCode').AsFloat:=StrToFloat(EditBoxCode.Text);except ParamsMI.ParamByName('BoxCode').AsFloat:=0;end;
                    //сохранение MovementItem
                    DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
                    Initialize_afterSave_MI;
@@ -390,6 +500,9 @@ begin
      ParamsMI.ParamByName('RealWeight_Get').AsFloat:=fGetScale_CurrentWeight;
      try ParamsMI.ParamByName('Count').AsFloat:=StrToFloat(EditCount.Text);except ParamsMI.ParamByName('Count').AsFloat:=0;end;
      try ParamsMI.ParamByName('HeadCount').AsFloat:=StrToFloat(EditHeadCount.Text);except ParamsMI.ParamByName('HeadCount').AsFloat:=0;end;
+     try ParamsMI.ParamByName('BoxCount').AsFloat:=StrToFloat(EditBoxCount.Text);except ParamsMI.ParamByName('BoxCount').AsFloat:=0;end;
+     try ParamsMI.ParamByName('BoxCode').AsFloat:=StrToFloat(EditBoxCode.Text);except ParamsMI.ParamByName('BoxCode').AsFloat:=0;end;
+
      ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      //
      if ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0
@@ -419,7 +532,11 @@ procedure TMainForm.bbChangeCountClick(Sender: TObject);
 var execParams:TParams;
 begin
      // выход
-     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
@@ -446,7 +563,11 @@ procedure TMainForm.bbChangeHeadCountClick(Sender: TObject);
 var execParams:TParams;
 begin
      // выход
-     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
@@ -454,9 +575,40 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='№ Шар';
+          NumberValueLabel.Caption:='Количество голов';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('HeadCount').AsString;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbChangeBoxCountClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIFloat_BoxCount');
+
+     with DialogNumberValueForm do
+     begin
+          NumberValueLabel.Caption:='Количество упак.тары';
+          ActiveControl:=NumberValueEdit;
+          NumberValueEdit.Text:=CDS.FieldByName('BoxCount').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
           ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
@@ -473,7 +625,11 @@ procedure TMainForm.bbChangeLevelNumberClick(Sender: TObject);
 var execParams:TParams;
 begin
      // выход
-     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
@@ -500,7 +656,11 @@ procedure TMainForm.bbChangeNumberTareClick(Sender: TObject);
 var execParams:TParams;
 begin
      // выход
-     if CDS.FieldByName('MovementItemId').AsInteger = 0 then exit;
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
@@ -540,10 +700,40 @@ begin
      myActiveControl;
 end;
 {------------------------------------------------------------------------}
-procedure TMainForm.bbRefreshClick(Sender: TObject);
+procedure TMainForm.actRefreshExecute(Sender: TObject);
 begin
     RefreshDataSet;
     WriteParamsMovement;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.actUpdateBoxExecute(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
+     //
+     actChoiceBox.GuiParams.ParamByName('Key').Value:=CDS.FieldByName('BoxId').AsString;
+     actChoiceBox.GuiParams.ParamByName('TextValue').Value:=CDS.FieldByName('BoxName').AsString;
+     //
+     if actChoiceBox.Execute
+     then begin
+               execParams:=nil;
+               ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+               ParamAddValue(execParams,'inDescCode',ftString,'zc_MILinkObject_Box');
+               ParamAddValue(execParams,'inObjectId',ftInteger,actChoiceBox.GuiParams.ParamByName('Key').Value);
+               if DMMainScaleForm.gpUpdate_Scale_MILinkObject(execParams) then
+               begin
+                    CDS.Edit;
+                    CDS.FieldByName('BoxId').AsString:=actChoiceBox.GuiParams.ParamByName('Key').Value;
+                    CDS.FieldByName('BoxName').AsString:=actChoiceBox.GuiParams.ParamByName('TextValue').Value;
+                    CDS.Post;
+               end;
+               execParams.Free;
+     end;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.CDSAfterOpen(DataSet: TDataSet);
@@ -640,17 +830,18 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
-  Caption:='Экспедиция ('+GetFileVersionString(ParamStr(0))+') - <'+DMMainScaleForm.gpGet_Scale_User+'>';
+  SettingMain.BranchName:=DMMainScaleForm.lpGet_BranchName(SettingMain.BranchCode);
+  Caption:='Экспедиция ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleForm.gpGet_Scale_User+'>';
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
-  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'Default');
-  Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'Service');
+  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Default');
+  Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Service');
 
-  PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'PriceList');
-  TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'TareCount');
-  TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'TareWeight');
-  ChangePercentAmount_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'ChangePercentAmount');
+  PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'PriceList');
+  TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareCount');
+  TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareWeight');
+  ChangePercentAmount_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'ChangePercentAmount');
   GoodsKind_Array:=     DMMainScaleForm.gpSelect_Scale_GoodsKindWeighing;
   //global Initialize
   Create_ParamsMI(ParamsMI);
@@ -666,6 +857,10 @@ begin
   PartionGoodsPanel.Visible:=StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_sale')) = zc_Enum_InfoMoney_30201; // Доходы + Мясное сырье + Мясное сырье
   HeadCountPanel.Visible:=PartionGoodsPanel.Visible;
   BarCodePanel.Visible:=not PartionGoodsPanel.Visible;
+  PanelBox.Visible:=GetArrayList_Value_byName(Default_Array,'isBox') = AnsiUpperCase('TRUE');
+
+  bbChangeHeadCount.Visible:=HeadCountPanel.Visible;
+  bbChangeCount.Visible:=not bbChangeHeadCount.Visible;
   //
   with spSelect do
   begin
@@ -852,6 +1047,13 @@ end;
 {------------------------------------------------------------------------}
 procedure TMainForm.bbDeleteItemClick(Sender: TObject);
 begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
+     //
      if CDS.FieldByName('isErased').AsBoolean=false
      then
          if MessageDlg('Действительно удалить? ('+CDS.FieldByName('GoodsName').AsString+' '+CDS.FieldByName('GoodsKindName').AsString+') вес=('+CDS.FieldByName('RealWeight').AsString+')'
@@ -873,7 +1075,7 @@ begin
               end
 end;
 {------------------------------------------------------------------------}
-procedure TMainForm.bbExitClick(Sender: TObject);
+procedure TMainForm.actExitExecute(Sender: TObject);
 begin Close;end;
 {------------------------------------------------------------------------}
 end.

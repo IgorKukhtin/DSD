@@ -282,10 +282,18 @@ BEGIN
       END IF;
 
 
-      -- временная таблица "база" документов
-      CREATE TEMP TABLE _tmpMovement (MovementId Integer, DescId Integer, DocumentTaxKindId Integer) ON COMMIT DROP;
-      -- временная таблица "база" строчной части
-      CREATE TEMP TABLE _tmpMI (GoodsId Integer, GoodsKindId Integer, Price TFloat, CountForPrice TFloat, Amount_Tax TFloat, Amount_TaxCorrective TFloat) ON COMMIT DROP;
+      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpmovement')
+      THEN
+          -- временная таблица "база" документов
+          DELETE FROM _tmpMovement;
+          -- временная таблица "база" строчной части
+          DELETE FROM _tmpMI;
+      ELSE
+          -- временная таблица "база" документов
+          CREATE TEMP TABLE _tmpMovement (MovementId Integer, DescId Integer, DocumentTaxKindId Integer) ON COMMIT DROP;
+          -- временная таблица "база" строчной части
+          CREATE TEMP TABLE _tmpMI (GoodsId Integer, GoodsKindId Integer, Price TFloat, CountForPrice TFloat, Amount_Tax TFloat, Amount_TaxCorrective TFloat) ON COMMIT DROP;
+      END IF;
 
       -- формируются данные "база" документов
       IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()

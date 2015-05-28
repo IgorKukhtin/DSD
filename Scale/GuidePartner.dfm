@@ -87,6 +87,25 @@ object GuidePartnerForm: TGuidePartnerForm
         ParentShowHint = False
         ShowHint = True
       end
+      object bb: TSpeedButton
+        Left = 314
+        Top = 3
+        Width = 31
+        Height = 29
+        Hint = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100'/'#1086#1090#1082#1083#1102#1095#1080#1090#1100' '#1055#1077#1095#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          888888880000000888888888FFFFFFF888888888000000088888880000FFFFFF
+          88888077770FFFFFF88878888880FFFFFF887888888900000008788888888887
+          77787FFFFFFFFFF7777887F0000000FF7778887FFFFFFF0FF7788887F8888807
+          77888888788888F8888888888F88888088888888877777778888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbClick
+      end
     end
     object cxDBGrid: TcxGrid
       Left = 0
@@ -240,6 +259,13 @@ object GuidePartnerForm: TGuidePartnerForm
           HeaderAlignmentVert = vaCenter
           Width = 45
         end
+        object ItemName: TcxGridDBColumn
+          Caption = #1069#1083#1077#1084#1077#1085#1090
+          DataBinding.FieldName = 'ItemName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 100
+        end
       end
       object cxDBGridLevel: TcxGridLevel
         GridView = cxDBGridDBTableView
@@ -297,7 +323,7 @@ object GuidePartnerForm: TGuidePartnerForm
       end
     end
   end
-  object DataSource: TDataSource
+  object DS: TDataSource
     DataSet = CDS
     Left = 320
     Top = 336
@@ -319,11 +345,6 @@ object GuidePartnerForm: TGuidePartnerForm
     OnFilterRecord = CDSFilterRecord
     Left = 272
     Top = 384
-  end
-  object DS: TDataSource
-    DataSet = CDS
-    Left = 192
-    Top = 424
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

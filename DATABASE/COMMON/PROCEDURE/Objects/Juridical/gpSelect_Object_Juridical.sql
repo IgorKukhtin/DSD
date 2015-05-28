@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               GLNCode TVarChar, isCorporate Boolean,isTaxSummary Boolean,
+               GLNCode TVarChar, isCorporate Boolean, isTaxSummary Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                RetailId Integer, RetailName TVarChar,

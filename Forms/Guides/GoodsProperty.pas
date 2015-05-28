@@ -46,6 +46,10 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    clEndPosFrac: TcxGridDBColumn;
+    clEndPosInt: TcxGridDBColumn;
+    clStartPosInt: TcxGridDBColumn;
+    clStartPosFrac: TcxGridDBColumn;
   private
     { Private declarations }
   public

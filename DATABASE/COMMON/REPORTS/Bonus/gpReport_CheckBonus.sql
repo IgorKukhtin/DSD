@@ -313,7 +313,7 @@ BEGIN
                 , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale() THEN (tmpMovement.Sum_Sale/100 * tmpContract.Value)
                              WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN (tmpMovement.Sum_SaleReturnIn/100 * tmpContract.Value) 
                              WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
-                        ELSE 0 END  AS TFloat) AS Sum_Bonus
+                        ELSE 0 END AS NUMERIC (16, 2)) AS Sum_Bonus
                 , 0 :: TFloat                  AS Sum_BonusFact
                 , 0 :: TFloat                  AS Sum_CheckBonusFact
                 , 0 :: TFloat                  AS Sum_SaleFact

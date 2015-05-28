@@ -263,7 +263,8 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 23
+    Top = 194
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTransportGoodsForm'
       FormNameParam.Value = 'TTransportGoodsForm'

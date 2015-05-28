@@ -70,7 +70,7 @@ BEGIN
                                       , inInvNumberMark    := inInvNumberMark
                                       , inOperDate         := inOperDate
                                       , inOperDatePartner  := CASE WHEN vbUserId = 5 AND ioId > 0 THEN COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()), inOperDatePartner) ELSE inOperDatePartner END
-                                      , inChecked          := inChecked
+                                      , inChecked          := CASE WHEN vbUserId = 5 AND ioId > 0 THEN COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked()), inChecked) ELSE inChecked END
                                       , inPriceWithVAT     := inPriceWithVAT
                                       , inVATPercent       := inVATPercent
                                       , inChangePercent    := inChangePercent

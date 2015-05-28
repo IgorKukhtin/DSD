@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, T
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 */
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -22,7 +23,9 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inCountForPrice_Return  TFloat    , -- Цена за количество
     IN inDayPrior_PriceReturn  Integer,
     IN inCount                 TFloat    , -- Количество пакетов или Количество батонов
-    IN inHeadCount             TFloat    , -- Вес 1-ой тары
+    IN inHeadCount             TFloat    , -- 
+    IN inBoxCount              TFloat    , -- 
+    IN inBoxCode               Integer  , -- 
     IN inPartionGoods          TVarChar  , -- Партия
     IN inPriceListId           Integer   , -- Количество голов
     IN inSession               TVarChar    -- сессия пользователя
@@ -38,14 +41,19 @@ $BODY$
    DECLARE vbMovementDescId Integer;
    DECLARE vbOperDate TDateTime;
    DECLARE vbTotalSumm TFloat;
+   DECLARE vbBoxId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Scale_MI());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- 
+     -- определили
      SELECT MovementFloat.ValueData :: Integer, Movement.OperDate INTO vbMovementDescId, vbOperDate FROM Movement INNER JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id AND MovementFloat.DescId = zc_MovementFloat_MovementDesc() WHERE Movement.Id = inMovementId;
+
+     -- определили
+     vbBoxId:= CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box()) ELSE 0 END;
+
 
      -- сохранили
      vbId:= gpInsertUpdate_MovementItem_WeighingPartner (ioId                  := 0
@@ -59,7 +67,7 @@ BEGIN
                                                        , inWeightTare          := inWeightTare
                                                        , inCount               := inCount
                                                        , inHeadCount           := inHeadCount
-                                                       , inBoxCount            := 0
+                                                       , inBoxCount            := inBoxCount
                                                        , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
                                                        , inLevelNumber         := 0
                                                        , inPrice               := CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN inPrice_Return ELSE inPrice END
@@ -76,7 +84,7 @@ BEGIN
                                                        , inPartionGoodsDate    := NULL
                                                        , inGoodsKindId         := inGoodsKindId
                                                        , inPriceListId         := inPriceListId
-                                                       , inBoxId               := NULL
+                                                       , inBoxId               := vbBoxId
                                                        , inSession             := inSession
                                                         );
 

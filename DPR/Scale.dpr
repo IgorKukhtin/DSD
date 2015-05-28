@@ -74,7 +74,8 @@ uses
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm: TParentForm},
   DialogPersonalComplete in '..\Scale\DialogPersonalComplete.pas' {DialogPersonalCompleteForm},
   DialogMovementDesc in '..\Scale\DialogMovementDesc.pas' {DialogMovementDescForm},
-  GuidePersonal in '..\Scale\GuidePersonal.pas' {GuidePersonalForm};
+  GuidePersonal in '..\Scale\GuidePersonal.pas' {GuidePersonalForm},
+  DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm};
 
 {$R *.res}
 
@@ -104,6 +105,7 @@ begin
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
+         Application.CreateForm(TDialogPrintForm, DialogPrintForm);
   end
   else
 
@@ -129,6 +131,7 @@ begin
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
+         Application.CreateForm(TDialogPrintForm, DialogPrintForm);
 
   end;
   //

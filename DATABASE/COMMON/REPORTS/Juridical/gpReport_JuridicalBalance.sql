@@ -76,19 +76,30 @@ BEGIN
                              AND (tmpContract.ContractId > 0 OR COALESCE (inContractId, 0) = 0)
                              AND (CLO_Currency.ObjectId = inCurrencyId OR COALESCE (inCurrencyId, 0) = 0 OR COALESCE (inCurrencyId, 0) = zc_Enum_Currency_Basis())
                           )
-        , tmpSummContract AS (SELECT tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
-                              FROM tmpContainer
-                                   LEFT JOIN MovementItemContainer AS MIContainer
-                                                                   ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                  AND MIContainer.OperDate >= inOperDate
-                              GROUP BY tmpContainer.Amount, tmpContainer.ContainerId
+        , tmpSummContract_all AS (SELECT tmpContainer.ContainerId
+                                       , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
+                                  FROM tmpContainer
+                                       LEFT JOIN MovementItemContainer AS MIContainer
+                                                                       ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                                      AND MIContainer.OperDate >= inOperDate
+                                  GROUP BY tmpContainer.ContainerId, tmpContainer.Amount
+                                 )
+        , tmpSummContract AS (SELECT /*tmpSummContract_all.ContainerId,*/ SUM (tmpSummContract_all.Amount) AS Amount
+                              FROM tmpSummContract_all
+                              -- GROUP BY tmpSummContract_all.ContainerId
                              )
-        , tmpSummContractCurrency AS (SELECT tmpContainer.Amount_Currency - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
-                                      FROM tmpContainer
-                                           LEFT JOIN MovementItemContainer AS MIContainer
-                                                                           ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
-                                                                          AND MIContainer.OperDate >= inOperDate
-                                      GROUP BY tmpContainer.Amount_Currency, tmpContainer.ContainerId_Currency
+        , tmpSummContractCurrency_all AS (SELECT tmpContainer.ContainerId
+                                               , tmpContainer.ContainerId_Currency
+                                               , tmpContainer.Amount_Currency - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
+                                          FROM tmpContainer
+                                               LEFT JOIN MovementItemContainer AS MIContainer
+                                                                               ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
+                                                                              AND MIContainer.OperDate >= inOperDate
+                                          GROUP BY tmpContainer.ContainerId, tmpContainer.ContainerId_Currency, tmpContainer.Amount_Currency
+                                         )
+        , tmpSummContractCurrency AS (SELECT /*tmpSummContractCurrency_all.ContainerId, */ SUM (tmpSummContractCurrency_all.Amount) AS Amount
+                                      FROM tmpSummContractCurrency_all
+                                      -- GROUP BY tmpSummContractCurrency_all.ContainerId
                                      )
         , tmpSumm AS (SELECT SUM (Amount) AS Amount FROM tmpSummContract)
         , tmpSummCurrency AS (SELECT SUM (Amount) AS Amount FROM tmpSummContractCurrency)
@@ -112,7 +123,7 @@ BEGIN
                , outContracNumber, outContractTagName, outContractSigningDate
                , outJuridicalName_Basis, outJuridicalShortName_Basis, outAccounterName_Basis
      FROM tmpSumm
-          LEFT JOIN tmpSummCurrency ON inCurrencyId <> 0
+          LEFT JOIN tmpSummCurrency ON 1 = 1 -- tmpSummCurrency.ContainerId = tmpSumm.ContainerId -- inCurrencyId <> 0
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = inJuridicalId
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = inPartnerId
           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = inCurrencyId

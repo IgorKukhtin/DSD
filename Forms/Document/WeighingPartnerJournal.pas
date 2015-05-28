@@ -78,7 +78,6 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     colInvNumber_parent: TcxGridDBColumn;
-    actReCompleteAll: TdsdExecStoredProc;
     bbReCompleteAll: TdxBarButton;
     spMovementReCompleteAll: TdsdStoredProc;
     colUserName: TcxGridDBColumn;
@@ -104,6 +103,8 @@ type
     bbShowErased: TdxBarButton;
     colInvNumber_TransportGoods: TcxGridDBColumn;
     colOperDate_TransportGoods: TcxGridDBColumn;
+    actMovementProtocol: TdsdOpenForm;
+    bbMovementProtocol: TdxBarButton;
   private
   public
   end;

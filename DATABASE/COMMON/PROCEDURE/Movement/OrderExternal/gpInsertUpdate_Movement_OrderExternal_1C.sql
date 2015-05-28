@@ -118,6 +118,7 @@ BEGIN
                                                , inRouteSortingId      := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_RouteSorting()), vbRouteSortingId)
                                                , inPersonalId          := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_Personal()), vbPersonalId)
                                                , ioPriceListId         := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_PriceList()), 0)
+                                               , inPartnerId           := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_Partner()), 0)
                                                , inSession             := inSession
                                                 ) AS tmp;
 

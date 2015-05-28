@@ -8,8 +8,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Scale_MIFloat(
     IN inValueData             TFloat    , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )                              
-RETURNS TABLE (TotalSumm TFloat
-              )
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;

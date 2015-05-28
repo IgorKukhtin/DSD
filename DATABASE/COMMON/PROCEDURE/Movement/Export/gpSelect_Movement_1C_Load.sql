@@ -162,7 +162,9 @@ BEGIN
                   INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                      AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-             WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate 
+             WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
             ) AS Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -263,10 +265,10 @@ BEGIN
                                         ON MIFloat_CountForPrice.MovementItemId = MIMaster.Id
                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
-      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
+      WHERE /*Movement.OperDate BETWEEN inStartDate AND inEndDate 
         AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
         AND Movement.StatusId = zc_Enum_Status_Complete()
-        AND (View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+        AND */(View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
         AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
         AND 0 <> CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                            THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
@@ -290,4 +292,4 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '31.10.2014', inEndDate:= '31.10.2014', inInfoMoneyId:= 0, inPaidKindId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '28.04.2015', inEndDate:= '29.04.2015', inInfoMoneyId:= 8962, inPaidKindId:= 3, inSession:= zfCalc_UserAdmin())

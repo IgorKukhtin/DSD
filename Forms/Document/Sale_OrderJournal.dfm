@@ -1193,7 +1193,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'MovementId;InvNumber;WeighingNumber;goodsname_two'
+          IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
       Params = <
         item
@@ -1233,7 +1233,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'MovementId;InvNumber;WeighingNumber;goodsname_two'
+          IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
       Params = <
         item

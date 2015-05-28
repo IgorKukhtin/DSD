@@ -27,9 +27,18 @@ RETURNS TABLE (MovementId       Integer
              , PartnerName_calc TVarChar
              , ChangePercent    TFloat
              , ChangePercentAmount TFloat
+
              , isEdiOrdspr      Boolean
              , isEdiInvoice     Boolean
              , isEdiDesadv      Boolean
+
+             , isMovement    Boolean   -- Накладная
+             , isAccount     Boolean   -- Счет
+             , isTransport   Boolean   -- ТТН
+             , isQuality     Boolean   -- Качественное
+             , isPack        Boolean   -- Упаковочный
+             , isSpec        Boolean   -- Спецификация
+             , isTax         Boolean   -- Налоговая
 
              , OrderExternalName_master TVarChar
               )
@@ -43,6 +52,56 @@ BEGIN
 
     -- Результат
     RETURN QUERY
+       WITH tmpMovement AS (SELECT tmpMovement.Id
+                                 , tmpMovement.InvNumber
+                                 , tmpMovement.DescId
+                                 , tmpMovement.OperDate
+                                 , MovementLinkObject_Contract.ObjectId       AS ContractId
+                                 , MovementLinkObject_From.ObjectId           AS FromId
+                                 , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                 , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+                            FROM (SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.DescId
+                                       , Movement.OperDate
+                                  FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13
+                                       ) AS tmp
+                                       INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                          AND Movement.DescId = zc_Movement_OrderExternal()
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 UNION
+                                  SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.DescId
+                                       , Movement.OperDate
+                                  FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13
+                                       ) AS tmp
+                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
+                                                          AND Movement.DescId = zc_Movement_OrderExternal()
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 ) AS tmpMovement
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                              ON MovementLinkObject_Contract.MovementId = tmpMovement.Id
+                                                             AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                              ON MovementLinkObject_From.MovementId = tmpMovement.Id
+                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                      ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                           )
+           , tmpJuridicalPrint AS (SELECT tmp.Id AS JuridicalId
+                                        , tmp.isMovement
+                                        , tmp.isAccount
+                                        , tmp.isTransport
+                                        , tmp.isQuality
+                                        , tmp.isPack
+                                        , tmp.isSpec
+                                        , tmp.isTax
+                                   FROM lpGet_Object_Juridical_PrintKindItem ((SELECT tmpMovement.JuridicalId FROM tmpMovement LIMIT 1)) AS tmp
+                                  )
        SELECT tmpMovement.Id                                 AS MovementId
             , inBarCode                                      AS BarCode
             , tmpMovement.InvNumber                          AS InvNumber
@@ -80,29 +139,18 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
+            , CASE WHEN tmpJuridicalPrint.isPack = TRUE OR tmpJuridicalPrint.isSpec = TRUE THEN COALESCE (tmpJuridicalPrint.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
+            , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount
+            , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport
+            , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality
+            , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack
+            , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec
+            , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax
+
             , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || DATE (tmpMovement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 
-       FROM (SELECT tmpMovement.Id
-                  , tmpMovement.InvNumber
-                  , tmpMovement.DescId
-                  , tmpMovement.OperDate
-                  , MovementLinkObject_Contract.ObjectId AS ContractId
-                  , MovementLinkObject_From.ObjectId     AS FromId 
-                  , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
-             FROM (SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp INNER JOIN Movement ON Movement.Id = tmp.MovementId AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY' AND Movement.StatusId <> zc_Enum_Status_Erased()
-                  UNION
-                    SELECT Movement.Id, Movement.InvNumber, Movement.DescId, Movement.OperDate FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13) AS tmp INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY' AND Movement.StatusId <> zc_Enum_Status_Erased()
-                   ) AS tmpMovement
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                ON MovementLinkObject_Contract.MovementId = tmpMovement.Id
-                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                ON MovementLinkObject_From.MovementId = tmpMovement.Id
-                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                   LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                        ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
-                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-            ) AS tmpMovement
+       FROM tmpMovement
+            LEFT JOIN tmpJuridicalPrint ON tmpJuridicalPrint.JuridicalId = tmpMovement.JuridicalId
 
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To

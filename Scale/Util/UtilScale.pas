@@ -33,7 +33,8 @@ type
   TArrayListScale = array of TListItemScale;
 
   TSettingMain = record
-    BrancCode :Integer;
+    BranchCode:Integer;
+    BranchName:String;
     ScaleCount:Integer;
     DefaultCOMPort:Integer;
     IndexScale_old:Integer;
@@ -105,6 +106,9 @@ var
 
   zc_Enum_InfoMoney_30201: Integer; // Доходы + Мясное сырье + Мясное сырье
 
+  zc_Object_Partner    : Integer;
+  zc_Object_ArticleLoss: Integer;
+
   zc_Measure_Sh: Integer;
   zc_Measure_Kg: Integer;
 
@@ -148,9 +152,18 @@ begin
      ParamAdd(Params,'calcPartnerName',ftString);
      ParamAdd(Params,'ChangePercentAmount',ftFloat);
      ParamAdd(Params,'ChangePercent',ftFloat);
-     ParamAdd(Params,'isEdiOrdspr',ftBoolean);//Подтверждение
+
+     ParamAdd(Params,'isEdiOrdspr',ftBoolean); //Подтверждение
      ParamAdd(Params,'isEdiInvoice',ftBoolean);//Счет
-     ParamAdd(Params,'isEdiDesadv',ftBoolean);//уведомление
+     ParamAdd(Params,'isEdiDesadv',ftBoolean); //уведомление
+
+     ParamAdd(Params,'isMovement',ftBoolean);  //Накладная
+     ParamAdd(Params,'isAccount',ftBoolean);   //Счет
+     ParamAdd(Params,'isTransport',ftBoolean); //ТТН
+     ParamAdd(Params,'isQuality',ftBoolean);   //Качественное
+     ParamAdd(Params,'isPack',ftBoolean);      //Упаковочный
+     ParamAdd(Params,'isSpec',ftBoolean);      //Спецификация
+     ParamAdd(Params,'isTax',ftBoolean);       //Налоговая
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_BarCode',ftString);
@@ -200,7 +213,10 @@ begin
      ParamAdd(Params,'CountForPrice_Return',ftFloat); //
      ParamAdd(Params,'Count',ftFloat);                // Количество пакетов или Количество батонов
      ParamAdd(Params,'HeadCount',ftFloat);            // Количество голов
+     ParamAdd(Params,'BoxCount',ftFloat);            //
+     ParamAdd(Params,'BoxCode',ftInteger);            //
      ParamAdd(Params,'PartionGoods',ftString);        //
+
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsPersonal(var Params:TParams;idx:String);
@@ -399,8 +415,14 @@ begin
    with execParams do
     for i:=0 to Count-1 do
     begin
-         if execParams[i].DataType=ftString then execParams.ParamByName(Items[i].Name).AsString:='';
-         if execParams[i].DataType=ftInteger then execParams.ParamByName(Items[i].Name).AsInteger:=0;
+         if execParams[i].DataType=ftInteger
+         then execParams.ParamByName(Items[i].Name).AsInteger:=0
+         else
+             if execParams[i].DataType=ftFloat
+             then execParams.ParamByName(Items[i].Name).AsFloat:=0
+             else
+                if (execParams[i].DataType<>ftDate) and (execParams[i].DataType<>ftDateTime)
+                then execParams.ParamByName(Items[i].Name).AsString:='';
     end;
 end;
 {------------------------------------------------------------------------------}

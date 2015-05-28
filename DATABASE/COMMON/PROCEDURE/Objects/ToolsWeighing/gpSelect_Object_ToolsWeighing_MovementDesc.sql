@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_ToolsWeighing_Guide (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ToolsWeighing_MovementDesc (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc(
-    IN inBrancCode    Integer   ,
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inBranchCode  Integer   , --
+    IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Number           Integer
              , MovementDescId   Integer
@@ -29,7 +29,7 @@ BEGIN
    -- vbUserId:= lpGetUserBySession (inSession);
 
     -- определяется кол-во операций
-    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBrancCode, 'Movement', '', 'Count', '10', inSession));
+    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBranchCode, 'Movement', '', 'Count', '10', inSession));
 
     -- временные таблица
     CREATE TEMP TABLE _tmpToolsWeighing (Number                   Integer
@@ -74,13 +74,13 @@ BEGIN
               END * 1000 AS OrderById
        FROM
       (SELECT tmp.Number
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'DescId'    ,               '0', inSession) AS MovementDescId
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'    ,               '0', inSession) AS FromId
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'      ,               '0', inSession) AS ToId
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'PaidKindId',               '0', inSession) AS PaidKindId
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'InfoMoneyId', zc_Enum_InfoMoney_30101() :: TVarChar, inSession) AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsKindWeighingGroupId', '345238', inSession) AS GoodsKindWeighingGroupId -- Продажа
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid' ,               '0', inSession) AS ColorGridValue
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'DescId'    ,               '0', inSession) AS MovementDescId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'FromId'    ,               '0', inSession) AS FromId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ToId'      ,               '0', inSession) AS ToId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'PaidKindId',               '0', inSession) AS PaidKindId
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'InfoMoneyId', zc_Enum_InfoMoney_30101() :: TVarChar, inSession) AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsKindWeighingGroupId', '345238', inSession) AS GoodsKindWeighingGroupId -- Продажа
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid' ,               '0', inSession) AS ColorGridValue
        FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
       ) AS tmp;
 
@@ -114,6 +114,9 @@ BEGIN
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
+
+                  WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Loss())
+                       THEN COALESCE (Object_From.ValueData, '') || ' => '
 
                   ELSE TRIM (COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, ''))
               END) :: TVarChar AS MovementDescName

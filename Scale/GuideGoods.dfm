@@ -628,9 +628,9 @@ object GuideGoodsForm: TGuideGoodsForm
       end
     end
   end
-  object DataSource: TDataSource
+  object DS: TDataSource
     DataSet = CDS
-    OnDataChange = DataSourceDataChange
+    OnDataChange = DSDataChange
     Left = 320
     Top = 336
   end
@@ -651,11 +651,6 @@ object GuideGoodsForm: TGuideGoodsForm
     OnFilterRecord = CDSFilterRecord
     Left = 272
     Top = 384
-  end
-  object DS: TDataSource
-    DataSet = CDS
-    Left = 192
-    Top = 424
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

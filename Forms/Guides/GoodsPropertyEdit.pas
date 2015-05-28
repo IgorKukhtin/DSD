@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore, dsdDB,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit, dsdAddOn;
+  Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit, dsdAddOn, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TGoodsPropertyEditForm = class(TParentForm)
@@ -25,6 +26,16 @@ type
     ceCode: TcxCurrencyEdit;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
+    cxLabel2: TcxLabel;
+    cxLabel4: TcxLabel;
+    cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    cxLabel3: TcxLabel;
+    cxLabel8: TcxLabel;
+    edStartPosInt: TcxCurrencyEdit;
+    edEndPosInt: TcxCurrencyEdit;
+    edStartPosFrac: TcxCurrencyEdit;
+    edEndPosFrac: TcxCurrencyEdit;
   private
     { Private declarations }
   public

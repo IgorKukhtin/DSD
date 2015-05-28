@@ -1,15 +1,18 @@
-Ôªø-- Function: gpGet_Object_GoodsProperty()
+-- Function: gpGet_Object_GoodsProperty()
 
---DROP FUNCTION gpGet_Object_GoodsProperty();
+
+DROP FUNCTION IF EXISTS gpGet_Object_GoodsProperty( Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsProperty(
-    IN inId          Integer,       -- –ö–ª–∞—Å—Å–∏—Ñ–∏–∫–∞—Ç–æ—Ä —Å–≤–æ–π—Å—Ç–≤ —Ç–æ–≤–∞—Ä–æ–≤ 
-    IN inSession     TVarChar       -- —Å–µ—Å—Å–∏—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è
+    IN inId          Integer,       -- 
+    IN inSession     TVarChar       -- 
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , StartPosInt TFloat, EndPosInt TFloat, StartPosFrac TFloat, EndPosFrac TFloat             
+             , isErased boolean) AS
 $BODY$BEGIN
 
-   -- –ø—Ä–æ–≤–µ—Ä–∫–∞ –ø—Ä–∞–≤ –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è –Ω–∞ –≤—ã–∑–æ–≤ –ø—Ä–æ—Ü–µ–¥—É—Ä—ã
+   -- ÔÓ‚ÂÍ‡ Ô‡‚ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ Ì‡ ‚˚ÁÓ‚ ÔÓˆÂ‰Û˚
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsProperty());
 
    IF COALESCE (inId, 0) = 0
@@ -17,20 +20,47 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
+           , COALESCE (MAX (Object_GoodsProperty.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
-           , CAST (NULL AS Boolean) AS isErased
-       FROM Object 
-       WHERE Object.DescId = zc_Object_GoodsProperty();
+
+           , CAST (0 as TFloat)   AS StartPosInt
+           , CAST (0 as TFloat)   AS EndPosInt
+           , CAST (0 as TFloat)   AS StartPosFrac
+           , CAST (0 as TFloat)   AS EndPosFrac
+
+           , CAST (NULL AS Boolean) AS isErased;
+
    ELSE
        RETURN QUERY 
        SELECT 
-             Object.Id         AS Id
-           , Object.ObjectCode AS Code
-           , Object.ValueData  AS Name
-           , Object.isErased   AS isErased
-       FROM Object
-       WHERE Object.Id = inId;
+             Object_GoodsProperty.Id         AS Id
+           , Object_GoodsProperty.ObjectCode AS Code
+           , Object_GoodsProperty.ValueData  AS Name
+
+           , ObjectFloat_StartPosInt.ValueData   AS StartPosInt
+           , ObjectFloat_EndPosInt.ValueData     AS EndPosInt
+           , ObjectFloat_StartPosFrac.ValueData  AS StartPosFrac
+           , ObjectFloat_EndPosFrac.ValueData    AS EndPosFrac
+
+           , Object_GoodsProperty.isErased   AS isErased
+       FROM Object AS Object_GoodsProperty
+        LEFT JOIN ObjectFloat AS ObjectFloat_StartPosInt 
+                              ON ObjectFloat_StartPosInt.ObjectId = Object_GoodsProperty.Id 
+                             AND ObjectFloat_StartPosInt.DescId = zc_ObjectFloat_GoodsProperty_StartPosInt()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_EndPosInt 
+                              ON ObjectFloat_EndPosInt.ObjectId = Object_GoodsProperty.Id 
+                             AND ObjectFloat_EndPosInt.DescId = zc_ObjectFloat_GoodsProperty_EndPosInt()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_StartPosFrac 
+                              ON ObjectFloat_StartPosFrac.ObjectId = Object_GoodsProperty.Id 
+                             AND ObjectFloat_StartPosFrac.DescId = zc_ObjectFloat_GoodsProperty_StartPosFrac()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_EndPosFrac 
+                              ON ObjectFloat_EndPosFrac.ObjectId = Object_GoodsProperty.Id 
+                             AND ObjectFloat_EndPosFrac.DescId = zc_ObjectFloat_GoodsProperty_EndPosFrac()
+
+       WHERE Object_GoodsProperty.Id = inId;
    END IF;
     
 END;
@@ -42,12 +72,13 @@ ALTER FUNCTION gpGet_Object_GoodsProperty(integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- –ò–°–¢–û–†–ò–Ø –†–ê–ó–†–ê–ë–û–¢–ö–ò: –î–ê–¢–ê, –ê–í–¢–û–†
-               –§–µ–ª–æ–Ω—é–∫ –ò.–í.   –ö—É—Ö—Ç–∏–Ω –ò.–í.   –ö–ª–∏–º–µ–Ω—Ç—å–µ–≤ –ö.–ò.
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.05.15          * ADD StartPosInt, EndPosInt, StartPosFrac, EndPosFrac
  12.06.13          *
  00.06.13
 
 */
 
--- —Ç–µ—Å—Ç
+-- “≈—“
 -- SELECT * FROM gpSelect_GoodsProperty('2')

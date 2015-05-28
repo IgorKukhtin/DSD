@@ -4,7 +4,7 @@
   ClientWidth = 1004
   AddOnFormData.isSingle = False
   ExplicitWidth = 1010
-  ExplicitHeight = 641
+  ExplicitHeight = 644
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -75,7 +75,7 @@
   end
   object edCertificateNumber: TcxTextEdit [9]
     Left = 8
-    Top = 77
+    Top = 80
     TabOrder = 9
     Width = 193
   end
@@ -94,7 +94,7 @@
   end
   object ceComment: TcxMemo [12]
     Left = 8
-    Top = 227
+    Top = 230
     TabOrder = 12
     Height = 327
     Width = 984

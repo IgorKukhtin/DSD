@@ -1,6 +1,5 @@
 -- Function: gpGet_ToolsWeighing_Value
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ToolsWeighing_Branch (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpGetToolsPropertyId (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpGetToolsPropertyValue (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_ToolsWeighing_Value (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);

@@ -1,8 +1,10 @@
 -- Function: gpInsert_Scale_Movement_all()
 
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
+    IN inBranchCode          Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
@@ -15,7 +17,9 @@ $BODY$
 
    DECLARE vbMovementId_begin Integer;
    DECLARE vbMovementDescId Integer;
+   DECLARE vbIsTax Boolean;
 
+   DECLARE vbOperDate_scale TDateTime;
    DECLARE vbTmpId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -31,9 +35,36 @@ BEGIN
 
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
-     -- !!!для заявки дата берется из неё!!
+     -- !!!запомнили!!
+     vbOperDate_scale:= inOperDate;
+     -- !!!если по заявке, тогда дата берется из неё, вообще - надо только для филиалов!!!
      inOperDate:= COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()) AND DescId = zc_MovementDate_OperDatePartner())
                            , inOperDate);
+
+
+     -- определяется признак "создавать Налоговую"
+     IF vbMovementDescId = zc_Movement_Sale()
+     THEN           -- если в дефолтах
+          vbIsTax:= LOWER ((SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBranchCode, 'Default', '', 'isTax', 'FALSE', inSession))) = LOWER ('TRUE')
+                    -- если у контрагента нет признака "Сводная"
+                AND NOT EXISTS (SELECT ObjectBoolean_isTaxSummary.ValueData
+                                FROM MovementLinkObject AS MovementLinkObject_To
+                                     INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                           ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     INNER JOIN ObjectBoolean AS ObjectBoolean_isTaxSummary
+                                                              ON ObjectBoolean_isTaxSummary.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                             AND ObjectBoolean_isTaxSummary.DescId = zc_ObjectBoolean_Juridical_isTaxSummary()
+                                                             AND ObjectBoolean_isTaxSummary.ValueData = TRUE
+                                WHERE MovementLinkObject_To.MovementId = inMovementId
+                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                               )
+                    -- если БН
+                AND EXISTS (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PaidKind() AND ObjectId = zc_Enum_PaidKind_FirstForm())
+               ;
+     ELSE vbIsTax:= FALSE;
+     END IF;
+
 
 
      IF vbMovementDescId = zc_Movement_Sale()
@@ -128,6 +159,18 @@ BEGIN
                                  );
         -- дописали св-во <Дата/время создания>
         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbMovementId_begin, CURRENT_TIMESTAMP);
+
+
+        -- !!!Налоговая!!!
+        IF vbIsTax = TRUE
+        THEN
+             -- сохранили
+             PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := vbMovementId_begin
+                                                          , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
+                                                          , inDocumentTaxKindId_inf := NULL
+                                                          , inUserId                := vbUserId
+                                                           );
+        END IF;
 
     ELSE
         -- Распроводим Документ !!!существующий!!!
@@ -337,7 +380,7 @@ BEGIN
 
 
      -- финиш - сохранили <Документ> - <Взвешивание (контрагент)>
-     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, vbMovementId_begin, Movement.AccessKeyId)
+     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, vbOperDate_scale, vbMovementId_begin, Movement.AccessKeyId)
      FROM Movement
      WHERE Id = inMovementId ;
 
@@ -362,6 +405,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.05.15                                        * add vbIsTax
  03.02.15                                        *
 */
 /*

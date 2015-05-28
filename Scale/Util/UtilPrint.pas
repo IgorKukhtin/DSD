@@ -77,8 +77,8 @@ type
   function Print_Movemenet(MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Tax      (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Account  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
-  function Print_Spec     (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
-  function Print_Pack     (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Spec     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Pack     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Transport(MovementDescId,MovementId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
 
@@ -123,21 +123,23 @@ begin
   UtilPrintForm.mactPrint_Account.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_PackDocument (MovementId: Integer);
+procedure Print_PackDocument (MovementId,MovementId_by:Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
   UtilPrintForm.actPrint_Pack.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_SpecDocument (MovementId: Integer);
+procedure Print_SpecDocument (MovementId,MovementId_by:Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
   UtilPrintForm.actPrint_Spec.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_TransportDocument (MovementId,MovementId_sale: Integer;OperDate:TDateTime);
 begin
-  UtilPrintForm.FormParams.ParamByName('MovementId_TransportGoods').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId;
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId_sale;
   UtilPrintForm.FormParams.ParamByName('OperDate').Value := OperDate;
   UtilPrintForm.mactPrint_TTN.Execute;
@@ -161,9 +163,9 @@ begin
                   then Print_ReturnIn(MovementId)
                   else if MovementDescId = zc_Movement_SendOnPrice
                        then Print_SendOnPrice(MovementId)
-                       else begin ShowMessage ('Ошибка.Документ сохранен.Форма печати не найдена.');exit;end;
+                       else begin ShowMessage ('Ошибка.Форма печати <Накладная> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Документ сохранен.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Накладная> не сформирована.');
                 exit;
           end;
      Result:=true;
@@ -177,9 +179,9 @@ begin
              //Print
              if MovementDescId = zc_Movement_Sale
              then Print_TaxDocument(MovementId)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <Налоговая> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Налоговая> не сформирована.');
                 exit;
           end;
      Result:=true;
@@ -193,41 +195,41 @@ begin
              //Print
              if MovementDescId = zc_Movement_Sale
              then Print_AccountDocument(MovementId)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <Счет> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Счет> не сформирована.');
                 exit;
           end;
      Result:=true;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_Spec (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+function Print_Spec (MovementDescId,MovementId,MovementId_by:Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
 begin
      Result:=false;
           //
           try
              //Print
              if MovementDescId = zc_Movement_Sale
-             then Print_SpecDocument(MovementId)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             then Print_SpecDocument(MovementId,MovementId_by)
+             else begin ShowMessage ('Ошибка.Форма печати <Спецификация> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Спецификация> не сформирована.');
                 exit;
           end;
      Result:=true;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_Pack (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+function Print_Pack (MovementDescId,MovementId,MovementId_by:Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
 begin
      Result:=false;
           //
           try
              //Print
              if MovementDescId = zc_Movement_Sale
-             then Print_PackDocument(MovementId)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             then Print_PackDocument(MovementId,MovementId_by)
+             else begin ShowMessage ('Ошибка.Форма печати <Упаковочный лист> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать не <Упаковочный лист> сформирована.');
                 exit;
           end;
      Result:=true;
@@ -241,9 +243,9 @@ begin
              //Print
              if MovementDescId = zc_Movement_Sale
              then Print_TransportDocument(MovementId,MovementId_sale,OperDate)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <ТТН> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <ТТН> не сформирована.');
                 exit;
           end;
      Result:=true;
@@ -257,9 +259,9 @@ begin
              //Print
              if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_Loss)
              then Print_QualityDocument(MovementId)
-             else begin ShowMessage ('Ошибка.Форма печати не найдена.');exit;end;
+             else begin ShowMessage ('Ошибка.Форма печати <Качественное> не найдена.');exit;end;
           except
-                ShowMessage('Ошибка.Печать не сформирована.');
+                ShowMessage('Ошибка.Печать <Качественное> не сформирована.');
                 exit;
           end;
      Result:=true;

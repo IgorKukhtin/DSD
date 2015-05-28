@@ -18,6 +18,15 @@ BEGIN
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
+
+     -- !!!временно - округляем!!!
+     UPDATE MovementItem SET Amount = CAST (MovementItem.Amount AS NUMERIC (16, 2))
+     WHERE MovementItem.MovementId = Movement.Id
+       AND MovementItem.DescId = zc_MI_Master()
+       AND MovementItem.Amount <> CAST (MovementItem.Amount AS NUMERIC (16, 2))
+    ;
+
+
      -- проводим Документ
      PERFORM lpComplete_Movement_Service (inMovementId := inMovementId
                                         , inUserId     := vbUserId);

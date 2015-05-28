@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_ToolsWeighing_onLevelChild (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_onLevelChild(
-    IN inBrancCode    Integer
+    IN inBranchCode    Integer
   , IN inLevelChild  TVarChar
   , IN inSession     TVarChar       -- сессия пользователя
 )
@@ -30,7 +30,7 @@ BEGIN
             , 0 AS Id
             , 0 AS Code
             , tmp.Name :: TVarChar AS Name
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, inLevelChild, '', tmp.Name, '1', inSession) AS Value
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, inLevelChild, '', tmp.Name, '1', inSession) AS Value
        FROM (SELECT 'SecondBeforeComplete' :: TVarChar AS Name
             ) AS tmp
        ORDER BY 1
@@ -45,13 +45,15 @@ BEGIN
             , 0 AS Id
             , 0 AS Code
             , tmp.Name :: TVarChar AS Name
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, inLevelChild, '', tmp.Name
-                                       , CASE WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
-                                                   THEN 'FALSE'
-                                              WHEN STRPOS (tmp.Name, 'InfoMoneyId_income') > 0
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, inLevelChild, '', tmp.Name
+                                       , CASE WHEN STRPOS (tmp.Name, 'InfoMoneyId_income') > 0
                                                    THEN '0'
                                               WHEN STRPOS (tmp.Name, 'InfoMoneyId_sale') > 0
                                                    THEN zc_Enum_InfoMoney_30101() :: TVarChar -- Доходы + Продукция + Готовая продукция
+                                              WHEN STRPOS (tmp.Name, 'isPrintPreview') > 0
+                                                   THEN 'TRUE'
+                                              WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
+                                                   THEN 'FALSE'
                                               ELSE '1'
                                          END
                                        , inSession) AS Value
@@ -61,14 +63,21 @@ BEGIN
        UNION SELECT 'ChangePercentAmountNumber' AS Name
        UNION SELECT 'PriceListNumber'        AS Name
 
-       UNION SELECT 'isPreviewPrint'         AS Name
+       UNION SELECT 'PrintCount'             AS Name
+       UNION SELECT 'isPrintPreview'         AS Name
+
        UNION SELECT 'isTareWeightEnter'      AS Name
        UNION SELECT 'isPersonalComplete'     AS Name
+       UNION SELECT 'isTax'                  AS Name
 
        UNION SELECT 'DayPrior_PriceReturn' AS Name
 
        UNION SELECT 'InfoMoneyId_income' AS Name
        UNION SELECT 'InfoMoneyId_sale'   AS Name
+
+       UNION SELECT 'isBox'              AS Name
+       UNION SELECT 'BoxCount'           AS Name
+       UNION SELECT 'BoxCode'            AS Name
             ) AS tmp
        ORDER BY 1
        ;
@@ -78,7 +87,7 @@ BEGIN
     IF inLevelChild = 'TareCount'
     THEN
     -- определяется кол-во
-    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBrancCode, inLevelChild, '', 'Count', '1', inSession));
+    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBranchCode, inLevelChild, '', 'Count', '1', inSession));
     -- Результат
     RETURN QUERY
        SELECT tmp.Number
@@ -92,7 +101,7 @@ BEGIN
     ELSE
 
     -- определяется кол-во
-    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBrancCode, inLevelChild, '', 'Count', '1', inSession));
+    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBranchCode, inLevelChild, '', 'Count', '1', inSession));
     -- Результат
     RETURN QUERY
        SELECT tmp.Number
@@ -111,7 +120,7 @@ BEGIN
               END :: TVarChar AS Name
             , tmp.Value
        FROM (SELECT tmp.Number
-                  , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, inLevelChild, '', inLevelChild || CASE WHEN inLevelChild = 'PriceList' THEN 'Id' ELSE '' END || '_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, '0', inSession) AS Value
+                  , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, inLevelChild, '', inLevelChild || CASE WHEN inLevelChild = 'PriceList' THEN 'Id' ELSE '' END || '_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, '0', inSession) AS Value
              FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
             ) AS tmp
             LEFT JOIN Object ON Object.Id = CAST (CASE WHEN tmp.Value <> '' AND inLevelChild = 'PriceList' THEN tmp.Value END AS Integer)
@@ -122,7 +131,7 @@ BEGIN
             , 0 AS Code
             , 'ввод вес тары' :: TVarChar  AS Name
             , '0' :: TVarChar AS Value
-       FROM gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Default', '', 'isTareWeightEnter', 'FALSE', inSession) AS tmp
+       FROM gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, 'Default', '', 'isTareWeightEnter', 'FALSE', inSession) AS tmp
        WHERE inLevelChild = 'TareWeight'
          AND tmp.tmp = 'TRUE'
        ORDER BY 1

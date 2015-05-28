@@ -55,7 +55,9 @@ BEGIN
                                                                                                             INNER JOIN MovementFloat AS MovementFloat_WeighingNumber
                                                                                                                                      ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                                                                                                                     AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
-                                                                                                       WHERE Movement.DescId = zc_Movement_WeighingPartner() AND Movement.OperDate = inOperDate
+                                                                                                       WHERE Movement.DescId = zc_Movement_WeighingPartner()
+                                                                                                         AND Movement.OperDate = inOperDate
+                                                                                                         AND Movement.StatusId <> zc_Enum_Status_Erased()
                                                                                                       ), 0)
                                                                               END :: Integer
                                                    , inFromId              := inFromId

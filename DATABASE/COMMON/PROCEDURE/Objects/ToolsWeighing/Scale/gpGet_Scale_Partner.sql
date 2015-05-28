@@ -23,9 +23,18 @@ RETURNS TABLE (PartnerId    Integer
 
              , ChangePercent TFloat
              , ChangePercentAmount TFloat
+
              , isEdiOrdspr      Boolean
              , isEdiInvoice     Boolean
              , isEdiDesadv      Boolean
+
+             , isMovement    Boolean   -- Накладная
+             , isAccount     Boolean   -- Счет
+             , isTransport   Boolean   -- ТТН
+             , isQuality     Boolean   -- Качественное
+             , isPack        Boolean   -- Упаковочный
+             , isSpec        Boolean   -- Спецификация
+             , isTax         Boolean   -- Налоговая
               )
 AS
 $BODY$
@@ -53,20 +62,36 @@ BEGIN
                                   AND Object_Partner.DescId = zc_Object_Partner()
                                   AND inPartnerCode < 0
                                )
-           , tmpPartnerContract AS (SELECT tmpPartner_find.PartnerId
-                                         , tmpPartner_find.PartnerCode
-                                         , tmpPartner_find.PartnerName
+         , tmpPartnerJuridical AS (SELECT tmpPartner_find.PartnerId
+                                        , tmpPartner_find.PartnerCode
+                                        , tmpPartner_find.PartnerName
+                                        , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                    FROM tmpPartner_find
+                                         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                              ON ObjectLink_Partner_Juridical.ObjectId = tmpPartner_find.PartnerId
+                                                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                  )
+           , tmpJuridicalPrint AS (SELECT tmp.Id AS JuridicalId
+                                        , tmp.isMovement
+                                        , tmp.isAccount
+                                        , tmp.isTransport
+                                        , tmp.isQuality
+                                        , tmp.isPack
+                                        , tmp.isSpec
+                                        , tmp.isTax
+                                   FROM lpGet_Object_Juridical_PrintKindItem ((SELECT tmpPartnerJuridical.JuridicalId FROM tmpPartnerJuridical LIMIT 1)) AS tmp
+                                  )
+           , tmpPartnerContract AS (SELECT tmpPartnerJuridical.PartnerId
+                                         , tmpPartnerJuridical.PartnerCode
+                                         , tmpPartnerJuridical.PartnerName
                                          , Object_Contract_View.ContractId
                                          , Object_Contract_View.ContractCode     AS ContractCode
                                          , Object_Contract_View.InvNumber        AS ContractNumber
                                          , Object_Contract_View.ContractTagName  AS ContractTagName
                                          , Object_Contract_View.PaidKindId       AS PaidKindId
-                                         , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                                    FROM tmpPartner_find
-                                         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                              ON ObjectLink_Partner_Juridical.ObjectId = tmpPartner_find.PartnerId
-                                                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                         LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                         , tmpPartnerJuridical.JuridicalId
+                                    FROM tmpPartnerJuridical
+                                         LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = tmpPartnerJuridical.JuridicalId
                                                                        AND Object_Contract_View.InfoMoneyId = inInfoMoneyId -- zc_Enum_InfoMoney_30101()
                                                                        AND Object_Contract_View.isErased = FALSE
                                                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
@@ -118,9 +143,17 @@ BEGIN
             , Object_ContractCondition_PercentView.ChangePercent :: TFloat AS ChangePercent
             , CASE WHEN tmpPartner.PartnerCode = 1 THEN 1 WHEN tmpPartner.PartnerCode = 3 THEN 1 ELSE 1 END :: TFloat AS ChangePercentAmount
 
-            , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
+            , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData,  FALSE) :: Boolean AS isEdiOrdspr
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
-            , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
+            , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData,  FALSE) :: Boolean AS isEdiDesadv
+
+            , CASE WHEN tmpJuridicalPrint.isPack = TRUE OR tmpJuridicalPrint.isSpec = TRUE THEN COALESCE (tmpJuridicalPrint.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
+            , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount
+            , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport
+            , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality
+            , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack
+            , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec
+            , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax
 
        FROM (SELECT tmpPartnerContract_find.PartnerId
                   , tmpPartnerContract_find.PartnerCode
@@ -130,11 +163,14 @@ BEGIN
                   , tmpPartnerContract_find.ContractNumber
                   , tmpPartnerContract_find.ContractTagName
                   , tmpPartnerContract_find.PaidKindId
+                  , tmpPartnerContract_find.JuridicalId
                   , zfCalc_GoodsPropertyId (tmpPartnerContract_find.ContractId, tmpPartnerContract_find.JuridicalId) AS GoodsPropertyId
                   , lfGet_Object_Partner_PriceList_record (tmpPartnerContract_find.ContractId, tmpPartnerContract_find.PartnerId, inOperDate) AS PriceListId
 
              FROM tmpPartnerContract_find
             ) AS tmpPartner
+            LEFT JOIN tmpJuridicalPrint ON tmpJuridicalPrint.JuridicalId = tmpPartner.JuridicalId
+
             LEFT JOIN Object_ContractCondition_PercentView ON Object_ContractCondition_PercentView.ContractId = tmpPartner.ContractId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpPartner.PaidKindId
 

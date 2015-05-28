@@ -82,7 +82,7 @@ begin
                MessagePanel.Caption:='Текущее взвешивание не закрыто.Будет создано <Новое> взвешивание.';
                //
                ParamsMovement_local.ParamByName('MovementDescId').AsInteger:=0;
-               ParamsMovement_local.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber');
+               ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger:=StrToInt(GetArrayList_Value_byName(Default_Array,'MovementNumber'));
                ParamsMovement_local.ParamByName('OrderExternal_BarCode').AsString:='';
                ParamsMovement_local.ParamByName('OrderExternal_InvNumber').AsString:='';
                ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
@@ -101,7 +101,7 @@ begin
      ChoiceNumber:=0;
      with ParamsMovement_local do
      begin
-          CDS.Locate('Number',ParamByName('MovementDescNumber').AsString,[]);
+          CDS.Locate('Number',IntToStr(ParamByName('MovementDescNumber').AsInteger),[]);
           if ParamByName('OrderExternal_BarCode').AsString<>''
           then EditBarCode.Text:=ParamByName('OrderExternal_BarCode').AsString
           else EditBarCode.Text:=ParamByName('OrderExternal_InvNumber').AsString;
@@ -132,6 +132,15 @@ begin
        and(ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=0)
      then begin
                ShowMessage('Ошибка.Значение <Код контрагента> не найдено.');
+               ActiveControl:=EditPartnerCode;
+               Result:=false;
+               exit;
+     end;
+     // проверка для списания
+     if   (CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Loss)
+       and(ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=0)
+     then begin
+               ShowMessage('Ошибка.Значение <Код списания> не найдено.');
                ActiveControl:=EditPartnerCode;
                Result:=false;
                exit;
@@ -186,6 +195,7 @@ begin
           else
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Sale)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnOut)
+            or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
           then begin
                     ParamByName('FromId').AsInteger:= CDS.FieldByName('FromId').asInteger;
                     ParamByName('FromCode').asString:= CDS.FieldByName('FromCode').asString;
@@ -248,7 +258,7 @@ end;
 procedure TDialogMovementDescForm.EditBarCodeEnter(Sender: TObject);
 begin
     if CDS.Filtered then CDS.Filtered:=false;
-    CDS.Locate('Number',ParamsMovement_local.ParamByName('MovementDescNumber').AsString,[]);
+    CDS.Locate('Number',IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger),[]);
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditBarCodeExit(Sender: TObject);
@@ -312,6 +322,7 @@ begin
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_ReturnOut)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Sale)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_ReturnIn)
+                      and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Loss)
                     then begin ActiveControl:=DBGrid;DBGridCellClick(DBGrid.Columns[0]);end;
                end;
           end;
@@ -418,8 +429,9 @@ var Key:Word;
 begin
     if ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger<>0
     then begin
-              EditBarCode.Text:=ParamsMovement_local.ParamByName('MovementDescNumber').AsString;
+              EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
               EditBarCodeExit(Self);
+              ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
     end;
 
     if GuidePartnerForm.Execute(ParamsMovement_local)
@@ -440,6 +452,7 @@ begin
      then CDS.Next
      else begin
                ChoiceNumber:=CDS.FieldByName('Number').AsInteger;
+               ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger:=CDS.FieldByName('Number').AsInteger;
                DBGrid.Repaint;
                bbOkClick(Self);
      end;
@@ -496,7 +509,7 @@ begin
   begin
        StoredProcName:='gpSelect_Object_ToolsWeighing_MovementDesc';
        OutputType:=otDataSet;
-       Params.AddParam('inBrancCode', ftInteger, ptInput, SettingMain.BrancCode);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Execute;
   end;
   //

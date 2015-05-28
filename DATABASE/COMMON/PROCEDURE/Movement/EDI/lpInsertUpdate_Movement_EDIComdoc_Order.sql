@@ -259,6 +259,7 @@ BEGIN
                                                                , inRouteSortingId      := vbRouteSortingId
                                                                , inPersonalId          := vbMemberTakeId
                                                                , inPriceListId         := vbPriceListId
+                                                               , inPartnerId           := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementLinkObject_Partner()), 0)
                                                                , inUserId              := inUserId
                                                                 );
 
