@@ -5,8 +5,6 @@ inherited MainForm: TMainForm
   Position = poDesigned
   ExplicitWidth = 1102
   ExplicitHeight = 265
-  ExplicitWidth = 1094
-  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3575,7 +3573,7 @@ inherited MainForm: TMainForm
       object N64: TMenuItem
         Caption = '-'
       end
-      object N63: TMenuItem
+      object miReport_WeighingPartner: TMenuItem
         Action = actReport_WeighingPartner
       end
     end
