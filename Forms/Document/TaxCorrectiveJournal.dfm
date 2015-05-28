@@ -420,19 +420,42 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Style.BorderStyle = ebsNone
-      TabOrder = 5
-      Text = 'cxTextEdit1'
-      Width = 208
+      TabOrder = 6
+      Text = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1079#1072' '
+      Width = 113
     end
-    object cxDateEdit1: TcxDateEdit
-      Left = 823
+    object edLoadData: TcxDateEdit
+      Left = 851
+      Top = 5
+      EditValue = 42121.4513888889d
+      Enabled = False
+      ParentColor = True
+      Style.BorderStyle = ebsNone
+      TabOrder = 8
+      Width = 135
+    end
+    object edPeriod: TcxDateEdit
+      Left = 730
       Top = 5
       EditValue = 42121d
       Enabled = False
       ParentColor = True
+      Properties.DisplayFormat = 'mmmm yyyy'
       Style.BorderStyle = ebsNone
-      TabOrder = 6
-      Width = 121
+      TabOrder = 5
+      Width = 91
+    end
+    object cxTextEdit2: TcxTextEdit
+      Left = 817
+      Top = 5
+      Enabled = False
+      ParentColor = True
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Style.BorderStyle = ebsNone
+      TabOrder = 7
+      Text = #1073#1099#1083#1072
+      Width = 34
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1436,23 +1459,30 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Top = 387
   end
   object spGetInfo: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GlobalConstMEDOC'
+    StoredProcName = 'gpGet_Object_MedocLoadInfo'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ValueText'
+        Name = 'inDate'
         Value = Null
-        Component = cxTextEdit1
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'Period'
+        Value = 'cxTextEdit1'
+        Component = edPeriod
         DataType = ftString
       end
       item
-        Name = 'OperDate'
-        Value = Null
-        Component = cxDateEdit1
+        Name = 'LoadDateTime'
+        Value = 42121d
+        Component = edLoadData
       end>
     PackSize = 1
-    Left = 896
-    Top = 8
+    Left = 736
+    Top = 24
   end
 end

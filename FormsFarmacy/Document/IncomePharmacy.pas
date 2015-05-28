@@ -50,6 +50,12 @@ type
     spCalculateSalePrice: TdsdStoredProc;
     colSalePrice: TcxGridDBColumn;
     colSaleSumm: TcxGridDBColumn;
+    cxLabel12: TcxLabel;
+    cxLabel11: TcxLabel;
+    edPointDate: TcxDateEdit;
+    cxLabel9: TcxLabel;
+    edPointNumber: TcxTextEdit;
+    cbFarmacyShow: TcxCheckBox;
   private
     { Private declarations }
   public

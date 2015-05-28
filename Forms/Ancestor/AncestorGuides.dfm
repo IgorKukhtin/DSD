@@ -115,6 +115,33 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -160,6 +187,14 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end>
     end
@@ -181,6 +216,10 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end

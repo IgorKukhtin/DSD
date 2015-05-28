@@ -69,6 +69,7 @@ BEGIN
                                  inOperDate, 20::TFloat, vbFromId, vbToId, inContract, vbUserId);                       
             update Movement set AccessKeyId = vbAccessKey where Id = vbMovementId;
             outId := vbMovementId;
+            UPDATE Movement SET ParentId = vbMovementId WHERE Id = vbMedocId;
          ELSE
             SELECT JuridicalId INTO vbToId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inFromINN;
             SELECT JuridicalId INTO vbFromId FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.INN = inToINN;
@@ -76,8 +77,14 @@ BEGIN
                                   inOperDate, 20::TFloat, vbFromId, vbToId, inContract, vbUserId);
             update Movement set AccessKeyId = vbAccessKey where Id = vbMovementId;
             outId := vbMovementId;
+            UPDATE Movement SET ParentId = vbMovementId WHERE Id = vbMedocId;
          END IF;
       END IF;
+   ELSE
+      -- Заапдейтили
+      vbMedocId := lpInsertUpdate_Movement_Medoc(vbMedocId, inMedocCode, inInvNumber, inOperDate,
+                           inFromINN, inToINN, inInvNumberBranch, inInvNumberRegistered, inDateRegistered, inDocKind, inContract, 
+                           inTotalSumm, vbUserId);
    END IF;
 
    -- Если это Днепр или Запорожье (вносят сами)
@@ -103,11 +110,15 @@ BEGIN
                          LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                   ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                         LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                  ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                                 AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
               WHERE MovementString_InvNumberPartner.ValueData = inInvNumber 
                 AND JuridicalFrom.INN = inFromINN AND JuridicalTo.INN = inToINN
                 AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Tax()
-                AND Movement.StatusId <> zc_Enum_Status_Erased() 
-                AND abs(MovementFloat_TotalSumm.ValueData) = abs(inTotalSumm);
+                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                AND abs(inTotalSumm) = abs(MovementFloat_TotalSumm.ValueData);
+--              AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '');         
         ELSE
              SELECT Movement.Id INTO vbMovementId 
                     FROM Movement 
@@ -128,10 +139,14 @@ BEGIN
                          LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                   ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                         LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                  ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                                 AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
               WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.INN = inToINN  
                 AND JuridicalTo.INN = inFromINN AND Movement.StatusId <> zc_Enum_Status_Erased()
-                AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective()
-                AND abs(MovementFloat_TotalSumm.ValueData) = abs(inTotalSumm);         
+                AND abs(inTotalSumm) = abs(MovementFloat_TotalSumm.ValueData)
+                AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective();
+  --              AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '');         
       END IF;
       -- Если нашли, то установили связь
       IF (COALESCE(vbMovementId, 0)) <> 0 THEN
@@ -157,6 +172,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 27.05.15                         * 
  19.05.15                         * 
  21.04.15                         * 
  02.04.15                         * 

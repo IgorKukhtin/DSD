@@ -16,7 +16,7 @@ type
 implementation
 
 uses ScriptXML, ParentForm, FormStorage, ActnList, Classes, SysUtils,
-     dsdAction, Log, RTTI, fs_ipascal, fs_iinterpreter, DateUtils;
+     dsdAction, Log, RTTI, fs_ipascal, fs_iinterpreter, DateUtils, Variants;
 
 { TRunScript }
 var fsScript: TfsScript;
@@ -75,6 +75,7 @@ var ctx : TRttiContext;
     RttiType : TRttiType;
     RttiProperty : TRttiProperty;
     Val: TValue;
+    vDate: TDateTime;
 begin
     ctx := TRttiContext.Create();
     PropertyName := LowerCase(PropertyName);
@@ -84,7 +85,14 @@ begin
 
       for RttiProperty in RttiType.GetProperties() do begin
           if LowerCase(RttiProperty.Name) <> PropertyName then continue;
-          Val.FromVariant(Value);
+          case VarType(Value) of
+             varDate: begin
+                  vDate := Value;
+                  Val := TValue.From<TDateTime>(vDate);
+             end
+             else
+               Val.FromVariant(Value);
+          end;
           RttiProperty.SetValue(obj, Val);
       end;
     finally

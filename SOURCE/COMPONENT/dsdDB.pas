@@ -30,6 +30,7 @@ type
   public
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
+    function AsFloat: double;
     procedure Assign(Source: TPersistent); override;
     constructor Create(Collection: TCollection); overload; override;
     constructor Create; overload;
@@ -556,6 +557,16 @@ begin
 end;
 
 { TdsdParam }
+
+function TdsdParam.AsFloat: double;
+var D: Variant;
+begin
+  D := Value;
+  case VarType(D) of
+    vtExtended: result := D;
+    vtString, vtWideString, vtClass: result := gfStrToFloat(D);
+  end;
+end;
 
 procedure TdsdParam.Assign(Source: TPersistent);
 var Owner: TComponent;

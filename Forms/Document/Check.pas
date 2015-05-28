@@ -12,10 +12,16 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxCurrencyEdit;
 
 type
   TCheckForm = class(TAncestorDocumentForm)
+    cxTextEdit1: TcxTextEdit;
+    cxTextEdit2: TcxTextEdit;
+    cxTextEdit3: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

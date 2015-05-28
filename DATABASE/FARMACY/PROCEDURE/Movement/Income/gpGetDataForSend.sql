@@ -45,6 +45,7 @@ BEGIN
        SELECT vbConnectionString, STRING_AGG (OneProcedure, ';')::TBlob
        FROM (SELECT 
      'call "DBA"."LoadIncomeBillItems"('''||Movement_Income_View.InvNumber||''','''||to_char(Movement_Income_View.OperDate, 'yyyy-mm-dd')||
+          ''','''||COALESCE(Movement_Income_View.InvNumberBranch, '')||''','''||to_char(COALESCE(Movement_Income_View.BranchDate, CURRENT_DATE), 'yyyy-mm-dd')||
           ''','''||to_char(Movement_Income_View.PaymentDate, 'yyyy-mm-dd')||
           ''','||0::integer||','''||coalesce(Juridical.OKPO,'')||''','||COALESCE(vbClientId, 0)||','||vbUnitId||','||ObjectFloat_NDSKind_NDS.ValueData||
           ','||MovementItem.GoodsCode||','''||MovementItem.GoodsName||''','''||Object_Goods_View.MeasureName||''','||MovementItem.Amount||','||
@@ -71,6 +72,7 @@ ALTER FUNCTION gpGetDataForSend(Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.05.15                         *
  14.04.15                         *
  27.01.15                         *
  12.01.15                         *
@@ -83,6 +85,6 @@ ALTER FUNCTION gpGetDataForSend(Integer, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 --
-SELECT * FROM gpGetDataForSendNew (inMovementId:= 53675  , inSession:= '2') --15532 --15476
+SELECT * FROM gpGetDataForSend (inMovementId:= 53675  , inSession:= '2') --15532 --15476
 --call "DBA"."LoadIncomeBillItems"('БН8687','2015-01-20','2015-01-20',1,'35341093',0,79,7.0000,12654,'Тонометр Росма (...)"
 

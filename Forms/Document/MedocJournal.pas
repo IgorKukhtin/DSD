@@ -16,6 +16,17 @@ uses
 
 type
   TMedocJournalForm = class(TAncestorJournalForm)
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    cxGridDBTableViewColumn2: TcxGridDBColumn;
+    cxGridDBTableViewColumn3: TcxGridDBColumn;
+    cxGridDBTableViewColumn4: TcxGridDBColumn;
+    cxGridDBTableViewColumn5: TcxGridDBColumn;
+    cxGridDBTableViewColumn6: TcxGridDBColumn;
+    cxGridDBTableViewColumn7: TcxGridDBColumn;
+    cxGridDBTableViewColumn8: TcxGridDBColumn;
+    cxGridDBTableViewColumn9: TcxGridDBColumn;
+    cxGridDBTableViewColumn10: TcxGridDBColumn;
+    cxGridDBTableViewColumn11: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -25,5 +36,9 @@ type
 implementation
 
 {$R *.dfm}
+
+initialization
+
+  RegisterClass(TMedocJournalForm)
 
 end.

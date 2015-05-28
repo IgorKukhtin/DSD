@@ -5,6 +5,8 @@ inherited MainForm: TMainForm
   Position = poDesigned
   ExplicitWidth = 1102
   ExplicitHeight = 265
+  ExplicitWidth = 1094
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3066,6 +3068,16 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actMedocJournal: TdsdOpenForm
+      Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1074' '#1052#1077#1076#1082#1077
+      FormName = 'TMedocJournalForm'
+      FormNameParam.Value = 'TMedocJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -3316,6 +3328,9 @@ inherited MainForm: TMainForm
       end
       object MEDOC1: TMenuItem
         Action = actLoadStatusFromMedoc
+      end
+      object N63: TMenuItem
+        Action = actMedocJournal
       end
       object N15: TMenuItem
         Caption = '-'

@@ -21,27 +21,38 @@ inherited CheckJournalForm: TCheckJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          inherited colStatus: TcxGridDBColumn
+            Options.Editing = False
+          end
           inherited colInvNumber: TcxGridDBColumn
+            Options.Editing = False
             Width = 99
+          end
+          inherited colOperDate: TcxGridDBColumn
+            Options.Editing = False
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            Options.Editing = False
             Width = 111
           end
           object colCashNumber: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashRegisterName'
+            Options.Editing = False
             Width = 74
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
+            Options.Editing = False
             Width = 72
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
+            Options.Editing = False
             Width = 79
           end
         end
@@ -55,9 +66,15 @@ inherited CheckJournalForm: TCheckJournalForm
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
+      FormName = 'TCheckForm'
+      FormNameParam.Value = 'TCheckForm'
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       Enabled = False
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TCheckForm'
+      FormNameParam.Value = 'TCheckForm'
     end
     inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False

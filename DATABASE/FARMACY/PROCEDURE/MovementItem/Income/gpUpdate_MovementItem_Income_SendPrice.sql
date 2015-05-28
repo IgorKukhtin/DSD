@@ -13,6 +13,8 @@ $BODY$
    DECLARE vbInvNumber TVarChar;
    DECLARE vbMarginCategoryId Integer;
    DECLARE vbJuridicalPercent TFloat;
+   DECLARE vbToId Integer;
+   DECLARE vbInvNumberPoint TVarChar;
 BEGIN
      
      -- определяем <Статус>
@@ -66,6 +68,22 @@ BEGIN
          WHERE MarginCondition.MinPrice < MovementItem_Income.PriceWithVAT AND MovementItem_Income.PriceWithVAT <= MarginCondition.MaxPrice 
            AND MovementItem_Income.GoodsId = MovementItem_Income_View.GoodsId
            AND MovementItem_Income_View.MovementId = inMovementId);
+
+     SELECT ToId, InvNumberBranch INTO vbToId, vbInvNumberPoint FROM Movement_Income_View WHERE Id = inMovementId;
+
+     IF COALESCE(vbInvNumberPoint, '') = '' THEN 
+        -- Определяем, что приход идет на последнее подразделение в ветке
+        IF (SELECT Count(*) FROM Object_Unit_View WHERE ParentId = vbToId) = 0 THEN 
+           -- считаем номер документа
+           vbInvNumberPoint := COALESCE((SELECT MAX(zfConvert_StringToNumber(InvNumberBranch)) + 1
+                                  FROM Movement_Income_View WHERE ToId = vbToId), 1);
+
+           PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), inMovementId, vbInvNumberPoint::TVarChar);
+
+           PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inMovementId, CURRENT_DATE);
+        END IF; 
+     END IF;
+
 
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
      -- сохранили протокол

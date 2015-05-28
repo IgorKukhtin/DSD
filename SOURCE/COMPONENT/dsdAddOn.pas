@@ -997,8 +997,10 @@ end;
 procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if (Key = VK_ESCAPE) and (View.DataController.Filter.Active) then
-     View.DataController.Filter.Clear;
+  if (Key = VK_ESCAPE) and (View.DataController.Filter.Active) then begin
+      View.DataController.Filter.Clear;
+      View.DataController.Filter.Active := false;
+  end;
   if (Key = VK_RETURN) and (Shift = []) and OnlyEditingCellOnEnter then begin
      ActionOnlyEditingCellOnEnter;
      Key := 0;

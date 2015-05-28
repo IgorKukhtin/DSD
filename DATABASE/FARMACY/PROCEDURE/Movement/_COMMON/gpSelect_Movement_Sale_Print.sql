@@ -36,6 +36,9 @@ BEGIN
            , Movement_Income_View.NDSKindId
            , Movement_Income_View.NDSKindName
            , Movement_Income_View.SaleSumm
+           , Movement_Income_View.InvNumberBranch
+           , Movement_Income_View.BranchDate
+
        FROM Movement_Income_View 
        WHERE Movement_Income_View.Id =  inMovementId;
 
@@ -75,6 +78,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.15                         *
  28.04.15                         *
 */
 

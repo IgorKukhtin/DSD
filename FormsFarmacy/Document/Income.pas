@@ -71,9 +71,11 @@ type
     colPercent: TcxGridDBColumn;
     colPriceWithVAT: TcxGridDBColumn;
     cxLabel9: TcxLabel;
-    cxTextEdit1: TcxTextEdit;
+    edPointNumber: TcxTextEdit;
     cxLabel11: TcxLabel;
-    cxDateEdit1: TcxDateEdit;
+    edPointDate: TcxDateEdit;
+    cbFarmacyShow: TcxCheckBox;
+    cxLabel12: TcxLabel;
   private
     { Private declarations }
   public

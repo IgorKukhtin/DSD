@@ -20,6 +20,7 @@ CREATE OR REPLACE VIEW Object_Unit_View AS
            , Object_Unit.AccessKeyId
            , Object_Unit.isErased AS isErased
            , ObjectBoolean_isLeaf.ValueData AS isLeaf
+           , 0 AS BranchId
        FROM Object AS Object_Unit
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                                 ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id

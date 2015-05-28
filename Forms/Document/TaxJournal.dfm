@@ -2,8 +2,8 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitWidth = 1118
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -418,26 +418,49 @@ inherited TaxJournalForm: TTaxJournalForm
       Width = 250
     end
     object cxTextEdit1: TcxTextEdit
-      Left = 107
-      Top = 27
+      Left = 92
+      Top = 26
       Enabled = False
       ParentColor = True
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Style.BorderStyle = ebsNone
       TabOrder = 7
-      Text = 'cxTextEdit1'
-      Width = 441
+      Text = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1079#1072' '
+      Width = 366
     end
-    object cxDateEdit1: TcxDateEdit
-      Left = 554
-      Top = 27
-      EditValue = 42121d
+    object edLoadData: TcxDateEdit
+      Left = 581
+      Top = 26
+      EditValue = 42121.4513888889d
       Enabled = False
       ParentColor = True
       Style.BorderStyle = ebsNone
       TabOrder = 8
-      Width = 121
+      Width = 135
+    end
+    object edPeriod: TcxDateEdit
+      Left = 459
+      Top = 26
+      EditValue = 42121d
+      Enabled = False
+      ParentColor = True
+      Properties.DisplayFormat = 'mmmm yyyy'
+      Style.BorderStyle = ebsNone
+      TabOrder = 9
+      Width = 91
+    end
+    object cxTextEdit2: TcxTextEdit
+      Left = 546
+      Top = 26
+      Enabled = False
+      ParentColor = True
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Style.BorderStyle = ebsNone
+      TabOrder = 10
+      Text = #1073#1099#1083#1072
+      Width = 34
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1528,20 +1551,27 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 307
   end
   object spGetInfo: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GlobalConstMEDOC'
+    StoredProcName = 'gpGet_Object_MedocLoadInfo'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ValueText'
+        Name = 'inDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'Period'
         Value = 'cxTextEdit1'
-        Component = cxTextEdit1
+        Component = edPeriod
         DataType = ftString
       end
       item
-        Name = 'OperDate'
+        Name = 'LoadDateTime'
         Value = 42121d
-        Component = cxDateEdit1
+        Component = edLoadData
       end>
     PackSize = 1
     Left = 736

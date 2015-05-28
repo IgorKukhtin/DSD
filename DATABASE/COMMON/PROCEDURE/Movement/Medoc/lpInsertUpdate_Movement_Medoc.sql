@@ -27,19 +27,11 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     IF inDocKind = 'Tax' THEN
-        SELECT ObjectBoolean_isCorporate.ValueData INTO vbisIncome FROM ObjectHistory_JuridicalDetails_View AS Juridical
+     SELECT ObjectBoolean_isCorporate.ValueData INTO vbisIncome FROM ObjectHistory_JuridicalDetails_View AS Juridical
                  JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                     ON ObjectBoolean_isCorporate.ObjectId = Juridical.JuridicalId 
                                    AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-          WHERE Juridical.INN = inToINN;
-     ELSE
-        SELECT ObjectBoolean_isCorporate.ValueData INTO vbisIncome FROM ObjectHistory_JuridicalDetails_View AS Juridical
-                 JOIN ObjectBoolean AS ObjectBoolean_isCorporate
-                                    ON ObjectBoolean_isCorporate.ObjectId = Juridical.JuridicalId 
-                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-          WHERE Juridical.INN = inFromINN;
-     END IF;
+         WHERE Juridical.INN = inToINN;
 
 
      -- сохранили <Документ>

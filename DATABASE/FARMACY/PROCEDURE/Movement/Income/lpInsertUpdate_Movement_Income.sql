@@ -26,7 +26,12 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
 )
 RETURNS Integer AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
+   DECLARE vbInvNumberPoint Integer;
 BEGIN
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL);
@@ -49,7 +54,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

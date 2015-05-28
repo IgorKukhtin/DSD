@@ -89,7 +89,6 @@ type
     colInvNumberRegistered: TcxGridDBColumn;
     spGetInfo: TdsdStoredProc;
     cxTextEdit1: TcxTextEdit;
-    cxDateEdit1: TcxDateEdit;
   private
     { Private declarations }
   public

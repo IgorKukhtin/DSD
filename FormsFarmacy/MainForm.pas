@@ -144,6 +144,8 @@ type
     N48: TMenuItem;
     actCheck: TdsdOpenForm;
     N49: TMenuItem;
+    actCashRegister: TdsdOpenForm;
+    N50: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

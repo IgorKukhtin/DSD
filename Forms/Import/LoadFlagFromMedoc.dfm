@@ -134,10 +134,17 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
     Top = 36
   end
   object spUpdate_Object_GlobalConst_MEDOC: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_GlobalConst_MEDOC'
+    StoredProcName = 'gpInsertUpdate_Object_MedocLoadInfo'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inPeriod'
+        Value = Null
+        Component = dePeriodDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 160
     Top = 48
