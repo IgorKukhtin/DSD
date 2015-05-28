@@ -52,31 +52,30 @@ type
     PersonalGuides: TdsdGuides;
     PositionName: TcxGridDBColumn;
     CountMovement: TcxGridDBColumn;
-    actPrint: TdsdPrintAction;
     bbPrintBy_Goods: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     FormParams: TdsdFormParams;
     TotalCountKg: TcxGridDBColumn;
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
-    actIsInfoMoney: TdsdDataSetRefresh;
+    actIsDay: TdsdDataSetRefresh;
     bbGoodsKind: TdxBarControlContainerItem;
     cbinIsDay: TcxCheckBox;
     bbPartionGoods: TdxBarControlContainerItem;
     bbAmount: TdxBarControlContainerItem;
-    actPrint_GP: TdsdPrintAction;
     bbPrint2: TdxBarButton;
-    actPrint_Remains: TdsdPrintAction;
+    actPrint: TdsdPrintAction;
     bbPrint3: TdxBarButton;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    edUnitGroup: TcxButtonEdit;
+    edPersonal: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    edLocation: TcxButtonEdit;
+    edPosition: TcxButtonEdit;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
+    PersonalCode: TcxGridDBColumn;
   private
   public
   end;

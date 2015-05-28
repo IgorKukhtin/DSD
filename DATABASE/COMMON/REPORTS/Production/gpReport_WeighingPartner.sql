@@ -58,9 +58,10 @@ BEGIN
                                  , Count(MovementLinkObject_Personal.ObjectId)::TFloat AS CountPersonal  --MovementLinkObject_Personal.ObjectId AS PersonalID
                             FROM Movement
                             LEFT JOIN tmpListDesc on tmpListDesc. CountDesc = 4
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                               JOIN MovementLinkObject AS MovementLinkObject_Personal
                                                       ON MovementLinkObject_Personal.MovementId = Movement.Id
                                                      and tmpListDesc.PersonalDescId = MovementLinkObject_Personal.DescId
+                                                     AND (MovementLinkObject_Personal.ObjectId = inPersonalId OR inPersonalId=0)
                             WHERE Movement.DescId = zc_Movement_WeighingPartner()
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                              -- AND Movement.Id in (759166,740060,740078)
@@ -122,6 +123,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = tmpMovement.MovementId
                                         AND MovementLinkObject_Personal.DescId = tmpListDesc.PersonalDescId
+                                        AND (MovementLinkObject_Personal.ObjectId = inPersonalId OR inPersonalId=0)
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
            

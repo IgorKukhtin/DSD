@@ -678,7 +678,9 @@ uses
   Retail_PrintKindItem in '..\..\Forms\Guides\Retail_PrintKindItem.pas' {Retail_PrintKindItemForm: TParentForm},
   Juridical_PrintKindItem in '..\..\Forms\Guides\Juridical_PrintKindItem.pas' {Juridical_PrintKindItemForm: TParentForm},
   QualityDoc in '..\..\Forms\Document\QualityDoc.pas' {QualityDocForm: TParentForm},
-  QualityDocJournal in '..\..\Forms\Document\QualityDocJournal.pas' {QualityDocJournalForm: TParentForm};
+  QualityDocJournal in '..\..\Forms\Document\QualityDocJournal.pas' {QualityDocJournalForm: TParentForm},
+  Report_WeighingPartner in '..\..\Forms\Report\Report_WeighingPartner.pas' {Report_WeighingPartnerForm: TParentForm},
+  Report_WeighingPartnerDialog in '..\..\Forms\Report\Report_WeighingPartnerDialog.pas' {Report_WeighingPartnerDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

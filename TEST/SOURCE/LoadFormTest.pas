@@ -1176,6 +1176,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartnerDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartnerDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartnerForm');
+
 end;
 
 procedure TLoadFormTest.LoadReportProductionFormTest;

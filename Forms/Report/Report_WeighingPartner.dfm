@@ -2,7 +2,7 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084'>'
-  ClientHeight = 669
+  ClientHeight = 496
   ClientWidth = 945
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,10 +22,9 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
     Left = 0
     Top = 80
     Width = 945
-    Height = 589
+    Height = 416
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1344
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -528,6 +527,13 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
         Options.Editing = False
         Width = 50
       end
+      object PersonalCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'PersonalCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
       object PersonalName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'PersonalName'
@@ -596,9 +602,9 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
   object cbinIsDay: TcxCheckBox
     Left = 301
     Top = 87
-    Caption = #1087#1086' '#1076#1085#1103#1084' '
+    Action = actIsDay
     Properties.ReadOnly = False
-    TabOrder = 5
+    TabOrder = 2
     Width = 102
   end
   object Panel1: TPanel
@@ -608,7 +614,6 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
     Height = 54
     Align = alTop
     TabOrder = 6
-    ExplicitTop = -6
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
@@ -627,9 +632,9 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
       TabOrder = 3
       Width = 85
     end
-    object edUnitGroup: TcxButtonEdit
+    object edPersonal: TcxButtonEdit
       Left = 242
-      Top = 5
+      Top = 3
       Properties.Buttons = <
         item
           Default = True
@@ -644,7 +649,7 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
       Top = 6
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
     end
-    object edLocation: TcxButtonEdit
+    object edPosition: TcxButtonEdit
       Left = 242
       Top = 30
       Properties.Buttons = <
@@ -754,6 +759,14 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbDialogForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -766,31 +779,11 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbGoodsKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartionGoods'
-        end
-        item
-          Visible = True
           ItemName = 'bbAmount'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintBy_Goods'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint2'
         end
         item
           Visible = True
@@ -831,8 +824,12 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
       Category = 0
     end
     object bbPrintBy_Goods: TdxBarButton
-      Action = actPrint
+      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
       Category = 0
+      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
+      Visible = ivAlways
+      ImageIndex = 3
+      ShortCut = 16464
     end
     object dxBarStatic: TdxBarStatic
       Caption = '   '
@@ -853,18 +850,22 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
       Visible = ivAlways
     end
     object bbAmount: TdxBarControlContainerItem
-      Caption = #1090#1086#1083#1100#1082#1086' '#1050#1086#1083'-'#1074#1086
+      Caption = #1087#1086' '#1076#1085#1103#1084
       Category = 0
-      Hint = #1090#1086#1083#1100#1082#1086' '#1050#1086#1083'-'#1074#1086
+      Hint = #1087#1086' '#1076#1085#1103#1084
       Visible = ivAlways
       Control = cbinIsDay
     end
     object bbPrint2: TdxBarButton
-      Action = actPrint_GP
+      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093')'
       Category = 0
+      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093')'
+      Visible = ivAlways
+      ImageIndex = 18
+      ShortCut = 16464
     end
     object bbPrint3: TdxBarButton
-      Action = actPrint_Remains
+      Action = actPrint
       Category = 0
     end
   end
@@ -901,54 +902,33 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_MotionGoodsDialogForm'
-      FormNameParam.Value = 'TReport_MotionGoodsDialogForm'
+      FormName = 'TReport_WeighingPartnerDialogForm'
+      FormNameParam.Value = 'TReport_WeighingPartnerDialogForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
+          Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
         end
         item
           Name = 'EndDate'
           Value = 41640d
+          Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
         end
         item
-          Name = 'GoodsId'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-        end
-        item
-          Name = 'GoodsName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-        end
-        item
-          Name = 'GoodsGroupId'
-          Value = ''
-          ParamType = ptInput
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-        end
-        item
-          Name = 'UnitGroupId'
+          Name = 'PersonalId'
           Value = ''
           Component = PersonalGuides
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
-          Name = 'UnitGroupName'
+          Name = 'PersonalName'
           Value = ''
           Component = PersonalGuides
           ComponentItem = 'TextValue'
@@ -956,14 +936,14 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
           ParamType = ptInput
         end
         item
-          Name = 'LocationId'
+          Name = 'PositionId'
           Value = ''
           Component = PositionGuides
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
-          Name = 'LocationName'
+          Name = 'PositionName'
           Value = ''
           Component = PositionGuides
           ComponentItem = 'TextValue'
@@ -971,121 +951,14 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
           ParamType = ptInput
         end
         item
-          Name = 'AccountGroupId'
+          Name = 'inIsDay'
           Value = Null
-          ParamType = ptInput
-        end
-        item
-          Name = 'AccountGroupName'
-          Value = Null
-          ParamType = ptInput
-        end
-        item
-          Name = 'isInfoMoney'
-          Value = Null
+          Component = cbinIsDay
           DataType = ftBoolean
-          ParamType = ptInput
-        end
-        item
-          Name = 'UnitGroupId_by'
-          Value = Null
-          ParamType = ptInput
-        end
-        item
-          Name = 'UnitGroupName_by'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-        end
-        item
-          Name = 'LocationId_by'
-          Value = Null
-          ParamType = ptInput
-        end
-        item
-          Name = 'LocationName_by'
-          Value = Null
-          DataType = ftString
           ParamType = ptInput
         end>
       isShowModal = True
       OpenBeforeShow = True
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          DataType = ftDateTime
-        end
-        item
-          Name = 'UnitGroupName'
-          Value = Null
-          Component = PersonalGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'LocationName'
-          Value = ''
-          Component = PositionGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = Null
-          DataType = ftString
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-        end
-        item
-          Name = 'isGoodsKind'
-          Value = Null
-          DataType = ftBoolean
-        end
-        item
-          Name = 'isPartionGoods'
-          Value = Null
-          DataType = ftBoolean
-        end
-        item
-          Name = 'isAmount'
-          Value = Null
-          Component = cbinIsDay
-          DataType = ftBoolean
-        end
-        item
-          Name = 'isInfoMoney'
-          Value = Null
-          DataType = ftBoolean
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ReportNameParam.DataType = ftString
     end
     object SaleJournal: TdsdOpenForm
       Category = 'DSDLib'
@@ -1201,7 +1074,7 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
         end>
       isShowModal = False
     end
-    object actIsInfoMoney: TdsdDataSetRefresh
+    object actIsDay: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spReport
@@ -1209,171 +1082,60 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
         item
           StoredProc = spReport
         end>
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
-      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
+      Caption = #1055#1086' '#1076#1085#1103#1084
+      Hint = #1055#1086' '#1076#1085#1103#1084
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actPrint_GP: TdsdPrintAction
+    object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093')'
-      ImageIndex = 18
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
+      ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
+          IndexFieldNames = 'operDate,PersonalName'
           GridView = cxGridDBTableView
         end>
       Params = <
         item
           Name = 'StartDate'
           Value = 42005d
+          Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
           Value = 42005d
+          Component = deEnd
           DataType = ftDateTime
         end
         item
-          Name = 'UnitGroupName'
+          Name = 'PersonalName'
           Value = ''
           Component = PersonalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
         end
         item
-          Name = 'LocationName'
+          Name = 'PositionName'
           Value = ''
           Component = PositionGuides
           ComponentItem = 'TextValue'
           DataType = ftString
         end
         item
-          Name = 'GoodsGroupName'
-          Value = ''
-          DataType = ftString
-        end
-        item
-          Name = 'GoodsName'
-          Value = ''
-        end
-        item
-          Name = 'isGoodsKind'
-          Value = 'False'
-          DataType = ftBoolean
-        end
-        item
-          Name = 'isPartionGoods'
-          Value = 'False'
-          DataType = ftBoolean
-        end
-        item
-          Name = 'isAmount'
+          Name = 'inIsDay'
           Value = 'False'
           Component = cbinIsDay
           DataType = ftBoolean
-        end
-        item
-          Name = 'isInfoMoney'
-          Value = 'False'
-          DataType = ftBoolean
-        end
-        item
-          Name = 'UnitGroupName_by'
-          Value = Null
-          DataType = ftString
-        end
-        item
-          Name = 'LocationName_by'
-          Value = Null
-          DataType = ftString
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093')'
-      ReportNameParam.DataType = ftString
-    end
-    object actPrint_Remains: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1076#1072#1090#1091')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1076#1072#1090#1091')'
-      ImageIndex = 19
-      ShortCut = 16464
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 42005d
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 42005d
-          DataType = ftDateTime
-        end
-        item
-          Name = 'UnitGroupName'
-          Value = ''
-          Component = PersonalGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'LocationName'
-          Value = ''
-          Component = PositionGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = ''
-          DataType = ftString
-        end
-        item
-          Name = 'GoodsName'
-          Value = ''
-        end
-        item
-          Name = 'isGoodsKind'
-          Value = 'False'
-          DataType = ftBoolean
-        end
-        item
-          Name = 'isPartionGoods'
-          Value = 'False'
-          DataType = ftBoolean
-        end
-        item
-          Name = 'isAmount'
-          Value = 'False'
-          Component = cbinIsDay
-          DataType = ftBoolean
-        end
-        item
-          Name = 'isInfoMoney'
-          Value = 'False'
-          DataType = ftBoolean
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1086#1089#1090#1072#1090#1086#1082')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1086#1089#1090#1072#1090#1086#1082')'
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
       ReportNameParam.DataType = ftString
     end
   end
@@ -1401,14 +1163,14 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
       end
       item
         Name = 'inPersonalId'
-        Value = Null
+        Value = '0'
         Component = PersonalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPositionId'
-        Value = ''
+        Value = '0'
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -1449,6 +1211,8 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edPosition
+    Key = '0'
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormName = 'TPositionForm'
@@ -1479,11 +1243,12 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edPersonal
+    Key = '0'
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1500,6 +1265,19 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = PositionGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = PositionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 304
   end
@@ -1512,20 +1290,19 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
         Component = PeriodChoice
       end
       item
-      end
-      item
         Component = PersonalGuides
       end
       item
         Component = PositionGuides
       end
       item
+        Component = deEnd
       end
       item
+        Component = deStart
       end
       item
-      end
-      item
+        Component = cbinIsDay
       end>
     Left = 144
     Top = 344
@@ -1533,59 +1310,11 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'IncomeDesc'
+        Name = 'inIsDay'
         Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'ReturnOutDesc'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'SaleDesc'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'ReturnInDesc'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'MoneyDesc'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'ServiceDesc'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'SendDebtDesc'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'OtherDesc'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'SaleRealDesc'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'ReturnInRealDesc'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'TransferDebtDesc'
-        Value = Null
-        DataType = ftString
+        Component = cbinIsDay
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 424
     Top = 224

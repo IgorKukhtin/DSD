@@ -574,6 +574,9 @@ type
     N61: TMenuItem;
     actJuridical_PrintKindItem: TdsdOpenForm;
     N62: TMenuItem;
+    actReport_WeighingPartner: TdsdOpenForm;
+    N63: TMenuItem;
+    N64: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
