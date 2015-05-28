@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Partner(
 RETURNS TABLE (PartnerId     Integer
              , PartnerCode   Integer
              , PartnerName   TVarChar
+             , JuridicalName TVarChar
              , PaidKindId    Integer
              , PaidKindName  TVarChar
              , ContractId    Integer, ContractCode      Integer, ContractNumber    TVarChar, ContractTagName TVarChar
@@ -30,6 +31,9 @@ RETURNS TABLE (PartnerId     Integer
              , isPack        Boolean   -- Упаковочный
              , isSpec        Boolean   -- Спецификация
              , isTax         Boolean   -- Налоговая
+
+             , ObjectDescId  Integer
+             , ItemName      TVarChar
               )
 AS
 $BODY$
@@ -136,6 +140,7 @@ BEGIN
        SELECT tmpPartner.PartnerId
             , tmpPartner.PartnerCode
             , tmpPartner.PartnerName
+            , Object_Juridical.ValueData           AS JuridicalName
             , Object_PaidKind.Id                   AS PaidKindId
             , Object_PaidKind.ValueData            AS PaidKindName
 
@@ -155,7 +160,7 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
-            , COALESCE (tmpPrintKindItem.isMovement, FALSE)  :: Boolean AS isMovement
+            , CASE WHEN tmpPrintKindItem.isPack = TRUE OR tmpPrintKindItem.isSpec = TRUE THEN COALESCE (tmpPrintKindItem.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
             , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount
             , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport
             , COALESCE (tmpPrintKindItem.isQuality, FALSE)   :: Boolean AS isQuality
@@ -163,7 +168,11 @@ BEGIN
             , COALESCE (tmpPrintKindItem.isSpec, FALSE)      :: Boolean AS isSpec
             , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax
 
+            , ObjectDesc.Id AS ObjectDescId
+            , ObjectDesc.ItemName
+
        FROM tmpPartner
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_Partner()
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                  ON ObjectLink_Juridical_Retail.ObjectId = tmpPartner.JuridicalId
                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
@@ -195,11 +204,62 @@ BEGIN
                                     ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  tmpPartner.PartnerId
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
                                    AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
-       ORDER BY Object_Juridical.ValueData
-              , tmpPartner.PartnerName
-              , tmpPartner.PartnerCode
-              , View_InfoMoney.InfoMoneyCode
-              , Object_Contract_View.ContractCode
+      UNION ALL
+       SELECT Object_ArticleLoss.Id          AS PartnerId
+            , Object_ArticleLoss.ObjectCode  AS PartnerCode
+            , Object_ArticleLoss.ValueData   AS PartnerName
+            , '' :: TVarChar  AS JuridicalName
+            , NULL :: Integer AS PaidKindId
+            , '' :: TVarChar  AS PaidKindName
+
+            , NULL :: Integer AS ContractId
+            , View_ProfitLossDirection.ProfitLossDirectionCode             AS ContractCode
+            , View_ProfitLossDirection.ProfitLossDirectionCode :: TVarChar AS ContractNumber
+            , View_ProfitLossDirection.ProfitLossDirectionName             AS ContractTagName
+
+            , NULL :: Integer                     AS InfoMoneyId
+            , Object_InfoMoney_View.InfoMoneyCode AS InfoMoneyCode
+            , Object_InfoMoney_View.InfoMoneyName AS InfoMoneyName
+
+            , NULL :: TFloat AS ChangePercent
+            , NULL :: TFloat AS ChangePercentAmount
+
+            , FALSE       :: Boolean AS isEdiOrdspr
+            , FALSE       :: Boolean AS isEdiInvoice
+            , FALSE       :: Boolean AS isEdiDesadv
+
+            , TRUE        :: Boolean AS isMovement
+            , FALSE       :: Boolean AS isAccount
+            , FALSE       :: Boolean AS isTransport
+            , FALSE       :: Boolean AS isQuality
+            , FALSE       :: Boolean AS isPack
+            , FALSE       :: Boolean AS isSpec
+            , FALSE       :: Boolean AS isTax
+
+            , ObjectDesc.Id AS ObjectDescId
+            , ObjectDesc.ItemName
+
+       FROM Object AS Object_ArticleLoss
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ArticleLoss.DescId
+
+            LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney 
+                                 ON ObjectLink_ArticleLoss_InfoMoney.ObjectId = Object_ArticleLoss.Id
+                                AND ObjectLink_ArticleLoss_InfoMoney.DescId = zc_ObjectLink_ArticleLoss_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_ProfitLossDirection
+                                 ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = Object_ArticleLoss.Id
+                                AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
+            LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
+
+       WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
+         AND Object_ArticleLoss.isErased = FALSE
+
+       ORDER BY 4 -- Object_Juridical.ValueData
+              , 3 -- tmpPartner.PartnerName
+              , 2 -- tmpPartner.PartnerCode
+              , 12 -- View_InfoMoney.InfoMoneyCode
+              , 8 -- Object_Contract_View.ContractCode
       ;
 
 END;

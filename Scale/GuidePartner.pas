@@ -54,6 +54,8 @@ type
     isPack: TcxGridDBColumn;
     isSpec: TcxGridDBColumn;
     isTax: TcxGridDBColumn;
+    bb: TSpeedButton;
+    ItemName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditPartnerNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -72,6 +74,7 @@ type
     procedure actRefreshExecute(Sender: TObject);
     procedure actChoiceExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
+    procedure bbClick(Sender: TObject);
   private
     fEnterPartnerCode:Boolean;
     fEnterPartnerName:Boolean;
@@ -101,7 +104,16 @@ begin
      EditPartnerName.Text:='';
 
      CancelCxFilter;
-     CDS.Filter:='InfoMoneyId='+ParamsMovement_local.ParamByName('InfoMoneyId').AsString;
+     if  (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+       or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut)
+       or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Sale)
+       or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+     then CDS.Filter:='InfoMoneyId='+ParamsMovement_local.ParamByName('InfoMoneyId').AsString
+                    + ' and ObjectDescId='+IntToStr(zc_Object_Partner)
+     else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
+          then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_ArticleLoss)
+          else CDS.Filter:='1=0';
+
      CDS.Filtered:=false;
      CDS.Filtered:=true;
 
@@ -145,6 +157,80 @@ begin
       if cxDBGridDBTableView.DataController.Filter.Active
       then CancelCxFilter
       else actExitExecute(Self);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuidePartnerForm.bbClick(Sender: TObject);
+begin
+     if CDS.FieldByName('PartnerId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Контрагент не выбран.');
+          exit;
+     end;
+     //
+     with CDS do
+     begin
+         if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isMovement').Index].Focused = TRUE then
+         begin
+            Edit;
+            FieldByName('isMovement').AsBoolean:=not FieldByName('isMovement').AsBoolean;
+            Post;
+         end
+         else
+         if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isAccount').Index].Focused = TRUE then
+         begin
+            Edit;
+            FieldByName('isAccount').AsBoolean:=not FieldByName('isAccount').AsBoolean;
+            Post;
+         end
+         else
+         if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isTransport').Index].Focused = TRUE then
+         begin
+            Edit;
+            FieldByName('isTransport').AsBoolean:=not FieldByName('isTransport').AsBoolean;
+            Post;
+         end
+         else
+         if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isQuality').Index].Focused = TRUE then
+         begin
+            Edit;
+            FieldByName('isQuality').AsBoolean:=not FieldByName('isQuality').AsBoolean;
+            Post;
+         end
+         else
+         if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPack').Index].Focused = TRUE then
+         begin
+            Edit;
+            FieldByName('isPack').AsBoolean:=not FieldByName('isPack').AsBoolean;
+            Post;
+         end
+         else
+         if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isSpec').Index].Focused = TRUE then
+         begin
+            Edit;
+            FieldByName('isSpec').AsBoolean:=not FieldByName('isSpec').AsBoolean;
+            Post;
+         end
+         else
+         if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isTax').Index].Focused = TRUE then
+         begin
+            Edit;
+            FieldByName('isTax').AsBoolean:=not FieldByName('isTax').AsBoolean;
+            Post;
+         end
+         else begin
+                    ShowMessage('Ошибка.'+#10+#13+'Для изменения необходимо установить курсор в нужную колонку');
+                    exit;
+         end;
+         //
+         DMMainScaleForm.gpUpdate_Scale_Partner_print(FieldByName('PartnerId').AsInteger
+                                                     ,FieldByName('isMovement').AsBoolean
+                                                     ,FieldByName('isAccount').AsBoolean
+                                                     ,FieldByName('isTransport').AsBoolean
+                                                     ,FieldByName('isQuality').AsBoolean
+                                                     ,FieldByName('isPack').AsBoolean
+                                                     ,FieldByName('isSpec').AsBoolean
+                                                     ,FieldByName('isTax').AsBoolean);
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuidePartnerForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);

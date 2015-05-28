@@ -162,7 +162,9 @@ BEGIN
                   INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                      AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-             WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate 
+             WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
             ) AS Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -290,4 +292,4 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '01.04.2015', inEndDate:= '10.04.2015', inInfoMoneyId:= 8962, inPaidKindId:= 3, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '28.04.2015', inEndDate:= '29.04.2015', inInfoMoneyId:= 8962, inPaidKindId:= 3, inSession:= zfCalc_UserAdmin())

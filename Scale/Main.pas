@@ -291,6 +291,7 @@ begin
      if DMMainScaleForm.gpInsert_Movement_all(ParamsMovement) then
      begin
           //
+          //Комплектовщики
           Create_ParamsPersonalComplete(execParams);
           execParams.ParamByName('MovementId').AsInteger:=ParamsMovement.ParamByName('MovementId').AsInteger;
           execParams.ParamByName('InvNumber').AsString:=ParamsMovement.ParamByName('InvNumber').AsString;
@@ -301,18 +302,19 @@ begin
           Save_Movement_PersonalComplete(execParams);
           execParams.Free;
           //
-          //Print
+          //Print and Create Quality + Transport + Tax
           Print_Movement_afterSave;
           //
           //EDI
           if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then SendEDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then SendEDI_OrdSpr (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then SendEDI_Desadv (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
-
+          //
           //Initialize or Empty
-          //НЕ будем автоматов открывать предыдущий док.
-          ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!может и ненадо!!!
-          DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
+             //НЕ будем автоматов открывать предыдущий док.
+          //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!нельзя обнулять, т.к. это будет значить isLast=TRUE!!!
+          //DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
+          EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
           gpInitialize_MovementDesc;
           //
           Initialize_afterSave_all;
@@ -411,7 +413,7 @@ begin
      //
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then if ParamsMovement.ParamByName('MovementDescId').AsInteger=0
-          then ParamsMovement.ParamByName('MovementDescNumber').AsString:=GetArrayList_Value_byName(Default_Array,'MovementNumber')
+          then ParamsMovement.ParamByName('MovementDescNumber').AsInteger:=StrToInt(GetArrayList_Value_byName(Default_Array,'MovementNumber'))
           else
      else if (DMMainScaleForm.gpUpdate_Scale_Movement_check(ParamsMovement)=false)
           then begin
@@ -828,17 +830,18 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
-  Caption:='Экспедиция ('+GetFileVersionString(ParamStr(0))+') - <'+DMMainScaleForm.gpGet_Scale_User+'>';
+  SettingMain.BranchName:=DMMainScaleForm.lpGet_BranchName(SettingMain.BranchCode);
+  Caption:='Экспедиция ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleForm.gpGet_Scale_User+'>';
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
-  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'Default');
-  Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'Service');
+  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Default');
+  Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Service');
 
-  PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'PriceList');
-  TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'TareCount');
-  TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'TareWeight');
-  ChangePercentAmount_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BrancCode,'ChangePercentAmount');
+  PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'PriceList');
+  TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareCount');
+  TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareWeight');
+  ChangePercentAmount_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'ChangePercentAmount');
   GoodsKind_Array:=     DMMainScaleForm.gpSelect_Scale_GoodsKindWeighing;
   //global Initialize
   Create_ParamsMI(ParamsMI);

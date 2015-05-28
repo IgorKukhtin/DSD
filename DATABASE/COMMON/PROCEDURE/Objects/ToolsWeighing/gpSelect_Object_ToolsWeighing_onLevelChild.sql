@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_ToolsWeighing_onLevelChild (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_onLevelChild(
-    IN inBrancCode    Integer
+    IN inBranchCode    Integer
   , IN inLevelChild  TVarChar
   , IN inSession     TVarChar       -- сессия пользователя
 )
@@ -30,7 +30,7 @@ BEGIN
             , 0 AS Id
             , 0 AS Code
             , tmp.Name :: TVarChar AS Name
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, inLevelChild, '', tmp.Name, '1', inSession) AS Value
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, inLevelChild, '', tmp.Name, '1', inSession) AS Value
        FROM (SELECT 'SecondBeforeComplete' :: TVarChar AS Name
             ) AS tmp
        ORDER BY 1
@@ -45,7 +45,7 @@ BEGIN
             , 0 AS Id
             , 0 AS Code
             , tmp.Name :: TVarChar AS Name
-            , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, inLevelChild, '', tmp.Name
+            , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, inLevelChild, '', tmp.Name
                                        , CASE WHEN STRPOS (tmp.Name, 'InfoMoneyId_income') > 0
                                                    THEN '0'
                                               WHEN STRPOS (tmp.Name, 'InfoMoneyId_sale') > 0
@@ -87,7 +87,7 @@ BEGIN
     IF inLevelChild = 'TareCount'
     THEN
     -- определяется кол-во
-    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBrancCode, inLevelChild, '', 'Count', '1', inSession));
+    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBranchCode, inLevelChild, '', 'Count', '1', inSession));
     -- Результат
     RETURN QUERY
        SELECT tmp.Number
@@ -101,7 +101,7 @@ BEGIN
     ELSE
 
     -- определяется кол-во
-    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBrancCode, inLevelChild, '', 'Count', '1', inSession));
+    vbCount:= (SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBranchCode, inLevelChild, '', 'Count', '1', inSession));
     -- Результат
     RETURN QUERY
        SELECT tmp.Number
@@ -120,7 +120,7 @@ BEGIN
               END :: TVarChar AS Name
             , tmp.Value
        FROM (SELECT tmp.Number
-                  , gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, inLevelChild, '', inLevelChild || CASE WHEN inLevelChild = 'PriceList' THEN 'Id' ELSE '' END || '_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, '0', inSession) AS Value
+                  , gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, inLevelChild, '', inLevelChild || CASE WHEN inLevelChild = 'PriceList' THEN 'Id' ELSE '' END || '_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, '0', inSession) AS Value
              FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
             ) AS tmp
             LEFT JOIN Object ON Object.Id = CAST (CASE WHEN tmp.Value <> '' AND inLevelChild = 'PriceList' THEN tmp.Value END AS Integer)
@@ -131,7 +131,7 @@ BEGIN
             , 0 AS Code
             , 'ввод вес тары' :: TVarChar  AS Name
             , '0' :: TVarChar AS Value
-       FROM gpGet_ToolsWeighing_Value ('Scale_' || inBrancCode, 'Default', '', 'isTareWeightEnter', 'FALSE', inSession) AS tmp
+       FROM gpGet_ToolsWeighing_Value ('Scale_' || inBranchCode, 'Default', '', 'isTareWeightEnter', 'FALSE', inSession) AS tmp
        WHERE inLevelChild = 'TareWeight'
          AND tmp.tmp = 'TRUE'
        ORDER BY 1

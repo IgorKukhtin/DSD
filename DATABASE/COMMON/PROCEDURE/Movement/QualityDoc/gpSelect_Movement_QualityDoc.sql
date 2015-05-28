@@ -192,4 +192,4 @@ ALTER FUNCTION gpSelect_Movement_QualityDoc (TDateTime, TDateTime, Boolean, TVar
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_QualityDoc (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_QualityDoc (inStartDate:= '01.05.2015', inEndDate:= '31.05.2015', inIsErased:=false , inSession:= zfCalc_UserAdmin())

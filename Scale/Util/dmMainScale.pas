@@ -12,7 +12,7 @@ type
     procedure DataModuleCreate(Sender: TObject);
   private
   public
-    function gpSelect_ToolsWeighing_onLevelChild(inBrancCode:Integer;inLevelChild: String): TArrayList;
+    function gpSelect_ToolsWeighing_onLevelChild(inBranchCode:Integer;inLevelChild: String): TArrayList;
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
     function gpGet_Scale_User:String;
 
@@ -38,6 +38,9 @@ type
 
     function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
     function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
+    function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
+
+    function lpGet_BranchName(inBranchCode:Integer): String;
   end;
 
   function gpInitialize_OperDate(var execParams:TParams):TDateTime;
@@ -79,7 +82,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
 
-       if (isLast = FALSE) or (isNext = TRUE)
+       if (isNext = TRUE)or(isLast = FALSE)//так сложно, т.к. при isLast = FALSE надо обработать MovementId
        then Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger)
        else Params.AddParam('inMovementId', ftInteger, ptInput, 0);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
@@ -224,7 +227,7 @@ begin
          Result:=DataSet.FieldByName('isOk').asBoolean;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+         ShowMessage('Ошибка получения - gpUpdate_Scale_Movement_check');
        end;}
     end;
 end;
@@ -265,7 +268,33 @@ begin
          Execute;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpUpdate_Scale_MIFloat');
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MILinkObject');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_Partner_print';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inPartnerId', ftInteger, ptInput, PartnerId);
+       Params.AddParam('inIsMovement', ftBoolean, ptInput, isMovement);
+       Params.AddParam('inIsAccount', ftBoolean, ptInput, isAccount);
+       Params.AddParam('inIsTransport', ftBoolean, ptInput, isTransport);
+       Params.AddParam('inIsQuality', ftBoolean, ptInput, isQuality);
+       Params.AddParam('inIsPack', ftBoolean, ptInput, isPack);
+       Params.AddParam('inIsSpec', ftBoolean, ptInput, isSpec);
+       Params.AddParam('inIsTax', ftBoolean, ptInput, isTax);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MILinkObject');
        end;}
     end;
     Result:=true;
@@ -278,14 +307,15 @@ begin
        StoredProcName:='gpInsert_Scale_Movement_all';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inMovementId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
        //try
          Execute;
          execParamsMovement.ParamByName('MovementId_begin').AsInteger:=DataSet.FieldByName('MovementId_begin').asInteger;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+         ShowMessage('Ошибка получения - gpInsert_Movement_all');
        end;}
     end;
     Result:=true;
@@ -317,7 +347,7 @@ begin
          execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+         ShowMessage('Ошибка получения - gpInsertUpdate_Scale_Movement');
        end;}
     end;
     Result:=true;
@@ -358,7 +388,7 @@ begin
          execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+         ShowMessage('Ошибка получения - gpInsert_Scale_MI');
        end;}
     end;
 
@@ -379,13 +409,13 @@ begin
          ParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MI_Erased');
        end;}
     end;
 
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(inBrancCode:Integer;inLevelChild: String): TArrayList;
+function TDMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(inBranchCode:Integer;inLevelChild: String): TArrayList;
 var i: integer;
 begin
     with spSelect do
@@ -393,7 +423,7 @@ begin
        StoredProcName:='gpSelect_Object_ToolsWeighing_onLevelChild';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inBrancCode', ftInteger, ptInput, inBrancCode);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, inBranchCode);
        Params.AddParam('inLevelChild', ftString, ptInput, inLevelChild);
        //try
          Execute;
@@ -431,7 +461,7 @@ begin
 
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpGet_ToolsWeighing_Value');
+         ShowMessage('Ошибка получения - gpGet_Scale_User');
        end;}
     end;
 end;
@@ -480,7 +510,7 @@ begin
          end;
        {except
          SetLength(Result, 0);
-         ShowMessage('Ошибка получения - gpSelect_ToolsWeighing_onLevelChild');
+         ShowMessage('Ошибка получения - gpSelect_Scale_GoodsKindWeighing');
        end;}
     end;
 end;
@@ -785,7 +815,7 @@ begin
          result.Code := Code;
          result.Id   := 0;
          result.Name := '';
-         ShowMessage('Ошибка получения - gpGetObject_byCode');
+         ShowMessage('Ошибка получения - gpGet_Scale_OrderExternal');
        end;}
     end;
 end;
@@ -798,6 +828,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        //try
+         Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
          Execute;
          //
          Result:=DataSet.FieldByName('OperDate').asDateTime;
@@ -807,7 +838,7 @@ begin
          result.Code := Code;
          result.Id   := 0;
          result.Name := '';
-         ShowMessage('Ошибка получения - gpGetObject_byCode');
+         ShowMessage('Ошибка получения - gpGet_Scale_OperDate');
        end;}
     end;
 end;
@@ -889,6 +920,13 @@ begin
          Execute;
          zc_Enum_InfoMoney_30201:=DataSet.FieldByName('Value').asInteger;
 
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Object_Partner() :: TVarChar';
+         Execute;
+         zc_Object_Partner:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Object_ArticleLoss() :: TVarChar';
+         Execute;
+         zc_Object_ArticleLoss:=DataSet.FieldByName('Value').asInteger;
 
        {except
          result.Code := Code;
@@ -899,6 +937,19 @@ begin
     end;
 
     Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.lpGet_BranchName(inBranchCode:Integer): String;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpExecSql_Value';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inSqlText', ftString, ptInput, 'SELECT ValueData FROM Object WHERE ObjectCode = '+ IntToStr(inBranchCode) + ' and DescId = zc_Object_Branch()' );
+       Execute;
+       Result:=DataSet.FieldByName('Value').asString;
+    end;
 end;
 {------------------------------------------------------------------------}
 function gpInitialize_Ini: Boolean;
@@ -912,8 +963,10 @@ begin
 
   Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'scale.ini');
 
-  SettingMain.BrancCode:=Ini.ReadInteger('Main','BrancCode',1);
-  if SettingMain.BrancCode=1 then Ini.WriteInteger('Main','BrancCode',1);
+  SettingMain.BranchCode:=Ini.ReadInteger('Main','BrancCode',1);
+  if SettingMain.BranchCode=1 then Ini.WriteInteger('Main','BrancCode',1);
+  //!!!временно!!!
+  Ini.WriteInteger('Main','BranchCode',SettingMain.BranchCode);
 
   SettingMain.DefaultCOMPort:=Ini.ReadInteger('Main','DefaultCOMPort',1);
   if SettingMain.DefaultCOMPort=1 then Ini.WriteInteger('Main','DefaultCOMPort',1);

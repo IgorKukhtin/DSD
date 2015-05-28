@@ -2,9 +2,11 @@
 
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_OperDate (TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Scale_OperDate (TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_OperDate (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_OperDate(
-    IN inSession     TVarChar      -- сессия пользователя
+    IN inBranchCode  Integer       -- 
+  , IN inSession     TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (OperDate  TDateTime)
 AS
@@ -21,7 +23,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_OperDate (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Scale_OperDate (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -31,4 +33,4 @@ ALTER FUNCTION gpGet_Scale_OperDate (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_OperDate (zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_OperDate (1, zfCalc_UserAdmin())

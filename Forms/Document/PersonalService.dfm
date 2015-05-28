@@ -3,23 +3,23 @@ inherited PersonalServiceForm: TPersonalServiceForm
   ClientHeight = 662
   ClientWidth = 1345
   ExplicitWidth = 1361
-  ExplicitHeight = 700
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1345
     Height = 576
-    ExplicitWidth = 1112
+    ExplicitWidth = 1345
     ExplicitHeight = 576
     ClientRectBottom = 576
     ClientRectRight = 1345
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1112
+      ExplicitWidth = 1345
       ExplicitHeight = 552
       inherited cxGrid: TcxGrid
         Width = 1345
         Height = 552
-        ExplicitWidth = 1112
+        ExplicitWidth = 1345
         ExplicitHeight = 552
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -391,7 +391,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   inherited DataPanel: TPanel
     Width = 1345
     TabOrder = 3
-    ExplicitWidth = 1112
+    ExplicitWidth = 1345
     inherited edInvNumber: TcxTextEdit
       Left = 144
       ExplicitLeft = 144
@@ -877,6 +877,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
   inherited StatusGuides: TdsdGuides
     Left = 24
     Top = 16
+  end
+  inherited spChangeStatus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_PersonalService'
+    Left = 128
+    Top = 40
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalService'

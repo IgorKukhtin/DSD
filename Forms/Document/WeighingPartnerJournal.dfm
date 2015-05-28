@@ -1114,12 +1114,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
       end>
     PackSize = 1
     Left = 64

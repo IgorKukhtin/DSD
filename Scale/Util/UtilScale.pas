@@ -33,7 +33,8 @@ type
   TArrayListScale = array of TListItemScale;
 
   TSettingMain = record
-    BrancCode :Integer;
+    BranchCode:Integer;
+    BranchName:String;
     ScaleCount:Integer;
     DefaultCOMPort:Integer;
     IndexScale_old:Integer;
@@ -104,6 +105,9 @@ var
   zc_Movement_ProductionSeparate: Integer;
 
   zc_Enum_InfoMoney_30201: Integer; // Доходы + Мясное сырье + Мясное сырье
+
+  zc_Object_Partner    : Integer;
+  zc_Object_ArticleLoss: Integer;
 
   zc_Measure_Sh: Integer;
   zc_Measure_Kg: Integer;
@@ -411,8 +415,14 @@ begin
    with execParams do
     for i:=0 to Count-1 do
     begin
-         if execParams[i].DataType=ftString then execParams.ParamByName(Items[i].Name).AsString:='';
-         if execParams[i].DataType=ftInteger then execParams.ParamByName(Items[i].Name).AsInteger:=0;
+         if execParams[i].DataType=ftInteger
+         then execParams.ParamByName(Items[i].Name).AsInteger:=0
+         else
+             if execParams[i].DataType=ftFloat
+             then execParams.ParamByName(Items[i].Name).AsFloat:=0
+             else
+                if (execParams[i].DataType<>ftDate) and (execParams[i].DataType<>ftDateTime)
+                then execParams.ParamByName(Items[i].Name).AsString:='';
     end;
 end;
 {------------------------------------------------------------------------------}
