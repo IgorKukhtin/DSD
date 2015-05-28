@@ -45,8 +45,8 @@ type
     MainColReserved: TcxGridDBColumn;
     dsdDBViewAddOnMain: TdsdDBViewAddOn;
     spSelectRemains: TdsdStoredProc;
-    DSRemains: TDataSource;
-    CDSRemains: TClientDataSet;
+    RemainsDS: TDataSource;
+    RemainsCDS: TClientDataSet;
     ceAmount: TcxCurrencyEdit;
     cxLabel1: TcxLabel;
     lcName: TcxLookupComboBox;
@@ -60,15 +60,31 @@ type
     cbSpec: TcxCheckBox;
     actCheck: TdsdOpenForm;
     cxButton1: TcxButton;
+    actInsertUpdateCheckItems: TAction;
+    spGoodsRemains: TdsdStoredProc;
+    spSelectCheck: TdsdStoredProc;
+    CheckDS: TDataSource;
+    CheckCDS: TClientDataSet;
+    spInsertUpdateCheckItems: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
     procedure lcNameKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure actSoldExecute(Sender: TObject);
+    procedure actInsertUpdateCheckItemsExecute(Sender: TObject);
+    procedure ceAmountKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     FSoldRegim: boolean;
     procedure SetSoldRegim(const Value: boolean);
+    // возвращает остаток
+    function GetGoodsPropertyRemains(GoodsId: integer): real;
     // процедура обновляет параметры для введения нового чека
     procedure NewCheck;
+    // Изменение тела чека
+    procedure InsertUpdateBillCheckItems;
+    // Расчет актуального остатка по позиции
+    procedure UpdateQuantityInQuery(GoodsId: integer);
+
     property SoldRegim: boolean read FSoldRegim write SetSoldRegim;
   public
     { Public declarations }
@@ -82,11 +98,25 @@ implementation
 {$R *.dfm}
 procedure TMainCashForm.actChoiceGoodsInRemainsGridExecute(Sender: TObject);
 begin
-  if CDSRemains.FieldByName('Remains').AsFloat>0 then begin
-     lcName.Text := CDSRemains.FieldByName('GoodsName').Text;
+  if RemainsCDS.FieldByName('Remains').AsFloat>0 then begin
+     lcName.Text := RemainsCDS.FieldByName('GoodsName').Text;
      ceAmount.Enabled := true;
+     ceAmount.Value := 1;
      ActiveControl := ceAmount;
   end;
+end;
+
+procedure TMainCashForm.actInsertUpdateCheckItemsExecute(Sender: TObject);
+begin
+  if ceAmount.Value <> 0 then begin //ЕСЛИ введенное кол-во 0 то просто переходим к следующему коду
+    if RemainsCDS.FieldByName('Price').AsFloat = 0 then begin
+       ShowMessage('Нельзя продать товар с 0 ценой! Свяжитесь с менеджером');
+       exit;
+    end;
+    InsertUpdateBillCheckItems;
+  end;
+  SoldRegim := true;
+  ActiveControl := lcName;
 end;
 
 procedure TMainCashForm.actSoldExecute(Sender: TObject);
@@ -97,11 +127,64 @@ begin
   Activecontrol := lcName;
 end;
 
+procedure TMainCashForm.ceAmountKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key=VK_Return then
+     actInsertUpdateCheckItems.Execute
+end;
+
 procedure TMainCashForm.FormCreate(Sender: TObject);
 begin
   inherited;
   UserSettingsStorageAddOn.LoadUserSettings;
   NewCheck;
+end;
+
+function TMainCashForm.GetGoodsPropertyRemains(GoodsId: integer): real;
+begin
+  spGoodsRemains.ParamByName('inGoodsId').Value := GoodsId;
+  spGoodsRemains.Execute;
+  result := spGoodsRemains.ParamByName('outRemains').asFloat;
+end;
+
+procedure TMainCashForm.InsertUpdateBillCheckItems;
+begin
+  if ceAmount.Value = 0 then
+     exit;
+  if SoldRegim
+     and (ceAmount.Value > GetGoodsPropertyRemains(RemainsCDS.FieldByName('Id').asInteger)) then
+  begin
+    ShowMessage('Не хватает количества для продажи!');
+    exit;
+  end;
+  if (not SoldRegim) and
+     (abs(ceAmount.Value) > abs(CheckCDS.FieldByName('Amount').asFloat)) then
+  begin
+      ShowMessage('Не хватает количества для возврата!');
+  end;
+  with spInsertUpdateCheckItems do begin
+     ParamByName('inAmount').Value := ceAmount.Value;
+     ParamByName('inPrice').Value := RemainsCDS.FieldByName('Price').asFloat;
+     if ceAmount.Value > 0 then
+        ParamByName('inGoodsId').Value := RemainsCDS.FieldByName('Id').asInteger
+     else
+        ParamByName('inGoodsId').Value := CheckCDS.FieldByName('GoodsId').asInteger;
+     Execute;
+     spSelectCheck.Execute;
+//     CalcTotalSumm;// Пересчитали значение Суммы в TotalPanel
+     UpdateQuantityInQuery(ParamByName('inGoodsId').Value);
+  end;
+end;
+
+{------------------------------------------------------------------------------}
+procedure TMainCashForm.UpdateQuantityInQuery(GoodsId: integer);
+begin
+  if RemainsCDS.Locate('Id', GoodsId, []) then begin
+     RemainsCDS.Edit;
+     RemainsCDS.FieldByName('Remains').AsFloat := GetGoodsPropertyRemains(GoodsId);
+     RemainsCDS.Post;
+  end;
 end;
 
 procedure TMainCashForm.lcNameKeyDown(Sender: TObject; var Key: Word;

@@ -51,11 +51,11 @@ type
     colSalePrice: TcxGridDBColumn;
     colSaleSumm: TcxGridDBColumn;
     cxLabel12: TcxLabel;
-    cbFarmacyShow: TcxCheckBox;
     cxLabel11: TcxLabel;
     edPointDate: TcxDateEdit;
     cxLabel9: TcxLabel;
     edPointNumber: TcxTextEdit;
+    cbFarmacyShow: TcxCheckBox;
   private
     { Private declarations }
   public

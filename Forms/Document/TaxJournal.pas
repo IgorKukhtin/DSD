@@ -98,9 +98,11 @@ type
     bbMedocFalse: TdxBarButton;
     colRegisteredNumber: TcxGridDBColumn;
     cxTextEdit1: TcxTextEdit;
-    cxDateEdit1: TcxDateEdit;
+    edLoadData: TcxDateEdit;
     spGetInfo: TdsdStoredProc;
     spSelectTax_Medoc: TdsdStoredProc;
+    edPeriod: TcxDateEdit;
+    cxTextEdit2: TcxTextEdit;
   private
     { Private declarations }
   public

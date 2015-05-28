@@ -645,6 +645,7 @@ inherited IncomeForm: TIncomeForm
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
       ImageIndex = 43
     end
     object actCalculateSalePrice: TdsdExecStoredProc
@@ -1104,14 +1105,14 @@ inherited IncomeForm: TIncomeForm
         Value = 0.000000000000000000
         Component = edPointNumber
         DataType = ftWideString
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
         Name = 'inOperDateBranch'
         Value = ''
         Component = edPointDate
         DataType = ftDateTime
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
         Value = ''

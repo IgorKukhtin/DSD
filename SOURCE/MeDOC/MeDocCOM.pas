@@ -234,7 +234,10 @@ begin
                        ParamByName('inOperDate').Value := VarToDateTime(HeaderDataSet.Fields['N15'].Value);
                        ParamByName('inBranchNumber').Value := HeaderDataSet.Fields['N1_13'].Value;
                        ParamByName('inContract').Value := HeaderDataSet.Fields['N2_3'].Value;
-                       ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A2_9'].Value;
+                       ParamByName('inTotalSumm').Value := HeaderDataSet.Fields['A1_9'].Value +
+                                                           HeaderDataSet.Fields['A1_10'].Value +
+                                                           HeaderDataSet.Fields['A1_11'].Value +
+                                                           HeaderDataSet.Fields['A2_9'].Value;
                     end;
                     ParamByName('inInvNumberRegistered').Value := HeaderDataSet.Fields['SEND_DPA_RN'].Value;
                     SEND_DPA_DATE := HeaderDataSet.Fields['SEND_DPA_DATE'].Value;

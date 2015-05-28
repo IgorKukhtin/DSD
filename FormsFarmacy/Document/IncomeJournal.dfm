@@ -2,8 +2,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 469
   ClientWidth = 831
-  ExplicitLeft = -49
-  ExplicitTop = -113
   ExplicitWidth = 839
   ExplicitHeight = 496
   PixelsPerInch = 96
@@ -12,17 +10,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Width = 831
     Height = 412
     TabOrder = 3
-    ExplicitWidth = 807
+    ExplicitWidth = 831
     ExplicitHeight = 412
     ClientRectBottom = 412
     ClientRectRight = 831
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 807
+      ExplicitWidth = 831
       ExplicitHeight = 412
       inherited cxGrid: TcxGrid
         Width = 831
         Height = 412
-        ExplicitWidth = 807
+        ExplicitWidth = 831
         ExplicitHeight = 412
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -254,7 +252,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   end
   inherited Panel: TPanel
     Width = 831
-    ExplicitWidth = 807
+    ExplicitWidth = 831
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -288,10 +286,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Category = 'dsdImportExport'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGetDataForSendNew
+      StoredProc = spGetDataForSend
       StoredProcList = <
         item
-          StoredProc = spGetDataForSendNew
+          StoredProc = spGetDataForSend
         end>
     end
     object mactSendOneDocNEW: TMultiAction [3]
@@ -517,10 +515,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbSendData'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -568,6 +562,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     object bbSendData: TdxBarButton
       Action = mactSendOneDoc
       Category = 0
+      Visible = ivNever
     end
     object bbNewSend: TdxBarButton
       Action = mactSendOneDocNEW

@@ -1,4 +1,4 @@
-unit Main;
+unit Main;                                 
 
 interface
 
@@ -122,8 +122,6 @@ type
     procedure GridExit(Sender: TObject);
     procedure CodeSearchsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure ceCountKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure CodeSearchsEnter(Sender: TObject);
     procedure ceCountExit(Sender: TObject);
     procedure bbSendCheckClick(Sender: TObject);
@@ -205,7 +203,6 @@ type
     fShowStoreRemains: boolean;
     FListStoreRemains: TStrings;
     FFilterRemains: TStringList;
-    FFilterCheck: TStringList;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN); message WM_KEYDOWN;
     procedure UM_SetActive(var Message: TMessage); message WM_SetActive;
     procedure SetShowStoreRemains(Value: boolean);
@@ -216,8 +213,6 @@ type
     procedure SetSoldRegim(AValue: boolean);
     function Execute:boolean; override;
     procedure NewCheck;// процедура обновляет параметры для введения нового чека
-    function CheckCountCode: boolean;// проверяет возможность продажи данного кол-ва
-    procedure InsertUpdateBillCheckItems; //Изменение тела чека
     procedure CalcTotalSumm;// Пересчитали значение Суммы в TotalPanel
     function PutCheckToCash(Discount, SalerCash: real; PaidType: TPaidType): boolean;// Отбиваем чек через ЭККА
     procedure pKillDontEnterCheck;//удалить чеки не введенные в программу
@@ -226,10 +221,8 @@ type
     property Percent: real read fPercent write SetPercent;
     property TypePercent: real read fTypePercent write SetTypePercent;
     property ShowStoreRemains: boolean read fShowStoreRemains write SetShowStoreRemains;
-    procedure UpdateQuantityInQuery(const ID: integer);
     function CalcTotalDiscount(APercent: real): real;
     procedure OnNameEditTimerEvent(Sender: TObject);
-    procedure RefreshCheckQuery;
   public
     SendToCashOnly: boolean;
     isStore: boolean;
@@ -301,7 +294,6 @@ begin
   SendToCashOnly:= false;
   FFilterRemains:=TStringList.Create;
   FListStoreRemains:= TStringList.Create;
-  FFilterCheck:= TStringList.Create;
   gbSaler.Visible:=GetDefaultValue_fromFile(ifDefaults,'Common','ShowSalerPanel','false')='true';
   gbDiscount.Visible:=GetDefaultValue_fromFile(ifDefaults,'Saler','ShowDiscPanel','false')='true';
   TotalPanel.Visible:=gbDiscount.Visible;
@@ -363,51 +355,6 @@ begin
   Cash.AlwaysSold:=GetDefaultValue_fromFile(ifDefaults,Self.ClassName,'AlwaysSold','true')='true';
   Grid.OnKeyDown := GridKeyDown;
   NewQuery.Filtered := true;
-end;
-{------------------------------------------------------------------------------}
-procedure TSoldWithCompMainForm.UpdateQuantityInQuery(const ID: integer);
-var
-  B: TBookmark;
-begin
-  with NewQuery do begin
-    DisableControls;
-    Filtered := false;
-    if GuideControl.FindValue(IntToStr(ID),'GoodsPropertyID') then begin
-       Edit;
-       FieldByName('RemainsCount').asFloat :=
-               StrToFloat(GetStringValue('MainDb',
-                    'SELECT (Remains.RemainsCount - ISNULL(CheckAmount.OperCount, 0)) AS ReturnValue ' +
-'FROM (SELECT SUM(GoodsCardItemsCount.RemainsCount) AS RemainsCount ' +
-'        FROM dba.GoodsCardItemsCount ' +
-'        JOIN dba.GoodsCardItems ' +
-'         ON GoodsCardItems.ID = GoodsCardItemsCount.GoodsCardItemsID ' +
-'      WHERE GoodsCardItemsCount.UnitID = ' + IntTostr(abs(UnitID)) + ' and GoodsCardItemsCount.RemainsCount > 0 ' +
-'        AND GoodsCardItems.GoodsPropertyId = ' + IntTostr(ID) + ') AS Remains ' +
-', (SELECT SUM(OperCount) AS OperCount ' +
-'             FROM PrepareCheckItem ' +
-'             JOIN (SELECT Id FROM PrepareCheck ' +
-'                            WHERE CheckStatus = zc_csPutOff() ' +
-'             UNION SELECT ' + IntTostr(PrepareCheckID) + ') AS PrepareCheck ON PrepareCheck.Id = PrepareCheckItem.PrepareCheckId ' +
-'         AND PrepareCheckItem.GoodsPropertyId = ' + IntTostr(ID) + ') AS CheckAmount'));
-       Post;
-       if FieldByName('RemainsCount').asFloat = 0 then
-          Next;
-          if Eof then
-             Prior;
-       B := GetBookmark;
-    end;
-    NewQuery.OnFilterRecord := NewQueryFilterRecord;
-    Filtered := true;
-    if Assigned(B) then begin
-       try
-         GotoBookmark(B);
-       except
-
-       end;
-       FreeBookmark(B);
-    end;
-    EnableControls;
-  end;
 end;
 {------------------------------------------------------------------------------}
 procedure TSoldWithCompMainForm.ceCodeChange(Sender: TObject);
@@ -487,12 +434,6 @@ begin
   end;
 end;
 {------------------------------------------------------------------------------}
-procedure TSoldWithCompMainForm.FormShow(Sender: TObject);
-begin
-  inherited;
-  Activecontrol:=lcName;
-end;
-{------------------------------------------------------------------------------}
 procedure TSoldWithCompMainForm.CodeSearchsKeyPress(Sender: TObject; var Key: Char);
 begin
   if not (Key in ['0'..'9',Char(VK_BACK)]) then Key:=#0
@@ -524,11 +465,6 @@ begin
      else ceCount.Value:=-abs(ceCount.Value);
      ActiveControl:=ceCount;
   end;
-end;
-{------------------------------------------------------------------------------}
-function TSoldWithCompMainForm.CheckCountCode;// проверяет возможность продажи данного кол-ва
-begin
-  result:=true;
 end;
 {------------------------------------------------------------------------------}
 procedure TSoldWithCompMainForm.TotalPanelCaption;
@@ -578,80 +514,6 @@ begin
    fTypePercent:=AValue;
    TotalPercent:=Percent+fTypePercent;
    TotalPanelCaption;
-end;
-{------------------------------------------------------------------------------}
-procedure TSoldWithCompMainForm.InsertUpdateBillCheckItems; //Изменение тела чека
-  function GetGoodsPropertyRemains(GoodsPropertyId: integer): real;
-  begin
-    result:=StrToFloat(GetStringValue('MainDb','select fGetGoodsPropertyRemainsOnDate('+IntTostr(GoodsPropertyID)+',Today(*),'+IntTostr(abs(UnitID))+') as ReturnValue'));
-  end;
-  {----------------------------------------------------------------------------}
-  var pParams: TParams;
-      S: string;
-      l:longint;
-begin pParams:=nil;
-//  NewQuery.Database.StartTransaction;
-  try
-    if ceCount.Value=0 then exit;
-    if inSoldRegim and MoreFloat(ceCount.Value,GetGoodsPropertyRemains(NewQuery.FieldByName('GoodsPropertyId').asInteger),NullValue)
-       then begin
-          TypeShowMessage('Не хватает количества для продажи!',mtError,[],0);
-       end;
-    if (not inSoldRegim) and MoreFloat(abs(ceCount.Value),abs(CheckQuery.FieldByName('OperCount').asFloat),NullValue)
-       then begin
-        TypeShowMessage('Не хватает количества для возврата!',mtError,[],0);
-       end;
-    ParamAddValue(pParams,'Code',ftInteger,NewQuery.FieldByName('Code').asInteger);
-    SetCursorAtFirstRecord(pParams,NewQuery);
-      with spInsertUpdate do begin
-         ParamByName('@PrepareCheckID').asInteger := PrepareCheckID;
-         if ceCount.Value > 0 then begin
-            ParamByName('@OperCount').asFloat := MinValue([ceCount.Value, NewQuery.FieldByName('RemainsCount').asFloat]);
-            ParamByName('@OperPrice').asFloat := NewQuery.FieldByName('LastPrice').asFloat;
-            ParamByName('@GoodsPropertyID').asInteger := NewQuery.FieldByName('GoodsPropertyID').asInteger;
-         end
-         else begin
-            ParamByName('@OperCount').asFloat := ceCount.Value;
-            ParamByName('@OperPrice').asFloat := NewQuery.FieldByName('LastPrice').asFloat;
-            ParamByName('@GoodsPropertyID').asInteger := CheckQuery.FieldByName('GoodsPropertyID').asInteger;
-         end;
-         try
-           ExecProc;
-           GuideCheck.BookedRefreshQuery;// Перечитали запрос
-           CheckQuery.Last;
-           CalcTotalSumm;// Пересчитали значение Суммы в TotalPanel
-           UpdateQuantityInQuery(ParamByName('@GoodsPropertyID').asInteger);
-           RefreshCheckQuery;
-           if ceCount.Value>0 then begin
-              ceCount.Value := ceCount.Value-ParamByName('@OperCount').asFloat;
-              if ceCount.Value>0 then NewQuery.Next;
-           end
-           else
-              ceCount.Value:=0;
-          except
-           on E:EDBEngineError do EDB_EngineErrorMsg(E);
-         end;
-      end;
-  finally
-    //if NewQuery.Database.InTransaction then NewQuery.Database.Commit
-  end
-end;
-{------------------------------------------------------------------------------}
-procedure TSoldWithCompMainForm.ceCountKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if Key=VK_Return then begin
-     if ceCount.Value<>0 then begin //ЕСЛИ введенное кол-во 0 то просто переходим к следующему коду
-        if NewQuery.FieldByName('LastPrice').AsFloat = 0 then begin
-           ShowMessage('Нельзя продать товар с 0 ценой! Свяжитесь с менеджером');
-           exit;
-        end;
-        if not CheckCountCode then exit;
-        InsertUpdateBillCheckItems;
-     end;
-     inSoldRegim:=true;
-     ActiveControl:=lcName;
-  end;
 end;
 {------------------------------------------------------------------------------}
 procedure TSoldWithCompMainForm.CodeSearchsEnter(Sender: TObject);
@@ -1170,10 +1032,7 @@ var Index: integer;
 begin
   inherited;
   Accept := (DataSet.FieldByName('RemainsCount').AsFloat > 0.01) or (DataSet.FieldByName('OperCount').AsFloat > 0.01);
- { Accept:=(DataSet.FieldByName('RemainsCount').AsFloat > 0) or FFilterCheck.Find(DataSet.FieldByName('Code').AsString,Index);
-  if ShowStoreRemains and (not Accept) then
-     Accept:= Accept or FFilterRemains.Find(DataSet.FieldByName('Code').AsString,Index)
-}end;
+end;
 
 procedure TSoldWithCompMainForm.quStoreRemainsAfterOpen(DataSet: TDataSet);
 begin
@@ -1190,29 +1049,6 @@ begin
   end;
   FFilterRemains.Sort;
   TStringList(FListStoreRemains).Sort;
-end;
-
-procedure TSoldWithCompMainForm.RefreshCheckQuery;
-var B: TBookMark;
-begin
-  if not CheckQuery.Active then exit;
-  CheckQuery.DisableControls;
-  B:=CheckQuery.GetBookmark;
-  try
-    FFilterCheck.Clear;
-    with CheckQuery do begin
-      First;
-      while not EOF do begin
-        FFilterCheck.Add(FieldByName('Code').asString);
-        Next;
-      end
-    end;
-    FFilterCheck.Sort;
-  finally
-    CheckQuery.GotoBookmark(B);
-    CheckQuery.FreeBookmark(B);
-    CheckQuery.EnableControls
-  end
 end;
 
 procedure TSoldWithCompMainForm.siCashWorkClick(Sender: TObject);

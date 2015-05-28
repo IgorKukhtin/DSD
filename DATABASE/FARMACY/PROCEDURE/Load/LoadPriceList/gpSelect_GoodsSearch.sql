@@ -62,9 +62,9 @@ BEGIN
          PartnerGoods.MinimumLot,
          Object_Goods.NDS,
          LinkGoods.Id AS LinkGoodsId, 
-         MarginCondition.MarginPercent,
+         (MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0))::TFloat,
          zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100), -- Цена С НДС
-                           MarginCondition.MarginPercent, -- % наценки
+                           MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
                            ObjectGoodsView.isTop, -- ТОП позиция
                            ObjectGoodsView.PercentMarkup, -- % наценки у товара
                            ObjectFloat_Percent.valuedata)::TFloat AS NewPrice
@@ -87,7 +87,8 @@ BEGIN
 
             LEFT JOIN Object_Goods_Main_View AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
             LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = Object_MarginCategoryLink.MarginCategoryId
-                                     AND (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
+                                     AND (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat 
+                                     BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
             LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId = LoadPriceList.JuridicalId 

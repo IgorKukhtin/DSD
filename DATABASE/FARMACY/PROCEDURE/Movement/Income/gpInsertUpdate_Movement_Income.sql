@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inOperDateBranch      TDateTime , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE(Id Integer, InvNumberBranch TVarChar) AS
+RETURNS INTEGER AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbOldContractId Integer;
@@ -40,10 +40,10 @@ BEGIN
      ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inOperDate, inPriceWithVAT
                                           , inFromId, inToId, inNDSKindId, inContractId, inPaymentDate, vbUserId);
 
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), inId, inInvNumberBranch);
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), ioId, inInvNumberBranch);
 
      -- 
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inId, inOperDateBranch);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), ioId, inOperDateBranch);
 
 END;
 $BODY$

@@ -12,6 +12,7 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
            , ''::TVarChar                 AS InvNumber
            , ''::TVarChar                 AS ContractTagGroupName
            , ''::TVarChar                 AS ContractTagName
+           , ''::TVarChar                 AS ContractKindName
            , 0::Integer                   AS ContractStateKindCode
            , NULL::TDateTime              AS startdate
            , NULL::TDateTime              AS enddate

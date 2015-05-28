@@ -63,7 +63,8 @@ uses
   FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   dsdApplication in '..\SOURCE\dsdApplication.pas',
-  dsdException in '..\SOURCE\dsdException.pas';
+  dsdException in '..\SOURCE\dsdException.pas',
+  dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas';
 
 {$R *.res}
 

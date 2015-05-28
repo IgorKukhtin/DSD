@@ -293,20 +293,6 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Top = 47
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085':'
     end
-    object cbFarmacyShow: TcxCheckBox
-      Left = 192
-      Top = 64
-      DragMode = dmAutomatic
-      ParentFont = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -11
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = []
-      Style.IsFontAssigned = True
-      TabOrder = 13
-      Width = 22
-    end
     object cxLabel11: TcxLabel
       Left = 224
       Top = 5
@@ -319,7 +305,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Enabled = False
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 15
+      TabOrder = 14
       Width = 100
     end
     object cxLabel9: TcxLabel
@@ -332,8 +318,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Top = 64
       Enabled = False
       Properties.ReadOnly = False
-      TabOrder = 17
+      TabOrder = 16
       Width = 99
+    end
+    object cbFarmacyShow: TcxCheckBox
+      Left = 189
+      Top = 64
+      TabOrder = 17
+      Width = 30
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -765,6 +757,21 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Name = 'PaymentDate'
         Value = Null
         DataType = ftDateTime
+      end
+      item
+        Name = 'BranchDate'
+        Value = Null
+        Component = edPointDate
+      end
+      item
+        Name = 'InvNumberBranch'
+        Value = Null
+        Component = edPointNumber
+      end
+      item
+        Name = 'Checked'
+        Value = Null
+        Component = cbFarmacyShow
       end>
     Left = 216
     Top = 248
@@ -809,7 +816,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     Top = 193
   end
   inherited RefreshAddOn: TRefreshAddOn
-    DataSet = ''
+    FormName = 'TIncomePharmacyJournal'
+    DataSet = 'MasterCDS'
     Left = 912
     Top = 320
   end

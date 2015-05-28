@@ -128,12 +128,14 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
         item
           Name = 'Id'
           Value = Null
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'TextValue'
           Value = Null
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput

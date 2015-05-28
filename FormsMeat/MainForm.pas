@@ -574,6 +574,8 @@ type
     N61: TMenuItem;
     actJuridical_PrintKindItem: TdsdOpenForm;
     N62: TMenuItem;
+    actMedocJournal: TdsdOpenForm;
+    N63: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
