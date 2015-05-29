@@ -59,11 +59,7 @@ type
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
     actIsDay: TdsdDataSetRefresh;
-    bbGoodsKind: TdxBarControlContainerItem;
     cbinIsDay: TcxCheckBox;
-    bbPartionGoods: TdxBarControlContainerItem;
-    bbAmount: TdxBarControlContainerItem;
-    bbPrint2: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint3: TdxBarButton;
     Panel1: TPanel;
@@ -76,6 +72,11 @@ type
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     PersonalCode: TcxGridDBColumn;
+    TotalCount1: TcxGridDBColumn;
+    TotalCountKg1: TcxGridDBColumn;
+    CountMI1: TcxGridDBColumn;
+    CountMovement1: TcxGridDBColumn;
+    actPrint1: TdsdPrintAction;
   private
   public
   end;

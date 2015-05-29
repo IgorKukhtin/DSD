@@ -25,6 +25,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Height = 416
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 87
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -266,6 +267,26 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCount1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountKg1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountMI1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountMovement1
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -503,6 +524,26 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCount1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountKg1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountMI1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountMovement1
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -551,7 +592,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Width = 180
       end
       object TotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1082#1086#1084#1087#1083'.)'
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -559,10 +600,10 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 102
+        Width = 80
       end
       object TotalCountKg: TcxGridDBColumn
-        Caption = #1042#1077#1089
+        Caption = #1042#1077#1089' ('#1082#1086#1084#1087#1083'.)'
         DataBinding.FieldName = 'TotalCountKg'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -570,10 +611,10 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 65
+        Width = 80
       end
       object CountMI: TcxGridDBColumn
-        Caption = #1050#1086#1083'. '#1089#1090#1088#1086#1082
+        Caption = #1050#1086#1083'. '#1089#1090#1088#1086#1082' ('#1082#1086#1084#1087#1083'.)'
         DataBinding.FieldName = 'CountMI'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -581,10 +622,10 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 96
+        Width = 80
       end
       object CountMovement: TcxGridDBColumn
-        Caption = #1050#1086#1083'. '#1076#1086#1082'.'
+        Caption = #1050#1086#1083'. '#1076#1086#1082'. ('#1082#1086#1084#1087#1083'.)'
         DataBinding.FieldName = 'CountMovement'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -592,7 +633,47 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 96
+        Width = 80
+      end
+      object TotalCount1: TcxGridDBColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1082#1083#1076#1074')'
+        DataBinding.FieldName = 'TotalCount1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalCountKg1: TcxGridDBColumn
+        Caption = #1042#1077#1089' ('#1082#1083#1076#1074')'
+        DataBinding.FieldName = 'TotalCountKg1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 67
+      end
+      object CountMI1: TcxGridDBColumn
+        Caption = #1050#1086#1083'. '#1089#1090#1088#1086#1082' ('#1082#1083#1076#1074')'
+        DataBinding.FieldName = 'CountMI1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountMovement1: TcxGridDBColumn
+        Caption = #1050#1086#1083'. '#1076#1086#1082'. ('#1082#1083#1076#1074')'
+        DataBinding.FieldName = 'CountMovement1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -686,8 +767,8 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 88
-    Top = 200
+    Left = 96
+    Top = 176
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -779,10 +860,6 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         end
         item
           Visible = True
-          ItemName = 'bbAmount'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -792,6 +869,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         item
           Visible = True
           ItemName = 'bbPrint3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintBy_Goods'
         end
         item
           Visible = True
@@ -824,45 +909,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       Category = 0
     end
     object bbPrintBy_Goods: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
+      Action = actPrint1
       Category = 0
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      Visible = ivAlways
-      ImageIndex = 3
-      ShortCut = 16464
     end
     object dxBarStatic: TdxBarStatic
       Caption = '   '
       Category = 0
       Hint = '   '
       Visible = ivAlways
-    end
-    object bbGoodsKind: TdxBarControlContainerItem
-      Caption = #1087#1086' '#1042#1080#1076#1072#1084
-      Category = 0
-      Hint = #1087#1086' '#1042#1080#1076#1072#1084
-      Visible = ivAlways
-    end
-    object bbPartionGoods: TdxBarControlContainerItem
-      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Category = 0
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Visible = ivAlways
-    end
-    object bbAmount: TdxBarControlContainerItem
-      Caption = #1087#1086' '#1076#1085#1103#1084
-      Category = 0
-      Hint = #1087#1086' '#1076#1085#1103#1084
-      Visible = ivAlways
-      Control = cbinIsDay
-    end
-    object bbPrint2: TdxBarButton
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093')'
-      Category = 0
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1094#1077#1093')'
-      Visible = ivAlways
-      ImageIndex = 18
-      ShortCut = 16464
     end
     object bbPrint3: TdxBarButton
       Action = actPrint
@@ -1087,6 +1141,62 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrint1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072#1084
+      ImageIndex = 16
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'operDate,PersonalName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'PersonalName'
+          Value = ''
+          Component = PersonalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PositionName'
+          Value = ''
+          Component = PositionGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'inIsDay'
+          Value = 'False'
+          Component = cbinIsDay
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isPrint'
+          Value = 'False'
+          DataType = ftBoolean
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
+      ReportNameParam.DataType = ftString
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1132,6 +1242,11 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Name = 'inIsDay'
           Value = 'False'
           Component = cbinIsDay
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isPrint'
+          Value = 'True'
           DataType = ftBoolean
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
