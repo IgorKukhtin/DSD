@@ -124,13 +124,13 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actReport_WeighingPartner: TdsdOpenForm [3]
+    object actReport_PersonalComplete: TdsdOpenForm [3]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
-      FormName = 'TReport_WeighingPartnerForm'
-      FormNameParam.Value = 'TReport_WeighingPartnerForm'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084'/'#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084'/'#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072#1084
+      FormName = 'TReport_PersonalCompleteForm'
+      FormNameParam.Value = 'TReport_PersonalCompleteForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <>
@@ -3574,7 +3574,7 @@ inherited MainForm: TMainForm
         Caption = '-'
       end
       object miReport_WeighingPartner: TMenuItem
-        Action = actReport_WeighingPartner
+        Action = actReport_PersonalComplete
       end
     end
     object miReportsGoods: TMenuItem [9]

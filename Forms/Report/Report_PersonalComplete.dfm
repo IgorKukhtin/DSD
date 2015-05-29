@@ -1,7 +1,7 @@
-object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
+object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084'/'#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072#1084'>'
   ClientHeight = 496
   ClientWidth = 945
   Color = clBtnFace
@@ -604,7 +604,7 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
     Top = 87
     Action = actIsDay
     Properties.ReadOnly = False
-    TabOrder = 2
+    TabOrder = 1
     Width = 102
   end
   object Panel1: TPanel
@@ -902,8 +902,8 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_WeighingPartnerDialogForm'
-      FormNameParam.Value = 'TReport_WeighingPartnerDialogForm'
+      FormName = 'TReport_PersonalCompleteDialogForm'
+      FormNameParam.Value = 'TReport_PersonalCompleteDialogForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -1140,7 +1140,7 @@ object Report_WeighingPartnerForm: TReport_WeighingPartnerForm
     end
   end
   object spReport: TdsdStoredProc
-    StoredProcName = 'gpReport_WeighingPartner'
+    StoredProcName = 'gpReport_PersonalComplete'
     DataSet = MasterCDS
     DataSets = <
       item

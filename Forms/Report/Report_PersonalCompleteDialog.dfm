@@ -1,4 +1,4 @@
-object Report_WeighingPartnerDialogForm: TReport_WeighingPartnerDialogForm
+object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog

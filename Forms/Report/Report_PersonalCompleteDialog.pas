@@ -1,4 +1,4 @@
-unit Report_WeighingPartnerDialog;
+unit Report_PersonalCompleteDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_WeighingPartnerDialogForm = class(TParentForm)
+  TReport_PersonalCompleteDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -41,6 +41,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_WeighingPartnerDialogForm);
+  RegisterClass(TReport_PersonalCompleteDialogForm);
 
 end.

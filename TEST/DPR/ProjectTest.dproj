@@ -2065,12 +2065,12 @@
 				<Form>QualityDocJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_WeighingPartner.pas">
-				<Form>Report_WeighingPartnerForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_PersonalComplete.pas">
+				<Form>Report_PersonalCompleteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_WeighingPartnerDialog.pas">
-				<Form>Report_WeighingPartnerDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_PersonalCompleteDialog.pas">
+				<Form>Report_PersonalCompleteDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

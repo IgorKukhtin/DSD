@@ -1,4 +1,4 @@
-unit Report_WeighingPartner;
+unit Report_PersonalComplete;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
 
 type
-  TReport_WeighingPartnerForm = class(TParentForm)
+  TReport_PersonalCompleteForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -87,6 +87,6 @@ implementation
 
 
 initialization
-  RegisterClass(TReport_WeighingPartnerForm);
+  RegisterClass(TReport_PersonalCompleteForm);
 
 end.
