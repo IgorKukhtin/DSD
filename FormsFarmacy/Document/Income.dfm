@@ -1,29 +1,27 @@
 inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
-  ClientWidth = 864
-  ExplicitLeft = -82
-  ExplicitTop = -170
-  ExplicitWidth = 872
+  ClientWidth = 904
+  ExplicitWidth = 912
   ExplicitHeight = 553
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 864
+    Width = 904
     Height = 400
     ExplicitTop = 126
-    ExplicitWidth = 864
+    ExplicitWidth = 904
     ExplicitHeight = 400
     ClientRectBottom = 400
-    ClientRectRight = 864
+    ClientRectRight = 904
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 864
+      ExplicitWidth = 904
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
-        Width = 864
+        Width = 904
         Height = 376
-        ExplicitWidth = 864
+        ExplicitWidth = 904
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -237,10 +235,10 @@ inherited IncomeForm: TIncomeForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 864
+    Width = 904
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 864
+    ExplicitWidth = 904
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -269,11 +267,11 @@ inherited IncomeForm: TIncomeForm
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
-      TabOrder = 8
+      TabOrder = 9
       ExplicitTop = 63
-      ExplicitWidth = 208
+      ExplicitWidth = 169
       ExplicitHeight = 22
-      Width = 208
+      Width = 169
     end
     object cxLabel3: TcxLabel
       Left = 327
@@ -288,7 +286,7 @@ inherited IncomeForm: TIncomeForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 4
+      TabOrder = 5
       Width = 174
     end
     object edTo: TcxButtonEdit
@@ -299,7 +297,7 @@ inherited IncomeForm: TIncomeForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 5
+      TabOrder = 6
       Width = 184
     end
     object cxLabel4: TcxLabel
@@ -311,7 +309,7 @@ inherited IncomeForm: TIncomeForm
       Left = 327
       Top = 64
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 11
+      TabOrder = 14
       Width = 130
     end
     object cxLabel10: TcxLabel
@@ -327,7 +325,7 @@ inherited IncomeForm: TIncomeForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 13
+      TabOrder = 16
       Width = 86
     end
     object cxLabel5: TcxLabel
@@ -343,15 +341,16 @@ inherited IncomeForm: TIncomeForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 6
+      TabOrder = 7
       Width = 140
     end
     object edPaymentDate: TcxDateEdit
       Left = 558
       Top = 64
+      EditValue = 42144d
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 15
+      TabOrder = 18
       Width = 100
     end
     object cxLabel6: TcxLabel
@@ -378,7 +377,7 @@ inherited IncomeForm: TIncomeForm
       StyleDisabled.BorderColor = clBtnFace
       StyleDisabled.BorderStyle = ebsSingle
       StyleDisabled.TextColor = clBtnText
-      TabOrder = 17
+      TabOrder = 20
       Width = 94
     end
     object ceTotalSummPVAT: TcxCurrencyEdit
@@ -400,7 +399,7 @@ inherited IncomeForm: TIncomeForm
       StyleDisabled.BorderColor = clBtnFace
       StyleDisabled.BorderStyle = ebsSingle
       StyleDisabled.TextColor = clBtnText
-      TabOrder = 18
+      TabOrder = 21
       Width = 94
     end
     object cxLabel7: TcxLabel
@@ -430,28 +429,48 @@ inherited IncomeForm: TIncomeForm
     object cxLabel9: TcxLabel
       Left = 220
       Top = 46
-      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
     end
-    object cxTextEdit1: TcxTextEdit
+    object edPointNumber: TcxTextEdit
       Left = 220
       Top = 64
       Properties.ReadOnly = False
-      TabOrder = 22
+      TabOrder = 11
       Width = 99
     end
     object cxLabel11: TcxLabel
       Left = 219
       Top = 5
-      Caption = #1044#1072#1090#1072
+      Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080
     end
-    object cxDateEdit1: TcxDateEdit
+    object edPointDate: TcxDateEdit
       Left = 219
       Top = 23
       EditValue = 42132d
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 24
+      TabOrder = 3
       Width = 100
+    end
+    object cbFarmacyShow: TcxCheckBox
+      Left = 187
+      Top = 63
+      DragMode = dmAutomatic
+      Enabled = False
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 10
+      Width = 22
+    end
+    object cxLabel12: TcxLabel
+      Left = 159
+      Top = 46
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085':'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -475,7 +494,27 @@ inherited IncomeForm: TIncomeForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -606,6 +645,7 @@ inherited IncomeForm: TIncomeForm
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
       ImageIndex = 43
     end
     object actCalculateSalePrice: TdsdExecStoredProc
@@ -619,6 +659,9 @@ inherited IncomeForm: TIncomeForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
       Hint = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
@@ -972,6 +1015,21 @@ inherited IncomeForm: TIncomeForm
         Value = Null
         Component = edPaymentDate
         DataType = ftDateTime
+      end
+      item
+        Name = 'BranchDate'
+        Value = Null
+        Component = edPointDate
+      end
+      item
+        Name = 'InvNumberBranch'
+        Value = Null
+        Component = edPointNumber
+      end
+      item
+        Name = 'Checked'
+        Value = Null
+        Component = cbFarmacyShow
       end>
     Left = 216
     Top = 248
@@ -1043,13 +1101,18 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
       end
       item
+        Name = 'inInvNumberBranch'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = edPointNumber
+        DataType = ftWideString
+        ParamType = ptInput
       end
       item
+        Name = 'inOperDateBranch'
         Value = ''
-        ParamType = ptUnknown
+        Component = edPointDate
+        DataType = ftDateTime
+        ParamType = ptInput
       end
       item
         Value = ''

@@ -639,6 +639,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actCashRegister: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1099
+      FormName = 'TCashRegisterForm'
+      FormNameParam.Value = 'TCashRegisterForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -898,6 +908,9 @@ inherited MainForm: TMainForm
       end
       object N8: TMenuItem [19]
         Caption = '-'
+      end
+      object N50: TMenuItem [20]
+        Action = actCashRegister
       end
       object N10: TMenuItem
         Caption = '-'

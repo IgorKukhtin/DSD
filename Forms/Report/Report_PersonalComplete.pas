@@ -1,4 +1,4 @@
-unit Report_WeighingPartner;
+unit Report_PersonalComplete;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
 
 type
-  TReport_WeighingPartnerForm = class(TParentForm)
+  TReport_PersonalCompleteForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -52,31 +52,31 @@ type
     PersonalGuides: TdsdGuides;
     PositionName: TcxGridDBColumn;
     CountMovement: TcxGridDBColumn;
-    actPrint: TdsdPrintAction;
     bbPrintBy_Goods: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     FormParams: TdsdFormParams;
     TotalCountKg: TcxGridDBColumn;
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
-    actIsInfoMoney: TdsdDataSetRefresh;
-    bbGoodsKind: TdxBarControlContainerItem;
+    actIsDay: TdsdDataSetRefresh;
     cbinIsDay: TcxCheckBox;
-    bbPartionGoods: TdxBarControlContainerItem;
-    bbAmount: TdxBarControlContainerItem;
-    actPrint_GP: TdsdPrintAction;
-    bbPrint2: TdxBarButton;
-    actPrint_Remains: TdsdPrintAction;
+    actPrint: TdsdPrintAction;
     bbPrint3: TdxBarButton;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    edUnitGroup: TcxButtonEdit;
+    edPersonal: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    edLocation: TcxButtonEdit;
+    edPosition: TcxButtonEdit;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
+    PersonalCode: TcxGridDBColumn;
+    TotalCount1: TcxGridDBColumn;
+    TotalCountKg1: TcxGridDBColumn;
+    CountMI1: TcxGridDBColumn;
+    CountMovement1: TcxGridDBColumn;
+    actPrint1: TdsdPrintAction;
   private
   public
   end;
@@ -88,6 +88,6 @@ implementation
 
 
 initialization
-  RegisterClass(TReport_WeighingPartnerForm);
+  RegisterClass(TReport_PersonalCompleteForm);
 
 end.

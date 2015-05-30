@@ -22,6 +22,7 @@ type
     N5: TMenuItem;
     N6: TMenuItem;
     N7: TMenuItem;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

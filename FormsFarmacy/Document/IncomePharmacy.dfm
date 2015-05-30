@@ -233,17 +233,17 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Top = 63
       TabOrder = 7
       ExplicitTop = 63
-      ExplicitWidth = 206
+      ExplicitWidth = 178
       ExplicitHeight = 22
-      Width = 206
+      Width = 178
     end
     object cxLabel3: TcxLabel
-      Left = 217
+      Left = 330
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076
     end
     object edFrom: TcxButtonEdit
-      Left = 217
+      Left = 330
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -255,7 +255,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Width = 174
     end
     object edTo: TcxButtonEdit
-      Left = 399
+      Left = 512
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -267,17 +267,17 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Width = 184
     end
     object cxLabel4: TcxLabel
-      Left = 399
+      Left = 512
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel10: TcxLabel
-      Left = 217
-      Top = 46
+      Left = 330
+      Top = 47
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 217
+      Left = 330
       Top = 64
       Enabled = False
       Properties.Buttons = <
@@ -287,6 +287,45 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end>
       TabOrder = 11
       Width = 86
+    end
+    object cxLabel12: TcxLabel
+      Left = 164
+      Top = 47
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085':'
+    end
+    object cxLabel11: TcxLabel
+      Left = 224
+      Top = 5
+      Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080
+    end
+    object edPointDate: TcxDateEdit
+      Left = 224
+      Top = 23
+      EditValue = 42132d
+      Enabled = False
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 14
+      Width = 100
+    end
+    object cxLabel9: TcxLabel
+      Left = 225
+      Top = 47
+      Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
+    end
+    object edPointNumber: TcxTextEdit
+      Left = 225
+      Top = 64
+      Enabled = False
+      Properties.ReadOnly = False
+      TabOrder = 16
+      Width = 99
+    end
+    object cbFarmacyShow: TcxCheckBox
+      Left = 189
+      Top = 64
+      TabOrder = 17
+      Width = 30
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -718,110 +757,41 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Name = 'PaymentDate'
         Value = Null
         DataType = ftDateTime
+      end
+      item
+        Name = 'BranchDate'
+        Value = Null
+        Component = edPointDate
+      end
+      item
+        Name = 'InvNumberBranch'
+        Value = Null
+        Component = edPointNumber
+      end
+      item
+        Name = 'Checked'
+        Value = Null
+        Component = cbFarmacyShow
       end>
     Left = 216
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Income'
+    StoredProcName = 'gpInsertUpdate_Movement_IncomeSale'
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
-        Name = 'inInvNumber'
+        Name = 'inChecked'
         Value = ''
-        Component = edInvNumber
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inOperDate'
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPriceWithVAT'
-        Value = 'False'
+        Component = cbFarmacyShow
         DataType = ftBoolean
         ParamType = ptInput
-      end
-      item
-        Name = 'inFromId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inToId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inNDSKindId'
-        Value = ''
-        Component = NDSKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inContractId'
-        Value = 0.000000000000000000
-        Component = ContractGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPaymentDate'
-        Value = ''
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 162
     Top = 312
@@ -838,12 +808,16 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     Top = 192
   end
   inherited HeaderSaver: THeaderSaver
-    StoredProc = nil
+    ControlList = <
+      item
+        Control = cbFarmacyShow
+      end>
     Left = 232
     Top = 193
   end
   inherited RefreshAddOn: TRefreshAddOn
-    DataSet = ''
+    FormName = 'TIncomePharmacyJournal'
+    DataSet = 'MasterCDS'
     Left = 912
     Top = 320
   end

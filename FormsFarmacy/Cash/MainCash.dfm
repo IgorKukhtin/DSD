@@ -1,4 +1,5 @@
 inherited MainCashForm: TMainCashForm
+  ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 412
   ClientWidth = 770
@@ -26,6 +27,7 @@ inherited MainCashForm: TMainCashForm
       TabOrder = 0
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = CheckDS
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -40,20 +42,25 @@ inherited MainCashForm: TMainCashForm
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object CheckGridColCode: TcxGridDBColumn
           Caption = #1050#1086#1076
+          DataBinding.FieldName = 'GoodsCode'
         end
         object CheckGridColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'GoodsName'
           Width = 317
         end
         object CheckGridColAmount: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086
+          DataBinding.FieldName = 'Amount'
         end
         object CheckGridColPrice: TcxGridDBColumn
           Caption = #1062#1077#1085#1072
+          DataBinding.FieldName = 'Price'
           Width = 57
         end
         object CheckGridColSumm: TcxGridDBColumn
           Caption = #1057#1091#1084#1084#1072
+          DataBinding.FieldName = 'Summ'
           Width = 60
         end
       end
@@ -129,7 +136,7 @@ inherited MainCashForm: TMainCashForm
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = DSRemains
+        DataController.DataSource = RemainsDS
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -198,6 +205,7 @@ inherited MainCashForm: TMainCashForm
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 0
+        OnKeyDown = ceAmountKeyDown
         Width = 72
       end
       object cxLabel1: TcxLabel
@@ -227,7 +235,7 @@ inherited MainCashForm: TMainCashForm
         Properties.ListOptions.AnsiSort = True
         Properties.ListOptions.CaseInsensitive = True
         Properties.ListOptions.SyncMode = True
-        Properties.ListSource = DSRemains
+        Properties.ListSource = RemainsDS
         TabOrder = 2
         OnKeyDown = lcNameKeyDown
         Width = 210
@@ -287,6 +295,9 @@ inherited MainCashForm: TMainCashForm
       StoredProcList = <
         item
           StoredProc = spSelectRemains
+        end
+        item
+          StoredProc = spSelectCheck
         end>
     end
     object actChoiceGoodsInRemainsGrid: TAction
@@ -307,6 +318,10 @@ inherited MainCashForm: TMainCashForm
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
+    end
+    object actInsertUpdateCheckItems: TAction
+      Caption = 'actInsertUpdateCheckItems'
+      OnExecute = actInsertUpdateCheckItemsExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -333,10 +348,10 @@ inherited MainCashForm: TMainCashForm
   end
   object spSelectRemains: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains '
-    DataSet = CDSRemains
+    DataSet = RemainsCDS
     DataSets = <
       item
-        DataSet = CDSRemains
+        DataSet = RemainsCDS
       end>
     Params = <>
     PackSize = 1
@@ -344,12 +359,12 @@ inherited MainCashForm: TMainCashForm
     Left = 232
     Top = 96
   end
-  object DSRemains: TDataSource
-    DataSet = CDSRemains
+  object RemainsDS: TDataSource
+    DataSet = RemainsCDS
     Left = 256
     Top = 136
   end
-  object CDSRemains: TClientDataSet
+  object RemainsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 304
@@ -388,5 +403,88 @@ inherited MainCashForm: TMainCashForm
       end>
     Left = 48
     Top = 104
+  end
+  object spGoodsRemains: TdsdStoredProc
+    StoredProcName = 'gpGet_GoodsOnUnitRemains'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'outRemains'
+        Value = Null
+        DataType = ftFloat
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 80
+  end
+  object spSelectCheck: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_Check'
+    DataSet = CheckCDS
+    DataSets = <
+      item
+        DataSet = CheckCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    AutoWidth = True
+    Left = 176
+    Top = 256
+  end
+  object CheckDS: TDataSource
+    DataSet = CheckCDS
+    Left = 200
+    Top = 296
+  end
+  object CheckCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 248
+    Top = 296
+  end
+  object spInsertUpdateCheckItems: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Check'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 256
   end
 end

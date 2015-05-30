@@ -291,7 +291,10 @@ uses
   IncomePharmacyJournal in '..\..\FormsFarmacy\Document\IncomePharmacyJournal.pas' {IncomePharmacyJournalForm: TParentForm},
   LoadFarmacyReportTest in '..\SOURCE\LoadFarmacyReportTest.pas',
   CheckJournal in '..\..\Forms\Document\CheckJournal.pas' {CheckJournalForm: TParentForm},
-  Check in '..\..\Forms\Document\Check.pas' {CheckForm: TParentForm};
+  Check in '..\..\Forms\Document\Check.pas' {CheckForm: TParentForm},
+  CashRegisterKind in '..\..\Forms\Kind\CashRegisterKind.pas' {CashRegisterKindForm: TParentForm},
+  CashRegister in '..\..\Forms\Guides\CashRegister.pas' {CashRegisterForm: TParentForm},
+  CashRegisterEdit in '..\..\Forms\Guides\CashRegisterEdit.pas' {CashRegisterEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

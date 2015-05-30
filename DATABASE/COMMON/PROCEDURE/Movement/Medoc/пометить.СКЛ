@@ -1,0 +1,6 @@
+update Movement set StatusId = zc_Enum_Status_Erased()
+
+WHERE StatusId <> zc_Enum_Status_Erased() AND DescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective())
+
+AND AccessKeyId IN (zc_Enum_Process_AccessKey_DocumentKharkov(), zc_Enum_Process_AccessKey_DocumentKiev(), 
+zc_Enum_Process_AccessKey_DocumentNikolaev(), zc_Enum_Process_AccessKey_DocumentKrRog(), zc_Enum_Process_AccessKey_DocumentCherkassi());

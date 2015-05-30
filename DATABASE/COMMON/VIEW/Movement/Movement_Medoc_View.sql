@@ -9,6 +9,7 @@ SELECT
            , Movement.OperDate
            , Movement.ParentId
            , Movement.StatusId
+           , Movement.StatusId
            , Object_Status.ObjectCode                     AS StatusCode
            , Object_Status.ValueData                      AS StatusName
            , MovementString_InvNumberPartner.ValueData    AS InvNumberPartner

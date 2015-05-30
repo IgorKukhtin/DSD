@@ -28,7 +28,7 @@ SELECT       Movement.Id                                AS Id
            , MovementFloat_TotalSummSale.ValueData      AS SaleSumm
            , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
            , MovementDate_Branch.ValueData              AS BranchDate
-           , MovementBoolean_Checked.ValueData          AS Checked
+           , COALESCE(MovementBoolean_Checked.ValueData, false)   AS Checked
 
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
