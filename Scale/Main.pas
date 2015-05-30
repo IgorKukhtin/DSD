@@ -900,7 +900,11 @@ begin
     PanelTotalSumm.Caption:=FormatFloat(',0.00##',ParamByName('TotalSumm').asFloat);
 
     if ParamByName('OrderExternalId').AsInteger<>0
-    then PanelOrderExternal.Caption:='  '+ParamByName('OrderExternalName_master').asString
+    then if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_OrderExternal
+         then PanelOrderExternal.Caption:=' ç.'+ParamByName('OrderExternalName_master').asString
+         else if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_SendOnPrice
+              then PanelOrderExternal.Caption:=' ô.'+ParamByName('OrderExternalName_master').asString
+              else PanelOrderExternal.Caption:=' ???'+ParamByName('OrderExternalName_master').asString
     else PanelOrderExternal.Caption:='';
 
   end;

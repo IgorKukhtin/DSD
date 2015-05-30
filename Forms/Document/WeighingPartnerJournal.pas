@@ -105,6 +105,9 @@ type
     colOperDate_TransportGoods: TcxGridDBColumn;
     actMovementProtocol: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
+    colInvNumberPartner_Tax: TcxGridDBColumn;
+    colOperDate_Tax: TcxGridDBColumn;
+    colMovementDescNumber: TcxGridDBColumn;
   private
   public
   end;

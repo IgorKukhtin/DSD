@@ -24,21 +24,19 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Loss());
 
      -- сохранили
-     SELECT tmp.ioId
-            INTO ioId
-     FROM lpInsertUpdate_MovementItem_Loss (ioId                 := ioId
-                                          , inMovementId         := inMovementId
-                                          , inGoodsId            := inGoodsId
-                                          , inAmount             := inAmount
-                                          , inCount              := inCount
-                                          , inHeadCount          := inHeadCount
-                                          , inPartionGoodsDate   := inPartionGoodsDate
-                                          , inPartionGoods       := inPartionGoods
-                                          , inGoodsKindId        := inGoodsKindId
-                                          , inAssetId            := inAssetId
-                                          , inPartionGoodsId     := inPartionGoodsId
-                                          , inUserId             := vbUserId
-                                           ) AS tmp;
+     ioId:= lpInsertUpdate_MovementItem_Loss (ioId                 := ioId
+                                            , inMovementId         := inMovementId
+                                            , inGoodsId            := inGoodsId
+                                            , inAmount             := inAmount
+                                            , inCount              := inCount
+                                            , inHeadCount          := inHeadCount
+                                            , inPartionGoodsDate   := inPartionGoodsDate
+                                            , inPartionGoods       := inPartionGoods
+                                            , inGoodsKindId        := inGoodsKindId
+                                            , inAssetId            := inAssetId
+                                            , inPartionGoodsId     := inPartionGoodsId
+                                            , inUserId             := vbUserId
+                                             );
 
 END;
 $BODY$

@@ -29,25 +29,23 @@ BEGIN
      -- меняем параметр
      IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 
--- сохранили
-     SELECT tmp.ioId
-            INTO ioId
-     FROM lpInsertUpdate_MovementItem_Inventory (ioId                 := ioId
-                                               , inMovementId         := inMovementId
-                                               , inGoodsId            := inGoodsId
-                                               , inAmount             := inAmount
-                                               , inPartionGoodsDate   := inPartionGoodsDate
-                                               , inPrice              := inPrice
-                                               , inSumm               := inSumm
-                                               , inHeadCount          := inHeadCount
-                                               , inCount              := inCount
-                                               , inPartionGoods       := inPartionGoods
-                                               , inGoodsKindId        := inGoodsKindId
-                                               , inAssetId            := inAssetId
-                                               , inUnitId             := inUnitId
-                                               , inStorageId          := inStorageId
-                                               , inUserId             := vbUserId
-                                                ) AS tmp;
+     -- сохранили
+     ioId:= lpInsertUpdate_MovementItem_Inventory (ioId                 := ioId
+                                                 , inMovementId         := inMovementId
+                                                 , inGoodsId            := inGoodsId
+                                                 , inAmount             := inAmount
+                                                 , inPartionGoodsDate   := inPartionGoodsDate
+                                                 , inPrice              := inPrice
+                                                 , inSumm               := inSumm
+                                                 , inHeadCount          := inHeadCount
+                                                 , inCount              := inCount
+                                                 , inPartionGoods       := inPartionGoods
+                                                 , inGoodsKindId        := inGoodsKindId
+                                                 , inAssetId            := inAssetId
+                                                 , inUnitId             := inUnitId
+                                                 , inStorageId          := inStorageId
+                                                 , inUserId             := vbUserId
+                                                  ) AS tmp;
 
 END;
 $BODY$

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn_Value(
     IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
     IN inPrice               TFloat    , -- Цена
-    IN ioCountForPrice       TFloat    , -- Цена за количество
+    IN inCountForPrice       TFloat    , -- Цена за количество
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -28,7 +28,7 @@ BEGIN
                                               , inAmount             := inAmount
                                               , inAmountPartner      := inAmountPartner
                                               , inPrice              := inPrice
-                                              , ioCountForPrice      := ioCountForPrice
+                                              , ioCountForPrice      := inCountForPrice
                                               , inHeadCount          := inHeadCount
                                               , inMovementId_Partion := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_MovementId()), 0) :: Integer
                                               , inPartionGoods       := inPartionGoods

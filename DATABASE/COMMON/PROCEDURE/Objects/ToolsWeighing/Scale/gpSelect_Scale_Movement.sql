@@ -11,8 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Movement(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
+             , MovementId_Tax Integer, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
              , StartWeighing TDateTime, EndWeighing TDateTime 
-             , MovementDescId Integer, MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
+             , MovementDescNumber Integer, MovementDescId Integer, MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
              , ChangePercent TFloat
              , TotalCount TFloat, TotalCountTare TFloat
              , TotalSumm TFloat
@@ -72,9 +73,14 @@ BEGIN
              , Movement_TransportGoods.InvNumber     AS InvNumber_TransportGoods
              , Movement_TransportGoods.OperDate      AS OperDate_TransportGoods
 
+             , Movement_Tax.Id                       AS MovementId_Tax
+             , MS_InvNumberPartner_Tax.ValueData     AS InvNumberPartner_Tax
+             , Movement_Tax.OperDate                 AS OperDate_Tax
+
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
+             , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.Id                            AS MovementDescId
              , MovementDesc.ItemName                      AS MovementDescName
              , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
@@ -137,6 +143,9 @@ BEGIN
                                    ON MovementDate_EndWeighing.MovementId =  Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
                                   
+            LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
+                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                   AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                     ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
@@ -227,6 +236,13 @@ BEGIN
                                         AND MovementLinkObject_Position4.DescId = zc_MovementLinkObject_PositionComplete4()
             LEFT JOIN Object AS Object_Position4 ON Object_Position4.Id = MovementLinkObject_Position4.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                           ON MovementLinkMovement_Tax.MovementId = Movement.ParentId
+                                          AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_Tax ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
+                                                               AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
+
        ORDER BY COALESCE (MovementDate_EndWeighing.ValueData, MovementDate_StartWeighing.ValueData) DESC
               , MovementDate_StartWeighing.ValueData DESC
       ;
@@ -244,4 +260,4 @@ ALTER FUNCTION gpSelect_Scale_Movement (TDateTime, TDateTime, Boolean, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Movement (inStartDate:= '01.01.2014', inEndDate:= '01.02.2014', inIsComlete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Movement (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsComlete:= TRUE, inSession:= zfCalc_UserAdmin())

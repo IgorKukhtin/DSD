@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_Loss()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -16,7 +16,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss(
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
     IN inUserId              Integer     -- пользователь
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
@@ -58,8 +59,8 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-      -- сохранили протокол
-      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

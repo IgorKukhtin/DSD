@@ -157,7 +157,9 @@ begin
           //
           try
              //Print
-             if MovementDescId = zc_Movement_Sale
+             if (MovementDescId = zc_Movement_Sale)
+             or (MovementDescId = zc_Movement_Loss)
+             or (MovementDescId = zc_Movement_ReturnOut)
              then Print_Sale(MovementId)
              else if MovementDescId = zc_Movement_ReturnIn
                   then Print_ReturnIn(MovementId)

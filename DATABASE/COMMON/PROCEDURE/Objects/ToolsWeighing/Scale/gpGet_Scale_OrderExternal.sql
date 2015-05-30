@@ -1,19 +1,22 @@
 -- Function: gpGet_Scale_OrderExternal()
 
-DROP FUNCTION IF EXISTS gpSelect_Scale_OrderExternal (TDateTime, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Scale_OrderExternal (TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_OrderExternal(
-    IN inOperDate    TDateTime   ,
-    IN inBarCode     TVarChar    ,
-    IN inSession     TVarChar      -- сессия пользователя
+    IN inOperDate       TDateTime   ,
+    IN inBranchCode     Integer   , --
+    IN inBarCode        TVarChar    ,
+    IN inSession        TVarChar      -- сессия пользователя
 )
-RETURNS TABLE (MovementId       Integer
-             , BarCode          TVarChar
-             , InvNumber        TVarChar
-             , InvNumberPartner TVarChar
+RETURNS TABLE (MovementId            Integer
+             , MovementDescId_order  Integer
+             , BarCode               TVarChar
+             , InvNumber             TVarChar
+             , InvNumberPartner      TVarChar
 
-             , MovementDescId Integer
+             , MovementDescNumber Integer -- !!!только для zc_Movement_SendOnPrice!!!
+             , MovementDescId     Integer -- !!!расчет для будущего документа!!!
              , FromId         Integer, FromCode         Integer, FromName       TVarChar
              , ToId           Integer, ToCode           Integer, ToName         TVarChar
              , PaidKindId     Integer, PaidKindName   TVarChar
@@ -45,10 +48,15 @@ RETURNS TABLE (MovementId       Integer
 AS
 $BODY$
    DECLARE vbUserId     Integer;
+
+   DECLARE vbBranchId   Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpGetUserBySession (inSession);
+   vbUserId:= lpGetUserBySession (inSession);
 
+
+    -- определяется
+    vbBranchId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch());
 
     -- Результат
     RETURN QUERY
@@ -58,8 +66,19 @@ BEGIN
                                  , tmpMovement.OperDate
                                  , MovementLinkObject_Contract.ObjectId       AS ContractId
                                  , MovementLinkObject_From.ObjectId           AS FromId
+                                 , MovementLinkObject_To.ObjectId             AS ToId
                                  , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                  , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+                                   -- вот таким сложным CASE определяется приход или расход
+                                 , CASE WHEN ObjectLink_UnitFrom_Branch.ChildObjectId = vbBranchId
+                                             THEN NULL -- FALSE -- для филиала - расход с него !!!блокируется!!!
+                                        WHEN ObjectLink_UnitTo_Branch.ChildObjectId = vbBranchId
+                                             THEN TRUE -- для филиала - приход на него
+                                        WHEN ObjectLink_UnitTo_Branch.ChildObjectId > 0
+                                             THEN NULL -- FALSE -- для главного - расход с него !!!блокируется!!!
+                                        WHEN ObjectLink_UnitFrom_Branch.ChildObjectId > 0
+                                             THEN TRUE -- для главного - приход на него
+                                   END AS isSendOnPriceIn
                             FROM (SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.DescId
@@ -67,7 +86,7 @@ BEGIN
                                   FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                          AND Movement.DescId = zc_Movement_OrderExternal()
+                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_SendOnPrice())
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
@@ -78,7 +97,7 @@ BEGIN
                                   FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
-                                                          AND Movement.DescId = zc_Movement_OrderExternal()
+                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_SendOnPrice())
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate + INTERVAL '1 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  ) AS tmpMovement
@@ -88,26 +107,65 @@ BEGIN
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                               ON MovementLinkObject_From.MovementId = tmpMovement.Id
                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                              ON MovementLinkObject_To.MovementId = tmpMovement.Id
+                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                  LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                       ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                 LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
+                                                      ON ObjectLink_UnitFrom_Branch.ObjectId = MovementLinkObject_From.ObjectId
+                                                     AND ObjectLink_UnitFrom_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                 LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Branch
+                                                      ON ObjectLink_UnitTo_Branch.ObjectId = MovementLinkObject_To.ObjectId
+                                                     AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
                            )
-           , tmpJuridicalPrint AS (SELECT tmp.Id AS JuridicalId
-                                        , tmp.isMovement
-                                        , tmp.isAccount
-                                        , tmp.isTransport
-                                        , tmp.isQuality
-                                        , tmp.isPack
-                                        , tmp.isSpec
-                                        , tmp.isTax
-                                   FROM lpGet_Object_Juridical_PrintKindItem ((SELECT tmpMovement.JuridicalId FROM tmpMovement LIMIT 1)) AS tmp
+           , tmpJuridicalPrint AS (SELECT tmpGet.Id AS JuridicalId
+                                        , tmpGet.isMovement
+                                        , tmpGet.isAccount
+                                        , tmpGet.isTransport
+                                        , tmpGet.isQuality
+                                        , tmpGet.isPack
+                                        , tmpGet.isSpec
+                                        , tmpGet.isTax
+                                   FROM (SELECT tmpMovement.JuridicalId FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_OrderExternal() LIMIT 1) AS tmp
+                                        INNER JOIN lpGet_Object_Juridical_PrintKindItem ((SELECT tmpMovement.JuridicalId FROM tmpMovement LIMIT 1)) AS tmpGet ON tmpGet.Id = tmp.JuridicalId
                                   )
+      , tmpMovementDescNumber AS (SELECT tmpSelect.Number AS MovementDescNumber
+                                  FROM (SELECT tmpMovement.DescId AS MovementDescId, tmpMovement.FromId, tmpMovement.ToId, tmpMovement.isSendOnPriceIn
+                                        FROM tmpMovement
+                                        WHERE tmpMovement.DescId = zc_Movement_SendOnPrice()
+                                       ) AS tmp
+                                       INNER JOIN gpSelect_Object_ToolsWeighing_MovementDesc (inBranchCode:= inBranchCode
+                                                                                            , inSession   := inSession
+                                                                                             ) AS tmpSelect ON tmpSelect.MovementDescId = tmp.MovementDescId
+                                                                                                           AND tmpSelect.FromId = CASE WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
+                                                                                                                                            THEN tmp.FromId -- для главного - расход с него
+                                                                                                                                       WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = TRUE
+                                                                                                                                            THEN 0 -- для главного - приход на него, а здесь 0 т.к. он выбирается из справочника
+                                                                                                                                       WHEN tmp.isSendOnPriceIn = TRUE
+                                                                                                                                            THEN tmp.FromId -- для филиала - приход на него, а здесь FromId т.к. не выбирается
+                                                                                                                                       WHEN tmp.isSendOnPriceIn = FALSE
+                                                                                                                                            THEN tmp.FromId -- для для филиала - расход с него
+                                                                                                                                  END
+                                                                                                           AND tmpSelect.ToId   = CASE WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
+                                                                                                                                            THEN 0 -- для главного - расход с него, а здесь 0 т.к. он выбирается из справочника
+                                                                                                                                       WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = TRUE
+                                                                                                                                            THEN tmp.ToId -- для главного - приход на него
+                                                                                                                                       WHEN tmp.isSendOnPriceIn = TRUE
+                                                                                                                                            THEN tmp.ToId -- для филиала - приход на него
+                                                                                                                                       WHEN tmp.isSendOnPriceIn = FALSE
+                                                                                                                                            THEN tmp.ToId -- для для филиала - расход с него, а здесь ToId т.к. не выбирается
+                                                                                                                                  END
+                                 )
        SELECT tmpMovement.Id                                 AS MovementId
+            , tmpMovement.DescId                             AS MovementDescId_order
             , inBarCode                                      AS BarCode
             , tmpMovement.InvNumber                          AS InvNumber
             , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
 
-            , zc_Movement_Sale()                             AS MovementDescId
+            , tmpMovementDescNumber.MovementDescNumber       AS MovementDescNumber -- !!!только для zc_Movement_SendOnPrice!!!
+            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal() THEN zc_Movement_Sale() ELSE tmpMovement.DescId END AS MovementDescId
             , Object_From.Id                                 AS FromId
             , Object_From.ObjectCode                         AS FromCode
             , Object_From.ValueData                          AS FromName
@@ -129,11 +187,30 @@ BEGIN
             , Object_GoodsProperty.ObjectCode                AS GoodsPropertyCode
             , Object_GoodsProperty.ValueData                 AS GoodsPropertyName
 
-            , Object_From.Id         AS PartnerId_calc
-            , Object_From.ObjectCode AS PartnerCode_calc
-            , Object_From.ValueData  AS PartnerName_calc
+            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+                        THEN Object_From.Id
+                   WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
+                        THEN Object_From.Id
+                   WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
+                        THEN Object_To.Id
+              END :: Integer AS PartnerId_calc
+            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+                        THEN Object_From.ObjectCode
+                   WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
+                        THEN Object_From.ObjectCode
+                   WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
+                        THEN Object_To.ObjectCode
+              END :: Integer AS PartnerCode_calc
+            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+                        THEN Object_From.ValueData
+                   WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
+                        THEN Object_From.ValueData
+                   WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
+                        THEN Object_To.ValueData
+              END :: TVarChar AS PartnerName_calc
+
             , MovementFloat_ChangePercent.ValueData AS ChangePercent
-            , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate, -1 * Object_From.Id, inSession) AS tmp WHERE tmp.ContractId = View_Contract_InvNumber.ContractId) AS ChangePercentAmount
+            , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate, zc_Movement_Sale(), -1 * Object_From.Id, zc_Enum_InfoMoney_30101(), Object_PaidKind.Id, inSession) AS tmp WHERE tmp.ContractId = View_Contract_InvNumber.ContractId) AS ChangePercentAmount
 
             , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
@@ -150,6 +227,7 @@ BEGIN
             , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || DATE (tmpMovement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 
        FROM tmpMovement
+            LEFT JOIN tmpMovementDescNumber ON tmpMovementDescNumber.MovementDescNumber > 0
             LEFT JOIN tmpJuridicalPrint ON tmpJuridicalPrint.JuridicalId = tmpMovement.JuridicalId
 
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
@@ -164,6 +242,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = tmpMovement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                        AND tmpMovement.DescId = zc_Movement_OrderExternal()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
@@ -204,7 +283,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_OrderExternal (TDateTime, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -214,5 +293,5 @@ ALTER FUNCTION gpGet_Scale_OrderExternal (TDateTime, TVarChar, TVarChar) OWNER T
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_OrderExternal ('27.02.2015', '0000007448300', zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Scale_OrderExternal ('27.02.2015', '3535', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_OrderExternal ('27.02.2015', 1, '3535', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_OrderExternal ('28.05.2015', 1, '2020017207290', zfCalc_UserAdmin())

@@ -45,6 +45,7 @@ RETURNS TABLE (MovementId       Integer
              , isTax         Boolean   -- Налоговая
 
              , MovementId_Order Integer
+             , MovementDescId_Order Integer
              , InvNumber_Order  TVarChar
              , OrderExternalName_master TVarChar
 
@@ -112,7 +113,7 @@ BEGIN
                                                   THEN zc_PriceList_Basis() -- для филиалов !!!всегда!!!
                                              ELSE 0
                                         END AS PriceListId
-                                      , CASE WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+                                      , CASE WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_SendOnPrice(), zc_Movement_Loss())
                                                   THEN MovementLinkObject_To.ObjectId
                                              WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_ReturnIn(), zc_Movement_Income())
                                                   THEN MovementLinkObject_From.ObjectId
@@ -215,8 +216,8 @@ BEGIN
             , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax
 
             , tmpMovement.MovementId_Order AS MovementId_Order
-            , Movement_Order.InvNumber  AS InvNumber_Order
-
+            , Movement_Order.DescId        AS MovementDescId_Order
+            , Movement_Order.InvNumber     AS InvNumber_Order
             , ('№ <' || Movement_Order.InvNumber || '>' || ' от <' || DATE (Movement_Order.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 
             , MovementFloat_TotalSumm.ValueData AS TotalSumm

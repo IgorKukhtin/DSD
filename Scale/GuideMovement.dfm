@@ -211,6 +211,13 @@ object GuideMovementForm: TGuideMovementForm
           Options.Editing = False
           Width = 70
         end
+        object MovementDescNumber: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1086#1087#1077#1088'.'
+          DataBinding.FieldName = 'MovementDescNumber'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 45
+        end
         object MovementDescName: TcxGridDBColumn
           Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
           DataBinding.FieldName = 'MovementDescName'
@@ -261,11 +268,25 @@ object GuideMovementForm: TGuideMovementForm
         object InvNumberOrder: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
           DataBinding.FieldName = 'InvNumberOrder'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 70
+        end
+        object InvNumberPartner_Tax: TcxGridDBColumn
+          Caption = #8470' '#1085#1072#1083#1086#1075'.'
+          DataBinding.FieldName = 'InvNumberPartner_Tax'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object OperDate_Tax: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+          DataBinding.FieldName = 'OperDate_Tax'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 60
         end
         object InvNumberTransport: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'. '#1087#1091#1090#1077#1074#1086#1081' '#1083'.'

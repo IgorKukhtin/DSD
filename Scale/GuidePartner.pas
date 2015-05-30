@@ -104,14 +104,25 @@ begin
      EditPartnerName.Text:='';
 
      CancelCxFilter;
-     if  (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+     {if  (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
        or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut)
        or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Sale)
        or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
      then CDS.Filter:='InfoMoneyId='+ParamsMovement_local.ParamByName('InfoMoneyId').AsString
+                    + ' and ObjectDescId='+IntToStr(zc_Object_Partner)}
+     if  (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+       or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut)
+     then CDS.Filter:='MovementDescId='+IntToStr(zc_Movement_Income)
+                    + ' and ObjectDescId='+IntToStr(zc_Object_Partner)
+     else
+     if  (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Sale)
+       or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+     then CDS.Filter:='MovementDescId='+IntToStr(zc_Movement_Sale)
                     + ' and ObjectDescId='+IntToStr(zc_Object_Partner)
      else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
           then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_ArticleLoss)
+          else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
+               then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_Unit)
           else CDS.Filter:='1=0';
 
      CDS.Filtered:=false;

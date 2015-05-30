@@ -30,8 +30,8 @@ $BODY$
 BEGIN
 
      -- сохранили <Документ>
-     SELECT tmp.ioId
-            INTO ioId
+     ioId:=
+    (SELECT tmp.ioId
      FROM lpInsertUpdate_Movement_Sale (ioId                   := ioId
                                       , inInvNumber            := inInvNumber
                                       , inInvNumberPartner     := inInvNumberPartner
@@ -52,7 +52,7 @@ BEGIN
                                       , ioCurrencyPartnerValue := ioCurrencyPartnerValue
                                       , ioParPartnerValue      := ioParPartnerValue
                                       , inUserId               := inUserId
-                                       ) AS tmp;
+                                       ) AS tmp);
 
 
 END;

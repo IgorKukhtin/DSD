@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_MovementItem_Send()
+-- Function: lpInsertUpdate_MovementItem_Send_Value()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send_Value (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
@@ -10,26 +10,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN inPartionGoodsDate    TDateTime , -- Дата партии
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inHeadCount           TFloat    , -- Количество голов
- INOUT ioPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
+    IN inPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUnitId              Integer   , -- Подразделение (для МО)
     IN inStorageId           Integer   , -- Место хранения
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inUserId              Integer     -- пользователь
 )
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
-   DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
-
      -- сохранили
-     SELECT tmp.ioId, tmp.ioPartionGoods
-            INTO ioId, ioPartionGoods
+     ioId:=
+    (SELECT tmp.ioId
      FROM lpInsertUpdate_MovementItem_Send (ioId                 := ioId
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId
@@ -37,14 +33,14 @@ BEGIN
                                           , inPartionGoodsDate   := inPartionGoodsDate
                                           , inCount              := inCount
                                           , inHeadCount          := inHeadCount
-                                          , ioPartionGoods       := ioPartionGoods
+                                          , ioPartionGoods       := inPartionGoods
                                           , inGoodsKindId        := inGoodsKindId
                                           , inAssetId            := inAssetId
                                           , inUnitId             := inUnitId
                                           , inStorageId          := inStorageId
                                           , inPartionGoodsId     := inPartionGoodsId
                                           , inUserId             := vbUserId
-                                           );
+                                           ) AS tmp);
 
 END;
 $BODY$
@@ -57,4 +53,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_MovementItem_Send_Value (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')

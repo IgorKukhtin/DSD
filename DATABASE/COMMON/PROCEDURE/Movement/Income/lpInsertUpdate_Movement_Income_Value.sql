@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Movement_Income()
+-- Function: lpInsertUpdate_Movement_Income_Value()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
@@ -21,23 +21,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-   OUT outCurrencyValue      TFloat    , -- курс валюты
-    IN inSession             TVarChar    -- сессия пользователя
-)                              
-RETURNS RECORD
+    IN inUserId              Integer     -- пользователь
+)
+RETURNS Integer
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyId Integer;
-   DECLARE vbIsInsert Boolean;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
-
-     
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.outCurrencyValue
-            INTO ioId, outCurrencyValue
+     ioId:= 
+    (SELECT tmp.ioId
      FROM lpInsertUpdate_Movement_Income (ioId                := ioId
                                         , inInvNumber         := inInvNumber
                                         , inOperDate          := inOperDate
@@ -53,8 +45,8 @@ BEGIN
                                         , inPersonalPackerId  := inPersonalPackerId
                                         , inCurrencyDocumentId:= inCurrencyDocumentId
                                         , inCurrencyPartnerId := inCurrencyPartnerId
-                                        , inUserId            := vbUserId
-                                         ) AS tmp;
+                                        , inUserId            := inUserId
+                                         ) AS tmp);
 
 END;
 $BODY$
@@ -62,19 +54,9 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 29.05.15                                        * lpInsertUpdate_Movement_Income
- 06.09.14                                        * add lpInsert_MovementProtocol
- 23.07.14         * add inCurrencyDocumentId
-                        inCurrencyPartnerId
- 10.02.14                                        * add lpGetAccessKey
- 07.10.13                                        * add lpCheckRight
- 06.10.13                                        * add lfCheck_Movement_Parent
- 30.09.13                                        * del zc_MovementLinkObject_PersonalDriver
- 27.09.13                                        * del zc_MovementLinkObject_Car
- 07.07.13                                        * rename zc_MovementFloat_ChangePercent
- 30.06.13                                        *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.05.15                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Income (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_Movement_Income_Value (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

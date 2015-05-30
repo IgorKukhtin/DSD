@@ -90,6 +90,9 @@ type
     bbViewMI: TSpeedButton;
     FormParams: TdsdFormParams;
     actViewMI: TdsdInsertUpdateAction;
+    InvNumberPartner_Tax: TcxGridDBColumn;
+    OperDate_Tax: TcxGridDBColumn;
+    MovementDescNumber: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

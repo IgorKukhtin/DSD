@@ -17,55 +17,38 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnOut(
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnOut());
 
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
-     -- сохранили свойство <Количество у контрагента>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
-
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-     -- сохранили свойство <Цена за количество>
+     -- изменили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
 
-     -- сохранили свойство <Количество голов>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
-
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
-
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-
-     -- создали объект <Связи Товары и Виды товаров>
-     PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     -- сохранили
+     ioId:= lpInsertUpdate_MovementItem_ReturnOut (ioId                 := ioId
+                                                 , inMovementId         := inMovementId
+                                                 , inGoodsId            := inGoodsId
+                                                 , inAmount             := inAmount
+                                                 , inAmountPartner      := inAmountPartner
+                                                 , inPrice              := inPrice
+                                                 , inCountForPrice      := ioCountForPrice
+                                                 , inHeadCount          := inHeadCount
+                                                 , inPartionGoods       := inPartionGoods
+                                                 , inGoodsKindId        := inGoodsKindId
+                                                 , inAssetId            := inAssetId
+                                                 , inUserId             := vbUserId
+                                                  );
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
                                 THEN CAST (inAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
                            ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
                       END;
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -74,9 +57,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 11.05.14                                        * add lpInsert_MovementItemProtocol
- 11.05.14                                        * change ioCountForPrice
- 10.02.14                                                       *
+ 29.05.15                                        *
 */
 
 

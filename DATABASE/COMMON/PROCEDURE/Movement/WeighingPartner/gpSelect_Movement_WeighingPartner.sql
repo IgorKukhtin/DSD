@@ -12,8 +12,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
+             , MovementId_Tax Integer, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
              , StartWeighing TDateTime, EndWeighing TDateTime 
-             , MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
+             , MovementDescNumber Integer, MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
              , PriceWithVAT Boolean
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat
@@ -63,15 +64,21 @@ BEGIN
 
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
-             , Movement_Parent.InvNumber         AS InvNumber_parent
+             , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete() THEN Movement_Parent.InvNumber ELSE '' END :: TVarChar AS InvNumber_parent
 
              , Movement_TransportGoods.Id            AS MovementId_TransportGoods
              , Movement_TransportGoods.InvNumber     AS InvNumber_TransportGoods
              , Movement_TransportGoods.OperDate      AS OperDate_TransportGoods
 
+             , Movement_Tax.Id                       AS MovementId_Tax
+             , CASE WHEN Movement_Tax.StatusId = zc_Enum_Status_Complete() THEN MS_InvNumberPartner_Tax.ValueData ELSE '' END :: TVarChar AS InvNumberPartner_Tax
+             , Movement_Tax.OperDate                 AS OperDate_Tax
+
+
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
+             , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.ItemName                      AS MovementDescName
              , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
              , MovementString_PartionGoods.ValueData      AS PartionGoods
@@ -136,6 +143,9 @@ BEGIN
                                    ON MovementDate_EndWeighing.MovementId =  Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
                                   
+            LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
+                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                   AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                     ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
@@ -250,6 +260,13 @@ BEGIN
                                          ON MovementLinkObject_User.MovementId = Movement.Id
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                           ON MovementLinkMovement_Tax.MovementId = Movement.ParentId
+                                          AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_Tax ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
+                                                               AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
       ;
   
 END;
@@ -265,4 +282,4 @@ ALTER FUNCTION gpSelect_Movement_WeighingPartner (TDateTime, TDateTime, Boolean,
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

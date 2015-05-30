@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_Income();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -22,52 +22,26 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
 
-     -- проверка - связанные документы Изменять нельзя
-     -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
-
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
-
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-   
-     -- сохранили свойство <Количество у контрагента>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
-     -- сохранили свойство <Количество у заготовителя>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPacker(), ioId, inAmountPacker);
-
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-     -- сохранили свойство <Цена за количество>
-     IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice := 1; END IF;
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
-
-     -- сохранили свойство <Живой вес>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_LiveWeight(), ioId, inLiveWeight);
-     -- сохранили свойство <Количество голов>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
-
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
-
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-
-     -- создали объект <Связи Товары и Виды товаров>
-     PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+     -- сохранили
+     ioId:= lpInsertUpdate_MovementItem_Income (ioId                 := ioId
+                                              , inMovementId         := inMovementId
+                                              , inGoodsId            := inGoodsId
+                                              , inAmount             := inAmount
+                                              , inAmountPartner      := inAmountPartner
+                                              , inAmountPacker       := inAmountPacker
+                                              , inPrice              := inPrice
+                                              , inCountForPrice      := inCountForPrice
+                                              , inLiveWeight         := inLiveWeight
+                                              , inHeadCount          := inHeadCount
+                                              , inPartionGoods       := inPartionGoods
+                                              , inGoodsKindId        := inGoodsKindId
+                                              , inAssetId            := inAssetId
+                                              , inUserId             := vbUserId
+                                               );
 
 END;
 $BODY$
@@ -77,13 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 11.05.14                                        * add lpInsert_MovementItemProtocol
- 06.10.13                                        * add lfCheck_Movement_Parent
- 29.09.13                                        * add recalc inCountForPrice
- 12.07.13          * lpInsertUpdate_MovementFloat_TotalSumm было lpInsertUpdate_MovementFloat_Income_TotalSumm    
- 07.07.13                                        * add lpInsertUpdate_MovementFloat_Income_TotalSumm
- 07.07.13                                        * add lpInsert_Object_GoodsByGoodsKind
- 30.06.13                                        *
+ 29.05.15                                        *
 */
 
 -- тест

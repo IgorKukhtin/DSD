@@ -68,6 +68,7 @@ type
     bbPrintOut: TdxBarButton;
     spSelectPrintOut: TdsdStoredProc;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

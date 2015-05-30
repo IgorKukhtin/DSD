@@ -1,25 +1,25 @@
 inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')>'
   ClientHeight = 668
-  ClientWidth = 740
-  ExplicitWidth = 756
-  ExplicitHeight = 706
+  ClientWidth = 944
+  ExplicitWidth = 960
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 740
+    Width = 944
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 740
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 740
+    ClientRectRight = 944
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 740
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 740
+        Width = 944
         Height = 518
         ExplicitWidth = 740
         ExplicitHeight = 518
@@ -206,12 +206,20 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 80
           end
+          object colUnitName: TcxGridDBColumn [13]
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 740
+    Width = 944
     Height = 100
     TabOrder = 3
     ExplicitWidth = 740
