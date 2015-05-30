@@ -78,32 +78,8 @@ BEGIN
                              AND MovementItem.isErased   = False
                            GROUP BY MovementItem.MovementId 
                           )
-          
-       , tmpMovementSK AS (SELECT  Movement.Id AS MovementId 
-                                 , Movement.InvNumber
-                                 , Movement.OperDate
-                                 , MovementLinkObject_User.ObjectId AS UserId
-                            FROM Movement
-                            
-                               LEFT JOIN MovementLinkObject AS MovementLinkObject_User
-                                                            ON MovementLinkObject_User.MovementId = Movement.Id
-                                                           AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-                                                           AND (MovementLinkObject_User.ObjectId = inPersonalId OR inPersonalId=0)
-                            
-                            WHERE Movement.DescId = zc_Movement_WeighingPartner()
-                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                              --AND Movement.Id in (759166,740060,740078)
-                          GROUP BY  Movement.Id, Movement.InvNumber, Movement.OperDate, MovementLinkObject_User.ObjectId
-                          )
-       , tmpMovementMISK AS (SELECT MovementItem.MovementId AS MovementId
-                                           , Count(MovementItem.Id) AS CountMI 
-                                      FROM MovementItem 
-                                      WHERE MovementItem.MovementId in (Select tmpMovementSK.MovementId from tmpMovementSK)
-                                        AND MovementItem.DescId     = zc_MI_Master()
-                                        AND MovementItem.isErased   = False
-                                      GROUP BY MovementItem.MovementId 
-                                     )
        , tmpPersonal AS (SELECT tmp.MemberId
+                              , Object_Personal_View.PersonalId
                               , Object_Personal_View.PersonalCode 
                               , Object_Personal_View.PersonalName 
                               , Object_Personal_View.PositionCode
@@ -116,8 +92,40 @@ BEGIN
                           WHERE View_Personal.isErased = FALSE
                           GROUP BY View_Personal.MemberId
                          ) AS tmp 
-                         LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = tmp.PersonalId
+                         JOIN Object_Personal_View ON Object_Personal_View.PersonalId = tmp.PersonalId
+                                                  AND (Object_Personal_View.PersonalId = inPersonalId OR inPersonalId=0)
                         )
+          
+       , tmpMovementSK AS (SELECT  Movement.Id AS MovementId 
+                                 , Movement.InvNumber
+                                 , Movement.OperDate
+                                 , tmpPersonal.PersonalId
+                           
+                            FROM Movement
+                            
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                            ON MovementLinkObject_User.MovementId = Movement.Id
+                                                           AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                                                                                      
+                              LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                   ON ObjectLink_User_Member.ObjectId = MovementLinkObject_User.ObjectId
+                                                  AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()                                   
+                              JOIN tmpPersonal on tmpPersonal.MemberId =  ObjectLink_User_Member.ChildObjectId
+
+                           WHERE Movement.DescId = zc_Movement_WeighingPartner()
+                              --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                             -- AND Movement.Id in (759166,740060,740078)
+                           GROUP BY  Movement.Id, Movement.InvNumber, Movement.OperDate, tmpPersonal.PersonalId
+                          )
+       , tmpMovementMISK AS (SELECT MovementItem.MovementId AS MovementId
+                                           , Count(MovementItem.Id) AS CountMI 
+                                      FROM MovementItem 
+                                      WHERE MovementItem.MovementId in (Select tmpMovementSK.MovementId from tmpMovementSK)
+                                        AND MovementItem.DescId     = zc_MI_Master()
+                                        AND MovementItem.isErased   = False
+                                      GROUP BY MovementItem.MovementId 
+                                     )
+     
 
         SELECT  tmp.OperDate
               , tmp.PersonalCode
@@ -203,12 +211,12 @@ BEGIN
                                     ON MovementFloat_TotalCountKg.MovementId =  tmpMovementSK.MovementId
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
-            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+            /*LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = tmpMovementSK.UserId
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()                                   
            
-            LEFT JOIN tmpPersonal on tmpPersonal.MemberId =  ObjectLink_User_Member.ChildObjectId
-          
+            LEFT JOIN tmpPersonal on tmpPersonal.MemberId =  ObjectLink_User_Member.ChildObjectId*/
+            LEFT JOIN tmpPersonal on tmpPersonal.PersonalId =  tmpMovementSK.PersonalId
             INNER JOIN tmpMovementMISK on tmpMovementMISK.MovementId = tmpMovementSK.MovementId
 
 
