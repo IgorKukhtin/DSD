@@ -325,7 +325,7 @@ begin
               isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text);
               if isOrderExternal=false then
               begin
-                   ShowMessage('Ошибка.'+#10+#13+'Значение <№ документа/Код операции/Штрих код документа> не найдено.');
+                   ShowMessage('Ошибка.'+#10+#13+'Значение <Код операции/№ "основания"/Штрих код "основания"> не найдено.');
                    ActiveControl:=EditBarCode;
                    exit;
               end

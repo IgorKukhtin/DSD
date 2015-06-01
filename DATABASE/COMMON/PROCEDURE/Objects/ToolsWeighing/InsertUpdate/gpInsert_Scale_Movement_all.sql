@@ -126,7 +126,7 @@ BEGIN
           -- это "некоторые филиалы", иначе приход = расход !!!временно, т.к. должны быть все!!!
           vbIsUnitCheck:= EXISTS (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO JOIN _tmpUnit_check ON _tmpUnit_check.UnitId = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To()));
           -- это "приход" на "некоторые филиалы"
-          vbIsSendOnPriceIn:= CASE WHEN isBranchCheck = FALSE
+          vbIsSendOnPriceIn:= CASE WHEN vbIsUnitCheck = FALSE
                                         THEN FALSE -- т.е. не важно
                                    WHEN vbBranchId = zc_Branch_Basis() AND EXISTS (SELECT MLO_From.ObjectId FROM MovementLinkObject AS MLO_From JOIN _tmpUnit_check ON _tmpUnit_check.UnitId = MLO_From.ObjectId WHERE MLO_From.MovementId = inMovementId AND MLO_From.DescId = zc_MovementLinkObject_From())
                                         THEN TRUE -- для главного - приход на него
@@ -457,7 +457,7 @@ BEGIN
                                                         , inCountForPrice       := tmp.CountForPrice
                                                         , inPartionGoods        := '' -- !!!не ошибка, здесь не формируется!!!
                                                         , inGoodsKindId         := tmp.GoodsKindId
-                                                        , inUnitId              := tmp.UnitId_to
+                                                        , inUnitId              := CASE WHEN vbIsUnitCheck = FALSE OR vbIsSendOnPriceIn = FALSE THEN 0 ELSE tmp.UnitId_to END -- !!!формируется только когда приход + на "некоторые филиалы"!!!
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_Loss()
@@ -486,7 +486,7 @@ BEGIN
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := NULL
-                                                        , inUnitId              := NULL
+                                                        , inUnitId              := NULL -- !!!не ошибка, здесь не формируется!!!
                                                         , inStorageId           := NULL
                                                         , inPartionGoodsId      := NULL
                                                         , inUserId              := vbUserId
@@ -627,6 +627,7 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
                                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+                                                           AND vbMovementDescId = zc_Movement_Sale()
 
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Master()

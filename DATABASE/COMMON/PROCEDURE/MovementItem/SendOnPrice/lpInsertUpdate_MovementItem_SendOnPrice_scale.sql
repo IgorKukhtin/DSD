@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice_scale(
     IN inCountForPrice       TFloat    , -- Цена за количество
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inUnitId              Integer   , -- 
+   IN inUnitId              Integer   , -- 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer

@@ -677,12 +677,12 @@ end;
 function TDMMainScaleForm.gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
 begin
     //для этих MovementDescId не надо определять доп.параметры, поэтому возвращается true, что б закрыть справочник
-    if  (execParams.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
+    {if  (execParams.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
       or(execParams.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
     then begin
               Result:=true;
               exit
-    end;
+    end;}
 
     with spSelect do
     begin

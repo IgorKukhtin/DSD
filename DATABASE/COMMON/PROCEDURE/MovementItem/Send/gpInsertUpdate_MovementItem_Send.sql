@@ -44,7 +44,7 @@ BEGIN
                                           , inStorageId          := inStorageId
                                           , inPartionGoodsId     := inPartionGoodsId
                                           , inUserId             := vbUserId
-                                           );
+                                           ) AS tmp;
 
 END;
 $BODY$

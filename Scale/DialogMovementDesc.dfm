@@ -20,7 +20,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
     Width = 667
     TabOrder = 2
     ExplicitTop = 640
-    ExplicitWidth = 662
+    ExplicitWidth = 667
     inherited bbOk: TBitBtn
       Visible = False
     end
@@ -33,7 +33,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 662
     object Panel1: TPanel
       Left = 0
       Top = 25
@@ -52,15 +51,14 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 0
-        ExplicitWidth = 189
         object ScaleLabel: TLabel
           Left = 1
           Top = 1
           Width = 190
           Height = 16
           Align = alTop
-          Caption = '  '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' / '#1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080
-          ExplicitWidth = 182
+          Caption = '  '#1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080' / '#8470' '#1086#1089#1085#1086#1074#1072#1085#1080#1103
+          ExplicitWidth = 183
         end
         object EditBarCode: TEdit
           Left = 8
@@ -84,8 +82,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       Alignment = taLeftJustify
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 189
-      ExplicitWidth = 473
       object Panel3: TPanel
         Left = 0
         Top = 0
@@ -131,7 +127,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 1
-        ExplicitWidth = 358
         object Label3: TLabel
           Left = 1
           Top = 1
@@ -158,7 +153,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 356
         end
       end
     end
@@ -179,7 +173,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 2
-      ExplicitWidth = 662
     end
   end
   object Panel6: TPanel
@@ -191,7 +184,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
     Alignment = taLeftJustify
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 662
     object DBGrid: TDBGrid
       Left = 0
       Top = 0

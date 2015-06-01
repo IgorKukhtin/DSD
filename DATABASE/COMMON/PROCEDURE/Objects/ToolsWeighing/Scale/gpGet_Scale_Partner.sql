@@ -234,9 +234,9 @@ BEGIN
             , NULL :: Integer AS PaidKindId
             , '' :: TVarChar  AS PaidKindName
 
-            , NULL :: Integer AS PriceListId
-            , NULL :: Integer AS PriceListCode
-            , '' :: TVarChar  AS PriceListName
+            , Object_PriceList.Id                  AS PriceListId
+            , Object_PriceList.ObjectCode          AS PriceListCode
+            , Object_PriceList.ValueData           AS PriceListName
 
             , NULL :: Integer AS ContractId
             , View_ProfitLossDirection.ProfitLossDirectionCode             AS ContractCode
@@ -263,6 +263,7 @@ BEGIN
             , FALSE       :: Boolean AS isTax
 
        FROM tmpArticleLoss
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
             LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_ProfitLossDirection
                                  ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = tmpArticleLoss.PartnerId
                                 AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
@@ -316,9 +317,9 @@ BEGIN
             , NULL :: Integer AS PaidKindId
             , '' :: TVarChar  AS PaidKindName
 
-            , NULL :: Integer AS PriceListId
-            , NULL :: Integer AS PriceListCode
-            , '' :: TVarChar  AS PriceListName
+            , Object_PriceList.Id                  AS PriceListId
+            , Object_PriceList.ObjectCode          AS PriceListCode
+            , Object_PriceList.ValueData           AS PriceListName
 
             , NULL :: Integer AS ContractId
             , View_AccountDirection.AccountDirectionCode             AS ContractCode
@@ -345,6 +346,7 @@ BEGIN
             , FALSE       :: Boolean AS isTax
 
        FROM tmpUnit
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
             LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
                                  ON ObjectLink_Unit_AccountDirection.ObjectId = tmpUnit.PartnerId
                                 AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()

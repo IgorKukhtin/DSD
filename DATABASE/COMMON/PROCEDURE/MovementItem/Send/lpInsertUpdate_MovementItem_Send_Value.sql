@@ -39,7 +39,7 @@ BEGIN
                                           , inUnitId             := inUnitId
                                           , inStorageId          := inStorageId
                                           , inPartionGoodsId     := inPartionGoodsId
-                                          , inUserId             := vbUserId
+                                          , inUserId             := inUserId
                                            ) AS tmp);
 
 END;
