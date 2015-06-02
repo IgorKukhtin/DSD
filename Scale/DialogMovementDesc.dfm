@@ -3,7 +3,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
   Top = 0
   Caption = #1042#1099#1073#1086#1088' <'#1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
   ClientHeight = 681
-  ClientWidth = 662
+  ClientWidth = 667
   Font.Charset = RUSSIAN_CHARSET
   Font.Height = -13
   Font.Name = 'Tahoma'
@@ -11,16 +11,16 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
-  ExplicitWidth = 678
+  ExplicitWidth = 683
   ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 16
   inherited bbPanel: TPanel
     Top = 640
-    Width = 662
+    Width = 667
     TabOrder = 2
     ExplicitTop = 640
-    ExplicitWidth = 662
+    ExplicitWidth = 667
     inherited bbOk: TBitBtn
       Visible = False
     end
@@ -28,7 +28,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
   object InfoPanel: TPanel
     Left = 0
     Top = 0
-    Width = 662
+    Width = 667
     Height = 71
     Align = alTop
     BevelOuter = bvNone
@@ -36,7 +36,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
     object Panel1: TPanel
       Left = 0
       Top = 25
-      Width = 189
+      Width = 192
       Height = 46
       Align = alLeft
       Alignment = taLeftJustify
@@ -45,7 +45,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       object Panel5: TPanel
         Left = 0
         Top = 0
-        Width = 189
+        Width = 192
         Height = 46
         Align = alClient
         Alignment = taLeftJustify
@@ -54,14 +54,14 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         object ScaleLabel: TLabel
           Left = 1
           Top = 1
-          Width = 187
+          Width = 190
           Height = 16
           Align = alTop
-          Caption = '  '#1053#1086#1084#1077#1088' '#1079#1072#1103#1074#1082#1080' / '#1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080
+          Caption = '  '#1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080' / '#8470' '#1086#1089#1085#1086#1074#1072#1085#1080#1103
           ExplicitWidth = 183
         end
         object EditBarCode: TEdit
-          Left = 7
+          Left = 8
           Top = 19
           Width = 176
           Height = 24
@@ -74,9 +74,9 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       end
     end
     object Panel2: TPanel
-      Left = 189
+      Left = 192
       Top = 25
-      Width = 473
+      Width = 475
       Height = 46
       Align = alClient
       Alignment = taLeftJustify
@@ -121,7 +121,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       object Panel4: TPanel
         Left = 115
         Top = 0
-        Width = 358
+        Width = 360
         Height = 46
         Align = alClient
         Alignment = taLeftJustify
@@ -130,7 +130,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         object Label3: TLabel
           Left = 1
           Top = 1
-          Width = 356
+          Width = 358
           Height = 16
           Align = alTop
           Caption = '  '#1053#1072#1079#1074#1072#1085#1080#1077
@@ -139,7 +139,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         object PanelPartnerName: TPanel
           Left = 1
           Top = 17
-          Width = 356
+          Width = 358
           Height = 28
           Align = alClient
           Alignment = taLeftJustify
@@ -159,7 +159,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
     object MessagePanel: TPanel
       Left = 0
       Top = 0
-      Width = 662
+      Width = 667
       Height = 25
       Align = alTop
       BevelOuter = bvNone
@@ -178,7 +178,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
   object Panel6: TPanel
     Left = 0
     Top = 71
-    Width = 662
+    Width = 667
     Height = 569
     Align = alClient
     Alignment = taLeftJustify
@@ -187,13 +187,13 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
     object DBGrid: TDBGrid
       Left = 0
       Top = 0
-      Width = 662
+      Width = 667
       Height = 569
       Align = alClient
       DataSource = DataSource
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
-      Font.Height = -19
+      Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
       Options = [dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]

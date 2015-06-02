@@ -1,5 +1,6 @@
 -- Function: gpGet_Scale_PartnerParams()
 
+-- DROP FUNCTION IF EXISTS gpGet_Scale_PartnerParams (TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Scale_PartnerParams (TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_PartnerParams(
@@ -22,7 +23,7 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       WITH tmpPartner AS (SELECT Object_Partner.Id             AS PartnerId
+           WITH tmpPartner AS (SELECT Object_Partner.Id             AS PartnerId
                                     , Object_Partner.ObjectCode     AS PartnerCode
                                     , Object_Partner.ValueData      AS PartnerName
                                     , lfGet_Object_Partner_PriceList_record (inContractId, Object_Partner.Id, inOperDate) AS PriceListId
@@ -34,7 +35,20 @@ BEGIN
                                 WHERE Object_Partner.Id = inPartnerId
                                   AND Object_Partner.DescId = zc_Object_Partner()
                                   AND Object_Partner.isErased = FALSE
-                              )
+                              UNION ALL
+                               SELECT Object_Partner.Id             AS PartnerId
+                                    , Object_Partner.ObjectCode     AS PartnerCode
+                                    , Object_Partner.ValueData      AS PartnerName
+                                    , zc_PriceList_Basis()          AS PriceListId
+                                    , 0                             AS GoodsPropertyId
+                               FROM Object AS Object_Partner
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                WHERE Object_Partner.Id = inPartnerId
+                                  AND Object_Partner.DescId IN (zc_Object_Unit(), zc_Object_ArticleLoss())
+                                  AND Object_Partner.isErased = FALSE
+                             )
 
        SELECT tmpPartner.PartnerId
             , tmpPartner.PartnerCode
@@ -56,7 +70,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_PartnerParams (TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Scale_PartnerParams (TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

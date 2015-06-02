@@ -134,6 +134,7 @@ begin
          ParamByName('isTax').asBoolean:= DataSet.FieldByName('isTax').asBoolean;
 
          ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId_Order').asInteger;
+         ParamByName('OrderExternal_DescId').AsInteger:= DataSet.FieldByName('MovementDescId_Order').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
          ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber_Order').asString;
          ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
@@ -184,7 +185,7 @@ begin
                         ParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                   end;
         end
-        else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Нажмите на клавиатуре клавишу <F2>.';
+        else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
    end;
 end;
 {------------------------------------------------------------------------}
@@ -612,6 +613,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParams.ParamByName('MovementDescId').AsInteger);
        Params.AddParam('inPartnerCode', ftInteger, ptInput, inPartnerCode);
        Params.AddParam('inInfoMoneyId', ftInteger, ptInput, execParams.ParamByName('InfoMoneyId').AsInteger);
        Params.AddParam('inPaidKindId', ftInteger, ptInput, execParams.ParamByName('PaidKindId').AsInteger);
@@ -674,6 +676,14 @@ end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
 begin
+    //для этих MovementDescId не надо определять доп.параметры, поэтому возвращается true, что б закрыть справочник
+    {if  (execParams.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
+      or(execParams.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
+    then begin
+              Result:=true;
+              exit
+    end;}
+
     with spSelect do
     begin
        StoredProcName:='gpGet_Scale_PartnerParams';
@@ -756,6 +766,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inBranchCode',ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
        //try
          Execute;
@@ -772,6 +783,10 @@ begin
          ParamByName('ToName').asString:= DataSet.FieldByName('FromName').asString;
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
+
+         //определяется только для zc_Movement_SendOnPrice
+         if DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_SendOnPrice
+         then ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
          ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId_calc').AsInteger;
          ParamByName('calcPartnerCode').AsInteger:= DataSet.FieldByName('PartnerCode_calc').AsInteger;
@@ -792,6 +807,7 @@ begin
          ParamByName('isTax').asBoolean:= DataSet.FieldByName('isTax').asBoolean;
 
          ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+         ParamByName('OrderExternal_DescId').AsInteger:= DataSet.FieldByName('MovementDescId_order').asInteger;
          ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
          ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
          ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
@@ -855,6 +871,8 @@ begin
        Params.AddParam('inSqlText', ftString, ptInput, '');
 
        //try
+
+         //MovementDesc
          Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_Income() :: TVarChar';
          Execute;
          zc_Movement_Income:=DataSet.FieldByName('Value').asInteger;
@@ -895,6 +913,11 @@ begin
          Execute;
          zc_Movement_ProductionSeparate:=DataSet.FieldByName('Value').asInteger;
 
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_OrderExternal() :: TVarChar';
+         Execute;
+         zc_Movement_OrderExternal:=DataSet.FieldByName('Value').asInteger;
+
+         //Measure
          Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';
          Execute;
          zc_Measure_Sh:=DataSet.FieldByName('Value').asInteger;
@@ -903,6 +926,7 @@ begin
          Execute;
          zc_Measure_Kg:=DataSet.FieldByName('Value').asInteger;
 
+         //BarCodePref
          Params.ParamByName('inSqlText').Value:='SELECT zc_BarCodePref_Object() :: TVarChar';
          Execute;
          zc_BarCodePref_Object:=DataSet.FieldByName('Value').asString;
@@ -915,11 +939,13 @@ begin
          Execute;
          zc_BarCodePref_MI:=DataSet.FieldByName('Value').asString;
 
-         // Доходы + Мясное сырье + Мясное сырье
+         // InfoMoney
+         // 30201 Доходы + Мясное сырье + Мясное сырье
          Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_InfoMoney_30201() :: TVarChar';
          Execute;
          zc_Enum_InfoMoney_30201:=DataSet.FieldByName('Value').asInteger;
 
+         //ObjectDesc
          Params.ParamByName('inSqlText').Value:='SELECT zc_Object_Partner() :: TVarChar';
          Execute;
          zc_Object_Partner:=DataSet.FieldByName('Value').asInteger;
@@ -927,6 +953,10 @@ begin
          Params.ParamByName('inSqlText').Value:='SELECT zc_Object_ArticleLoss() :: TVarChar';
          Execute;
          zc_Object_ArticleLoss:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Object_Unit() :: TVarChar';
+         Execute;
+         zc_Object_Unit:=DataSet.FieldByName('Value').asInteger;
 
        {except
          result.Code := Code;

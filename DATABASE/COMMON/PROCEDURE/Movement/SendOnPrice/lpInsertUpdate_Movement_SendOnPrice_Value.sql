@@ -21,24 +21,23 @@ RETURNS Integer
 AS
 $BODY$
 BEGIN
-
      -- сохранили <Документ>
-     SELECT tmp.ioId INTO ioId
-     FROM lpInsertUpdate_Movement_SendOnPrice
-                                       (ioId               := ioId
-                                      , inInvNumber        := inInvNumber
-                                      , inOperDate         := inOperDate
-                                      , inOperDatePartner  := inOperDatePartner
-                                      , inPriceWithVAT     := inPriceWithVAT
-                                      , inVATPercent       := inVATPercent
-                                      , inChangePercent    := inChangePercent
-                                      , inFromId           := inFromId
-                                      , inToId             := inToId
-                                      , inRouteSortingId   := inRouteSortingId
-                                      , ioPriceListId      := ioPriceListId
-                                      , inProcessId        := inProcessId
-                                      , inUserId           := inUserId
-                                       ) AS tmp;
+     ioId:=
+    (SELECT tmp.ioId
+     FROM lpInsertUpdate_Movement_SendOnPrice (ioId               := ioId
+                                             , inInvNumber        := inInvNumber
+                                             , inOperDate         := inOperDate
+                                             , inOperDatePartner  := inOperDatePartner
+                                             , inPriceWithVAT     := inPriceWithVAT
+                                             , inVATPercent       := inVATPercent
+                                             , inChangePercent    := inChangePercent
+                                             , inFromId           := inFromId
+                                             , inToId             := inToId
+                                             , inRouteSortingId   := inRouteSortingId
+                                             , ioPriceListId      := ioPriceListId
+                                             , inProcessId        := inProcessId
+                                             , inUserId           := inUserId
+                                              ) AS tmp);
 
 END;
 $BODY$

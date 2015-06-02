@@ -25,9 +25,9 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inCount                 TFloat    , -- Количество пакетов или Количество батонов
     IN inHeadCount             TFloat    , -- 
     IN inBoxCount              TFloat    , -- 
-    IN inBoxCode               Integer  , -- 
+    IN inBoxCode               Integer   , -- 
     IN inPartionGoods          TVarChar  , -- Партия
-    IN inPriceListId           Integer   , -- Количество голов
+    IN inPriceListId           Integer   , --
     IN inSession               TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
@@ -38,10 +38,11 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbId Integer;
-   DECLARE vbMovementDescId Integer;
    DECLARE vbOperDate TDateTime;
-   DECLARE vbTotalSumm TFloat;
+   DECLARE vbMovementDescId Integer;
+   DECLARE vbMovementId_order Integer;
    DECLARE vbBoxId Integer;
+   DECLARE vbTotalSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Scale_MI());
@@ -49,7 +50,15 @@ BEGIN
 
 
      -- определили
-     SELECT MovementFloat.ValueData :: Integer, Movement.OperDate INTO vbMovementDescId, vbOperDate FROM Movement INNER JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id AND MovementFloat.DescId = zc_MovementFloat_MovementDesc() WHERE Movement.Id = inMovementId;
+     SELECT Movement.OperDate, MovementFloat.ValueData :: Integer, COALESCE (MLM_Order.MovementChildId, 0)
+            INTO vbOperDate, vbMovementDescId, vbMovementId_order
+     FROM Movement
+          LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
+                                 AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()
+          LEFT JOIN MovementLinkMovement AS MLM_Order
+                                         ON MLM_Order.MovementId = Movement.Id
+                                        AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+     WHERE Movement.Id = inMovementId;
 
      -- определили
      vbBoxId:= CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box()) ELSE 0 END;
@@ -70,13 +79,19 @@ BEGIN
                                                        , inBoxCount            := inBoxCount
                                                        , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
                                                        , inLevelNumber         := 0
-                                                       , inPrice               := CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN inPrice_Return ELSE inPrice END
+                                                       , inPrice               := CASE WHEN vbMovementDescId = zc_Movement_ReturnIn()
+                                                                                            THEN inPrice_Return
+                                                                                       WHEN vbMovementDescId = zc_Movement_Sale()
+                                                                                            AND vbMovementId_order = 0 -- !!!если НЕ по заявке!!!
+                                                                                            THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate
+                                                                                                                                                                        , inPriceListId:= inPriceListId
+                                                                                                                                                                        , inGoodsId    := inGoodsId
+                                                                                                                                                                        , inSession    := inSession
+                                                                                                                                                                         ) AS tmp), 0)
+                                                                                       ELSE inPrice
+                                                                                  END
                                                                                    /*CASE WHEN vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_SendOnPrice())
-                                                                                            THEN (SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN vbOperDate - (inDayPrior_PriceReturn :: TVarChar || ' DAY') :: INTERVAL ELSE vbOperDate END
-                                                                                                                                                              , inPriceListId:= inPriceListId
-                                                                                                                                                              , inGoodsId    := inGoodsId
-                                                                                                                                                              , inSession    := inSession
-                                                                                                                                                               ) AS tmp)
+                                                                                            THEN 
                                                                                        ELSE 0
                                                                                   END*/
                                                        , inCountForPrice       := CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN inCountForPrice_Return ELSE inCountForPrice END

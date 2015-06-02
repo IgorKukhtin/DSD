@@ -1179,6 +1179,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
+
 end;
 
 procedure TLoadFormTest.LoadReportProductionFormTest;

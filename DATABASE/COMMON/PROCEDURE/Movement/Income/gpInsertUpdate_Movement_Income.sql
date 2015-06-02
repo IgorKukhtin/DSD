@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat,TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -24,7 +24,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
    OUT outCurrencyValue      TFloat    , -- курс валюты
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Record AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
@@ -32,95 +33,28 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
-     -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Income());
 
-     -- проверка - связанные документы Изменять нельзя
-     PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
-
-     -- проверка
-     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
-     THEN
-         RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
-     END IF;
-
-     -- проверка
-     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
-     END IF;
-
-
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
-
-     -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
-
-     -- сохранили свойство <Дата накладной у контрагента>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
-     -- сохранили свойство <Номер накладной у контрагента>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
-
-     -- сохранили свойство <Цена с НДС (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
-     -- сохранили свойство <% НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
-     -- сохранили свойство <(-)% Скидки (+)% Наценки >
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
-
-     -- рассчитали и сохранили свойство <Курс для перевода в валюту баланса>
-     outCurrencyValue := 1.00;
-     IF inCurrencyDocumentId <> inCurrencyPartnerId
-     THEN
-        SELECT MovementItem.Amount
-       INTO outCurrencyValue  
-        FROM (
-              SELECT max(Movement.OperDate) as maxOperDate
-              FROM Movement 
-                  JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-                                   AND MovementItem.ObjectId = inCurrencyDocumentId
-                  JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
-                                              ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
-                                             AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
-              WHERE Movement.DescId = zc_Movement_Currency()
-                AND Movement.OperDate <= inOperDate
-                AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   
-              ) as tmpDate
-         JOIN Movement ON Movement.DescId = zc_Movement_Currency()
-                      AND Movement.OperDate = tmpDate.maxOperDate
-                      AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())    
-         JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                          AND MovementItem.DescId = zc_MI_Master();
-     END IF;
      
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);   
-
-     -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-
-     -- сохранили связь с <Виды форм оплаты >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
-     -- сохранили связь с <Договора>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-
-     -- сохранили связь с <Сотрудник (заготовитель)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalPacker(), ioId, inPersonalPackerId);
-
-     -- сохранили связь с <Валюта (документа)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);
-     -- сохранили связь с <Валюта (контрагента) >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
-
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+     -- сохранили <Документ>
+     SELECT tmp.ioId, tmp.outCurrencyValue
+            INTO ioId, outCurrencyValue
+     FROM lpInsertUpdate_Movement_Income (ioId                := ioId
+                                        , inInvNumber         := inInvNumber
+                                        , inOperDate          := inOperDate
+                                        , inOperDatePartner   := inOperDatePartner
+                                        , inInvNumberPartner  := inInvNumberPartner
+                                        , inPriceWithVAT      := inPriceWithVAT
+                                        , inVATPercent        := inVATPercent
+                                        , inChangePercent     := inChangePercent
+                                        , inFromId            := inFromId
+                                        , inToId              := inToId
+                                        , inPaidKindId        := inPaidKindId
+                                        , inContractId        := inContractId
+                                        , inPersonalPackerId  := inPersonalPackerId
+                                        , inCurrencyDocumentId:= inCurrencyDocumentId
+                                        , inCurrencyPartnerId := inCurrencyPartnerId
+                                        , inUserId            := vbUserId
+                                         ) AS tmp;
 
 END;
 $BODY$
@@ -129,6 +63,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.05.15                                        * lpInsertUpdate_Movement_Income
  06.09.14                                        * add lpInsert_MovementProtocol
  23.07.14         * add inCurrencyDocumentId
                         inCurrencyPartnerId

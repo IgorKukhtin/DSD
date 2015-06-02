@@ -40,10 +40,8 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     actPrintOut: TdsdPrintAction;
     bbPrintOut: TdxBarButton;
-    spSelectPrintOut: TdsdStoredProc;
   private
     { Private declarations }
   public

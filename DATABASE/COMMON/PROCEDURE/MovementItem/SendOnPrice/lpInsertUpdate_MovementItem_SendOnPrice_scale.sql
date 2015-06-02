@@ -1,8 +1,9 @@
 -- Function: gpInsertUpdate_MovementItem_SendOnPrice()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice_Value(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice_Value(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice_scale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
@@ -11,9 +12,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice_Value(
     IN inAmountChangePercent TFloat    , -- Количество c учетом % скидки
     IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
     IN inPrice               TFloat    , -- Цена
-    IN ioCountForPrice       TFloat    , -- Цена за количество
+    IN inCountForPrice       TFloat    , -- Цена за количество
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
+   IN inUnitId              Integer   , -- 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -22,7 +24,8 @@ $BODY$
 BEGIN
 
      -- сохранили
-     SELECT tmp.ioId INTO ioId
+     ioId:=
+    (SELECT tmp.ioId
      FROM lpInsertUpdate_MovementItem_SendOnPrice
                                            (ioId                 := ioId
                                           , inMovementId         := inMovementId
@@ -32,11 +35,15 @@ BEGIN
                                           , inAmountChangePercent:= inAmountChangePercent
                                           , inChangePercentAmount:= inChangePercentAmount
                                           , inPrice              := inPrice
-                                          , ioCountForPrice      := ioCountForPrice
+                                          , ioCountForPrice      := inCountForPrice
                                           , inPartionGoods       := inPartionGoods
                                           , inGoodsKindId        := inGoodsKindId
                                           , inUserId             := inUserId
-                                           ) AS tmp;
+                                           ) AS tmp);
+
+     -- сохранили связь с <Unit>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+
 
 END;
 $BODY$

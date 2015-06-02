@@ -321,33 +321,61 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
-    Top = 243
+    Top = 267
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 31
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSendOnPriceForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSendOnPriceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actPrintOut: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
-          FromParam.Name = 'id'
+          FromParam.Name = 'Id'
           FromParam.Value = Null
           FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Name = 'ReportType'
+          FromParam.Value = 0
+          ToParam.Name = 'ReportType'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'ReportType'
         end>
-      StoredProc = spSelectPrintOut
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintOut
+          StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1093#1086#1076')'
       Hint = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1093#1086#1076')'
@@ -378,14 +406,23 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       Category = 'DSDLib'
       MoveParams = <
         item
-          FromParam.Name = 'id'
+          FromParam.Name = 'Id'
           FromParam.Value = Null
           FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Name = 'ReportType'
+          FromParam.Value = 1
+          ToParam.Name = 'ReportType'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'ReportType'
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -698,44 +735,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       item
         Name = 'inReportType'
         Value = '1'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 511
-    Top = 344
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 628
-    Top = 294
-  end
-  object spSelectPrintOut: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
         Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inReportType'
-        Value = '0'
+        ComponentItem = 'ReportType'
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 359
-    Top = 440
+    Left = 487
+    Top = 384
   end
 end

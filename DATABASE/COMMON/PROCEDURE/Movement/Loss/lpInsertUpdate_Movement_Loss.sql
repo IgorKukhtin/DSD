@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss(
     IN inArticleLossId       Integer   , -- Статьи списания
     IN inUserId              Integer     -- пользователь
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;

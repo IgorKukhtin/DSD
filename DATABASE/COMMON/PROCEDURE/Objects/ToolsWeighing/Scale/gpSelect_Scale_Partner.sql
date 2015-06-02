@@ -32,8 +32,9 @@ RETURNS TABLE (PartnerId     Integer
              , isSpec        Boolean   -- Спецификация
              , isTax         Boolean   -- Налоговая
 
-             , ObjectDescId  Integer
-             , ItemName      TVarChar
+             , ObjectDescId   Integer
+             , MovementDescId Integer
+             , ItemName       TVarChar
               )
 AS
 $BODY$
@@ -56,16 +57,40 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       WITH tmpInfoMoney AS (SELECT View_InfoMoney_find.InfoMoneyId
+       WITH tmpInfoMoney AS (-- 1.1.
+                             SELECT View_InfoMoney_find.InfoMoneyId
                                   , View_InfoMoney_find.InfoMoneyGroupId
+                                  , zc_Movement_Income() AS MovementDescId
                              FROM Object_InfoMoney_View AS View_InfoMoney
                                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_find ON View_InfoMoney_find.InfoMoneyDestinationId = View_InfoMoney.InfoMoneyDestinationId
                              WHERE View_InfoMoney.InfoMoneyId = inInfoMoneyId_income
                             UNION
+                             -- 1.1.
                              SELECT View_InfoMoney_find.InfoMoneyId
                                   , View_InfoMoney_find.InfoMoneyGroupId
+                                  , zc_Movement_Income() AS MovementDescId
                              FROM Object_InfoMoney_View AS View_InfoMoney_find
-                             WHERE View_InfoMoney_find.InfoMoneyId IN (/*inInfoMoneyId_income,*/ inInfoMoneyId_sale)
+                             WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700() -- Общефирменные + Товары
+                                                                                , zc_Enum_InfoMoneyDestination_21000() -- Общефирменные + Чапли
+                                                                                 )
+                               AND inInfoMoneyId_income = zc_Enum_InfoMoney_20901() -- Общефирменные + Ирна + Ирна
+                            UNION
+                             -- 2.1.
+                             SELECT View_InfoMoney_find.InfoMoneyId
+                                  , View_InfoMoney_find.InfoMoneyGroupId
+                                  , zc_Movement_Sale() AS MovementDescId
+                             FROM Object_InfoMoney_View AS View_InfoMoney_find
+                             WHERE View_InfoMoney_find.InfoMoneyId IN (inInfoMoneyId_sale)
+                            /*UNION
+                             -- 2.2.
+                             SELECT View_InfoMoney_find.InfoMoneyId
+                                  , View_InfoMoney_find.InfoMoneyGroupId
+                                  , zc_Movement_Sale() AS MovementDescId
+                             FROM Object_InfoMoney_View AS View_InfoMoney_find
+                             WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                 )
+                               AND inInfoMoneyId_sale = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                            */
                             )
          , tmpContractPartner AS (SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
                                        , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId
@@ -97,6 +122,7 @@ BEGIN
                                        ELSE tmpInfoMoney.InfoMoneyId
                                   END AS InfoMoneyId*/
                                 , tmpInfoMoney.InfoMoneyId
+                                , tmpInfoMoney.MovementDescId
                                 , MAX (View_Contract.ContractId) AS ContractId
                            FROM tmpInfoMoney
                                 LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
@@ -134,6 +160,7 @@ BEGIN
                                   , View_Contract.JuridicalId
                                   , View_Contract.PaidKindId
                                   , tmpInfoMoney.InfoMoneyId
+                                  , tmpInfoMoney.MovementDescId
                           )
           , tmpPrintKindItem AS (SELECT tmp.Id, tmp.isMovement, tmp.isAccount, tmp.isTransport, tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax FROM lpSelect_Object_PrintKindItem() AS tmp)
 
@@ -169,6 +196,7 @@ BEGIN
             , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax
 
             , ObjectDesc.Id AS ObjectDescId
+            , tmpPartner.MovementDescId
             , ObjectDesc.ItemName
 
        FROM tmpPartner
@@ -237,6 +265,7 @@ BEGIN
             , FALSE       :: Boolean AS isTax
 
             , ObjectDesc.Id AS ObjectDescId
+            , zc_Movement_Loss() AS MovementDescId
             , ObjectDesc.ItemName
 
        FROM Object AS Object_ArticleLoss
@@ -254,6 +283,90 @@ BEGIN
 
        WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
          AND Object_ArticleLoss.isErased = FALSE
+
+      UNION ALL
+       SELECT Object_Unit.Id          AS PartnerId
+            , Object_Unit.ObjectCode  AS PartnerCode
+            , Object_Unit.ValueData   AS PartnerName
+            , Object_Branch.ObjectCode :: TVarChar AS JuridicalName -- для сортировки
+            , NULL :: Integer AS PaidKindId
+            , '' :: TVarChar  AS PaidKindName
+
+            , NULL :: Integer AS ContractId
+            , View_AccountDirection.AccountDirectionCode             AS ContractCode
+            , View_AccountDirection.AccountDirectionCode :: TVarChar AS ContractNumber
+            , View_AccountDirection.AccountDirectionName             AS ContractTagName
+
+            , NULL :: Integer                     AS InfoMoneyId
+            , Object_Branch.ObjectCode            AS InfoMoneyCode
+            , Object_Branch.ValueData             AS InfoMoneyName
+
+            , NULL :: TFloat AS ChangePercent
+            , NULL :: TFloat AS ChangePercentAmount
+
+            , FALSE       :: Boolean AS isEdiOrdspr
+            , FALSE       :: Boolean AS isEdiInvoice
+            , FALSE       :: Boolean AS isEdiDesadv
+
+            , TRUE        :: Boolean AS isMovement
+            , FALSE       :: Boolean AS isAccount
+            , FALSE       :: Boolean AS isTransport
+            , FALSE       :: Boolean AS isQuality
+            , FALSE       :: Boolean AS isPack
+            , FALSE       :: Boolean AS isSpec
+            , FALSE       :: Boolean AS isTax
+
+            , ObjectDesc.Id             AS ObjectDescId
+            , zc_Movement_SendOnPrice() AS MovementDescId
+            , ObjectDesc.ItemName
+
+       FROM Object AS Object_Unit
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                 ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
+                                 ON ObjectLink_Unit_AccountDirection.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
+            LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = ObjectLink_Unit_AccountDirection.ChildObjectId
+
+       WHERE Object_Unit.DescId = zc_Object_Unit()
+         AND Object_Unit.isErased = FALSE
+/*         AND (ObjectLink_Unit_AccountDirection.ChildObjectId = zc_Enum_AccountDirection_20700() -- Запасы + на филиалах
+           OR ((ObjectLink_Unit_Parent.ChildObjectId = 8460 -- группа - Возвраты общие
+                OR Object_Unit.Id = 8459) -- Склад Реализации
+               AND vbBranchId_Constraint > 0
+             ))*/
+         AND ((Object_Unit.Id IN (301309 -- 22121	Склад ГП ф.Запорожье	филиал Запорожье
+                                , 309599 -- 22122	Склад возвратов ф.Запорожье	филиал Запорожье
+                                , 8411   -- 22021	Склад ГП ф.Киев	филиал Киев
+                                , 428365 -- 22022	Склад возвратов ф.Киев	филиал Киев
+                                , 8413   -- 22031	Склад ГП ф.Кривой Рог	филиал Кр.Рог
+                                , 428366 -- 22032	Склад возвратов ф.Кривой Рог	филиал Кр.Рог
+                                , 8417   -- 22051	Склад ГП ф.Николаев (Херсон)	филиал Николаев (Херсон)
+                                , 428364 -- 22052	Склад возвратов ф.Николаев (Херсон)	филиал Николаев (Херсон)
+                                , 346093 -- 22081	Склад ГП ф.Одесса	филиал Одесса
+                                , 346094 -- 22082	Склад возвратов ф.Одесса	филиал Одесса
+                                , 8425   -- 22091	Склад ГП ф.Харьков	филиал Харьков
+                                , 409007 -- 22092	Склад возвратов ф.Харьков	филиал Харьков
+                                , 8415   -- 22041	Склад ГП ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
+                                , 428363 -- 22042	Склад возвратов ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
+                                )
+            AND (vbBranchId_Constraint = 0
+              OR vbUserId = zfCalc_UserAdmin() :: Integer)
+              )
+           OR ((ObjectLink_Unit_Parent.ChildObjectId = 8460 -- группа - Возвраты общие
+                OR Object_Unit.Id = 8459) -- Склад Реализации
+               AND (vbBranchId_Constraint > 0
+                OR vbUserId = zfCalc_UserAdmin() :: Integer))
+              )
 
        ORDER BY 4 -- Object_Juridical.ValueData
               , 3 -- tmpPartner.PartnerName

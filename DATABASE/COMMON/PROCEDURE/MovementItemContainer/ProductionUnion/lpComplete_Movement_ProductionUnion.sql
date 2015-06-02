@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_ProductionUnion (Integer, Boolean, I
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_ProductionUnion(
     IN inMovementId        Integer              , -- ключ Документа
-    IN inIsHistoryCost     Boolean              , --
+    IN inIsHistoryCost     Boolean              , -- параметр что б ускорить ввод док-тов произв и не формировать проводки с/с
     IN inUserId            Integer                -- Пользователь
 )                              
 RETURNS VOID

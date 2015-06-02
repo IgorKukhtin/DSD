@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Movement_ReturnOut()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
@@ -21,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
- AS
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -32,20 +31,20 @@ BEGIN
      SELECT tmp.ioId, tmp.outCurrencyValue
             INTO ioId, outCurrencyValue
      FROM lpInsertUpdate_Movement_ReturnOut (ioId                 := ioId
-                                              , inInvNumber          := inInvNumber
-                                              , inOperDate           := inOperDate
-                                              , inOperDatePartner    := inOperDatePartner
-                                              , inPriceWithVAT       := inPriceWithVAT
-                                              , inVATPercent         := inVATPercent
-                                              , inChangePercent      := inChangePercent
-                                              , inFromId             := inFromId
-                                              , inToId               := inToId
-                                              , inPaidKindId         := inPaidKindId
-                                              , inContractId         := inContractId
-                                              , inCurrencyDocumentId := inCurrencyDocumentId
-                                              , inCurrencyPartnerId  := inCurrencyPartnerId
-                                              , inUserId             := vbUserId
-                                               ) AS tmp;
+                                           , inInvNumber          := inInvNumber
+                                           , inOperDate           := inOperDate
+                                           , inOperDatePartner    := inOperDatePartner
+                                           , inPriceWithVAT       := inPriceWithVAT
+                                           , inVATPercent         := inVATPercent
+                                           , inChangePercent      := inChangePercent
+                                           , inFromId             := inFromId
+                                           , inToId               := inToId
+                                           , inPaidKindId         := inPaidKindId
+                                           , inContractId         := inContractId
+                                           , inCurrencyDocumentId := inCurrencyDocumentId
+                                           , inCurrencyPartnerId  := inCurrencyPartnerId
+                                           , inUserId             := vbUserId
+                                            ) AS tmp;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

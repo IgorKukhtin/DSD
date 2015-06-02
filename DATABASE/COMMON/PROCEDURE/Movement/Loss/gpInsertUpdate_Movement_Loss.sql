@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
     IN inArticleLossId       Integer   , -- Статьи списания
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN

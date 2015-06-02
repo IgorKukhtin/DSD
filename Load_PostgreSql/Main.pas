@@ -14845,6 +14845,8 @@ begin
         then Add('where isnull(BillItems.Id_Postgres,0)=0');
         Add('order by 2,3,1');
 
+        if cbShowContract.Checked then myShowSql(fromQuery.Sql);
+
         Open;
         cbSaleInt.Caption:='3.3.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Прод.пок.Int - БН';
         //

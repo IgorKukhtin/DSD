@@ -15,6 +15,11 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbBranchId        Integer;
+   DECLARE vbIsUnitCheck     Boolean;
+   DECLARE vbIsSendOnPriceIn Boolean;
+
+   DECLARE vbMovementId_find Integer;
    DECLARE vbMovementId_begin Integer;
    DECLARE vbMovementDescId Integer;
    DECLARE vbIsTax Boolean;
@@ -33,6 +38,10 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Нет данных для документа.';
      END IF;
 
+     -- определили 
+     vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
+                       ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
+                  END;
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
      -- !!!запомнили!!
@@ -41,8 +50,22 @@ BEGIN
      inOperDate:= COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()) AND DescId = zc_MovementDate_OperDatePartner())
                            , inOperDate);
 
+     -- таблица - "некоторые филиалы"
+     CREATE TEMP TABLE _tmpUnit_check (UnitId Integer) ON COMMIT DROP;
+     INSERT INTO _tmpUnit_check (UnitId)
+        SELECT 301309 -- 22121	Склад ГП ф.Запорожье
+       UNION
+        SELECT 301309 -- 22121	Склад ГП ф.Запорожье
+       UNION
+        SELECT 309599 -- 22122	Склад возвратов ф.Запорожье
+       UNION
+        SELECT 346093 -- 22081	Склад ГП ф.Одесса
+       UNION
+        SELECT 346094 -- 22082	Склад возвратов ф.Одесса
+    ;
 
-     -- определяется признак "создавать Налоговую"
+
+     -- определяется признак "создавать Налоговую - да/нет"
      IF vbMovementDescId = zc_Movement_Sale()
      THEN           -- если в дефолтах
           vbIsTax:= LOWER ((SELECT gpGet_ToolsWeighing_Value ('Scale_'||inBranchCode, 'Default', '', 'isTax', 'FALSE', inSession))) = LOWER ('TRUE')
@@ -66,11 +89,10 @@ BEGIN
      END IF;
 
 
-
      IF vbMovementDescId = zc_Movement_Sale()
      THEN
           -- поиск существующего документа <Продажа покупателю> по Заявке
-          vbMovementId_begin:= (SELECT Movement.Id
+          vbMovementId_find:= (SELECT Movement.Id
                                 FROM MovementLinkMovement
                                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                                      ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
@@ -82,13 +104,100 @@ BEGIN
                                 WHERE MovementLinkMovement.MovementId = inMovementId
                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order());
      END IF;
+     IF vbMovementDescId = zc_Movement_Inventory()
+     THEN
+          -- поиск существующего документа <Инвентаризация> по ВСЕМ параметрам
+          vbMovementId_find:= (SELECT Movement.Id
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                  AND MovementLinkObject_From.ObjectId = inFromId
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND MovementLinkObject_To.ObjectId = inToId
+                                WHERE Movement.DescId = zc_Movement_Inventory()
+                                  AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                                  AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()));
+     END IF;
+     IF vbMovementDescId = zc_Movement_SendOnPrice()
+     THEN
+         -- поиск существующего документа <Перемещение по цене> !!!сразу получаем ключ!!!
+          vbMovementId_find:= (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order());
+          -- это "некоторые филиалы", иначе приход = расход !!!временно, т.к. должны быть все!!!
+          vbIsUnitCheck:= EXISTS (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO JOIN _tmpUnit_check ON _tmpUnit_check.UnitId = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To()));
+          -- это "приход" на "некоторые филиалы"
+          vbIsSendOnPriceIn:= CASE WHEN vbIsUnitCheck = FALSE
+                                        THEN FALSE -- т.е. не важно
+                                   WHEN vbBranchId = zc_Branch_Basis() AND EXISTS (SELECT MLO_From.ObjectId FROM MovementLinkObject AS MLO_From JOIN _tmpUnit_check ON _tmpUnit_check.UnitId = MLO_From.ObjectId WHERE MLO_From.MovementId = inMovementId AND MLO_From.DescId = zc_MovementLinkObject_From())
+                                        THEN TRUE -- для главного - приход на него
+                                   WHEN vbBranchId = zc_Branch_Basis() AND EXISTS (SELECT MLO_To.ObjectId   FROM MovementLinkObject AS MLO_To   JOIN _tmpUnit_check ON _tmpUnit_check.UnitId = MLO_To.ObjectId   WHERE MLO_To.MovementId = inMovementId   AND MLO_To.DescId   = zc_MovementLinkObject_To())
+                                        THEN FALSE -- для главного - расход с него
+                                   WHEN EXISTS (SELECT MLO_To.ObjectId FROM MovementLinkObject AS MLO_To     JOIN _tmpUnit_check ON _tmpUnit_check.UnitId = MLO_To.ObjectId   WHERE MLO_To.MovementId   = inMovementId AND MLO_To.DescId   = zc_MovementLinkObject_To())
+                                        THEN TRUE -- для филиала - приход на него
+                                   WHEN EXISTS (SELECT MLO_From.ObjectId FROM MovementLinkObject AS MLO_From JOIN _tmpUnit_check ON _tmpUnit_check.UnitId = MLO_From.ObjectId WHERE MLO_From.MovementId = inMovementId AND MLO_From.DescId = zc_MovementLinkObject_From())
+                                        THEN FALSE -- для филиала - расход с него
+                              END;
+
+          -- проверка vbMovementId_find
+          IF  (COALESCE (vbMovementId_find, 0) <> 0 AND vbIsUnitCheck     = FALSE) -- т.е. vbMovementId_find не должно быть
+           OR (COALESCE (vbMovementId_find, 0) = 0  AND vbIsSendOnPriceIn = TRUE)  -- т.е. вводят приход, а vbMovementId_find нет
+           OR (COALESCE (vbMovementId_find, 0) <> 0 AND vbIsSendOnPriceIn = FALSE) -- т.е. вводят расход, а vbMovementId_find есть
+          THEN
+               RAISE EXCEPTION 'vbMovementId_find <%>', vbMovementId_find;
+          END IF;
+
+     END IF;
+
+
+     -- перенесли
+     vbMovementId_begin:= vbMovementId_find;
 
 
     -- сохранили <Документ>
     IF COALESCE (vbMovementId_begin, 0) = 0
     THEN
         -- сохранили
-        vbMovementId_begin:= (SELECT CASE WHEN vbMovementDescId = zc_Movement_Sale()
+        vbMovementId_begin:= (SELECT CASE WHEN vbMovementDescId = zc_Movement_Income()
+                                                    -- <Приход от поставщика>
+                                               THEN lpInsertUpdate_Movement_Income_Value
+                                                   (ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_Income_seq') AS TVarChar)
+                                                  , inOperDate              := inOperDate
+                                                  , inOperDatePartner       := inOperDate
+                                                  , inInvNumberPartner      := ''
+                                                  , inPriceWithVAT          := PriceWithVAT
+                                                  , inVATPercent            := VATPercent
+                                                  , inChangePercent         := ChangePercent
+                                                  , inFromId                := FromId
+                                                  , inToId                  := ToId
+                                                  , inPaidKindId            := PaidKindId
+                                                  , inContractId            := ContractId
+                                                  , inPersonalPackerId      := NULL
+                                                  , inCurrencyDocumentId    := NULL
+                                                  , inCurrencyPartnerId     := NULL
+                                                  , inUserId                := vbUserId
+                                                   )
+                                          WHEN vbMovementDescId = zc_Movement_ReturnOut()
+                                                    -- <Возврат поставщику>
+                                               THEN lpInsertUpdate_Movement_ReturnOut_Value
+                                                   (ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_ReturnOut_seq') AS TVarChar)
+                                                  , inOperDate              := inOperDate
+                                                  , inOperDatePartner       := inOperDate
+                                                  , inPriceWithVAT          := PriceWithVAT
+                                                  , inVATPercent            := VATPercent
+                                                  , inChangePercent         := ChangePercent
+                                                  , inFromId                := FromId
+                                                  , inToId                  := ToId
+                                                  , inPaidKindId            := PaidKindId
+                                                  , inContractId            := ContractId
+                                                  , inCurrencyDocumentId    := NULL
+                                                  , inCurrencyPartnerId     := NULL
+                                                  , inUserId                := vbUserId
+                                                   )
+                                          WHEN vbMovementDescId = zc_Movement_Sale()
                                                     -- <Продажа покупателю>
                                                THEN lpInsertUpdate_Movement_Sale_Value
                                                    (ioId                    := 0
@@ -139,8 +248,8 @@ BEGIN
                                                THEN lpInsertUpdate_Movement_SendOnPrice_Value
                                                    (ioId                    := 0
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_SendOnPrice_seq') AS TVarChar)
-                                                  , inOperDate              := inOperDate
-                                                  , inOperDatePartner       := inOperDate
+                                                  , inOperDate              := inOperDate -- дата приход = дата расходно только при создании
+                                                  , inOperDatePartner       := inOperDate -- дата приход = дата расход
                                                   , inPriceWithVAT          := PriceWithVAT
                                                   , inVATPercent            := VATPercent
                                                   , inChangePercent         := ChangePercent
@@ -151,12 +260,65 @@ BEGIN
                                                   , inProcessId             := zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                   , inUserId                := vbUserId
                                                    )
-                                           END AS MovementId_begin
+                                          WHEN vbMovementDescId = zc_Movement_Loss()
+                                                    -- <Списание>
+                                               THEN lpInsertUpdate_Movement_Loss_scale
+                                                   (ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_Loss_seq') AS TVarChar)
+                                                  , inOperDate              := inOperDate
+                                                  , inPriceWithVAT          := FALSE
+                                                  , inVATPercent            := 20
+                                                  , inFromId                := FromId
+                                                  , inToId                  := NULL
+                                                  , inArticleLossId         := ToId -- !!!не ошибка!!!
+                                                  , inPaidKindId            := zc_Enum_PaidKind_SecondForm()
+                                                  , inUserId                := vbUserId
+                                                   )
+                                          WHEN vbMovementDescId = zc_Movement_Send()
+                                                    -- <Перемещение>
+                                               THEN lpInsertUpdate_Movement_Send
+                                                   (ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_Send_seq') AS TVarChar)
+                                                  , inOperDate              := inOperDate
+                                                  , inFromId                := FromId
+                                                  , inToId                  := ToId
+                                                  , inUserId                := vbUserId
+                                                   )
+                                          WHEN vbMovementDescId = zc_Movement_ProductionUnion()
+                                                    -- <Приход с производства>
+                                               THEN lpInsertUpdate_Movement_ProductionUnion
+                                                   (ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_ProductionUnion_seq') AS TVarChar)
+                                                  , inOperDate              := inOperDate
+                                                  , inFromId                := FromId
+                                                  , inToId                  := ToId
+                                                  , inIsPeresort            := FALSE
+                                                  , inUserId                := vbUserId
+                                                   )
+                                          WHEN vbMovementDescId = zc_Movement_Inventory()
+                                                    -- <Инвентаризация>
+                                               THEN lpInsertUpdate_Movement_Inventory
+                                                   (ioId                    := 0
+                                                  , inInvNumber             := CAST (NEXTVAL ('movement_Inventory_seq') AS TVarChar)
+                                                  , inOperDate              := inOperDate - INTERVAL '1 DAY'
+                                                  , inFromId                := FromId
+                                                  , inToId                  := ToId
+                                                  , inUserId                := vbUserId
+                                                   )
+
+                                          END AS MovementId_begin
+
                                     FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession) AS tmp
                                          LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
                                                                ON ObjectFloat_Partner_DocumentDayCount.ObjectId = tmp.ToId
                                                               AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
                                  );
+         -- Проверка
+         IF COALESCE (vbMovementId_begin, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
+         END IF;
+
         -- дописали св-во <Дата/время создания>
         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbMovementId_begin, CURRENT_TIMESTAMP);
 
@@ -176,12 +338,32 @@ BEGIN
         -- Распроводим Документ !!!существующий!!!
         PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_begin
                                      , inUserId     := vbUserId);
-    END IF;
 
-    -- Проверка
-    IF COALESCE (vbMovementId_begin, 0) = 0
-    THEN
-        RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
+        -- для !!!существующий!!! zc_Movement_SendOnPrice меняется <Дата прихода> + <Кому (в документе)> (если это первый раз)
+        IF vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsUnitCheck = TRUE
+        THEN
+            IF vbIsSendOnPriceIn = TRUE
+            THEN
+                -- сохранили свойство <Дата прихода>
+                PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), vbMovementId_begin, inOperDate);
+
+                -- !!!только в первый раз!!! для проведенных
+                IF NOT EXISTS (SELECT Movement.ParentId FROM Movement WHERE Movement.ParentId = vbMovementId_begin AND Movement.DescId = zc_Movement_WeighingPartner() AND Movement.StatusId = zc_Enum_Status_Complete())
+                THEN
+                    -- исправили связь с <Кому (в документе)>
+                    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), vbMovementId_begin, (SELECT MLO_To.ObjectId FROM MovementLinkObject AS MLO_To WHERE MLO_To.MovementId = inMovementId AND MLO_To.DescId = zc_MovementLinkObject_To()));
+                END IF;
+
+            ELSE
+                -- по идее такого быть не может
+                RAISE EXCEPTION 'Ошибка.<Дата расхода> не может измениться.';
+                -- сохранили свойство <Дата расхода>
+                PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, Movement.ParentId, Movement.AccessKeyId)
+                FROM Movement
+                WHERE Movement.Id = vbMovementId_begin;
+            END IF;
+        END IF;
+
     END IF;
 
 
@@ -193,7 +375,41 @@ BEGIN
 
     -- сохранили <строчная часть>
      SELECT MAX (tmpId) INTO vbTmpId
-     FROM (SELECT CASE WHEN vbMovementDescId = zc_Movement_Sale()
+     FROM (SELECT CASE WHEN vbMovementDescId = zc_Movement_Income()
+                                 -- <Приход от поставщика>
+                            THEN lpInsertUpdate_MovementItem_Income
+                                                         (ioId                  := tmp.MovementItemId_find
+                                                        , inMovementId          := vbMovementId_begin
+                                                        , inGoodsId             := tmp.GoodsId
+                                                        , inAmount              := tmp.Amount
+                                                        , inAmountPartner       := tmp.AmountPartner
+                                                        , inAmountPacker        := tmp.AmountPacker
+                                                        , inPrice               := tmp.Price
+                                                        , inCountForPrice       := tmp.CountForPrice
+                                                        , inLiveWeight          := tmp.LiveWeight
+                                                        , inHeadCount           := tmp.HeadCount
+                                                        , inPartionGoods        := ''
+                                                        , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inAssetId             := NULL
+                                                        , inUserId              := vbUserId
+                                                         )
+                       WHEN vbMovementDescId = zc_Movement_ReturnOut()
+                                 -- <Возврат поставщику>
+                            THEN lpInsertUpdate_MovementItem_ReturnOut
+                                                         (ioId                  := tmp.MovementItemId_find
+                                                        , inMovementId          := vbMovementId_begin
+                                                        , inGoodsId             := tmp.GoodsId
+                                                        , inAmount              := tmp.Amount
+                                                        , inAmountPartner       := tmp.AmountPartner
+                                                        , inPrice               := tmp.Price
+                                                        , inCountForPrice       := tmp.CountForPrice
+                                                        , inHeadCount           := tmp.HeadCount
+                                                        , inPartionGoods        := tmp.PartionGoods
+                                                        , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inAssetId             := NULL
+                                                        , inUserId              := vbUserId
+                                                         )
+                       WHEN vbMovementDescId = zc_Movement_Sale()
                                  -- <Продажа покупателю>
                             THEN lpInsertUpdate_MovementItem_Sale_Value
                                                          (ioId                  := tmp.MovementItemId_find
@@ -205,69 +421,181 @@ BEGIN
                                                         , inChangePercentAmount := tmp.ChangePercentAmount
                                                         , inPrice               := tmp.Price
                                                         , ioCountForPrice       := tmp.CountForPrice
-                                                        , inHeadCount           := 0
+                                                        , inHeadCount           := tmp.HeadCount
                                                         , inBoxCount            := tmp.BoxCount
-                                                        , inPartionGoods        := ''
+                                                        , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := NULL
-                                                        , inBoxId               := NULL
+                                                        , inBoxId               := tmp.BoxId
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_ReturnIn()
                                  -- <Возврат от покупателя>
                             THEN lpInsertUpdate_MovementItem_ReturnIn_Value
-                                                         (ioId                  := 0
+                                                         (ioId                  := tmp.MovementItemId_find
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
                                                         , inAmountPartner       := tmp.Amount
                                                         , inPrice               := tmp.Price
-                                                        , ioCountForPrice       := tmp.CountForPrice
+                                                        , inCountForPrice       := tmp.CountForPrice
                                                         , inHeadCount           := 0
-                                                        , inPartionGoods        := ''
+                                                        , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := NULL
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_SendOnPrice()
                                  -- <Перемещение по цене>
-                            THEN lpInsertUpdate_MovementItem_SendOnPrice_Value
-                                                         (ioId                  := 0
+                            THEN lpInsertUpdate_MovementItem_SendOnPrice_scale
+                                                         (ioId                  := tmp.MovementItemId_find
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
-                                                        , inAmountChangePercent := tmp.Amount
-                                                        , inAmountPartner       := tmp.Amount
+                                                        , inAmountChangePercent := tmp.AmountChangePercent
+                                                        , inAmountPartner       := tmp.AmountPartner
                                                         , inChangePercentAmount := 0
                                                         , inPrice               := tmp.Price
-                                                        , ioCountForPrice       := tmp.CountForPrice
-                                                        , inPartionGoods        := ''
+                                                        , inCountForPrice       := tmp.CountForPrice
+                                                        , inPartionGoods        := '' -- !!!не ошибка, здесь не формируется!!!
+                                                        , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inUnitId              := CASE WHEN vbIsUnitCheck = FALSE OR vbIsSendOnPriceIn = FALSE THEN 0 ELSE tmp.UnitId_to END -- !!!формируется только когда приход + на "некоторые филиалы"!!!
+                                                        , inUserId              := vbUserId
+                                                         )
+                       WHEN vbMovementDescId = zc_Movement_Loss()
+                                 -- <Списание>
+                            THEN lpInsertUpdate_MovementItem_Loss_scale
+                                                         (ioId                  := tmp.MovementItemId_find
+                                                        , inMovementId          := vbMovementId_begin
+                                                        , inGoodsId             := tmp.GoodsId
+                                                        , inAmount              := tmp.Amount
+                                                        , inPrice               := tmp.Price
+                                                        , inCountForPrice       := tmp.CountForPrice
+                                                        , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inUserId              := vbUserId
                                                          )
+                       WHEN vbMovementDescId = zc_Movement_Send()
+                                 -- <Перемещение>
+                            THEN lpInsertUpdate_MovementItem_Send_Value
+                                                         (ioId                  := tmp.MovementItemId_find
+                                                        , inMovementId          := vbMovementId_begin
+                                                        , inGoodsId             := tmp.GoodsId
+                                                        , inAmount              := tmp.Amount
+                                                        , inPartionGoodsDate    := NULL
+                                                        , inCount               := tmp.Count
+                                                        , inHeadCount           := tmp.HeadCount
+                                                        , inPartionGoods        := tmp.PartionGoods
+                                                        , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inAssetId             := NULL
+                                                        , inUnitId              := NULL -- !!!не ошибка, здесь не формируется!!!
+                                                        , inStorageId           := NULL
+                                                        , inPartionGoodsId      := NULL
+                                                        , inUserId              := vbUserId
+                                                         )
+
+                       WHEN vbMovementDescId = zc_Movement_ProductionUnion()
+                                 -- <Приход с производства>
+                            THEN lpInsertUpdate_MI_ProductionUnion_Master
+                                                         (ioId                  := tmp.MovementItemId_find
+                                                        , inMovementId          := vbMovementId_begin
+                                                        , inGoodsId             := tmp.GoodsId
+                                                        , inAmount              := tmp.Amount
+                                                        -- , inCount               := tmp.Count
+                                                        , inPartionGoods        := tmp.PartionGoods
+                                                        , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inUserId              := vbUserId
+                                                         )
+
+                       WHEN vbMovementDescId = zc_Movement_Inventory()
+                                 -- <Инвентаризация>
+                            THEN lpInsertUpdate_MovementItem_Inventory
+                                                         (ioId                  := tmp.MovementItemId_find
+                                                        , inMovementId          := vbMovementId_begin
+                                                        , inGoodsId             := tmp.GoodsId
+                                                        , inAmount              := tmp.Amount
+                                                        , inPartionGoodsDate    := NULL
+                                                        , inPrice               := NULL -- !!!не ошибка, здесь не формируется!!!
+                                                        , inSumm                := NULL -- !!!не ошибка, здесь не формируется!!!
+                                                        , inHeadCount           := tmp.HeadCount
+                                                        , inCount               := tmp.Count
+                                                        , inPartionGoods        := tmp.PartionGoods
+                                                        , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inAssetId             := NULL
+                                                        , inUnitId              := NULL
+                                                        , inStorageId           := NULL
+                                                        , inUserId              := vbUserId
+                                                         )
+
                   END AS tmpId
           FROM (SELECT MAX (tmp.MovementItemId)      AS MovementItemId_find
                      , tmp.GoodsId
                      , tmp.GoodsKindId
+                     , tmp.BoxId
+                     , tmp.PartionGoods
                      , SUM (tmp.Amount)              AS Amount
                      , SUM (tmp.AmountChangePercent) AS AmountChangePercent
                      , SUM (tmp.AmountPartner)       AS AmountPartner
                      , tmp.ChangePercentAmount
                      , tmp.Price
                      , tmp.CountForPrice
-                     , SUM (tmp.BoxCount)  AS BoxCount
+                     , SUM (tmp.BoxCount)     AS BoxCount
+                     , SUM (tmp.Count)        AS Count
+                     , SUM (tmp.HeadCount)    AS HeadCount
+                     , SUM (tmp.AmountPacker) AS AmountPacker
+                     , SUM (tmp.LiveWeight)   AS LiveWeight
+                     , tmp.UnitId_to
                 FROM (SELECT 0                                                   AS MovementItemId
                            , MovementItem.ObjectId                               AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                           , MovementItem.Amount                                 AS Amount
-                           , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountChangePercent
-                           , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner
+                           , COALESCE (MILinkObject_Box.ObjectId, 0)             AS BoxId
+                           , COALESCE (MIString_PartionGoods.ValueData, '')      AS PartionGoods
+
+                           , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsUnitCheck = FALSE
+                                       THEN MovementItem.Amount -- приход = расход = вес без скидки
+                                  WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
+                                       THEN MovementItem.Amount -- формируется только расход = вес без скидки
+                                  WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = TRUE
+                                       THEN 0 -- не заполняется, т.к. сейчас приход
+                                  ELSE MovementItem.Amount -- обычное значение
+                             END AS Amount
+
+                           , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsUnitCheck = FALSE
+                                       THEN MovementItem.Amount -- приход = расход = вес без скидки
+                                  WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
+                                       THEN MovementItem.Amount -- формируется только расход = вес без скидки
+                                  WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = TRUE
+                                       THEN 0 -- не заполняется, т.к. сейчас приход
+                                  ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) -- обычное значение = вес со скидкой
+                             END AS AmountChangePercent
+
+                           , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsUnitCheck = FALSE
+                                       THEN MovementItem.Amount -- приход = расход = вес без скидки
+                                  WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
+                                       THEN 0 -- не заполняется, т.к. сейчас расход
+                                  WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = TRUE
+                                       THEN MovementItem.Amount -- формируется только приход = вес без скидки
+                                  ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) -- обычное значение = вес со скидкой
+                             END AS AmountPartner
+
                            , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
+
                            , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
                            , COALESCE (MIFloat_CountForPrice.ValueData, 0)       AS CountForPrice
+
                            , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
+                           , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
+                           , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
+                           , 0                                                   AS AmountPacker
+                           , 0                                                   AS LiveWeight
+
                            , MovementItem.Amount                                 AS Amount_mi
+                           , COALESCE (MLO_To.ObjectId, 0)                       AS UnitId_to
                       FROM MovementItem
+                           LEFT JOIN MovementLinkObject AS MLO_To
+                                                        ON MLO_To.MovementId = MovementItem.MovementId
+                                                       AND MLO_To.DescId = zc_MovementLinkObject_To()
+                                                       AND vbMovementDescId = zc_Movement_SendOnPrice()
                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -277,6 +605,13 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                                        ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                           LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                       ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                       ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -284,12 +619,17 @@ BEGIN
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
+                           LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                        ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
                                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+                                                           AND vbMovementDescId = zc_Movement_Sale()
 
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Master()
@@ -298,15 +638,34 @@ BEGIN
                       SELECT MovementItem.Id                                     AS MovementItemId
                            , MovementItem.ObjectId                               AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                           , COALESCE (MILinkObject_Box.ObjectId, 0)             AS BoxId
+                           , COALESCE (MIString_PartionGoods.ValueData, '')       AS PartionGoods
+
                            , MovementItem.Amount                                 AS Amount
                            , COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS AmountChangePercent
                            , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner
                            , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
+
                            , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
                            , COALESCE (MIFloat_CountForPrice.ValueData, 0)       AS CountForPrice
+
                            , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
+                           , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
+                           , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
+                           , COALESCE (MIFloat_AmountPacker.ValueData, 0)        AS AmountPacker
+                           , COALESCE (MIFloat_LiveWeight.ValueData, 0)          AS LiveWeight
+
                            , 0                                                   AS Amount_mi
+                           , COALESCE (MILinkObject_To.ObjectId, COALESCE (MLO_To.ObjectId, 0)) AS UnitId_to
                       FROM MovementItem
+                           LEFT JOIN MovementLinkObject AS MLO_To
+                                                        ON MLO_To.MovementId = MovementItem.MovementId
+                                                       AND MLO_To.DescId = zc_MovementLinkObject_To()
+                                                       AND vbMovementDescId = zc_Movement_SendOnPrice()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_To
+                                                            ON MILinkObject_To.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_To.DescId = zc_MILinkObject_Unit()
+                                                           AND vbMovementDescId = zc_Movement_SendOnPrice()
                            LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
                                                        ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
                                                       AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
@@ -319,12 +678,29 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                                        ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                           LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                       ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                       ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                                                       ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
+                           LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                                       ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                           LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                        ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -333,49 +709,121 @@ BEGIN
                                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
 
-                      WHERE MovementItem.MovementId = vbMovementId_begin
+                      WHERE MovementItem.MovementId = vbMovementId_find
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
-                        AND vbMovementDescId = zc_Movement_Sale()
+                        AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_Inventory(), zc_Movement_SendOnPrice())
                      ) AS tmp
                 GROUP BY tmp.GoodsId
                        , tmp.GoodsKindId
+                       , tmp.BoxId
+                       , tmp.PartionGoods
                        , tmp.ChangePercentAmount
                        , tmp.Price
                        , tmp.CountForPrice
+                       , tmp.UnitId_to
                 HAVING SUM (tmp.Amount_mi) <> 0
                ) AS tmp
           ) AS tmp;
 
 
+     -- !!!!!!!!!!!!!!
      -- !!!Проводки!!!
+     -- !!!!!!!!!!!!!!
+
+     -- <Продажа покупателю>
      IF vbMovementDescId = zc_Movement_Sale()
      THEN
          -- создаются временные таблицы - для формирование данных для проводок - <Продажа покупателю>
          PERFORM lpComplete_Movement_Sale_CreateTemp();
-         -- Проводим Документ - <Продажа покупателю>
+         -- Проводим Документ
          PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId_begin
                                          , inUserId         := vbUserId
                                          , inIsLastComplete := NULL);
-     ELSE
-         IF vbMovementDescId = zc_Movement_ReturnIn()
-         THEN
-             -- создаются временные таблицы - для формирование данных для проводок - <Возврат от покупателя>
-             PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
-             -- Проводим Документ - <Возврат от покупателя>
-             PERFORM lpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_begin
-                                                 , inUserId         := vbUserId
-                                                 , inIsLastComplete := NULL);
-         ELSE
-             IF vbMovementDescId = zc_Movement_SendOnPrice()
-             THEN
-                 -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
-                 PERFORM lpComplete_Movement_SendOnPrice_CreateTemp();
-                 -- Проводим Документ - <Перемещение по цене>
-                 PERFORM lpComplete_Movement_SendOnPrice (inMovementId     := vbMovementId_begin
-                                                        , inUserId         := vbUserId);
-             END IF;
-         END IF;
+
+     ELSE -- <Возврат от покупателя>
+          IF vbMovementDescId = zc_Movement_ReturnIn()
+          THEN
+              -- создаются временные таблицы - для формирование данных для проводок - <Возврат от покупателя>
+              PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
+              -- Проводим Документ 
+              PERFORM lpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_begin
+                                                  , inUserId         := vbUserId
+                                                  , inIsLastComplete := NULL);
+
+          ELSE -- <Перемещение по цене>
+               IF vbMovementDescId = zc_Movement_SendOnPrice()
+               THEN
+                   -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
+                   PERFORM lpComplete_Movement_SendOnPrice_CreateTemp();
+                   -- Проводим Документ
+                   PERFORM lpComplete_Movement_SendOnPrice (inMovementId     := vbMovementId_begin
+                                                          , inUserId         := vbUserId);
+
+               ELSE
+               -- <Приход от поставщика>
+               IF vbMovementDescId = zc_Movement_Income()
+               THEN
+                   -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
+                   PERFORM lpComplete_Movement_Income_CreateTemp();
+                   -- Проводим Документ
+                   PERFORM lpComplete_Movement_Income (inMovementId     := vbMovementId_begin
+                                                     , inUserId         := vbUserId
+                                                     , inIsLastComplete := NULL);
+               ELSE
+               -- <Возврат поставщику>
+               IF vbMovementDescId = zc_Movement_ReturnOut()
+               THEN
+                   -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
+                   PERFORM lpComplete_Movement_ReturnOut_CreateTemp();
+                   -- Проводим Документ
+                   PERFORM lpComplete_Movement_ReturnOut (inMovementId     := vbMovementId_begin
+                                                        , inUserId         := vbUserId
+                                                        , inIsLastComplete := NULL);
+
+               ELSE
+               -- <Списание>
+               IF vbMovementDescId = zc_Movement_Loss()
+               THEN
+                   -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
+                   PERFORM lpComplete_Movement_Loss_CreateTemp();
+                   -- Проводим Документ
+                   PERFORM lpComplete_Movement_Loss (inMovementId     := vbMovementId_begin
+                                                   , inUserId         := vbUserId);
+               ELSE
+               -- <Перемещение>
+               IF vbMovementDescId = zc_Movement_Send()
+               THEN
+                   -- Проводим Документ
+                   PERFORM gpComplete_Movement_Send (inMovementId     := vbMovementId_begin
+                                                   , inIsLastComplete := NULL
+                                                   , inSession        := inSession);
+               ELSE
+               -- <Приход с производства>
+               IF vbMovementDescId = zc_Movement_ProductionUnion()
+               THEN
+                   -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
+                   PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();
+                   -- Проводим Документ
+                   PERFORM lpComplete_Movement_ProductionUnion (inMovementId     := vbMovementId_begin
+                                                              , inIsHistoryCost  := FALSE
+                                                              , inUserId         := vbUserId);
+               ELSE
+               -- <Инвентаризация>
+               IF vbMovementDescId = zc_Movement_Inventory()
+               THEN
+                   -- Проводим Документ
+                   PERFORM gpComplete_Movement_Inventory (inMovementId     := vbMovementId_begin
+                                                        , inIsLastComplete := NULL
+                                                        , inSession        := inSession);
+               END IF;
+               END IF;
+               END IF;
+               END IF;
+               END IF;
+               END IF;
+               END IF;
+               END IF;
      END IF;
 
 

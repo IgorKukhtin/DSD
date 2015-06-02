@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
     IN inUserId              Integer     -- Пользователь
 )
 RETURNS Integer
- AS
+AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;

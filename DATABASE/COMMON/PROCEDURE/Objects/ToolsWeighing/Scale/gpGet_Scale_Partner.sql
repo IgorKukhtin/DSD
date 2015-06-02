@@ -3,15 +3,18 @@
 -- DROP FUNCTION IF EXISTS gpGet_Scale_Partner (TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Scale_Partner (TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Scale_Partner (TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_Partner (TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_Partner(
-    IN inOperDate    TDateTime   ,
-    IN inPartnerCode Integer     ,
-    IN inInfoMoneyId Integer     ,
-    IN inPaidKindId  Integer     ,
-    IN inSession     TVarChar      -- сессия пользователя
+    IN inOperDate       TDateTime   ,
+    IN inMovementDescId Integer     ,
+    IN inPartnerCode    Integer     ,
+    IN inInfoMoneyId    Integer     ,
+    IN inPaidKindId     Integer     ,
+    IN inSession        TVarChar      -- сессия пользователя
 )
-RETURNS TABLE (PartnerId    Integer
+RETURNS TABLE (ObjectDescId Integer
+             , PartnerId    Integer
              , PartnerCode  Integer
              , PartnerName  TVarChar
              , PaidKindId   Integer
@@ -39,22 +42,33 @@ RETURNS TABLE (PartnerId    Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbBranchId_Constraint Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpGetUserBySession (inSession);
+   vbUserId:= lpGetUserBySession (inSession);
 
 
-    -- Результат
-    RETURN QUERY
-       WITH tmpPartner_find AS (SELECT Object_Partner.Id             AS PartnerId
+   -- определяется уровень доступа
+   vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
+
+
+   IF inMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+   THEN
+       -- Результат для Partner
+       RETURN QUERY
+       WITH tmpPartner_find AS (SELECT Object_Partner.DescId         AS ObjectDescId
+                                     , Object_Partner.Id             AS PartnerId
                                      , Object_Partner.ObjectCode     AS PartnerCode
                                      , Object_Partner.ValueData      AS PartnerName
                                 FROM Object AS Object_Partner
                                 WHERE Object_Partner.ObjectCode = inPartnerCode
-                                  AND Object_Partner.DescId = zc_Object_Partner()
+                                  AND Object_Partner.DescId     = zc_Object_Partner()
+                                  AND Object_Partner.isErased   = FALSE
                                   AND inPartnerCode > 0
                                UNION ALL
-                                SELECT Object_Partner.Id             AS PartnerId
+                                SELECT Object_Partner.DescId         AS ObjectDescId
+                                     , Object_Partner.Id             AS PartnerId
                                      , Object_Partner.ObjectCode     AS PartnerCode
                                      , Object_Partner.ValueData      AS PartnerName
                                 FROM Object AS Object_Partner
@@ -62,7 +76,8 @@ BEGIN
                                   AND Object_Partner.DescId = zc_Object_Partner()
                                   AND inPartnerCode < 0
                                )
-         , tmpPartnerJuridical AS (SELECT tmpPartner_find.PartnerId
+         , tmpPartnerJuridical AS (SELECT tmpPartner_find.ObjectDescId
+                                        , tmpPartner_find.PartnerId
                                         , tmpPartner_find.PartnerCode
                                         , tmpPartner_find.PartnerName
                                         , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
@@ -81,7 +96,8 @@ BEGIN
                                         , tmp.isTax
                                    FROM lpGet_Object_Juridical_PrintKindItem ((SELECT tmpPartnerJuridical.JuridicalId FROM tmpPartnerJuridical LIMIT 1)) AS tmp
                                   )
-           , tmpPartnerContract AS (SELECT tmpPartnerJuridical.PartnerId
+           , tmpPartnerContract AS (SELECT tmpPartnerJuridical.ObjectDescId
+                                         , tmpPartnerJuridical.PartnerId
                                          , tmpPartnerJuridical.PartnerCode
                                          , tmpPartnerJuridical.PartnerName
                                          , Object_Contract_View.ContractId
@@ -96,7 +112,8 @@ BEGIN
                                                                        AND Object_Contract_View.isErased = FALSE
                                                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                     )
-      , tmpPartnerContract_find AS (SELECT tmpPartnerContract.PartnerId
+      , tmpPartnerContract_find AS (SELECT tmpPartnerContract.ObjectDescId
+                                         , tmpPartnerContract.PartnerId
                                          , tmpPartnerContract.PartnerCode
                                          , tmpPartnerContract.PartnerName
                                          , tmpPartnerContract.ContractId
@@ -108,7 +125,8 @@ BEGIN
                                     FROM tmpPartnerContract
                                     WHERE tmpPartnerContract.PaidKindId = inPaidKindId
                                    UNION ALL
-                                    SELECT tmpPartnerContract.PartnerId
+                                    SELECT tmpPartnerContract.ObjectDescId
+                                         , tmpPartnerContract.PartnerId
                                          , tmpPartnerContract.PartnerCode
                                          , tmpPartnerContract.PartnerName
                                          , tmpPartnerContract.ContractId
@@ -122,7 +140,8 @@ BEGIN
                                     WHERE tmpPartnerContract_two.PaidKindId IS NULL
                                     )
 
-       SELECT tmpPartner.PartnerId
+       SELECT tmpPartner.ObjectDescId
+            , tmpPartner.PartnerId
             , tmpPartner.PartnerCode
             , tmpPartner.PartnerName
             , Object_PaidKind.Id                   AS PaidKindId
@@ -155,7 +174,8 @@ BEGIN
             , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec
             , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax
 
-       FROM (SELECT tmpPartnerContract_find.PartnerId
+       FROM (SELECT tmpPartnerContract_find.ObjectDescId
+                  , tmpPartnerContract_find.PartnerId
                   , tmpPartnerContract_find.PartnerCode
                   , tmpPartnerContract_find.PartnerName
                   , tmpPartnerContract_find.ContractId
@@ -192,6 +212,149 @@ BEGIN
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
                                    AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
       ;
+   ELSE
+   IF inMovementDescId IN (zc_Movement_Loss())
+   THEN
+       -- Результат для ArticleLoss
+       RETURN QUERY
+       WITH tmpArticleLoss AS (SELECT Object_ArticleLoss.DescId         AS ObjectDescId
+                                    , Object_ArticleLoss.Id             AS PartnerId
+                                    , Object_ArticleLoss.ObjectCode     AS PartnerCode
+                                    , Object_ArticleLoss.ValueData      AS PartnerName
+                               FROM Object AS Object_ArticleLoss
+                               WHERE Object_ArticleLoss.ObjectCode = inPartnerCode
+                                 AND Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
+                                 AND Object_ArticleLoss.isErased = FALSE
+                                 AND inPartnerCode > 0
+                              )
+       SELECT tmpArticleLoss.ObjectDescId
+            , tmpArticleLoss.PartnerId
+            , tmpArticleLoss.PartnerCode
+            , tmpArticleLoss.PartnerName
+            , NULL :: Integer AS PaidKindId
+            , '' :: TVarChar  AS PaidKindName
+
+            , Object_PriceList.Id                  AS PriceListId
+            , Object_PriceList.ObjectCode          AS PriceListCode
+            , Object_PriceList.ValueData           AS PriceListName
+
+            , NULL :: Integer AS ContractId
+            , View_ProfitLossDirection.ProfitLossDirectionCode             AS ContractCode
+            , View_ProfitLossDirection.ProfitLossDirectionCode :: TVarChar AS ContractNumber
+            , View_ProfitLossDirection.ProfitLossDirectionName             AS ContractTagName
+
+            , NULL :: Integer AS GoodsPropertyId
+            , NULL :: Integer AS GoodsPropertyCode
+            , '' :: TVarChar  AS GoodsPropertyName
+
+            , NULL :: TFloat AS ChangePercent
+            , NULL :: TFloat AS ChangePercentAmount
+
+            , FALSE       :: Boolean AS isEdiOrdspr
+            , FALSE       :: Boolean AS isEdiInvoice
+            , FALSE       :: Boolean AS isEdiDesadv
+
+            , TRUE        :: Boolean AS isMovement
+            , FALSE       :: Boolean AS isAccount
+            , FALSE       :: Boolean AS isTransport
+            , FALSE       :: Boolean AS isQuality
+            , FALSE       :: Boolean AS isPack
+            , FALSE       :: Boolean AS isSpec
+            , FALSE       :: Boolean AS isTax
+
+       FROM tmpArticleLoss
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
+            LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_ProfitLossDirection
+                                 ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = tmpArticleLoss.PartnerId
+                                AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
+            LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
+      ;
+   ELSE
+   IF inMovementDescId IN (zc_Movement_SendOnPrice())
+   THEN
+       -- Результат для Unit
+       RETURN QUERY
+       WITH tmpUnit AS (SELECT Object_Unit.DescId         AS ObjectDescId
+                             , Object_Unit.Id             AS PartnerId
+                             , Object_Unit.ObjectCode     AS PartnerCode
+                             , Object_Unit.ValueData      AS PartnerName
+                        FROM Object AS Object_Unit
+                             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                                  ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                        WHERE Object_Unit.ObjectCode = inPartnerCode
+                          AND Object_Unit.DescId = zc_Object_Unit()
+                          AND Object_Unit.isErased = FALSE
+                          AND inPartnerCode > 0
+                          AND ((Object_Unit.Id IN (301309 -- 22121	Склад ГП ф.Запорожье	филиал Запорожье
+                                                 , 309599 -- 22122	Склад возвратов ф.Запорожье	филиал Запорожье
+                                                 , 8411   -- 22021	Склад ГП ф.Киев	филиал Киев
+                                                 , 428365 -- 22022	Склад возвратов ф.Киев	филиал Киев
+                                                 , 8413   -- 22031	Склад ГП ф.Кривой Рог	филиал Кр.Рог
+                                                 , 428366 -- 22032	Склад возвратов ф.Кривой Рог	филиал Кр.Рог
+                                                 , 8417   -- 22051	Склад ГП ф.Николаев (Херсон)	филиал Николаев (Херсон)
+                                                 , 428364 -- 22052	Склад возвратов ф.Николаев (Херсон)	филиал Николаев (Херсон)
+                                                 , 346093 -- 22081	Склад ГП ф.Одесса	филиал Одесса
+                                                 , 346094 -- 22082	Склад возвратов ф.Одесса	филиал Одесса
+                                                 , 8425   -- 22091	Склад ГП ф.Харьков	филиал Харьков
+                                                 , 409007 -- 22092	Склад возвратов ф.Харьков	филиал Харьков
+                                                 , 8415   -- 22041	Склад ГП ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
+                                                 , 428363 -- 22042	Склад возвратов ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
+                                                 )
+                             AND (vbBranchId_Constraint = 0
+                               OR vbUserId = zfCalc_UserAdmin() :: Integer)
+                               )
+                            OR ((ObjectLink_Unit_Parent.ChildObjectId = 8460 -- группа - Возвраты общие
+                                 OR Object_Unit.Id = 8459) -- Склад Реализации
+                                AND (vbBranchId_Constraint > 0
+                                 OR vbUserId = zfCalc_UserAdmin() :: Integer))
+                               )
+                       )
+       SELECT tmpUnit.ObjectDescId
+            , tmpUnit.PartnerId
+            , tmpUnit.PartnerCode
+            , tmpUnit.PartnerName
+            , NULL :: Integer AS PaidKindId
+            , '' :: TVarChar  AS PaidKindName
+
+            , Object_PriceList.Id                  AS PriceListId
+            , Object_PriceList.ObjectCode          AS PriceListCode
+            , Object_PriceList.ValueData           AS PriceListName
+
+            , NULL :: Integer AS ContractId
+            , View_AccountDirection.AccountDirectionCode             AS ContractCode
+            , View_AccountDirection.AccountDirectionCode :: TVarChar AS ContractNumber
+            , View_AccountDirection.AccountDirectionName             AS ContractTagName
+
+            , NULL :: Integer AS GoodsPropertyId
+            , NULL :: Integer AS GoodsPropertyCode
+            , '' :: TVarChar  AS GoodsPropertyName
+
+            , NULL :: TFloat AS ChangePercent
+            , NULL :: TFloat AS ChangePercentAmount
+
+            , FALSE       :: Boolean AS isEdiOrdspr
+            , FALSE       :: Boolean AS isEdiInvoice
+            , FALSE       :: Boolean AS isEdiDesadv
+
+            , TRUE        :: Boolean AS isMovement
+            , FALSE       :: Boolean AS isAccount
+            , FALSE       :: Boolean AS isTransport
+            , FALSE       :: Boolean AS isQuality
+            , FALSE       :: Boolean AS isPack
+            , FALSE       :: Boolean AS isSpec
+            , FALSE       :: Boolean AS isTax
+
+       FROM tmpUnit
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
+                                 ON ObjectLink_Unit_AccountDirection.ObjectId = tmpUnit.PartnerId
+                                AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
+            LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = ObjectLink_Unit_AccountDirection.ChildObjectId
+      ;
+   END IF;
+   END IF;
+   END IF;
 
 END;
 $BODY$
@@ -206,4 +369,6 @@ ALTER FUNCTION gpGet_Scale_Partner (TDateTime, Integer, TVarChar) OWNER TO postg
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_SendOnPrice(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Loss(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Sale(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())

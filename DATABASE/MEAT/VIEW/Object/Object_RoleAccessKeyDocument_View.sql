@@ -72,6 +72,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                                , zc_Enum_Process_InsertUpdate_Movement_ReturnIn_Partner()
                                                , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
                                                , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
+                                               , zc_Enum_Process_InsertUpdate_Movement_Send()
                                                , zc_Enum_Process_InsertUpdate_Movement_Loss()
                                                , zc_Enum_Process_InsertUpdate_Movement_Inventory()
                                                , zc_Enum_Process_InsertUpdate_Movement_ProductionUnion()

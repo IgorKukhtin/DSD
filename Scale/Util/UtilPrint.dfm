@@ -334,6 +334,10 @@ object UtilPrintForm: TUtilPrintForm
       item
         Name = 'MovementId_by'
         Value = Null
+      end
+      item
+        Name = 'ReportType'
+        Value = Null
       end>
     Left = 40
     Top = 16
@@ -532,40 +536,6 @@ object UtilPrintForm: TUtilPrintForm
       ReportName = 'PrintMovement_SalePack'
       ReportNameParam.Name = 'PrintMovement_SalePack'
       ReportNameParam.Value = 'PrintMovement_SalePack'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrint_SendOnPrice: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint_SendOnPrice
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_SendOnPrice
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -1124,6 +1094,89 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint_SendOnPrice_out: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'ReportType'
+          FromParam.Value = 0
+          ToParam.Name = 'ReportType'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'ReportType'
+        end>
+      StoredProc = spSelectPrint_SendOnPrice
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SendOnPrice
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1093#1086#1076')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1093#1086#1076')'
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_SendOnPrice_in: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'ReportType'
+          FromParam.Value = 1
+          ToParam.Name = 'ReportType'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'ReportType'
+        end>
+      StoredProc = spSelectPrint_SendOnPrice
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SendOnPrice
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1088#1080#1093#1086#1076')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1088#1080#1093#1086#1076')'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Name = #1055#1088#1080#1093#1086#1076
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -1147,29 +1200,6 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 162
     Top = 322
-  end
-  object spSelectPrint_SendOnPrice: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 159
-    Top = 392
   end
   object spGetReportName_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
@@ -1328,5 +1358,35 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 687
     Top = 128
+  end
+  object spSelectPrint_SendOnPrice: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReportType'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ReportType'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 151
+    Top = 456
   end
 end

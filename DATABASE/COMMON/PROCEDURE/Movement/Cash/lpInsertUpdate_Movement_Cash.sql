@@ -133,8 +133,14 @@ BEGIN
 
      IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Personal())
      THEN
-         -- пока определяется "как повезет", надо вывести на форму
-         vbPersonalServiceListId:= (SELECT MLO_PersonalServiceList.ObjectId
+         -- пока определяется "из справочника", доработать - вывести на форму
+         vbPersonalServiceListId:= (SELECT ObjectLink_Personal_PersonalServiceList.ChildObjectId
+                                    FROM ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                    WHERE ObjectLink_Personal_PersonalServiceList.ObjectId = inMoneyPlaceId
+                                      AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                   );
+         -- пока определяется "как повезет", доработать - вывести на форму
+         /*vbPersonalServiceListId:= (SELECT MLO_PersonalServiceList.ObjectId
                                     FROM (SELECT inServiceDate AS ServiceDate
                                          UNION
                                           SELECT inServiceDate - INTERVAL '1 MONTH' AS ServiceDate
@@ -190,7 +196,7 @@ BEGIN
                                                                       -- AND MLO_PersonalServiceList.ObjectId <> 298695 
                                     ORDER BY MovementDate_ServiceDate.ValueData DESC, MovementItem.Amount DESC
                                     LIMIT 1
-                                   );
+                                   );*/
          -- проверка
          IF COALESCE (vbPersonalServiceListId, 0) = 0
          THEN

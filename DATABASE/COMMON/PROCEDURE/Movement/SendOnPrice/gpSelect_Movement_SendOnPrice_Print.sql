@@ -227,6 +227,7 @@ BEGIN
     OPEN Cursor1 FOR
        SELECT
              Movement.Id                                AS Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber                         AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Movement.OperDate                          AS OperDate
@@ -279,6 +280,10 @@ BEGIN
            , '' :: TVarChar                             AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
 
+           , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
+
+           , inReportType AS ReportType
+
        FROM Movement
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -329,6 +334,14 @@ BEGIN
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                                                                ON OH_JuridicalDetails_From.JuridicalId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                               AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate
+                                                               AND Movement.OperDate <  OH_JuridicalDetails_From.EndDate
+
        WHERE Movement.Id =  inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
@@ -337,7 +350,8 @@ BEGIN
 
     OPEN Cursor2 FOR
        SELECT
-             Object_Goods.ObjectCode         AS GoodsCode
+             zfFormat_BarCode (zc_BarCodePref_Object(), COALESCE (View_GoodsByGoodsKind.Id, Object_Goods.Id)) AS IdBarCode
+           , Object_Goods.ObjectCode         AS GoodsCode
            , (Object_Goods.ValueData || ' ' || Object_GoodsKind.ValueData) :: TVarChar AS GoodsName
            , Object_Goods.ValueData          AS GoodsName_two
            , Object_GoodsKind.ValueData      AS GoodsKindName
@@ -478,9 +492,10 @@ BEGIN
                                    ON OS_Measure_InternalCode.ObjectId = Object_Measure.Id
                                   AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()
 
-
-
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+
+            LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.GoodsId = Object_Goods.Id
+                                                                           AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
 
        WHERE (tmpMI.AmountOut <> 0 AND inReportType = 0)
           OR (tmpMI.AmountIn <> 0 AND inReportType = 1)

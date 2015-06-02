@@ -60,6 +60,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     clIsMain: TcxGridDBColumn;
     clDriverCertificate: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -37,6 +37,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
 
+
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
 
@@ -121,4 +122,3 @@ $BODY$
 
 -- тест
 --SELECT * FROM lpInsertUpdate_Movement_ReturnOut (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inUserId:= 2)
-

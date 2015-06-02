@@ -2109,6 +2109,181 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftDateTime
       end
       item
+        Name = 'OperDate_Tax'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_Tax'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'OperDate_TaxCorrective'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_TaxCorrective'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'InvNumber_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Sale'
+        DataType = ftString
+      end
+      item
+        Name = 'InvNumberPartner_Tax'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumberPartner_Tax'
+        DataType = ftString
+      end
+      item
+        Name = 'InvNumberPartner_TaxCorrective'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumberPartner_TaxCorrective'
+        DataType = ftString
+      end
+      item
+        Name = 'MovementId_Tax'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Tax'
+      end
+      item
+        Name = 'MovementId_TaxCorrective'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_TaxCorrective'
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Order'
+      end
+      item
+        Name = 'OperDate_Order'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_Order'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'InvNumber_Order'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Order'
+        DataType = ftString
+      end
+      item
+        Name = 'FromName_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FromName_Sale'
+        DataType = ftString
+      end
+      item
+        Name = 'ToName_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToName_Sale'
+        DataType = ftString
+      end
+      item
+        Name = 'TotalSumm_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSumm_Sale'
+        DataType = ftFloat
+      end
+      item
+        Name = 'TotalCountPartner_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalCountPartner_Sale'
+        DataType = ftFloat
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+      end
+      item
+        Name = 'ContractCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractCode'
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractName'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractTagName'
+        DataType = ftString
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitName'
+        DataType = ftString
+      end
+      item
+        Name = 'JuridicalNameFind'
+        Value = Null
+        Component = MasterCDS
+        DataType = ftString
+      end
+      item
+        Name = 'PartnerNameFind'
+        Value = Null
+        Component = MasterCDS
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 144
+  end
+  object spUpdate_EDIComdoc_Params: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_EDIComdoc_Params'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'MovementId_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+      end
+      item
+        Name = 'OperDatePartner_Sale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner_Sale'
+        DataType = ftDateTime
+      end
+      item
         Name = 'InvNumber_Sale'
         Value = Null
         Component = MasterCDS
@@ -2201,22 +2376,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = MasterCDS
         ComponentItem = 'UnitName'
         DataType = ftString
-      end>
-    PackSize = 1
-    Left = 680
-    Top = 144
-  end
-  object spUpdate_EDIComdoc_Params: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_EDIComdoc_Params'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
       end>
     PackSize = 1
     Left = 712

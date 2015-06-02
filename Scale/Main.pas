@@ -331,11 +331,12 @@ begin
      //
      //Movement
      if DialogPrintForm.cbPrintMovement.Checked
-     then Result:=Print_Movemenet (ParamsMovement.ParamByName('MovementDescId').AsInteger
-                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger
-                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text)
-                                 , DialogPrintForm.cbPrintPreview.Checked
-                                  );
+     then Result:=Print_Movement (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                                , StrToInt(DialogPrintForm.PrintCountEdit.Text) // myPrintCount
+                                , DialogPrintForm.cbPrintPreview.Checked        // isPreview
+                                , DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
+                                 );
      //
      //Tax
      if (DialogPrintForm.cbPrintTax.Checked) and (Result = TRUE)
@@ -900,7 +901,11 @@ begin
     PanelTotalSumm.Caption:=FormatFloat(',0.00##',ParamByName('TotalSumm').asFloat);
 
     if ParamByName('OrderExternalId').AsInteger<>0
-    then PanelOrderExternal.Caption:='  '+ParamByName('OrderExternalName_master').asString
+    then if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_OrderExternal
+         then PanelOrderExternal.Caption:=' ç.'+ParamByName('OrderExternalName_master').asString
+         else if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_SendOnPrice
+              then PanelOrderExternal.Caption:=' ô.'+ParamByName('OrderExternalName_master').asString
+              else PanelOrderExternal.Caption:=' ???'+ParamByName('OrderExternalName_master').asString
     else PanelOrderExternal.Caption:='';
 
   end;

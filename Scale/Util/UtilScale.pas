@@ -104,10 +104,13 @@ var
   zc_Movement_ProductionUnion: Integer;
   zc_Movement_ProductionSeparate: Integer;
 
+  zc_Movement_OrderExternal: Integer;
+
   zc_Enum_InfoMoney_30201: Integer; // Доходы + Мясное сырье + Мясное сырье
 
   zc_Object_Partner    : Integer;
   zc_Object_ArticleLoss: Integer;
+  zc_Object_Unit       : Integer;
 
   zc_Measure_Sh: Integer;
   zc_Measure_Kg: Integer;
@@ -116,8 +119,8 @@ var
   zc_BarCodePref_Movement:String;
   zc_BarCodePref_MI      :String;
 
-  implementation
-
+implementation
+//uses DMMainScale;
 {------------------------------------------------------------------------}
 procedure Create_ParamsMovement(var Params:TParams);
 begin
@@ -166,6 +169,7 @@ begin
      ParamAdd(Params,'isTax',ftBoolean);       //Налоговая
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
+     ParamAdd(Params,'OrderExternal_DescId',ftInteger);
      ParamAdd(Params,'OrderExternal_BarCode',ftString);
      ParamAdd(Params,'OrderExternal_InvNumber',ftString);
      ParamAdd(Params,'OrderExternalName_master',ftString);
