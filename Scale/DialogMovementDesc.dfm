@@ -193,7 +193,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       DataSource = DataSource
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
-      Font.Height = -19
+      Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
       Options = [dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]

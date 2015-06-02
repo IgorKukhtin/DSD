@@ -83,11 +83,11 @@ BEGIN
                                                                                             THEN inPrice_Return
                                                                                        WHEN vbMovementDescId = zc_Movement_Sale()
                                                                                             AND vbMovementId_order = 0 -- !!!если НЕ по заявке!!!
-                                                                                            THEN (SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate
-                                                                                                                                                              , inPriceListId:= inPriceListId
-                                                                                                                                                              , inGoodsId    := inGoodsId
-                                                                                                                                                              , inSession    := inSession
-                                                                                                                                                               ) AS tmp)
+                                                                                            THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate
+                                                                                                                                                                        , inPriceListId:= inPriceListId
+                                                                                                                                                                        , inGoodsId    := inGoodsId
+                                                                                                                                                                        , inSession    := inSession
+                                                                                                                                                                         ) AS tmp), 0)
                                                                                        ELSE inPrice
                                                                                   END
                                                                                    /*CASE WHEN vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_SendOnPrice())

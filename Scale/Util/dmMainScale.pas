@@ -185,7 +185,7 @@ begin
                         ParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                   end;
         end
-        else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Нажмите на клавиатуре клавишу <F2>.';
+        else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
    end;
 end;
 {------------------------------------------------------------------------}

@@ -6,7 +6,37 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_EDIComdoc_Params(
     IN inMovementId      Integer   , --
     IN inSession         TVarChar    -- сессия пользователя
 )                              
-RETURNS VOID
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar, OperDateTax TDateTime, InvNumberTax TVarChar
+             , TotalCountPartner TFloat
+             , TotalSumm TFloat
+             , OKPO TVarChar, JuridicalName TVarChar
+             , GLNCode TVarChar,  GLNPlaceCode TVarChar
+             , JuridicalId_Find Integer, JuridicalNameFind TVarChar, PartnerNameFind TVarChar
+
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
+             , UnitId Integer, UnitName TVarChar
+
+             , MovementId_Sale Integer
+             , OperDatePartner_Sale TDateTime, InvNumber_Sale TVarChar
+             , FromName_Sale TVarChar, ToName_Sale TVarChar
+             , TotalCountPartner_Sale TFloat
+             , TotalSumm_Sale TFloat
+
+             , MovementId_Tax Integer
+             , OperDate_Tax TDateTime, InvNumberPartner_Tax TVarChar
+
+             , MovementId_TaxCorrective Integer
+             , OperDate_TaxCorrective TDateTime, InvNumberPartner_TaxCorrective TVarChar
+
+             , MovementId_Order Integer
+             , OperDate_Order TDateTime, InvNumber_Order TVarChar
+
+             , DescName TVarChar
+             , isCheck Boolean
+             , isElectron Boolean
+             , isError Boolean
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -108,6 +138,12 @@ BEGIN
      FROM MovementItem
      WHERE MovementItem.MovementId = inMovementId;
 
+
+     RETURN QUERY 
+     SELECT * FROM lpGet_Movement_EDI (inMovementId:= inMovementId
+                                     , inUserId    := vbUserId
+                                      );
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -115,6 +151,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.06.15                                        * add lpGet_Movement_EDI
  01.09.14                                        * del !!!только для продажи!!!
  07.08.14                                        * add !!!только для продажи!!!
  07.08.14                                        * add zc_MovementString_InvNumberPartner

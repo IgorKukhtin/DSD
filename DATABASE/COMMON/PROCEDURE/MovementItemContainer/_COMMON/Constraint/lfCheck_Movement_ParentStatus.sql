@@ -19,7 +19,7 @@ BEGIN
      -- проверка при изменении <Child> на Проведен/Распроведен - если <Master> Удален, то <Ошибка>
      IF inNewStatusId <> zc_Enum_Status_Erased()
      THEN
-         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Erased() WHERE Movement.Id = inMovementId)
+         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Erased() WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_WeighingPartner())
          THEN
              -- находим параметры <Master> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -40,7 +40,7 @@ BEGIN
      -- проверка при изменении <Child> на Удален - если <Master> Проведен, то <Ошибка>
      IF inNewStatusId = zc_Enum_Status_Erased()
      THEN
-         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId)
+         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_WeighingPartner())
          THEN
              -- находим параметры <Master> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -58,7 +58,8 @@ BEGIN
          END IF;
          --
          IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id IN (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Master())
-                                                       AND Movement.StatusId = zc_Enum_Status_Complete())
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                       AND Movement.DescId <> zc_Movement_WeighingPartner())
          THEN
              -- находим параметры <Child> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -75,7 +76,8 @@ BEGIN
          END IF;
          --
          IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id IN (SELECT MovementId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Master())
-                                                       AND Movement.StatusId = zc_Enum_Status_Complete())
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                       AND Movement.DescId <> zc_Movement_WeighingPartner())
          THEN
              -- находим параметры <Child> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName

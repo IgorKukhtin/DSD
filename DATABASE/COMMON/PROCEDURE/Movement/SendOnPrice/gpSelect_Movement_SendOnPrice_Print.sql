@@ -282,6 +282,8 @@ BEGIN
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
 
+           , inReportType AS ReportType
+
        FROM Movement
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner

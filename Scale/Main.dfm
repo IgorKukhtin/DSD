@@ -802,7 +802,7 @@ object MainForm: TMainForm
     TabOrder = 1
     object BarCodePanel: TPanel
       Left = 0
-      Top = 83
+      Top = 86
       Width = 133
       Height = 41
       Align = alTop
@@ -813,6 +813,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
+      ExplicitTop = 83
       object BarCodeLabel: TLabel
         Left = 1
         Top = 1
@@ -875,11 +876,12 @@ object MainForm: TMainForm
     end
     object infoPanel_Scale: TPanel
       Left = 0
-      Top = 241
+      Top = 244
       Width = 133
       Height = 29
       Align = alTop
       TabOrder = 2
+      ExplicitTop = 241
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -916,7 +918,7 @@ object MainForm: TMainForm
     end
     object rgScale: TRadioGroup
       Left = 0
-      Top = 124
+      Top = 127
       Width = 133
       Height = 117
       Align = alTop
@@ -925,10 +927,11 @@ object MainForm: TMainForm
       ParentColor = False
       TabOrder = 3
       OnClick = rgScaleClick
+      ExplicitTop = 124
     end
     object CountPanel: TPanel
       Left = 0
-      Top = 270
+      Top = 273
       Width = 133
       Height = 41
       Align = alTop
@@ -939,6 +942,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 4
+      ExplicitTop = 270
       object CountLabel: TLabel
         Left = 1
         Top = 1
@@ -969,7 +973,7 @@ object MainForm: TMainForm
     end
     object HeadCountPanel: TPanel
       Left = 0
-      Top = 367
+      Top = 370
       Width = 133
       Height = 41
       Align = alTop
@@ -980,6 +984,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 5
+      ExplicitTop = 367
       object HeadCountLabel: TLabel
         Left = 1
         Top = 1
@@ -1012,7 +1017,7 @@ object MainForm: TMainForm
       Left = 0
       Top = 42
       Width = 133
-      Height = 41
+      Height = 44
       Align = alTop
       Font.Charset = RUSSIAN_CHARSET
       Font.Color = clWindowText
@@ -1049,7 +1054,7 @@ object MainForm: TMainForm
     end
     object PanelBox: TPanel
       Left = 0
-      Top = 311
+      Top = 314
       Width = 133
       Height = 56
       Align = alTop
@@ -1060,6 +1065,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 7
+      ExplicitTop = 311
       object Label1: TLabel
         Left = 1
         Top = 1

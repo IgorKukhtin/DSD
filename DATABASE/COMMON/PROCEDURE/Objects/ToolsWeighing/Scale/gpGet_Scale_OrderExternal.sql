@@ -56,7 +56,9 @@ BEGIN
 
 
     -- определяется
-    vbBranchId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch());
+    vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
+                      ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
+                 END;
 
     -- Результат
     RETURN QUERY

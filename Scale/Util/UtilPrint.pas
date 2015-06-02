@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dsdAction, Vcl.ActnList, dsdDB, Data.DB,
-  Datasnap.DBClient,EDI;
+  Datasnap.DBClient,EDI,frxBarcode;
 
 type
   TUtilPrintForm = class(TForm)
@@ -44,8 +44,6 @@ type
     actPrint_TTN: TdsdPrintAction;
     actPrint_ReturnIn: TdsdPrintAction;
     spSelectPrint_ReturnIn: TdsdStoredProc;
-    spSelectPrint_SendOnPrice: TdsdStoredProc;
-    actPrint_SendOnPrice: TdsdPrintAction;
     spGetReportName_ReturnIn: TdsdStoredProc;
     mactPrint_ReturnIn: TMultiAction;
     actPrint_ReturnIn_ReportName: TdsdExecStoredProc;
@@ -71,10 +69,13 @@ type
     actPrint_QualityDoc: TdsdPrintAction;
     actDialog_QualityDoc: TdsdOpenForm;
     mactPrint_QualityDoc: TMultiAction;
+    actPrint_SendOnPrice_out: TdsdPrintAction;
+    actPrint_SendOnPrice_in: TdsdPrintAction;
+    spSelectPrint_SendOnPrice: TdsdStoredProc;
   private
   end;
 
-  function Print_Movemenet(MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Movement (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
   function Print_Tax      (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Account  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Spec     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
@@ -105,10 +106,12 @@ begin
   UtilPrintForm.mactPrint_ReturnIn.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_SendOnPrice (MovementId: Integer);
+procedure Print_SendOnPrice (MovementId: Integer; isSendOnPriceIn:Boolean);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  UtilPrintForm.actPrint_SendOnPrice.Execute;
+  if isSendOnPriceIn = True
+  then UtilPrintForm.actPrint_SendOnPrice_in.Execute
+  else UtilPrintForm.actPrint_SendOnPrice_out.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_TaxDocument (MovementId: Integer);
@@ -151,7 +154,7 @@ begin
   UtilPrintForm.mactPrint_QualityDoc.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_Movemenet (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
+function Print_Movement (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
 begin
      Result:=false;
           //
@@ -164,7 +167,7 @@ begin
              else if MovementDescId = zc_Movement_ReturnIn
                   then Print_ReturnIn(MovementId)
                   else if MovementDescId = zc_Movement_SendOnPrice
-                       then Print_SendOnPrice(MovementId)
+                       then Print_SendOnPrice(MovementId,isSendOnPriceIn)
                        else begin ShowMessage ('Ошибка.Форма печати <Накладная> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Накладная> не сформирована.');

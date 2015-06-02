@@ -62,6 +62,7 @@ type
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
     function Execute(BarCode: String): boolean; virtual;
+    function Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
   end;
 
 var
@@ -102,20 +103,40 @@ begin
      ChoiceNumber:=0;
      with ParamsMovement_local do
      begin
+          ChoiceNumber:=ParamByName('MovementDescNumber').AsInteger;
           CDS.Locate('Number',IntToStr(ParamByName('MovementDescNumber').AsInteger),[]);
           if ParamByName('OrderExternal_BarCode').AsString<>''
           then EditBarCode.Text:=ParamByName('OrderExternal_BarCode').AsString
-          else EditBarCode.Text:=ParamByName('OrderExternal_InvNumber').AsString;
+          else if ParamByName('OrderExternal_InvNumber').AsString<> ''
+               then EditBarCode.Text:=ParamByName('OrderExternal_InvNumber').AsString
+               else EditBarCode.Text:=ParamByName('MovementDescNumber').AsString;
 
           EditPartnerCode.Text:= IntToStr(ParamByName('calcPartnerCode').AsInteger);
           PanelPartnerName.Caption:= ParamByName('calcPartnerName').AsString;
      end;
 
      ActiveControl:=EditBarCode;
-     isEditBarCode:=BarCode<>'';
+     //isEditBarCode:=BarCode<>'';
+     isEditBarCode:=false;//ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger<>zc_Movement_SendOnPrice;
 
      if BarCode<>'' then begin EditBarCodeExit(EditBarCode);Result:=true;end
      else Result:=(ShowModal=mrOk);
+end;
+{------------------------------------------------------------------------}
+function TDialogMovementDescForm.Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
+begin
+     Result:=false;
+     //
+        if MovementDescNumber <> 0 then
+        begin
+             CDS.Filter:='(Number='+IntToStr(MovementDescNumber)
+                        +')'
+                          ;
+             CDS.Filtered:=true;
+             if CDS.RecordCount<>1
+             then ShowMessage('Ошибка.Код операции не определен.')
+             else Result:=CDS.FieldByName('isSendOnPriceIn').asBoolean;
+        end;
 end;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Checked: boolean; //Проверка корректного ввода в Edit
@@ -171,6 +192,7 @@ begin
                if(Length(trim(EditBarCode.Text))=1)or(Length(trim(EditBarCode.Text))=2)
                then ActiveControl:=EditBarCode
                else ActiveControl:=DBGrid;
+               isEditBarCode:=false;
                Result:=false;
                exit;
      end;
@@ -509,6 +531,7 @@ begin
     if ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger<>0
     then begin
               EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
+              isEditBarCode:=true;
               EditBarCodeExit(Self);
               //переопределяются параметры, т.к. они используются в фильтре справ.
               ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
@@ -523,6 +546,7 @@ begin
               EditPartnerCodeKeyDown(Sender,Key,[]);
               isEditPartnerCodeExit:= true;
     end;
+    //else ActiveControl:=EditBarCode;
 end;
 
 {------------------------------------------------------------------------}
@@ -546,7 +570,7 @@ end;
 procedure TDialogMovementDescForm.DBGridDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
 begin
-     if (gdSelected in State)and(ChoiceNumber=0) then exit;
+     //if (gdSelected in State)and(ChoiceNumber=0) then exit;
 
      //if ChoiceNumber <> 0 then ShowMessage (CDS.FieldByName('Number').AsString);
 
@@ -568,7 +592,7 @@ begin
           Font.Color:=clBlue;
           Font.Size:=10;
           Font.Style:=[];
-          FillRect(Rect);
+//          FillRect(Rect);
           //TextOut(Rect.Left + 2, Rect.Top + 2, Column.Field.Text);
           if (Column.Alignment=taLeftJustify)or(Rect.Left>=Rect.Right - LengTh(Column.Field.Text))
           then TextOut(Rect.Left+2, Rect.Top+2, Column.Field.Text)

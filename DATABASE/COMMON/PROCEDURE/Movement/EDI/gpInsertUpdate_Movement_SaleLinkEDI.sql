@@ -183,7 +183,7 @@ BEGIN
 
      RETURN QUERY 
      SELECT * FROM lpGet_Movement_EDI (inMovementId:= inMovementId_EDI
-                                     , inUserId:= vbUserId
+                                     , inUserId    := vbUserId
                                       );
 END;
 $BODY$

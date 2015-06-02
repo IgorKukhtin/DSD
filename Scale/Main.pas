@@ -331,11 +331,12 @@ begin
      //
      //Movement
      if DialogPrintForm.cbPrintMovement.Checked
-     then Result:=Print_Movemenet (ParamsMovement.ParamByName('MovementDescId').AsInteger
-                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger
-                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text)
-                                 , DialogPrintForm.cbPrintPreview.Checked
-                                  );
+     then Result:=Print_Movement (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                                , StrToInt(DialogPrintForm.PrintCountEdit.Text) // myPrintCount
+                                , DialogPrintForm.cbPrintPreview.Checked        // isPreview
+                                , DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
+                                 );
      //
      //Tax
      if (DialogPrintForm.cbPrintTax.Checked) and (Result = TRUE)

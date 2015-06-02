@@ -39,7 +39,9 @@ BEGIN
      END IF;
 
      -- определили 
-     vbBranchId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch());
+     vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
+                       ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
+                  END;
      -- определили <“ип документа>
      vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
      -- !!!запомнили!!
@@ -346,7 +348,7 @@ BEGIN
                 PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), vbMovementId_begin, inOperDate);
 
                 -- !!!только в первый раз!!! дл€ проведенных
-                IF NOT EXISTS (SELECT Movement.ParentId FROM Movement WHERE Movement.ParentId = inMovementId AND Movement.DescId = zc_Movement_WeighingPartner() AND Movement.StatusId = zc_Enum_Status_Complete())
+                IF NOT EXISTS (SELECT Movement.ParentId FROM Movement WHERE Movement.ParentId = vbMovementId_begin AND Movement.DescId = zc_Movement_WeighingPartner() AND Movement.StatusId = zc_Enum_Status_Complete())
                 THEN
                     -- исправили св€зь с < ому (в документе)>
                     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), vbMovementId_begin, (SELECT MLO_To.ObjectId FROM MovementLinkObject AS MLO_To WHERE MLO_To.MovementId = inMovementId AND MLO_To.DescId = zc_MovementLinkObject_To()));

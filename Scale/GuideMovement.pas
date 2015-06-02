@@ -140,7 +140,7 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale,UtilScale,UtilPrint,Main;
+uses dmMainScale,UtilScale,UtilPrint,Main,DialogMovementDesc;
 {------------------------------------------------------------------------------}
 function TGuideMovementForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
 begin
@@ -493,11 +493,12 @@ begin
 
      //
      if cbPrintMovement.Checked
-     then Print_Movemenet (CDS.FieldByName('MovementDescId').AsInteger
-                         , CDS.FieldByName('MovementId_parent').AsInteger
-                         , 1    // myPrintCount
-                         , TRUE // isPreview
-                          );
+     then Print_Movement (CDS.FieldByName('MovementDescId').AsInteger
+                        , CDS.FieldByName('MovementId_parent').AsInteger
+                        , 1    // myPrintCount
+                        , TRUE // isPreview
+                        , DialogMovementDescForm.Get_isSendOnPriceIn(CDS.FieldByName('MovementDescNumber').AsInteger)
+                         );
      //
      if cbPrintTax.Checked
      then Print_Tax (CDS.FieldByName('MovementDescId').AsInteger
