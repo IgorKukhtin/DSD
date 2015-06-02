@@ -329,7 +329,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Width = 273
   end
   object cePercent: TcxCurrencyEdit [10]
@@ -597,6 +597,7 @@
         Name = 'inPercent'
         Value = Null
         Component = cePercent
+        DataType = ftFloat
         ParamType = ptInput
       end>
     PackSize = 1

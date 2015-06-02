@@ -1,8 +1,8 @@
 -- Function: gpUnComplete_Movement_Income (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUnComplete_Movement_Income (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Income(
+CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Check(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
@@ -32,4 +32,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement_Income (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUnComplete_Movement_Check (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
