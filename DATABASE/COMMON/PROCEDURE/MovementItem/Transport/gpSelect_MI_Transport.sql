@@ -26,6 +26,9 @@ BEGIN
             , Object_Route.ObjectCode  AS RouteCode
             , Object_Route.ValueData   AS RouteName
           
+            , Object_Unit.Id           AS UnitId
+            , Object_Unit.ValueData    AS UnitName
+
             , MovementItem.Amount
             , MIFloat_DistanceFuelChild.ValueData       AS DistanceFuelChild
             , MIFloat_DistanceWeightTransport.ValueData AS DistanceWeightTransport
@@ -91,6 +94,12 @@ BEGIN
                                               ON MILinkObject_RouteKindFreight.MovementItemId = MovementItem.Id 
                                              AND MILinkObject_RouteKindFreight.DescId = zc_MILinkObject_RouteKindFreight()
              LEFT JOIN Object AS Object_RouteKindFreight ON Object_RouteKindFreight.Id = MILinkObject_RouteKindFreight.ObjectId
+             
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id 
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
       ;
     
     RETURN NEXT Cursor1;

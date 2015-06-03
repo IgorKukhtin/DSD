@@ -234,6 +234,8 @@ type
     colDistanceWeightTransport: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    colUnitName: TcxGridDBColumn;
+    UnitChoiceForm: TOpenChoiceForm;
   private
   public
   end;

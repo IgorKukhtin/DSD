@@ -424,6 +424,21 @@
             HeaderAlignmentVert = vaCenter
             Width = 154
           end
+          object colUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = UnitChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 110
+          end
           object colFreightName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
             DataBinding.FieldName = 'FreightName'
@@ -1341,6 +1356,7 @@
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -1521,6 +1537,7 @@
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -1535,6 +1552,7 @@
     object actUpdateChildDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIChild
       StoredProcList = <
         item
@@ -1546,6 +1564,7 @@
     object actUpdateIncomeDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIIncome
       StoredProcList = <
         item
@@ -1558,6 +1577,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = RouteChoiceForm
       Params = <>
@@ -1599,9 +1619,34 @@
       isSetErased = False
       DataSource = MasterDS
     end
+    object UnitChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'UnitChoiceForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'RouteChoiceForm'
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
@@ -1664,12 +1709,26 @@
           Component = MasterCDS
           ComponentItem = 'RouteKindName_Freight'
           DataType = ftString
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
         end>
       isShowModal = True
     end
     object FreightChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'FreightChoiceForm'
       FormName = 'TFreightForm'
       FormNameParam.Value = ''
@@ -1692,6 +1751,7 @@
     object RouteKindFreightChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'RouteKindFreightChoiceForm'
       FormName = 'TRouteKindForm'
       FormNameParam.Value = ''
@@ -1717,6 +1777,7 @@
       TabSheet = cxTabSheetIncome
       MoveParams = <>
       Enabled = False
+      PostDataSetBeforeExecute = False
       View = cxGridIncomeDBTableView
       Action = SourceFuel_ObjectChoiceForm
       Params = <>
@@ -1763,6 +1824,7 @@
     object SourceFuel_ObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ObjectFrom_byIncomeFuelChoiceForm'
       FormName = 'TSourceFuel_ObjectForm'
       FormNameParam.Value = ''
@@ -1858,6 +1920,7 @@
     object PaidKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PaidKindChoiceForm'
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
@@ -1881,6 +1944,7 @@
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsChoiceForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = ''
@@ -1917,6 +1981,7 @@
     object RouteIncomeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'RouteChoiceForm'
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
@@ -2271,8 +2336,8 @@
         DataType = ftString
       end>
     PackSize = 1
-    Left = 221
-    Top = 182
+    Left = 205
+    Top = 206
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2383,6 +2448,13 @@
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
         ParamType = ptInput
       end
       item
