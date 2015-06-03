@@ -75,7 +75,6 @@ uses
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
   AncestorJournal in '..\..\Forms\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
-  AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   dbLoadTest in '..\SOURCE\Load\dbLoadTest.pas',
   Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
@@ -294,7 +293,9 @@ uses
   Check in '..\..\Forms\Document\Check.pas' {CheckForm: TParentForm},
   CashRegisterKind in '..\..\Forms\Kind\CashRegisterKind.pas' {CashRegisterKindForm: TParentForm},
   CashRegister in '..\..\Forms\Guides\CashRegister.pas' {CashRegisterForm: TParentForm},
-  CashRegisterEdit in '..\..\Forms\Guides\CashRegisterEdit.pas' {CashRegisterEditForm: TParentForm};
+  CashRegisterEdit in '..\..\Forms\Guides\CashRegisterEdit.pas' {CashRegisterEditForm: TParentForm},
+  AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
+  Report_RemainGoods in '..\..\FormsFarmacy\Report\Report_RemainGoods.pas' {AncestorReportForm2: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -313,6 +314,7 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TAncestorReportForm2, AncestorReportForm2);
   Application.Run;
 
   DUnitTestRunner.RunRegisteredTests;

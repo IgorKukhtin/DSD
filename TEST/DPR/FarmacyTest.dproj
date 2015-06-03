@@ -224,10 +224,6 @@
 				<Form>AncestorJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
-				<Form>AncestorReportForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
 				<Form>AboutBox</Form>
 			</DCCReference>
@@ -875,6 +871,15 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\CashRegisterEdit.pas">
 				<Form>CashRegisterEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
+				<Form>AncestorReportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainGoods.pas">
+				<Form>AncestorReportForm2</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

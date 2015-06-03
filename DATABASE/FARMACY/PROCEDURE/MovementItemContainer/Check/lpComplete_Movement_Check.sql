@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Check (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_Income(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_Check(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )                              
@@ -12,6 +12,7 @@ $BODY$
    DECLARE vbAccountId Integer;
    DECLARE vbOperSumm_Partner TFloat;
    DECLARE vbOperSumm_Partner_byItem TFloat;
+   DECLARE vbUnitId Integer;
 BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -23,6 +24,16 @@ BEGIN
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
+   vbAccountId := lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
+                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
+                                     , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
+                                     , inInfoMoneyId            := NULL
+                                     , inUserId                 := inUserId);
+
+   SELECT MovementLinkObject.ObjectId INTO vbUnitId 
+     FROM MovementLinkObject 
+    WHERE MovementLinkObject.MovementId = inMovementId 
+      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
    -- Проводки по суммам документа. Деньги в кассу
    
@@ -115,30 +126,40 @@ BEGIN
  */
 
     -- А сюда товары
+WITH DD AS (SELECT MI_Sale.Id AS MovementItemId, MI_Sale.Amount AS SaleAmount, Container.Amount AS ContainerAmount, OperDate, Container.Id
+                 , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE) 
+  FROM Container 
+  JOIN MovementItem AS MI_Sale ON MI_Sale.objectid = Container.objectid 
+  JOIN containerlinkobject AS CLI_MI ON CLI_MI.containerid = Container.Id
+    AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+  JOIN containerlinkobject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
+    AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
+    AND CLI_Unit.ObjectId = vbUnitId
+  JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+    JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
+    JOIN Movement ON Movement.Id = movementitem.movementid
+  WHERE MI_Sale.MovementId = inMovementId  AND Container.Amount > 0), 
+  
+  tmpItem AS (SELECT Id, MovementItemId, OperDate, 
+    CASE 
+      WHEN SaleAmount - SUM > 0 THEN ContainerAmount 
+      ELSE SaleAmount - SUM + ContainerAmount
+    END AS Amount
+     FROM DD
+     
+  WHERE SaleAmount - (SUM - ContainerAmount) > 0)
+
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
          SELECT 
                 zc_Container_Count()
               , zc_Movement_Income()  
               , inMovementId
-              , _tmpItem.MovementItemId
-              , lpInsertFind_Container(
-                          inContainerDescId := zc_Container_Count(), -- DescId Остатка
-                          inParentId        := NULL               , -- Главный Container
-                          inObjectId := ObjectId, -- Объект (Счет или Товар или ...)
-                          inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
-                          inBusinessId := NULL, -- Бизнесы
-                          inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL,
-                          inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
-                          inObjectId_1        := _tmpItem.UnitId,
-                          inDescId_2          := zc_ContainerLinkObject_PartionMovementItem(), -- DescId для 2-ой Аналитики
-                          inObjectId_2        := lpInsertFind_Object_PartionMovementItem(_tmpItem.MovementItemId)) 
-              , AccountId
-              , OperSumm
+              , tmpItem.MovementItemId
+              , tmpItem.Id
+              , vbAccountId
+              , - Amount
               , OperDate
-           FROM _tmpItem;
-   
-
+           FROM tmpItem;
     
 --     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer
   --                                           , AccountId Integer, AnalyzerId Integer, ObjectId_Analyzer Integer, WhereObjectId_Analyzer Integer, ContainerId_Analyzer Integer
@@ -189,7 +210,7 @@ BEGIN
     
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_LossDebt()
+                                , inDescId     := zc_Movement_Check()
                                 , inUserId     := inUserId
                                  );
 END;
@@ -205,5 +226,8 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM lpComplete_Movement_Income (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
+--    IN inMovementId        Integer  , -- ключ Документа
+--    IN inUserId            Integer    -- Пользователь
+-- SELECT * FROM lpComplete_Movement_Check (inMovementId:= 12671, inUserId:= zfCalc_UserAdmin()::Integer)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM MovementItemContainer WHERE MovementId = 12671

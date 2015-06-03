@@ -94,6 +94,7 @@ begin
         ShowMessage('Установлен режим отладки')
       else
         ShowMessage('Снят режим отладки');
+     Msg.CharCode := $0;
   end;
   // Ctrl + Shift + T
   if (Msg.CharCode = $54) and ShiftDown and CtrlDown then begin
@@ -102,6 +103,7 @@ begin
         ShowMessage('Установлен режим проверки времени')
       else
         ShowMessage('Снят режим проверки времени');
+     Msg.CharCode := $0;
   end;
   // Ctrl + Shift + D
   if (Msg.CharCode = $44) and ShiftDown and CtrlDown then begin
@@ -110,6 +112,7 @@ begin
         ShowMessage('Установки пользователя не загружаются')
       else
         ShowMessage('Установки пользователя загружаются');
+     Msg.CharCode := $0;
   end;
 end;
 

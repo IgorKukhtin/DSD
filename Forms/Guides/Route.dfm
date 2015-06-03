@@ -421,6 +421,19 @@ object RouteForm: TRouteForm
           Component = ClientDataSet
           ComponentItem = 'RouteKindName'
           DataType = ftString
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

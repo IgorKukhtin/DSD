@@ -3,6 +3,7 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, In
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inFreightId                 Integer   , -- Название груза
     IN inRouteKindId_Freight       Integer   , -- Типы маршрутов(груз)
     IN inRouteKindId               Integer   , -- Типы маршрутов
+    IN inUnitId                    Integer   , -- Подразделение
     IN inComment                   TVarChar  , -- Комментарий	
     IN inSession                   TVarChar    -- сессия пользователя
 )                              
@@ -85,6 +87,9 @@ BEGIN
    -- сохранили связь с <Типы маршрутов>
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RouteKind(), ioId, inRouteKindId);
 
+   -- сохранили связь с <Подразделение>
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+
    -- сохранили свойство <Пробег, км (дополнительный вид топлива)>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DistanceFuelChild(), ioId, inDistanceFuelChild);
 
@@ -117,6 +122,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.06.15         * add UnitID
  10.12.13         * add DistanceWeightTransport
  09.12.13         * add WeightTransport
  02.12.13         * add Comment
