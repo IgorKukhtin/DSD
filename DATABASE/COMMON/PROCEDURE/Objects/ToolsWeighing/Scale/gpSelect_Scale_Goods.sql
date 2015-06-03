@@ -180,6 +180,21 @@ BEGIN
    ELSE
     -- Результат - все товары
     RETURN QUERY
+       WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyId
+                             FROM Object_InfoMoney_View AS View_InfoMoney
+                             WHERE inInfoMoneyId IN (0,  zc_Enum_InfoMoney_30101()) -- Доходы + Готовая продукция
+                               AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
+                                                                , zc_Enum_InfoMoney_30101() -- Доходы + Готовая продукция
+                                                                , zc_Enum_InfoMoney_30102() -- Доходы + Тушенка
+                                                                , zc_Enum_InfoMoney_30201() --Доходы + Мясное сырье
+                                                                 )
+                            UNION
+                             SELECT View_InfoMoney.InfoMoneyId
+                             FROM Object_InfoMoney_View AS View_InfoMoney
+                             WHERE inInfoMoneyId IN (0,  zc_Enum_InfoMoney_10101()) -- Основное сырье + Мясное сырье + Живой вес
+                               AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                            )
+                            )
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpGoods.GoodsId            AS GoodsId
             , tmpGoods.GoodsCode          AS GoodsCode
@@ -206,16 +221,15 @@ BEGIN
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
                   , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)            AS GoodsKindId
-             FROM Object_InfoMoney_View
+             FROM tmpInfoMoney
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                   JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                              AND Object_Goods.isErased = FALSE
                                              AND Object_Goods.ObjectCode <> 0
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND 1=0
-             WHERE Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
             ) AS tmpGoods
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull

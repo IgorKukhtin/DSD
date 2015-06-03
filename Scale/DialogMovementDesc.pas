@@ -109,17 +109,18 @@ begin
           then EditBarCode.Text:=ParamByName('OrderExternal_BarCode').AsString
           else if ParamByName('OrderExternal_InvNumber').AsString<> ''
                then EditBarCode.Text:=ParamByName('OrderExternal_InvNumber').AsString
-               else EditBarCode.Text:=ParamByName('MovementDescNumber').AsString;
+               else EditBarCode.Text:=''{ParamByName('MovementDescNumber').AsString};
 
           EditPartnerCode.Text:= IntToStr(ParamByName('calcPartnerCode').AsInteger);
           PanelPartnerName.Caption:= ParamByName('calcPartnerName').AsString;
      end;
 
      ActiveControl:=EditBarCode;
+     EditBarCode.SelectAll;
      //isEditBarCode:=BarCode<>'';
-     isEditBarCode:=false;//ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger<>zc_Movement_SendOnPrice;
+     isEditBarCode:=ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger<>zc_Movement_SendOnPrice;
 
-     if BarCode<>'' then begin EditBarCodeExit(EditBarCode);Result:=true;end
+     if BarCode<>'' then begin isEditBarCode:=true;EditBarCodeExit(EditBarCode);Result:=true;end
      else Result:=(ShowModal=mrOk);
 end;
 {------------------------------------------------------------------------}

@@ -857,6 +857,7 @@ begin
   //local visible
   PartionGoodsPanel.Visible:=StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_sale')) = zc_Enum_InfoMoney_30201; // Доходы + Мясное сырье + Мясное сырье
   HeadCountPanel.Visible:=PartionGoodsPanel.Visible;
+  CountPanel.Visible:=not PartionGoodsPanel.Visible;
   BarCodePanel.Visible:=not PartionGoodsPanel.Visible;
   PanelBox.Visible:=GetArrayList_Value_byName(Default_Array,'isBox') = AnsiUpperCase('TRUE');
 

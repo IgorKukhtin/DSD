@@ -813,7 +813,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
-      ExplicitTop = 83
       object BarCodeLabel: TLabel
         Left = 1
         Top = 1
@@ -881,7 +880,6 @@ object MainForm: TMainForm
       Height = 29
       Align = alTop
       TabOrder = 2
-      ExplicitTop = 241
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -927,7 +925,6 @@ object MainForm: TMainForm
       ParentColor = False
       TabOrder = 3
       OnClick = rgScaleClick
-      ExplicitTop = 124
     end
     object CountPanel: TPanel
       Left = 0
@@ -942,7 +939,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 4
-      ExplicitTop = 270
       object CountLabel: TLabel
         Left = 1
         Top = 1
@@ -984,7 +980,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 5
-      ExplicitTop = 367
       object HeadCountLabel: TLabel
         Left = 1
         Top = 1
@@ -1065,7 +1060,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 7
-      ExplicitTop = 311
       object Label1: TLabel
         Left = 1
         Top = 1

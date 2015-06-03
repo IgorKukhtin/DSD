@@ -1098,6 +1098,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
       StoredProc = spUpdate_EDIComdoc_Params
       StoredProcList = <
         item
@@ -1112,6 +1113,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -2246,12 +2248,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'JuridicalNameFind'
         Value = Null
         Component = MasterCDS
+        ComponentItem = 'JuridicalNameFind'
         DataType = ftString
       end
       item
         Name = 'PartnerNameFind'
         Value = Null
         Component = MasterCDS
+        ComponentItem = 'PartnerNameFind'
         DataType = ftString
       end>
     PackSize = 1

@@ -181,7 +181,17 @@ BEGIN
             , View_InfoMoney.InfoMoneyName
 
             , Object_ContractCondition_PercentView.ChangePercent :: TFloat AS ChangePercent
-            , CASE WHEN tmpPartner.PartnerCode = 1 THEN 1 WHEN tmpPartner.PartnerCode = 3 THEN 1 ELSE 1 END :: TFloat AS ChangePercentAmount
+            , CASE WHEN View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                        THEN 0
+                   WHEN inInfoMoneyId_sale = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье
+                    AND tmpPartner.JuridicalId = 15384                 -- Фізична особа-підприємець Соколюк Аліса Борисівна
+                        THEN 1
+                   WHEN inInfoMoneyId_sale = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье
+                        THEN 0
+                   WHEN tmpPartner.PartnerCode IN (12345678) -- ???
+                        THEN 1
+                   ELSE 1
+              END :: TFloat AS ChangePercentAmount
 
             , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice

@@ -691,7 +691,7 @@ begin
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inPartnerId', ftInteger, ptInput, execParams.ParamByName('calcPartnerId').AsInteger);
-       Params.AddParam('inContractIdId', ftInteger, ptInput, execParams.ParamByName('ContractId').AsInteger);
+       Params.AddParam('inContractId', ftInteger, ptInput, execParams.ParamByName('ContractId').AsInteger);
        //try
          Execute;
          //
