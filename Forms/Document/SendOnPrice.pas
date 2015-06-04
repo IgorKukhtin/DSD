@@ -69,6 +69,7 @@ type
     spSelectPrintOut: TdsdStoredProc;
     clGoodsGroupNameFull: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
+    UnitChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
