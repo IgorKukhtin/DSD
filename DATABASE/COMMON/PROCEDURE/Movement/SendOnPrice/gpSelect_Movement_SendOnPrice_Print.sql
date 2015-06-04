@@ -208,6 +208,7 @@ BEGIN
                      , MILinkObject_GoodsKind.ObjectId
                      , MIFloat_Price.ValueData
                      , MIFloat_CountForPrice.ValueData
+
              ) AS tmpMI
                        LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                              ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
@@ -357,6 +358,8 @@ BEGIN
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
 
+           , Object_Unit.ValueData           AS UnitName
+
            , CASE inReportType
                   WHEN 0 THEN tmpMI.AmountOut
                   ELSE tmpMI.AmountIn
@@ -444,6 +447,7 @@ BEGIN
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                  , COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)      AS UnitId
                   , CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                          WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
@@ -470,6 +474,15 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+        
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                               ON MovementLinkObject_To.MovementId = MovementItem.MovementId
+                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                  
+
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
@@ -477,6 +490,8 @@ BEGIN
                     , MILinkObject_GoodsKind.ObjectId
                     , MIFloat_Price.ValueData
                     , MIFloat_CountForPrice.ValueData
+                    , COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+
             ) AS tmpMI
 
 
@@ -496,6 +511,8 @@ BEGIN
 
             LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.GoodsId = Object_Goods.Id
                                                                            AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
+            
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
 
        WHERE (tmpMI.AmountOut <> 0 AND inReportType = 0)
           OR (tmpMI.AmountIn <> 0 AND inReportType = 1)
@@ -513,6 +530,7 @@ ALTER FUNCTION gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.06.15         * add unitId
  05.03.15                                        * all
  10.02.15                                                       *
  19.11.14                                                       *

@@ -21,6 +21,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       inherited cxGrid: TcxGrid
         Width = 944
         Height = 518
+        ExplicitLeft = 8
+        ExplicitTop = 3
         ExplicitWidth = 944
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -428,7 +430,45 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrintOut: TdsdPrintAction [9]
+    object actPrintUnit: TdsdPrintAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintOut
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOut
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '1'
+          DataType = ftFloat
+        end>
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrintOut: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintOut
@@ -455,6 +495,11 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '0'
+          DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
@@ -477,7 +522,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -501,7 +546,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end>
       isShowModal = True
     end
-    object UnitChoiceForm: TOpenChoiceForm [18]
+    object UnitChoiceForm: TOpenChoiceForm [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -661,6 +706,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -686,6 +739,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     end
     object bbPrintOut: TdxBarButton
       Action = actPrintOut
+      Category = 0
+    end
+    object bbPrintUnit: TdxBarButton
+      Action = actPrintUnit
       Category = 0
     end
   end

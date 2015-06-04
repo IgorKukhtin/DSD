@@ -62,6 +62,8 @@ type
     clGoodsGroupNameFull: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     UnitChoiceForm: TOpenChoiceForm;
+    actPrintUnit: TdsdPrintAction;
+    bbPrintUnit: TdxBarButton;
   private
     { Private declarations }
   public
