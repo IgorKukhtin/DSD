@@ -1,27 +1,27 @@
 inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
-  ClientWidth = 1419
-  ExplicitWidth = 1435
-  ExplicitHeight = 706
+  ClientWidth = 1556
+  ExplicitWidth = 1572
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1419
+    Width = 1556
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1364
+    ExplicitWidth = 1556
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1419
+    ClientRectRight = 1556
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1364
+      ExplicitWidth = 1556
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1419
+        Width = 1556
         Height = 518
-        ExplicitWidth = 1364
+        ExplicitWidth = 1556
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -137,11 +137,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsGroupNameFull: TcxGridDBColumn [0]
+          object GoodsGroupNameFull: TcxGridDBColumn [0]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object GoodsCode: TcxGridDBColumn [1]
@@ -354,10 +355,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1419
+    Width = 1556
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1364
+    ExplicitWidth = 1556
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -486,14 +487,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 1337
+      Left = 1409
       Top = 41
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1337
-      Top = 63
+      Left = 1409
+      Top = 60
       Properties.Buttons = <
         item
           Default = True
@@ -503,7 +504,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Properties.ReadOnly = True
       TabOrder = 19
       Visible = False
-      Width = 153
+      Width = 106
     end
     object cxLabel7: TcxLabel
       Left = 509
@@ -1689,12 +1690,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Control = edTo
       end
       item
-        Control = edOperDateStart
-      end
-      item
-        Control = edOperDateEnd
-      end
-      item
         Control = edRoute
       end
       item
@@ -1710,16 +1705,34 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Control = edPriceList
       end
       item
-        Control = edPriceWithVAT
+        Control = edChangePercent
       end
       item
         Control = edVATPercent
       end
       item
-        Control = edChangePercent
+        Control = edPriceWithVAT
+      end
+      item
+        Control = cbPrinted
+      end
+      item
+        Control = edOperDateMark
       end
       item
         Control = edPersonal
+      end
+      item
+        Control = edPartner
+      end
+      item
+        Control = edRetail
+      end
+      item
+        Control = edOperDateStart
+      end
+      item
+        Control = edOperDateEnd
       end>
     Left = 232
     Top = 193
@@ -1905,7 +1918,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
-        Component = PriceListGuides
+        Component = GuidesFrom
       end>
     Left = 512
     Top = 328
@@ -2374,8 +2387,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1268
-    Top = 4
+    Left = 1324
+    Top = 12
   end
   object RetailGuides: TdsdGuides
     KeyField = 'Id'

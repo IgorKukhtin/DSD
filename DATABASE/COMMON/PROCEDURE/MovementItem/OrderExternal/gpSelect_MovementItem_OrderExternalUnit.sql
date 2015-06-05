@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , AmountCalc TFloat, AmountCalcOrder TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , isErased Boolean
               )
 AS
@@ -69,6 +70,11 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountSumm
            , CAST (NULL AS TFloat)      AS AmountSumm_Partner
 
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -110,6 +116,11 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = tmpGoods.GoodsId
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -140,6 +151,11 @@ BEGIN
            , CAST ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) * MIFloat_Price.ValueData  / COALESCE (MIFloat_CountForPrice.ValueData ,0) AS NUMERIC (16, 2)) :: TFloat AS AmountSumm 
            , MIFloat_Summ.ValueData                 AS AmountSumm_Partner
            
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -187,6 +203,11 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
                                   
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
             ;
      ELSE
 
@@ -218,6 +239,11 @@ BEGIN
  
            , MIFloat_Summ.ValueData            AS AmountSumm_Partner
                    
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -264,6 +290,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
            ;
 
      END IF;
@@ -282,4 +313,4 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternalUnit (Integer, Integer, TDateT
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_OrderExternalUnit (inMovementId:= 4229, inPriceListId:=0, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= TRUE, inisErased:= True, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_OrderExternalUnit (inMovementId:= 4229, inPriceListId:=0, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= True, inisErased:= True, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_OrderExternalUnit (inMovementId:= 4229, inPriceListId:=0, inOperDate:= CURRENT_TIMESTAMP, inShowAll:= FALSE, inisErased:= True, inSession:= '2')

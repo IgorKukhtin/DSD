@@ -12001,7 +12001,7 @@ begin
              //!!!если надо обработать только ошибки!!!
              if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
              begin
-                  //Сначала находим статус документе, если он проведене или удален - ничего не делаем
+                  //Сначала находим статус документе, если он проведен или удален - ничего не делаем
                   fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
                   isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
              end

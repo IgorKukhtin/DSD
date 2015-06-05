@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , AmountRemains TFloat, Amount TFloat, AmountEDI TFloat, AmountSecond TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , isErased Boolean
               )
 AS
@@ -42,27 +43,60 @@ BEGIN
 
      -- Результат такой
      RETURN QUERY
- WITH tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
-                           , MovementItem.ObjectId                         AS GoodsId
-                           , MovementItem.Amount                           AS Amount
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                           , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
-                           , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
-                           , MovementItem.isErased
-                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                   AND MovementItem.DescId     = zc_MI_Master()
-                                                   AND MovementItem.isErased   = tmpIsErased.isErased
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                     )
+      WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyGroupId
+                                 , View_InfoMoney.InfoMoneyDestinationId
+                                 , View_InfoMoney.InfoMoneyId
+                            FROM (SELECT View_InfoMoney.InfoMoneyGroupId
+                                       , View_InfoMoney.InfoMoneyDestinationId
+                                       , View_InfoMoney.InfoMoneyId
+                                  FROM MovementLinkObject AS MLO_Contract
+                                       INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                             ON ObjectLink_Contract_InfoMoney.ObjectId = MLO_Contract.ObjectId
+                                                            AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                       INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+                                  WHERE MLO_Contract.MovementId = inMovementId
+                                    AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()
+                                 ) AS tmpContract
+                                 INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON (View_InfoMoney.InfoMoneyDestinationId  IN (zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье + Основное сырье
+                                                                                                                                  )
+                                                                                        AND tmpContract.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье
+                                                                                       )
+                                                                                    OR ((View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21100() -- Общефирменные + Дворкин
+                                                                                         OR View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
+                                                                                        )
+                                                                                        AND tmpContract.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
+                                                                                       )
+                                                                                    OR (View_InfoMoney.InfoMoneyDestinationId  IN (zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_21000() -- Общефирменные + Чапли
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                                                                  )
+                                                                                        AND View_InfoMoney.InfoMoneyId <> zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
+                                                                                        AND tmpContract.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                                                                                       )
+
+                           )
+          , tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
+                                 , MovementItem.ObjectId                         AS GoodsId
+                                 , MovementItem.Amount                           AS Amount
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                 , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+                                 , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+                                 , MovementItem.isErased
+                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                        AND MovementItem.DescId     = zc_MI_Master()
+                                                        AND MovementItem.isErased   = tmpIsErased.isErased
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                             ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                          )
           , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
                                 , Container.Amount                            AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
@@ -167,6 +201,12 @@ BEGIN
            , 1 :: TFloat                AS CountForPrice
            , NULL :: TFloat             AS AmountSumm
            , NULL :: TFloat             AS AmountSumm_Partner
+
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                        AS GoodsId
@@ -175,20 +215,18 @@ BEGIN
                   -- , zc_Enum_GoodsKind_Main()  AS GoodsKindId
                   , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
                   , ObjectString_Goods_GoodsGroupFull.ValueData            AS GoodsGroupNameFull
-             FROM Object_InfoMoney_View
+             FROM tmpInfoMoney
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                   JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                              AND Object_Goods.isErased = FALSE
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
-                                                        AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
+                                                        AND tmpInfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
 
                   LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                          ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                         AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
-             WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
             ) AS tmpGoods
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoods.GoodsId
@@ -203,6 +241,11 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = tmpGoods.GoodsId
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
                                   
        WHERE tmpMI.GoodsId IS NULL
@@ -226,6 +269,12 @@ BEGIN
            , tmpMI.CountForPrice :: TFloat      AS CountForPrice
            , CAST ((tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
            , MIFloat_Summ.ValueData             AS AmountSumm_Partner
+
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+
            , tmpMI.isErased                     AS isErased
 
        FROM tmpMI_all AS tmpMI
@@ -248,6 +297,10 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
        ;
 
      ELSE
@@ -379,6 +432,12 @@ BEGIN
            , tmpMI.CountForPrice :: TFloat      AS CountForPrice
            , CAST ((tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
            , MIFloat_Summ.ValueData             AS AmountSumm_Partner
+
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+
            , tmpMI.isErased                     AS isErased
 
        FROM tmpMI_all AS tmpMI
@@ -401,6 +460,10 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
                                   
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
        ;
 
      END IF;

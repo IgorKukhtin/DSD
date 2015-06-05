@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 668
   ClientWidth = 1391
   ExplicitWidth = 1407
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +11,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1391
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1084
+    ExplicitWidth = 1391
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1391
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1084
+      ExplicitWidth = 1391
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1391
         Height = 518
-        ExplicitWidth = 1084
+        ExplicitWidth = 1391
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -101,11 +101,12 @@ inherited OrderExternalForm: TOrderExternalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsGroupNameFull: TcxGridDBColumn [0]
+          object GoodsGroupNameFull: TcxGridDBColumn [0]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 126
           end
           object GoodsCode: TcxGridDBColumn [1]
@@ -274,7 +275,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1391
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1084
+    ExplicitWidth = 1391
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1342,19 +1343,25 @@ inherited OrderExternalForm: TOrderExternalForm
         Control = edPriceList
       end
       item
-        Control = edPriceWithVAT
+        Control = edChangePercent
       end
       item
         Control = edVATPercent
       end
       item
-        Control = edChangePercent
+        Control = edPriceWithVAT
+      end
+      item
+        Control = cbPrinted
+      end
+      item
+        Control = edOperDateMark
       end
       item
         Control = edPersonal
       end
       item
-        Control = cbPrinted
+        Control = edPartner
       end>
     Left = 232
     Top = 193
@@ -1543,6 +1550,9 @@ inherited OrderExternalForm: TOrderExternalForm
     ComponentList = <
       item
         Component = PriceListGuides
+      end
+      item
+        Component = GuidesTo
       end>
     Left = 512
     Top = 328
@@ -1763,21 +1773,6 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'PaidKindName'
         Value = ''
         Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'PriceListId'
-        Value = Null
-        Component = PriceListGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'PriceListName'
-        Value = Null
-        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

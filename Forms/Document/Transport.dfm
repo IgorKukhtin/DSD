@@ -29,7 +29,7 @@
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
-      Enabled = False
+      Properties.ReadOnly = True
       TabOrder = 0
       Width = 92
     end
@@ -54,10 +54,10 @@
     object edBranchForwarding: TcxButtonEdit
       Left = 1011
       Top = 63
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -210,11 +210,11 @@
     object edHoursWork: TcxCurrencyEdit
       Left = 610
       Top = 23
-      Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 75
     end
@@ -816,6 +816,24 @@
           object colchRatioFuel: TcxGridDBColumn
             Caption = #1050#1086#1101#1092#1092'. '#1087#1077#1088#1077#1074#1086#1076#1072' '#1085#1086#1088#1084#1099
             DataBinding.FieldName = 'RatioFuel'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colchUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1079#1072#1090#1088#1072#1090#1099')'
+            DataBinding.FieldName = 'UnitName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colchBranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1079#1072#1090#1088#1072#1090#1099')'
+            DataBinding.FieldName = 'BranchName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2451,11 +2469,18 @@
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'ioUnitId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outUnitName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitName'
+        DataType = ftString
       end
       item
         Name = 'inComment'
@@ -2685,9 +2710,9 @@
   object GuidesBranchForwarding: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranchForwarding
-    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.Value = 'TBranch_orUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBranch_ObjectForm'
+    FormName = 'TBranch_orUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
