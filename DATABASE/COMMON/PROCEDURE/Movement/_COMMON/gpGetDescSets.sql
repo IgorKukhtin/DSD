@@ -26,7 +26,7 @@ BEGIN
                                             AS ServiceDesc
         , (zc_Movement_TransferDebtOut()::TVarChar||';'||zc_Movement_TransferDebtIn()::TVarChar)::TVarChar AS TransferDebtDesc
         , (zc_Movement_SendDebt()::TVarChar)::TVarChar AS SendDebtDesc
-        , zc_Movement_LossDebt()::TVarChar AS OtherDesc
+        , (zc_Movement_LossDebt() :: TVarChar || ';' || zc_Movement_PersonalReport() :: TVarChar) :: TVarChar AS OtherDesc
         , zc_Movement_PriceCorrective() :: TVarChar AS PriceCorrectiveDesc
         , (zc_Movement_ProfitLossService() :: TVarChar || ';' || zc_Movement_Service() :: TVarChar || ';' || zc_Movement_TransportService() :: TVarChar || ';' || 'ServiceRealDesc') :: TVarChar
                                             AS ServiceRealDesc
@@ -41,10 +41,10 @@ ALTER FUNCTION gpGetDescSets (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.06.15                                        * add zc_Movement_PersonalReport
  31.08.14                                        * add Real...
  22.04.14                         *
  11.03.14                         *
-
 */
 
 -- тест

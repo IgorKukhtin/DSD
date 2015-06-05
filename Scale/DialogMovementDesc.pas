@@ -538,6 +538,12 @@ begin
               ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
     end;
 
+    try
+    if (trim(EditPartnerCode.Text)<>'')and(trim(EditPartnerCode.Text)<>'0')
+    then ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger:=StrToInt(trim(EditPartnerCode.Text))
+    except ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger:=0;
+    end;
+
     if GuidePartnerForm.Execute(ParamsMovement_local)
     then begin
               EditPartnerCode.Text:=IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);

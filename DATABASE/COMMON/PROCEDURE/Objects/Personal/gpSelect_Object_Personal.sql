@@ -101,13 +101,15 @@ BEGIN
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.BranchId = vbObjectId_Constraint
-         OR Object_Personal_View.UnitId = 8429 -- Отдел логистики
+         OR Object_Personal_View.UnitId     = 8429  -- Отдел логистики
          OR Object_Personal_View.PositionId = 81178 -- экспедитор
          OR Object_Personal_View.PositionId = 8466  -- водитель
            )
        AND (View_RoleAccessKeyGuide.UnitId_PersonalService > 0
             OR vbIsAllUnit = TRUE
             OR Object_Personal_View.BranchId = vbObjectId_Constraint
+            OR Object_Personal_View.PositionId = 12436 -- бухгалтер
+            OR Object_Personal_View.UnitId     = 8386  -- Бухгалтерия
            )
        AND (Object_Personal_View.isErased = FALSE
             OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE)

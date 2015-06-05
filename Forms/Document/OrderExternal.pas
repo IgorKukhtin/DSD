@@ -84,7 +84,7 @@ type
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
     cbPrinted: TcxCheckBox;
-    clGoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
     cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;

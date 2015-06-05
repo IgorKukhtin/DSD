@@ -176,7 +176,10 @@ BEGIN
             , Object_RateFuelKind.Id         AS RateFuelKindId
             , Object_RateFuelKind.ValueData  AS RateFuelKindName
 
-            , FALSE isErased
+            , ''   AS UnitName
+            , ''   AS BranchName
+
+            , FALSE AS isErased
             
         FROM (SELECT zc_ObjectLink_Car_FuelMaster() AS DescId UNION ALL SELECT zc_ObjectLink_Car_FuelChild() AS DescId) AS tmpDesc
              -- выбрали автомобиль (он один)
@@ -219,7 +222,6 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
                                               ON MILinkObject_RouteKind.MovementItemId = MovementItem_Master.Id 
                                              AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
-
              -- выбрали норму для автомобиль + Тип маршрута
              LEFT JOIN (SELECT ObjectLink_RateFuel_Car.ChildObjectId       AS CarId
                              , ObjectLink_RateFuel_RouteKind.ChildObjectId AS RouteKindId
@@ -304,6 +306,9 @@ BEGIN
             , Object_RateFuelKind.Id         AS RateFuelKindId
             , Object_RateFuelKind.ValueData  AS RateFuelKindName
 
+            , Object_Unit.ValueData    AS UnitName
+            , Object_Branch.ValueData  AS BranchName
+
             , MovementItem.isErased
             
         FROM (SELECT FALSE AS isErased UNION ALL SELECT TRUE AS isErased) AS tmpIsErased -- !!!Показываем Все!!!
@@ -312,11 +317,21 @@ BEGIN
                               AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = MovementItem.ObjectId
 
+             -- выбрали Подразделение для затрат
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+             -- выбрали Филиал для затрат
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                              ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
+
              -- выбрали автомобиль (он один)
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                           ON MovementLinkObject_Car.MovementId = inMovementId
                                          AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-
              -- выбрали у автомобиля - Вид топлива
              LEFT JOIN ObjectLink AS ObjectLink_Car_FuelAll ON ObjectLink_Car_FuelAll.ObjectId = MovementLinkObject_Car.ObjectId
                                                            AND ObjectLink_Car_FuelAll.ChildObjectId = MovementItem.ObjectId

@@ -2047,8 +2047,8 @@ object MainForm: TMainForm
   end
   object DataSource: TDataSource
     DataSet = fromQuery
-    Left = 248
-    Top = 192
+    Left = 176
+    Top = 184
   end
   object fromADOConnection: TADOConnection
     ConnectionString = 
@@ -2056,8 +2056,8 @@ object MainForm: TMainForm
       ';User ID=dba_adm;Data Source=v9ProfiMeatingDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
-    Left = 344
-    Top = 248
+    Left = 176
+    Top = 240
   end
   object fromQuery: TADOQuery
     Connection = fromADOConnection
@@ -2065,13 +2065,13 @@ object MainForm: TMainForm
     Parameters = <>
     SQL.Strings = (
       'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 304
-    Top = 320
+    Left = 128
+    Top = 296
   end
   object fromSqlQuery: TADOQuery
     Connection = fromADOConnection
     Parameters = <>
-    Left = 384
+    Left = 200
     Top = 320
   end
   object toSqlQuery: TZQuery
@@ -2081,21 +2081,21 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 168
-    Top = 416
+    Left = 88
+    Top = 496
   end
   object toStoredProc: TdsdStoredProc
     DataSets = <>
     Params = <>
     PackSize = 1
-    Left = 128
-    Top = 248
+    Left = 40
+    Top = 224
   end
   object toStoredProc_two: TdsdStoredProc
     DataSets = <>
     Params = <>
     PackSize = 1
-    Left = 120
+    Left = 48
     Top = 160
   end
   object fromQuery_two: TADOQuery
@@ -2104,8 +2104,8 @@ object MainForm: TMainForm
     Parameters = <>
     SQL.Strings = (
       'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 312
-    Top = 384
+    Left = 184
+    Top = 376
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
@@ -2118,8 +2118,8 @@ object MainForm: TMainForm
     User = 'postgres'
     Password = 'postgres'
     Protocol = 'postgresql-9'
-    Left = 144
-    Top = 360
+    Left = 40
+    Top = 328
   end
   object fromFlADOConnection: TADOConnection
     ConnectionString = 
@@ -2127,8 +2127,8 @@ object MainForm: TMainForm
       ';User ID=dba;Data Source=v9_2ProfiMeatingDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
-    Left = 320
-    Top = 72
+    Left = 176
+    Top = 24
   end
   object fromFlQuery: TADOQuery
     Connection = fromFlADOConnection
@@ -2136,21 +2136,21 @@ object MainForm: TMainForm
     Parameters = <>
     SQL.Strings = (
       'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 312
-    Top = 128
+    Left = 176
+    Top = 80
   end
   object fromFlSqlQuery: TADOQuery
     Connection = fromFlADOConnection
     Parameters = <>
-    Left = 376
-    Top = 118
+    Left = 176
+    Top = 134
   end
   object toStoredProc_three: TdsdStoredProc
     DataSets = <>
     Params = <>
     PackSize = 1
-    Left = 120
-    Top = 112
+    Left = 56
+    Top = 96
   end
   object toSqlQuery_two: TZQuery
     Connection = toZConnection
@@ -2159,8 +2159,8 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 168
-    Top = 464
+    Left = 88
+    Top = 544
   end
   object fromQueryDate: TADOQuery
     Connection = fromADOConnection
@@ -2168,7 +2168,7 @@ object MainForm: TMainForm
     Parameters = <>
     SQL.Strings = (
       'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 320
-    Top = 504
+    Left = 168
+    Top = 456
   end
 end

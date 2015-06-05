@@ -100,7 +100,9 @@ function TGuidePartnerForm.Execute(var execParamsMovement:TParams): boolean;
 begin
      CopyValuesParamsFrom(execParamsMovement,ParamsMovement_local);
 
-     EditPartnerCode.Text:='';
+     if ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger<>0
+     then EditPartnerCode.Text:=IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger)
+     else EditPartnerCode.Text:='';
      EditPartnerName.Text:='';
 
      CancelCxFilter;
@@ -125,15 +127,17 @@ begin
                then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_Unit)
           else CDS.Filter:='1=0';
 
+
+     if ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger<>0
+     then begin ActiveControl:=EditPartnerCode;fEnterPartnerCode:=true;end
+     else begin ActiveControl:=EditPartnerName;fEnterPartnerCode:=false;end;
+     fEnterPartnerName:=false;
+
      CDS.Filtered:=false;
      CDS.Filtered:=true;
 
      if ParamsMovement_local.ParamByName('calcPartnerId').AsInteger<>0
      then CDS.Locate('PartnerId',ParamsMovement_local.ParamByName('calcPartnerId').AsString,[]);
-
-     fEnterPartnerCode:=false;
-     fEnterPartnerName:=false;
-     ActiveControl:=EditPartnerName;
 
      Application.ProcessMessages;
      Application.ProcessMessages;
@@ -247,7 +251,7 @@ end;
 procedure TGuidePartnerForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
 begin
      //
-     if (fEnterPartnerCode)and(trim(EditPartnerCode.Text)<>'')
+     if (fEnterPartnerCode)and(trim(EditPartnerCode.Text)<>'')and(trim(EditPartnerCode.Text)<>'0')
      then
        if  (EditPartnerCode.Text=DataSet.FieldByName('PartnerCode').AsString)
        then Accept:=true else Accept:=false;

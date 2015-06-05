@@ -559,6 +559,7 @@ object IncomeForm: TIncomeForm
             Width = 100
           end
           object clInfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
             HeaderAlignmentHorz = taCenter

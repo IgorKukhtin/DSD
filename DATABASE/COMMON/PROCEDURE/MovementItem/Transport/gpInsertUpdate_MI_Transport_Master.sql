@@ -1,11 +1,10 @@
 -- Function: gpInsertUpdate_MI_Transport_Master()
+
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
  INOUT ioId                        Integer   , -- Ключ объекта <Элемент документа>
@@ -21,14 +20,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inFreightId                 Integer   , -- Название груза
     IN inRouteKindId_Freight       Integer   , -- Типы маршрутов(груз)
     IN inRouteKindId               Integer   , -- Типы маршрутов
-    IN inUnitId                    Integer   , -- Подразделение
+ INOUT ioUnitId                    Integer   , -- Подразделение
+   OUT outUnitName                 TVarChar  , -- Подразделение
     IN inComment                   TVarChar  , -- Комментарий	
     IN inSession                   TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TransportMaster());
@@ -75,6 +77,11 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Неверное значение <Пробег, км (дополнительный вид топлива)>, т.к. у <Автомобиля> не установлен <Дополнительный вид топлива>.';
    END IF;
 
+
+
+   -- определяется признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
+
    -- сохранили <Элемент документа>
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inRouteId, inMovementId, inAmount, NULL);
   
@@ -87,8 +94,37 @@ BEGIN
    -- сохранили связь с <Типы маршрутов>
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RouteKind(), ioId, inRouteKindId);
 
+   -- только при создании - расчет
+   IF vbIsInsert
+   THEN
+        -- поиск Подразделения для затрат (т.е. в Child перенесется отсюда при проведении)
+        ioUnitId:= (SELECT CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
+                                     THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если филиал = "пусто", тогда затраты по принадлежности маршрута к подразделению, т.е. это мясо(з+сб), снабжение, админ, произв.
+                                WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
+                                     THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению, т.е. это филиалы
+                                ELSE (SELECT MLO.ObjectId AS MLO FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_UnitForwarding()) -- иначе Подразделение (Место отправки), т.е. везут на филиалы но затраты к ним не падают
+                           END 
+                    FROM Object AS Object_Route
+                         LEFT JOIN ObjectLink AS ObjectLink_Route_Branch
+                                              ON ObjectLink_Route_Branch.ObjectId = Object_Route.Id
+                                             AND ObjectLink_Route_Branch.DescId = zc_ObjectLink_Route_Branch()
+                         LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
+                                              ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
+                                             AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
+                         LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Branch
+                                              ON ObjectLink_UnitRoute_Branch.ObjectId = ObjectLink_Route_Unit.ChildObjectId
+                                             AND ObjectLink_UnitRoute_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                         LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Business
+                                              ON ObjectLink_UnitRoute_Business.ObjectId = ObjectLink_Route_Unit.ChildObjectId
+                                             AND ObjectLink_UnitRoute_Business.DescId = zc_ObjectLink_Unit_Business()
+                    WHERE Object_Route.Id = inRouteId
+                   );
+   END IF;
+   -- еще досчитали
+   outUnitName:= (SELECT Object.ValueData FROM Object WHERE Object.Id = ioUnitId);
    -- сохранили связь с <Подразделение>
-   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, ioUnitId);
+
 
    -- сохранили свойство <Пробег, км (дополнительный вид топлива)>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DistanceFuelChild(), ioId, inDistanceFuelChild);
@@ -112,6 +148,9 @@ BEGIN
 
    -- !!!обязательно!!! пересчитали Child
    PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := inMovementId, inParentId := ioId, inRouteKindId:= inRouteKindId, inUserId := vbUserId);
+
+   -- сохранили протокол
+   PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 
 END;

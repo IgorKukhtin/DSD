@@ -109,7 +109,7 @@ type
     edOperDateEnd: TcxDateEdit;
     AmountForecastOrder: TcxGridDBColumn;
     AmountCalcOrder: TcxGridDBColumn;
-    clGoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
     cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;

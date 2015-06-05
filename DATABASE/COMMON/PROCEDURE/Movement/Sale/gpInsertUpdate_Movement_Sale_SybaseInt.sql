@@ -40,6 +40,7 @@ BEGIN
 
      -- для павильонов меняется договор на ГП
      IF EXISTS (SELECT ObjectId FROM ObjectLink WHERE ObjectId = inToId AND DescId = zc_ObjectLink_Partner_Unit() AND ChildObjectId > 0)
+        AND inFromId = 148955 -- СКЛАД ПАВИЛЬОНЫ
      THEN
          IF NOT EXISTS (SELECT ContractId FROM Object_Contract_View WHERE ContractId = inContractId AND InfoMoneyId = zc_Enum_InfoMoney_30101()) -- Готовая продукция
          THEN
