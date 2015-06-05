@@ -359,6 +359,7 @@ BEGIN
            , Object_Measure.ValueData        AS MeasureName
 
            , Object_Unit.ValueData           AS UnitName
+           , Object_Unit.ObjectCode          AS UnitCode
 
            , CASE inReportType
                   WHEN 0 THEN tmpMI.AmountOut
