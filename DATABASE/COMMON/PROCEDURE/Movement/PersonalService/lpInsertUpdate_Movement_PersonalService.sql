@@ -17,6 +17,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbMovementId_check Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
@@ -31,6 +32,27 @@ BEGIN
 
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+
+
+     -- Проверка - других быть не должно
+     vbMovementId_check:= (SELECT MovementDate.MovementId
+                           FROM MovementDate
+                                INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate.MovementId
+                                                             AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                                             AND MovementLinkObject.ObjectId = inPersonalServiceListId
+                                INNER JOIN Movement ON Movement.Id = MovementDate.MovementId
+                                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
+                           WHERE MovementDate.ValueData = inServiceDate
+                             AND MovementDate.DescId = zc_MIDate_ServiceDate()
+                           LIMIT 1
+                          );
+     IF vbMovementId_check <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> для <%> за <%>.Дублирование запрещено.', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
+                                                                                                                           , DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_check))
+                                                                                                                           , lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_check AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
+                                                                                                                           , zfCalc_MonthYearName ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = vbMovementId_check AND MovementDate.DescId = zc_MIDate_ServiceDate()));
+     END IF;
 
 
      -- определяем ключ доступа

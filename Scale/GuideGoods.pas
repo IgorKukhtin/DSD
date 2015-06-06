@@ -163,7 +163,7 @@ begin
      if execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0 then
      with spSelect do
      begin
-       Self.Caption:='Параметры продукции для заявки '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
+       Self.Caption:='Параметры продукции на основании '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
        Params.ParamByName('inOrderExternalId').Value:=execParamsMovement.ParamByName('OrderExternalId').AsInteger;
        Execute;
      end;
@@ -173,7 +173,8 @@ begin
   if ParamsMI.ParamByName('GoodsId').AsInteger<>0
   then begin
             CDS.Filter:='GoodsId = '+ParamsMI.ParamByName('GoodsId').AsString;
-            if execParamsMovement.ParamByName('OrderExternalId').asInteger<>0
+            if (execParamsMovement.ParamByName('OrderExternalId').asInteger<>0)
+               and (rgGoodsKind.Items.Count>1)
             then CDS.Filter:= CDS.Filter +' and GoodsKindId = '+IntToStr(ParamsMI.ParamByName('GoodsKindId').AsInteger);
 
             CDS.Filtered:=true;

@@ -20,7 +20,7 @@ type
     Value:  string;
   end;
 
-  TScaleType = (stBI, stDB);
+  TScaleType = (stBI, stDB, stZeus);
 
   TListItemScale = record
     Number   : Integer;

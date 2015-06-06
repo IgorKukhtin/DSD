@@ -66,6 +66,7 @@ BEGIN
        UNION SELECT 'PrintCount'             AS Name
        UNION SELECT 'isPrintPreview'         AS Name
 
+       UNION SELECT 'isBarCode'              AS Name
        UNION SELECT 'isTareWeightEnter'      AS Name
        UNION SELECT 'isPersonalComplete'     AS Name
        UNION SELECT 'isTax'                  AS Name

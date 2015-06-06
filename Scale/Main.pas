@@ -12,7 +12,7 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, dsdDB, Datasnap.DBClient, dxSkinsCore,
   dxSkinsDefaultPainters
- ,SysScalesLib_TLB
+ ,SysScalesLib_TLB,AxLibLib_TLB
  ,UtilScale,DataModul, cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxDBData, dsdAddOn, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid,
@@ -205,6 +205,7 @@ type
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
+    Scale_Zeus: TZeus;
 
     function Save_Movement_all:Boolean;
     function Print_Movement_afterSave:Boolean;
@@ -858,7 +859,7 @@ begin
   PartionGoodsPanel.Visible:=StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_sale')) = zc_Enum_InfoMoney_30201; // Доходы + Мясное сырье + Мясное сырье
   HeadCountPanel.Visible:=PartionGoodsPanel.Visible;
   CountPanel.Visible:=not PartionGoodsPanel.Visible;
-  BarCodePanel.Visible:=not PartionGoodsPanel.Visible;
+  BarCodePanel.Visible:=GetArrayList_Value_byName(Default_Array,'isBarCode') = AnsiUpperCase('TRUE');
   PanelBox.Visible:=GetArrayList_Value_byName(Default_Array,'isBox') = AnsiUpperCase('TRUE');
 
   bbChangeHeadCount.Visible:=HeadCountPanel.Visible;
@@ -925,8 +926,10 @@ procedure TMainForm.Create_Scale;
 var i:Integer;
     number:Integer;
 begin
-  Scale_DB:=TCasDB.Create(self);
-  Scale_BI:=TCasBI.Create(self);
+  try Scale_DB:=TCasDB.Create(self); except end;
+  try Scale_BI:=TCasBI.Create(self); except end;
+  try Scale_Zeus:=TZeus.Create(self); except end;
+
   SettingMain.IndexScale_old:=-1;
 
   number:=-1;
@@ -947,6 +950,7 @@ begin
      then begin
                if Scale_Array[SettingMain.IndexScale_old].ScaleType=stBI then Scale_BI.Active := 0;
                if Scale_Array[SettingMain.IndexScale_old].ScaleType=stDB then Scale_DB.Active := 0;
+               if Scale_Array[SettingMain.IndexScale_old].ScaleType=stZeus then Scale_DB.Active := 0;
           end;
      MyDelay_two(200);
 
@@ -981,6 +985,21 @@ begin
              ScaleLabel.Caption:='DB.Active = Error-ALL';
          end;
 
+     if Scale_Array[rgScale.ItemIndex].ScaleType = stZeus
+     then try
+             // !!! SCALE Zeus !!!
+             Scale_Zeus.Active:=0;
+             Scale_Zeus.CommPort:=Scale_Array[rgScale.ItemIndex].ComPort;
+             Scale_Zeus.CommSpeed := 1200;
+             Scale_Zeus.Active := 1;
+             //
+             if Scale_Zeus.Active=1
+             then ScaleLabel.Caption:='Zeus.Active = OK'
+             else ScaleLabel.Caption:='Zeus.Active = Error';
+          except
+             ScaleLabel.Caption:='Zeus.Active = Error-ALL';
+         end;
+
      //
      PanelWeight_Scale.Caption:='';
      //
@@ -1010,7 +1029,9 @@ begin
         then Result:=Scale_BI.Weight
              else if Scale_Array[rgScale.ItemIndex].ScaleType = stDB
                   then Result:=Scale_DB.Weight
-                  else Result:=0;
+                  else if Scale_Array[rgScale.ItemIndex].ScaleType = stZeus
+                       then Result:=Scale_Zeus.Weight
+                       else Result:=0;
      except Result:=0;end;
      // закрываем ВЕСЫ
      // Scale_DB.Active:=0;

@@ -784,8 +784,9 @@ begin
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
 
-         //определяется только для zc_Movement_SendOnPrice
-         if DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_SendOnPrice
+         //определяется только для zc_Movement_SendOnPrice + zc_Movement_Loss
+         if  (DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_SendOnPrice)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
          then ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
          ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId_calc').AsInteger;
@@ -976,7 +977,7 @@ begin
        StoredProcName:='gpExecSql_Value';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inSqlText', ftString, ptInput, 'SELECT ValueData FROM Object WHERE ObjectCode = '+ IntToStr(inBranchCode) + ' and DescId = zc_Object_Branch()' );
+       Params.AddParam('inSqlText', ftString, ptInput, 'SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE((SELECT Object_Branch.Id FROM Object AS Object_Branch WHERE Object_Branch.ObjectCode = '+ IntToStr(inBranchCode) + ' AND Object_Branch.DescId = zc_Object_Branch()), zc_Branch_Basis())' );
        Execute;
        Result:=DataSet.FieldByName('Value').asString;
     end;

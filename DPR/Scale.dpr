@@ -75,7 +75,8 @@ uses
   DialogPersonalComplete in '..\Scale\DialogPersonalComplete.pas' {DialogPersonalCompleteForm},
   DialogMovementDesc in '..\Scale\DialogMovementDesc.pas' {DialogMovementDescForm},
   GuidePersonal in '..\Scale\GuidePersonal.pas' {GuidePersonalForm},
-  DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm};
+  DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm},
+  AxLibLib_TLB in '..\Scale\Util\AxLibLib_TLB.pas';
 
 {$R *.res}
 
@@ -92,7 +93,7 @@ begin
          //TUpdater.AutomaticUpdateProgram;
          //
          Application.CreateForm(TdmMain, dmMain);
-         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);

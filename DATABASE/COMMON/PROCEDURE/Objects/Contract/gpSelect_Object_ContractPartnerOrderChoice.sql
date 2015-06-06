@@ -232,21 +232,21 @@ BEGIN
                                  , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
                                   )
          )
-  /*UNION ALL
+  UNION ALL
    SELECT
          NULL :: Integer AS Id
-       , NULL :: Integer AS Code
-       , NULL :: TVarChar InvNumber
+       , View_ProfitLossDirection.ProfitLossDirectionCode AS Code
+       , View_ProfitLossDirection.ProfitLossDirectionCode :: TVarChar InvNumber
        , NULL :: TDateTime AS StartDate
        , NULL :: TDateTime AS EndDate
        , NULL :: Integer AS ContractTagId
-       , NULL :: TVarChar AS ContractTagName
+       , View_ProfitLossDirection.ProfitLossDirectionName AS ContractTagName
        , NULL :: Integer AS JuridicalId
-       , Object_Parent.ObjectCode AS JuridicalCode
-       , Object_Parent.ValueData  AS JuridicalName
-       , Object_Unit.Id AS PartnerId
-       , Object_Unit.ObjectCode AS PartnerCode
-       , Object_Unit.ValueData AS PartnerName
+       , NULL :: Integer AS JuridicalCode
+       , NULL :: TVarChar AS JuridicalName
+       , Object_ArticleLoss.Id         AS PartnerId
+       , Object_ArticleLoss.ObjectCode AS PartnerCode
+       , Object_ArticleLoss.ValueData  AS PartnerName
        , NULL :: TVarChar AS GLNCode
        , NULL :: Integer AS PaidKindId
        , NULL :: TVarChar AS PaidKindName
@@ -257,27 +257,42 @@ BEGIN
        , NULL :: TVarChar AS RouteName
        , NULL :: Integer AS RouteSortingId
        , NULL :: TVarChar AS RouteSortingName
+       , NULL :: Integer AS MemberTakeId
+       , NULL :: TVarChar AS MemberTakeName
        , NULL :: Integer AS PersonalTakeId
        , NULL :: TVarChar AS PersonalTakeName
 
-       , NULL :: Integer AS InfoMoneyId
-       , NULL :: TVarChar AS InfoMoneyGroupName
-       , NULL :: TVarChar AS InfoMoneyDestinationName
-       , NULL :: Integer AS InfoMoneyCode
-       , NULL :: TVarChar AS InfoMoneyName
-       , NULL :: TVarChar AS InfoMoneyName_all
+       , Object_InfoMoney_View.InfoMoneyId
+       , Object_InfoMoney_View.InfoMoneyGroupName
+       , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyCode
+       , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
 
        , NULL :: TVarChar AS OKPO
-       , NULL :: TFloat  AS ChangePercent
+       , NULL :: TFloat   AS ChangePercent
+       , NULL :: TVarChar AS DelayDay
+       , NULL :: TFloat   AS PrepareDayCount
+       , NULL :: TFloat   AS DocumentDayCount
+       , NULL :: TFloat   AS AmountDebet
+       , NULL :: TFloat   AS AmountKredit
+       , NULL :: TVarChar AS BranchName
 
        , ObjectDesc.ItemName
-       , Object_Unit.isErased
+       , Object_ArticleLoss.isErased
 
-   FROM ObjectLink AS ObjectLink_Unit_Parent
-         INNER JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit_Parent.ObjectId
-         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
-         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
-   WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()*/
+   FROM Object AS Object_ArticleLoss
+         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ArticleLoss.DescId
+         LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney 
+                              ON ObjectLink_ArticleLoss_InfoMoney.ObjectId = Object_ArticleLoss.Id
+                             AND ObjectLink_ArticleLoss_InfoMoney.DescId = zc_ObjectLink_ArticleLoss_InfoMoney()
+         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_ProfitLossDirection
+                              ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = Object_ArticleLoss.Id
+                             AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
+         LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
+   WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
   ;
 
    ELSE
@@ -463,59 +478,68 @@ BEGIN
                                   )
          )
 
-  /*UNION ALL
+  UNION ALL
    SELECT
          NULL :: Integer AS Id
-       , NULL :: Integer AS Code
-       , NULL :: TVarChar InvNumber
+       , View_ProfitLossDirection.ProfitLossDirectionCode AS Code
+       , View_ProfitLossDirection.ProfitLossDirectionCode :: TVarChar InvNumber
        , NULL :: TDateTime AS StartDate
        , NULL :: TDateTime AS EndDate
        , NULL :: Integer AS ContractTagId
-       , NULL :: TVarChar AS ContractTagName
+       , View_ProfitLossDirection.ProfitLossDirectionName AS ContractTagName
        , NULL :: Integer AS JuridicalId
-       , Object_Parent.ObjectCode AS JuridicalCode
-       , Object_Parent.ValueData  AS JuridicalName
-       , Object_Unit.Id AS PartnerId
-       , Object_Unit.ObjectCode AS PartnerCode
-       , Object_Unit.ValueData AS PartnerName
+       , NULL :: Integer AS JuridicalCode
+       , NULL :: TVarChar AS JuridicalName
+       , Object_ArticleLoss.Id         AS PartnerId
+       , Object_ArticleLoss.ObjectCode AS PartnerCode
+       , Object_ArticleLoss.ValueData  AS PartnerName
        , NULL :: TVarChar AS GLNCode
        , NULL :: Integer AS PaidKindId
        , NULL :: TVarChar AS PaidKindName
        , NULL :: Integer ContractStateKindCode
-       , NULL :: TVarChar AS ContractComment 
+       , NULL :: TVarChar AS ContractComment
 
        , NULL :: Integer AS RouteId
        , NULL :: TVarChar AS RouteName
        , NULL :: Integer AS RouteSortingId
        , NULL :: TVarChar AS RouteSortingName
+       , NULL :: Integer AS MemberTakeId
+       , NULL :: TVarChar AS MemberTakeName
        , NULL :: Integer AS PersonalTakeId
        , NULL :: TVarChar AS PersonalTakeName
 
-       , NULL :: Integer AS InfoMoneyId
-       , NULL :: TVarChar AS InfoMoneyGroupName
-       , NULL :: TVarChar AS InfoMoneyDestinationName
-       , NULL :: Integer AS InfoMoneyCode
-       , NULL :: TVarChar AS InfoMoneyName
-       , NULL :: TVarChar AS InfoMoneyName_all
+       , Object_InfoMoney_View.InfoMoneyId
+       , Object_InfoMoney_View.InfoMoneyGroupName
+       , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyCode
+       , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
 
        , NULL :: TVarChar AS OKPO
-       , NULL :: TFloat  AS ChangePercent
+       , NULL :: TFloat   AS ChangePercent
+       , NULL :: TVarChar AS DelayDay
+       , NULL :: TFloat   AS PrepareDayCount
+       , NULL :: TFloat   AS DocumentDayCount
+       , NULL :: TFloat   AS AmountDebet
+       , NULL :: TFloat   AS AmountKredit
+       , NULL :: TVarChar AS BranchName
 
        , ObjectDesc.ItemName
-       , Object_Unit.isErased
+       , Object_ArticleLoss.isErased
 
-   FROM ObjectLink AS ObjectLink_Unit_Parent
-         INNER JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit_Parent.ObjectId
-         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
-         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
-         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                              ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
-                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-   WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
-     AND (ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
-          OR vbIsConstraint = FALSE
-          OR Object_Unit.Id = 8459 -- Склад Реализации
-         )*/
+   FROM Object AS Object_ArticleLoss
+         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ArticleLoss.DescId
+         LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney 
+                              ON ObjectLink_ArticleLoss_InfoMoney.ObjectId = Object_ArticleLoss.Id
+                             AND ObjectLink_ArticleLoss_InfoMoney.DescId = zc_ObjectLink_ArticleLoss_InfoMoney()
+         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_ProfitLossDirection
+                              ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = Object_ArticleLoss.Id
+                             AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
+         LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
+   WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
+     AND Object_ArticleLoss.isErased = FALSE
   ;
 
    END IF;

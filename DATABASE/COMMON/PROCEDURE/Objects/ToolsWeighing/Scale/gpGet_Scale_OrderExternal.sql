@@ -134,14 +134,24 @@ BEGIN
                                         INNER JOIN lpGet_Object_Juridical_PrintKindItem ((SELECT tmpMovement.JuridicalId FROM tmpMovement LIMIT 1)) AS tmpGet ON tmpGet.Id = tmp.JuridicalId
                                   )
       , tmpMovementDescNumber AS (SELECT tmpSelect.Number AS MovementDescNumber
-                                  FROM (SELECT tmpMovement.DescId AS MovementDescId, tmpMovement.FromId, tmpMovement.ToId, tmpMovement.isSendOnPriceIn
+                                  FROM (SELECT CASE WHEN Object_From.DescId = zc_Object_ArticleLoss()
+                                                         THEN zc_Movement_Loss()
+                                                    ELSE tmpMovement.DescId
+                                               END AS MovementDescId
+                                             , tmpMovement.FromId
+                                             , tmpMovement.ToId
+                                             , tmpMovement.isSendOnPriceIn
                                         FROM tmpMovement
+                                             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
                                         WHERE tmpMovement.DescId = zc_Movement_SendOnPrice()
+                                           OR Object_From.DescId = zc_Object_ArticleLoss()
                                        ) AS tmp
                                        INNER JOIN gpSelect_Object_ToolsWeighing_MovementDesc (inBranchCode:= inBranchCode
                                                                                             , inSession   := inSession
                                                                                              ) AS tmpSelect ON tmpSelect.MovementDescId = tmp.MovementDescId
-                                                                                                           AND tmpSelect.FromId = CASE WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
+                                                                                                           AND tmpSelect.FromId = CASE WHEN tmp.MovementDescId = zc_Movement_Loss()
+                                                                                                                                            THEN tmp.ToId -- для списания
+                                                                                                                                       WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
                                                                                                                                             THEN tmp.FromId -- для главного - расход с него
                                                                                                                                        WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = TRUE
                                                                                                                                             THEN 0 -- для главного - приход на него, а здесь 0 т.к. он выбирается из справочника
@@ -150,7 +160,9 @@ BEGIN
                                                                                                                                        WHEN tmp.isSendOnPriceIn = FALSE
                                                                                                                                             THEN tmp.FromId -- для для филиала - расход с него
                                                                                                                                   END
-                                                                                                           AND tmpSelect.ToId   = CASE WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
+                                                                                                           AND tmpSelect.ToId   = CASE WHEN tmp.MovementDescId = zc_Movement_Loss()
+                                                                                                                                            THEN 0 -- для списания здесь 0 т.к. он выбирается из справочника
+                                                                                                                                       WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
                                                                                                                                             THEN 0 -- для главного - расход с него, а здесь 0 т.к. он выбирается из справочника
                                                                                                                                        WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = TRUE
                                                                                                                                             THEN tmp.ToId -- для главного - приход на него
@@ -167,7 +179,12 @@ BEGIN
             , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
 
             , tmpMovementDescNumber.MovementDescNumber       AS MovementDescNumber -- !!!только для zc_Movement_SendOnPrice!!!
-            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal() THEN zc_Movement_Sale() ELSE tmpMovement.DescId END AS MovementDescId
+            , CASE WHEN Object_From.DescId = zc_Object_ArticleLoss()
+                        THEN zc_Movement_Loss()
+                   WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+                        THEN zc_Movement_Sale()
+                   ELSE tmpMovement.DescId
+              END AS MovementDescId
             , Object_From.Id                                 AS FromId
             , Object_From.ObjectCode                         AS FromCode
             , Object_From.ValueData                          AS FromName

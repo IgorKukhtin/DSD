@@ -47,8 +47,11 @@ BEGIN
      -- !!!запомнили!!
      vbOperDate_scale:= inOperDate;
      -- !!!если по заявке, тогда дата берется из неё, вообще - надо только для филиалов!!!
-     inOperDate:= COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()) AND DescId = zc_MovementDate_OperDatePartner())
-                           , inOperDate);
+     inOperDate:= CASE WHEN vbBranchId = zc_Branch_Basis()
+                            THEN inOperDate
+                       ELSE COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()) AND DescId = zc_MovementDate_OperDatePartner())
+                                    , inOperDate)
+                 END;
 
      -- таблица - "некоторые филиалы"
      CREATE TEMP TABLE _tmpUnit_check (UnitId Integer) ON COMMIT DROP;
