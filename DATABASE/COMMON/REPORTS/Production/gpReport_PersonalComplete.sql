@@ -113,7 +113,7 @@ BEGIN
                               JOIN tmpPersonal on tmpPersonal.MemberId =  ObjectLink_User_Member.ChildObjectId
 
                            WHERE Movement.DescId = zc_Movement_WeighingPartner()
-                              --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                              -- AND Movement.Id in (759166,740060,740078)
                            GROUP BY  Movement.Id, Movement.InvNumber, Movement.OperDate, tmpPersonal.PersonalId
                           )

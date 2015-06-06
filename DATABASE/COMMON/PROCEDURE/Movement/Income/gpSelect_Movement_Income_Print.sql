@@ -1,11 +1,11 @@
--- Function: gpSelect_Movement_SendOnPrice_Print()
+-- Function: gpSelect_Movement_Income_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Print (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Print (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_Print(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inReportType        Integer  , -- 0=out 1=in
+  --  IN inReportType        Integer  , -- 0=out 1=in
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -36,10 +36,10 @@ $BODY$
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_SendOnPrice_Print());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
      vbUserId:= inSession;
 
-     inReportType :=  COALESCE (inReportType, 0);
+     --inReportType :=  COALESCE (inReportType, 0);
 
      -- параметры из документа
      SELECT Movement.DescId
@@ -526,16 +526,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Income_Print (Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 04.06.15         * add unitId
- 05.03.15                                        * all
- 10.02.15                                                       *
- 19.11.14                                                       *
+ 05.06.15         * 
+
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendOnPrice_Print (inMovementId := 570596, inReportType := 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Income_Print (inMovementId := 570596, inReportType := 0, inSession:= '5');

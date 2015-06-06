@@ -140,6 +140,9 @@ type
     bbMovementItemProtocol: TdxBarButton;
     clGoodsGroupNameFull: TcxGridDBColumn;
     clInfoMoneyName_all: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
   private
   public
   end;
