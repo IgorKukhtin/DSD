@@ -917,6 +917,12 @@ object IncomeForm: TIncomeForm
       ShortCut = 16464
       DataSets = <
         item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
         end>
       Params = <
         item
@@ -929,6 +935,8 @@ object IncomeForm: TIncomeForm
         item
           Name = 'From'
           Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
         end
