@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Tax_Params()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_Params (Integer, TVarChar, TDateTime, TDateTime, Boolean, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_Params (Integer, TVarChar, TDateTime, TDateTime, Boolean, TVarChar, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax_Params(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Налоговая>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax_Params(
     IN inOperDate            TDateTime , -- Дата документа
     IN inDateRegistered      TDateTime , -- Дата регистрации
     IN inRegistered          Boolean   , -- Зарегестрирована (да/нет)
+    IN inInvNumberRegistered TVarChar  , -- Номер регистрации документа 
     IN inContractId          Integer   , -- Договора
     IN inUserId              Integer     -- пользователь
 )
@@ -20,6 +22,10 @@ BEGIN
      -- сохранили свойство <Зарегестрирован (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Registered(), ioId, inRegistered);
 
+     -- сохранили свойство <Номер налогового документа регистрации>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberRegistered(), ioId, inInvNumberRegistered);
+
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, FALSE);
 
@@ -30,6 +36,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 09.06.15         * add inInvNumberRegistered
  01.05.14                                        * здесь надо сохранить только 2 параметра
  09.02.14                                                         *
 */

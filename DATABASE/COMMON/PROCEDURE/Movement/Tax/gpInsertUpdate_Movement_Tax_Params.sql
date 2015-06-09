@@ -1,6 +1,7 @@
 -- gpInsertUpdate_Movement_Tax_Params()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax_Params (Integer, TVarChar, TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax_Params (Integer, TVarChar, TDateTime, TDateTime, Boolean, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax_Params (
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax_Params (
     IN inOperDate            TDateTime , -- Дата документа
     IN inDateRegistered      TDateTime , -- Дата регистрации
     IN inRegistered          Boolean   , -- Зарегестрирована (да/нет)
+    IN inInvNumberRegistered TVarChar  , -- Номер регистрации документа 
     IN inContractId          Integer   , -- Договора
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -16,7 +18,12 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Tax_IsRegistered());
+     IF (select descid from movement where id = ioId) = zc_Movement_Tax() 
+     THEN
+	vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Tax_IsRegistered());
+     ELSE 
+        vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_TaxCorrective_IsRegistered());
+     END IF;
 
      -- проверка
      IF COALESCE (inContractId, 0) = 0
@@ -25,7 +32,7 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_Tax_Params(ioId, inInvNumber, inOperDate, inDateRegistered, inRegistered, inContractId, vbUserId);
+     ioId := lpInsertUpdate_Movement_Tax_Params(ioId, inInvNumber, inOperDate, inDateRegistered, inRegistered, inInvNumberRegistered, inContractId, vbUserId);
 
 END;
 $BODY$
@@ -34,6 +41,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.06.15         * add inInvNumberRegistered
  24.03.14                                        * add zc_Enum_Process_Update_Movement_Tax_IsRegistered
  09.02.14                                                        *
 */

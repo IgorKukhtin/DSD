@@ -1585,8 +1585,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edDocumentTax
       end>
     GetStoredProc = spGet
-    Left = 344
-    Top = 193
+    Left = 368
+    Top = 249
   end
   object spInsertUpdateMovement_DocChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_DocChild'

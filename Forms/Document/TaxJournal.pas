@@ -103,6 +103,8 @@ type
     spSelectTax_Medoc: TdsdStoredProc;
     edPeriod: TcxDateEdit;
     cxTextEdit2: TcxTextEdit;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

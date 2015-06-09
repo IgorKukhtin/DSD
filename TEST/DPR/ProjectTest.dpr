@@ -680,7 +680,8 @@ uses
   QualityDoc in '..\..\Forms\Document\QualityDoc.pas' {QualityDocForm: TParentForm},
   QualityDocJournal in '..\..\Forms\Document\QualityDocJournal.pas' {QualityDocJournalForm: TParentForm},
   Report_PersonalComplete in '..\..\Forms\Report\Report_PersonalComplete.pas' {Report_PersonalCompleteForm: TParentForm},
-  Report_PersonalCompleteDialog in '..\..\Forms\Report\Report_PersonalCompleteDialog.pas' {Report_PersonalCompleteDialogForm: TParentForm};
+  Report_PersonalCompleteDialog in '..\..\Forms\Report\Report_PersonalCompleteDialog.pas' {Report_PersonalCompleteDialogForm: TParentForm},
+  TaxJournalDialog in '..\..\Forms\Document\TaxJournalDialog.pas' {TaxJournalDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
