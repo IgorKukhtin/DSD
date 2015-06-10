@@ -2,7 +2,6 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitLeft = -246
   ExplicitWidth = 1083
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -864,7 +863,7 @@ inherited TaxForm: TTaxForm
       Category = 0
     end
     object bbMeDoc: TdxBarButton
-      Action = mactMeDoc
+      Action = actInsertMaskMulti
       Category = 0
     end
     object bb: TdxBarButton
@@ -1466,7 +1465,7 @@ inherited TaxForm: TTaxForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 272
+    Left = 296
     Top = 8
   end
   object GuidesTo: TdsdGuides
@@ -1667,10 +1666,8 @@ inherited TaxForm: TTaxForm
     StoredProc = spInsertUpdateMovement_Params
     ControlList = <
       item
-        Control = edDateRegistered
       end
       item
-        Control = edIsRegistered
       end>
     GetStoredProc = spGet
     Left = 280

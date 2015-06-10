@@ -226,6 +226,10 @@ BEGIN
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN MovementString AS MovementString_InvNumberRegistered
                                      ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                     AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
