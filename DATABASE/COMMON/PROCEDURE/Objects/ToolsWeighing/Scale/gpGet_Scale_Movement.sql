@@ -175,7 +175,7 @@ BEGIN
 
             , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
 
-            , tmpMovement.MovementDescId :: Integer             AS MovementDescId
+            , tmpMovement.MovementDescId :: Integer          AS MovementDescId
             , Object_From.Id                                 AS FromId
             , Object_From.ObjectCode                         AS FromCode
             , Object_From.ValueData                          AS FromName

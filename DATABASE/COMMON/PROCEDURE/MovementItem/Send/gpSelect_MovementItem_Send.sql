@@ -124,7 +124,7 @@ BEGIN
 
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MovementItem.Amount                AS Amount
-           , MIFloat_Count.ValueData            AS Count
+           , MIFloat_CountPack.ValueData        AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIString_PartionGoods.ValueData    AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -159,9 +159,9 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                        ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
@@ -232,7 +232,7 @@ BEGIN
 
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MovementItem.Amount                AS Amount
-           , MIFloat_Count.ValueData            AS Count
+           , MIFloat_CountPack.ValueData        AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIString_PartionGoods.ValueData    AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -269,9 +269,9 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                        ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id

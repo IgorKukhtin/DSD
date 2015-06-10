@@ -500,7 +500,7 @@ BEGIN
                                                         AND vbOperDate >= '01.06.2014'
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
-              WHERE vbPriceListId = 0
+              WHERE vbPriceListId <> 0
              UNION ALL
               -- это расчетные остатки (их надо вычесть) -- !!!для "наших" подр!!!!
                SELECT _tmpRemainsCount.MovementItemId
@@ -509,7 +509,7 @@ BEGIN
                    , -1 * _tmpRemainsSumm.OperSumm AS OperSumm
               FROM _tmpRemainsSumm
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
-              WHERE vbPriceListId <> 0
+              WHERE vbPriceListId = 0
              ) AS _tmp
         WHERE  zc_isHistoryCost() = TRUE
         GROUP BY _tmp.MovementItemId

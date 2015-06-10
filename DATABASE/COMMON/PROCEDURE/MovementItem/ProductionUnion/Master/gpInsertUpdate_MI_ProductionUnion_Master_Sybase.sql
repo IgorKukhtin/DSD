@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master_Sybase(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inIsPartionClose	     Boolean   , -- партия закрыта (да/нет)
-    IN inCount	             TFloat    , -- Количество батонов или упаковок
+    IN inCount	             TFloat    , -- Количество батонов
     IN inRealWeight          TFloat    , -- Фактический вес(информативно)
     IN inCuterCount          TFloat    , -- Количество кутеров
     IN inPartionGoods        TVarChar  , -- Партия товара
@@ -48,7 +48,7 @@ BEGIN
 
    -- сохранили свойство <Примечание>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
-   -- сохранили свойство <Количество батонов или упаковок>
+   -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount);
    -- сохранили свойство <Фактический вес(информативно)>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_RealWeight(), ioId, inRealWeight);

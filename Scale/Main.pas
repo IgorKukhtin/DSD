@@ -32,7 +32,7 @@ type
     infoPanelTotalSumm: TPanel;
     gbRealWeight: TGroupBox;
     PanelRealWeight: TPanel;
-    gbPanelWeightTare: TGroupBox;
+    gbWeightTare: TGroupBox;
     PanelWeightTare: TPanel;
     gbAmountPartnerWeight: TGroupBox;
     PanelAmountPartnerWeight: TPanel;
@@ -41,7 +41,6 @@ type
     PanelSaveItem: TPanel;
     BarCodePanel: TPanel;
     BarCodeLabel: TLabel;
-    gbOperDate: TGroupBox;
     infoPanel_Scale: TPanel;
     ScaleLabel: TLabel;
     PanelWeight_Scale: TPanel;
@@ -114,7 +113,6 @@ type
     miScaleRun_BI: TMenuItem;
     miScaleRun_Zeus: TMenuItem;
     miScaleRun_BI_R: TMenuItem;
-    OperDateEdit: TcxDateEdit;
     spSelect: TdsdStoredProc;
     DS: TDataSource;
     CDS: TClientDataSet;
@@ -153,13 +151,13 @@ type
     DBViewAddOn: TdsdDBViewAddOn;
     isErased: TcxGridDBColumn;
     Count: TcxGridDBColumn;
-    bbChangeCount: TSpeedButton;
+    bbChangeCountPack: TSpeedButton;
     bbChangeHeadCount: TSpeedButton;
     HeadCount: TcxGridDBColumn;
     EditBarCode: TcxCurrencyEdit;
-    CountPanel: TPanel;
-    CountLabel: TLabel;
-    EditCount: TcxCurrencyEdit;
+    PanelCountPack: TPanel;
+    LabelCountPack: TLabel;
+    EditCountPack: TcxCurrencyEdit;
     HeadCountPanel: TPanel;
     HeadCountLabel: TLabel;
     EditHeadCount: TcxCurrencyEdit;
@@ -180,20 +178,21 @@ type
     Panel3: TPanel;
     Label3: TLabel;
     EditBoxCode: TcxCurrencyEdit;
+    Panel25: TPanel;
+    Label17: TLabel;
+    OperDateEdit: TcxDateEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CDSAfterOpen(DataSet: TDataSet);
     procedure bbDeleteItemClick(Sender: TObject);
-    procedure DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
-      DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure rgScaleClick(Sender: TObject);
     procedure bbChoice_UnComleteClick(Sender: TObject);
     procedure bbView_allClick(Sender: TObject);
     procedure bbChangeNumberTareClick(Sender: TObject);
     procedure bbChangeLevelNumberClick(Sender: TObject);
-    procedure bbChangeCountClick(Sender: TObject);
+    procedure bbChangeCountPackClick(Sender: TObject);
     procedure bbChangeHeadCountClick(Sender: TObject);
     procedure EditBarCodePropertiesChange(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
@@ -242,7 +241,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_afterSave_MI;
 begin
-     EditCount.Text:='';
+     EditCountPack.Text:='';
      EditHeadCount.Text:='';
      EditBarCode.Text:='';
      EditBoxCount.Text:=GetArrayList_Value_byName(Default_Array,'BoxCount');
@@ -253,7 +252,9 @@ procedure TMainForm.myActiveControl;
 begin
      if PartionGoodsPanel.Visible
      then ActiveControl:=EditPartionGoods
-     else ActiveControl:=EditBarCode;
+     else if BarCodePanel.Visible
+          then ActiveControl:=EditBarCode
+          else ActiveControl:=cxDBGrid;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_all:Boolean;
@@ -336,7 +337,8 @@ begin
                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger
                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text) // myPrintCount
                                 , DialogPrintForm.cbPrintPreview.Checked        // isPreview
-                                , DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
+                                //, DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
+                                , ParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean
                                  );
      //
      //Tax
@@ -500,11 +502,12 @@ begin
 
      //
      ParamsMI.ParamByName('RealWeight_Get').AsFloat:=fGetScale_CurrentWeight;
-     try ParamsMI.ParamByName('Count').AsFloat:=StrToFloat(EditCount.Text);except ParamsMI.ParamByName('Count').AsFloat:=0;end;
+     try ParamsMI.ParamByName('Count').AsFloat:=StrToFloat(EditCountPack.Text);except ParamsMI.ParamByName('Count').AsFloat:=0;end;
      try ParamsMI.ParamByName('HeadCount').AsFloat:=StrToFloat(EditHeadCount.Text);except ParamsMI.ParamByName('HeadCount').AsFloat:=0;end;
      try ParamsMI.ParamByName('BoxCount').AsFloat:=StrToFloat(EditBoxCount.Text);except ParamsMI.ParamByName('BoxCount').AsFloat:=0;end;
      try ParamsMI.ParamByName('BoxCode').AsFloat:=StrToFloat(EditBoxCode.Text);except ParamsMI.ParamByName('BoxCode').AsFloat:=0;end;
 
+     // доопределили параметр
      ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      //
      if ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0
@@ -515,7 +518,6 @@ begin
                     Result:=true;
                     RefreshDataSet;
                     WriteParamsMovement;
-                    CDS.First;
               end
          else
      else
@@ -525,12 +527,11 @@ begin
                     Result:=true;
                     RefreshDataSet;
                     WriteParamsMovement;
-                    CDS.First;
               end;
      Initialize_afterSave_MI;
 end;
 //------------------------------------------------------------------------------------------------
-procedure TMainForm.bbChangeCountClick(Sender: TObject);
+procedure TMainForm.bbChangeCountPackClick(Sender: TObject);
 var execParams:TParams;
 begin
      // выход
@@ -542,7 +543,7 @@ begin
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
-     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIFloat_Count');
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIFloat_CountPack');
 
      with DialogNumberValueForm do
      begin
@@ -773,19 +774,6 @@ begin
     PanelWeightTare.Caption:=FormatFloat(',0.000#'+' кг.',WeightTare);
 end;
 //------------------------------------------------------------------------------------------------
-procedure TMainForm.DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;DataCol: Integer; Column: TColumn; State: TGridDrawState);
-begin
-     if CDS.FieldByName('isErased').AsBoolean=true then
-     with (Sender as TDBGrid).Canvas do
-     begin
-          Font.Color:=clRed;
-          FillRect(Rect);
-          if (Column.Alignment=taLeftJustify)or(Rect.Left>=Rect.Right - LengTh(Column.Field.Text))
-          then TextOut(Rect.Left+2, Rect.Top+2, Column.Field.Text)
-          else TextOut(Rect.Right - TextWidth(Column.Field.Text) - 2, Rect.Top+2 , Column.Field.Text);
-     end;
-end;
-//---------------------------------------------------------------------------------------------
 procedure TMainForm.EditBarCodePropertiesChange(Sender: TObject);
 begin
      EditBarCode.Text:=trim(EditBarCode.Text);
@@ -858,12 +846,12 @@ begin
   //local visible
   PartionGoodsPanel.Visible:=StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_sale')) = zc_Enum_InfoMoney_30201; // Доходы + Мясное сырье + Мясное сырье
   HeadCountPanel.Visible:=PartionGoodsPanel.Visible;
-  CountPanel.Visible:=not PartionGoodsPanel.Visible;
+  PanelCountPack.Visible:=not PartionGoodsPanel.Visible;
   BarCodePanel.Visible:=GetArrayList_Value_byName(Default_Array,'isBarCode') = AnsiUpperCase('TRUE');
   PanelBox.Visible:=GetArrayList_Value_byName(Default_Array,'isBox') = AnsiUpperCase('TRUE');
 
   bbChangeHeadCount.Visible:=HeadCountPanel.Visible;
-  bbChangeCount.Visible:=not bbChangeHeadCount.Visible;
+  bbChangeCountPack.Visible:=not bbChangeHeadCount.Visible;
   //
   with spSelect do
   begin
@@ -920,6 +908,8 @@ begin
        Params.ParamByName('inMovementId').Value:=ParamsMovement.ParamByName('MovementId').AsInteger;
        Execute;
   end;
+  //
+  CDS.First;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Create_Scale;
@@ -1038,9 +1028,9 @@ begin
      //
 //*****
      if (System.Pos('ves=',ParamStr(1))>0)and(Result=0)
-     then Result:=StrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-5));
+     then Result:=myStrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-5));
      if (System.Pos('ves=',ParamStr(2))>0)and(Result=0)
-     then Result:=StrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-5));
+     then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-5));
 //*****
      PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;

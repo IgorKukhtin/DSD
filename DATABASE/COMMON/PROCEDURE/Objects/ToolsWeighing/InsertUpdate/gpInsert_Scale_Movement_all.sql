@@ -486,7 +486,7 @@ BEGIN
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
                                                         , inPartionGoodsDate    := NULL
-                                                        , inCount               := tmp.Count
+                                                        , inCount               := tmp.CountPack
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
@@ -504,7 +504,7 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
-                                                        -- , inCount               := tmp.Count
+                                                        , inCount               := tmp.Count
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inUserId              := vbUserId
@@ -544,6 +544,7 @@ BEGIN
                      , tmp.CountForPrice
                      , SUM (tmp.BoxCount)     AS BoxCount
                      , SUM (tmp.Count)        AS Count
+                     , SUM (tmp.CountPack)    AS CountPack
                      , SUM (tmp.HeadCount)    AS HeadCount
                      , SUM (tmp.AmountPacker) AS AmountPacker
                      , SUM (tmp.LiveWeight)   AS LiveWeight
@@ -588,6 +589,7 @@ BEGIN
 
                            , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
                            , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
+                           , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
                            , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                            , 0                                                   AS AmountPacker
                            , 0                                                   AS LiveWeight
@@ -611,6 +613,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                           LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                                       ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
                            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -654,6 +659,7 @@ BEGIN
 
                            , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
                            , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
+                           , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
                            , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                            , COALESCE (MIFloat_AmountPacker.ValueData, 0)        AS AmountPacker
                            , COALESCE (MIFloat_LiveWeight.ValueData, 0)          AS LiveWeight
@@ -684,6 +690,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                           LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                                       ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
                            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()

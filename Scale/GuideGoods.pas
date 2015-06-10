@@ -414,14 +414,14 @@ begin
             then ParamByName('CountTare').AsFloat:=1;
         end
         else
-            try ParamByName('WeightTare').AsFloat:=StrToFloat(TareWeight_Array[rgTareWeight.ItemIndex].Value);
+            try ParamByName('WeightTare').AsFloat:=myStrToFloat(TareWeight_Array[rgTareWeight.ItemIndex].Value);
             except ParamByName('WeightTare').AsFloat:=0;
             end;
        // % скидки для кол-ва
        if CDS.FieldByName('ChangePercentAmount').AsFloat=0
        then EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,FloatToStr(CDS.FieldByName('ChangePercentAmount').AsFloat))].Code)
        else EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,ParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code);
-       try ParamByName('ChangePercentAmount').AsFloat:=StrToFloat(ChangePercentAmount_Array[rgChangePercentAmount.ItemIndex].Value);
+       try ParamByName('ChangePercentAmount').AsFloat:=myStrToFloat(ChangePercentAmount_Array[rgChangePercentAmount.ItemIndex].Value);
        except ParamByName('ChangePercentAmount').AsFloat:=0;
        end;
 

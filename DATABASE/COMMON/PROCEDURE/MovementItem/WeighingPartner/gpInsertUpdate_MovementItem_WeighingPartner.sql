@@ -9,11 +9,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inRealWeight          TFloat    , -- Реальный вес (без учета % скидки для кол-ва)
+    IN inRealWeight          TFloat    , -- Реальный вес (без учета: минус тара и % скидки для кол-ва)
     IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
     IN inCountTare           TFloat    , -- Количество тары
     IN inWeightTare          TFloat    , -- Вес тары
-    IN inCount               TFloat    , -- Количество батонов или упаковок
+    IN inCountPack           TFloat    , -- Количество упаковок
     IN inHeadCount           TFloat    , -- Количество голов
     IN inBoxCount            TFloat    , -- Количество Ящик(гофро)
     IN inBoxNumber           TFloat    , -- Номер ящика
@@ -31,7 +31,6 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingPartner());
@@ -56,7 +55,7 @@ BEGIN
 
      -- сохранили свойство <Количество у контрагента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
-     -- сохранили свойство <Реальный вес (без учета % скидки для кол-ва)>
+     -- сохранили свойство <Реальный вес (без учета: минус тара и % скидки для кол-ва)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeight(), ioId, inRealWeight);
      -- сохранили свойство <% скидки для кол-ва>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), ioId, inChangePercentAmount);
@@ -64,8 +63,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare(), ioId, inCountTare);
      -- сохранили свойство <Вес тары>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare(), ioId, inWeightTare);
-     -- сохранили свойство <Количество батонов или упаковок>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
+     -- сохранили свойство <Количество упаковок>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountPack(), ioId, inCountPack);
      -- сохранили свойство <Количество голов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
      -- сохранили свойство <Количество Ящик(гофро)>
@@ -93,7 +92,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 
 END;
 $BODY$

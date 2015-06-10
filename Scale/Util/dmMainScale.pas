@@ -53,7 +53,7 @@ var
   DMMainScaleForm: TDMMainScaleForm;
 
 implementation
-uses Inifiles,TypInfo,DialogMovementDesc;
+uses Inifiles,TypInfo,DialogMovementDesc,UtilConst;
 {$R *.dfm}
 {------------------------------------------------------------------------}
 procedure TDMMainScaleForm.DataModuleCreate(Sender: TObject);
@@ -183,6 +183,8 @@ begin
                         ParamsMovement.ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
                         ParamsMovement.ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
                         ParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
+                        ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
+                        ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
                   end;
         end
         else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
@@ -424,6 +426,7 @@ begin
        StoredProcName:='gpSelect_Object_ToolsWeighing_onLevelChild';
        OutputType:=otDataSet;
        Params.Clear;
+       Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
        Params.AddParam('inBranchCode', ftInteger, ptInput, inBranchCode);
        Params.AddParam('inLevelChild', ftString, ptInput, inLevelChild);
        //try
@@ -520,10 +523,11 @@ function TDMMainScaleForm.gpGet_Scale_Goods(var execParams:TParams;inBarCode:Str
 begin
     with spSelect do
     begin
-       //в ШК - Id товара или товар+вид товара
+       //в ШК - Id товара или Id товар+вид товара или для isCeh код GoodsCode
        StoredProcName:='gpGet_Scale_Goods';
        OutputType:=otDataSet;
        Params.Clear;
+       Params.AddParam('inIsWorkProgress', ftBoolean, ptInput, SettingMain.isWorkProgress);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
        //try
          Execute;
@@ -535,9 +539,19 @@ begin
          ParamByName('GoodsCode').AsInteger:= DataSet.FieldByName('GoodsCode').AsInteger;
          ParamByName('GoodsName').asString := DataSet.FieldByName('GoodsName').asString;
 
+         if SettingMain.isCeh = FALSE then
+         begin
          ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').asInteger;
          ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').AsInteger;
          ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
+         end
+         else
+         begin
+         ParamByName('MeasureId').AsInteger  := DataSet.FieldByName('MeasureId').asInteger;
+         ParamByName('MeasureCode').AsInteger:= DataSet.FieldByName('MeasureCode').AsInteger;
+         ParamByName('MeasureName').asString := DataSet.FieldByName('MeasuredName').asString;
+         end;
+
        end;
 
        {except
@@ -992,7 +1006,14 @@ var
 begin
   Result:=false;
 
+  //!!!захардкодили т.к. это программа Scale!!!
+  SettingMain.isCeh:=FALSE;//AnsiUpperCase(ExtractFileName(ParamStr(0))) <> AnsiUpperCase('Scale.exe');
+
+  //а теперь ини-файл
   Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'scale.ini');
+
+  //!!!отладака при запуске!!!
+  gc_isDebugMode:=AnsiUpperCase(Ini.ReadString('Main','isDebugMode','FALSE')) = AnsiUpperCase('TRUE');
 
   SettingMain.BranchCode:=Ini.ReadInteger('Main','BrancCode',1);
   if SettingMain.BranchCode=1 then Ini.WriteInteger('Main','BrancCode',1);

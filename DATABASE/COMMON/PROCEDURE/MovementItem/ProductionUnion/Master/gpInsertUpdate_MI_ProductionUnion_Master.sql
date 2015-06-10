@@ -23,6 +23,7 @@ BEGIN
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
                                                   , inAmount           := inAmount
+                                                  , inCount            := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_Count()), 0)
                                                   , inPartionGoods     := inPartionGoods
                                                   , inGoodsKindId      := inGoodsKindId
                                                   , inUserId           := vbUserId

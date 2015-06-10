@@ -71,8 +71,8 @@ BEGIN
      -- сохранили свойство <ƒата партии>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
 
-     -- сохранили свойство < оличество батонов или упаковок>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
+     -- сохранили свойство < оличество упаковок>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountPack(), ioId, inCount);
 
      -- сохранили свойство < оличество голов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);

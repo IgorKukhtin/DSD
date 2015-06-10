@@ -129,7 +129,7 @@ begin
 
 
      if ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger<>0
-     then begin ActiveControl:=EditPartnerCode;fEnterPartnerCode:=true;end
+     then begin ActiveControl:=EditPartnerCode;fEnterPartnerCode:=true;EditPartnerCode.SelectAll;end
      else begin ActiveControl:=EditPartnerName;fEnterPartnerCode:=false;end;
      fEnterPartnerName:=false;
 

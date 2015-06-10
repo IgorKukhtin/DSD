@@ -1,13 +1,13 @@
 -- Function: gpSelect_Scale_Goods()
 
-DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
     IN inOperDate              TDateTime,
     IN inOrderExternalId       Integer,
     IN inPriceListId           Integer,
-    IN inInfoMoneyId           Integer,
+    IN inInfoMoneyId_sale      Integer,
     IN inDayPrior_PriceReturn  Integer,
     IN inSession               TVarChar      -- сессия пользователя
 )
@@ -41,7 +41,7 @@ BEGIN
     -- Результат - по заявке
     RETURN QUERY
        WITH tmpMI_Order AS (SELECT MovementItem.ObjectId                                                AS GoodsId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inInfoMoneyId = zc_Enum_InfoMoney_30201() THEN 0 ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inInfoMoneyId_sale = zc_Enum_InfoMoney_30201() THEN 0 ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
                                  , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                  , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
@@ -182,7 +182,7 @@ BEGIN
     RETURN QUERY
        WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyId
                              FROM Object_InfoMoney_View AS View_InfoMoney
-                             WHERE inInfoMoneyId IN (0,  zc_Enum_InfoMoney_30101()) -- Доходы + Готовая продукция
+                             WHERE inInfoMoneyId_sale IN (0,  zc_Enum_InfoMoney_30101()) -- Доходы + Готовая продукция
                                AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
                                                                 , zc_Enum_InfoMoney_30101() -- Доходы + Готовая продукция
                                                                 , zc_Enum_InfoMoney_30102() -- Доходы + Тушенка
@@ -191,7 +191,7 @@ BEGIN
                             UNION
                              SELECT View_InfoMoney.InfoMoneyId
                              FROM Object_InfoMoney_View AS View_InfoMoney
-                             WHERE inInfoMoneyId IN (0,  zc_Enum_InfoMoney_10101()) -- Основное сырье + Мясное сырье + Живой вес
+                             WHERE inInfoMoneyId_sale IN (0,  zc_Enum_InfoMoney_10101()) -- Основное сырье + Мясное сырье + Живой вес
                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                                             )
                             )
@@ -265,4 +265,4 @@ ALTER FUNCTION gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Goods (inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:=0, inInfoMoneyId:=0, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Goods (inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:=0, inInfoMoneyId_sale:=0, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin())

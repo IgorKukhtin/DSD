@@ -4,6 +4,9 @@ interface
 
 uses
   System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient, Vcl.Dialogs,Forms,Vcl.StdCtrls;
+
+const
+    fmtWeight:String = ',0.#### кг.';
 type
 
   TDBObject = record
@@ -33,6 +36,10 @@ type
   TArrayListScale = array of TListItemScale;
 
   TSettingMain = record
+    isCeh:Boolean;         // ScaleCeh orScale
+    isWorkProgress:Boolean;// only ScaleCeh - производство/упаковка or обвалка
+    WeightSkewer1:Double;  // only ScaleCeh
+    WeightSkewer2:Double;  // only ScaleCeh
     BranchCode:Integer;
     BranchName:String;
     ScaleCount:Integer;
@@ -72,6 +79,8 @@ type
   procedure EmptyValuesParams(var execParams:TParams);
 
   function CheckBarCode(BarCode:String):Boolean;
+  function myStrToFloat(Value:String):Double;
+  function myReplaceStr(const S, Srch, Replace: string): string;
 
 var
   UserId_begin : Integer;
@@ -168,6 +177,9 @@ begin
      ParamAdd(Params,'isSpec',ftBoolean);      //Спецификация
      ParamAdd(Params,'isTax',ftBoolean);       //Налоговая
 
+     ParamAdd(Params,'isSendOnPriceIn',ftBoolean);
+     ParamAdd(Params,'isPartionGoodsDate',ftBoolean);
+
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_DescId',ftInteger);
      ParamAdd(Params,'OrderExternal_BarCode',ftString);
@@ -200,26 +212,54 @@ end;
 procedure Create_ParamsMI(var Params:TParams);
 begin
      Params:=nil;
-     ParamAdd(Params,'GoodsId',ftInteger);     // Товары
-     ParamAdd(Params,'GoodsCode',ftInteger);     // Товары
-     ParamAdd(Params,'GoodsName',ftString);     // Товары
-     ParamAdd(Params,'GoodsKindId',ftInteger); // Виды товаров
-     ParamAdd(Params,'GoodsKindCode',ftInteger); // Виды товаров
-     ParamAdd(Params,'GoodsKindName',ftString);     // Виды товаров
+     if SettingMain.isCeh = FALSE then
+     begin
+     ParamAdd(Params,'GoodsId',ftInteger);           // Товары
+     ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
+     ParamAdd(Params,'GoodsName',ftString);          // Товары
+     ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
+     ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
+     ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
      ParamAdd(Params,'RealWeight_Get',ftFloat);      //
-     ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета тары и % скидки для кол-ва)
+     ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и % скидки для кол-ва)
      ParamAdd(Params,'CountTare',ftFloat);           // Количество тары
      ParamAdd(Params,'WeightTare',ftFloat);          // Вес 1-ой тары
      ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва
-     ParamAdd(Params,'Price',ftFloat);          //
-     ParamAdd(Params,'Price_Return',ftFloat);          //
-     ParamAdd(Params,'CountForPrice',ftFloat);         //
-     ParamAdd(Params,'CountForPrice_Return',ftFloat); //
-     ParamAdd(Params,'Count',ftFloat);                // Количество пакетов или Количество батонов
-     ParamAdd(Params,'HeadCount',ftFloat);            // Количество голов
+     ParamAdd(Params,'Price',ftFloat);               //
+     ParamAdd(Params,'Price_Return',ftFloat);        //
+     ParamAdd(Params,'CountForPrice',ftFloat);       //
+     ParamAdd(Params,'CountForPrice_Return',ftFloat);//
+     ParamAdd(Params,'Count',ftFloat);               // Количество пакетов или Количество батонов
+     ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
      ParamAdd(Params,'BoxCount',ftFloat);            //
-     ParamAdd(Params,'BoxCode',ftInteger);            //
-     ParamAdd(Params,'PartionGoods',ftString);        //
+     ParamAdd(Params,'BoxCode',ftInteger);           //
+     ParamAdd(Params,'PartionGoods',ftString);       //
+     end
+     else
+     begin
+     ParamAdd(Params,'GoodsId',ftInteger);           // Товары
+     ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
+     ParamAdd(Params,'GoodsName',ftString);          // Товары
+     ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
+     ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
+     ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
+     ParamAdd(Params,'MeasureId',ftInteger);         // Единица измерения
+     ParamAdd(Params,'MeasureCode',ftInteger);       // Единица измерения
+     ParamAdd(Params,'MeasureName',ftString);        // Единица измерения
+     ParamAdd(Params,'OperCount',ftFloat);           // Количество (с учетом: минус тара и прочее)
+     ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и прочее)
+     ParamAdd(Params,'WeightTare',ftFloat);          // Вес тары
+     ParamAdd(Params,'WeightOther',ftFloat);         // Вес, прочее
+     ParamAdd(Params,'CountSkewer1',ftFloat);        // Количество шпажек/крючков вида1
+     ParamAdd(Params,'CountSkewer2',ftFloat);        // Количество шпажек/крючков вида2
+     ParamAdd(Params,'Count',ftFloat);               // Количество батонов
+     ParamAdd(Params,'CountPack',ftFloat);           // Количество пакетов
+     ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
+     ParamAdd(Params,'LiveWeight',ftFloat);          // Живой вес
+     ParamAdd(Params,'PartionGoods',ftString);       //
+     ParamAdd(Params,'PartionGoodsDate',ftDateTime); //
+     ParamAdd(Params,'isStartWeighing',ftBoolean);   //локальный параметр
+     end;
 
 end;
 {------------------------------------------------------------------------}
@@ -450,6 +490,38 @@ begin
      if not Result then ShowMessage('Ошибка в значении <Штрих код> = <'+BarCode+'>.('+Summ_show+')');
 end;
 {------------------------------------------------------------------------------}
+function myStrToFloat(Value:String):Double;
+begin
+     Value:=trim(Value);
+     //
+     try
+         if (System.Pos('.',Value)>0)and(DecimalSeparator<>'.')
+         then Result:=StrToFloat(myReplaceStr(Value,'.',DecimalSeparator))
+         else if (System.Pos(',',Value)>0)and(DecimalSeparator<>',')
+              then Result:=StrToFloat(myReplaceStr(Value,'.',DecimalSeparator))
+              else Result:=StrToFloat(Value);
+     except
+            Result:=0;
+     end;
+end;
+{------------------------------------------------------------------------------}
+function myReplaceStr(const S, Srch, Replace: string): string;
+var
+  I: Integer;
+  Source: string;
+begin
+  Source := S;
+  Result := '';
+  repeat
+    I := Pos(Srch, Source);
+    if I > 0 then begin
+      Result := Result + Copy(Source, 1, I - 1) + Replace;
+      Source := Copy(Source, I + Length(Srch), MaxInt);
+    end
+    else Result := Result + Source;
+  until I <= 0;
+end;
+{------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
 function zf_Calc_Word_bySeparate(myStr,Sep1,Sep2:String;myWordNumber:smallint):String;
@@ -558,7 +630,11 @@ begin
         and((ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Sale)
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ReturnIn)
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Loss)
-          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory))
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Send)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ProductionUnion)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ProductionSeparate)
+           )
         then begin
                   PartionGoods:=myCalcPartionGoods(Edit.Text);
                   Result:=PartionGoods<>'';

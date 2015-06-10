@@ -42,6 +42,7 @@ BEGIN
                                                              AND MovementLinkObject.ObjectId = inPersonalServiceListId
                                 INNER JOIN Movement ON Movement.Id = MovementDate.MovementId
                                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                   AND Movement.Id <> COALESCE (ioId, 0)
                            WHERE MovementDate.ValueData = inServiceDate
                              AND MovementDate.DescId = zc_MIDate_ServiceDate()
                            LIMIT 1

@@ -84,12 +84,12 @@ BEGIN
            , DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END) AS StartDate
            , DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
-           , MovementFloat_VATPercent.ValueData AS VATPercent
+           , MovementFloat_VATPercent.ValueData     AS VATPercent
            , ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId -- От кого - всегда главное юр.лицо из договора
            , CASE WHEN Movement.DescId = zc_Movement_Sale() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE MovementLinkObject_To.ObjectId END AS ToId
            , CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_Partner.ObjectId WHEN Movement.DescId = zc_Movement_Tax() THEN MovementLinkObject_Partner.ObjectId ELSE MovementLinkObject_To.ObjectId END AS PartnerId
-           , COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId) AS ContractId
-           , zc_Enum_PaidKind_FirstForm() AS PaidKindId
+           , COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId)                                          AS ContractId
+           , COALESCE (MovementLinkObject_PaidKindTo.ObjectId, COALESCE (MovementLinkObject_PaidKind.ObjectId, zc_Enum_PaidKind_FirstForm())) AS PaidKindId
            -- , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
            -- , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
 
@@ -119,6 +119,12 @@ BEGIN
            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                         ON MovementLinkObject_To.MovementId = Movement.Id
                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKindTo
+                                        ON MovementLinkObject_PaidKindTo.MovementId = Movement.Id
+                                       AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                       AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -279,6 +285,11 @@ BEGIN
       IF inDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
       THEN
           RAISE EXCEPTION 'Ошибка.Тип налогового документа <%> не допустим.', lfGet_Object_ValueData (inDocumentTaxKindId);
+      END IF;
+
+      IF vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+      THEN
+          RAISE EXCEPTION 'Ошибка.Невозможно создать налоговый документ для формы оплаты <%>.', lfGet_Object_ValueData (vbPaidKindId);
       END IF;
 
 

@@ -29,7 +29,6 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
    DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры

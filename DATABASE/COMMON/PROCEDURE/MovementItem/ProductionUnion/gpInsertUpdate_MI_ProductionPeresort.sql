@@ -52,6 +52,7 @@ BEGIN
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
                                                   , inAmount           := inAmount
+                                                  , inCount            := 0
                                                   , inPartionGoods     := inPartionGoods
                                                   , inGoodsKindId      := inGoodsKindId
                                                   , inUserId           := vbUserId

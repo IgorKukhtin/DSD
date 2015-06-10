@@ -1,9 +1,9 @@
-object MainForm: TMainForm
+object MainCehForm: TMainCehForm
   Left = 0
   Top = 0
-  Caption = #1069#1082#1089#1087#1077#1076#1080#1094#1080#1103
-  ClientHeight = 651
-  ClientWidth = 984
+  Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+  ClientHeight = 641
+  ClientWidth = 969
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,17 +19,17 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object GridPanel: TPanel
-    Left = 130
-    Top = 66
-    Width = 854
-    Height = 585
+    Left = 352
+    Top = 33
+    Width = 617
+    Height = 608
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 854
+      Width = 617
       Height = 33
       Align = alTop
       BevelOuter = bvNone
@@ -120,63 +120,6 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
       end
-      object bbRefreshZakaz: TSpeedButton
-        Left = 599
-        Top = 3
-        Width = 31
-        Height = 29
-        Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          8888888888888888888873333333333333387BBBBBBBBBBBBB387BBBBBBBBBBB
-          BB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBB
-          BB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBBBBB888BBBBBB0888
-          8888888777778888888888888888888888888888888888888888}
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-      end
-      object bbChangeNumberTare: TSpeedButton
-        Left = 105
-        Top = 5
-        Width = 31
-        Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1071#1097#1080#1082#1072'>'
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          888880888808080808088800088888888888880F708888888888880FF7088888
-          88888880FF708888888888880FF708888888888880FF708088888888880FF000
-          0888888888800B0080888888888800F708088888888880FF708888888888880F
-          F708888888888880FF0888888888888800808888888888888808}
-        ParentShowHint = False
-        ShowHint = True
-        OnClick = bbChangeNumberTareClick
-      end
-      object bbChangeLevelNumber: TSpeedButton
-        Left = 136
-        Top = 5
-        Width = 31
-        Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1064#1072#1088'>'
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          8888889999999999998889088888889998888111088899888888889990889998
-          888888199908888998888881999088889888888819990888888888888B099088
-          8888888888BB990888888888888BB990888888888888B0990888888888888B99
-          9088888888888819990888888888888199888888888888881888}
-        ParentShowHint = False
-        ShowHint = True
-        OnClick = bbChangeLevelNumberClick
-      end
       object bbExportToEDI: TSpeedButton
         Left = 658
         Top = 3
@@ -243,12 +186,12 @@ object MainForm: TMainForm
         ShowHint = True
         OnClick = bbView_allClick
       end
-      object bbChangeCountPack: TSpeedButton
+      object bbChangeCount: TSpeedButton
         Left = 37
         Top = 5
         Width = 31
         Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1072#1082#1077#1090#1086#1074'>'
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1073#1072#1090#1086#1085#1086#1074'>'
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
@@ -260,7 +203,7 @@ object MainForm: TMainForm
           0508888888888880FD0888888888888800888888888888888888}
         ParentShowHint = False
         ShowHint = True
-        OnClick = bbChangeCountPackClick
+        OnClick = bbChangeCountClick
       end
       object bbChangeHeadCount: TSpeedButton
         Left = 5
@@ -281,84 +224,47 @@ object MainForm: TMainForm
         ShowHint = True
         OnClick = bbChangeHeadCountClick
       end
-      object bbChangeBoxCount: TSpeedButton
-        Left = 71
-        Top = 4
+      object bbChangeCountPack: TSpeedButton
+        Left = 69
+        Top = 5
         Width = 31
         Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1087#1072#1082#1086#1074#1086#1095#1085#1086#1081' '#1090#1072#1088#1099'>'
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1072#1082#1077#1090#1086#1074'>'
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
           8000008000000080800080000000800080008080000080808000C0C0C0000000
           FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          888887088888888888888F808888888888888080888888888888880F08888888
-          88888888F0888888888888888F0888888888888888F000888888888888899108
-          88888888880B9990888888888880B91908888888888809919088888888888099
-          1908888888888809908888888888888008888888888888888888}
+          8888808800000000000888F0888888888888880F808888888888888FF0088888
+          888888800B308888888888880BB308888888888880BB308888888888880BB308
+          888888888880BB308888888888880BB308888888888880BB0088888888888800
+          0508888888888880FD0888888888888800888888888888888888}
         ParentShowHint = False
         ShowHint = True
-        OnClick = bbChangeBoxCountClick
+        OnClick = bbChangeCountPackClick
       end
     end
     object infoPanelTotalSumm: TPanel
       Left = 0
-      Top = 544
-      Width = 854
+      Top = 567
+      Width = 617
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      object gbRealWeight: TGroupBox
-        Left = 249
-        Top = 0
-        Width = 119
-        Height = 41
-        Align = alLeft
-        Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-        object PanelRealWeight: TPanel
-          Left = 2
-          Top = 16
-          Width = 115
-          Height = 23
-          Align = alClient
-          BevelOuter = bvNone
-          Caption = 'PanelRealWeight'
-          Font.Charset = RUSSIAN_CHARSET
-          Font.Color = clBlack
-          Font.Height = -12
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 0
-        end
-      end
       object gbWeightTare: TGroupBox
-        Left = 368
+        Left = 240
         Top = 0
-        Width = 108
+        Width = 100
         Height = 41
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1090#1072#1088#1099
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 1
+        TabOrder = 0
         object PanelWeightTare: TPanel
           Left = 2
-          Top = 16
-          Width = 104
-          Height = 23
+          Top = 15
+          Width = 96
+          Height = 24
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelWeightTare'
@@ -371,28 +277,22 @@ object MainForm: TMainForm
           TabOrder = 0
         end
       end
-      object gbAmountPartnerWeight: TGroupBox
-        Left = 0
+      object gbWeightOther: TGroupBox
+        Left = 340
         Top = 0
-        Width = 130
+        Width = 140
         Height = 41
         Align = alLeft
-        Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 2
-        object PanelAmountPartnerWeight: TPanel
+        Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1082#1088','#1096#1087','#1087#1088#1086#1095
+        TabOrder = 1
+        object PanelWeightOther: TPanel
           Left = 2
-          Top = 16
-          Width = 126
-          Height = 23
+          Top = 15
+          Width = 136
+          Height = 24
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelAmountPartnerWeight'
+          Caption = 'PanelWeightOther'
           Font.Charset = RUSSIAN_CHARSET
           Font.Color = clBlack
           Font.Height = -12
@@ -402,28 +302,47 @@ object MainForm: TMainForm
           TabOrder = 0
         end
       end
-      object gbTotalSumm: TGroupBox
-        Left = 746
+      object gbRealWeight: TGroupBox
+        Left = 0
         Top = 0
-        Width = 108
+        Width = 140
         Height = 41
-        Align = alRight
-        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1075#1088#1085
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 3
-        object PanelTotalSumm: TPanel
+        Align = alLeft
+        Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
+        TabOrder = 2
+        object PanelRealWeight: TPanel
           Left = 2
-          Top = 16
-          Width = 104
-          Height = 23
+          Top = 15
+          Width = 136
+          Height = 24
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelTotalSumm'
+          Caption = 'PanelRealWeight'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+      end
+      object gbCountSkewer: TGroupBox
+        Left = 480
+        Top = 0
+        Width = 100
+        Height = 41
+        Align = alLeft
+        Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083' '#1096#1087','#1082#1088
+        TabOrder = 3
+        object PanelCountSkewer: TPanel
+          Left = 2
+          Top = 15
+          Width = 96
+          Height = 24
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelCountSkewer'
           Font.Charset = RUSSIAN_CHARSET
           Font.Color = clBlack
           Font.Height = -12
@@ -434,24 +353,18 @@ object MainForm: TMainForm
         end
       end
       object gbAmountWeight: TGroupBox
-        Left = 130
+        Left = 140
         Top = 0
-        Width = 119
+        Width = 100
         Height = 41
         Align = alLeft
-        Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1057#1082#1083#1072#1076
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
+        Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1087#1088#1086#1076'.'
         TabOrder = 4
         object PanelAmountWeight: TPanel
           Left = 2
-          Top = 16
-          Width = 115
-          Height = 23
+          Top = 15
+          Width = 96
+          Height = 24
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelAmountWeight'
@@ -468,8 +381,8 @@ object MainForm: TMainForm
     object cxDBGrid: TcxGrid
       Left = 0
       Top = 33
-      Width = 854
-      Height = 511
+      Width = 617
+      Height = 534
       Align = alClient
       TabOrder = 2
       object cxDBGridDBTableView: TcxGridDBTableView
@@ -479,11 +392,6 @@ object MainForm: TMainForm
           item
             Format = ',0.####'
             Kind = skSum
-            Column = AmountPartner
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
             Column = Amount
           end
           item
@@ -494,37 +402,67 @@ object MainForm: TMainForm
           item
             Format = ',0.####'
             Kind = skSum
-            Column = WeightTareTotal
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = CountTare
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = BoxCount
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
             Column = Count
           end
           item
             Format = ',0.####'
             Kind = skSum
             Column = HeadCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = LiveWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = WeightTare
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountSkewer1_k
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalWeightSkewer1_k
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountSkewer1
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalWeightSkewer1
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountSkewer2
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalWeightSkewer2
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = WeightOther
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountPack
           end>
         DataController.Summary.FooterSummaryItems = <
           item
             Format = ',0.####'
             Kind = skSum
-            Column = AmountPartner
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
             Column = Amount
           end
           item
@@ -535,27 +473,62 @@ object MainForm: TMainForm
           item
             Format = ',0.####'
             Kind = skSum
-            Column = WeightTareTotal
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = CountTare
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = BoxCount
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
             Column = Count
           end
           item
             Format = ',0.####'
             Kind = skSum
             Column = HeadCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = LiveWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = WeightTare
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountSkewer1_k
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalWeightSkewer1_k
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountSkewer1
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalWeightSkewer1
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountSkewer2
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalWeightSkewer2
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = WeightOther
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountPack
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsCustomize.ColumnHiding = True
@@ -563,6 +536,7 @@ object MainForm: TMainForm
         OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
         OptionsData.Inserting = False
         OptionsView.Footer = True
         OptionsView.GroupByBox = False
@@ -605,7 +579,6 @@ object MainForm: TMainForm
         object PartionGoods: TcxGridDBColumn
           Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
           DataBinding.FieldName = 'PartionGoods'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -614,41 +587,38 @@ object MainForm: TMainForm
         object PartionGoodsDate: TcxGridDBColumn
           Caption = #1055#1072#1088#1090#1080#1103' '#1044#1040#1058#1040
           DataBinding.FieldName = 'PartionGoodsDate'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 55
         end
-        object PriceListName: TcxGridDBColumn
-          Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
-          DataBinding.FieldName = 'PriceListName'
+        object isStartWeighing: TcxGridDBColumn
+          Caption = #1056#1077#1078#1080#1084' '#1085#1086#1074'.'
+          DataBinding.FieldName = 'isStartWeighing'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 75
-        end
-        object Price: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072
-          DataBinding.FieldName = 'Price'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 50
         end
-        object ChangePercentAmount: TcxGridDBColumn
-          Caption = '% '#1057#1082#1076
-          DataBinding.FieldName = 'ChangePercentAmount'
+        object Count: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1073#1072#1090'.'
+          DataBinding.FieldName = 'Count'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 35
+          Width = 45
+        end
+        object CountPack: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1087#1072#1082'.'
+          DataBinding.FieldName = 'CountPack'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 45
         end
         object HeadCount: TcxGridDBColumn
           Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
@@ -661,19 +631,18 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 55
         end
-        object AmountPartner: TcxGridDBColumn
-          Caption = #1050#1086#1083'. '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-          DataBinding.FieldName = 'AmountPartner'
+        object LiveWeight: TcxGridDBColumn
+          Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
+          DataBinding.FieldName = 'LiveWeight'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
+          Width = 60
         end
         object Amount: TcxGridDBColumn
-          Caption = #1050#1086#1083'. '#1089#1082#1083#1072#1076
+          Caption = #1050#1086#1083'-'#1074#1086
           DataBinding.FieldName = 'Amount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
@@ -694,30 +663,8 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 55
         end
-        object Count: TcxGridDBColumn
-          Caption = #1050#1086#1083'. '#1087#1072#1082#1077#1090#1086#1074
-          DataBinding.FieldName = 'Count'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
-        end
-        object WeightTareTotal: TcxGridDBColumn
-          Caption = #1042#1077#1089' '#1090#1072#1088#1099
-          DataBinding.FieldName = 'WeightTareTotal'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
-        end
         object WeightTare: TcxGridDBColumn
-          Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099
+          Caption = #1042#1077#1089' '#1090#1072#1088#1099
           DataBinding.FieldName = 'WeightTare'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
@@ -727,64 +674,108 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 50
         end
-        object CountTare: TcxGridDBColumn
-          Caption = #1050#1086#1083'. '#1090#1072#1088#1099
-          DataBinding.FieldName = 'CountTare'
+        object CountSkewer1_k: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1082#1088#1102#1095'.'
+          DataBinding.FieldName = 'CountSkewer1_k'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 50
         end
-        object LevelNumber: TcxGridDBColumn
-          Caption = #8470' '#1096#1088'.'
-          DataBinding.FieldName = 'LevelNumber'
+        object WeightSkewer1_k: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1086#1076#1085'. '#1082#1088#1102#1095'.'
+          DataBinding.FieldName = 'WeightSkewer1_k'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 60
+        end
+        object TotalWeightSkewer1_k: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1082#1088#1102#1095'.'
+          DataBinding.FieldName = 'TotalWeightSkewer1_k'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 40
+          Width = 50
         end
-        object BoxNumber: TcxGridDBColumn
-          Caption = #8470' '#1103#1097'.'
-          DataBinding.FieldName = 'BoxNumber'
+        object CountSkewer1: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1096#1087'.1'
+          DataBinding.FieldName = 'CountSkewer1'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 40
+          Width = 45
         end
-        object BoxName: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091#1087#1072#1082'.-'#1090#1072#1088#1099
-          DataBinding.FieldName = 'BoxName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actUpdateBox
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
+        object WeightSkewer1: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1086#1076#1085'. '#1096#1087'.1'
+          DataBinding.FieldName = 'WeightSkewer1'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 80
+          Width = 60
         end
-        object BoxCount: TcxGridDBColumn
-          Caption = #1050#1086#1083'. '#1091#1087#1072#1082'.-'#1090'.'
-          DataBinding.FieldName = 'BoxCount'
+        object TotalWeightSkewer1: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1096#1087'.1'
+          DataBinding.FieldName = 'TotalWeightSkewer1'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 58
+          Width = 45
+        end
+        object CountSkewer2: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1096#1087'.2'
+          DataBinding.FieldName = 'CountSkewer2'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 45
+        end
+        object WeightSkewer2: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1086#1076#1085'. '#1096#1087'.2'
+          DataBinding.FieldName = 'WeightSkewer2'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 60
+        end
+        object TotalWeightSkewer2: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1096#1087'.2'
+          DataBinding.FieldName = 'TotalWeightSkewer2'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 45
+        end
+        object WeightOther: TcxGridDBColumn
+          Caption = #1042#1077#1089', '#1087#1088#1086#1095#1077#1077
+          DataBinding.FieldName = 'WeightOther'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
         end
         object InsertDate: TcxGridDBColumn
           Caption = #1044#1072#1090#1072'('#1074#1088') '#1089#1086#1079#1076#1072#1085#1080#1103
@@ -817,61 +808,32 @@ object MainForm: TMainForm
     end
   end
   object PanelSaveItem: TPanel
-    Left = 0
-    Top = 66
+    Left = 222
+    Top = 33
     Width = 130
-    Height = 585
+    Height = 608
     Align = alLeft
     BevelOuter = bvNone
     Font.Charset = RUSSIAN_CHARSET
     Font.Color = clBlack
-    Font.Height = -11
+    Font.Height = -12
     Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
-    object BarCodePanel: TPanel
-      Left = 0
-      Top = 39
-      Width = 130
-      Height = 39
-      Align = alTop
-      TabOrder = 0
-      object BarCodeLabel: TLabel
-        Left = 1
-        Top = 1
-        Width = 128
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
-        ExplicitWidth = 59
-      end
-      object EditBarCode: TcxCurrencyEdit
-        Left = 5
-        Top = 15
-        Properties.Alignment.Horz = taRightJustify
-        Properties.Alignment.Vert = taVCenter
-        Properties.AssignedValues.DisplayFormat = True
-        Properties.DecimalPlaces = 0
-        Properties.OnChange = EditBarCodePropertiesChange
-        TabOrder = 0
-        Width = 120
-      end
-    end
     object infoPanel_Scale: TPanel
       Left = 0
-      Top = 238
+      Top = 573
       Width = 130
-      Height = 29
-      Align = alTop
+      Height = 35
+      Align = alBottom
       Font.Charset = RUSSIAN_CHARSET
       Font.Color = clTeal
       Font.Height = -11
       Font.Name = 'Arial'
       Font.Style = []
       ParentFont = False
-      TabOrder = 1
+      TabOrder = 0
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -886,7 +848,7 @@ object MainForm: TMainForm
         Left = 1
         Top = 15
         Width = 128
-        Height = 13
+        Height = 19
         Align = alClient
         BevelOuter = bvNone
         Caption = 'Weight=???'
@@ -903,210 +865,23 @@ object MainForm: TMainForm
     end
     object rgScale: TRadioGroup
       Left = 0
-      Top = 121
+      Top = 456
       Width = 130
       Height = 117
-      Align = alTop
+      Align = alBottom
       Caption = #1042#1077#1089#1099
-      TabOrder = 2
+      TabOrder = 1
       OnClick = rgScaleClick
-    end
-    object PanelCountPack: TPanel
-      Left = 0
-      Top = 267
-      Width = 130
-      Height = 39
-      Align = alTop
-      TabOrder = 3
-      object LabelCountPack: TLabel
-        Left = 1
-        Top = 1
-        Width = 128
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074
-        ExplicitWidth = 87
-      end
-      object EditCountPack: TcxCurrencyEdit
-        Left = 5
-        Top = 15
-        Properties.Alignment.Horz = taRightJustify
-        Properties.Alignment.Vert = taVCenter
-        Properties.AssignedValues.DisplayFormat = True
-        Properties.DecimalPlaces = 0
-        Properties.OnChange = EditBarCodePropertiesChange
-        TabOrder = 0
-        Width = 120
-      end
-    end
-    object HeadCountPanel: TPanel
-      Left = 0
-      Top = 360
-      Width = 130
-      Height = 39
-      Align = alTop
-      TabOrder = 4
-      object HeadCountLabel: TLabel
-        Left = 1
-        Top = 1
-        Width = 128
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
-        ExplicitWidth = 75
-      end
-      object EditHeadCount: TcxCurrencyEdit
-        Left = 5
-        Top = 15
-        Properties.Alignment.Horz = taRightJustify
-        Properties.Alignment.Vert = taVCenter
-        Properties.AssignedValues.DisplayFormat = True
-        Properties.DecimalPlaces = 0
-        Properties.OnChange = EditBarCodePropertiesChange
-        TabOrder = 0
-        Width = 120
-      end
-    end
-    object PartionGoodsPanel: TPanel
-      Left = 0
-      Top = 78
-      Width = 130
-      Height = 43
-      Align = alTop
-      TabOrder = 5
-      object PartionGoodsLabel: TLabel
-        Left = 1
-        Top = 1
-        Width = 128
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1042#1074#1086#1076' '#1055#1040#1056#1058#1048#1071' '#1057#1067#1056#1068#1071
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 119
-      end
-      object EditPartionGoods: TEdit
-        Left = 5
-        Top = 17
-        Width = 120
-        Height = 23
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clBlack
-        Font.Height = -12
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        TabOrder = 0
-        Text = 'EditPartionGoods'
-        OnExit = EditPartionGoodsExit
-      end
-    end
-    object PanelBox: TPanel
-      Left = 0
-      Top = 306
-      Width = 130
-      Height = 54
-      Align = alTop
-      TabOrder = 6
-      object Label1: TLabel
-        Left = 1
-        Top = 1
-        Width = 128
-        Height = 14
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1072#1103' '#1090#1072#1088#1072
-        ExplicitWidth = 99
-      end
-      object Panel2: TPanel
-        Left = 65
-        Top = 15
-        Width = 64
-        Height = 38
-        Align = alClient
-        BevelOuter = bvNone
-        TabOrder = 0
-        object Label2: TLabel
-          Left = 0
-          Top = 0
-          Width = 64
-          Height = 14
-          Align = alTop
-          Alignment = taCenter
-          Caption = #1050#1086#1083'-'#1074#1086
-          Font.Charset = RUSSIAN_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentFont = False
-          ExplicitWidth = 36
-        end
-        object EditBoxCount: TcxCurrencyEdit
-          Left = 5
-          Top = 15
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.AssignedValues.DisplayFormat = True
-          Properties.DecimalPlaces = 0
-          Properties.OnChange = EditBarCodePropertiesChange
-          TabOrder = 0
-          Width = 55
-        end
-      end
-      object Panel3: TPanel
-        Left = 1
-        Top = 15
-        Width = 64
-        Height = 38
-        Align = alLeft
-        BevelOuter = bvNone
-        TabOrder = 1
-        object Label3: TLabel
-          Left = 0
-          Top = 0
-          Width = 64
-          Height = 14
-          Align = alTop
-          Alignment = taCenter
-          Caption = #1050#1086#1076
-          Font.Charset = RUSSIAN_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentFont = False
-          ExplicitWidth = 19
-        end
-        object EditBoxCode: TcxCurrencyEdit
-          Left = 2
-          Top = 15
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taVCenter
-          Properties.AssignedValues.DisplayFormat = True
-          Properties.DecimalPlaces = 0
-          Properties.OnChange = EditBarCodePropertiesChange
-          TabOrder = 0
-          Width = 55
-        end
-      end
     end
     object Panel25: TPanel
       Left = 0
       Top = 0
       Width = 130
-      Height = 39
+      Height = 40
       Align = alTop
       BevelInner = bvRaised
       BevelOuter = bvNone
-      TabOrder = 7
+      TabOrder = 2
       object Label17: TLabel
         Left = 1
         Top = 1
@@ -1123,13 +898,78 @@ object MainForm: TMainForm
         ExplicitWidth = 59
       end
       object OperDateEdit: TcxDateEdit
-        Left = 5
+        Left = 10
         Top = 14
         EditValue = 41640d
-        ParentFont = False
         Properties.DateButtons = [btnToday]
         Properties.SaveTime = False
         Properties.ShowTime = False
+        TabOrder = 0
+        Width = 110
+      end
+    end
+    object PanelPartionDate: TPanel
+      Left = 0
+      Top = 40
+      Width = 130
+      Height = 40
+      Align = alTop
+      BevelInner = bvRaised
+      BevelOuter = bvNone
+      TabOrder = 3
+      object LabelPartionDate: TLabel
+        Left = 1
+        Top = 1
+        Width = 128
+        Height = 14
+        Align = alTop
+        Caption = '   '#1055#1072#1088#1090#1080#1103' '#1079#1072
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 62
+      end
+      object PartionDateEdit: TcxDateEdit
+        Left = 10
+        Top = 15
+        EditValue = 41640d
+        Properties.DateButtons = [btnToday]
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 0
+        Width = 110
+      end
+    end
+    object HeadCountPanel: TPanel
+      Left = 0
+      Top = 396
+      Width = 130
+      Height = 60
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 4
+      object HeadCountLabel: TLabel
+        Left = 0
+        Top = 0
+        Width = 130
+        Height = 15
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
+        ExplicitWidth = 112
+      end
+      object EditEnterCount: TcxCurrencyEdit
+        Left = 10
+        Top = 14
+        ParentFont = False
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DecimalPlaces = 0
+        Properties.OnChange = EditEnterCountPropertiesChange
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -12
@@ -1137,15 +977,18 @@ object MainForm: TMainForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 0
-        Width = 120
+        OnEnter = EditEnterCountEnter
+        OnExit = EditEnterCountExit
+        OnKeyDown = EditEnterCountKeyDown
+        Width = 110
       end
     end
   end
   object PanelInfoItem: TPanel
-    Left = 130
-    Top = 66
+    Left = 352
+    Top = 33
     Width = 0
-    Height = 585
+    Height = 608
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
@@ -1404,7 +1247,7 @@ object MainForm: TMainForm
     end
     object infoPanelTotalWeight: TPanel
       Left = 0
-      Top = 548
+      Top = 571
       Width = 0
       Height = 37
       Align = alBottom
@@ -1477,8 +1320,8 @@ object MainForm: TMainForm
   object infoPanel_mastre: TPanel
     Left = 0
     Top = 0
-    Width = 984
-    Height = 66
+    Width = 969
+    Height = 33
     Align = alTop
     BevelOuter = bvNone
     Font.Charset = DEFAULT_CHARSET
@@ -1489,10 +1332,10 @@ object MainForm: TMainForm
     ParentFont = False
     TabOrder = 3
     object PanelMovement: TPanel
-      Left = 664
+      Left = 649
       Top = 0
       Width = 320
-      Height = 28
+      Height = 33
       Align = alRight
       BevelOuter = bvNone
       Caption = 'PanelMovement'
@@ -1501,8 +1344,8 @@ object MainForm: TMainForm
     object PanelMovementDesc: TPanel
       Left = 0
       Top = 0
-      Width = 664
-      Height = 28
+      Width = 649
+      Height = 33
       Align = alClient
       BevelOuter = bvNone
       Caption = 'PanelMovementDesc'
@@ -1514,192 +1357,722 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 1
     end
-    object infoPanel: TPanel
+  end
+  object PanelInfo: TPanel
+    Left = 0
+    Top = 33
+    Width = 222
+    Height = 608
+    Align = alLeft
+    BevelOuter = bvNone
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 4
+    object PanelGoods: TPanel
       Left = 0
-      Top = 28
-      Width = 984
-      Height = 38
-      Align = alBottom
+      Top = 40
+      Width = 222
+      Height = 73
+      Align = alTop
       BevelOuter = bvNone
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 2
-      object infoPanelPartner: TPanel
-        Left = 130
-        Top = 0
-        Width = 362
-        Height = 38
-        Align = alClient
-        BevelInner = bvRaised
-        BevelOuter = bvNone
-        TabOrder = 0
-        object LabelPartner: TLabel
-          Left = 1
-          Top = 1
-          Width = 360
-          Height = 13
-          Align = alTop
-          Alignment = taCenter
-          Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          ExplicitWidth = 69
-        end
-        object PanelPartner: TPanel
-          Left = 1
-          Top = 14
-          Width = 360
-          Height = 23
-          Align = alClient
-          Alignment = taLeftJustify
-          BevelOuter = bvNone
-          Caption = 'PanelPartner'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clNavy
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 0
-        end
-      end
-      object infoPanelPriceList: TPanel
+      TabOrder = 0
+      object LabelGoods: TLabel
         Left = 0
         Top = 0
-        Width = 130
-        Height = 38
-        Align = alLeft
-        BevelInner = bvRaised
+        Width = 222
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1055#1088#1086#1076#1091#1082#1094#1080#1103
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 61
+      end
+      object Panel3: TPanel
+        Left = 0
+        Top = 14
+        Width = 222
+        Height = 36
+        Align = alTop
         BevelOuter = bvNone
+        TabOrder = 0
+        object PanelGoodsCode: TPanel
+          Left = 0
+          Top = 0
+          Width = 100
+          Height = 36
+          Align = alLeft
+          BevelOuter = bvNone
+          TabOrder = 0
+          object LabelGoodsCode: TLabel
+            Left = 0
+            Top = 0
+            Width = 100
+            Height = 14
+            Align = alTop
+            Alignment = taCenter
+            Caption = #1050#1086#1076
+            Font.Charset = RUSSIAN_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Arial'
+            Font.Style = []
+            ParentFont = False
+            ExplicitWidth = 19
+          end
+          object EditGoodsCode: TcxCurrencyEdit
+            Left = 4
+            Top = 12
+            Properties.Alignment.Horz = taRightJustify
+            Properties.Alignment.Vert = taVCenter
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 0
+            TabOrder = 0
+            OnExit = EditGoodsCodeExit
+            OnKeyDown = EditGoodsCodeKeyDown
+            Width = 90
+          end
+        end
+        object infoPanelGoodsWeight: TPanel
+          Left = 100
+          Top = 0
+          Width = 122
+          Height = 36
+          Align = alClient
+          BevelOuter = bvNone
+          TabOrder = 1
+          object LabelGoodsWeight: TLabel
+            Left = 0
+            Top = 0
+            Width = 122
+            Height = 14
+            Align = alTop
+            Alignment = taCenter
+            Caption = #1042#1077#1089
+            Font.Charset = RUSSIAN_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Arial'
+            Font.Style = []
+            ParentFont = False
+            ExplicitWidth = 19
+          end
+          object PanelGoodsWeight: TPanel
+            Left = 0
+            Top = 14
+            Width = 122
+            Height = 22
+            Align = alClient
+            BevelOuter = bvNone
+            Caption = 'PanelGoodsWeight'
+            Font.Charset = RUSSIAN_CHARSET
+            Font.Color = clNavy
+            Font.Height = -11
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            TabOrder = 0
+          end
+        end
+      end
+      object PanelGoodsName: TPanel
+        Left = 0
+        Top = 50
+        Width = 222
+        Height = 23
+        Align = alClient
+        Caption = 'PanelGoodsName'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clNavy
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 1
-        object PriceListNameLabel: TLabel
-          Left = 1
-          Top = 1
-          Width = 128
-          Height = 13
+      end
+    end
+    object PanelGoodsKind: TPanel
+      Left = 0
+      Top = 113
+      Width = 222
+      Height = 156
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 1
+      object LabelGoodsKind: TLabel
+        Left = 0
+        Top = 0
+        Width = 222
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 106
+      end
+      object PanelGoodsKindCode: TPanel
+        Left = 0
+        Top = 14
+        Width = 222
+        Height = 26
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 0
+        object EditGoodsKindCode: TcxCurrencyEdit
+          Left = 5
+          Top = 0
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 0
+          Properties.OnChange = EditGoodsKindCodePropertiesChange
+          TabOrder = 0
+          OnExit = EditGoodsKindCodeExit
+          OnKeyDown = EditGoodsKindCodeKeyDown
+          Width = 90
+        end
+      end
+      object rgGoodsKind: TRadioGroup
+        Left = 0
+        Top = 40
+        Width = 222
+        Height = 116
+        Align = alClient
+        Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
+        Columns = 2
+        TabOrder = 1
+        OnClick = rgGoodsKindClick
+      end
+    end
+    object PartionGoodsPanel: TPanel
+      Left = 0
+      Top = 269
+      Width = 222
+      Height = 41
+      Align = alTop
+      TabOrder = 2
+      object PartionGoodsLabel: TLabel
+        Left = 1
+        Top = 1
+        Width = 220
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1042#1074#1086#1076' '#1055#1040#1056#1058#1048#1071' '#1057#1067#1056#1068#1071
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 119
+      end
+      object EditPartionGoods: TEdit
+        Left = 5
+        Top = 16
+        Width = 190
+        Height = 22
+        TabOrder = 0
+        Text = 'EditPartionGoods'
+        OnExit = EditPartionGoodsExit
+        OnKeyDown = EditPartionGoodsKeyDown
+      end
+    end
+    object infoPanelCount: TPanel
+      Left = 0
+      Top = 310
+      Width = 222
+      Height = 51
+      Align = alTop
+      TabOrder = 3
+      object LabelCount_all: TLabel
+        Left = 1
+        Top = 1
+        Width = 220
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1042#1074#1086#1076' '#1082#1086#1083'-'#1074#1086' '#1096#1090'.'
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 88
+      end
+      object PanelCount: TPanel
+        Left = 1
+        Top = 15
+        Width = 100
+        Height = 35
+        Align = alLeft
+        BevelOuter = bvNone
+        TabOrder = 0
+        object LabelCount: TLabel
+          Left = 0
+          Top = 0
+          Width = 100
+          Height = 14
           Align = alTop
           Alignment = taCenter
-          Caption = #1055#1088#1072#1081#1089'-'#1051#1080#1089#1090
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Caption = #1041#1072#1090#1086#1085#1099'/'#1064#1090#1091#1082#1080
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
           Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          ExplicitWidth = 71
-        end
-        object PanelPriceList: TPanel
-          Left = 1
-          Top = 14
-          Width = 128
-          Height = 23
-          Align = alClient
-          Alignment = taLeftJustify
-          BevelOuter = bvNone
-          Caption = 'PanelPriceList'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clPurple
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
+          Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 75
+        end
+        object EditCount: TcxCurrencyEdit
+          Left = 4
+          Top = 12
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 0
+          Properties.OnChange = EditCountPropertiesChange
           TabOrder = 0
+          OnKeyDown = EditCountKeyDown
+          Width = 90
         end
       end
-      object infoPanelOrderExternal: TPanel
-        Left = 664
-        Top = 0
-        Width = 320
-        Height = 38
-        Align = alRight
-        BevelInner = bvRaised
+      object PanelLiveWeight: TPanel
+        Left = 101
+        Top = 15
+        Width = 120
+        Height = 35
+        Align = alClient
         BevelOuter = bvNone
-        TabOrder = 2
-        object LabelOrderExternal: TLabel
-          Left = 1
-          Top = 1
-          Width = 318
-          Height = 13
+        TabOrder = 1
+        object LabelCountPack: TLabel
+          Left = 0
+          Top = 0
+          Width = 120
+          Height = 14
           Align = alTop
           Alignment = taCenter
-          Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Caption = #1055#1072#1082#1077#1090#1099'/'#1046#1080#1074#1086#1081' '#1074#1077#1089
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
           Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
+          Font.Name = 'Arial'
+          Font.Style = []
           ParentFont = False
-          ExplicitWidth = 66
+          ExplicitWidth = 100
         end
-        object PanelOrderExternal: TPanel
-          Left = 1
-          Top = 14
-          Width = 318
-          Height = 23
-          Align = alClient
-          Alignment = taLeftJustify
-          BevelOuter = bvNone
-          Caption = 'PanelOrderExternal'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clNavy
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
+        object EditCountPack: TcxCurrencyEdit
+          Left = 5
+          Top = 12
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 2
+          Properties.OnChange = EditCountPackPropertiesChange
           TabOrder = 0
+          OnKeyDown = EditCountPackKeyDown
+          Width = 90
         end
       end
-      object infoPanelContract: TPanel
-        Left = 492
-        Top = 0
-        Width = 172
-        Height = 38
-        Align = alRight
-        BevelInner = bvRaised
+    end
+    object infoPanelSkewer2: TPanel
+      Left = 0
+      Top = 463
+      Width = 222
+      Height = 37
+      Align = alTop
+      TabOrder = 4
+      object PanelSkewer2: TPanel
+        Left = 1
+        Top = 1
+        Width = 100
+        Height = 35
+        Align = alLeft
         BevelOuter = bvNone
-        TabOrder = 3
-        object LabelContract: TLabel
-          Left = 1
-          Top = 1
-          Width = 170
-          Height = 13
+        TabOrder = 0
+        object LabelSkewer2: TLabel
+          Left = 0
+          Top = 0
+          Width = 100
+          Height = 14
           Align = alTop
           Alignment = taCenter
-          Caption = #1044#1086#1075#1086#1074#1086#1088
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 0.0 '#1082#1075
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
           Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
+          Font.Name = 'Arial'
+          Font.Style = []
           ParentFont = False
-          ExplicitWidth = 52
+          ExplicitWidth = 81
         end
-        object PanelContract: TPanel
-          Left = 1
+        object EditSkewer2: TcxCurrencyEdit
+          Left = 4
+          Top = 12
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 0
+          Properties.OnChange = EditSkewer2PropertiesChange
+          TabOrder = 0
+          OnExit = EditSkewer2Exit
+          OnKeyDown = EditSkewer2KeyDown
+          Width = 90
+        end
+      end
+      object infoPanelWeightSkewer2: TPanel
+        Left = 101
+        Top = 1
+        Width = 120
+        Height = 35
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 1
+        object LabelWeightSkewer2: TLabel
+          Left = 0
+          Top = 0
+          Width = 120
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1042#1077#1089
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitWidth = 19
+        end
+        object PanelWeightSkewer2: TPanel
+          Left = 0
           Top = 14
-          Width = 170
-          Height = 23
+          Width = 120
+          Height = 21
           Align = alClient
-          Alignment = taLeftJustify
           BevelOuter = bvNone
-          Caption = 'PanelContract'
-          Font.Charset = DEFAULT_CHARSET
+          Caption = 'PanelWeightSkewer2'
+          Font.Charset = RUSSIAN_CHARSET
           Font.Color = clNavy
           Font.Height = -11
-          Font.Name = 'MS Sans Serif'
+          Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
         end
       end
+    end
+    object infoPanelTare_enter: TPanel
+      Left = 0
+      Top = 361
+      Width = 222
+      Height = 51
+      Align = alTop
+      TabOrder = 5
+      object LabelTare_enter_all: TLabel
+        Left = 1
+        Top = 1
+        Width = 220
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1058#1072#1088#1072
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 26
+      end
+      object infoPanelWeightTare_enter: TPanel
+        Left = 1
+        Top = 15
+        Width = 100
+        Height = 35
+        Align = alLeft
+        BevelOuter = bvNone
+        TabOrder = 0
+        object LabelWeightTare_enter: TLabel
+          Left = 0
+          Top = 0
+          Width = 100
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1042#1077#1089
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitWidth = 19
+        end
+        object EditWeightTare_enter: TcxCurrencyEdit
+          Left = 4
+          Top = 12
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 2
+          Properties.OnChange = EditWeightTare_enterPropertiesChange
+          TabOrder = 0
+          OnExit = EditWeightTare_enterExit
+          OnKeyDown = EditWeightTare_enterKeyDown
+          Width = 90
+        end
+      end
+      object infoPanelWeightTare_enter_two: TPanel
+        Left = 101
+        Top = 15
+        Width = 120
+        Height = 35
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 1
+        object LabelWeightTare_enter_two: TLabel
+          Left = 0
+          Top = 0
+          Width = 120
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1042#1077#1089
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitWidth = 19
+        end
+        object PanelWeightTare_enter_two: TPanel
+          Left = 0
+          Top = 14
+          Width = 120
+          Height = 21
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelWeightTare_enter_two'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clNavy
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+      end
+    end
+    object infoPanelSkewer1: TPanel
+      Left = 0
+      Top = 412
+      Width = 222
+      Height = 51
+      Align = alTop
+      TabOrder = 6
+      object LabelSkewer: TLabel
+        Left = 1
+        Top = 1
+        Width = 220
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1064#1087#1072#1075#1080'/'#1050#1088#1102#1095#1082#1080
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 81
+      end
+      object PanelSkewer1: TPanel
+        Left = 1
+        Top = 15
+        Width = 100
+        Height = 35
+        Align = alLeft
+        BevelOuter = bvNone
+        TabOrder = 0
+        object LabelSkewer1: TLabel
+          Left = 0
+          Top = 0
+          Width = 100
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 0.0 '#1082#1075
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitWidth = 81
+        end
+        object EditSkewer1: TcxCurrencyEdit
+          Left = 4
+          Top = 12
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 0
+          Properties.OnChange = EditSkewer1PropertiesChange
+          TabOrder = 0
+          OnExit = EditSkewer1Exit
+          OnKeyDown = EditSkewer1KeyDown
+          Width = 90
+        end
+      end
+      object infoPanelWeightSkewer1: TPanel
+        Left = 101
+        Top = 15
+        Width = 120
+        Height = 35
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 1
+        object LabelWeightSkewer1: TLabel
+          Left = 0
+          Top = 0
+          Width = 120
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1042#1077#1089
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitWidth = 19
+        end
+        object PanelWeightSkewer1: TPanel
+          Left = 0
+          Top = 14
+          Width = 120
+          Height = 21
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelWeightSkewer1'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clNavy
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+      end
+    end
+    object infoPanelWeightOther: TPanel
+      Left = 0
+      Top = 500
+      Width = 222
+      Height = 38
+      Align = alTop
+      TabOrder = 7
+      object LabelWeightOther: TLabel
+        Left = 1
+        Top = 1
+        Width = 220
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1055#1088#1086#1095#1080#1077', '#1086#1073#1097#1080#1081' '#1074#1077#1089', '#1082#1075
+        ExplicitWidth = 125
+      end
+      object EditWeightOther: TcxCurrencyEdit
+        Left = 55
+        Top = 14
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.DecimalPlaces = 2
+        Properties.OnChange = EditWeightOtherPropertiesChange
+        TabOrder = 0
+        OnExit = EditWeightOtherExit
+        OnKeyDown = EditWeightOtherKeyDown
+        Width = 90
+      end
+    end
+    object infoPanel_Weight: TPanel
+      Left = 0
+      Top = 573
+      Width = 222
+      Height = 35
+      Align = alBottom
+      TabOrder = 8
+      object Label_Weight: TLabel
+        Left = 1
+        Top = 1
+        Width = 220
+        Height = 13
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1054#1073#1097#1080#1081' '#1074#1077#1089
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clMaroon
+        Font.Height = -12
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 66
+      end
+      object Panel_Weight: TPanel
+        Left = 1
+        Top = 14
+        Width = 220
+        Height = 20
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'Panel_Weight'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -12
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+      end
+    end
+    object gbStartWeighing: TRadioGroup
+      Left = 0
+      Top = 0
+      Width = 222
+      Height = 40
+      Align = alTop
+      Caption = #1056#1077#1078#1080#1084
+      Columns = 2
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clNavy
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      Items.Strings = (
+        #1053#1086#1074#1099#1081
+        #1054#1073#1085#1091#1083#1080#1090#1100)
+      ParentFont = False
+      TabOrder = 9
+      OnClick = gbStartWeighingClick
+      OnEnter = gbStartWeighingEnter
     end
   end
   object PopupMenu: TPopupMenu
@@ -1799,20 +2172,20 @@ object MainForm: TMainForm
       end>
     Params = <>
     PackSize = 1
-    Left = 224
-    Top = 384
+    Left = 400
+    Top = 232
   end
   object DS: TDataSource
     DataSet = CDS
-    Left = 320
-    Top = 400
+    Left = 472
+    Top = 224
   end
   object CDS: TClientDataSet
     Aggregates = <>
     Params = <>
     AfterOpen = CDSAfterOpen
-    Left = 304
-    Top = 448
+    Left = 408
+    Top = 280
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1842,33 +2215,6 @@ object MainForm: TMainForm
       Category = 'ScaleLib'
       Hint = #1042#1099#1093#1086#1076
       OnExecute = actExitExecute
-    end
-    object actChoiceBox: TOpenChoiceForm
-      Category = 'ScaleLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceBox'
-      Hint = 'actChoiceBox'
-      FormName = 'TBoxForm'
-      FormNameParam.Value = 'TBoxForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object actUpdateBox: TAction
-      Category = 'ScaleLib'
-      Caption = 'actUpdateBox'
-      Hint = 'actUpdateBox'
-      OnExecute = actUpdateBoxExecute
     end
   end
 end

@@ -20,7 +20,7 @@ type
     spSelect: TdsdStoredProc;
     InfoPanel: TPanel;
     Panel1: TPanel;
-    Panel2: TPanel;
+    infoPanelPartner: TPanel;
     Panel3: TPanel;
     Label2: TLabel;
     Panel4: TPanel;
@@ -49,6 +49,8 @@ type
     procedure EditPartnerCodeEnter(Sender: TObject);
     procedure EditPartnerCodePropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure FormShow(Sender: TObject);
+    procedure DBGridDblClick(Sender: TObject);
 
   private
     ChoiceNumber:Integer;
@@ -70,13 +72,13 @@ var
 
 implementation
 {$R *.dfm}
-uses DMMainScale,GuidePartner;
+uses dmMainScale,GuidePartner;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
      CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
 
-     isEditPartnerCodeExit:= true;
+     isEditPartnerCodeExit:= FALSE;
 
      if ParamsMovement_local.ParamByName('MovementId').AsInteger<>0
      then begin
@@ -119,9 +121,10 @@ begin
      EditBarCode.SelectAll;
      //isEditBarCode:=BarCode<>'';
      isEditBarCode:=FALSE;//ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger<>zc_Movement_SendOnPrice;
+     isEditPartnerCodeExit:= TRUE;
 
      if BarCode<>'' then begin isEditBarCode:=true;EditBarCodeExit(EditBarCode);Result:=true;end
-     else Result:=(ShowModal=mrOk);
+     else begin Result:=(ShowModal=mrOk);end;
 end;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
@@ -184,6 +187,7 @@ begin
      // проверка для списания
      if   (CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Loss)
        and(ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=0)
+       and(CDS.FieldByName('ToId').asInteger=0)
      then begin
                ShowMessage('Ошибка.Значение <Код контрагента> не найдено.');
                ActiveControl:=EditPartnerCode;
@@ -232,6 +236,8 @@ begin
           ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
           ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
           ParamByName('GoodsKindWeighingGroupId').asInteger:= CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
+          ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
+          ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Income)
@@ -380,7 +386,7 @@ begin
 
     if CDS.Filtered then CDS.Filtered:=false;
     //
-    if Length(trim(EditBarCode.Text))>2
+    if (Length(trim(EditBarCode.Text))>2) and (SettingMain.isCeh = FALSE)
     then begin
                //Проверка <Контрольная сумма>
                if (Length(trim(EditBarCode.Text))>=13)and(CheckBarCode(trim(EditBarCode.Text)) = FALSE)
@@ -580,6 +586,8 @@ end;
 procedure TDialogMovementDescForm.EditPartnerCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var Key:Word;
 begin
+    if SettingMain.isCeh = TRUE then exit;
+    //
     if ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger<>0
     then begin
               EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
@@ -606,9 +614,11 @@ begin
     end;
     //else ActiveControl:=EditBarCode;
 end;
-
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.DBGridCellClick(Column: TColumn);
+begin DBGridDblClick(Self);end;
+{------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.DBGridDblClick(Sender: TObject);
 begin
      if (CDS.FieldByName('MovementDescId').AsInteger<=0)
      then CDS.Next
@@ -672,10 +682,14 @@ end;
 procedure TDialogMovementDescForm.FormCreate(Sender: TObject);
 begin
   inherited;
+  //
+  infoPanelPartner.Visible:= SettingMain.isCeh = FALSE;
+  //
   with spSelect do
   begin
        StoredProcName:='gpSelect_Object_ToolsWeighing_MovementDesc';
        OutputType:=otDataSet;
+       Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Execute;
   end;
@@ -696,8 +710,19 @@ end;
 procedure TDialogMovementDescForm.FormKeyDown(Sender: TObject; var Key: Word;  Shift: TShiftState);
 begin
      if Key = VK_RETURN
-     then if (ActiveControl=EditBarCode)
-          then ActiveControl:=EditPartnerCode
+     then if (ActiveControl=EditBarCode) and (infoPanelPartner.Visible)
+          then begin
+                    EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
+                    isEditBarCode:=true;
+                    EditBarCodeExit(Self);
+                    //переопределяются параметры, т.к. они используются в фильтре справ.
+                    ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
+                    //
+                    ActiveControl:=EditPartnerCode;
+              end
+          else
+          if (ActiveControl=EditBarCode) and (not infoPanelPartner.Visible)
+          then ActiveControl:=DBGrid
           else if (ActiveControl=EditPartnerCode)
                then ActiveControl:=DBGrid
                else if (ActiveControl=DBGrid)
@@ -709,6 +734,12 @@ begin
      if (Key = VK_UP)or(Key = VK_DOWN)or(Key = VK_HOME)or(Key = VK_END)or(Key = VK_PRIOR)or(Key = VK_NEXT)
      then if (CDS.FieldByName('MovementDescId').AsInteger<=0)
           then CDS.Next;
+end;
+{------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.FormShow(Sender: TObject);
+begin
+   DialogMovementDescForm.Width:=DialogMovementDescForm.Width+1;
+   DialogMovementDescForm.Width:=DialogMovementDescForm.Width-1;
 end;
 {------------------------------------------------------------------------}
 end.
