@@ -406,10 +406,8 @@ inherited SendForm: TSendForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
-      ReportNameParam.ParamType = ptInput
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -782,7 +780,7 @@ inherited SendForm: TSendForm
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Send'
     Left = 128
-    Top = 56
+    Top = 64
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Send'
@@ -1247,7 +1245,7 @@ inherited SendForm: TSendForm
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_Send_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1266,8 +1264,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 319
-    Top = 208
+    Left = 367
+    Top = 376
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
