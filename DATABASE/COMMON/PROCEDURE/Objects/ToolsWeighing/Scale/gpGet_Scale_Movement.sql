@@ -148,7 +148,7 @@ BEGIN
                                                                    ON MovementLinkObject_Contract_Order.MovementId = MovementLinkMovement_Order.MovementChildId
                                                                   AND MovementLinkObject_Contract_Order.DescId = zc_MovementLinkObject_Contract()*/
                                       LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
-                                                              ON MovementFloat_MovementDesc.MovementId =  Movement.Id
+                                                              ON MovementFloat_MovementDesc.MovementId = Movement.Id
                                                              AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
                                       LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                            ON ObjectLink_Partner_Juridical.ObjectId = CASE WHEN MovementFloat_MovementDesc.ValueData IN (zc_Movement_Sale(), zc_Movement_ReturnOut())

@@ -12,33 +12,37 @@ type
     procedure DataModuleCreate(Sender: TObject);
   private
   public
+    // Scale + ScaleCeh
     function gpSelect_ToolsWeighing_onLevelChild(inBranchCode:Integer;inLevelChild: String): TArrayList;
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
     function gpGet_Scale_User:String;
-
+    function gpGet_Scale_OperDate(var execParams:TParams):TDateTime;
+    // Scale + ScaleCeh
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
-
+    // Scale + ScaleCeh
+    function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
+    function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
+    // Scale + ScaleCeh
+    function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
+    function lpGet_BranchName(inBranchCode:Integer): String;
+    //
+    // +++ScaleCeh+++
     function gpGet_ScaleCeh_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
-
-    function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
+    // +++ScaleCeh+++
     function gpInsertUpdate_ScaleCeh_Movement(var execParamsMovement:TParams): Boolean;
     function gpInsert_ScaleCeh_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
+    function gpInsert_MovementCeh_all(var execParamsMovement:TParams): Boolean;
+    //
+    //ScaleCeh
+    function gpGet_ScaleCeh_Movement_checkPartion(var execParamsMovement:TParams): Boolean;
 
-    function gpUpdate_ScaleCeh_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
-
-    function gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
-
-    function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
-
-    function lpGet_BranchName(inBranchCode:Integer): String;
   end;
 
-  function gpInitialize_OperDate(var execParams:TParams):TDateTime;
-  function gpInitialize_Const: Boolean;
-  function gpInitialize_Ini: Boolean;
-  function gpInitialize_ParamsMovement: Boolean;
-  function gpInitialize_SettingMain_isCeh: Boolean;
+  function gpInitialize_Const: Boolean;//Scale + ScaleCeh
+  function gpInitialize_Ini: Boolean;  //ScaleCeh
+  function gpInitialize_SettingMain_isCeh: Boolean;//ScaleCeh
 
 var
   DMMainScaleCehForm: TDMMainScaleCehForm;
@@ -49,19 +53,26 @@ uses Inifiles,TypInfo,DialogMovementDesc,UtilConst;
 {------------------------------------------------------------------------}
 procedure TDMMainScaleCehForm.DataModuleCreate(Sender: TObject);
 begin
-  gpInitialize_ParamsMovement;
+    //  gpInitialize_ParamsMovement;
+    //
+    Create_ParamsMovement(ParamsMovement);
+    //
+    gpGet_Scale_OperDate(ParamsMovement);
+    //
+    ///////Result:=
+    DMMainScaleCehForm.gpGet_ScaleCeh_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
 end;
 {------------------------------------------------------------------------}
-function gpInitialize_ParamsMovement: Boolean;
+{function gpInitialize_ParamsMovement: Boolean;
 begin
     Result:=false;
     //
     Create_ParamsMovement(ParamsMovement);
     //
-    gpInitialize_OperDate(ParamsMovement);
+    gpGet_Scale_OperDate(ParamsMovement);
     //
     Result:=DMMainScaleCehForm.gpGet_ScaleCeh_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
-end;
+end;}
 {------------------------------------------------------------------------}
 function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
 begin
@@ -126,12 +137,32 @@ begin
   Result:=true;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleCehForm.gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
+function TDMMainScaleCehForm.gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
     if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
     with spSelect do begin
-       StoredProcName:='gpUpdate_Scale_Movement_check';
+       StoredProcName:='gpGet_Scale_Movement_checkId';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       //try
+         Execute;
+         Result:=DataSet.FieldByName('isOk').asBoolean;
+         execParamsMovement.ParamByName('isMovementId_check').asBoolean:=DataSet.FieldByName('isOk').asBoolean
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(var execParamsMovement:TParams): Boolean;
+begin
+    Result:=false;
+    if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
+    with spSelect do begin
+       StoredProcName:='gpGet_ScaleCeh_Movement_checkPartion';
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inMovementId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
@@ -140,7 +171,7 @@ begin
          Result:=DataSet.FieldByName('isOk').asBoolean;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpUpdate_Scale_Movement_check');
+         ShowMessage('Ошибка получения - gpGet_ScaleCeh_Movement_checkPartion');
        end;}
     end;
 end;
@@ -166,11 +197,32 @@ begin
     Result:=true;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleCehForm.gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
+function TDMMainScaleCehForm.gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_MILinkObject';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, execParams.ParamByName('inMovementItemId').AsInteger);
+       Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
+       Params.AddParam('inObjectId', ftInteger, ptInput, execParams.ParamByName('inObjectId').AsInteger);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MILinkObject');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpInsert_MovementCeh_all(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
     with spSelect do begin
-       StoredProcName:='gpInsert_Scale_Movement_all';
+       StoredProcName:='gpInsert_ScaleCeh_Movement_all';
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
@@ -181,7 +233,7 @@ begin
          execParamsMovement.ParamByName('MovementId_begin').AsInteger:=DataSet.FieldByName('MovementId_begin').asInteger;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpInsert_Movement_all');
+         ShowMessage('Ошибка получения - gpInsert_ScaleCeh_Movement_all');
        end;}
     end;
     Result:=true;
@@ -255,18 +307,19 @@ begin
 
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleCehForm.gpUpdate_ScaleCeh_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
+function TDMMainScaleCehForm.gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
 begin
     Result:= false;
     //
     with spSelect do begin
-       StoredProcName:='gpUpdate_ScaleCeh_MI_Erased';
+       StoredProcName:='gpUpdate_Scale_MI_Erased';
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inMovementItemId', ftInteger, ptInput, MovementItemId);
        Params.AddParam('inIsErased', ftBoolean, ptInput, NewValue);
        //try
          Execute;
+         ParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpUpdate_ScaleCeh_MI_Erased');
@@ -422,7 +475,7 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function gpInitialize_OperDate(var execParams:TParams):TDateTime;
+function TDMMainScaleCehForm.gpGet_Scale_OperDate(var execParams:TParams):TDateTime;
 begin
     with  DMMainScaleCehForm.spSelect do
     begin
@@ -430,6 +483,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        //try
+         Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
          Execute;
          //

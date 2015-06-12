@@ -37,7 +37,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingPartner());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
 

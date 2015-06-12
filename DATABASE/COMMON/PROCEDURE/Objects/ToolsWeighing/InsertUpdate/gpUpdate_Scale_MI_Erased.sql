@@ -18,7 +18,6 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-
     -- устанавливаем новое значение
     IF inIsErased = TRUE
     THEN PERFORM lpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);

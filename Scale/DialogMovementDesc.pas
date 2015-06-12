@@ -80,7 +80,8 @@ begin
 
      isEditPartnerCodeExit:= FALSE;
 
-     if ParamsMovement_local.ParamByName('MovementId').AsInteger<>0
+     if   (ParamsMovement_local.ParamByName('MovementId').AsInteger <> 0)
+       and(ParamsMovement_local.ParamByName('isMovementId_check').asBoolean = FALSE)
      then begin
                MessagePanel.Font.Style:=[fsBold];
                MessagePanel.Caption:='Текущее взвешивание не закрыто.Будет создано <Новое> взвешивание.';
@@ -229,7 +230,8 @@ begin
           //
           //if ParamByName('MovementId').AsInteger<>0
           //then ShowMessage('После завершения <Нового> взвешивания возврат к текущему будет произведен автоматически.');
-          ParamByName('MovementId').AsInteger:=0;
+          if ParamsMovement_local.ParamByName('isMovementId_check').asBoolean = FALSE
+          then ParamByName('MovementId').AsInteger:=0; // т.е. будет Insert, иначе Update
           //
           ParamByName('ColorGridValue').AsInteger:=CDS.FieldByName('ColorGridValue').asInteger;
           ParamByName('MovementDescNumber').AsInteger:= CDS.FieldByName('Number').asInteger;

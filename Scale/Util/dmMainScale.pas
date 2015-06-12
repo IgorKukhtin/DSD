@@ -12,42 +12,46 @@ type
     procedure DataModuleCreate(Sender: TObject);
   private
   public
+    // Scale + ScaleCeh
     function gpSelect_ToolsWeighing_onLevelChild(inBranchCode:Integer;inLevelChild: String): TArrayList;
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
     function gpGet_Scale_User:String;
-
+    function gpGet_Scale_OperDate(var execParams:TParams):TDateTime;
+    // Scale + ScaleCeh
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
+    function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
+    // Scale + ScaleCeh
+    function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
+    function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
+    // Scale + ScaleCeh
+    function lpGet_BranchName(inBranchCode:Integer): String;
+    function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
+    // !!!Scale + ScaleCeh!!!
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
-    function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
+    // Scale
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Personal(var execParams:TParams;inPersonalCode:Integer): Boolean;
-
+    // !!!Scale + ScaleCeh!!!
+    function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
+    //
+    // +++Scale+++
     function gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
-
-    function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
+    // +++Scale+++
     function gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
     function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
-
+    function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
+    //
+    // Scale
     function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
 
-    function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
-
-    function gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
-
-    function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
-    function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
-    function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
-
-    function lpGet_BranchName(inBranchCode:Integer): String;
   end;
 
-  function gpInitialize_OperDate(var execParams:TParams):TDateTime;
-  function gpInitialize_Const: Boolean;
-  function gpInitialize_Ini: Boolean;
-  function gpInitialize_ParamsMovement: Boolean;
-  function gpInitialize_MovementDesc: Boolean;
+  function gpInitialize_Const: Boolean; // Scale + ScaleCeh
+  function gpInitialize_Ini: Boolean;   // Scale
+  function gpInitialize_MovementDesc: Boolean; // !!!Scale + ScaleCeh!!!
 
 var
   DMMainScaleForm: TDMMainScaleForm;
@@ -58,10 +62,16 @@ uses Inifiles,TypInfo,DialogMovementDesc,UtilConst;
 {------------------------------------------------------------------------}
 procedure TDMMainScaleForm.DataModuleCreate(Sender: TObject);
 begin
-  gpInitialize_ParamsMovement;
+    //gpInitialize_ParamsMovement;
+    //
+    Create_ParamsMovement(ParamsMovement);
+    //
+    gpGet_Scale_OperDate(ParamsMovement);
+    //
+    DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
 end;
 {------------------------------------------------------------------------}
-function gpInitialize_ParamsMovement: Boolean;
+{function gpInitialize_ParamsMovement: Boolean;
 begin
     Result:=false;
     //
@@ -70,7 +80,7 @@ begin
     gpInitialize_OperDate(ParamsMovement);
     //
     Result:=DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
-end;
+end;}
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
 begin
@@ -216,21 +226,22 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
+function TDMMainScaleForm.gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
     if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
     with spSelect do begin
-       StoredProcName:='gpUpdate_Scale_Movement_check';
+       StoredProcName:='gpGet_Scale_Movement_checkId';
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inMovementId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
        //try
          Execute;
          Result:=DataSet.FieldByName('isOk').asBoolean;
+         execParamsMovement.ParamByName('isMovementId_check').asBoolean:=DataSet.FieldByName('isOk').asBoolean
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpUpdate_Scale_Movement_check');
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
        end;}
     end;
 end;
@@ -851,7 +862,7 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function gpInitialize_OperDate(var execParams:TParams):TDateTime;
+function TDMMainScaleForm.gpGet_Scale_OperDate(var execParams:TParams):TDateTime;
 begin
     with DMMainScaleForm.spSelect do
     begin
@@ -859,6 +870,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        //try
+         Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
          Execute;
          //

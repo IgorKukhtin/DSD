@@ -112,14 +112,20 @@ BEGIN
           -- поиск существующего документа <Инвентаризация> по ВСЕМ параметрам
           vbMovementId_find:= (SELECT Movement.Id
                                 FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                                   ON MovementLinkObject_From_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To_find
+                                                                   ON MovementLinkObject_To_find.MovementId = inMovementId
+                                                                  AND MovementLinkObject_To_find.DescId = zc_MovementLinkObject_To()
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement.Id
                                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                  AND MovementLinkObject_From.ObjectId = inFromId
+                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From.ObjectId
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                  AND MovementLinkObject_To.ObjectId = inToId
+                                                                  AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
                                 WHERE Movement.DescId = zc_Movement_Inventory()
                                   AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()));
@@ -485,7 +491,7 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
-                                                        , inPartionGoodsDate    := NULL
+                                                        , inPartionGoodsDate    := tmp.PartionGoodsDate
                                                         , inCount               := tmp.CountPack
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inPartionGoods        := tmp.PartionGoods
@@ -505,6 +511,7 @@ BEGIN
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
                                                         , inCount               := tmp.Count
+                                                        , inPartionGoodsDate    := tmp.PartionGoodsDate
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inUserId              := vbUserId
@@ -517,7 +524,7 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
-                                                        , inPartionGoodsDate    := NULL
+                                                        , inPartionGoodsDate    := tmp.PartionGoodsDate
                                                         , inPrice               := NULL -- !!!не ошибка, здесь не формируется!!!
                                                         , inSumm                := NULL -- !!!не ошибка, здесь не формируется!!!
                                                         , inHeadCount           := tmp.HeadCount
@@ -535,6 +542,7 @@ BEGIN
                      , tmp.GoodsId
                      , tmp.GoodsKindId
                      , tmp.BoxId
+                     , tmp.PartionGoodsDate
                      , tmp.PartionGoods
                      , SUM (tmp.Amount)              AS Amount
                      , SUM (tmp.AmountChangePercent) AS AmountChangePercent
@@ -546,13 +554,14 @@ BEGIN
                      , SUM (tmp.Count)        AS Count
                      , SUM (tmp.CountPack)    AS CountPack
                      , SUM (tmp.HeadCount)    AS HeadCount
-                     , SUM (tmp.AmountPacker) AS AmountPacker
                      , SUM (tmp.LiveWeight)   AS LiveWeight
+                     , SUM (tmp.AmountPacker) AS AmountPacker
                      , tmp.UnitId_to
                 FROM (SELECT 0                                                   AS MovementItemId
                            , MovementItem.ObjectId                               AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                            , COALESCE (MILinkObject_Box.ObjectId, 0)             AS BoxId
+                           , MIDate_PartionGoods.ValueData                       AS PartionGoodsDate
                            , COALESCE (MIString_PartionGoods.ValueData, '')      AS PartionGoods
 
                            , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsUnitCheck = FALSE
@@ -596,6 +605,12 @@ BEGIN
 
                            , MovementItem.Amount                                 AS Amount_mi
                            , COALESCE (MLO_To.ObjectId, 0)                       AS UnitId_to
+                           , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
+                                       THEN 0 -- надо суммировать
+                                  WHEN vbMovementDescId IN (zc_Movement_Send()) AND inBranchCode = 201 -- если Обвалка
+                                       THEN MovementItem.Id -- пока не надо суммировать
+                                  ELSE 0 -- можно суммировать, даже для Обвалки
+                             END AS myId
                       FROM MovementItem
                            LEFT JOIN MovementLinkObject AS MLO_To
                                                         ON MLO_To.MovementId = MovementItem.MovementId
@@ -627,6 +642,9 @@ BEGIN
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
+                           LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                      ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                     AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                            LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -647,7 +665,8 @@ BEGIN
                            , MovementItem.ObjectId                               AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                            , COALESCE (MILinkObject_Box.ObjectId, 0)             AS BoxId
-                           , COALESCE (MIString_PartionGoods.ValueData, '')       AS PartionGoods
+                           , MIDate_PartionGoods.ValueData                       AS PartionGoodsDate
+                           , COALESCE (MIString_PartionGoods.ValueData, '')      AS PartionGoods
 
                            , MovementItem.Amount                                 AS Amount
                            , COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS AmountChangePercent
@@ -666,6 +685,7 @@ BEGIN
 
                            , 0                                                   AS Amount_mi
                            , COALESCE (MILinkObject_To.ObjectId, COALESCE (MLO_To.ObjectId, 0)) AS UnitId_to
+                           , 0                                                   AS myId
                       FROM MovementItem
                            LEFT JOIN MovementLinkObject AS MLO_To
                                                         ON MLO_To.MovementId = MovementItem.MovementId
@@ -710,6 +730,9 @@ BEGIN
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
+                           LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                      ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                     AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                            LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -729,11 +752,13 @@ BEGIN
                 GROUP BY tmp.GoodsId
                        , tmp.GoodsKindId
                        , tmp.BoxId
+                       , tmp.PartionGoodsDate
                        , tmp.PartionGoods
                        , tmp.ChangePercentAmount
                        , tmp.Price
                        , tmp.CountForPrice
                        , tmp.UnitId_to
+                       , tmp.myId -- если нет суммирования - каждое взвешивание в отдельной строчке
                 HAVING SUM (tmp.Amount_mi) <> 0
                ) AS tmp
           ) AS tmp;
@@ -839,10 +864,11 @@ BEGIN
      END IF;
 
 
-     -- финиш - сохранили <Документ> - <Взвешивание (контрагент)>
-     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, vbOperDate_scale, vbMovementId_begin, Movement.AccessKeyId)
+     -- финиш - сохранили <Документ> - <Взвешивание (контрагент)> - только дату + ParentId + AccessKeyId
+     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, vbOperDate_scale, vbMovementId_begin, Movement_begin.AccessKeyId)
      FROM Movement
-     WHERE Id = inMovementId ;
+          LEFT JOIN Movement AS Movement_begin ON Movement_begin.Id = vbMovementId_begin
+     WHERE Movement.Id = inMovementId ;
 
      -- сохранили свойство <Протокол взвешивания>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), inMovementId, CURRENT_TIMESTAMP);

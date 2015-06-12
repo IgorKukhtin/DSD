@@ -179,8 +179,8 @@
 				<Form>DMMainScaleCehForm</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\ScaleCeh\GuideMovement.pas">
-				<Form>GuideMovementForm</Form>
+			<DCCReference Include="..\ScaleCeh\GuideMovementCeh.pas">
+				<Form>GuideMovementCehForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\ScaleCeh\MainCeh.pas">
 				<Form>MainCehForm</Form>
@@ -191,6 +191,9 @@
 			<DCCReference Include="..\ScaleCeh\Util\dmMainScale.pas"/>
 			<DCCReference Include="..\Scale\GuidePartner.pas">
 				<Form>GuidePartnerForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\ScaleCeh\DialogMessage.pas">
+				<Form>DialogMessageForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

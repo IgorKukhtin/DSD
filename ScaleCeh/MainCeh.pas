@@ -124,7 +124,7 @@ type
     isErased: TcxGridDBColumn;
     Count: TcxGridDBColumn;
     bbChangeCount: TSpeedButton;
-    bbChangeHeadCount: TSpeedButton;
+    bbChangeLiveWeight: TSpeedButton;
     HeadCount: TcxGridDBColumn;
     ActionList: TActionList;
     actRefresh: TAction;
@@ -144,8 +144,8 @@ type
     LabelGoodsWeight: TLabel;
     PanelGoodsWeight: TPanel;
     rgGoodsKind: TRadioGroup;
-    PartionGoodsPanel: TPanel;
-    PartionGoodsLabel: TLabel;
+    PanelPartionGoods: TPanel;
+    LabelPartionGoods: TLabel;
     EditPartionGoods: TEdit;
     infoPanelCount: TPanel;
     LabelCount_all: TLabel;
@@ -209,6 +209,8 @@ type
     EditEnterCount: TcxCurrencyEdit;
     CountPack: TcxGridDBColumn;
     bbChangeCountPack: TSpeedButton;
+    bbChangeHeadCount: TSpeedButton;
+    bbChangeBoxCount: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -264,7 +266,10 @@ type
     procedure EditSkewer2Exit(Sender: TObject);
     procedure EditWeightOtherExit(Sender: TObject);
     procedure EditEnterCountExit(Sender: TObject);
+    procedure bbChangeLiveWeightClick(Sender: TObject);
   private
+    oldGoodsId:Integer;
+
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
     Scale_Zeus: TZeus;
@@ -296,12 +301,13 @@ var
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
-    ,GuideMovement, DialogNumberValue, DialogPrint;
+    ,GuideMovementCeh, DialogNumberValue, DialogPrint, DialogMessage;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.Initialize_afterSave_all;
 begin
+     oldGoodsId:=0;
      EditPartionGoods.Text:='';
      // EditBoxCode.Text:=GetArrayList_Value_byName(Default_Array,'BoxCode');
 end;
@@ -441,9 +447,10 @@ end;
 {------------------------------------------------------------------------------}
 procedure TMainCehForm.myActiveControl;
 begin
-     if PartionGoodsPanel.Visible
+     if PanelPartionGoods.Visible
      then ActiveControl:=EditGoodsCode
      else ActiveControl:=EditGoodsCode;
+     ActiveControl:=EditGoodsCode;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Save_Movement_all:Boolean;
@@ -451,15 +458,23 @@ var execParams:TParams;
 begin
      Result:=false;
      //
-     OperDateEdit.Text:=DateToStr(gpInitialize_OperDate(ParamsMovement));
-     //
+     OperDateEdit.Text:=DateToStr(DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement));
+     //Проверка
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then begin
          ShowMessage('Ошибка.Продукция не взвешена.');
          exit;
      end;
+     //Проверка - если есть несохраненный элемент, тогда формирование документа не произойдет
+     if ParamsMI.ParamByName('GoodsId').AsInteger <> 0 then
+     begin
+          ShowMessage('Сохраните элемент взвешивания нажатием клавиши <F4>.');
+          ActiveControl:=EditGoodsCode;
+          exit;
+     end;
      //
-     if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+     //if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+     if DialogMessageForm.Execute = FALSE
      then exit;
 
 
@@ -479,7 +494,7 @@ begin
      end;
 
      //!!!Сохранили документ!!!
-     if DMMainScaleCehForm.gpInsert_Movement_all(ParamsMovement) then
+     if DMMainScaleCehForm.gpInsert_MovementCeh_all(ParamsMovement) then
      begin
           //
           //Initialize or Empty
@@ -501,6 +516,13 @@ function TMainCehForm.Save_MI:Boolean;
 begin
      Result:=false;
      // проверка
+     if  (oldGoodsId=ParamsMI.ParamByName('GoodsId').AsInteger)
+      and(MessageDlg ('Повторно введен код.Продолжить?', mtConfirmation, mbYesNoCancel, 0) <> 6)
+      then begin
+           ActiveControl:=EditGoodsCode;
+           exit;
+     end;
+     // проверка
      if ParamsMI.ParamByName('GoodsId').AsInteger = 0 then
      begin ActiveControl:=EditGoodsCode;
            PanelMovementDesc.Font.Color:=clRed;
@@ -513,6 +535,19 @@ begin
            PanelMovementDesc.Font.Color:=clRed;
            PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть <= 0';
            exit;
+     end;
+     // проверка
+     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ProductionSeparate)
+        or (trim(EditPartionGoods.Text) <> '')
+     then begin
+               //если партия с ошибкой
+               if (Recalc_PartionGoods(EditPartionGoods) = FALSE) or (trim(EditPartionGoods.Text) = '') then
+               begin
+                    ActiveControl:=EditPartionGoods;
+                    PanelMovementDesc.Font.Color:=clRed;
+                    PanelMovementDesc.Caption:='Ошибка.Не определена <ПАРТИЯ СЫРЬЯ>';
+                    exit;
+               end;
      end;
      // доопределили параметр
      try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text)
@@ -542,6 +577,7 @@ begin
      //
      if Result then
      begin
+          oldGoodsId:=ParamsMI.ParamByName('GoodsId').AsInteger;
           Initialize_afterSave_MI;
           RefreshDataSet;
           WriteParamsMovement;
@@ -574,7 +610,7 @@ begin
      then if ParamsMovement.ParamByName('MovementDescId').AsInteger=0
           then ParamsMovement.ParamByName('MovementDescNumber').AsInteger:=StrToInt(GetArrayList_Value_byName(Default_Array,'MovementNumber'))
           else
-     else if (DMMainScaleCehForm.gpUpdate_Scale_Movement_check(ParamsMovement)=false)
+     else if (DMMainScaleCehForm.gpGet_Scale_Movement_checkId(ParamsMovement)=false)
           then begin
                //ShowMessage ('Ошибка.'+#10+#13+'Документ взвешивания № <'+ParamsMovement.ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamsMovement.ParamByName('OperDate_Movement').AsDateTime)+'> не закрыт.'+#10+#13+'Изменение параметров не возможно.');
                //Result:=false;
@@ -694,20 +730,52 @@ begin
      RefreshDataSet;
 end;
 {------------------------------------------------------------------------}
+procedure TMainCehForm.bbChangeLiveWeightClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIFloat_LiveWeight');
+
+     with DialogNumberValueForm do
+     begin
+          NumberValueLabel.Caption:='Живой вес';
+          ActiveControl:=NumberValueEdit;
+          NumberValueEdit.Text:=CDS.FieldByName('LiveWeight').AsString;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          DMMainScaleCehForm.gpUpdate_Scale_MIFloat(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
 procedure TMainCehForm.bbChoice_UnComleteClick(Sender: TObject);
 begin
-     if GuideMovementForm.Execute(ParamsMovement,TRUE)//isChoice=TRUE
+     if GuideMovementCehForm.Execute(ParamsMovement,TRUE)//isChoice=TRUE
      then begin
                WriteParamsMovement;
                RefreshDataSet;
                CDS.First;
+               oldGoodsId:=0;
           end;
      myActiveControl;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.bbView_allClick(Sender: TObject);
 begin
-     GuideMovementForm.Execute(ParamsMovement,FALSE);//isChoice=FALSE
+     GuideMovementCehForm.Execute(ParamsMovement,FALSE);//isChoice=FALSE
      myActiveControl;
 end;
 {------------------------------------------------------------------------}
@@ -759,7 +827,7 @@ end;
 procedure TMainCehForm.EditGoodsCodeExit(Sender: TObject);
 var GoodsCode_int:Integer;
 begin
-     if ParamsMovement.ParamByName('MovementDescId').asInteger=0
+     if (ParamsMovement.ParamByName('MovementDescId').asInteger = 0)and(ActiveControl.ClassName <> 'TcxGridSite')
      then if GetParams_MovementDesc('') = false
           then begin
                     ActiveControl:=EditGoodsCode;
@@ -909,7 +977,7 @@ begin
      if Key = 13 then
      begin
           if PanelGoodsKind.Visible then ActiveControl:=EditGoodsKindCode
-          else if PartionGoodsPanel.Visible then ActiveControl:=EditPartionGoods
+          else if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
                else ActiveControl:=EditCount;
      end;
 end;
@@ -918,7 +986,7 @@ procedure TMainCehForm.EditGoodsKindCodeKeyDown(Sender: TObject; var Key: Word;S
 begin
      if Key = 13 then
      begin
-          if PartionGoodsPanel.Visible then ActiveControl:=EditPartionGoods
+          if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
           else ActiveControl:=EditCount;
      end;
 end;
@@ -978,7 +1046,7 @@ begin
      if Key = 13 then
      begin
           if PanelGoodsKind.Visible then ActiveControl:=EditGoodsKindCode
-          else if PartionGoodsPanel.Visible then ActiveControl:=EditPartionGoods
+          else if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
                else ActiveControl:=EditCount;
      end;
 end;
@@ -1144,7 +1212,7 @@ begin
   if SettingMain.isWorkProgress = TRUE
   then begin
             //Only производство/упаковка
-            PartionGoodsPanel.Visible:= false;
+            PanelPartionGoods.Visible:= false;
             LabelCount_all.Caption:='Ввод кол-во шт.';
             LabelCount.Caption:='Батоны';
             LabelCountPack.Caption:='Пакеты';
@@ -1152,7 +1220,7 @@ begin
   end
   else begin
             //Only обвалка
-            PartionGoodsPanel.Visible:= true;
+            PanelPartionGoods.Visible:= true;
             LabelCount_all.Caption:='Ввод кол-во';
             LabelCount.Caption:='Штуки';
             LabelCountPack.Caption:='Живой вес';
@@ -1164,7 +1232,7 @@ begin
   LabelSkewer2.Caption:='Кол-во по '+FloatToStr(SettingMain.WeightSkewer2)+' кг';
 
 
-  bbChangeHeadCount.Visible:=PartionGoodsPanel.Visible;
+  bbChangeHeadCount.Visible:=PanelPartionGoods.Visible;
   bbChangeCount.Visible:=not bbChangeHeadCount.Visible;
   bbChangeCountPack.Visible:=not bbChangeHeadCount.Visible;
   //local enabled
@@ -1381,7 +1449,7 @@ begin
                 ,mtConfirmation,mbYesNoCancel,0) <> 6
          then exit
          else begin
-                   DMMainScaleCehForm.gpUpdate_ScaleCeh_MI_Erased(CDS.FieldByName('MovementItemId').AsInteger,true);
+                   DMMainScaleCehForm.gpUpdate_Scale_MI_Erased(CDS.FieldByName('MovementItemId').AsInteger,true);
                    RefreshDataSet;
                    WriteParamsMovement;
               end
@@ -1390,7 +1458,7 @@ begin
                 ,mtConfirmation,mbYesNoCancel,0) <> 6
          then exit
          else begin
-                   DMMainScaleCehForm.gpUpdate_ScaleCeh_MI_Erased(CDS.FieldByName('MovementItemId').AsInteger,false);
+                   DMMainScaleCehForm.gpUpdate_Scale_MI_Erased(CDS.FieldByName('MovementItemId').AsInteger,false);
                    RefreshDataSet;
                    WriteParamsMovement;
               end

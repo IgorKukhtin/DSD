@@ -31,6 +31,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingPartner());
@@ -38,6 +39,9 @@ BEGIN
 
      -- проверка - связанные документы Изменять нельзя
      -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -92,7 +96,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$

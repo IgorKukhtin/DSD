@@ -13,6 +13,7 @@ RETURNS TABLE (MovementId       Integer
              , InvNumber        TVarChar
              , OperDate         TDateTime
 
+             , isProductionIn     Boolean
              , MovementDescNumber Integer
 
              , MovementDescId Integer
@@ -90,6 +91,7 @@ BEGIN
             , tmpMovement.InvNumber                          AS InvNumber
             , tmpMovement.OperDate                           AS OperDate
 
+            , MovementBoolean_isIncome.ValueData             AS isProductionIn
             , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
 
             , tmpMovement.MovementDescId :: Integer          AS MovementDescId
@@ -103,6 +105,9 @@ BEGIN
        FROM tmpMovement
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
+            LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
+                                      ON MovementBoolean_isIncome.MovementId =  tmpMovement.Id
+                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
                                     ON MovementFloat_MovementDescNumber.MovementId =  tmpMovement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()

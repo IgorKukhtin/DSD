@@ -262,7 +262,7 @@ var execParams:TParams;
 begin
      Result:=false;
      //
-     OperDateEdit.Text:=DateToStr(gpInitialize_OperDate(ParamsMovement));
+     OperDateEdit.Text:=DateToStr(DMMainScaleForm.gpGet_Scale_OperDate(ParamsMovement));
      //
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then begin
@@ -419,7 +419,7 @@ begin
      then if ParamsMovement.ParamByName('MovementDescId').AsInteger=0
           then ParamsMovement.ParamByName('MovementDescNumber').AsInteger:=StrToInt(GetArrayList_Value_byName(Default_Array,'MovementNumber'))
           else
-     else if (DMMainScaleForm.gpUpdate_Scale_Movement_check(ParamsMovement)=false)
+     else if (DMMainScaleForm.gpGet_Scale_Movement_checkId(ParamsMovement)=false)
           then begin
                //ShowMessage ('Ошибка.'+#10+#13+'Документ взвешивания № <'+ParamsMovement.ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamsMovement.ParamByName('OperDate_Movement').AsDateTime)+'> не закрыт.'+#10+#13+'Изменение параметров не возможно.');
                //Result:=false;

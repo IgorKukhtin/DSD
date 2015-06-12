@@ -12,6 +12,7 @@ object MainForm: TMainForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
@@ -36,7 +37,7 @@ object MainForm: TMainForm
       TabOrder = 0
       object bbDeleteItem: TSpeedButton
         Left = 193
-        Top = 5
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1091#1076#1072#1083#1080#1090#1100'/'#1074#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -86,7 +87,7 @@ object MainForm: TMainForm
       end
       object bbExit: TSpeedButton
         Left = 489
-        Top = 3
+        Top = 4
         Width = 31
         Height = 29
         Action = actExit
@@ -104,7 +105,7 @@ object MainForm: TMainForm
       end
       object bbRefresh: TSpeedButton
         Left = 370
-        Top = 3
+        Top = 4
         Width = 31
         Height = 29
         Action = actRefresh
@@ -122,7 +123,7 @@ object MainForm: TMainForm
       end
       object bbRefreshZakaz: TSpeedButton
         Left = 599
-        Top = 3
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
@@ -141,7 +142,7 @@ object MainForm: TMainForm
       end
       object bbChangeNumberTare: TSpeedButton
         Left = 105
-        Top = 5
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1071#1097#1080#1082#1072'>'
@@ -160,7 +161,7 @@ object MainForm: TMainForm
       end
       object bbChangeLevelNumber: TSpeedButton
         Left = 136
-        Top = 5
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1064#1072#1088'>'
@@ -179,7 +180,7 @@ object MainForm: TMainForm
       end
       object bbExportToEDI: TSpeedButton
         Left = 658
-        Top = 3
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' EDI'
@@ -198,10 +199,38 @@ object MainForm: TMainForm
       end
       object bbChoice_UnComlete: TSpeedButton
         Left = 249
-        Top = 5
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1042#1077#1088#1085#1091#1090#1100#1089#1103' '#1082' '#1085#1077' '#1079#1072#1082#1088#1099#1090#1086#1084#1091' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102
+        Glyph.Data = {
+          06020000424D0602000000000000760000002800000019000000190000000100
+          0400000000009001000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888888888888000000088888888888888888888888880000000888888888888
+          8888888888888000000088888888888888888888888880000000888888888887
+          7777788888888000000088888888800000377788888880000000888888880EEE
+          E0307778888880000000888888880EEEE030777888888000000088888880EEEE
+          0333077888888000000088888880EEEE03330778888880000000888888800000
+          0333077888888000000088888888887033330778888880000000888888888000
+          33330778888880000000888888880EE03333077888888000000088888880EEEE
+          033307788888800000008888880EEEEEE0330778888880000000888880EEEEEE
+          EE03077888888000000088888000EEEE0003077888888000000088888880EEEE
+          03330788888880000000888888880EEEE0307888888880000000888888880EEE
+          E030888888888000000088888888800000388888888880000000888888888888
+          8888888888888000000088888888888888888888888880000000888888888888
+          88888888888880000000}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChoice_UnComleteClick
+      end
+      object bbView_all: TSpeedButton
+        Left = 286
+        Top = 4
+        Width = 31
+        Height = 29
+        Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1042#1057#1045#1061'> '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
         Glyph.Data = {
           06020000424D0602000000000000760000002800000019000000190000000100
           0400000000009001000000000000000000001000000000000000000000000000
@@ -222,30 +251,11 @@ object MainForm: TMainForm
           77777777777770000000}
         ParentShowHint = False
         ShowHint = True
-        OnClick = bbChoice_UnComleteClick
-      end
-      object bbView_all: TSpeedButton
-        Left = 286
-        Top = 3
-        Width = 31
-        Height = 29
-        Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1042#1057#1045#1061'> '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00777777777777
-          777777777707C077777777770777CCC0777777077777CCCCC0777777FC77CCCC
-          CC07777FCC777FCCCC07777CC0CCC77FCC0777FCCCC777777F077777CCC07777
-          FC77777777CC0CFC777777777777777777777777777777777777777777777777
-          7777777777777777777777777777777777777777777777777777}
-        ParentShowHint = False
-        ShowHint = True
         OnClick = bbView_allClick
       end
       object bbChangeCountPack: TSpeedButton
         Left = 37
-        Top = 5
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1072#1082#1077#1090#1086#1074'>'
@@ -264,7 +274,7 @@ object MainForm: TMainForm
       end
       object bbChangeHeadCount: TSpeedButton
         Left = 5
-        Top = 5
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074'>'

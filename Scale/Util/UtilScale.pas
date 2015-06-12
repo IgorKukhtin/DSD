@@ -203,7 +203,8 @@ begin
 
      ParamAdd(Params,'MovementDescName_master',ftString);
 
-     ParamAdd(Params,'isComlete',ftString);//локальный параметр
+     ParamAdd(Params,'isComlete',ftBoolean);//локальный параметр, режим просмотра накладных
+     ParamAdd(Params,'isMovementId_check',ftBoolean);//локальный параметр, Insert или Update в TDialogMovementDescForm
 
      ParamAdd(Params,'TotalSumm',ftFloat);
 
@@ -459,14 +460,17 @@ begin
    with execParams do
     for i:=0 to Count-1 do
     begin
-         if execParams[i].DataType=ftInteger
-         then execParams.ParamByName(Items[i].Name).AsInteger:=0
+         if execParams[i].DataType=ftBoolean
+         then execParams.ParamByName(Items[i].Name).AsBoolean:=false
          else
-             if execParams[i].DataType=ftFloat
-             then execParams.ParamByName(Items[i].Name).AsFloat:=0
+             if execParams[i].DataType=ftInteger
+             then execParams.ParamByName(Items[i].Name).AsInteger:=0
              else
-                if (execParams[i].DataType<>ftDate) and (execParams[i].DataType<>ftDateTime)
-                then execParams.ParamByName(Items[i].Name).AsString:='';
+                 if execParams[i].DataType=ftFloat
+                 then execParams.ParamByName(Items[i].Name).AsFloat:=0
+                 else
+                    if (execParams[i].DataType<>ftDate) and (execParams[i].DataType<>ftDateTime)
+                    then execParams.ParamByName(Items[i].Name).AsString:='';
     end;
 end;
 {------------------------------------------------------------------------------}

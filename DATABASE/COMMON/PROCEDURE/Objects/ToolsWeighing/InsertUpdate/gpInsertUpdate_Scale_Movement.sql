@@ -38,10 +38,10 @@ BEGIN
                                                    , inInvNumberOrder      := CASE WHEN inMovementId_Order <> 0 THEN (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Order) ELSE '' END
                                                    , inMovementDescId      := inMovementDescId
                                                    , inMovementDescNumber  := inMovementDescNumber
-                                                   , inWeighingNumber      := CASE WHEN inMovementDescId <> zc_Movement_Sale()
-                                                                                        THEN 0
-                                                                                   WHEN inId <> 0
+                                                   , inWeighingNumber      := CASE WHEN inId <> 0
                                                                                         THEN (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inId AND MovementFloat.DescId = zc_MovementFloat_WeighingNumber())
+                                                                                   WHEN inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_Inventory())
+                                                                                        THEN 1
                                                                                    ELSE 1 + COALESCE ((SELECT MAX (COALESCE (MovementFloat_WeighingNumber.ValueData, 0))
                                                                                                        FROM Movement
                                                                                                             INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -52,6 +52,10 @@ BEGIN
                                                                                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                                                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                                                                                          AND MovementLinkObject_To.ObjectId = inToId
+                                                                                                            INNER JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                                                                                                     ON MovementFloat_MovementDesc.MovementId = Movement.Id
+                                                                                                                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
+                                                                                                                                    AND MovementFloat_MovementDesc.ValueData = inMovementDescId
                                                                                                             INNER JOIN MovementFloat AS MovementFloat_WeighingNumber
                                                                                                                                      ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                                                                                                                     AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()

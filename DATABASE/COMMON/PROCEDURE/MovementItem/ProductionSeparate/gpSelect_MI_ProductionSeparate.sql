@@ -1,13 +1,14 @@
 -- Function: gpSelect_MI_ProductionSeparate()
 
 --DROP FUNCTION gpSelect_MI_ProductionSeparate();
+DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate_Master (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionSeparate(
     IN inMovementId          Integer,
     IN inShowAll             Boolean,
-    IN inisErased            Boolean      , --
+    IN inIsErased            Boolean      , --
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor AS
@@ -29,6 +30,7 @@ BEGIN
            , Object_Measure.ValueData                    AS MeasureName
 
            , CAST (NULL AS TFloat)                  AS Amount
+           , CAST (NULL AS TFloat)                  AS LiveWeight
            , CAST (NULL AS TFloat)                  AS HeadCount
            , FALSE                                  AS isErased
 
@@ -68,6 +70,7 @@ BEGIN
            , Object_Measure.ValueData                    AS MeasureName
 
            , MovementItem.Amount                    AS Amount
+           , MIFloat_LiveWeight.ValueData           AS LiveWeight
            , MIFloat_HeadCount.ValueData            AS HeadCount
            , MovementItem.isErased                  AS isErased
 
@@ -77,6 +80,9 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
+            LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                        ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                       AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -98,15 +104,16 @@ BEGIN
        SELECT
              MovementItem.Id					AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
-           , Object_Goods.Id          			AS GoodsId
-           , Object_Goods.ObjectCode  			AS GoodsCode
-           , Object_Goods.ValueData   			AS GoodsName
+           , Object_Goods.Id          			 AS GoodsId
+           , Object_Goods.ObjectCode  			 AS GoodsCode
+           , Object_Goods.ValueData   			 AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
            , MovementItem.Amount			 AS Amount
-           , MIFloat_HeadCount.ValueData 		AS HeadCount
-           , MovementItem.isErased              AS isErased
+           , MIFloat_LiveWeight.ValueData                AS LiveWeight
+           , MIFloat_HeadCount.ValueData 		 AS HeadCount
+           , MovementItem.isErased                       AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -114,6 +121,9 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
+            LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                        ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                       AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -135,18 +145,19 @@ BEGIN
     OPEN Cursor2 FOR
 
        SELECT
-             MovementItem.Id					AS Id
+             MovementItem.Id			         AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
-           , MovementItem.ParentId              AS ParentId
-           , Object_Goods.Id          			AS GoodsId
-           , Object_Goods.ObjectCode  			AS GoodsCode
-           , Object_Goods.ValueData   			AS GoodsName
+           , MovementItem.ParentId                       AS ParentId
+           , Object_Goods.Id          			 AS GoodsId
+           , Object_Goods.ObjectCode  			 AS GoodsCode
+           , Object_Goods.ValueData   			 AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
-           , MovementItem.Amount			AS Amount
-           , MIFloat_HeadCount.ValueData 		AS HeadCount
-           , MovementItem.isErased              AS isErased
+           , MovementItem.Amount			 AS Amount
+           , MIFloat_LiveWeight.ValueData                AS LiveWeight
+           , MIFloat_HeadCount.ValueData 		 AS HeadCount
+           , MovementItem.isErased                       AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -154,6 +165,9 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
+            LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                        ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                       AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -187,4 +201,4 @@ ALTER FUNCTION gpSelect_MI_ProductionSeparate (Integer, Boolean, Boolean, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_ProductionSeparate (inMovementId:= 1, inShowAll:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_ProductionSeparate (inMovementId:= 1, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '2')

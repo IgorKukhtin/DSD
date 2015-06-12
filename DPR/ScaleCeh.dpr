@@ -68,11 +68,12 @@ uses
   DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm},
   AxLibLib_TLB in '..\Scale\Util\AxLibLib_TLB.pas',
   dmMainScaleCeh in '..\ScaleCeh\Util\dmMainScaleCeh.pas' {DMMainScaleCehForm: TDataModule},
-  GuideMovement in '..\ScaleCeh\GuideMovement.pas' {GuideMovementForm},
+  GuideMovementCeh in '..\ScaleCeh\GuideMovementCeh.pas' {GuideMovementCehForm},
   MainCeh in '..\ScaleCeh\MainCeh.pas' {MainCehForm},
   DialogMovementDesc in '..\Scale\DialogMovementDesc.pas' {DialogMovementDescForm},
   dmMainScale in '..\ScaleCeh\Util\dmMainScale.pas',
-  GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm};
+  GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm},
+  DialogMessage in '..\ScaleCeh\DialogMessage.pas' {DialogMessageForm};
 
 {$R *.res}
 
@@ -94,9 +95,10 @@ begin
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
-         Application.CreateForm(TGuideMovementForm, GuideMovementForm);
+         Application.CreateForm(TGuideMovementCehForm, GuideMovementCehForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
+         Application.CreateForm(TDialogMessageForm, DialogMessageForm);
   end
   else
 
@@ -114,10 +116,10 @@ begin
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
-         Application.CreateForm(TGuideMovementForm, GuideMovementForm);
+         Application.CreateForm(TGuideMovementCehForm, GuideMovementCehForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
-
+         Application.CreateForm(TDialogMessageForm, DialogMessageForm);
   end;
   //
   Application.Run;

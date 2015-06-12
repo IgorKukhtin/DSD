@@ -7,12 +7,14 @@ uses
 type
   TDMMainScaleForm = class(TDataModule)
   public
+    // !!!Scale + ScaleCeh!!!
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
     function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
   end;
 
+  // !!!Scale + ScaleCeh!!!
   function gpInitialize_MovementDesc: Boolean;
 
 var

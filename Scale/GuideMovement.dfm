@@ -528,22 +528,22 @@ object GuideMovementForm: TGuideMovementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    object gbPartnerCode: TGroupBox
+    object gbInvNumber_parent: TGroupBox
       Left = 280
       Top = 0
       Width = 137
       Height = 41
       Align = alLeft
-      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #8470' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
       TabOrder = 0
-      object EditInvNumber: TEdit
+      object EditInvNumber_parent: TEdit
         Left = 5
         Top = 17
         Width = 125
         Height = 22
         TabOrder = 0
-        Text = 'EditInvNumber'
-        OnChange = EditInvNumberChange
+        Text = 'EditInvNumber_parent'
+        OnChange = EditInvNumber_parentChange
       end
     end
     object GroupBox1: TGroupBox
