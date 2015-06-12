@@ -588,6 +588,7 @@ object IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end
       item
@@ -717,6 +718,7 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbPrint'
         end
@@ -1971,6 +1973,7 @@ object IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
