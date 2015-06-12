@@ -2,8 +2,8 @@ inherited LossJournalForm: TLossJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 569
+  ExplicitWidth = 1036
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -397,7 +397,7 @@ inherited LossJournalForm: TLossJournalForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 708
+    Left = 700
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc

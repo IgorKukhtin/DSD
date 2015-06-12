@@ -75,8 +75,8 @@ type
     edCurrencyValue: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    actPrint1: TdsdPrintAction;
   private
     { Private declarations }
   public

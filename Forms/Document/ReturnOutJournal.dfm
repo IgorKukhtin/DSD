@@ -2,8 +2,8 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1118
-  ExplicitHeight = 569
+  ExplicitWidth = 1126
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -310,7 +310,8 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 431
+    Top = 202
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TReturnOutForm'
       FormNameParam.Name = 'TReturnOutForm'
@@ -320,6 +321,50 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       FormName = 'TReturnOutForm'
       FormNameParam.Name = 'TReturnOutForm'
       FormNameParam.Value = 'TReturnOutForm'
+    end
+    object actPrint: TdsdPrintAction [15]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_ReturnOut'
+      ReportNameParam.Value = 'PrintMovement_ReturnOut'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
     end
   end
   inherited MasterDS: TDataSource
@@ -360,7 +405,8 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Top = 155
+    Left = 112
+    Top = 147
   end
   inherited BarManager: TdxBarManager
     Left = 168
@@ -370,6 +416,87 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -438,5 +565,44 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       end>
     Left = 208
     Top = 376
+  end
+  inherited FormParams: TdsdFormParams
+    Left = 312
+    Top = 304
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 532
+    Top = 209
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 532
+    Top = 262
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnOut_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 264
   end
 end
