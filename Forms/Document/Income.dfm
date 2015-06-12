@@ -588,7 +588,6 @@ object IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'Id'
-        Value = Null
         ParamType = ptInputOutput
       end
       item
@@ -1972,7 +1971,6 @@ object IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'inMovementId'
-        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
