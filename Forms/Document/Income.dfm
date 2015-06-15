@@ -698,6 +698,7 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -718,7 +719,6 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbPrint'
         end

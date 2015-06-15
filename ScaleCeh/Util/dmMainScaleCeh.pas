@@ -559,7 +559,9 @@ begin
        Params.Clear;
        Params.AddParam('inSqlText', ftString, ptInput, 'SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE((SELECT Object_Branch.Id FROM Object AS Object_Branch WHERE Object_Branch.ObjectCode = '+ IntToStr(inBranchCode) + ' AND Object_Branch.DescId = zc_Object_Branch()), zc_Branch_Basis())' );
        Execute;
-       Result:=DataSet.FieldByName('Value').asString;
+       if inBranchCode > 100
+       then Result:='('+IntToStr(inBranchCode)+')'+DataSet.FieldByName('Value').asString
+       else Result:='('+IntToStr(inBranchCode)+')'+DataSet.FieldByName('Value').asString;
     end;
 end;
 {------------------------------------------------------------------------}
@@ -691,24 +693,26 @@ begin
   //!!!отладака при запуске!!!
   gc_isDebugMode:=AnsiUpperCase(Ini.ReadString('Main','isDebugMode','FALSE')) = AnsiUpperCase('TRUE');
 
-  SettingMain.BranchCode:=Ini.ReadInteger('Main','BrancCode',1);
-  if SettingMain.BranchCode=1 then Ini.WriteInteger('Main','BrancCode',1);
   //!!!временно!!!
-  Ini.WriteInteger('Main','BranchCode',SettingMain.BranchCode);
+  SettingMain.BranchCode:=Ini.ReadInteger('Main','BrancCode',1);
+  if SettingMain.BranchCode<>1 then Ini.WriteInteger('Main','BranchCode',SettingMain.BranchCode);
+  //
+  SettingMain.BranchCode:=Ini.ReadInteger('Main','BranchCode',1);
+  if SettingMain.BranchCode=1 then Ini.WriteInteger('Main','BranchCode',1);
 
-  SettingMain.DefaultCOMPort:=Ini.ReadInteger('Main','DefaultCOMPort',1);
-  if SettingMain.DefaultCOMPort=1 then Ini.WriteInteger('Main','DefaultCOMPort',1);
+  SettingMain.DefaultCOMPort:=Ini.ReadInteger('Main','DefaultCehCOMPort',1);
+  if SettingMain.DefaultCOMPort=1 then Ini.WriteInteger('Main','DefaultCehCOMPort',1);
 
-  SettingMain.ScaleCount:=Ini.ReadInteger('Main','ScaleCount',2);
-  if SettingMain.ScaleCount=2 then Ini.WriteInteger('Main','ScaleCount',2);
+  SettingMain.ScaleCount:=Ini.ReadInteger('Main','ScaleCehCount',1);
+  if SettingMain.ScaleCount=1 then Ini.WriteInteger('Main','ScaleCehCount',1);
 
   ScaleList:=TStringList.Create;
-  Ini.ReadSectionValues('Type_CommPort_Name',ScaleList);
+  Ini.ReadSectionValues('TypeCeh_CommPort_Name',ScaleList);
   if ScaleList.Count=0 then
   begin
        for i:=1 to SettingMain.ScaleCount do
-          Ini.WriteString('Type_CommPort_Name','Item'+IntToStr(i-1),' stDB : '  + IntToStr(i) + ' : ' + 'DB');
-       Ini.ReadSectionValues('Type_CommPort_Name',ScaleList);
+          Ini.WriteString('TypeCeh_CommPort_Name','Item'+IntToStr(i-1),' stDB : '  + IntToStr(i) + ' : ' + 'DB');
+       Ini.ReadSectionValues('TypeCeh_CommPort_Name',ScaleList);
   end;
 
   SetLength(Scale_Array,SettingMain.ScaleCount);

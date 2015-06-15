@@ -975,7 +975,10 @@ begin
     else rgScale.Items.Add(Scale_Array[i].ScaleName+' : COM?');
     if Scale_Array[i].COMPort=SettingMain.DefaultCOMPort then number:=i;
   end;
-  rgScale.ItemIndex:=number;
+  //
+  if rgScale.Items.Count = 1
+  then rgScale.ItemIndex:=0
+  else rgScale.ItemIndex:=number;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_Scale;
@@ -1073,9 +1076,9 @@ begin
      //
 //*****
      if (System.Pos('ves=',ParamStr(1))>0)and(Result=0)
-     then Result:=myStrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-5));
+     then Result:=myStrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-4));
      if (System.Pos('ves=',ParamStr(2))>0)and(Result=0)
-     then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-5));
+     then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-4));
 //*****
      PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;

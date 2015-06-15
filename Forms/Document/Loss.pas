@@ -29,7 +29,7 @@ type
     colPartionGoods: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrint_Loss: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;

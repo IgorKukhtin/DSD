@@ -7,16 +7,16 @@ CREATE OR REPLACE FUNCTION gpSelect_ScaleCeh_MI(
     IN inMovementId  Integer   , -- ключ Документа
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
+RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureId Integer, MeasureName TVarChar
              , GoodsKindName TVarChar
              , isStartWeighing Boolean
              , Amount TFloat, AmountWeight TFloat
              , RealWeight TFloat, RealWeightWeight TFloat
              , WeightTare TFloat
              , WeightOther TFloat
-             , CountSkewer1_k TFloat, WeightSkewer1_k TFloat, TotalWeightSkewer1_k TFloat
-             , CountSkewer1 TFloat, WeightSkewer1 TFloat, TotalWeightSkewer1 TFloat
-             , CountSkewer2 TFloat, WeightSkewer2 TFloat, TotalWeightSkewer2 TFloat
+             , CountSkewer1_k TFloat, CountSkewer1 TFloat, CountSkewer2 TFloat
+             , WeightSkewer1_k TFloat, WeightSkewer1 TFloat, WeightSkewer2 TFloat
+             , TotalWeightSkewer1_k TFloat, TotalWeightSkewer1 TFloat, TotalWeightSkewer2 TFloat
              , Count TFloat, CountPack TFloat, HeadCount TFloat, LiveWeight TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -34,6 +34,7 @@ BEGIN
            , Object_Goods.Id                  AS GoodsId
            , Object_Goods.ObjectCode          AS GoodsCode
            , Object_Goods.ValueData           AS GoodsName
+           , Object_Measure.Id                AS MeasureId
            , Object_Measure.ValueData         AS MeasureName
            , Object_GoodsKind.ValueData       AS GoodsKindName
 

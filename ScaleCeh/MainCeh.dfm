@@ -1619,7 +1619,12 @@ object MainCehForm: TMainCehForm
         Height = 116
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
-        Columns = 2
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clNavy
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
         OnClick = rgGoodsKindClick
       end
@@ -1654,6 +1659,7 @@ object MainCehForm: TMainCehForm
         Height = 22
         TabOrder = 0
         Text = 'EditPartionGoods'
+        OnEnter = EditPartionGoodsEnter
         OnExit = EditPartionGoodsExit
         OnKeyDown = EditPartionGoodsKeyDown
       end

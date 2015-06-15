@@ -99,6 +99,7 @@ begin
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
+         MainCehForm.InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);//!!!после TDialogMovementDescForm, т.к. там GoodsKindWeighingGroupId!!!!
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementCehForm, GuideMovementCehForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
@@ -124,6 +125,7 @@ begin
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
+         MainCehForm.InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);//!!!после TDialogMovementDescForm, т.к. там GoodsKindWeighingGroupId!!!!
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementCehForm, GuideMovementCehForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);

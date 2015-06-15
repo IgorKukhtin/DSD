@@ -655,7 +655,7 @@ end;
 {------------------------------------------------------------------------------}
 function gpCheck_BranchCode: Boolean;
 begin
-    Result:=((SettingMain.isCeh = FALSE) and (SettingMain.BranchCode < 100))
+    Result:=((SettingMain.isCeh = FALSE) and ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode < 100)))
           or((SettingMain.isCeh = TRUE) and ((SettingMain.BranchCode = 1) or (SettingMain.BranchCode > 100)));
     //
     if not Result
