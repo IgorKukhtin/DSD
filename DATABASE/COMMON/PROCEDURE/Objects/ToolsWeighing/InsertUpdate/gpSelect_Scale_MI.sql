@@ -34,7 +34,7 @@ BEGIN
            , Object_Measure.ValueData         AS MeasureName
 
            , tmpMI.Amount :: TFloat           AS Amount
-           , (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS RealWeightWeight
+           , (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountWeight
 
            , tmpMI.AmountPartner :: TFloat    AS AmountPartner
            , (tmpMI.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountPartnerWeight
@@ -45,7 +45,7 @@ BEGIN
            , tmpMI.WeightTare  :: TFloat      AS WeightTare
            , (tmpMI.WeightTare * tmpMI.CountTare) :: TFloat AS WeightTareTotal
 
-           , tmpMI.Count       :: TFloat AS Count
+           , tmpMI.CountPack   :: TFloat AS Count
            , tmpMI.HeadCount   :: TFloat AS HeadCount
            , tmpMI.BoxCount    :: TFloat AS BoxCount
 
@@ -79,7 +79,7 @@ BEGIN
                   , COALESCE (MIFloat_CountTare.ValueData, 0)           AS CountTare
                   , COALESCE (MIFloat_WeightTare.ValueData, 0)          AS WeightTare
 
-                  , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
+                  , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
                   , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                   , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
 
@@ -134,9 +134,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
                                               ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
                                              AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
-                  LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                              ON MIFloat_Count.MovementItemId = MovementItem.Id
-                                             AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                             AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()

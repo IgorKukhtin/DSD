@@ -3385,6 +3385,7 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inIsTaxSummary',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
@@ -3720,6 +3721,7 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inIsTaxSummary',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
@@ -11302,6 +11304,7 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inIsTaxSummary',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
@@ -11573,6 +11576,7 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inIsTaxSummary',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
@@ -11997,7 +12001,7 @@ begin
              //!!!если надо обработать только ошибки!!!
              if (cbDocERROR.Checked)and(FieldByName('Id_Postgres').AsInteger>0) then
              begin
-                  //—начала находим статус документе, если он проведене или удален - ничего не делаем
+                  //—начала находим статус документе, если он проведен или удален - ничего не делаем
                   fOpenSqToQuery ('select StatusId, zc_Enum_Status_UnComplete() as zc_Enum_Status_UnComplete from Movement where Id='+IntToStr(FieldByName('Id_Postgres').AsInteger));
                   isDocBEGIN:=toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_UnComplete').AsInteger;
              end
@@ -15461,6 +15465,8 @@ begin
         Add('     , BillItems.OperCount_sh as shCount');
         Add('     , BillItems.RealCount as RealWeight');
         Add('     , BillItems.KuterCount as CuterCount');
+
+        Add('     , isnull(BillItems.PartionDate,zc_DateStart()) as PartionGoodsDate');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
         Add('     , BillItems.OperComment as OperComment');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
@@ -15510,6 +15516,7 @@ begin
         toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inRealWeight',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCuterCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoodsDate',ftDateTime,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
@@ -15532,6 +15539,9 @@ begin
              toStoredProc.Params.ParamByName('inCount').Value:=FieldByName('shCount').AsFloat;
              toStoredProc.Params.ParamByName('inRealWeight').Value:=FieldByName('RealWeight').AsFloat;
              toStoredProc.Params.ParamByName('inCuterCount').Value:=FieldByName('CuterCount').AsFloat;
+             if FieldByName('PartionGoodsDate').AsDateTime <= StrToDate('01.01.1900')
+             then toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=StrToDate('01.01.1900')
+             else toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=FieldByName('PartionGoodsDate').AsDateTime;
              toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('OperComment').AsString;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
@@ -15837,6 +15847,7 @@ begin
         Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItems.OperCount as Amount');
+        Add('     , BillItems.OperCount_Upakovka as LiveWeight');
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
@@ -15869,6 +15880,7 @@ begin
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inLiveWeight',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
 //        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
         //
@@ -15882,6 +15894,7 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inLiveWeight').Value:=FieldByName('LiveWeight').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
              //toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
 
@@ -15916,6 +15929,7 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , BillItems.OperCount as Amount');
         Add('     , 0 as ParentId_Postgres');
+        Add('     , BillItems.OperCount_Upakovka as LiveWeight');
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
@@ -15945,11 +15959,13 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inLiveWeight',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
 //        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        Add('     , BillItems.OperCount_Upakovka as LiveWeight');
         //
         //DisableControls;
         while not EOF do
@@ -15959,9 +15975,10 @@ begin
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inLiveWeight').Value:=FieldByName('LiveWeight').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
              //toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
 
@@ -21263,6 +21280,7 @@ end;
 function TMainForm.pLoadDocument_OrderExternal:Integer;
 var ContractId_pg,PriceListId:Integer;
     zc_PriceList_Basis:Integer;
+    RouteId_pg,RouteSortingId_pg,PersonalId_pg:Integer;
 begin
      Result:=0;
      if (not cbOrderExternal.Checked)or(not cbOrderExternal.Enabled) then exit;
@@ -21310,9 +21328,9 @@ begin
            +'                else 30101' // √отова€ продукци€
            +'       end as CodeIM');
 
-        Add('     , _pgRoute.RouteId_pg as RouteId_pg');
-        Add('     , Unit_RouteSorting.Id_Postgres_RouteSorting as RouteSortingId_pg');
-        Add('     , null as PersonalId_pg');
+        // Add('     , _pgRoute.RouteId_pg as RouteId_pg');
+        // Add('     , Unit_RouteSorting.Id_Postgres_RouteSorting as RouteSortingId_pg');
+        // Add('     , null as PersonalId_pg');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -21389,6 +21407,26 @@ begin
              end
              else PriceListId:=zc_PriceList_Basis;
              //
+             //находим параметры дл€ маршрута
+             fOpenSqToQuery (' select ObjectLink_Partner_Route.ChildObjectId        as RouteId'
+                            +'      , ObjectLink_Partner_RouteSorting.ChildObjectId as RouteSortingId'
+                            +'      , ObjectLink_Partner_MemberTake.ChildObjectId   as MemberTakeId'
+                            +' from Object as Object_Partner'
+                            +'      LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake'
+                            +'                           ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id'
+                            +'                          AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()'
+                            +'      LEFT JOIN ObjectLink AS ObjectLink_Partner_Route'
+                            +'                           ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id'
+                            +'                          AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()'
+                            +'      LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting'
+                            +'                           ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id'
+                            +'                          AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()'
+                            +' where Object_Partner.Id = '+IntToStr(FieldByName('FromId_Postgres').AsInteger)
+                            );
+             RouteId_pg:=toSqlQuery.FieldByName('RouteId').AsInteger;
+             RouteSortingId_pg:=toSqlQuery.FieldByName('RouteSortingId').AsInteger;
+             PersonalId_pg:=toSqlQuery.FieldByName('MemberTakeId').AsInteger;
+             //
              //находим договор по документу продажи
              if (FieldByName('BillNumberClient1').AsString<>'')and(FieldByName('isBranch').AsInteger=zc_rvNo)
              then begin
@@ -21425,14 +21463,13 @@ begin
              toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
              toStoredProc.Params.ParamByName('inChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
 
-
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inPaidKindId').Value:=FieldByName('PaidKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inContractId').Value:=ContractId_pg;
-             toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId_pg').AsInteger;
-             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_pg').AsInteger;
-             toStoredProc.Params.ParamByName('inPersonalId').Value:=FieldByName('PersonalId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteId').Value:=RouteId_pg;//FieldByName('RouteId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=RouteSortingId_pg;//FieldByName('RouteSortingId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalId').Value:=PersonalId_pg;//FieldByName('PersonalId_pg').AsInteger;
              toStoredProc.Params.ParamByName('ioPriceListId').Value:=PriceListId;
 
              if not myExecToStoredProc then ;//exit;

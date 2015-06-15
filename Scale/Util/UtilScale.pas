@@ -4,6 +4,9 @@ interface
 
 uses
   System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient, Vcl.Dialogs,Forms,Vcl.StdCtrls;
+
+const
+    fmtWeight:String = ',0.#### кг.';
 type
 
   TDBObject = record
@@ -20,7 +23,7 @@ type
     Value:  string;
   end;
 
-  TScaleType = (stBI, stDB);
+  TScaleType = (stBI, stDB, stZeus);
 
   TListItemScale = record
     Number   : Integer;
@@ -33,12 +36,18 @@ type
   TArrayListScale = array of TListItemScale;
 
   TSettingMain = record
+    isCeh:Boolean;          // ScaleCeh or Scale
+    isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
+    WeightSkewer1:Double;   // only ScaleCeh
+    WeightSkewer2:Double;   // only ScaleCeh
     BranchCode:Integer;
     BranchName:String;
     ScaleCount:Integer;
     DefaultCOMPort:Integer;
     IndexScale_old:Integer;
   end;
+
+  function gpCheck_BranchCode: Boolean;
 
   function Recalc_PartionGoods(Edit:TEdit):Boolean;
 
@@ -72,6 +81,8 @@ type
   procedure EmptyValuesParams(var execParams:TParams);
 
   function CheckBarCode(BarCode:String):Boolean;
+  function myStrToFloat(Value:String):Double;
+  function myReplaceStr(const S, Srch, Replace: string): string;
 
 var
   UserId_begin : Integer;
@@ -150,6 +161,7 @@ begin
      ParamAdd(Params,'InfoMoneyCode',ftInteger);
      ParamAdd(Params,'InfoMoneyName',ftString);
 
+     ParamAdd(Params,'isGetPartner',ftBoolean); //локальный параметр
      ParamAdd(Params,'calcPartnerId',ftInteger);
      ParamAdd(Params,'calcPartnerCode',ftInteger);
      ParamAdd(Params,'calcPartnerName',ftString);
@@ -167,6 +179,9 @@ begin
      ParamAdd(Params,'isPack',ftBoolean);      //Упаковочный
      ParamAdd(Params,'isSpec',ftBoolean);      //Спецификация
      ParamAdd(Params,'isTax',ftBoolean);       //Налоговая
+
+     ParamAdd(Params,'isSendOnPriceIn',ftBoolean);
+     ParamAdd(Params,'isPartionGoodsDate',ftBoolean);
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_DescId',ftInteger);
@@ -191,7 +206,8 @@ begin
 
      ParamAdd(Params,'MovementDescName_master',ftString);
 
-     ParamAdd(Params,'isComlete',ftString);//локальный параметр
+     ParamAdd(Params,'isComlete',ftBoolean);//локальный параметр, режим просмотра накладных
+     ParamAdd(Params,'isMovementId_check',ftBoolean);//локальный параметр, Insert или Update в TDialogMovementDescForm
 
      ParamAdd(Params,'TotalSumm',ftFloat);
 
@@ -200,26 +216,54 @@ end;
 procedure Create_ParamsMI(var Params:TParams);
 begin
      Params:=nil;
-     ParamAdd(Params,'GoodsId',ftInteger);     // Товары
-     ParamAdd(Params,'GoodsCode',ftInteger);     // Товары
-     ParamAdd(Params,'GoodsName',ftString);     // Товары
-     ParamAdd(Params,'GoodsKindId',ftInteger); // Виды товаров
-     ParamAdd(Params,'GoodsKindCode',ftInteger); // Виды товаров
-     ParamAdd(Params,'GoodsKindName',ftString);     // Виды товаров
+     if SettingMain.isCeh = FALSE then
+     begin
+     ParamAdd(Params,'GoodsId',ftInteger);           // Товары
+     ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
+     ParamAdd(Params,'GoodsName',ftString);          // Товары
+     ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
+     ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
+     ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
      ParamAdd(Params,'RealWeight_Get',ftFloat);      //
-     ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета тары и % скидки для кол-ва)
+     ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и % скидки для кол-ва)
      ParamAdd(Params,'CountTare',ftFloat);           // Количество тары
      ParamAdd(Params,'WeightTare',ftFloat);          // Вес 1-ой тары
      ParamAdd(Params,'ChangePercentAmount',ftFloat); // % скидки для кол-ва
-     ParamAdd(Params,'Price',ftFloat);          //
-     ParamAdd(Params,'Price_Return',ftFloat);          //
-     ParamAdd(Params,'CountForPrice',ftFloat);         //
-     ParamAdd(Params,'CountForPrice_Return',ftFloat); //
-     ParamAdd(Params,'Count',ftFloat);                // Количество пакетов или Количество батонов
-     ParamAdd(Params,'HeadCount',ftFloat);            // Количество голов
+     ParamAdd(Params,'Price',ftFloat);               //
+     ParamAdd(Params,'Price_Return',ftFloat);        //
+     ParamAdd(Params,'CountForPrice',ftFloat);       //
+     ParamAdd(Params,'CountForPrice_Return',ftFloat);//
+     ParamAdd(Params,'Count',ftFloat);               // Количество пакетов или Количество батонов
+     ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
      ParamAdd(Params,'BoxCount',ftFloat);            //
-     ParamAdd(Params,'BoxCode',ftInteger);            //
-     ParamAdd(Params,'PartionGoods',ftString);        //
+     ParamAdd(Params,'BoxCode',ftInteger);           //
+     ParamAdd(Params,'PartionGoods',ftString);       //
+     end
+     else
+     begin
+     ParamAdd(Params,'GoodsId',ftInteger);           // Товары
+     ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
+     ParamAdd(Params,'GoodsName',ftString);          // Товары
+     ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
+     ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
+     ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
+     ParamAdd(Params,'MeasureId',ftInteger);         // Единица измерения
+     ParamAdd(Params,'MeasureCode',ftInteger);       // Единица измерения
+     ParamAdd(Params,'MeasureName',ftString);        // Единица измерения
+     ParamAdd(Params,'OperCount',ftFloat);           // Количество (с учетом: минус тара и прочее)
+     ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и прочее)
+     ParamAdd(Params,'WeightTare',ftFloat);          // Вес тары
+     ParamAdd(Params,'WeightOther',ftFloat);         // Вес, прочее
+     ParamAdd(Params,'CountSkewer1',ftFloat);        // Количество шпажек/крючков вида1
+     ParamAdd(Params,'CountSkewer2',ftFloat);        // Количество шпажек/крючков вида2
+     ParamAdd(Params,'Count',ftFloat);               // Количество батонов
+     ParamAdd(Params,'CountPack',ftFloat);           // Количество пакетов
+     ParamAdd(Params,'HeadCount',ftFloat);           // Количество голов
+     ParamAdd(Params,'LiveWeight',ftFloat);          // Живой вес
+     ParamAdd(Params,'PartionGoods',ftString);       //
+     ParamAdd(Params,'PartionGoodsDate',ftDateTime); //
+     ParamAdd(Params,'isStartWeighing',ftBoolean);   //локальный параметр
+     end;
 
 end;
 {------------------------------------------------------------------------}
@@ -419,14 +463,17 @@ begin
    with execParams do
     for i:=0 to Count-1 do
     begin
-         if execParams[i].DataType=ftInteger
-         then execParams.ParamByName(Items[i].Name).AsInteger:=0
+         if execParams[i].DataType=ftBoolean
+         then execParams.ParamByName(Items[i].Name).AsBoolean:=false
          else
-             if execParams[i].DataType=ftFloat
-             then execParams.ParamByName(Items[i].Name).AsFloat:=0
+             if execParams[i].DataType=ftInteger
+             then execParams.ParamByName(Items[i].Name).AsInteger:=0
              else
-                if (execParams[i].DataType<>ftDate) and (execParams[i].DataType<>ftDateTime)
-                then execParams.ParamByName(Items[i].Name).AsString:='';
+                 if execParams[i].DataType=ftFloat
+                 then execParams.ParamByName(Items[i].Name).AsFloat:=0
+                 else
+                    if (execParams[i].DataType<>ftDate) and (execParams[i].DataType<>ftDateTime)
+                    then execParams.ParamByName(Items[i].Name).AsString:='';
     end;
 end;
 {------------------------------------------------------------------------------}
@@ -448,6 +495,38 @@ begin
      else Summ_show:='';
 
      if not Result then ShowMessage('Ошибка в значении <Штрих код> = <'+BarCode+'>.('+Summ_show+')');
+end;
+{------------------------------------------------------------------------------}
+function myStrToFloat(Value:String):Double;
+begin
+     Value:=trim(Value);
+     //
+     try
+         if (System.Pos('.',Value)>0)and(DecimalSeparator<>'.')
+         then Result:=StrToFloat(myReplaceStr(Value,'.',DecimalSeparator))
+         else if (System.Pos(',',Value)>0)and(DecimalSeparator<>',')
+              then Result:=StrToFloat(myReplaceStr(Value,'.',DecimalSeparator))
+              else Result:=StrToFloat(Value);
+     except
+            Result:=0;
+     end;
+end;
+{------------------------------------------------------------------------------}
+function myReplaceStr(const S, Srch, Replace: string): string;
+var
+  I: Integer;
+  Source: string;
+begin
+  Source := S;
+  Result := '';
+  repeat
+    I := Pos(Srch, Source);
+    if I > 0 then begin
+      Result := Result + Copy(Source, 1, I - 1) + Replace;
+      Source := Copy(Source, I + Length(Srch), MaxInt);
+    end
+    else Result := Result + Source;
+  until I <= 0;
 end;
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
@@ -558,7 +637,11 @@ begin
         and((ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Sale)
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ReturnIn)
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Loss)
-          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory))
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Send)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ProductionUnion)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ProductionSeparate)
+           )
         then begin
                   PartionGoods:=myCalcPartionGoods(Edit.Text);
                   Result:=PartionGoods<>'';
@@ -570,4 +653,13 @@ begin
              end;
 end;
 {------------------------------------------------------------------------------}
+function gpCheck_BranchCode: Boolean;
+begin
+    Result:=((SettingMain.isCeh = FALSE) and (SettingMain.BranchCode < 100))
+          or((SettingMain.isCeh = TRUE) and ((SettingMain.BranchCode = 1) or (SettingMain.BranchCode > 100)));
+    //
+    if not Result
+    then ShowMessage('Ошибка.Запуск программы для филиала <'+IntToStr(SettingMain.BranchCode)+'> не предусмотрен.');
+end;
+{------------------------------------------------------------------------}
 end.

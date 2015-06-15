@@ -34,9 +34,9 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    actPrint: TdsdPrintAction;
   private
     { Private declarations }
   public

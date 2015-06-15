@@ -60,6 +60,8 @@ type
     SendSumm: TcxGridDBColumn;
     AccountSumm: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
+    MoneyPlaceName: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
   private
     { Private declarations }
   public

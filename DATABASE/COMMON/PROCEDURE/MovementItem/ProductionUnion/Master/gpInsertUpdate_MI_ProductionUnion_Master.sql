@@ -1,17 +1,21 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Master()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inCount	             TFloat    , -- Количество батонов
+    IN inPartionGoodsDate    TDateTime , -- Партия товара
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -23,6 +27,8 @@ BEGIN
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
                                                   , inAmount           := inAmount
+                                                  , inCount            := inCount
+                                                  , inPartionGoodsDate := inPartionGoodsDate
                                                   , inPartionGoods     := inPartionGoods
                                                   , inGoodsKindId      := inGoodsKindId
                                                   , inUserId           := vbUserId
@@ -35,6 +41,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.06.15                                        * add inPartionGoodsDate
  21.03.15                                        * all
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  11.12.14         * add lpInsertUpdate_MI_ProductionUnion_Master

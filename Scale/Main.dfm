@@ -12,6 +12,7 @@ object MainForm: TMainForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
@@ -19,9 +20,9 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object GridPanel: TPanel
-    Left = 133
+    Left = 130
     Top = 66
-    Width = 851
+    Width = 854
     Height = 585
     Align = alClient
     BevelOuter = bvNone
@@ -29,14 +30,14 @@ object MainForm: TMainForm
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 851
+      Width = 854
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
       object bbDeleteItem: TSpeedButton
-        Left = 193
-        Top = 5
+        Left = 241
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1091#1076#1072#1083#1080#1090#1100'/'#1074#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -86,7 +87,7 @@ object MainForm: TMainForm
       end
       object bbExit: TSpeedButton
         Left = 489
-        Top = 3
+        Top = 2
         Width = 31
         Height = 29
         Action = actExit
@@ -103,8 +104,8 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 370
-        Top = 3
+        Left = 396
+        Top = 2
         Width = 31
         Height = 29
         Action = actRefresh
@@ -122,7 +123,7 @@ object MainForm: TMainForm
       end
       object bbRefreshZakaz: TSpeedButton
         Left = 599
-        Top = 3
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
@@ -140,8 +141,8 @@ object MainForm: TMainForm
         Visible = False
       end
       object bbChangeNumberTare: TSpeedButton
-        Left = 105
-        Top = 5
+        Left = 148
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1071#1097#1080#1082#1072'>'
@@ -159,8 +160,8 @@ object MainForm: TMainForm
         OnClick = bbChangeNumberTareClick
       end
       object bbChangeLevelNumber: TSpeedButton
-        Left = 136
-        Top = 5
+        Left = 179
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1064#1072#1088'>'
@@ -179,7 +180,7 @@ object MainForm: TMainForm
       end
       object bbExportToEDI: TSpeedButton
         Left = 658
-        Top = 3
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' EDI'
@@ -197,11 +198,39 @@ object MainForm: TMainForm
         Visible = False
       end
       object bbChoice_UnComlete: TSpeedButton
-        Left = 249
-        Top = 5
+        Left = 303
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1042#1077#1088#1085#1091#1090#1100#1089#1103' '#1082' '#1085#1077' '#1079#1072#1082#1088#1099#1090#1086#1084#1091' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102
+        Glyph.Data = {
+          06020000424D0602000000000000760000002800000019000000190000000100
+          0400000000009001000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888888888888000000088888888888888888888888880000000888888888888
+          8888888888888000000088888888888888888888888880000000888888888887
+          7777788888888000000088888888800000377788888880000000888888880EEE
+          E0307778888880000000888888880EEEE030777888888000000088888880EEEE
+          0333077888888000000088888880EEEE03330778888880000000888888800000
+          0333077888888000000088888888887033330778888880000000888888888000
+          33330778888880000000888888880EE03333077888888000000088888880EEEE
+          033307788888800000008888880EEEEEE0330778888880000000888880EEEEEE
+          EE03077888888000000088888000EEEE0003077888888000000088888880EEEE
+          03330788888880000000888888880EEEE0307888888880000000888888880EEE
+          E030888888888000000088888888800000388888888880000000888888888888
+          8888888888888000000088888888888888888888888880000000888888888888
+          88888888888880000000}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChoice_UnComleteClick
+      end
+      object bbView_all: TSpeedButton
+        Left = 334
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1042#1057#1045#1061'> '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
         Glyph.Data = {
           06020000424D0602000000000000760000002800000019000000190000000100
           0400000000009001000000000000000000001000000000000000000000000000
@@ -222,30 +251,11 @@ object MainForm: TMainForm
           77777777777770000000}
         ParentShowHint = False
         ShowHint = True
-        OnClick = bbChoice_UnComleteClick
-      end
-      object bbView_all: TSpeedButton
-        Left = 286
-        Top = 3
-        Width = 31
-        Height = 29
-        Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1042#1057#1045#1061'> '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          0400000000008000000000000000000000001000000000000000000000000000
-          80000080000000808000800000008000800080800000C0C0C000808080000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00777777777777
-          777777777707C077777777770777CCC0777777077777CCCCC0777777FC77CCCC
-          CC07777FCC777FCCCC07777CC0CCC77FCC0777FCCCC777777F077777CCC07777
-          FC77777777CC0CFC777777777777777777777777777777777777777777777777
-          7777777777777777777777777777777777777777777777777777}
-        ParentShowHint = False
-        ShowHint = True
         OnClick = bbView_allClick
       end
-      object bbChangeCount: TSpeedButton
-        Left = 37
-        Top = 5
+      object bbChangeCountPack: TSpeedButton
+        Left = 86
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1072#1082#1077#1090#1086#1074'>'
@@ -260,11 +270,11 @@ object MainForm: TMainForm
           0508888888888880FD0888888888888800888888888888888888}
         ParentShowHint = False
         ShowHint = True
-        OnClick = bbChangeCountClick
+        OnClick = bbChangeCountPackClick
       end
       object bbChangeHeadCount: TSpeedButton
         Left = 5
-        Top = 5
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074'>'
@@ -282,8 +292,8 @@ object MainForm: TMainForm
         OnClick = bbChangeHeadCountClick
       end
       object bbChangeBoxCount: TSpeedButton
-        Left = 71
-        Top = 4
+        Left = 117
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1087#1072#1082#1086#1074#1086#1095#1085#1086#1081' '#1090#1072#1088#1099'>'
@@ -300,11 +310,30 @@ object MainForm: TMainForm
         ShowHint = True
         OnClick = bbChangeBoxCountClick
       end
+      object bbChangePartionGoods: TSpeedButton
+        Left = 36
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071'>'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888870888888888888873308888888888888733088888888888887330888888
+          8888888733088888888888887330888888888888873308888088888888733088
+          8008888888873308087088888888730700888888888880887888888888888088
+          0888888888880800888888888888808888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChangePartionGoodsClick
+      end
     end
     object infoPanelTotalSumm: TPanel
       Left = 0
       Top = 544
-      Width = 851
+      Width = 854
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
@@ -316,44 +345,56 @@ object MainForm: TMainForm
         Height = 41
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 0
         object PanelRealWeight: TPanel
           Left = 2
-          Top = 15
+          Top = 16
           Width = 115
-          Height = 24
+          Height = 23
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelRealWeight'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
         end
       end
-      object gbPanelWeightTare: TGroupBox
+      object gbWeightTare: TGroupBox
         Left = 368
         Top = 0
         Width = 108
         Height = 41
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1090#1072#1088#1099
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
         object PanelWeightTare: TPanel
           Left = 2
-          Top = 15
+          Top = 16
           Width = 104
-          Height = 24
+          Height = 23
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelWeightTare'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
@@ -366,44 +407,56 @@ object MainForm: TMainForm
         Height = 41
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 2
         object PanelAmountPartnerWeight: TPanel
           Left = 2
-          Top = 15
+          Top = 16
           Width = 126
-          Height = 24
+          Height = 23
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelAmountPartnerWeight'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
         end
       end
       object gbTotalSumm: TGroupBox
-        Left = 743
+        Left = 746
         Top = 0
         Width = 108
         Height = 41
         Align = alRight
         Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1075#1088#1085
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 3
         object PanelTotalSumm: TPanel
           Left = 2
-          Top = 15
+          Top = 16
           Width = 104
-          Height = 24
+          Height = 23
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelTotalSumm'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
@@ -416,19 +469,25 @@ object MainForm: TMainForm
         Height = 41
         Align = alLeft
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1057#1082#1083#1072#1076
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 4
         object PanelAmountWeight: TPanel
           Left = 2
-          Top = 15
+          Top = 16
           Width = 115
-          Height = 24
+          Height = 23
           Align = alClient
           BevelOuter = bvNone
           Caption = 'PanelAmountWeight'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
@@ -438,7 +497,7 @@ object MainForm: TMainForm
     object cxDBGrid: TcxGrid
       Left = 0
       Top = 33
-      Width = 851
+      Width = 854
       Height = 511
       Align = alClient
       TabOrder = 2
@@ -575,20 +634,10 @@ object MainForm: TMainForm
         object PartionGoods: TcxGridDBColumn
           Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
           DataBinding.FieldName = 'PartionGoods'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 90
-        end
-        object PartionGoodsDate: TcxGridDBColumn
-          Caption = #1055#1072#1088#1090#1080#1103' '#1044#1040#1058#1040
-          DataBinding.FieldName = 'PartionGoodsDate'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
         end
         object PriceListName: TcxGridDBColumn
           Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
@@ -789,49 +838,36 @@ object MainForm: TMainForm
   object PanelSaveItem: TPanel
     Left = 0
     Top = 66
-    Width = 133
+    Width = 130
     Height = 585
     Align = alLeft
     BevelOuter = bvNone
     Font.Charset = RUSSIAN_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Tahoma'
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'Arial'
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
     object BarCodePanel: TPanel
       Left = 0
-      Top = 86
-      Width = 133
-      Height = 41
+      Top = 39
+      Width = 130
+      Height = 39
       Align = alTop
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
       TabOrder = 0
-      ExplicitTop = 83
       object BarCodeLabel: TLabel
         Left = 1
         Top = 1
-        Width = 131
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
         ExplicitWidth = 59
       end
       object EditBarCode: TcxCurrencyEdit
-        Left = 3
+        Left = 5
         Top = 15
         Properties.Alignment.Horz = taRightJustify
         Properties.Alignment.Vert = taVCenter
@@ -839,78 +875,46 @@ object MainForm: TMainForm
         Properties.DecimalPlaces = 0
         Properties.OnChange = EditBarCodePropertiesChange
         TabOrder = 0
-        Width = 126
-      end
-    end
-    object gbOperDate: TGroupBox
-      Left = 0
-      Top = 0
-      Width = 133
-      Height = 42
-      Align = alTop
-      Caption = #1057#1084#1077#1085#1072' '#1079#1072
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clBlue
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 1
-      object OperDateEdit: TcxDateEdit
-        Left = 5
-        Top = 16
-        EditValue = 41640d
-        ParentFont = False
-        Properties.DateButtons = [btnToday]
-        Properties.SaveTime = False
-        Properties.ShowTime = False
-        Style.Font.Charset = DEFAULT_CHARSET
-        Style.Font.Color = clBlue
-        Style.Font.Height = -13
-        Style.Font.Name = 'Tahoma'
-        Style.Font.Style = [fsBold]
-        Style.IsFontAssigned = True
-        TabOrder = 0
-        Width = 110
+        Width = 120
       end
     end
     object infoPanel_Scale: TPanel
       Left = 0
-      Top = 244
-      Width = 133
+      Top = 238
+      Width = 130
       Height = 29
       Align = alTop
-      TabOrder = 2
-      ExplicitTop = 241
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clTeal
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
-        Width = 131
-        Height = 13
+        Width = 128
+        Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = 'Scale.Active = ???'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clTeal
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
-        ExplicitWidth = 90
+        ExplicitWidth = 91
       end
       object PanelWeight_Scale: TPanel
         Left = 1
-        Top = 14
-        Width = 131
-        Height = 14
+        Top = 15
+        Width = 128
+        Height = 13
         Align = alClient
         BevelOuter = bvNone
         Caption = 'Weight=???'
-        Font.Charset = DEFAULT_CHARSET
+        Font.Charset = RUSSIAN_CHARSET
         Font.Color = clTeal
         Font.Height = -11
-        Font.Name = 'MS Sans Serif'
+        Font.Name = 'Arial'
         Font.Style = [fsBold]
+        ParentColor = True
         ParentFont = False
         TabOrder = 0
         OnDblClick = PanelWeight_ScaleDblClick
@@ -918,49 +922,33 @@ object MainForm: TMainForm
     end
     object rgScale: TRadioGroup
       Left = 0
-      Top = 127
-      Width = 133
+      Top = 121
+      Width = 130
       Height = 117
       Align = alTop
       Caption = #1042#1077#1089#1099
-      Color = clBtnFace
-      ParentColor = False
-      TabOrder = 3
+      TabOrder = 2
       OnClick = rgScaleClick
-      ExplicitTop = 124
     end
-    object CountPanel: TPanel
+    object PanelCountPack: TPanel
       Left = 0
-      Top = 273
-      Width = 133
-      Height = 41
+      Top = 267
+      Width = 130
+      Height = 39
       Align = alTop
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 4
-      ExplicitTop = 270
-      object CountLabel: TLabel
+      TabOrder = 3
+      object LabelCountPack: TLabel
         Left = 1
         Top = 1
-        Width = 131
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
         ExplicitWidth = 87
       end
-      object EditCount: TcxCurrencyEdit
-        Left = 3
+      object EditCountPack: TcxCurrencyEdit
+        Left = 5
         Top = 15
         Properties.Alignment.Horz = taRightJustify
         Properties.Alignment.Vert = taVCenter
@@ -968,41 +956,28 @@ object MainForm: TMainForm
         Properties.DecimalPlaces = 0
         Properties.OnChange = EditBarCodePropertiesChange
         TabOrder = 0
-        Width = 126
+        Width = 120
       end
     end
     object HeadCountPanel: TPanel
       Left = 0
-      Top = 370
-      Width = 133
-      Height = 41
+      Top = 360
+      Width = 130
+      Height = 39
       Align = alTop
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 5
-      ExplicitTop = 367
+      TabOrder = 4
       object HeadCountLabel: TLabel
         Left = 1
         Top = 1
-        Width = 131
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
         ExplicitWidth = 75
       end
       object EditHeadCount: TcxCurrencyEdit
-        Left = 3
+        Left = 5
         Top = 15
         Properties.Alignment.Horz = taRightJustify
         Properties.Alignment.Vert = taVCenter
@@ -1010,26 +985,20 @@ object MainForm: TMainForm
         Properties.DecimalPlaces = 0
         Properties.OnChange = EditBarCodePropertiesChange
         TabOrder = 0
-        Width = 126
+        Width = 120
       end
     end
-    object PartionGoodsPanel: TPanel
+    object PanelPartionGoods: TPanel
       Left = 0
-      Top = 42
-      Width = 133
-      Height = 44
+      Top = 78
+      Width = 130
+      Height = 43
       Align = alTop
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 6
-      object PartionGoodsLabel: TLabel
+      TabOrder = 5
+      object LabelPartionGoods: TLabel
         Left = 1
         Top = 1
-        Width = 131
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -1045,8 +1014,14 @@ object MainForm: TMainForm
       object EditPartionGoods: TEdit
         Left = 5
         Top = 17
-        Width = 125
-        Height = 24
+        Width = 120
+        Height = 23
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlack
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 0
         Text = 'EditPartionGoods'
         OnExit = EditPartionGoodsExit
@@ -1054,58 +1029,39 @@ object MainForm: TMainForm
     end
     object PanelBox: TPanel
       Left = 0
-      Top = 314
-      Width = 133
-      Height = 56
+      Top = 306
+      Width = 130
+      Height = 54
       Align = alTop
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 7
-      ExplicitTop = 311
+      TabOrder = 6
       object Label1: TLabel
         Left = 1
         Top = 1
-        Width = 131
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1072#1103' '#1090#1072#1088#1072
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
         ExplicitWidth = 99
       end
       object Panel2: TPanel
-        Left = 71
+        Left = 65
         Top = 15
-        Width = 61
-        Height = 40
+        Width = 64
+        Height = 38
         Align = alClient
         BevelOuter = bvNone
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
         TabOrder = 0
         object Label2: TLabel
           Left = 0
           Top = 0
-          Width = 61
+          Width = 64
           Height = 14
           Align = alTop
           Alignment = taCenter
           Caption = #1050#1086#1083'-'#1074#1086
           Font.Charset = RUSSIAN_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
           Font.Style = []
@@ -1121,33 +1077,27 @@ object MainForm: TMainForm
           Properties.DecimalPlaces = 0
           Properties.OnChange = EditBarCodePropertiesChange
           TabOrder = 0
-          Width = 50
+          Width = 55
         end
       end
       object Panel3: TPanel
         Left = 1
         Top = 15
-        Width = 70
-        Height = 40
+        Width = 64
+        Height = 38
         Align = alLeft
         BevelOuter = bvNone
-        Font.Charset = RUSSIAN_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
         TabOrder = 1
         object Label3: TLabel
           Left = 0
           Top = 0
-          Width = 70
+          Width = 64
           Height = 14
           Align = alTop
           Alignment = taCenter
           Caption = #1050#1086#1076
           Font.Charset = RUSSIAN_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -11
           Font.Name = 'Arial'
           Font.Style = []
@@ -1155,7 +1105,7 @@ object MainForm: TMainForm
           ExplicitWidth = 19
         end
         object EditBoxCode: TcxCurrencyEdit
-          Left = 5
+          Left = 2
           Top = 15
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
@@ -1163,13 +1113,55 @@ object MainForm: TMainForm
           Properties.DecimalPlaces = 0
           Properties.OnChange = EditBarCodePropertiesChange
           TabOrder = 0
-          Width = 60
+          Width = 55
         end
+      end
+    end
+    object Panel25: TPanel
+      Left = 0
+      Top = 0
+      Width = 130
+      Height = 39
+      Align = alTop
+      BevelInner = bvRaised
+      BevelOuter = bvNone
+      TabOrder = 7
+      object Label17: TLabel
+        Left = 1
+        Top = 1
+        Width = 128
+        Height = 14
+        Align = alTop
+        Caption = '   '#1057#1084#1077#1085#1072' '#1079#1072
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 59
+      end
+      object OperDateEdit: TcxDateEdit
+        Left = 5
+        Top = 14
+        EditValue = 41640d
+        ParentFont = False
+        Properties.DateButtons = [btnToday]
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        Style.Font.Charset = RUSSIAN_CHARSET
+        Style.Font.Color = clBlack
+        Style.Font.Height = -12
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+        TabOrder = 0
+        Width = 120
       end
     end
   end
   object PanelInfoItem: TPanel
-    Left = 133
+    Left = 130
     Top = 66
     Width = 0
     Height = 585
@@ -1556,9 +1548,9 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 2
       object infoPanelPartner: TPanel
-        Left = 133
+        Left = 130
         Top = 0
-        Width = 359
+        Width = 362
         Height = 38
         Align = alClient
         BevelInner = bvRaised
@@ -1567,7 +1559,7 @@ object MainForm: TMainForm
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 357
+          Width = 360
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1583,7 +1575,7 @@ object MainForm: TMainForm
         object PanelPartner: TPanel
           Left = 1
           Top = 14
-          Width = 357
+          Width = 360
           Height = 23
           Align = alClient
           Alignment = taLeftJustify
@@ -1601,7 +1593,7 @@ object MainForm: TMainForm
       object infoPanelPriceList: TPanel
         Left = 0
         Top = 0
-        Width = 133
+        Width = 130
         Height = 38
         Align = alLeft
         BevelInner = bvRaised
@@ -1610,7 +1602,7 @@ object MainForm: TMainForm
         object PriceListNameLabel: TLabel
           Left = 1
           Top = 1
-          Width = 131
+          Width = 128
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1626,7 +1618,7 @@ object MainForm: TMainForm
         object PanelPriceList: TPanel
           Left = 1
           Top = 14
-          Width = 131
+          Width = 128
           Height = 23
           Align = alClient
           Alignment = taLeftJustify

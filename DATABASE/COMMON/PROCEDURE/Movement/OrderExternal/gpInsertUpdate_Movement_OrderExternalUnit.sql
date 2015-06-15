@@ -42,7 +42,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
 
      -- проверка
-     IF COALESCE (inContractId, 0) = 0 AND EXISTS (SELECT Id FROM Object WHERE Id = inFromId AND DescId = zc_Object_Partner())
+     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT Id FROM Object WHERE Id = inFromId AND DescId = zc_Object_Unit())
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;

@@ -225,6 +225,7 @@ BEGIN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                   THEN 'X' ELSE '' END                  AS NotNDSPayer
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
+                    OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                   THEN TRUE ELSE FALSE END :: Boolean   AS isNotNDSPayer
 
            , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()

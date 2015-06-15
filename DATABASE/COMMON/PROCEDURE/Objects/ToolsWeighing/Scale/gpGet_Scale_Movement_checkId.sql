@@ -1,8 +1,10 @@
--- Function: gpUpdate_Scale_Movement_check()
+-- Function: gpGet_Scale_Movement_checkId()
 
-DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_check (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_check (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_Movement_check (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_Movement_checkId (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Scale_Movement_check(
+CREATE OR REPLACE FUNCTION gpGet_Scale_Movement_checkId(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -40,4 +42,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Scale_Movement_check (inMovementId:= 0, inSession:= '2')
+-- SELECT * FROM gpGet_Scale_Movement_checkId (inMovementId:= 0, inSession:= '2')

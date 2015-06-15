@@ -2,8 +2,8 @@ inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 535
   ClientWidth = 1073
-  ExplicitWidth = 1081
-  ExplicitHeight = 569
+  ExplicitWidth = 1089
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -178,14 +178,15 @@ inherited SendJournalForm: TSendJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSendForm'
     end
-    object actPrint: TdsdPrintAction
+    object actPrint: TdsdPrintAction [16]
       Category = 'DSDLib'
       MoveParams = <
         item
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
@@ -216,9 +217,8 @@ inherited SendJournalForm: TSendJournalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -466,7 +466,7 @@ inherited SendJournalForm: TSendJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_Send_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

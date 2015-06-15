@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_SendOnPrice()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -15,6 +17,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice(
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inUnitId              Integer   , -- Подразделение
     IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD
@@ -45,6 +48,9 @@ BEGIN
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+
      IF inGoodsId <> 0
      THEN
          -- создали объект <Связи Товары и Виды товаров>
@@ -71,6 +77,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.06.15         * add inUnitId
  05.05.14                                                        *
  08.02.14                                        *
  04.02.14                         *

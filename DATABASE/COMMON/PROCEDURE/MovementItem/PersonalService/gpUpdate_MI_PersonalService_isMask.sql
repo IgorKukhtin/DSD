@@ -8,12 +8,10 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_PersonalService_isMask(
     IN inMovementMaskId  Integer      , -- ключ Документа маски
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS void
- AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   
-     
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalService());
@@ -21,7 +19,7 @@ BEGIN
 
 
       -- Проверка - что б не копировали два раза
-      IF EXISTS (select Id FROM MovementItem WHERE isErased = FALSE AND DescId = zc_MI_Master() AND MovementId = inMovementId)  
+      IF EXISTS (SELECT Id FROM MovementItem WHERE isErased = FALSE AND DescId = zc_MI_Master() AND MovementId = inMovementId AND Amount <> 0)
          THEN RAISE EXCEPTION 'Ошибка.В документе уже есть данные по начислениям.'; 
       END IF;
 
@@ -32,28 +30,51 @@ BEGIN
              , Amount TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat) ON COMMIT DROP;
        
-       INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
-                         , Amount, SummService, SummCard, SummCardRecalc, SummMinus, SummAdd 
-                         , SummSocialIn, SummSocialAdd, SummChild)
-       SELECT MovementItem.Id                           AS MovementItemId
-            , MovementItem.ObjectId                     AS PersonalId
-            , COALESCE (MIBoolean_Main.ValueData, FALSE) :: Boolean   AS isMain
-            , MILinkObject_Unit.ObjectId                AS UnitId
-            , MILinkObject_Position.ObjectId            AS PositionId
-            , MILinkObject_InfoMoney.ObjectId           AS InfoMoneyId
-            , MILinkObject_Member.ObjectId              AS MemberId
-            , MILinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
-            , COALESCE (MovementItem.Amount, 0):: TFloat 
-            , COALESCE (MIFloat_SummService.ValueData, 0):: TFloat     AS SummService
-            , COALESCE (MIFloat_SummCard.ValueData, 0):: TFloat        AS SummCard
-            , COALESCE (MIFloat_SummCardRecalc.ValueData, 0):: TFloat  AS SummCardRecalc        
-            , COALESCE (MIFloat_SummMinus.ValueData, 0):: TFloat       AS SummMinus
-            , COALESCE (MIFloat_SummAdd.ValueData, 0):: TFloat         AS SummAdd
-            , COALESCE (MIFloat_SummSocialIn.ValueData, 0):: TFloat    AS SummSocialIn
-            , COALESCE (MIFloat_SummSocialAdd.ValueData, 0):: TFloat   AS SummSocialAdd
-            , COALESCE (MIFloat_SummChild.ValueData, 0):: TFloat       AS SummChild
-       FROM MovementItem 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+       WITH tmpMI AS (SELECT MAX (MovementItem.Id)                     AS MovementItemId
+                           , MovementItem.ObjectId                     AS PersonalId
+                           , MILinkObject_Unit.ObjectId                AS UnitId
+                           , MILinkObject_Position.ObjectId            AS PositionId
+                           , MILinkObject_InfoMoney.ObjectId           AS InfoMoneyId
+                      FROM MovementItem 
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                            ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+                      WHERE MovementItem.isErased = FALSE
+                        AND MovementItem.DescId = zc_MI_Master()
+                        AND MovementItem.MovementId =  inMovementId
+                      GROUP BY MovementItem.ObjectId
+                             , MILinkObject_Unit.ObjectId
+                             , MILinkObject_Position.ObjectId
+                             , MILinkObject_InfoMoney.ObjectId
+                     )
+         INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
+                           , Amount, SummService, SummCard, SummCardRecalc, SummMinus, SummAdd 
+                           , SummSocialIn, SummSocialAdd, SummChild)
+            SELECT COALESCE (tmpMI.MovementItemId, 0)        AS MovementItemId
+                 , MovementItem.ObjectId                     AS PersonalId
+                 , COALESCE (MIBoolean_Main.ValueData, FALSE) :: Boolean   AS isMain
+                 , MILinkObject_Unit.ObjectId                AS UnitId
+                 , MILinkObject_Position.ObjectId            AS PositionId
+                 , MILinkObject_InfoMoney.ObjectId           AS InfoMoneyId
+                 , MILinkObject_Member.ObjectId              AS MemberId
+                 , MILinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+                 , COALESCE (MovementItem.Amount, 0):: TFloat 
+                 , COALESCE (MIFloat_SummService.ValueData, 0):: TFloat     AS SummService
+                 , COALESCE (MIFloat_SummCard.ValueData, 0):: TFloat        AS SummCard
+                 , COALESCE (MIFloat_SummCardRecalc.ValueData, 0):: TFloat  AS SummCardRecalc        
+                 , COALESCE (MIFloat_SummMinus.ValueData, 0):: TFloat       AS SummMinus
+                 , COALESCE (MIFloat_SummAdd.ValueData, 0):: TFloat         AS SummAdd
+                 , COALESCE (MIFloat_SummSocialIn.ValueData, 0):: TFloat    AS SummSocialIn
+                 , COALESCE (MIFloat_SummSocialAdd.ValueData, 0):: TFloat   AS SummSocialAdd
+                 , COALESCE (MIFloat_SummChild.ValueData, 0):: TFloat       AS SummChild
+            FROM MovementItem 
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
@@ -101,13 +122,17 @@ BEGIN
                                             AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
                  LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                                ON MIBoolean_Main.MovementItemId = MovementItem.Id
-                                              AND MIBoolean_Main.DescId = zc_MIBoolean_Main()                                               
+                                              AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
+                 LEFT JOIN tmpMI ON tmpMI.PersonalId  = MovementItem.ObjectId
+                                AND tmpMI.UnitId      = MILinkObject_Unit.ObjectId
+                                AND tmpMI.PositionId  = MILinkObject_Position.ObjectId
+                                AND tmpMI.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
        WHERE MovementItem.isErased = FALSE
          AND MovementItem.DescId = zc_MI_Master()
          AND MovementItem.MovementId =  inMovementMaskId ;
         
 
-     PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId      := 0
+     PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                 := MovementItemId
                                                         , inMovementId         := inMovementId
                                                         , inPersonalId         := PersonalId
                                                         , inisMain             := isMain
@@ -128,8 +153,7 @@ BEGIN
                                                          )
                                                    
      FROM tmpMI
-       
-      ;
+    ;
 
 END;
 $BODY$

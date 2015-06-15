@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Movement_ProductionSeparate()
 
--- DROP FUNCTION gpInsertUpdate_Movement_ProductionSeparate();
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionSeparate (integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionSeparate (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionSeparate(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -12,43 +11,32 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionSeparate(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionSeparate()());
-   vbUserId := inSession;
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionSeparate());
 
    -- сохранили <Документ>
-   ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionSeparate(), inInvNumber, inOperDate, NULL);
-
-   -- сохранили связь с <От кого (в документе)>
-   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-   -- сохранили связь с <Кому (в документе)>
-   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-
-   -- сохранили свойство <Партия товара>
-   PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), ioId, inPartionGoods);
-
-   -- пересчитали Итоговые суммы по накладной
-   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
-   -- сохранили протокол
-   -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+   ioId := lpInsertUpdate_Movement_ProductionSeparate (ioId          := ioId
+                                                     , inInvNumber   := inInvNumber
+                                                     , inOperDate    := inOperDate
+                                                     , inFromId      := inFromId
+                                                     , inToId        := inToId
+                                                     , inPartionGoods:= inPartionGoods
+                                                     , inUserId      := vbUserId
+                                                      );
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 28.05.14                                                        *
- 16.07.13         *
-
+ 11.06.15                                        *
 */
 
 -- тест

@@ -21,6 +21,7 @@ $BODY$
   DECLARE vbExtraChargesPercent TFloat;
 
   DECLARE vbUnitId_From Integer;
+  DECLARE vbArticleLoss_From Integer;
   DECLARE vbContractId  Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -42,10 +43,11 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
 
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_ArticleLoss() THEN Object_From.Id ELSE 0 END, 0) AS ArticleLoss_From
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
 
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbUnitId_From, vbContractId
+               , vbUnitId_From, vbArticleLoss_From, vbContractId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -70,7 +72,7 @@ BEGIN
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
      -- проверка
-     IF COALESCE (vbContractId, 0) = 0 AND vbUnitId_From = 0
+     IF COALESCE (vbContractId, 0) = 0 AND vbUnitId_From = 0 AND vbArticleLoss_From = 0
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
      END IF;

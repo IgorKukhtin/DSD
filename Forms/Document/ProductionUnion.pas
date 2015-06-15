@@ -47,6 +47,7 @@ type
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
     clInfoMoneyName_all: TcxGridDBColumn;
+    colPartionGoodsDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

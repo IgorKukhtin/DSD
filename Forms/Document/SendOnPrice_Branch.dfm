@@ -3,7 +3,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +11,19 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     Width = 944
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 740
+    ExplicitWidth = 944
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 944
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 740
+      ExplicitWidth = 944
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 944
         Height = 518
-        ExplicitWidth = 740
+        ExplicitLeft = 8
+        ExplicitTop = 3
+        ExplicitWidth = 944
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -209,9 +211,16 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           object colUnitName: TcxGridDBColumn [13]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = UnitChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 120
           end
         end
@@ -222,7 +231,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     Width = 944
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 740
+    ExplicitWidth = 944
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -421,7 +430,45 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrintOut: TdsdPrintAction [9]
+    object actPrintUnit: TdsdPrintAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintOut
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOut
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '1'
+          DataType = ftFloat
+        end>
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrintOut: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintOut
@@ -448,6 +495,11 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '0'
+          DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
@@ -470,7 +522,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -490,6 +542,30 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object UnitChoiceForm: TOpenChoiceForm [19]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'UnitChoiceForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
           DataType = ftString
         end>
       isShowModal = True
@@ -630,6 +706,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -655,6 +739,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     end
     object bbPrintOut: TdxBarButton
       Action = actPrintOut
+      Category = 0
+    end
+    object bbPrintUnit: TdxBarButton
+      Action = actPrintUnit
       Category = 0
     end
   end
@@ -1074,9 +1162,11 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         ParamType = ptInput
       end
       item
+        Name = 'inUnitId'
         Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
       end
       item
         Value = Null

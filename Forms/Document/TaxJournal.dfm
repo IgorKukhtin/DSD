@@ -2,8 +2,8 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1118
-  ExplicitHeight = 562
+  ExplicitWidth = 1126
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +22,8 @@ inherited TaxJournalForm: TTaxJournalForm
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 458
+        ExplicitLeft = -48
+        ExplicitTop = -3
         ExplicitWidth = 1110
         ExplicitHeight = 458
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -758,6 +760,30 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
       Caption = 'actGetReporNameTax'
     end
+    object mactPrint_Tax_Client: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actGetReporNameTax
+        end
+        item
+          Action = actPrintTax_Client
+        end>
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      ImageIndex = 18
+    end
     object mactPrint_Tax_Us: TMultiAction
       Category = 'DSDLib'
       MoveParams = <
@@ -782,29 +808,75 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object mactPrint_Tax_Client: TMultiAction
+    object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
-      MoveParams = <
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+      ImageIndex = 35
+      FormName = 'TTaxJournalDialogForm'
+      FormNameParam.Value = 'TTaxJournalDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
         item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      ActionList = <
-        item
-          Action = actGetReporNameTax
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
         end
         item
-          Action = actPrintTax_Client
+          Name = 'DateRegistered'
+          Value = 41640d
+          Component = MasterCDS
+          ComponentItem = 'DateRegistered'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'Registered'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'Registered'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'InvNumberRegistered'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'InvNumberRegistered'
+          DataType = ftString
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'ContractName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
         end>
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      ImageIndex = 18
+      isShowModal = True
+      OpenBeforeShow = True
     end
     object MedocAction: TMedocAction
       Category = 'TaxLib'
@@ -1102,6 +1174,14 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1159,6 +1239,10 @@ inherited TaxJournalForm: TTaxJournalForm
     end
     object bbMedocFalse: TdxBarButton
       Action = actMedocFalse
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end

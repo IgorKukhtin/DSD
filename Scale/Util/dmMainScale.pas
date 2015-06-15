@@ -12,56 +12,69 @@ type
     procedure DataModuleCreate(Sender: TObject);
   private
   public
+    // Scale + ScaleCeh
     function gpSelect_ToolsWeighing_onLevelChild(inBranchCode:Integer;inLevelChild: String): TArrayList;
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
     function gpGet_Scale_User:String;
-
+    function gpGet_Scale_OperDate(var execParams:TParams):TDateTime;
+    // Scale + ScaleCeh
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
+    function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
+    // Scale + ScaleCeh
+    function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
+    function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MIString(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MIDate(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
+    // Scale + ScaleCeh
+    function lpGet_BranchName(inBranchCode:Integer): String;
+    function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
+    // !!!Scale + ScaleCeh!!!
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
-    function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
+    // Scale
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Personal(var execParams:TParams;inPersonalCode:Integer): Boolean;
-
+    // !!!Scale + ScaleCeh!!!
+    function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
+    //
+    // +++Scale+++
     function gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
-
-    function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
+    // +++Scale+++
     function gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
     function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
-
+    function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
+    //
+    // Scale
     function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
 
-    function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
-
-    function gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
-
-    function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
-    function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
-    function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
-
-    function lpGet_BranchName(inBranchCode:Integer): String;
   end;
 
-  function gpInitialize_OperDate(var execParams:TParams):TDateTime;
-  function gpInitialize_Const: Boolean;
-  function gpInitialize_Ini: Boolean;
-  function gpInitialize_ParamsMovement: Boolean;
-  function gpInitialize_MovementDesc: Boolean;
+  function gpInitialize_Const: Boolean; // Scale + ScaleCeh
+  function gpInitialize_Ini: Boolean;   // Scale
+  function gpInitialize_SettingMain_Default: Boolean;//Scale + ScaleCeh
+  function gpInitialize_MovementDesc: Boolean; // !!!Scale + ScaleCeh!!!
 
 var
   DMMainScaleForm: TDMMainScaleForm;
 
 implementation
-uses Inifiles,TypInfo,DialogMovementDesc;
+uses Inifiles,TypInfo,DialogMovementDesc,UtilConst;
 {$R *.dfm}
 {------------------------------------------------------------------------}
 procedure TDMMainScaleForm.DataModuleCreate(Sender: TObject);
 begin
-  gpInitialize_ParamsMovement;
+    //gpInitialize_ParamsMovement;
+    //
+    Create_ParamsMovement(ParamsMovement);
+    //
+    gpGet_Scale_OperDate(ParamsMovement);
+    //
+    DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
 end;
 {------------------------------------------------------------------------}
-function gpInitialize_ParamsMovement: Boolean;
+{function gpInitialize_ParamsMovement: Boolean;
 begin
     Result:=false;
     //
@@ -70,7 +83,7 @@ begin
     gpInitialize_OperDate(ParamsMovement);
     //
     Result:=DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,TRUE,FALSE);//isLast=TRUE,isNext=FALSE
-end;
+end;}
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
 begin
@@ -166,29 +179,6 @@ begin
     Result:=true;
 end;
 {------------------------------------------------------------------------}
-function gpInitialize_MovementDesc: Boolean;
-begin
-   with DialogMovementDescForm do
-   begin
-        if ParamsMovement.ParamByName('MovementDescNumber').asInteger<>0 then
-        begin
-             CDS.Filter:='(Number='+IntToStr(ParamsMovement.ParamByName('MovementDescNumber').asInteger)
-                        +')'
-                          ;
-             CDS.Filtered:=true;
-             if CDS.RecordCount<>1
-             then ShowMessage('Ошибка.Код операции не определен.')
-             else begin ParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
-                        ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
-                        ParamsMovement.ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
-                        ParamsMovement.ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
-                        ParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
-                  end;
-        end
-        else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
-   end;
-end;
-{------------------------------------------------------------------------}
 function TDMMainScaleForm.gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
 begin
     Result:=false;
@@ -214,21 +204,22 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpUpdate_Scale_Movement_check(execParamsMovement:TParams): Boolean;
+function TDMMainScaleForm.gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
     if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
     with spSelect do begin
-       StoredProcName:='gpUpdate_Scale_Movement_check';
+       StoredProcName:='gpGet_Scale_Movement_checkId';
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inMovementId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
        //try
          Execute;
          Result:=DataSet.FieldByName('isOk').asBoolean;
+         execParamsMovement.ParamByName('isMovementId_check').asBoolean:=DataSet.FieldByName('isOk').asBoolean
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpUpdate_Scale_Movement_check');
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
        end;}
     end;
 end;
@@ -249,6 +240,48 @@ begin
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpUpdate_Scale_MIFloat');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MIString(execParams:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_MIString';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, execParams.ParamByName('inMovementItemId').AsInteger);
+       Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
+       Params.AddParam('inValueData', ftString, ptInput, execParams.ParamByName('inValueData').AsString);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MIString');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MIDate(execParams:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_MIDate';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, execParams.ParamByName('inMovementItemId').AsInteger);
+       Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
+       Params.AddParam('inValueData', ftDateTime, ptInput, execParams.ParamByName('inValueData').AsDateTime);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MIDate');
        end;}
     end;
     Result:=true;
@@ -424,6 +457,7 @@ begin
        StoredProcName:='gpSelect_Object_ToolsWeighing_onLevelChild';
        OutputType:=otDataSet;
        Params.Clear;
+       Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
        Params.AddParam('inBranchCode', ftInteger, ptInput, inBranchCode);
        Params.AddParam('inLevelChild', ftString, ptInput, inLevelChild);
        //try
@@ -518,12 +552,19 @@ end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
 begin
+    if (trim (inBarCode) = '') or (trim (inBarCode) = '0') then
+    begin
+         Result:=false;
+         exit
+    end;
+    //
     with spSelect do
     begin
-       //в ШК - Id товара или товар+вид товара
+       //в ШК - Id товара или Id товар+вид товара или для isCeh код GoodsCode
        StoredProcName:='gpGet_Scale_Goods';
        OutputType:=otDataSet;
        Params.Clear;
+       Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
        //try
          Execute;
@@ -535,11 +576,22 @@ begin
          ParamByName('GoodsCode').AsInteger:= DataSet.FieldByName('GoodsCode').AsInteger;
          ParamByName('GoodsName').asString := DataSet.FieldByName('GoodsName').asString;
 
-         ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').asInteger;
-         ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').AsInteger;
-         ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
-       end;
+         if SettingMain.isCeh = FALSE then
+         begin
+              // только для программы Scale
+              ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').asInteger;
+              ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').AsInteger;
+              ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
+         end
+         else
+         begin
+              // только для программы ScaleCeh
+              ParamByName('MeasureId').AsInteger  := DataSet.FieldByName('MeasureId').asInteger;
+              ParamByName('MeasureCode').AsInteger:= DataSet.FieldByName('MeasureCode').AsInteger;
+              ParamByName('MeasureName').asString := DataSet.FieldByName('MeasureName').asString;
+         end;
 
+       end;
        {except
          result.Code := Code;
          result.Id   := 0;
@@ -623,6 +675,7 @@ begin
          Result:=DataSet.RecordCount<>0;
        with execParams do
        begin
+         ParamByName('isGetPartner').AsBoolean:= true;
          ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId').AsInteger;
          ParamByName('calcPartnerCode').AsInteger:= DataSet.FieldByName('PartnerCode').AsInteger;
          ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName').asString;
@@ -691,7 +744,7 @@ begin
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inPartnerId', ftInteger, ptInput, execParams.ParamByName('calcPartnerId').AsInteger);
-       Params.AddParam('inContractIdId', ftInteger, ptInput, execParams.ParamByName('ContractId').AsInteger);
+       Params.AddParam('inContractId', ftInteger, ptInput, execParams.ParamByName('ContractId').AsInteger);
        //try
          Execute;
          //
@@ -784,8 +837,9 @@ begin
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
 
-         //определяется только для zc_Movement_SendOnPrice
-         if DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_SendOnPrice
+         //определяется только для zc_Movement_SendOnPrice + zc_Movement_Loss
+         if  (DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_SendOnPrice)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
          then ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
          ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId_calc').AsInteger;
@@ -836,7 +890,7 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function gpInitialize_OperDate(var execParams:TParams):TDateTime;
+function TDMMainScaleForm.gpGet_Scale_OperDate(var execParams:TParams):TDateTime;
 begin
     with DMMainScaleForm.spSelect do
     begin
@@ -844,6 +898,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        //try
+         Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
          Execute;
          //
@@ -856,6 +911,19 @@ begin
          result.Name := '';
          ShowMessage('Ошибка получения - gpGet_Scale_OperDate');
        end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.lpGet_BranchName(inBranchCode:Integer): String;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpExecSql_Value';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inSqlText', ftString, ptInput, 'SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE((SELECT Object_Branch.Id FROM Object AS Object_Branch WHERE Object_Branch.ObjectCode = '+ IntToStr(inBranchCode) + ' AND Object_Branch.DescId = zc_Object_Branch()), zc_Branch_Basis())' );
+       Execute;
+       Result:=DataSet.FieldByName('Value').asString;
     end;
 end;
 {------------------------------------------------------------------------}
@@ -969,19 +1037,6 @@ begin
     Result:=true;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.lpGet_BranchName(inBranchCode:Integer): String;
-begin
-    with spSelect do
-    begin
-       StoredProcName:='gpExecSql_Value';
-       OutputType:=otDataSet;
-       Params.Clear;
-       Params.AddParam('inSqlText', ftString, ptInput, 'SELECT ValueData FROM Object WHERE ObjectCode = '+ IntToStr(inBranchCode) + ' and DescId = zc_Object_Branch()' );
-       Execute;
-       Result:=DataSet.FieldByName('Value').asString;
-    end;
-end;
-{------------------------------------------------------------------------}
 function gpInitialize_Ini: Boolean;
 var
   Ini: TInifile;
@@ -991,7 +1046,14 @@ var
 begin
   Result:=false;
 
+  //!!!захардкодили т.к. это программа Scale!!!
+  SettingMain.isCeh:=FALSE;//AnsiUpperCase(ExtractFileName(ParamStr(0))) <> AnsiUpperCase('Scale.exe');
+
+  //а теперь ини-файл
   Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'scale.ini');
+
+  //!!!отладака при запуске!!!
+  gc_isDebugMode:=AnsiUpperCase(Ini.ReadString('Main','isDebugMode','FALSE')) = AnsiUpperCase('TRUE');
 
   SettingMain.BranchCode:=Ini.ReadInteger('Main','BrancCode',1);
   if SettingMain.BranchCode=1 then Ini.WriteInteger('Main','BrancCode',1);
@@ -1031,6 +1093,44 @@ begin
   ScaleList.Free;
 
   Result:=true;
+end;
+{------------------------------------------------------------------------}
+function gpInitialize_SettingMain_Default: Boolean;
+begin
+  SettingMain.isGoodsComplete:=GetArrayList_Value_byName(Default_Array,'isGoodsComplete') = AnsiUpperCase('TRUE');
+  //
+  if SettingMain.isCeh = TRUE then
+  begin
+       SettingMain.WeightSkewer1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer1'));
+       SettingMain.WeightSkewer2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer2'));
+  end;
+  //
+  Result:=true;
+end;
+{------------------------------------------------------------------------}
+function gpInitialize_MovementDesc: Boolean;
+begin
+   with DialogMovementDescForm do
+   begin
+        if ParamsMovement.ParamByName('MovementDescNumber').asInteger<>0 then
+        begin
+             CDS.Filter:='(Number='+IntToStr(ParamsMovement.ParamByName('MovementDescNumber').asInteger)
+                        +')'
+                          ;
+             CDS.Filtered:=true;
+             if CDS.RecordCount<>1
+             then ShowMessage('Ошибка.Код операции не определен.')
+             else begin ParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
+                        ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
+                        ParamsMovement.ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
+                        ParamsMovement.ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
+                        ParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
+                        ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
+                        ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
+                  end;
+        end
+        else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
+   end;
 end;
 {------------------------------------------------------------------------}
 end.

@@ -12,11 +12,13 @@ uses
 
 type
   TDialogNumberValueForm = class(TAncestorDialogScaleForm)
-    NumberValuePanel: TPanel;
+    PanelNumberValue: TPanel;
     NumberValueEdit: TcxCurrencyEdit;
-    NumberValueLabel: TLabel;
+    LabelNumberValue: TLabel;
   private
     function Checked: boolean; override;//Ïğîâåğêà êîğğåêòíîãî ââîäà â Edit
+  public
+   NumberValue:Integer;
   end;
 
 var
@@ -26,10 +28,9 @@ implementation
 {$R *.dfm}
 {------------------------------------------------------------------------------}
 function TDialogNumberValueForm.Checked: boolean; //Ïğîâåğêà êîğğåêòíîãî ââîäà â Edit
-var NumberValue:Integer;
 begin
      try NumberValue:=StrToInt(NumberValueEdit.Text);except NumberValue:=0;end;
-     Result:=NumberValue>0;
+     Result:=NumberValue>=0;
 end;
 {------------------------------------------------------------------------------}
 end.

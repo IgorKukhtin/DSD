@@ -25,8 +25,8 @@ type
     bbChoice: TSpeedButton;
     spSelect: TdsdStoredProc;
     CDS: TClientDataSet;
-    gbPartnerCode: TGroupBox;
-    EditInvNumber: TEdit;
+    gbInvNumber_parent: TGroupBox;
+    EditInvNumber_parent: TEdit;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     deStart: TcxDateEdit;
@@ -37,7 +37,6 @@ type
     MovementDescName: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     WeighingNumber: TcxGridDBColumn;
-    PartionGoods: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     InvNumberOrder: TcxGridDBColumn;
     InvNumberTransport: TcxGridDBColumn;
@@ -98,7 +97,7 @@ type
       Shift: TShiftState);
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure FormDestroy(Sender: TObject);
-    procedure EditInvNumberChange(Sender: TObject);
+    procedure EditInvNumber_parentChange(Sender: TObject);
     procedure actRefreshExecute(Sender: TObject);
     procedure actChoiceExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -155,8 +154,7 @@ begin
      isChoice_local:=(isChoice);
      bbChoice.Enabled:=(isChoice_local) or (UserId_begin=5);
 
-     EditInvNumber.Text:='';
-     cbPrintPreview.Checked:=true;
+     EditInvNumber_parent.Text:='';
 
      fStartWrite:=true;
      deStart.Text:=DateToStr(ParamsMovement_local.ParamByName('OperDate').AsDateTime);
@@ -167,6 +165,7 @@ begin
      RefreshDataSet;
      CDS.Filtered:=false;
 
+     //для начала снимаем всю печать
      cbPrintMovement.Checked:=false;
      cbPrintTransport.Checked:=false;
      cbPrintQuality.Checked:=false;
@@ -174,11 +173,13 @@ begin
      cbPrintAccount.Checked:=false;
      cbPrintPack.Checked:=false;
      cbPrintSpec.Checked:=false;
+     //и отмечаем просмотр
+     cbPrintPreview.Checked:=true;
 
      if ParamsMovement_local.ParamByName('MovementId').AsInteger<>0
      then CDS.Locate('Id',ParamsMovement_local.ParamByName('MovementId').AsString,[]);
 
-     ActiveControl:=EditInvNumber;
+     ActiveControl:=EditInvNumber_parent;
 
      Application.ProcessMessages;
      Application.ProcessMessages;
@@ -316,9 +317,9 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
 begin
-     if (trim(EditInvNumber.Text)<>'')
+     if (trim(EditInvNumber_parent.Text)<>'')
      then
-       if (pos(AnsiUpperCase(EditInvNumber.Text),AnsiUpperCase(DataSet.FieldByName('InvNumber').AsString))>0)
+       if (pos(AnsiUpperCase(EditInvNumber_parent.Text),AnsiUpperCase(DataSet.FieldByName('InvNumber_parent').AsString))>0)
        then Accept:=true else Accept:=false;
 end;
 {------------------------------------------------------------------------------}
@@ -333,13 +334,13 @@ begin
 end;
 
 {------------------------------------------------------------------------------}
-procedure TGuideMovementForm.EditInvNumberChange(Sender: TObject);
+procedure TGuideMovementForm.EditInvNumber_parentChange(Sender: TObject);
 begin
        with CDS do begin
            //***Filtered:=false;
            //***if trim(EditPartnerName.Text)<>'' then begin Filtered:=false;Filtered:=true;end;
            Filtered:=false;
-           if trim(EditInvNumber.Text)<>'' then Filtered:=true;
+           if trim(EditInvNumber_parent.Text)<>'' then Filtered:=true;
        end;
 end;
 {------------------------------------------------------------------------------}

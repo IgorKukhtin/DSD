@@ -170,6 +170,22 @@ inherited Report_MemberForm: TReport_MemberForm
             Options.Editing = False
             Width = 181
           end
+          object MoneyPlaceName: TcxGridDBColumn
+            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
+            DataBinding.FieldName = 'MoneyPlaceName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object ItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'

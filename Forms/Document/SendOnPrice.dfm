@@ -3,7 +3,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientHeight = 668
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +11,17 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Width = 982
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 878
+    ExplicitWidth = 982
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 878
+      ExplicitWidth = 982
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 982
         Height = 518
-        ExplicitWidth = 878
+        ExplicitWidth = 982
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -206,9 +206,16 @@ inherited SendOnPriceForm: TSendOnPriceForm
           object colUnitName: TcxGridDBColumn [13]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = UnitChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 120
           end
         end
@@ -219,7 +226,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Width = 982
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 878
+    ExplicitWidth = 982
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -399,7 +406,49 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrintOut: TdsdPrintAction [9]
+    object actPrintUnit: TdsdPrintAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintOut
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOut
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103')'
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inReportType'
+          Value = '0'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '1'
+          DataType = ftFloat
+        end>
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrintOut: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintOut
@@ -430,6 +479,11 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
           Name = 'inReportType'
           Value = '0'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '0'
+          DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
@@ -452,7 +506,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -472,6 +526,30 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object UnitChoiceForm: TOpenChoiceForm [19]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'UnitChoiceForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
           DataType = ftString
         end>
       isShowModal = True
@@ -612,6 +690,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -637,6 +723,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
     object bbPrintOut: TdxBarButton
       Action = actPrintOut
+      Category = 0
+    end
+    object bbPrintUnit: TdxBarButton
+      Action = actPrintUnit
       Category = 0
     end
   end
@@ -1092,9 +1182,11 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptInput
       end
       item
+        Name = 'inUnitId'
         Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
       end
       item
         Value = Null

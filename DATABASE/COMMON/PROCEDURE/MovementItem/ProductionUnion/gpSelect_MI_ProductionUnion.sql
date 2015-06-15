@@ -29,6 +29,7 @@ BEGIN
             , CAST (NULL AS TFloat)                 AS Amount
 
             , CAST (NULL AS Boolean)                AS PartionClose
+            , CAST (NULL AS TDateTime)              AS PartionGoodsDate
             , CAST (NULL AS TVarchar)               AS PartionGoods
 
             , CAST (NULL AS TVarchar)               AS Comment
@@ -98,6 +99,7 @@ BEGIN
             , MovementItem.Amount               AS Amount
 
             , MIBoolean_PartionClose.ValueData  AS PartionClose
+            , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
             , MIString_PartionGoods.ValueData   AS PartionGoods
 
             , MIString_Comment.ValueData        AS Comment
@@ -171,6 +173,9 @@ BEGIN
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
 
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                        ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
              LEFT JOIN MovementItemString AS MIString_PartionGoods
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -204,6 +209,7 @@ BEGIN
             , MovementItem.Amount               AS Amount
 
             , MIBoolean_PartionClose.ValueData  AS PartionClose
+            , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
             , MIString_PartionGoods.ValueData   AS PartionGoods
 
             , MIString_Comment.ValueData        AS Comment
@@ -278,6 +284,9 @@ BEGIN
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
 
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                        ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
              LEFT JOIN MovementItemString AS MIString_PartionGoods
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()

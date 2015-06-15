@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Master_Sybase()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master_Sybase  (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master_Sybase (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master_Sybase (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master_Sybase(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,9 +9,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master_Sybase(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inIsPartionClose	     Boolean   , -- партия закрыта (да/нет)
-    IN inCount	             TFloat    , -- Количество батонов или упаковок
+    IN inCount	             TFloat    , -- Количество батонов
     IN inRealWeight          TFloat    , -- Фактический вес(информативно)
     IN inCuterCount          TFloat    , -- Количество кутеров
+    IN inPartionGoodsDate    TDateTime , -- Партия товара
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inComment             TVarChar  , -- Примечание
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -43,12 +45,16 @@ BEGIN
    -- сохранили свойство <партия закрыта (да/нет)>
    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionClose(), ioId, inIsPartionClose);
 
+   -- меняем параметр
+   IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
+   -- сохранили свойство <Партия товара>
+   PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
    -- сохранили свойство <Партия товара>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_PartionGoods(), ioId, inPartionGoods);
 
    -- сохранили свойство <Примечание>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
-   -- сохранили свойство <Количество батонов или упаковок>
+   -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount);
    -- сохранили свойство <Фактический вес(информативно)>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_RealWeight(), ioId, inRealWeight);

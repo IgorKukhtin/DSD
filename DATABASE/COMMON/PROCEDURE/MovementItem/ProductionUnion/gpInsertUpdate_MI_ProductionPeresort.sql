@@ -36,9 +36,6 @@ BEGIN
    outGoodsChildName:= (SELECT ValueData FROM Object WHERE Id = ioGoodsChildId);
    outGoodsChilCode:= (SELECT ObjectCode FROM Object WHERE Id = ioGoodsChildId);
 
-   -- меняем параметр
-   IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
-   IF inPartionGoodsDateChild <= '01.01.1900' THEN inPartionGoodsDateChild:= NULL; END IF;
    
    IF COALESCE (ioId,0) <> 0
    THEN
@@ -52,6 +49,8 @@ BEGIN
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
                                                   , inAmount           := inAmount
+                                                  , inCount            := 0
+                                                  , inPartionGoodsDate := inPartionGoodsDate
                                                   , inPartionGoods     := inPartionGoods
                                                   , inGoodsKindId      := inGoodsKindId
                                                   , inUserId           := vbUserId

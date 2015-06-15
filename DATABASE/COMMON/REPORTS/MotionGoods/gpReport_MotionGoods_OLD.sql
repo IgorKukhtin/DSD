@@ -149,7 +149,7 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
 
-    IF vbUserId = 5 OR 1=1
+    IF 1=0 -- vbUserId = 5 OR 1=1
     then RETURN QUERY
          select * from gpReport_MotionGoods_NEW (inStartDate     
                                                , inEndDate       

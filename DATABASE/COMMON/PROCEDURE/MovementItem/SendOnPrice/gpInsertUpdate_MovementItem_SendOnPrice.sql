@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_SendOnPrice()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -15,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice(
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inUnitId              Integer   , -- Подразделение
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -40,6 +43,7 @@ BEGIN
                                           , ioCountForPrice      := ioCountForPrice
                                           , inPartionGoods       := inPartionGoods
                                           , inGoodsKindId        := inGoodsKindId
+                                          , inUnitId             := inUnitId
                                           , inUserId             := vbUserId
                                            ) AS tmp;
 
@@ -51,6 +55,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.06.15         * add inUnitId
  05.05.14                                                        * надо раскоментить права после отладки
  08.09.13                                        * add zc_MIFloat_AmountChangePercent
  05.09.13                                        * add zc_MIFloat_ChangePercentAmount

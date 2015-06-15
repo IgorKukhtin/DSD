@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inGoodsId               Integer   , -- Товары
     IN inGoodsKindId           Integer   , -- Виды товаров
-    IN inRealWeight            TFloat    , -- Реальный вес (без учета % скидки для кол-ва)
+    IN inRealWeight            TFloat    , -- Реальный вес (без учета: минус тара и % скидки для кол-ва)
     IN inChangePercentAmount   TFloat    , -- % скидки для кол-ва
     IN inCountTare             TFloat    , -- Количество тары
     IN inWeightTare            TFloat    , -- Вес 1-ой тары
@@ -74,7 +74,7 @@ BEGIN
                                                        , inChangePercentAmount := inChangePercentAmount
                                                        , inCountTare           := inCountTare
                                                        , inWeightTare          := inWeightTare
-                                                       , inCount               := inCount
+                                                       , inCountPack           := inCount
                                                        , inHeadCount           := inHeadCount
                                                        , inBoxCount            := inBoxCount
                                                        , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
@@ -117,6 +117,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.15                                        * all
  13.10.14                                        * all
  13.03.14         *
 */

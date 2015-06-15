@@ -105,6 +105,12 @@ type
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     colContractCode: TcxGridDBColumn;
+    spSelectPrint: TdsdStoredProc;
+    bbPrint: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    actPrint: TdsdPrintAction;
+    FormParams: TdsdFormParams;
   private
   public
   end;

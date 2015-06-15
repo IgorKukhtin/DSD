@@ -489,13 +489,13 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
           Name = 'PersonalTakeId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeId'
+          ComponentItem = 'MemberTakeId'
         end
         item
           Name = 'PersonalTakeName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeName'
+          ComponentItem = 'MemberTakeName'
           DataType = ftString
         end
         item

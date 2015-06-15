@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingProduction(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Parent TVarChar
-             , StartWeighing TDateTime, EndWeighing TDateTime 
+             , isProductionIn Boolean
+             , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDesc TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , UserId Integer, UserName TVarChar
@@ -17,9 +18,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_WeighingProduction());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_WeighingProduction());
+     vbUserId:= lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -32,10 +33,11 @@ BEGIN
              , Object_Status.Name               AS StatusName
              
              , CAST ('' as TVarChar)            AS Parent
-             
+
+             , FALSE AS isProductionIn
              , CAST (CURRENT_DATE as TDateTime) AS StartWeighing
              , CAST (CURRENT_DATE as TDateTime) AS EndWeighing
-            
+
              , CAST (0 as TFloat)    AS MovementDesc
 
              , 0                     AS FromId
@@ -58,6 +60,7 @@ BEGIN
 
              , Movement_Parent.InvNumber         AS Parent
               
+             , MovementBoolean_isIncome.ValueData    AS isProductionIn
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
@@ -75,6 +78,9 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
+                                      ON MovementBoolean_isIncome.MovementId =  Movement.Id
+                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
                                    ON MovementDate_StartWeighing.MovementId =  Movement.Id
                                   AND MovementDate_StartWeighing.DescId = zc_MovementDate_StartWeighing()
@@ -120,4 +126,4 @@ ALTER FUNCTION gpGet_Movement_WeighingProduction (Integer, TVarChar) OWNER TO po
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_WeighingProduction (inMovementId := 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_WeighingProduction (inMovementId:= 1, inSession:= zfCalc_UserAdmin())

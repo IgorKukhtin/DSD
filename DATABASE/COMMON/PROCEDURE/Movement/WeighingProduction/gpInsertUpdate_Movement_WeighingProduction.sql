@@ -1,59 +1,85 @@
 -- Function: gpInsertUpdate_Movement_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ  Взвешивание (производство)>
-    IN inInvNumber           TVarChar  , -- Номер документа
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
-
-    IN inParentId            Integer   , -- Документ родитель
-    IN inStartWeighing       TDateTime , -- Протокол начало взвешивания
-    IN inEndWeighing         TDateTime , -- Протокол окончание взвешивания
-
-    IN inMovementDesc        TFloat    , -- Вид документа
- 
+    IN inMovementDescId      Integer   , -- Вид документа
+    IN inMovementDescNumber  Integer   , -- Код операции (взвешивание)
+    IN inWeighingNumber      Integer   , -- Номер взвешивания
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inUserId              Integer   , -- Пользователь
-
+    IN inPartionGoods        TVarChar  , -- Партия товара
+    IN inIsProductionIn      Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
+
+   DECLARE vbInvNumber TVarChar;
+   DECLARE vbParentId Integer;
+   DECLARE vbStartWeighing TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_WeighingProduction());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_WeighingProduction());
+     vbUserId:= lpGetUserBySession (inSession);
+
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_WeighingProduction());
+     -- vbAccessKeyId:= ...;
+
+     IF COALESCE (ioId, 0) = 0
+     THEN
+         vbInvNumber:= CAST (NEXTVAL ('Movement_WeighingProduction_seq') AS TVarChar);
+         vbParentId:= NULL;
+         vbStartWeighing:= CURRENT_TIMESTAMP;
+     ELSE
+         SELECT InvNumber, ParentId INTO vbInvNumber, vbParentId FROM Movement WHERE Id = ioId;
+     END IF;
+
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_WeighingProduction(), inInvNumber, inOperDate, inParentId, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_WeighingProduction(), vbInvNumber, inOperDate, vbParentId, vbAccessKeyId);
 
-     -- сохранили свойство <Протокол начало взвешиванияа>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartWeighing(), ioId, inStartWeighing);
-     -- сохранили свойство <Протокол окончание взвешивания>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighingr(), ioId, inEndWeighingr);
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <Протокол начало взвешивания>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartWeighing(), ioId, vbStartWeighing);
+     END IF;
      
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isIncome(), ioId, inIsProductionIn);
+
      -- сохранили свойство <Вид документа>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), ioId, inMovementDesc);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), ioId, inMovementDescId);
+     -- сохранили свойство <Код операции (взвешивание)>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDescNumber(), ioId, inMovementDescNumber);
+     -- сохранили свойство <Номер взвешивания>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeighingNumber(), ioId, inWeighingNumber);
  
+     -- сохранили свойство <Партия товара>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), ioId, inPartionGoods);
+
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
      -- сохранили связь с <Пользователь>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, inUserId);
-
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, vbUserId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -62,6 +88,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.06.15                                        * all
  13.03.14         *
 */
 

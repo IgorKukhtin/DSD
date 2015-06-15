@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_SendOnPrice_Branch()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice_Branch (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice_Branch (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice_Branch(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -15,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice_Branch(
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inUnitId              Integer   , -- Подразделение
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -64,6 +67,7 @@ BEGIN
                                                                               THEN inGoodsKindId
                                                                          ELSE (SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_GoodsKind())
                                                                     END
+                                          , inUnitId             := inUnitId
                                           , inUserId             := vbUserId
                                            ) AS tmp;
 
@@ -74,6 +78,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.06.15         * add inUnitId
  04.11.13                                        *
 */
 

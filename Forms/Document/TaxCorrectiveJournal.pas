@@ -89,6 +89,8 @@ type
     colInvNumberRegistered: TcxGridDBColumn;
     spGetInfo: TdsdStoredProc;
     cxTextEdit1: TcxTextEdit;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

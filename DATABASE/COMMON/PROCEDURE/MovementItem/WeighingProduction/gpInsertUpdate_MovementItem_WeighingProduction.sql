@@ -1,24 +1,25 @@
 -- Function: gpInsertUpdate_MovementItem_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean, TFloat,TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,  TDateTime, TVarChar,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar,Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingProduction(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inStartWeighing       Boolean   , -- Режим начала взвешивания
-    IN inRealWeight          TFloat    , -- Реальный вес (без учета % скидки для кол-ва)
+    IN inIsStartWeighing     Boolean   , -- Режим начала взвешивания
+    IN inRealWeight          TFloat    , -- Реальный вес (без учета: минус тара и прочее)
     IN inWeightTare          TFloat    , -- Вес тары
     IN inLiveWeight          TFloat    , -- Живой вес
     IN inHeadCount           TFloat    , -- Количество голов
-    IN inCount               TFloat    , -- Количество батонов или упаковок
-    IN inCountSkewer1        TFloat    , -- Количество шпажек вида1
-    IN inWeightSkewer1       TFloat    , -- Вес шпажек вида1
+    IN inCount               TFloat    , -- Количество батонов
+    IN inCountPack           TFloat    , -- Количество упаковок
+    IN inCountSkewer1        TFloat    , -- Количество шпажек/крючков вида1
+    IN inWeightSkewer1       TFloat    , -- Вес одной шпажки/крючка вида1
     IN inCountSkewer2        TFloat    , -- Количество шпажек вида2
-    IN inWeightSkewer2       TFloat    , -- Вес шпажек вида2
+    IN inWeightSkewer2       TFloat    , -- Вес одной шпажки вида2
     IN inWeightOther         TFloat    , -- Вес, прочее
-    IN inPartionGoodsDate    TDateTime , -- Партия
+    IN inPartionGoodsDate    TDateTime , -- Партия товара (дата)
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inSession             TVarChar    -- сессия пользователя
@@ -27,53 +28,60 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingProduction());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingProduction());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- проверка - связанные документы Изменять нельзя
      -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
 
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    
-     -- сохранили свойство <>
+     -- сохранили свойство <Режим начала взвешивания>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_StartWeighing(), ioId, inIsStartWeighing);
+
+     -- сохранили свойство <Реальный вес (без учета: минус тара и прочее)
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeight(), ioId, inRealWeight);
-     -- сохранили свойство <>
+     -- сохранили свойство <Вес тары>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare(), ioId, inWeightTare);
-     -- сохранили свойство <>
+     -- сохранили свойство <Живой вес>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_LiveWeight(), ioId, inLiveWeight);
-     -- сохранили свойство <>
+     -- сохранили свойство <Количество голов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
-     -- сохранили свойство <>
+     -- сохранили свойство <Количество батонов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
+     -- сохранили свойство <Количество упаковок>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountPack(), ioId, inCountPack);
 
 
-     -- сохранили свойство <>
+     -- сохранили свойство <Количество шпажек/крючков вида1>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountSkewer1(), ioId, inCountSkewer1);
-     -- сохранили свойство <>
+     -- сохранили свойство <Вес одной шпажки/крючка вида1>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightSkewer1(), ioId, inWeightSkewer1);
-     -- сохранили свойство <>
+     -- сохранили свойство <Количество шпажек вида2>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountSkewer2(), ioId, inCountSkewer2);
-     -- сохранили свойство <>
+     -- сохранили свойство <Вес одной шпажки вида2>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightSkewer2(), ioId, inWeightSkewer2);
-     -- сохранили свойство <>
+     -- сохранили свойство <Вес, прочее>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightOther(), ioId, inWeightOther);
 
 
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemIDate (zc_MIFIDate_PartionGoods(), ioId, inPartionGoodsDate);
+     -- сохранили свойство <Партия товара (дата)>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
     
-     -- создали объект <Связи Товары и Виды товаров>
-     PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -83,6 +91,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.15                                        * all
  13.03.14         *
 */
 

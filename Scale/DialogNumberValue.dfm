@@ -14,7 +14,7 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
     ExplicitTop = 49
     ExplicitWidth = 237
   end
-  object NumberValuePanel: TPanel
+  object PanelNumberValue: TPanel
     Left = 0
     Top = 0
     Width = 237
@@ -22,7 +22,7 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    object NumberValueLabel: TLabel
+    object LabelNumberValue: TLabel
       Left = 0
       Top = 0
       Width = 237

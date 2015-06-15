@@ -13,7 +13,7 @@ $BODY$
    DECLARE vbGoodsId        Integer;
 BEGIN
      -- меняем параметр
-     inValue:= COALESCE (inValue, '');
+     inValue:= COALESCE (TRIM (inValue), '');
 
      -- Находим по св-вам: Полное значение партии + НЕТ Подразделения(для цены)
      IF inValue = ''
@@ -45,12 +45,40 @@ BEGIN
      THEN
          -- сохранили <Полное значение партии>
          vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, inValue);
+
          -- сохранили <Дата партии>
+         vbOperDate:= CASE WHEN zfConvert_StringToDate (split_part (inValue, '-', 4)) IS NOT NULL 
+                                THEN zfConvert_StringToDate (split_part (inValue, '-', 4))
+                           WHEN zfConvert_StringToDate (split_part (inValue, '-', 3)) IS NOT NULL 
+                                THEN zfConvert_StringToDate (split_part (inValue, '-', 3))
+                           WHEN zfConvert_StringToDate (split_part (inValue, '-', 2)) IS NOT NULL 
+                                THEN zfConvert_StringToDate (split_part (inValue, '-', 2))
+                           WHEN zfConvert_StringToDate (split_part (inValue, '-', 1)) IS NOT NULL 
+                                THEN zfConvert_StringToDate (split_part (inValue, '-', 1))
+                           ELSE NULL
+                      END;
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, vbOperDate);
+
          -- сохранили <Контрагенты>
+         vbPartnerId:= CASE WHEN zfConvert_StringToDate (split_part (inValue, '-', 4)) IS NOT NULL 
+                                THEN zfConvert_StringToNumber (split_part (inValue, '-', 3))
+                            WHEN zfConvert_StringToDate (split_part (inValue, '-', 3)) IS NOT NULL 
+                                 THEN zfConvert_StringToNumber (split_part (inValue, '-', 2))
+                            ELSE NULL
+                       END;
+         vbPartnerId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = vbPartnerId AND Object.DescId = zc_Object_Partner());
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Partner(), vbPartionGoodsId, vbPartnerId);
+
          -- сохранили <Товар>
+         vbGoodsId:= CASE WHEN zfConvert_StringToDate (split_part (inValue, '-', 4)) IS NOT NULL 
+                               THEN zfConvert_StringToNumber (split_part (inValue, '-', 2))
+                          WHEN zfConvert_StringToDate (split_part (inValue, '-', 3)) IS NOT NULL 
+                               THEN zfConvert_StringToNumber (split_part (inValue, '-', 1))
+                          ELSE NULL
+                     END;
+         vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = vbGoodsId AND Object.DescId = zc_Object_Goods());
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Goods(), vbPartionGoodsId, vbGoodsId);
+ 
      END IF;
 
      -- Возвращаем значение

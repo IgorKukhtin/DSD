@@ -1,13 +1,14 @@
 -- Function: gpSelect_Scale_Goods()
 
-DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
+    IN inIsGoodsComplete       Boolean  ,    -- склад ГП/производство/упаковка or обвалка
     IN inOperDate              TDateTime,
     IN inOrderExternalId       Integer,
     IN inPriceListId           Integer,
-    IN inInfoMoneyId           Integer,
     IN inDayPrior_PriceReturn  Integer,
     IN inSession               TVarChar      -- сессия пользователя
 )
@@ -41,7 +42,7 @@ BEGIN
     -- Результат - по заявке
     RETURN QUERY
        WITH tmpMI_Order AS (SELECT MovementItem.ObjectId                                                AS GoodsId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inIsGoodsComplete = FALSE THEN 0 ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
                                  , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                  , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
@@ -180,6 +181,21 @@ BEGIN
    ELSE
     -- Результат - все товары
     RETURN QUERY
+       WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyId
+                             FROM Object_InfoMoney_View AS View_InfoMoney
+                             WHERE inIsGoodsComplete = TRUE
+                               AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
+                                                                , zc_Enum_InfoMoney_30101() -- Доходы + Готовая продукция
+                                                                , zc_Enum_InfoMoney_30102() -- Доходы + Тушенка
+                                                                , zc_Enum_InfoMoney_30201() --Доходы + Мясное сырье
+                                                                 )
+                            UNION
+                             SELECT View_InfoMoney.InfoMoneyId
+                             FROM Object_InfoMoney_View AS View_InfoMoney
+                             WHERE inIsGoodsComplete = FALSE
+                               AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                            )
+                            )
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpGoods.GoodsId            AS GoodsId
             , tmpGoods.GoodsCode          AS GoodsCode
@@ -206,16 +222,15 @@ BEGIN
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
                   , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)            AS GoodsKindId
-             FROM Object_InfoMoney_View
+             FROM tmpInfoMoney
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                   JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                              AND Object_Goods.isErased = FALSE
                                              AND Object_Goods.ObjectCode <> 0
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND 1=0
-             WHERE Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
             ) AS tmpGoods
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
@@ -241,7 +256,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -251,4 +266,4 @@ ALTER FUNCTION gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Goods (inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:=0, inInfoMoneyId:=0, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:=0, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin())

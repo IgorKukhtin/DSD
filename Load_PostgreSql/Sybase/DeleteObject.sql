@@ -165,3 +165,27 @@ from Movement
                                     AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101()
 where Movement.OperDate >= '01.06.2014'
   and Movement.DescId = zc_Movement_SendOnPrice();
+
+
+
+
+-- start !!!!!!!!!!SCALE!!!!!!!!!!
+select lpDelete_Object (aaa.Id, '5')
+from gpSelect_Object_ToolsWeighing( inSession := '5') as aaa
+where ParentId in (select aa.Id from gpSelect_Object_ToolsWeighing( inSession := '5') as aa
+                   where aa.ParentId in (select a.id from gpSelect_Object_ToolsWeighing( inSession := '5') as a where a.ParentId = 432585))
+order by 1
+
+select lpDelete_Object (aa.Id, '5')
+from gpSelect_Object_ToolsWeighing( inSession := '5') as aa
+where aa.ParentId in (select a.id from gpSelect_Object_ToolsWeighing( inSession := '5') as a where a.ParentId = 432585)
+order by 1
+
+select lpDelete_Object (a.Id, '5')
+from gpSelect_Object_ToolsWeighing( inSession := '5') as a
+where ParentId = 432585
+
+order by 1
+
+select lpDelete_Object (432585, '5')
+-- end !!!!!!!!!!SCALE!!!!!!!!!!

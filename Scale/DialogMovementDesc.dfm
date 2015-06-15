@@ -7,10 +7,12 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
   Font.Charset = RUSSIAN_CHARSET
   Font.Height = -13
   Font.Name = 'Tahoma'
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
+  OnShow = FormShow
   ExplicitWidth = 683
   ExplicitHeight = 716
   PixelsPerInch = 96
@@ -73,7 +75,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         end
       end
     end
-    object Panel2: TPanel
+    object infoPanelPartner: TPanel
       Left = 192
       Top = 25
       Width = 475
@@ -206,15 +208,11 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       TitleFont.Style = []
       OnCellClick = DBGridCellClick
       OnDrawColumnCell = DBGridDrawColumnCell
+      OnDblClick = DBGridDblClick
       Columns = <
         item
           Expanded = False
           FieldName = 'MovementDescName'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Tahoma'
-          Font.Style = []
           Width = 600
           Visible = True
         end>

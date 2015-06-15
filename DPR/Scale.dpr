@@ -71,11 +71,14 @@ uses
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
   DialogWeight in '..\Scale\DialogWeight.pas' {DialogWeightForm},
-  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm: TParentForm},
+  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm: TParentForm},
   DialogPersonalComplete in '..\Scale\DialogPersonalComplete.pas' {DialogPersonalCompleteForm},
   DialogMovementDesc in '..\Scale\DialogMovementDesc.pas' {DialogMovementDescForm},
   GuidePersonal in '..\Scale\GuidePersonal.pas' {GuidePersonalForm},
-  DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm};
+  DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm},
+  AxLibLib_TLB in '..\Scale\Util\AxLibLib_TLB.pas',
+  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
+  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm};
 
 {$R *.res}
 
@@ -83,13 +86,16 @@ begin
   Application.Initialize;
 
   TdsdApplication.Create;
+  //
   //global Initialize
   gpInitialize_Ini;
 
   if FindCmdLineSwitch('autologin', true) then
   begin
          TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
-         //TUpdater.AutomaticUpdateProgram;
+         TUpdater.AutomaticUpdateProgram;
+         //
+         if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
@@ -103,6 +109,8 @@ begin
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
          Application.CreateForm(TDialogWeightForm, DialogWeightForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
+         Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
+         Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
@@ -117,6 +125,8 @@ begin
     begin
          TUpdater.AutomaticUpdateProgram;
          //
+         if gpCheck_BranchCode = FALSE then exit;
+         //
          Application.CreateForm(TdmMain, dmMain);
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   // !!!важно первым!!!
@@ -129,6 +139,8 @@ begin
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
          Application.CreateForm(TDialogWeightForm, DialogWeightForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
+         Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
+         Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TGuidePersonalForm, GuidePersonalForm);
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);

@@ -78,7 +78,8 @@ BEGIN
          END IF; -- if COALESCE (vbGLNPlace, '') = ''
 
          -- только если существует продажа с номером заявки
-         IF EXISTS (SELECT Movement.Id
+         IF   TRIM (inOrderInvNumber) <> ''
+          AND EXISTS (SELECT Movement.Id
                     FROM MovementString AS MovementString_InvNumberOrder
                          INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                                  ON MovementDate_OperDatePartner.MovementId =  MovementString_InvNumberOrder.MovementId
@@ -149,6 +150,8 @@ BEGIN
              END IF;
 
          ELSE
+         IF TRIM (inOrderInvNumber) <> ''
+         THEN
              -- Поиск документа <Продажа покупателю> и <Налоговая накладная>
              SELECT Movement.Id, Movement_DocumentMaster.Id, MovementLinkObject_Contract.ObjectId
                     INTO vbMovementId_Master, vbMovementId_Child, vbContractId
@@ -203,6 +206,7 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.№ заявки <%> должен быть установлен только у одной накладной продажи.', inOrderInvNumber;
              END IF;
 
+         END IF;
          END IF;
 
          -- удалили связь с Продажа покупателю> !!!только наоборот!!!

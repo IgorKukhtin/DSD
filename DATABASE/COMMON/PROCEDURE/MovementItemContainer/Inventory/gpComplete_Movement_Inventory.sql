@@ -59,6 +59,7 @@ BEGIN
           , CASE WHEN COALESCE (ObjectLink_ObjectFrom_Branch.ChildObjectId, zc_Branch_Basis()) <> zc_Branch_Basis()
                   AND Object_From.DescId = zc_Object_Unit()
                       THEN COALESCE (MovementLinkObject_PriceList.ObjectId, zc_PriceList_Basis())
+                 ELSE 0
             END AS PriceListId
 
             INTO vbMovementDescId, vbStatusId, vbOperDate
@@ -481,19 +482,34 @@ BEGIN
                      -- остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
                    , CASE WHEN vbOperDate <= '01.06.2014' THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
               FROM _tmpItem
+                   LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpItem.ContainerId_Goods
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
                                                         AND vbOperDate >= '01.06.2014'
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
-            UNION ALL
-              -- это расчетные остатки (их надо вычесть)
+             UNION ALL
+              -- это расчетные остатки (их надо вычесть) - !!!для филиала!!!
+              SELECT _tmpRemainsCount.MovementItemId
+                   , COALESCE (Container_Summ.Id, 0) AS ContainerId
+                   , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
+                   , -1 * CASE WHEN vbOperDate <= '01.06.2014' THEN 0 ELSE _tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+              FROM _tmpRemainsCount
+                   LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpRemainsCount.ContainerId_Goods
+                                                        AND Container_Summ.DescId = zc_Container_Summ()
+                                                        AND vbOperDate >= '01.06.2014'
+                   LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
+                                        AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+              WHERE vbPriceListId <> 0
+             UNION ALL
+              -- это расчетные остатки (их надо вычесть) -- !!!для "наших" подр!!!!
                SELECT _tmpRemainsCount.MovementItemId
                    , _tmpRemainsSumm.ContainerId
                    , _tmpRemainsSumm.AccountId
                    , -1 * _tmpRemainsSumm.OperSumm AS OperSumm
               FROM _tmpRemainsSumm
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
+              WHERE vbPriceListId = 0
              ) AS _tmp
         WHERE  zc_isHistoryCost() = TRUE
         GROUP BY _tmp.MovementItemId

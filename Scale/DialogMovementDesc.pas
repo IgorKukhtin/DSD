@@ -20,7 +20,7 @@ type
     spSelect: TdsdStoredProc;
     InfoPanel: TPanel;
     Panel1: TPanel;
-    Panel2: TPanel;
+    infoPanelPartner: TPanel;
     Panel3: TPanel;
     Label2: TLabel;
     Panel4: TPanel;
@@ -49,6 +49,8 @@ type
     procedure EditPartnerCodeEnter(Sender: TObject);
     procedure EditPartnerCodePropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure FormShow(Sender: TObject);
+    procedure DBGridDblClick(Sender: TObject);
 
   private
     ChoiceNumber:Integer;
@@ -70,15 +72,17 @@ var
 
 implementation
 {$R *.dfm}
-uses DMMainScale,GuidePartner;
+uses dmMainScale,GuidePartner;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
      CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
 
-     isEditPartnerCodeExit:= true;
+     isEditPartnerCodeExit:= FALSE;
+     ParamsMovement_local.ParamByName('isGetPartner').AsBoolean:= false;
 
-     if ParamsMovement_local.ParamByName('MovementId').AsInteger<>0
+     if   (ParamsMovement_local.ParamByName('MovementId').AsInteger <> 0)
+       and(ParamsMovement_local.ParamByName('isMovementId_check').asBoolean = FALSE)
      then begin
                MessagePanel.Font.Style:=[fsBold];
                MessagePanel.Caption:='Текущее взвешивание не закрыто.Будет создано <Новое> взвешивание.';
@@ -109,18 +113,20 @@ begin
           then EditBarCode.Text:=ParamByName('OrderExternal_BarCode').AsString
           else if ParamByName('OrderExternal_InvNumber').AsString<> ''
                then EditBarCode.Text:=ParamByName('OrderExternal_InvNumber').AsString
-               else EditBarCode.Text:=ParamByName('MovementDescNumber').AsString;
+               else EditBarCode.Text:=''{ParamByName('MovementDescNumber').AsString};
 
           EditPartnerCode.Text:= IntToStr(ParamByName('calcPartnerCode').AsInteger);
           PanelPartnerName.Caption:= ParamByName('calcPartnerName').AsString;
      end;
 
      ActiveControl:=EditBarCode;
+     EditBarCode.SelectAll;
      //isEditBarCode:=BarCode<>'';
-     isEditBarCode:=false;//ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger<>zc_Movement_SendOnPrice;
+     isEditBarCode:=FALSE;//ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger<>zc_Movement_SendOnPrice;
+//     isEditPartnerCodeExit:= TRUE;
 
-     if BarCode<>'' then begin EditBarCodeExit(EditBarCode);Result:=true;end
-     else Result:=(ShowModal=mrOk);
+     if BarCode<>'' then begin isEditBarCode:=true;EditBarCodeExit(EditBarCode);Result:=true;end
+     else begin Result:=(ShowModal=mrOk);end;
 end;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
@@ -146,6 +152,29 @@ begin
      Result:=(IsOrderExternal=true)and(CDS.FieldByName('MovementDescId').AsInteger>0)and(ActiveControl=DBGrid);
      if not Result then exit;
 
+     //!!!обнуляется т.к.было изменение MovementDescId!!!
+     if  (CDS.FieldByName('MovementDescId').asInteger<>ParamsMovement.ParamByName('MovementDescId').AsInteger)
+     then begin
+          //!!!только если OrderExternalId был изначально!!!
+          if (ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0) then
+          begin
+               ParamsMovement_local.ParamByName('OrderExternalId').AsInteger        := 0;
+               ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger   := 0;
+               ParamsMovement_local.ParamByName('OrderExternal_BarCode').asString   := '';
+               ParamsMovement_local.ParamByName('OrderExternal_InvNumber').asString := '';
+               ParamsMovement_local.ParamByName('OrderExternalName_master').asString:= '';
+          end;
+          //!!!только если OrderExternalId был!!!
+          if (ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=ParamsMovement.ParamByName('calcPartnerId').AsInteger)
+            and(ParamsMovement_local.ParamByName('isGetPartner').AsBoolean= false)
+            and(ParamsMovement.ParamByName('calcPartnerId').AsInteger>0)
+          then begin
+               ParamsMovement_local.ParamByName('calcPartnerId').AsInteger  := 0;
+               ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger:= 0;
+               ParamsMovement_local.ParamByName('calcPartnerName').asString := '';
+          end;
+     end;
+
      // проверка для контрагента
      if ((CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Income)
        or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnOut)
@@ -162,6 +191,7 @@ begin
      // проверка для списания
      if   (CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Loss)
        and(ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=0)
+       and(CDS.FieldByName('ToId').asInteger=0)
      then begin
                ShowMessage('Ошибка.Значение <Код контрагента> не найдено.');
                ActiveControl:=EditPartnerCode;
@@ -191,7 +221,7 @@ begin
                ShowMessage('Ошибка.Выберите значение <Форма оплаты> = <'+ParamsMovement_local.ParamByName('PaidKindName').asString+'>.');
                if(Length(trim(EditBarCode.Text))=1)or(Length(trim(EditBarCode.Text))=2)
                then ActiveControl:=EditBarCode
-               else ActiveControl:=DBGrid;
+               else ActiveControl:=EditBarCode;//DBGrid;
                isEditBarCode:=false;
                Result:=false;
                exit;
@@ -203,13 +233,16 @@ begin
           //
           //if ParamByName('MovementId').AsInteger<>0
           //then ShowMessage('После завершения <Нового> взвешивания возврат к текущему будет произведен автоматически.');
-          ParamByName('MovementId').AsInteger:=0;
+          if ParamsMovement_local.ParamByName('isMovementId_check').asBoolean = FALSE
+          then ParamByName('MovementId').AsInteger:=0; // т.е. будет Insert, иначе Update
           //
           ParamByName('ColorGridValue').AsInteger:=CDS.FieldByName('ColorGridValue').asInteger;
           ParamByName('MovementDescNumber').AsInteger:= CDS.FieldByName('Number').asInteger;
           ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
           ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
           ParamByName('GoodsKindWeighingGroupId').asInteger:= CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
+          ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
+          ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Income)
@@ -226,6 +259,11 @@ begin
                     ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
                     ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                     ParamByName('ChangePercentAmount').asFloat:= 0;
+                    ParamByName('OrderExternalId').AsInteger        := 0;
+                    ParamByName('OrderExternal_DescId').AsInteger   := 0;
+                    ParamByName('OrderExternal_BarCode').asString   := '';
+                    ParamByName('OrderExternal_InvNumber').asString := '';
+                    ParamByName('OrderExternalName_master').asString:= '';
           end
           else
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Sale)
@@ -245,6 +283,14 @@ begin
                     ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                     if (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Sale)
                     then ParamByName('ChangePercentAmount').asFloat:= 0;
+                    if (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnOut)
+                    then begin
+                              ParamByName('OrderExternalId').AsInteger        := 0;
+                              ParamByName('OrderExternal_DescId').AsInteger   := 0;
+                              ParamByName('OrderExternal_BarCode').asString   := '';
+                              ParamByName('OrderExternal_InvNumber').asString := '';
+                              ParamByName('OrderExternalName_master').asString:= '';
+                    end;
           end
           else
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_SendOnPrice)
@@ -276,6 +322,11 @@ begin
                     ParamByName('InfoMoneyCode').AsInteger    := 0;
                     ParamByName('InfoMoneyName').asString     := '';
                     ParamByName('ChangePercentAmount').asFloat:= 0;
+                    {ParamByName('OrderExternalId').AsInteger        := 0;
+                    ParamByName('OrderExternal_DescId').AsInteger   := 0;
+                    ParamByName('OrderExternal_BarCode').asString   := '';
+                    ParamByName('OrderExternal_InvNumber').asString := '';
+                    ParamByName('OrderExternalName_master').asString:= '';}
           end
           else begin
                     ParamByName('FromId').AsInteger           := CDS.FieldByName('FromId').asInteger;
@@ -308,6 +359,12 @@ begin
                     ParamByName('GoodsPropertyId').AsInteger  := 0;
                     ParamByName('GoodsPropertyCode').AsInteger:= 0;
                     ParamByName('GoodsPropertyName').asString := '';
+
+                    ParamByName('OrderExternalId').AsInteger        := 0;
+                    ParamByName('OrderExternal_DescId').AsInteger   := 0;
+                    ParamByName('OrderExternal_BarCode').asString   := '';
+                    ParamByName('OrderExternal_InvNumber').asString := '';
+                    ParamByName('OrderExternalName_master').asString:= '';
                end;
 
     end;
@@ -334,7 +391,7 @@ begin
 
     if CDS.Filtered then CDS.Filtered:=false;
     //
-    if Length(trim(EditBarCode.Text))>2
+    if (Length(trim(EditBarCode.Text))>2) and (SettingMain.isCeh = FALSE)
     then begin
                //Проверка <Контрольная сумма>
                if (Length(trim(EditBarCode.Text))>=13)and(CheckBarCode(trim(EditBarCode.Text)) = FALSE)
@@ -359,8 +416,10 @@ begin
     else begin //обнуление
                isOrderExternal:=true;
                ParamsMovement_local.ParamByName('OrderExternalId').AsInteger:=0;
+               ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger:=0;
                ParamsMovement_local.ParamByName('OrderExternal_BarCode').asString :='';
                ParamsMovement_local.ParamByName('OrderExternal_InvNumber').asString :='';
+               ParamsMovement_local.ParamByName('OrderExternalName_master').asString :='';
                //
                try Number:=StrToInt(trim(EditBarCode.Text)) except Number:=0;end;
                // если это код операции
@@ -408,7 +467,8 @@ begin
     //
     if ParamsMovement_local.ParamByName('OrderExternal_BarCode').asString <> ''
     then begin
-              if ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice
+              if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
+               or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
               then CDS.Filter:='Number='+IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').asInteger)
               else CDS.Filter:='(MovementDescId='+IntToStr(ParamsMovement_local.ParamByName('MovementDescId').asInteger)
                               +'  and FromId='+IntToStr(ParamsMovement_local.ParamByName('FromId').asInteger)
@@ -419,8 +479,11 @@ begin
                               ;
               CDS.Filtered:=true;
               CDS.Locate('MovementDescId',ParamsMovement_local.ParamByName('MovementDescId').asString,[]);
-              if ((CDS.RecordCount<>1) and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger =  zc_Movement_SendOnPrice))
-               or((CDS.RecordCount<>2) and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger <> zc_Movement_SendOnPrice))
+              if ((CDS.RecordCount<>1) and ((ParamsMovement_local.ParamByName('MovementDescId').AsInteger =  zc_Movement_SendOnPrice)
+                                          or(ParamsMovement_local.ParamByName('MovementDescId').AsInteger =  zc_Movement_Loss))
+                 )
+               or((CDS.RecordCount<>2) and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger <> zc_Movement_SendOnPrice)
+                                       and (ParamsMovement_local.ParamByName('MovementDescId').AsInteger <> zc_Movement_Loss))
               then begin
                    ShowMessage('Ошибка.Значение <Вид документа> не определено.');
                    ActiveControl:=EditBarCode;
@@ -442,6 +505,15 @@ end;
 procedure TDialogMovementDescForm.EditPartnerCodeEnter(Sender: TObject);
 begin
   TEdit(Sender).SelectAll;
+  isEditPartnerCodeExit:= TRUE;
+    if ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger<>0
+    then begin
+              EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
+              isEditBarCode:=true;
+              EditBarCodeExit(Self);
+              //переопределяются параметры, т.к. они используются в фильтре справ.
+              ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
+    end;
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodeExit(Sender: TObject);
@@ -528,6 +600,8 @@ end;
 procedure TDialogMovementDescForm.EditPartnerCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var Key:Word;
 begin
+    if SettingMain.isCeh = TRUE then exit;
+    //
     if ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger<>0
     then begin
               EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
@@ -537,8 +611,15 @@ begin
               ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
     end;
 
+    try
+    if (trim(EditPartnerCode.Text)<>'')and(trim(EditPartnerCode.Text)<>'0')
+    then ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger:=StrToInt(trim(EditPartnerCode.Text))
+    except ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger:=0;
+    end;
+
     if GuidePartnerForm.Execute(ParamsMovement_local)
     then begin
+              ParamsMovement_local.ParamByName('isGetPartner').AsBoolean:= true;
               EditPartnerCode.Text:=IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);
               PanelPartnerName.Caption:= ParamsMovement_local.ParamByName('calcPartnerName').AsString;
               Key:=VK_RETURN;
@@ -548,9 +629,11 @@ begin
     end;
     //else ActiveControl:=EditBarCode;
 end;
-
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.DBGridCellClick(Column: TColumn);
+begin DBGridDblClick(Self);end;
+{------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.DBGridDblClick(Sender: TObject);
 begin
      if (CDS.FieldByName('MovementDescId').AsInteger<=0)
      then CDS.Next
@@ -614,10 +697,14 @@ end;
 procedure TDialogMovementDescForm.FormCreate(Sender: TObject);
 begin
   inherited;
+  //
+  infoPanelPartner.Visible:= SettingMain.isCeh = FALSE;
+  //
   with spSelect do
   begin
        StoredProcName:='gpSelect_Object_ToolsWeighing_MovementDesc';
        OutputType:=otDataSet;
+       Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Execute;
   end;
@@ -638,8 +725,19 @@ end;
 procedure TDialogMovementDescForm.FormKeyDown(Sender: TObject; var Key: Word;  Shift: TShiftState);
 begin
      if Key = VK_RETURN
-     then if (ActiveControl=EditBarCode)
-          then ActiveControl:=EditPartnerCode
+     then if (ActiveControl=EditBarCode) and (infoPanelPartner.Visible)
+          then begin
+                    EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
+                    isEditBarCode:=true;
+                    EditBarCodeExit(Self);
+                    //переопределяются параметры, т.к. они используются в фильтре справ.
+                    ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
+                    //
+                    ActiveControl:=EditPartnerCode;
+              end
+          else
+          if (ActiveControl=EditBarCode) and (not infoPanelPartner.Visible)
+          then ActiveControl:=DBGrid
           else if (ActiveControl=EditPartnerCode)
                then ActiveControl:=DBGrid
                else if (ActiveControl=DBGrid)
@@ -651,6 +749,12 @@ begin
      if (Key = VK_UP)or(Key = VK_DOWN)or(Key = VK_HOME)or(Key = VK_END)or(Key = VK_PRIOR)or(Key = VK_NEXT)
      then if (CDS.FieldByName('MovementDescId').AsInteger<=0)
           then CDS.Next;
+end;
+{------------------------------------------------------------------------}
+procedure TDialogMovementDescForm.FormShow(Sender: TObject);
+begin
+   DialogMovementDescForm.Width:=DialogMovementDescForm.Width+1;
+   DialogMovementDescForm.Width:=DialogMovementDescForm.Width-1;
 end;
 {------------------------------------------------------------------------}
 end.

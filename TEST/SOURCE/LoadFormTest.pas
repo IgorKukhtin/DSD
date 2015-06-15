@@ -726,6 +726,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedocJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedocJournalForm');
+  //09.06.15
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxJournalDialogForm');
 end;
 
 procedure TLoadFormTest.LoadTaxCorrectiveTest;

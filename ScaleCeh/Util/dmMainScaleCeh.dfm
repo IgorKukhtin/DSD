@@ -1,20 +1,15 @@
-object DMMain: TDMMain
+object DMMainScaleCehForm: TDMMainScaleCehForm
   OldCreateOrder = False
+  OnCreate = DataModuleCreate
   Height = 530
   Width = 576
-  object DataSource1: TDataSource
-    DataSet = ClientDataSet
-    Left = 160
-    Top = 80
-  end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 144
     Top = 128
   end
-  object spExec: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods'
+  object spSelect: TdsdStoredProc
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -22,6 +17,7 @@ object DMMain: TDMMain
       end>
     OutputType = otResult
     Params = <>
+    PackSize = 1
     Left = 64
     Top = 64
   end

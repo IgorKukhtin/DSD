@@ -39,6 +39,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colLiveWeight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -54,6 +59,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colLiveWeight
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -87,7 +97,17 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colHeadCount: TcxGridDBColumn [5]
+          object colLiveWeight: TcxGridDBColumn [5]
+            Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
+            DataBinding.FieldName = 'LiveWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colHeadCount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -118,6 +138,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Format = ',0.####'
               Kind = skSum
               Column = colChildHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildLiveWeight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -129,6 +154,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Format = ',0.####'
               Kind = skSum
               Column = colChildHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildLiveWeight
             end>
           Styles.Content = nil
           object colCholdGoodsGroupNameFull: TcxGridDBColumn [0]
@@ -159,7 +189,17 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 70
           end
-          object colChildHeadCount: TcxGridDBColumn [5]
+          object colChildLiveWeight: TcxGridDBColumn [5]
+            Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
+            DataBinding.FieldName = 'LiveWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colChildHeadCount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -170,9 +210,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 60
           end
-          object colChildPartionGoods: TcxGridDBColumn [6]
+          object colChildPartionGoods: TcxGridDBColumn [7]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -197,6 +238,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Height = 96
     ExplicitWidth = 903
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -577,10 +621,64 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptInput
       end
       item
+        Name = 'inLiveWeight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'LiveWeight'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inHeadCount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
+        ParamType = ptInput
+      end>
+  end
+  inherited spInsertMaskMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLiveWeight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'LiveWeight'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inHeadCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'HeadCount'
+        DataType = ftFloat
         ParamType = ptInput
       end>
   end
@@ -595,6 +693,58 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   end
   inherited spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Child_SetUnErased'
+  end
+  inherited spInsertMaskMIChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Child'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inParentId'
+        Value = 0
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLiveWeight'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'LiveWeight'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inHeadCount'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'HeadCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
   end
   inherited GuidesTo: TdsdGuides
     PositionDataSet = 'MasterCDS'
@@ -621,6 +771,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptInput
       end
       item
+        Name = 'inParentId'
+        Value = 0
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = ChildCDS
@@ -636,10 +791,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptInput
       end
       item
-        Name = 'inParentId'
+        Name = 'inLiveWeight'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'ParentId'
+        ComponentItem = 'LiveWeight'
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
@@ -647,6 +803,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'HeadCount'
+        DataType = ftFloat
         ParamType = ptInput
       end>
   end

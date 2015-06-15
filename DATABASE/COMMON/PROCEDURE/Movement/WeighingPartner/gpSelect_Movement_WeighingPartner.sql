@@ -9,17 +9,19 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner(
     IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
              , MovementId_Tax Integer, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
              , StartWeighing TDateTime, EndWeighing TDateTime 
-             , MovementDescNumber Integer, MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
+             , MovementDescNumber Integer, MovementDescName TVarChar
+             , WeighingNumber TFloat
+             , InvNumberOrder TVarChar
+             , InvNumberTransport Integer
              , PriceWithVAT Boolean
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
-             , WeighingNumber TFloat, InvNumberTransport TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
@@ -55,9 +57,8 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
-
        SELECT  Movement.Id
-             , Movement.InvNumber
+             , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
              , Movement.OperDate
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
@@ -74,14 +75,15 @@ BEGIN
              , CASE WHEN Movement_Tax.StatusId = zc_Enum_Status_Complete() THEN MS_InvNumberPartner_Tax.ValueData ELSE '' END :: TVarChar AS InvNumberPartner_Tax
              , Movement_Tax.OperDate                 AS OperDate_Tax
 
-
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.ItemName                      AS MovementDescName
+             , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
+
              , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
-             , MovementString_PartionGoods.ValueData      AS PartionGoods
+             , MovementFloat_InvNumberTransport.ValueData :: Integer AS InvNumberTransport
 
              , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
@@ -93,9 +95,6 @@ BEGIN
              , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
              , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
              , MovementFloat_TotalSumm.ValueData              AS TotalSumm
-
-             , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
-             , MovementFloat_InvNumberTransport.ValueData AS InvNumberTransport
 
              , Object_From.ValueData              AS FromName
              , Object_To.ValueData                AS ToName
@@ -161,9 +160,6 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-            LEFT JOIN MovementString AS MovementString_PartionGoods
-                                     ON MovementString_PartionGoods.MovementId =  Movement.Id
-                                    AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id

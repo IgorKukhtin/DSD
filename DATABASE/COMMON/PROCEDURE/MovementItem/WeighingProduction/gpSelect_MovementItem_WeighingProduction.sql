@@ -1,9 +1,11 @@
 -- Function: gpSelect_MovementItem_WeighingProduction()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_WeighingProduction (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_WeighingProduction (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WeighingProduction(
     IN inMovementId  Integer      , -- ключ Документа
+    IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -144,7 +146,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_WeighingProduction (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_WeighingProduction (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -153,4 +155,4 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingProduction (Integer, Boolean, TVarC
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_WeighingProduction (inMovementId:= 25173, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_WeighingProduction (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')

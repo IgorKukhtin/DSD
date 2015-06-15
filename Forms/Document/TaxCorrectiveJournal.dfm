@@ -2,9 +2,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitLeft = -336
-  ExplicitWidth = 1126
-  ExplicitHeight = 562
+  ExplicitWidth = 1134
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -611,6 +610,76 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
+    object ExecuteDialog: TExecuteDialog [23]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+      ImageIndex = 35
+      FormName = 'TTaxJournalDialogForm'
+      FormNameParam.Value = 'TTaxJournalDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'DateRegistered'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DateRegistered'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'Registered'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Registered'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'InvNumberRegistered'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberRegistered'
+          DataType = ftString
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'ContractName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
     object actPrint_TaxCorrective_Reestr: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1068,6 +1137,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1125,6 +1202,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbMedocFalse: TdxBarButton
       Action = actMedocFalse
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end
@@ -1482,7 +1563,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = edLoadData
       end>
     PackSize = 1
-    Left = 736
-    Top = 24
+    Left = 744
+    Top = 96
   end
 end

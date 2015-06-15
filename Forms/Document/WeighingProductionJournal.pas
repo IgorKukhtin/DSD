@@ -64,9 +64,6 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    colInvNumberOrder: TcxGridDBColumn;
-    colMovementDesc: TcxGridDBColumn;
-    colInvNumberTransport: TcxGridDBColumn;
     colEndWeighing: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
@@ -77,13 +74,20 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    colInvNumberParent: TcxGridDBColumn;
+    colInvNumber_parent: TcxGridDBColumn;
     actReCompleteAll: TdsdExecStoredProc;
     bbReCompleteAll: TdxBarButton;
     spMovementReCompleteAll: TdsdStoredProc;
     colUserName: TcxGridDBColumn;
-    colRouteSorting: TcxGridDBColumn;
     colStartWeighing: TcxGridDBColumn;
+    colMovementDescNumber: TcxGridDBColumn;
+    colMovementDescName: TcxGridDBColumn;
+    colOperDate_parent: TcxGridDBColumn;
+    colWeighingNumber: TcxGridDBColumn;
+    colPartionGoods: TcxGridDBColumn;
+    colTotalCountTare: TcxGridDBColumn;
+    colTotalCount: TcxGridDBColumn;
+    colIsProductionIn: TcxGridDBColumn;
   private
   public
   end;

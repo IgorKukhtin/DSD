@@ -48,8 +48,8 @@ BEGIN
            , tmpMI.CountTare   :: TFloat      AS CountTare
            , CASE WHEN inShowAll = TRUE THEN tmpMI.WeightTare WHEN tmpMI.CountTare <> 0 THEN (tmpMI.RealWeight - tmpMI.Amount) / tmpMI.CountTare ELSE 0 END :: TFloat AS WeightTare
 
-           , CASE WHEN tmpMI.Count = 0        THEN NULL ELSE tmpMI.Count        END :: TFloat AS Count
-           , CASE WHEN tmpMI.Count_mi = 0     THEN NULL ELSE tmpMI.Count_mi     END :: TFloat AS Count_mi
+           , CASE WHEN tmpMI.CountPack = 0    THEN NULL ELSE tmpMI.CountPack    END :: TFloat AS Count
+           , CASE WHEN tmpMI.CountPack_mi = 0 THEN NULL ELSE tmpMI.CountPack_mi END :: TFloat AS Count_mi
            , CASE WHEN tmpMI.HeadCount = 0    THEN NULL ELSE tmpMI.HeadCount    END :: TFloat AS HeadCount
            , CASE WHEN tmpMI.HeadCount_mi = 0 THEN NULL ELSE tmpMI.HeadCount_mi END :: TFloat AS HeadCount_mi
            , CASE WHEN tmpMI.BoxCount = 0     THEN NULL ELSE tmpMI.BoxCount     END :: TFloat AS BoxCount
@@ -87,8 +87,8 @@ BEGIN
                   , SUM (tmpMI.CountTare)      AS CountTare
                   , tmpMI.WeightTare           AS WeightTare
 
-                  , SUM (tmpMI.Count)          AS Count
-                  , SUM (tmpMI.Count_mi)       AS Count_mi
+                  , SUM (tmpMI.CountPack)      AS CountPack
+                  , SUM (tmpMI.CountPack_mi)   AS CountPack_mi
                   , SUM (tmpMI.HeadCount)      AS HeadCount
                   , SUM (tmpMI.HeadCount_mi)   AS HeadCount_mi
                   , SUM (tmpMI.BoxCount)       AS BoxCount
@@ -124,8 +124,8 @@ BEGIN
                   , COALESCE (MIFloat_CountTare.ValueData, 0)           AS CountTare
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare.ValueData, 0) ELSE 0 END AS WeightTare
 
-                  , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
-                  , 0 AS Count_mi
+                  , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
+                  , 0 AS CountPack_mi
                   , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                   , 0 AS HeadCount_mi
                   , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
@@ -182,9 +182,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
                                               ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
                                              AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
-                  LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                              ON MIFloat_Count.MovementItemId = MovementItem.Id
-                                             AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                             AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -232,8 +232,8 @@ BEGIN
                   , 0 AS CountTare
                   , 0 AS WeightTare
 
-                  , 0                                         AS Count
-                  , COALESCE (MIFloat_Count.ValueData, 0)     AS Count_mi
+                  , 0                                         AS CountPack
+                  , COALESCE (MIFloat_CountPack.ValueData, 0) AS CountPack_mi
                   , 0                                         AS HeadCount
                   , COALESCE (MIFloat_HeadCount.ValueData, 0) AS HeadCount_mi
                   , 0                                         AS BoxCount
@@ -279,9 +279,9 @@ BEGIN
                                               ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
 
-                  LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                              ON MIFloat_Count.MovementItemId = MovementItem.Id
-                                             AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                             AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()

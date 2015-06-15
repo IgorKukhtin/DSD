@@ -11,8 +11,8 @@ inherited DialogPrintForm: TDialogPrintForm
   inherited bbPanel: TPanel
     Top = 129
     Width = 301
-    ExplicitTop = 135
-    ExplicitWidth = 299
+    ExplicitTop = 129
+    ExplicitWidth = 301
     inherited bbOk: TBitBtn
       Left = 44
       Top = 9
@@ -34,8 +34,6 @@ inherited DialogPrintForm: TDialogPrintForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 106
-    ExplicitWidth = 299
     object PrintCountLabel: TLabel
       Left = 160
       Top = 5
@@ -83,8 +81,6 @@ inherited DialogPrintForm: TDialogPrintForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 299
-    ExplicitHeight = 106
     object cbPrintMovement: TCheckBox
       Left = 21
       Top = 5

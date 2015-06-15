@@ -489,13 +489,13 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Name = 'PersonalTakeId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeId'
+          ComponentItem = 'MemberTakeId'
         end
         item
           Name = 'PersonalTakeName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeName'
+          ComponentItem = 'MemberTakeName'
           DataType = ftString
         end
         item
@@ -607,13 +607,13 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeId'
+          ComponentItem = 'MemberTakeId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeName'
+          ComponentItem = 'MemberTakeName'
           DataType = ftString
         end>
       isShowModal = True

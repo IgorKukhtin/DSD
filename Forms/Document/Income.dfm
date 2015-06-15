@@ -41,6 +41,7 @@ object IncomeForm: TIncomeForm
     object edOperDate: TcxDateEdit
       Left = 171
       Top = 23
+      EditValue = 42160d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -559,6 +560,7 @@ object IncomeForm: TIncomeForm
             Width = 100
           end
           object clInfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -716,6 +718,7 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbPrint'
         end
@@ -904,12 +907,24 @@ object IncomeForm: TIncomeForm
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'InvNumber'
@@ -921,6 +936,8 @@ object IncomeForm: TIncomeForm
         item
           Name = 'From'
           Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
         end
@@ -931,8 +948,8 @@ object IncomeForm: TIncomeForm
           DataType = ftDateTime
           ParamType = ptInput
         end>
-      ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = ''
+      ReportName = 'PrintMovement_Income'
+      ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
     end
     object GridToExcel: TdsdGridToExcel
@@ -1611,8 +1628,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 216
-    Top = 224
+    Left = 192
+    Top = 232
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -1929,5 +1946,40 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
       end>
     Left = 840
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 548
+    Top = 297
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 548
+    Top = 350
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 471
+    Top = 368
   end
 end

@@ -101,13 +101,15 @@ BEGIN
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.BranchId = vbObjectId_Constraint
-         OR Object_Personal_View.UnitId = 8429 -- Отдел логистики
+         OR Object_Personal_View.UnitId     = 8429  -- Отдел логистики
          OR Object_Personal_View.PositionId = 81178 -- экспедитор
          OR Object_Personal_View.PositionId = 8466  -- водитель
            )
        AND (View_RoleAccessKeyGuide.UnitId_PersonalService > 0
             OR vbIsAllUnit = TRUE
             OR Object_Personal_View.BranchId = vbObjectId_Constraint
+            OR Object_Personal_View.PositionId = 12436 -- бухгалтер
+            OR Object_Personal_View.UnitId     = 8386  -- Бухгалтерия
            )
        AND (Object_Personal_View.isErased = FALSE
             OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE)
@@ -160,6 +162,11 @@ WHERE Object_Personal_View.isErased <> COALESCE (Object.isErased, TRUE)
     and COALESCE (Object.isErased, TRUE) = TRUE);
 */
 /*
+
+-- !!!!!!!!!!!!!!!!!!!!!!!
+-- 1
+-- !!!!!!!!!!!!!!!!!!!!!!!
+
 with tmp as (            SELECT max (MovementItem.Id) AS MovementItemId
                               , COALESCE (MovementItem.ObjectId, 0)           AS ObjectId
 --                              , COALESCE (MILinkObject_Unit.ObjectId, 0)      AS UnitId
@@ -212,6 +219,74 @@ from MovementItem
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = MovementItem .ObjectId
                               AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+
+
+-- !!!!!!!!!!!!!!!!!!!!!!!
+-- 2
+-- !!!!!!!!!!!!!!!!!!!!!!!
+
+with tmp as (            SELECT max (MovementItem.Id) AS MovementItemId
+                              , COALESCE (MovementItem.ObjectId, 0)           AS ObjectId
+--                              , COALESCE (MILinkObject_Unit.ObjectId, 0)      AS UnitId
+  --                            , COALESCE (MILinkObject_Position.ObjectId, 0)  AS PositionId
+                         FROM Movement
+                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                     AND MovementItem.DescId = zc_MI_Master()
+                                                     AND MovementItem.isErased = FALSE
+                                                     AND MovementItem.Amount <> 0 
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                             ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                            AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                                            AND MovementLinkObject_PersonalServiceList.ObjectId not IN (293716 -- Ведомость карточки БН Фидо
+                                                                                                                      , 413454 -- Ведомость карточки БН Пиреус
+                                                                                                                       )
+                               INNER JOIN Object on Object.Id = MovementLinkObject_PersonalServiceList.ObjectId
+                                          and Object.ObjectCode not in (105 
+                                                                        , 135 
+                                                                        , 136 
+                                                                        , 138 
+                                                                        , 156 
+                                                                        , 162 
+                                                                        , 164 
+                                                                        , 165 
+                                                                        , 166 
+                                                                        , 167 
+                                                                        , 168 
+                                                                         )
+
+where Movement.DescId = zc_Movement_PersonalService()
+ AND Movement.StatusId = zc_Enum_Status_Complete()
+group by COALESCE (MovementItem.ObjectId, 0)           
+
+--       , COALESCE (MILinkObject_Unit.ObjectId, 0)      
+  --    , COALESCE (MILinkObject_Position.ObjectId, 0)  
+)
+
+select    -- lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), tmp.ObjectId, MovementLinkObject_PersonalServiceList.ObjectId)
+-- *
+  zc_ObjectLink_Personal_PersonalServiceList(), tmp.ObjectId, MovementLinkObject_PersonalServiceList.ObjectId
+, Object.*, Object_p.*, Object_pp.*
+from tmp
+     INNER JOIN MovementItem ON MovementItem.Id = tmp.MovementItemId
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                             ON MovementLinkObject_PersonalServiceList.MovementId = MovementItem.MovementId
+                                                            AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                                            
+                               left JOIN MovementItemLinkObject 
+                                                             ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                                            AND MovementItemLinkObject.DescId = zc_MILinkObject_Position()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = MovementItem .ObjectId
+                              AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+
+left JOIN Object on Object.Id = MovementLinkObject_PersonalServiceList.ObjectId
+left JOIN Object as Object_p on Object_p .Id = tmp.ObjectId
+left JOIN Object as Object_pp on Object_pp.Id = MovementItemLinkObject.ObjectId
+
+ where ObjectLink_Personal_PersonalServiceList.ChildObjectId is null
+order by Object_p.ValueData
+
 
 */
 -- тест
