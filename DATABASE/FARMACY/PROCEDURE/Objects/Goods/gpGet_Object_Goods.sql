@@ -10,9 +10,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
-               MinimumLot TFloat, ReferCode TFloat, ReferPrice TFloat, 
+               MinimumLot TFloat, ReferCode TFloat, ReferPrice TFloat, Price TFloat, 
                isClose boolean, 
-               isTOP boolean, PercentMarkup TFloat, 
+               isTOP boolean, PercentMarkup TFloat,  
                isErased boolean
                ) AS
 $BODY$
@@ -44,6 +44,7 @@ BEGIN
            , 0::TFloat     AS MinimumLot
            , 0::TFloat     AS ReferCode
            , 0::TFloat     AS ReferPrice
+           , 0::TFloat     AS Price
            , false         AS isClose
            , false         AS isTOP
            , 0::TFloat     AS PercentMarkup
@@ -76,6 +77,7 @@ BEGIN
           , Object_Goods_View.MinimumLot     AS MinimumLot
           , ObjectFloat_Goods_ReferCode.ValueData  AS ReferCode
           , ObjectFloat_Goods_ReferPrice.ValueData AS ReferPrice
+          , Object_Goods_View.Price          AS Price
 
           , Object_Goods_View.isClose        AS isClose
 
@@ -105,6 +107,7 @@ ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.06.15                        *  
  23.03.15                        *  
  16.02.15                        *  
  13.11.14                        *  Дефолты

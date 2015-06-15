@@ -295,7 +295,8 @@ uses
   CashRegister in '..\..\Forms\Guides\CashRegister.pas' {CashRegisterForm: TParentForm},
   CashRegisterEdit in '..\..\Forms\Guides\CashRegisterEdit.pas' {CashRegisterEditForm: TParentForm},
   AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
-  Report_RemainGoods in '..\..\FormsFarmacy\Report\Report_RemainGoods.pas' {AncestorReportForm2: TParentForm};
+  Report_RemainGoods in '..\..\FormsFarmacy\Report\Report_RemainGoods.pas' {Report_GoodsRemainsForm: TParentForm},
+  Report_GoodsPartionMove in '..\..\FormsFarmacy\Report\Report_GoodsPartionMove.pas' {Report_GoodsPartionMoveForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -314,7 +315,6 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TAncestorReportForm2, AncestorReportForm2);
   Application.Run;
 
   DUnitTestRunner.RunRegisteredTests;

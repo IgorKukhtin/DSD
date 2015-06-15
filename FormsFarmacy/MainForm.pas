@@ -146,6 +146,8 @@ type
     N49: TMenuItem;
     actCashRegister: TdsdOpenForm;
     N50: TMenuItem;
+    actReport_GoodRemains: TdsdOpenForm;
+    N51: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

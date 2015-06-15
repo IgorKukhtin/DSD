@@ -878,7 +878,12 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainGoods.pas">
-				<Form>AncestorReportForm2</Form>
+				<Form>Report_GoodsRemainsForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionMove.pas">
+				<Form>Report_GoodsPartionMoveForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>

@@ -8,6 +8,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods
     (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods
     (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods
+    (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -19,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inMinimumLot          TFloat    ,    -- Групповая упаковка
     IN inReferCode           Integer   ,    -- Код для стыковки спецпроекта
     IN inReferPrice          TFloat    ,    -- Референтная цена упаковки
+    IN inPrice               TFloat    ,    -- Цена реализации
     IN inIsClose             Boolean   ,    -- Код закрыт
     IN inTOP                 Boolean   ,    -- ТОП - позиция
     IN inPercentMarkup	     TFloat    ,    -- % наценки
@@ -63,6 +66,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinimumLot(), ioId, inMinimumLot);
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferCode(), ioId, inReferCode);
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferPrice(), ioId, inReferPrice);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Price(), ioId, inPrice);
 
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Close(), ioId, inIsClose);
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), ioId, inTOP);
@@ -88,12 +92,13 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, boolean, boolean, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.06.15                        *
  23.03.15                        *
  16.02.15                        *
  26.11.14                        *

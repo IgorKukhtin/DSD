@@ -1,4 +1,4 @@
-unit Report_RemainGoods;
+unit Report_GoodsPartionMove;
 
 interface
 
@@ -12,20 +12,28 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  cxButtonEdit, dsdGuides, cxCurrencyEdit;
+  cxButtonEdit, dsdGuides;
 
 type
-  TReport_GoodsRemainsForm = class(TAncestorReportForm)
+  TReport_GoodsPartionMoveForm = class(TAncestorReportForm)
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    edGoods: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edParty: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
+    GuidesGoods: TdsdGuides;
+    GuidesParty: TdsdGuides;
     colGoodsCode: TcxGridDBColumn;
-    colOperAmount: TcxGridDBColumn;
-    colOperSum: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    actOpenPartionReport: TdsdOpenForm;
-    bbGoodsPartyReport: TdxBarButton;
+    colStartRemainsAmount: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    colInvNumber: TcxGridDBColumn;
+    colIncomeAmount: TcxGridDBColumn;
+    colOutcomeAmount: TcxGridDBColumn;
+    colEndRemainsAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -35,9 +43,8 @@ type
 implementation
 
 {$R *.dfm}
-
 initialization
 
-  RegisterClass(TReport_GoodsRemainsForm);
+  RegisterClass(TReport_GoodsPartionMoveForm);
 
 end.

@@ -1,18 +1,23 @@
 -- Function: zfCalc_RateFuelValue
 
 DROP FUNCTION IF EXISTS zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat);
+DROP FUNCTION IF EXISTS zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_SalePrice(
     IN inPriceWithVAT        TFloat    , -- Цена С НДС
     IN inMarginPercent       TFloat    , -- % наценки
     IN inIsTop               Boolean   , -- ТОП позиция
     IN inPercentMarkup       TFloat    , -- % наценки у товара
-    IN inJuridicalPercent    TFloat      -- % корректировки у Юр Лица для топа
+    IN inJuridicalPercent    TFloat    , -- % корректировки у Юр Лица для топа
+    IN inPrice               TFloat      -- Цена у товара
 )
 RETURNS TFloat AS
 $BODY$
   DECLARE vbPercent TFloat;
 BEGIN
+     IF COALESCE(inPrice, 0) <> 0 THEN 
+        RETURN inPrice;
+     END IF;
 
      -- расчет % наценки
    
@@ -26,13 +31,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfCalc_RateFuelValue (TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat) OWNER TO postgres;
+ALTER FUNCTION zfCalc_SalePrice(TFloat, TFloat, Boolean, TFloat, TFloat, TFloat) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.06.15                        * 
  13.04.15                        * 
 */
 /*
