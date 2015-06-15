@@ -157,6 +157,19 @@
     TabOrder = 9
     Width = 96
   end
+  object cxLabel9: TcxLabel [22]
+    Left = 231
+    Top = 257
+    Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+  end
+  object ceSalePrice: TcxCurrencyEdit [23]
+    Left = 231
+    Top = 280
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 23
+    Width = 92
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
     Top = 48
@@ -235,6 +248,13 @@
         Name = 'inReferPrice'
         Value = Null
         Component = ceReferPrice
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = ceSalePrice
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -336,6 +356,12 @@
         Name = 'ReferPrice'
         Value = Null
         Component = ceReferPrice
+      end
+      item
+        Name = 'Price'
+        Value = Null
+        Component = ceSalePrice
+        DataType = ftFloat
       end
       item
         Name = 'isClose'

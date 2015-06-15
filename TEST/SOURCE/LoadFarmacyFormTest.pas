@@ -301,6 +301,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

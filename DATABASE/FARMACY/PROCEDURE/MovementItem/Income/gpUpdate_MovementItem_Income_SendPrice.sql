@@ -62,7 +62,8 @@ BEGIN
                                           MarginCondition.MarginPercent, -- % наценки
                                           Object_Goods_View.isTOP, -- ТОП позиция
                                           Object_Goods_View.PercentMarkup, -- % наценки у товара
-                                          vbJuridicalPercent)))
+                                          vbJuridicalPercent, 
+                                          Object_Goods_View.Price )))
          FROM MarginCondition, MovementItem_Income_View, MovementItem_Income
                     LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem_Income.GoodsId
          WHERE MarginCondition.MinPrice < MovementItem_Income.PriceWithVAT AND MovementItem_Income.PriceWithVAT <= MarginCondition.MaxPrice 

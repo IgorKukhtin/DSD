@@ -67,7 +67,8 @@ BEGIN
                            MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
                            ObjectGoodsView.isTop, -- ТОП позиция
                            ObjectGoodsView.PercentMarkup, -- % наценки у товара
-                           ObjectFloat_Percent.valuedata)::TFloat AS NewPrice
+                           ObjectFloat_Percent.valuedata,
+                           ObjectGoodsView.Price)::TFloat AS NewPrice
 
        FROM LoadPriceListItem 
 
