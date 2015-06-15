@@ -8,13 +8,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_MovementCeh(
     IN inIsComlete   Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
-             , MovementDescNumber Integer, MovementDescId Integer, MovementDescName TVarChar, PartionGoods TVarChar
-             , TotalCount TFloat
+             , MovementDescNumber Integer, MovementDescId Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
+             , PartionGoods TVarChar
              , isProductionIn Boolean
+             , TotalCount TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
               )
@@ -45,7 +46,7 @@ BEGIN
                          )
 
        SELECT  Movement.Id
-             , Movement.InvNumber
+             , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
              , Movement.OperDate
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
@@ -61,12 +62,13 @@ BEGIN
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.Id                            AS MovementDescId
              , MovementDesc.ItemName                      AS MovementDescName
-             , MovementString_PartionGoods.ValueData      AS PartionGoods
-
-             , MovementFloat_TotalCount.ValueData             AS TotalCount
-
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
+
+             , MovementString_PartionGoods.ValueData      AS PartionGoods
              , MovementBoolean_isIncome.ValueData         AS isProductionIn
+
+             , MovementFloat_TotalCount.ValueData         AS TotalCount
+             , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
 
              , Object_From.ValueData              AS FromName
              , Object_To.ValueData                AS ToName
@@ -87,7 +89,6 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
-
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
                                       ON MovementBoolean_isIncome.MovementId =  Movement.Id

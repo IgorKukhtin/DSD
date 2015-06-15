@@ -392,8 +392,7 @@ begin
   with spSelect do
   begin
        StoredProcName:='gpSelect_Scale_Partner';
-       Params.AddParam('inInfoMoneyId_income', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_income')));
-       Params.AddParam('inInfoMoneyId_sale', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_sale')));
+       Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
        OutputType:=otDataSet;
        Execute;
   end;

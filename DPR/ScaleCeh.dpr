@@ -64,7 +64,7 @@ uses
   dsdException in '..\SOURCE\dsdException.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm: TParentForm},
+  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm: TParentForm},
   DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm},
   AxLibLib_TLB in '..\Scale\Util\AxLibLib_TLB.pas',
   dmMainScaleCeh in '..\ScaleCeh\Util\dmMainScaleCeh.pas' {DMMainScaleCehForm: TDataModule},
@@ -73,7 +73,9 @@ uses
   DialogMovementDesc in '..\Scale\DialogMovementDesc.pas' {DialogMovementDescForm},
   dmMainScale in '..\ScaleCeh\Util\dmMainScale.pas',
   GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm},
-  DialogMessage in '..\ScaleCeh\DialogMessage.pas' {DialogMessageForm};
+  DialogMessage in '..\ScaleCeh\DialogMessage.pas' {DialogMessageForm},
+  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
+  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm};
 
 {$R *.res}
 
@@ -84,10 +86,13 @@ begin
   //global Initialize
   gpInitialize_Ini;
 
+
   if FindCmdLineSwitch('autologin', true) then
   begin
          TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
-         //TUpdater.AutomaticUpdateProgram;
+         TUpdater.AutomaticUpdateProgram;
+         //
+         if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
          Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
@@ -97,6 +102,8 @@ begin
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementCehForm, GuideMovementCehForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
+         Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
+         Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
   end
@@ -110,6 +117,8 @@ begin
     begin
          TUpdater.AutomaticUpdateProgram;
          //
+         if gpCheck_BranchCode = FALSE then exit;
+         //
          Application.CreateForm(TdmMain, dmMain);
          Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
   // !!!важно первым!!!
@@ -118,6 +127,8 @@ begin
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementCehForm, GuideMovementCehForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
+         Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
+         Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
   end;

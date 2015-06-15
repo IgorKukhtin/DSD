@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGet_Scale_Goods (TDateTime, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Scale_Goods (Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_Goods(
-    IN inIsWorkProgress  Boolean      , -- производство/упаковка or обвалка
+    IN inIsGoodsComplete Boolean      , -- склад ГП/производство/упаковка or обвалка
     IN inBarCode         TVarChar     ,
     IN inSession         TVarChar       -- сессия пользователя
 )
@@ -49,8 +49,8 @@ BEGIN
                                                        ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
                                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                                   LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                             WHERE ((inIsWorkProgress = TRUE AND tmp.ObjectCode BETWEEN 1 AND 4000 - 1)
-                                 OR (inIsWorkProgress = FALSE AND tmp.ObjectCode >= 4000)
+                             WHERE ((inIsGoodsComplete = TRUE AND tmp.ObjectCode BETWEEN 1 AND 4000 - 1)
+                                 OR (inIsGoodsComplete = FALSE AND tmp.ObjectCode >= 4000)
                                  OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                    )
                                 AND tmp.ObjectCode > 0

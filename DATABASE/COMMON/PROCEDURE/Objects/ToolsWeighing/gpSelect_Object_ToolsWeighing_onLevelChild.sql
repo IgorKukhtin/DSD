@@ -63,6 +63,8 @@ BEGIN
                                                    THEN 'TRUE'
                                               WHEN STRPOS (tmp.Name, 'isBarCode') > 0
                                                    THEN 'TRUE'
+                                              WHEN STRPOS (tmp.Name, 'isGoodsComplete') > 0
+                                                   THEN 'TRUE'
                                               WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
                                                    THEN 'FALSE'
                                               ELSE '1'
@@ -77,16 +79,16 @@ BEGIN
        UNION SELECT 'PrintCount'             AS Name
        UNION SELECT 'isPrintPreview'         AS Name
 
-       UNION SELECT 'isBarCode'              AS Name
+       UNION SELECT 'isBarCode'              AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isTareWeightEnter'      AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isPersonalComplete'     AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isTax'                  AS Name WHERE inIsCeh = FALSE
 
        UNION SELECT 'DayPrior_PriceReturn' AS Name WHERE inIsCeh = FALSE
 
-       UNION SELECT 'isWorkProgress'     AS Name WHERE inIsCeh = TRUE
-       UNION SELECT 'InfoMoneyId_income' AS Name WHERE inIsCeh = FALSE
-       UNION SELECT 'InfoMoneyId_sale'   AS Name WHERE inIsCeh = FALSE
+       UNION SELECT 'isGoodsComplete'    AS Name
+       UNION SELECT 'InfoMoneyId_income' AS Name WHERE 1=0 AND inIsCeh = FALSE
+       UNION SELECT 'InfoMoneyId_sale'   AS Name WHERE 1=0 AND inIsCeh = FALSE
 
        UNION SELECT 'isBox'              AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'BoxCount'           AS Name WHERE inIsCeh = FALSE

@@ -34,12 +34,14 @@ begin
      try diffDateTime_sec:=StrToInt(GetArrayList_Value_byName(Service_Array,'SecondBeforeComplete')); except Result:=true;end;
      PanelTime.Caption:=' Осталось '+IntToStr(diffDateTime_sec)+' сек.';
      fIsOk:=false;
-     //ActiveControl:=bbCancel;
+     //
      MemoMessage.Lines.Clear;
      MemoMessage.Lines.Add('Смена за <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>');
      MemoMessage.Lines.Add(ParamsMovement.ParamByName('MovementDescName_master').asString);
      MemoMessage.Lines.Add('Действительно завершить взвешивание и сформировать документ?');
      //
+     ActiveControl:=bbOk;
+     //ActiveControl:=bbCancel;
      Result:=inherited Execute;
 end;
 {------------------------------------------------------------------------------}

@@ -212,7 +212,7 @@ object GuideMovementForm: TGuideMovementForm
           Width = 70
         end
         object MovementDescNumber: TcxGridDBColumn
-          Caption = #1050#1086#1076' '#1086#1087#1077#1088'.'
+          Caption = #8470' '#1086#1087#1077#1088'.'
           DataBinding.FieldName = 'MovementDescNumber'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -304,19 +304,12 @@ object GuideMovementForm: TGuideMovementForm
           HeaderAlignmentVert = vaCenter
           Width = 60
         end
-        object PartionGoods: TcxGridDBColumn
-          Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
-          DataBinding.FieldName = 'PartionGoods'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 70
-        end
         object WeighingNumber: TcxGridDBColumn
-          Caption = #1053#1086#1084#1077#1088' '#1074#1079#1074#1077#1096'.'
+          Caption = #8470' '#1074#1079#1074#1077#1096'.'
           DataBinding.FieldName = 'WeighingNumber'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 60
+          Width = 50
         end
         object FromName: TcxGridDBColumn
           Caption = #1054#1090' '#1082#1086#1075#1086

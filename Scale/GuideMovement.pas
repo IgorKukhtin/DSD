@@ -37,7 +37,6 @@ type
     MovementDescName: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     WeighingNumber: TcxGridDBColumn;
-    PartionGoods: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     InvNumberOrder: TcxGridDBColumn;
     InvNumberTransport: TcxGridDBColumn;
@@ -156,7 +155,6 @@ begin
      bbChoice.Enabled:=(isChoice_local) or (UserId_begin=5);
 
      EditInvNumber_parent.Text:='';
-     cbPrintPreview.Checked:=true;
 
      fStartWrite:=true;
      deStart.Text:=DateToStr(ParamsMovement_local.ParamByName('OperDate').AsDateTime);
@@ -167,6 +165,7 @@ begin
      RefreshDataSet;
      CDS.Filtered:=false;
 
+     //для начала снимаем всю печать
      cbPrintMovement.Checked:=false;
      cbPrintTransport.Checked:=false;
      cbPrintQuality.Checked:=false;
@@ -174,6 +173,8 @@ begin
      cbPrintAccount.Checked:=false;
      cbPrintPack.Checked:=false;
      cbPrintSpec.Checked:=false;
+     //и отмечаем просмотр
+     cbPrintPreview.Checked:=true;
 
      if ParamsMovement_local.ParamByName('MovementId').AsInteger<>0
      then CDS.Locate('Id',ParamsMovement_local.ParamByName('MovementId').AsString,[]);
@@ -318,7 +319,7 @@ procedure TGuideMovementForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boole
 begin
      if (trim(EditInvNumber_parent.Text)<>'')
      then
-       if (pos(AnsiUpperCase(EditInvNumber_parent.Text),AnsiUpperCase(DataSet.FieldByName('InvNumber').AsString))>0)
+       if (pos(AnsiUpperCase(EditInvNumber_parent.Text),AnsiUpperCase(DataSet.FieldByName('InvNumber_parent').AsString))>0)
        then Accept:=true else Accept:=false;
 end;
 {------------------------------------------------------------------------------}

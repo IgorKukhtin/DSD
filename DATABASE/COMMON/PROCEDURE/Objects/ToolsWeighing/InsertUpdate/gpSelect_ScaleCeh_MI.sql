@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ScaleCeh_MI(
     IN inMovementId  Integer   , -- ключ Документа
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
+RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
              , GoodsKindName TVarChar
              , isStartWeighing Boolean
              , Amount TFloat, AmountWeight TFloat
@@ -31,6 +31,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              tmpMI.MovementItemId
+           , Object_Goods.Id                  AS GoodsId
            , Object_Goods.ObjectCode          AS GoodsCode
            , Object_Goods.ValueData           AS GoodsName
            , Object_Measure.ValueData         AS MeasureName

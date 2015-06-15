@@ -1,4 +1,4 @@
-inherited DialogNumberValueForm: TDialogNumberValueForm
+inherited DialogStringValueForm: TDialogStringValueForm
   Caption = #1042#1074#1086#1076' '#1079#1085#1072#1095#1077#1085#1080#1103
   ClientHeight = 90
   ClientWidth = 237
@@ -14,7 +14,7 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
     ExplicitTop = 49
     ExplicitWidth = 237
   end
-  object PanelNumberValue: TPanel
+  object PanelStringValue: TPanel
     Left = 0
     Top = 0
     Width = 237
@@ -22,7 +22,7 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    object LabelNumberValue: TLabel
+    object LabelStringValue: TLabel
       Left = 0
       Top = 0
       Width = 237
@@ -38,15 +38,13 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
       ParentFont = False
       ExplicitWidth = 103
     end
-    object NumberValueEdit: TcxCurrencyEdit
+    object StringValueEdit: TEdit
       Left = 49
       Top = 25
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.AssignedValues.DisplayFormat = True
-      Properties.DecimalPlaces = 0
-      TabOrder = 0
       Width = 135
+      Height = 22
+      TabOrder = 0
+      Text = 'StringValueEdit'
     end
   end
 end

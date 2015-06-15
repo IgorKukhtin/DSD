@@ -86,7 +86,6 @@ type
     clPaidKindName: TcxGridDBColumn;
     colOperDate_parent: TcxGridDBColumn;
     colWeighingNumber: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
     PersonalName1: TcxGridDBColumn;
     PersonalName2: TcxGridDBColumn;
     PersonalName3: TcxGridDBColumn;

@@ -79,6 +79,7 @@ begin
      CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
 
      isEditPartnerCodeExit:= FALSE;
+     ParamsMovement_local.ParamByName('isGetPartner').AsBoolean:= false;
 
      if   (ParamsMovement_local.ParamByName('MovementId').AsInteger <> 0)
        and(ParamsMovement_local.ParamByName('isMovementId_check').asBoolean = FALSE)
@@ -122,7 +123,7 @@ begin
      EditBarCode.SelectAll;
      //isEditBarCode:=BarCode<>'';
      isEditBarCode:=FALSE;//ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger<>zc_Movement_SendOnPrice;
-     isEditPartnerCodeExit:= TRUE;
+//     isEditPartnerCodeExit:= TRUE;
 
      if BarCode<>'' then begin isEditBarCode:=true;EditBarCodeExit(EditBarCode);Result:=true;end
      else begin Result:=(ShowModal=mrOk);end;
@@ -164,8 +165,10 @@ begin
                ParamsMovement_local.ParamByName('OrderExternalName_master').asString:= '';
           end;
           //!!!только если OrderExternalId был!!!
-          if (ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=ParamsMovement.ParamByName('calcPartnerId').AsInteger) then
-          begin
+          if (ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=ParamsMovement.ParamByName('calcPartnerId').AsInteger)
+            and(ParamsMovement_local.ParamByName('isGetPartner').AsBoolean= false)
+            and(ParamsMovement.ParamByName('calcPartnerId').AsInteger>0)
+          then begin
                ParamsMovement_local.ParamByName('calcPartnerId').AsInteger  := 0;
                ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger:= 0;
                ParamsMovement_local.ParamByName('calcPartnerName').asString := '';
@@ -502,6 +505,15 @@ end;
 procedure TDialogMovementDescForm.EditPartnerCodeEnter(Sender: TObject);
 begin
   TEdit(Sender).SelectAll;
+  isEditPartnerCodeExit:= TRUE;
+    if ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger<>0
+    then begin
+              EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
+              isEditBarCode:=true;
+              EditBarCodeExit(Self);
+              //переопределяются параметры, т.к. они используются в фильтре справ.
+              ParamsMovement_local.ParamByName('MovementDescId').AsInteger:= CDS.FieldByName('MovementDescId').asInteger;
+    end;
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodeExit(Sender: TObject);
@@ -607,6 +619,7 @@ begin
 
     if GuidePartnerForm.Execute(ParamsMovement_local)
     then begin
+              ParamsMovement_local.ParamByName('isGetPartner').AsBoolean:= true;
               EditPartnerCode.Text:=IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);
               PanelPartnerName.Caption:= ParamsMovement_local.ParamByName('calcPartnerName').AsString;
               Key:=VK_RETURN;

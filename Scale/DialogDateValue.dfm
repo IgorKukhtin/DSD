@@ -1,4 +1,4 @@
-inherited DialogNumberValueForm: TDialogNumberValueForm
+inherited DialogDateValueForm: TDialogDateValueForm
   Caption = #1042#1074#1086#1076' '#1079#1085#1072#1095#1077#1085#1080#1103
   ClientHeight = 90
   ClientWidth = 237
@@ -14,7 +14,7 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
     ExplicitTop = 49
     ExplicitWidth = 237
   end
-  object PanelNumberValue: TPanel
+  object PanelDateValue: TPanel
     Left = 0
     Top = 0
     Width = 237
@@ -22,7 +22,7 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    object LabelNumberValue: TLabel
+    object LabelDateValue: TLabel
       Left = 0
       Top = 0
       Width = 237
@@ -38,15 +38,15 @@ inherited DialogNumberValueForm: TDialogNumberValueForm
       ParentFont = False
       ExplicitWidth = 103
     end
-    object NumberValueEdit: TcxCurrencyEdit
-      Left = 49
+    object DateValueEdit: TcxDateEdit
+      Left = 70
       Top = 25
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.AssignedValues.DisplayFormat = True
-      Properties.DecimalPlaces = 0
+      EditValue = 41640d
+      Properties.DateButtons = [btnToday]
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
-      Width = 135
+      Width = 95
     end
   end
 end

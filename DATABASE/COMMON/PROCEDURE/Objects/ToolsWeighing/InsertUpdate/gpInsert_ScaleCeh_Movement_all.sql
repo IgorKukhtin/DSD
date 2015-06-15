@@ -45,6 +45,7 @@ BEGIN
                                                          AND MIString_PartionGoods.ValueData <> ''
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.isErased = FALSE
+                         AND vbMovementDescId = zc_Movement_ProductionSeparate()
                        GROUP BY MIString_PartionGoods.ValueData
                       );
      -- определили <Приход или Расход>, нужен для zc_Movement_ProductionSeparate
@@ -71,7 +72,7 @@ BEGIN
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                   AND MovementLinkObject_To.ObjectId = MovementLinkObject_To_find.ObjectId
                                      INNER JOIN MovementString AS MovementString_PartionGoods
-                                                               ON MovementString_PartionGoods.MovementId =  Movement.Id
+                                                               ON MovementString_PartionGoods.MovementId = Movement.Id
                                                               AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
                                                               AND MovementString_PartionGoods.ValueData = vbPartionGoods
                                 WHERE Movement.DescId = zc_Movement_ProductionSeparate()
@@ -267,8 +268,8 @@ BEGIN
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
                                                         , inPartionGoodsDate    := tmp.PartionGoodsDate
-                                                        , inPrice               := NULL -- !!!не ошибка, здесь не формируется!!!
-                                                        , inSumm                := NULL -- !!!не ошибка, здесь не формируется!!!
+                                                        , inPrice               := 0 -- !!!не ошибка, здесь не формируется!!!
+                                                        , inSumm                := 0 -- !!!не ошибка, здесь не формируется!!!
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inCount               := tmp.Count
                                                         , inPartionGoods        := tmp.PartionGoods

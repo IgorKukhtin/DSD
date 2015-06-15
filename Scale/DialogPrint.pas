@@ -45,13 +45,23 @@ uses UtilScale;
 {------------------------------------------------------------------------------}
 function TDialogPrintForm.Execute(isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; //Проверка корректного ввода в Edit
 begin
-     cbPrintMovement.Checked:=isMovement;
+     // для ScaleCeh только одна печать
+     if SettingMain.isCeh = TRUE
+     then cbPrintMovement.Checked:= TRUE
+     else cbPrintMovement.Checked:=isMovement;
      cbPrintAccount.Checked:=isAccount;
      cbPrintTransport.Checked:=isTransport;
      cbPrintQuality.Checked:=isQuality;
      cbPrintPack.Checked:=isPack;
      cbPrintSpec.Checked:=isSpec;
      cbPrintTax.Checked:=isTax;
+     //
+     cbPrintAccount.Enabled:=SettingMain.isCeh = TRUE;
+     cbPrintTransport.Enabled:=SettingMain.isCeh = TRUE;
+     cbPrintQuality.Enabled:=SettingMain.isCeh = TRUE;
+     cbPrintPack.Enabled:=SettingMain.isCeh = TRUE;
+     cbPrintSpec.Enabled:=SettingMain.isCeh = TRUE;
+     cbPrintTax.Enabled:=SettingMain.isCeh = TRUE;
      //
      cbPrintPreview.Checked:=GetArrayList_Value_byName(Default_Array,'isPrintPreview') = AnsiUpperCase('TRUE');
      PrintCountEdit.Text:=GetArrayList_Value_byName(Default_Array,'PrintCount');

@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 668
   ClientWidth = 1072
   ExplicitWidth = 1088
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -150,6 +150,10 @@ inherited SendForm: TSendForm
           object colPartionGoodsDate: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.SaveTime = False
+            Properties.ShowTime = False
+            Properties.UseNullString = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 84

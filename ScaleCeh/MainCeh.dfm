@@ -36,8 +36,8 @@ object MainCehForm: TMainCehForm
       BevelOuter = bvNone
       TabOrder = 0
       object bbDeleteItem: TSpeedButton
-        Left = 193
-        Top = 4
+        Left = 225
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1091#1076#1072#1083#1080#1090#1100'/'#1074#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -87,7 +87,7 @@ object MainCehForm: TMainCehForm
       end
       object bbExit: TSpeedButton
         Left = 489
-        Top = 4
+        Top = 2
         Width = 31
         Height = 29
         Action = actExit
@@ -104,8 +104,8 @@ object MainCehForm: TMainCehForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 370
-        Top = 4
+        Left = 380
+        Top = 2
         Width = 31
         Height = 29
         Action = actRefresh
@@ -141,8 +141,8 @@ object MainCehForm: TMainCehForm
         Visible = False
       end
       object bbChoice_UnComlete: TSpeedButton
-        Left = 249
-        Top = 4
+        Left = 287
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1042#1077#1088#1085#1091#1090#1100#1089#1103' '#1082' '#1085#1077' '#1079#1072#1082#1088#1099#1090#1086#1084#1091' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102
@@ -169,8 +169,8 @@ object MainCehForm: TMainCehForm
         OnClick = bbChoice_UnComleteClick
       end
       object bbView_all: TSpeedButton
-        Left = 286
-        Top = 4
+        Left = 318
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1042#1057#1045#1061'> '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
@@ -197,8 +197,8 @@ object MainCehForm: TMainCehForm
         OnClick = bbView_allClick
       end
       object bbChangeCount: TSpeedButton
-        Left = 101
-        Top = 4
+        Left = 102
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1073#1072#1090#1086#1085#1086#1074'>'
@@ -217,7 +217,7 @@ object MainCehForm: TMainCehForm
       end
       object bbChangeLiveWeight: TSpeedButton
         Left = 34
-        Top = 4
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1046#1080#1074#1086#1081' '#1074#1077#1089'>'
@@ -236,7 +236,7 @@ object MainCehForm: TMainCehForm
       end
       object bbChangeCountPack: TSpeedButton
         Left = 133
-        Top = 4
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1072#1082#1077#1090#1086#1074'>'
@@ -255,7 +255,7 @@ object MainCehForm: TMainCehForm
       end
       object bbChangeHeadCount: TSpeedButton
         Left = 3
-        Top = 4
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074'>'
@@ -272,23 +272,43 @@ object MainCehForm: TMainCehForm
         ShowHint = True
         OnClick = bbChangeHeadCountClick
       end
-      object bbChangeBoxCount: TSpeedButton
-        Left = 64
-        Top = 4
+      object bbChangePartionGoods: TSpeedButton
+        Left = 65
+        Top = 2
         Width = 31
         Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1087#1072#1082#1086#1074#1086#1095#1085#1086#1081' '#1090#1072#1088#1099'>'
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071'>'
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
           8000008000000080800080000000800080008080000080808000C0C0C0000000
           FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          888887088888888888888F808888888888888080888888888888880F08888888
-          88888888F0888888888888888F0888888888888888F000888888888888899108
-          88888888880B9990888888888880B91908888888888809919088888888888099
-          1908888888888809908888888888888008888888888888888888}
+          8888870888888888888873308888888888888733088888888888887330888888
+          8888888733088888888888887330888888888888873308888088888888733088
+          8008888888873308087088888888730700888888888880887888888888888088
+          0888888888880800888888888888808888888888888888888888}
         ParentShowHint = False
         ShowHint = True
+        OnClick = bbChangePartionGoodsClick
+      end
+      object bbChangePartionGoodsDate: TSpeedButton
+        Left = 164
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1072#1088#1090#1080#1103' '#1044#1040#1058#1040'>'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888870888888888888873308888888888888733088888888888887330888888
+          8888888733088888888888887330888888888888873308888088888888733088
+          8008888888873308087088888888730700888888888880887888888888888088
+          0888888888880800888888888888808888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChangePartionGoodsDateClick
       end
     end
     object infoPanelTotalSumm: TPanel

@@ -23,6 +23,8 @@ type
     // Scale + ScaleCeh
     function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
     function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MIString(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MIDate(execParams:TParams): Boolean;
     function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
     // Scale + ScaleCeh
     function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
@@ -36,13 +38,13 @@ type
     function gpInsert_MovementCeh_all(var execParamsMovement:TParams): Boolean;
     //
     //ScaleCeh
-    function gpGet_ScaleCeh_Movement_checkPartion(var execParamsMovement:TParams): Boolean;
+    function gpGet_ScaleCeh_Movement_checkPartion(MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
 
   end;
 
   function gpInitialize_Const: Boolean;//Scale + ScaleCeh
   function gpInitialize_Ini: Boolean;  //ScaleCeh
-  function gpInitialize_SettingMain_isCeh: Boolean;//ScaleCeh
+  function gpInitialize_SettingMain_Default: Boolean;//Scale + ScaleCeh
 
 var
   DMMainScaleCehForm: TDMMainScaleCehForm;
@@ -128,15 +130,6 @@ begin
     Result:=true;
 end;
 {------------------------------------------------------------------------}
-function gpInitialize_SettingMain_isCeh: Boolean;
-begin
-  SettingMain.isWorkProgress:=GetArrayList_Value_byName(Default_Array,'isWorkProgress') = AnsiUpperCase('TRUE');
-  SettingMain.WeightSkewer1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer1'));
-  SettingMain.WeightSkewer2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer2'));
-  //
-  Result:=true;
-end;
-{------------------------------------------------------------------------}
 function TDMMainScaleCehForm.gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
 begin
     Result:=false;
@@ -145,7 +138,7 @@ begin
        StoredProcName:='gpGet_Scale_Movement_checkId';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inMovementId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
        //try
          Execute;
          Result:=DataSet.FieldByName('isOk').asBoolean;
@@ -157,23 +150,33 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(var execParamsMovement:TParams): Boolean;
+function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
 begin
     Result:=false;
-    if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
     with spSelect do begin
        StoredProcName:='gpGet_ScaleCeh_Movement_checkPartion';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inMovementId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inMovementId', ftInteger, ptInput, MovementId);
+       Params.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+       Params.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
+       Params.AddParam('inOperCount', ftFloat, ptInput, OperCount);
        //try
          Execute;
-         Result:=DataSet.FieldByName('isOk').asBoolean;
+         Result:=DataSet.FieldByName('Code').asInteger = 0;
+         //execParamsMovement.ParamByName('MessageCode').AsInteger:= DataSet.FieldByName('Code').AsInteger;
+         //execParamsMovement.ParamByName('MessageStr').AsString:= DataSet.FieldByName('MessageStr').AsString;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpGet_ScaleCeh_Movement_checkPartion');
        end;}
     end;
+
+    if not Result
+    then
+        if spSelect.DataSet.FieldByName('Code').asInteger = 1
+        then ShowMessage(spSelect.DataSet.FieldByName('MessageStr').AsString)
+        else Result:=MessageDlg(spSelect.DataSet.FieldByName('MessageStr').AsString,mtConfirmation,mbYesNoCancel,0) = 6;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleCehForm.gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
@@ -192,6 +195,48 @@ begin
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpUpdate_Scale_MIFloat');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpUpdate_Scale_MIString(execParams:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_MIString';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, execParams.ParamByName('inMovementItemId').AsInteger);
+       Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
+       Params.AddParam('inValueData', ftString, ptInput, execParams.ParamByName('inValueData').AsString);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MIString');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpUpdate_Scale_MIDate(execParams:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_MIDate';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementItemId', ftInteger, ptInput, execParams.ParamByName('inMovementItemId').AsInteger);
+       Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
+       Params.AddParam('inValueData', ftDateTime, ptInput, execParams.ParamByName('inValueData').AsDateTime);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MIDate');
        end;}
     end;
     Result:=true;
@@ -431,13 +476,19 @@ end;
 {------------------------------------------------------------------------}
 function TDMMainScaleCehForm.gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
 begin
+    if (trim (inBarCode) = '') or (trim (inBarCode) = '0') then
+    begin
+         Result:=false;
+         exit
+    end;
+    //
     with spSelect do
     begin
        //в ШК - Id товара или Id товар+вид товара или для isCeh код GoodsCode
        StoredProcName:='gpGet_Scale_Goods';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inIsWorkProgress', ftBoolean, ptInput, SettingMain.isWorkProgress);
+       Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
        //try
          Execute;
@@ -496,6 +547,19 @@ begin
          result.Name := '';
          ShowMessage('Ошибка получения - gpGet_Scale_OperDate');
        end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.lpGet_BranchName(inBranchCode:Integer): String;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpExecSql_Value';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inSqlText', ftString, ptInput, 'SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE((SELECT Object_Branch.Id FROM Object AS Object_Branch WHERE Object_Branch.ObjectCode = '+ IntToStr(inBranchCode) + ' AND Object_Branch.DescId = zc_Object_Branch()), zc_Branch_Basis())' );
+       Execute;
+       Result:=DataSet.FieldByName('Value').asString;
     end;
 end;
 {------------------------------------------------------------------------}
@@ -609,19 +673,6 @@ begin
     Result:=true;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleCehForm.lpGet_BranchName(inBranchCode:Integer): String;
-begin
-    with spSelect do
-    begin
-       StoredProcName:='gpExecSql_Value';
-       OutputType:=otDataSet;
-       Params.Clear;
-       Params.AddParam('inSqlText', ftString, ptInput, 'SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE((SELECT Object_Branch.Id FROM Object AS Object_Branch WHERE Object_Branch.ObjectCode = '+ IntToStr(inBranchCode) + ' AND Object_Branch.DescId = zc_Object_Branch()), zc_Branch_Basis())' );
-       Execute;
-       Result:=DataSet.FieldByName('Value').asString;
-    end;
-end;
-{------------------------------------------------------------------------}
 function gpInitialize_Ini: Boolean;
 var
   Ini: TInifile;
@@ -677,6 +728,19 @@ begin
   Ini.Free;
   ScaleList.Free;
 
+  Result:=true;
+end;
+{------------------------------------------------------------------------}
+function gpInitialize_SettingMain_Default: Boolean;
+begin
+  SettingMain.isGoodsComplete:=GetArrayList_Value_byName(Default_Array,'isGoodsComplete') = AnsiUpperCase('TRUE');
+  //
+  if SettingMain.isCeh = TRUE then
+  begin
+       SettingMain.WeightSkewer1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer1'));
+       SettingMain.WeightSkewer2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer2'));
+  end;
+  //
   Result:=true;
 end;
 {------------------------------------------------------------------------}

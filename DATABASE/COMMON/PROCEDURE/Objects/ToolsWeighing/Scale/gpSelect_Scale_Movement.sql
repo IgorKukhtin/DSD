@@ -8,16 +8,18 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Movement(
     IN inIsComlete   Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
              , MovementId_Tax Integer, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
              , StartWeighing TDateTime, EndWeighing TDateTime 
-             , MovementDescNumber Integer, MovementDescId Integer, MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
+             , MovementDescNumber Integer, MovementDescId Integer, MovementDescName TVarChar
+             , WeighingNumber TFloat
+             , InvNumberOrder TVarChar
+             , InvNumberTransport Integer
              , ChangePercent TFloat
              , TotalCount TFloat, TotalCountTare TFloat
              , TotalSumm TFloat
-             , WeighingNumber TFloat, InvNumberTransport TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
@@ -59,7 +61,7 @@ BEGIN
                          )
 
        SELECT  Movement.Id
-             , Movement.InvNumber
+             , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
              , Movement.OperDate
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
@@ -83,16 +85,15 @@ BEGIN
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.Id                            AS MovementDescId
              , MovementDesc.ItemName                      AS MovementDescName
+             , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
+
              , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
-             , MovementString_PartionGoods.ValueData      AS PartionGoods
+             , MovementFloat_InvNumberTransport.ValueData :: Integer AS InvNumberTransport
 
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
              , MovementFloat_TotalCount.ValueData             AS TotalCount
              , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
              , MovementFloat_TotalSumm.ValueData              AS TotalSumm
-
-             , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
-             , MovementFloat_InvNumberTransport.ValueData AS InvNumberTransport
 
              , Object_From.ValueData              AS FromName
              , Object_To.ValueData                AS ToName
@@ -161,9 +162,6 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-            LEFT JOIN MovementString AS MovementString_PartionGoods
-                                     ON MovementString_PartionGoods.MovementId =  Movement.Id
-                                    AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
 
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id

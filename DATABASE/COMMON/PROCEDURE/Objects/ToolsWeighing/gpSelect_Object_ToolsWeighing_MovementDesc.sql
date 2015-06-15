@@ -191,7 +191,7 @@ BEGIN
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Loss())
-                       THEN COALESCE (Object_From.ValueData, '') || ' => '
+                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || CASE WHEN Object_To.Id > 0 THEN ' ' || COALESCE (Object_To.ValueData, '') ELSE '' END
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                        THEN CASE WHEN _tmpToolsWeighing.isSendOnPriceIn = TRUE THEN 'опхунд' ELSE 'пюCунд' END
@@ -199,6 +199,7 @@ BEGIN
 
                   ELSE TRIM (COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, ''))
               END) :: TVarChar AS MovementDescName
+
 
            , ('(' || _tmpToolsWeighing.Number :: TVarChar ||') '
           || _tmpToolsWeighing.ItemName -- MovementDesc.ItemName
@@ -212,7 +213,7 @@ BEGIN
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_To.ValueData, '')
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Loss())
-                       THEN COALESCE (Object_From.ValueData, '') || ' => '
+                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || CASE WHEN Object_To.Id > 0 THEN ' ' || COALESCE (Object_To.ValueData, '') ELSE '' END
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                        THEN CASE WHEN _tmpToolsWeighing.isSendOnPriceIn = TRUE THEN 'опхунд' ELSE 'пюCунд' END

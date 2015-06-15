@@ -130,7 +130,6 @@ type
     GoodsKindName: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     PartionGoods: TcxGridDBColumn;
-    PartionGoodsDate: TcxGridDBColumn;
     PriceListName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     ChangePercentAmount: TcxGridDBColumn;
@@ -161,8 +160,8 @@ type
     HeadCountPanel: TPanel;
     HeadCountLabel: TLabel;
     EditHeadCount: TcxCurrencyEdit;
-    PartionGoodsPanel: TPanel;
-    PartionGoodsLabel: TLabel;
+    PanelPartionGoods: TPanel;
+    LabelPartionGoods: TLabel;
     EditPartionGoods: TEdit;
     ActionList: TActionList;
     actRefresh: TAction;
@@ -181,6 +180,7 @@ type
     Panel25: TPanel;
     Label17: TLabel;
     OperDateEdit: TcxDateEdit;
+    bbChangePartionGoods: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -201,6 +201,7 @@ type
     procedure actExitExecute(Sender: TObject);
     procedure actUpdateBoxExecute(Sender: TObject);
     procedure bbChangeBoxCountClick(Sender: TObject);
+    procedure bbChangePartionGoodsClick(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -229,7 +230,7 @@ var
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint
-    ,GuideMovement, DialogNumberValue,DialogPersonalComplete,DialogPrint;
+    ,GuideMovement, DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -250,7 +251,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.myActiveControl;
 begin
-     if PartionGoodsPanel.Visible
+     if PanelPartionGoods.Visible
      then ActiveControl:=EditPartionGoods
      else if BarCodePanel.Visible
           then ActiveControl:=EditBarCode
@@ -547,12 +548,12 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='Количество пакетов';
+          LabelNumberValue.Caption:='Количество пакетов';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('Count').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
-          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          ParamAddValue(execParams,'inValueData',ftFloat,NumberValue);
           DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
           //
      end;
@@ -578,13 +579,45 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='Количество голов';
+          LabelNumberValue.Caption:='Количество голов';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('HeadCount').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
-          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          ParamAddValue(execParams,'inValueData',ftFloat,NumberValue);
           DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbChangePartionGoodsClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIString_PartionGoods');
+
+     with DialogStringValueForm do
+     begin
+          LabelStringValue.Caption:='Партия СЫРЬЯ';
+          ActiveControl:=StringValueEdit;
+          StringValueEdit.Text:=CDS.FieldByName('PartionGoods').AsString;
+          isPartionGoods:=true;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftString,StringValueEdit.Text);
+          DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
           //
      end;
      //
@@ -609,12 +642,12 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='Количество упак.тары';
+          LabelNumberValue.Caption:='Количество упак.тары';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('BoxCount').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
-          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          ParamAddValue(execParams,'inValueData',ftFloat,NumberValue);
           DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
           //
      end;
@@ -640,12 +673,12 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='№ Шар';
+          LabelNumberValue.Caption:='№ Шар';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('LevelNumber').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
-          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          ParamAddValue(execParams,'inValueData',ftFloat,NumberValue);
           DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
           //
      end;
@@ -671,12 +704,12 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='№ Ящика';
+          LabelNumberValue.Caption:='№ Ящика';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('BoxNumber').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
-          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          ParamAddValue(execParams,'inValueData',ftFloat,NumberValue);
           DMMainScaleForm.gpUpdate_Scale_MIFloat(execParams);
           //
      end;
@@ -825,8 +858,9 @@ begin
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
-  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Default');
   Service_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Service');
+  Default_Array:=       DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Default');
+  gpInitialize_SettingMain_Default; //!!!обязатльно после получения Default_Array!!!
 
   PriceList_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'PriceList');
   TareCount_Array:=     DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareCount');
@@ -843,14 +877,25 @@ begin
   //local Control Form
   Initialize_afterSave_all;
   Initialize_afterSave_MI;
+  //local visible Columns
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=SettingMain.isGoodsComplete = FALSE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=SettingMain.isGoodsComplete = FALSE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LevelNumber').Index].Visible         :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxNumber').Index].Visible           :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxName').Index].Visible             :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxCount').Index].Visible            :=SettingMain.isGoodsComplete = TRUE;
   //local visible
-  PartionGoodsPanel.Visible:=StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_sale')) = zc_Enum_InfoMoney_30201; // Доходы + Мясное сырье + Мясное сырье
-  HeadCountPanel.Visible:=PartionGoodsPanel.Visible;
-  PanelCountPack.Visible:=not PartionGoodsPanel.Visible;
+  PanelPartionGoods.Visible:=SettingMain.isGoodsComplete = FALSE;
+  HeadCountPanel.Visible:=PanelPartionGoods.Visible;
+  PanelCountPack.Visible:=not PanelPartionGoods.Visible;
   BarCodePanel.Visible:=GetArrayList_Value_byName(Default_Array,'isBarCode') = AnsiUpperCase('TRUE');
   PanelBox.Visible:=GetArrayList_Value_byName(Default_Array,'isBox') = AnsiUpperCase('TRUE');
 
   bbChangeHeadCount.Visible:=HeadCountPanel.Visible;
+  bbChangePartionGoods.Visible:=HeadCountPanel.Visible;
+
   bbChangeCountPack.Visible:=not bbChangeHeadCount.Visible;
   //
   with spSelect do

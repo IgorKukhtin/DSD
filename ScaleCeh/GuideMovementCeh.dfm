@@ -137,8 +137,28 @@ object GuideMovementCehForm: TGuideMovementCehForm
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
         DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.DefaultGroupSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountTare
+          end>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TotalCountTare
+          end>
         DataController.Summary.SummaryGroups = <>
         OptionsCustomize.ColumnHiding = True
         OptionsCustomize.ColumnMoving = False
@@ -200,7 +220,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
           Width = 55
         end
         object MovementDescNumber: TcxGridDBColumn
-          Caption = #1050#1086#1076' '#1086#1087#1077#1088'.'
+          Caption = #8470' '#1086#1087#1077#1088'.'
           DataBinding.FieldName = 'MovementDescNumber'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -246,14 +266,14 @@ object GuideMovementCehForm: TGuideMovementCehForm
           Width = 70
         end
         object PartionGoods: TcxGridDBColumn
-          Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+          Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
           DataBinding.FieldName = 'PartionGoods'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
         end
         object WeighingNumber: TcxGridDBColumn
-          Caption = #1053#1086#1084#1077#1088' '#1074#1079#1074#1077#1096'.'
+          Caption = #8470' '#1074#1079#1074#1077#1096'.'
           DataBinding.FieldName = 'WeighingNumber'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -285,7 +305,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
           Width = 100
         end
         object TotalCount: TcxGridDBColumn
-          Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
+          Caption = #1050#1086#1083'-'#1074#1086
           DataBinding.FieldName = 'TotalCount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
@@ -297,6 +317,9 @@ object GuideMovementCehForm: TGuideMovementCehForm
         object TotalCountTare: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
           DataBinding.FieldName = 'TotalCountTare'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 60

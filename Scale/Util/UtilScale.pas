@@ -36,16 +36,18 @@ type
   TArrayListScale = array of TListItemScale;
 
   TSettingMain = record
-    isCeh:Boolean;         // ScaleCeh orScale
-    isWorkProgress:Boolean;// only ScaleCeh - производство/упаковка or обвалка
-    WeightSkewer1:Double;  // only ScaleCeh
-    WeightSkewer2:Double;  // only ScaleCeh
+    isCeh:Boolean;          // ScaleCeh or Scale
+    isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
+    WeightSkewer1:Double;   // only ScaleCeh
+    WeightSkewer2:Double;   // only ScaleCeh
     BranchCode:Integer;
     BranchName:String;
     ScaleCount:Integer;
     DefaultCOMPort:Integer;
     IndexScale_old:Integer;
   end;
+
+  function gpCheck_BranchCode: Boolean;
 
   function Recalc_PartionGoods(Edit:TEdit):Boolean;
 
@@ -159,6 +161,7 @@ begin
      ParamAdd(Params,'InfoMoneyCode',ftInteger);
      ParamAdd(Params,'InfoMoneyName',ftString);
 
+     ParamAdd(Params,'isGetPartner',ftBoolean); //локальный параметр
      ParamAdd(Params,'calcPartnerId',ftInteger);
      ParamAdd(Params,'calcPartnerCode',ftInteger);
      ParamAdd(Params,'calcPartnerName',ftString);
@@ -650,4 +653,13 @@ begin
              end;
 end;
 {------------------------------------------------------------------------------}
+function gpCheck_BranchCode: Boolean;
+begin
+    Result:=((SettingMain.isCeh = FALSE) and (SettingMain.BranchCode < 100))
+          or((SettingMain.isCeh = TRUE) and ((SettingMain.BranchCode = 1) or (SettingMain.BranchCode > 100)));
+    //
+    if not Result
+    then ShowMessage('Ошибка.Запуск программы для филиала <'+IntToStr(SettingMain.BranchCode)+'> не предусмотрен.');
+end;
+{------------------------------------------------------------------------}
 end.

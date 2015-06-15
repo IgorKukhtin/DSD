@@ -13,6 +13,8 @@ inherited DialogMessageForm: TDialogMessageForm
   inherited bbPanel: TPanel
     Top = 131
     Width = 614
+    ExplicitTop = 131
+    ExplicitWidth = 614
   end
   object MemoMessage: TMemo
     Left = 0

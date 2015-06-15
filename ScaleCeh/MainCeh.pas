@@ -210,7 +210,8 @@ type
     CountPack: TcxGridDBColumn;
     bbChangeCountPack: TSpeedButton;
     bbChangeHeadCount: TSpeedButton;
-    bbChangeBoxCount: TSpeedButton;
+    bbChangePartionGoods: TSpeedButton;
+    bbChangePartionGoodsDate: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -267,6 +268,8 @@ type
     procedure EditWeightOtherExit(Sender: TObject);
     procedure EditEnterCountExit(Sender: TObject);
     procedure bbChangeLiveWeightClick(Sender: TObject);
+    procedure bbChangePartionGoodsClick(Sender: TObject);
+    procedure bbChangePartionGoodsDateClick(Sender: TObject);
   private
     oldGoodsId:Integer;
 
@@ -301,7 +304,7 @@ var
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
-    ,GuideMovementCeh, DialogNumberValue, DialogPrint, DialogMessage;
+    ,GuideMovementCeh, DialogNumberValue, DialogStringValue, DialogDateValue, DialogPrint, DialogMessage;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -309,7 +312,6 @@ procedure TMainCehForm.Initialize_afterSave_all;
 begin
      oldGoodsId:=0;
      EditPartionGoods.Text:='';
-     // EditBoxCode.Text:=GetArrayList_Value_byName(Default_Array,'BoxCode');
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.Initialize_afterSave_MI;
@@ -446,11 +448,13 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TMainCehForm.myActiveControl;
+var Key:Word;
 begin
-     if PanelPartionGoods.Visible
-     then ActiveControl:=EditGoodsCode
-     else ActiveControl:=EditGoodsCode;
+     ActiveControl:=cxDBGrid;
      ActiveControl:=EditGoodsCode;
+//     if PanelPartionGoods.Visible
+//     then ActiveControl:=EditGoodsCode
+//     else ActiveControl:=EditGoodsCode;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Save_Movement_all:Boolean;
@@ -472,7 +476,14 @@ begin
           ActiveControl:=EditGoodsCode;
           exit;
      end;
-     //
+     //Проверка - только для Обв.
+     if SettingMain.isGoodsComplete = FALSE
+     then
+         //Проверка - партий
+         if DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(ParamsMovement.ParamByName('MovementId').AsInteger,0,'',0) = FALSE
+         then exit;
+
+
      //if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
      if DialogMessageForm.Execute = FALSE
      then exit;
@@ -549,6 +560,7 @@ begin
                     exit;
                end;
      end;
+
      // доопределили параметр
      try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text)
      except ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime + 1;
@@ -571,6 +583,13 @@ begin
      // доопределили параметр
      ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      ParamsMI.ParamByName('isStartWeighing').AsBoolean:=gbStartWeighing.ItemIndex = 0;
+
+     //Проверка - только для Обв.
+     if SettingMain.isGoodsComplete = FALSE
+     then
+         //Проверка - партий
+         if DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(ParamsMovement.ParamByName('MovementId').AsInteger,ParamsMI.ParamByName('GoodsId').AsInteger,ParamsMI.ParamByName('PartionGoods').AsString,ParamsMI.ParamByName('OperCount').AsFloat) = FALSE
+         then exit;
 
      //сохранение MovementItem
      Result:=DMMainScaleCehForm.gpInsert_ScaleCeh_MI(ParamsMovement,ParamsMI);
@@ -631,8 +650,8 @@ begin
                RefreshDataSet;
                Initialize_afterSave_all;
                Initialize_afterSave_MI;
-               InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
           end;
+          InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
      end;
      myActiveControl;
 end;
@@ -653,12 +672,12 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='Количество батонов';
+          LabelNumberValue.Caption:='Количество батонов';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('Count').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
-          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          ParamAddValue(execParams,'inValueData',ftFloat,NumberValue);
           DMMainScaleCehForm.gpUpdate_Scale_MIFloat(execParams);
           //
      end;
@@ -684,12 +703,12 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='Количество пакетов';
+          LabelNumberValue.Caption:='Количество пакетов';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('Count').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
-          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          ParamAddValue(execParams,'inValueData',ftFloat,NumberValue);
           DMMainScaleCehForm.gpUpdate_Scale_MIFloat(execParams);
           //
      end;
@@ -715,12 +734,12 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='Количество голов';
+          LabelNumberValue.Caption:='Количество голов';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('HeadCount').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
-          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          ParamAddValue(execParams,'inValueData',ftFloat,NumberValue);
           DMMainScaleCehForm.gpUpdate_Scale_MIFloat(execParams);
           //
      end;
@@ -746,13 +765,84 @@ begin
 
      with DialogNumberValueForm do
      begin
-          NumberValueLabel.Caption:='Живой вес';
+          LabelNumberValue.Caption:='Живой вес';
           ActiveControl:=NumberValueEdit;
           NumberValueEdit.Text:=CDS.FieldByName('LiveWeight').AsString;
           if not Execute then begin execParams.Free;exit;end;
           //
-          ParamAddValue(execParams,'inValueData',ftFloat,StrToFloat(NumberValueEdit.Text));
+          ParamAddValue(execParams,'inValueData',ftFloat,NumberValue);
           DMMainScaleCehForm.gpUpdate_Scale_MIFloat(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbChangePartionGoodsClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIString_PartionGoods');
+
+     with DialogStringValueForm do
+     begin
+          LabelStringValue.Caption:='Партия СЫРЬЯ';
+          ActiveControl:=StringValueEdit;
+          StringValueEdit.Text:=CDS.FieldByName('PartionGoods').AsString;
+          isPartionGoods:=true;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          //Проверка - только для Обв.
+          if SettingMain.isGoodsComplete = FALSE
+          then
+              //Проверка - партий
+              if DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(ParamsMovement.ParamByName('MovementId').AsInteger,CDS.FieldByName('GoodsId').AsInteger,StringValueEdit.Text,CDS.FieldByName('Amount').AsFloat) = FALSE
+              then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftString,StringValueEdit.Text);
+          DMMainScaleCehForm.gpUpdate_Scale_MIString(execParams);
+          //
+     end;
+     //
+     execParams.Free;
+     //
+     RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbChangePartionGoodsDateClick(Sender: TObject);
+var execParams:TParams;
+begin
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
+     //
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIDate_PartionGoods');
+
+     with DialogDateValueForm do
+     begin
+          LabelDateValue.Caption:='Партия СЫРЬЯ';
+          ActiveControl:=DateValueEdit;
+          DateValueEdit.Text:=DateToStr(CDS.FieldByName('PartionGoodsDate').AsDateTime);
+          isPartionGoodsDate:=true;
+          if not Execute then begin execParams.Free;exit;end;
+          //
+          ParamAddValue(execParams,'inValueData',ftDateTime,StrToDate(DateValueEdit.Text));
+          DMMainScaleCehForm.gpUpdate_Scale_MIDate(execParams);
           //
      end;
      //
@@ -827,7 +917,7 @@ end;
 procedure TMainCehForm.EditGoodsCodeExit(Sender: TObject);
 var GoodsCode_int:Integer;
 begin
-     if (ParamsMovement.ParamByName('MovementDescId').asInteger = 0)and(ActiveControl.ClassName <> 'TcxGridSite')
+     if (ParamsMovement.ParamByName('MovementDescId').asInteger = 0)and(ActiveControl.ClassName <> 'TcxGridSite')and(ActiveControl.ClassName <> 'TcxGrid') and (ActiveControl.ClassName <> 'TcxDateEdit')
      then if GetParams_MovementDesc('') = false
           then begin
                     ActiveControl:=EditGoodsCode;
@@ -850,7 +940,7 @@ begin
           then ActiveControl:=EditEnterCount;
      end
      else begin
-          if ActiveControl.ClassName = 'TcxGridSite'
+          if (ActiveControl.ClassName = 'TcxGridSite') or (ActiveControl.ClassName = 'TcxGrid') or (ActiveControl.ClassName = 'TcxDateEdit')
           then WriteParamsMovement
           else begin ActiveControl:=EditGoodsCode;
                      PanelMovementDesc.Font.Color:=clRed;
@@ -883,9 +973,17 @@ begin
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditPartionGoodsExit(Sender: TObject);
+var RetV:Boolean;
 begin
+     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ProductionSeparate)
+        or (trim(EditPartionGoods.Text) <> '')
+     then begin RetV:=Recalc_PartionGoods(EditPartionGoods);
+                if trim(EditPartionGoods.Text) = '' then RetV:=false;
+     end
+     else RetV:=true;
+
      //если партия с ошибкой
-     if Recalc_PartionGoods(EditPartionGoods) = FALSE then
+     if RetV = FALSE then
      begin
           PanelMovementDesc.Font.Color:=clRed;
           PanelMovementDesc.Caption:='Ошибка.Не определена <ПАРТИЯ СЫРЬЯ>';
@@ -960,7 +1058,7 @@ begin
      begin
            SetParams_OperCount;
            //
-           if ActiveControl.ClassName = 'TcxGridSite'
+           if (ActiveControl.ClassName = 'TcxGridSite') or (ActiveControl.ClassName = 'TcxGrid') or (ActiveControl.ClassName = 'TcxDateEdit')
            then WriteParamsMovement
            else
            if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
@@ -1058,7 +1156,7 @@ begin
      except
            tmpValue:=0;
      end;
-     if SettingMain.isWorkProgress = TRUE
+     if SettingMain.isGoodsComplete = TRUE
      then ParamsMI.ParamByName('Count').AsFloat:=tmpValue     // производство/упаковка - Количество батонов
      else ParamsMI.ParamByName('HeadCount').AsFloat:=tmpValue;// обвалка - Количество голов
 end;
@@ -1071,7 +1169,7 @@ begin
            tmpValue:=0;
      end;
      //
-     if SettingMain.isWorkProgress = TRUE
+     if SettingMain.isGoodsComplete = TRUE
      then ParamsMI.ParamByName('CountPack').AsFloat:=tmpValue  // производство/упаковка - Количество пакетов
      else ParamsMI.ParamByName('LiveWeight').AsFloat:=tmpValue;// обвалка - Живой вес
 end;
@@ -1178,7 +1276,7 @@ begin
   //global Initialize Array
   Service_Array:=       DMMainScaleCehForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Service');
   Default_Array:=       DMMainScaleCehForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'Default');
-  gpInitialize_SettingMain_isCeh;
+  gpInitialize_SettingMain_Default; //!!!обязатльно после получения Default_Array!!!
 
   GoodsKind_Array:=     DMMainScaleCehForm.gpSelect_Scale_GoodsKindWeighing;
   //global Initialize
@@ -1194,22 +1292,22 @@ begin
   Initialize_afterSave_MI;
   InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
   //local visible Columns
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isWorkProgress = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible    :=SettingMain.isWorkProgress = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=SettingMain.isWorkProgress = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=SettingMain.isWorkProgress = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountPack').Index].Visible           :=SettingMain.isWorkProgress = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=SettingMain.isWorkProgress = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LiveWeight').Index].Visible          :=SettingMain.isWorkProgress = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer1_k').Index].Visible      :=SettingMain.isWorkProgress = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer1_k').Index].Visible:=SettingMain.isWorkProgress = FALSE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer1').Index].Visible        :=SettingMain.isWorkProgress = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer1').Index].Visible  :=SettingMain.isWorkProgress = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer2').Index].Visible        :=SettingMain.isWorkProgress = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer2').Index].Visible  :=SettingMain.isWorkProgress = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightOther').Index].Visible         :=SettingMain.isWorkProgress = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible    :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=SettingMain.isGoodsComplete = FALSE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountPack').Index].Visible           :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=SettingMain.isGoodsComplete = FALSE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LiveWeight').Index].Visible          :=SettingMain.isGoodsComplete = FALSE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer1_k').Index].Visible      :=SettingMain.isGoodsComplete = FALSE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer1_k').Index].Visible:=SettingMain.isGoodsComplete = FALSE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer1').Index].Visible        :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer1').Index].Visible  :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer2').Index].Visible        :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TotalWeightSkewer2').Index].Visible  :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightOther').Index].Visible         :=SettingMain.isGoodsComplete = TRUE;
   //local visible
-  if SettingMain.isWorkProgress = TRUE
+  if SettingMain.isGoodsComplete = TRUE
   then begin
             //Only производство/упаковка
             PanelPartionGoods.Visible:= false;
@@ -1233,10 +1331,13 @@ begin
 
 
   bbChangeHeadCount.Visible:=PanelPartionGoods.Visible;
-  bbChangeCount.Visible:=not bbChangeHeadCount.Visible;
-  bbChangeCountPack.Visible:=not bbChangeHeadCount.Visible;
+  bbChangeLiveWeight.Visible:=PanelPartionGoods.Visible;
+  bbChangePartionGoods.Visible:=PanelPartionGoods.Visible;
+  bbChangeCount.Visible:=not PanelPartionGoods.Visible;
+  bbChangeCountPack.Visible:=not PanelPartionGoods.Visible;;
+  bbChangePartionGoodsDate.Visible:=not PanelPartionGoods.Visible;
   //local enabled
-  gbStartWeighing.Enabled:=SettingMain.isWorkProgress = TRUE;
+  gbStartWeighing.Enabled:=SettingMain.isGoodsComplete = TRUE;
   //
   //
   with spSelect do
@@ -1250,6 +1351,8 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.WriteParamsMovement;
 begin
+  PanelPartionDate.Visible:=ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean=true;
+  //
   PanelMovementDesc.Font.Color:=clBlue;
 
   with ParamsMovement do begin

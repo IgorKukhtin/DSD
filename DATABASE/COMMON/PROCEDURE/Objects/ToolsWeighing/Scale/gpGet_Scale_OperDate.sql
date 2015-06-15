@@ -1,8 +1,8 @@
 -- Function: gpGet_Scale_OperDate (TVarChar)
 
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_OperDate (TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Scale_OperDate (TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Scale_OperDate (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_OperDate (TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_OperDate (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Scale_OperDate (Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_OperDate(
@@ -35,4 +35,5 @@ ALTER FUNCTION gpGet_Scale_OperDate (Boolean, Integer, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_OperDate (1, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_OperDate (TRUE, 1, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_OperDate (FALSE, 1, zfCalc_UserAdmin())

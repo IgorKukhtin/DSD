@@ -525,8 +525,8 @@ BEGIN
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
                                                         , inPartionGoodsDate    := tmp.PartionGoodsDate
-                                                        , inPrice               := NULL -- !!!не ошибка, здесь не формируется!!!
-                                                        , inSumm                := NULL -- !!!не ошибка, здесь не формируется!!!
+                                                        , inPrice               := 0 -- !!!не ошибка, здесь не формируется!!!
+                                                        , inSumm                := 0 -- !!!не ошибка, здесь не формируется!!!
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inCount               := tmp.Count
                                                         , inPartionGoods        := tmp.PartionGoods

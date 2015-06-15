@@ -36,8 +36,8 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       TabOrder = 0
       object bbDeleteItem: TSpeedButton
-        Left = 193
-        Top = 4
+        Left = 241
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1091#1076#1072#1083#1080#1090#1100'/'#1074#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -87,7 +87,7 @@ object MainForm: TMainForm
       end
       object bbExit: TSpeedButton
         Left = 489
-        Top = 4
+        Top = 2
         Width = 31
         Height = 29
         Action = actExit
@@ -104,8 +104,8 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 370
-        Top = 4
+        Left = 396
+        Top = 2
         Width = 31
         Height = 29
         Action = actRefresh
@@ -123,7 +123,7 @@ object MainForm: TMainForm
       end
       object bbRefreshZakaz: TSpeedButton
         Left = 599
-        Top = 4
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1079#1072#1103#1074#1082#1091
@@ -141,8 +141,8 @@ object MainForm: TMainForm
         Visible = False
       end
       object bbChangeNumberTare: TSpeedButton
-        Left = 105
-        Top = 4
+        Left = 148
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1071#1097#1080#1082#1072'>'
@@ -160,8 +160,8 @@ object MainForm: TMainForm
         OnClick = bbChangeNumberTareClick
       end
       object bbChangeLevelNumber: TSpeedButton
-        Left = 136
-        Top = 4
+        Left = 179
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#8470' '#1064#1072#1088'>'
@@ -180,7 +180,7 @@ object MainForm: TMainForm
       end
       object bbExportToEDI: TSpeedButton
         Left = 658
-        Top = 4
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' EDI'
@@ -198,8 +198,8 @@ object MainForm: TMainForm
         Visible = False
       end
       object bbChoice_UnComlete: TSpeedButton
-        Left = 249
-        Top = 4
+        Left = 303
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1042#1077#1088#1085#1091#1090#1100#1089#1103' '#1082' '#1085#1077' '#1079#1072#1082#1088#1099#1090#1086#1084#1091' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1102
@@ -226,8 +226,8 @@ object MainForm: TMainForm
         OnClick = bbChoice_UnComleteClick
       end
       object bbView_all: TSpeedButton
-        Left = 286
-        Top = 4
+        Left = 334
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1042#1057#1045#1061'> '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
@@ -254,8 +254,8 @@ object MainForm: TMainForm
         OnClick = bbView_allClick
       end
       object bbChangeCountPack: TSpeedButton
-        Left = 37
-        Top = 4
+        Left = 86
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1072#1082#1077#1090#1086#1074'>'
@@ -274,7 +274,7 @@ object MainForm: TMainForm
       end
       object bbChangeHeadCount: TSpeedButton
         Left = 5
-        Top = 4
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074'>'
@@ -292,8 +292,8 @@ object MainForm: TMainForm
         OnClick = bbChangeHeadCountClick
       end
       object bbChangeBoxCount: TSpeedButton
-        Left = 71
-        Top = 4
+        Left = 117
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1087#1072#1082#1086#1074#1086#1095#1085#1086#1081' '#1090#1072#1088#1099'>'
@@ -309,6 +309,25 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbChangeBoxCountClick
+      end
+      object bbChangePartionGoods: TSpeedButton
+        Left = 36
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071'>'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888870888888888888873308888888888888733088888888888887330888888
+          8888888733088888888888887330888888888888873308888088888888733088
+          8008888888873308087088888888730700888888888880887888888888888088
+          0888888888880800888888888888808888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChangePartionGoodsClick
       end
     end
     object infoPanelTotalSumm: TPanel
@@ -615,20 +634,10 @@ object MainForm: TMainForm
         object PartionGoods: TcxGridDBColumn
           Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
           DataBinding.FieldName = 'PartionGoods'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 90
-        end
-        object PartionGoodsDate: TcxGridDBColumn
-          Caption = #1055#1072#1088#1090#1080#1103' '#1044#1040#1058#1040
-          DataBinding.FieldName = 'PartionGoodsDate'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
         end
         object PriceListName: TcxGridDBColumn
           Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
@@ -979,14 +988,14 @@ object MainForm: TMainForm
         Width = 120
       end
     end
-    object PartionGoodsPanel: TPanel
+    object PanelPartionGoods: TPanel
       Left = 0
       Top = 78
       Width = 130
       Height = 43
       Align = alTop
       TabOrder = 5
-      object PartionGoodsLabel: TLabel
+      object LabelPartionGoods: TLabel
         Left = 1
         Top = 1
         Width = 128

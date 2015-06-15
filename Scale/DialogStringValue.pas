@@ -1,4 +1,4 @@
-unit DialogNumberValue;
+unit DialogStringValue;
 
 interface
 
@@ -11,26 +11,28 @@ uses
   dsdAddOn, cxButtons;
 
 type
-  TDialogNumberValueForm = class(TAncestorDialogScaleForm)
-    PanelNumberValue: TPanel;
-    NumberValueEdit: TcxCurrencyEdit;
-    LabelNumberValue: TLabel;
+  TDialogStringValueForm = class(TAncestorDialogScaleForm)
+    PanelStringValue: TPanel;
+    LabelStringValue: TLabel;
+    StringValueEdit: TEdit;
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
-   NumberValue:Integer;
+    isPartionGoods:Boolean;
   end;
 
 var
-   DialogNumberValueForm: TDialogNumberValueForm;
+   DialogStringValueForm: TDialogStringValueForm;
 
 implementation
+uses UtilScale;
 {$R *.dfm}
 {------------------------------------------------------------------------------}
-function TDialogNumberValueForm.Checked: boolean; //Проверка корректного ввода в Edit
+function TDialogStringValueForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
-     try NumberValue:=StrToInt(NumberValueEdit.Text);except NumberValue:=0;end;
-     Result:=NumberValue>=0;
+     if isPartionGoods = true
+     then Result:=Recalc_PartionGoods(StringValueEdit)
+     else Result:=true;
 end;
 {------------------------------------------------------------------------------}
 end.

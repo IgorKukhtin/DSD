@@ -1000,10 +1000,10 @@ begin
   begin
        StoredProcName:='gpSelect_Scale_Goods';
        OutputType:=otDataSet;
+       Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
        Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
        Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
-       Params.AddParam('inInfoMoneyId_sale', ftInteger, ptInput, StrToInt(GetArrayList_Value_byName(Default_Array,'InfoMoneyId_sale')));
        Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput,GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn'));
        Execute;
   end;
@@ -1025,6 +1025,7 @@ begin
             rgPriceList.Items.Add('('+IntToStr(i+1)+') '+GetStringValue('select PriceListName AS RetV from dba.PriceList_byHistory where Id = '+ParamsPriceList.Items[i].AsString));
 }
 end;
+{------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.FormDestroy(Sender: TObject);
 begin
   if Assigned (ParamsMI) then begin ParamsMI.Free;ParamsMI:=nil;end;
