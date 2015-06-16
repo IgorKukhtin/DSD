@@ -22,6 +22,7 @@ RETURNS TABLE (ContainerId Integer, MemberId Integer, MemberCode Integer, Member
              , MoneySumm TFloat, ReportSumm TFloat, AccountSumm TFloat, SendSumm TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
              , MoneyPlaceName TVarChar, ItemName TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -86,10 +87,11 @@ BEGIN
 
        , Object_by.ValueData AS MoneyPlaceName
        , ObjectDesc.ItemName
+       , Operation.Comment :: TVarChar                                                              AS Comment
 
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.ObjectId,  Operation_all.MemberId, Operation_all.InfoMoneyId,
-                 CLO_Car.ObjectId AS CarId, Operation_all.BranchId, Operation_all.ObjectId_by,
+                 CLO_Car.ObjectId AS CarId, Operation_all.BranchId, Operation_all.ObjectId_by, Operation_all.Comment,
                      SUM (Operation_all.StartAmount) AS StartAmount,
                      SUM (Operation_all.DebetSumm)   AS DebetSumm,
                      SUM (Operation_all.KreditSumm)  AS KreditSumm,
@@ -111,7 +113,7 @@ BEGIN
                      , 0 AS ReportSumm
                      , 0 AS AccountSumm
                      , 0 AS SendSumm
-
+                     , '' AS Comment
 
                 FROM tmpContainer
                      LEFT JOIN MovementItemContainer AS MIContainer
@@ -143,6 +145,7 @@ BEGIN
                      , SUM (CASE WHEN (Movement.DescId = zc_Movement_PersonalReport()) OR (Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NOT NULL) THEN -1 * MIContainer.Amount ELSE 0 END)  AS ReportSumm
                      , SUM (CASE WHEN Movement.DescId IN (zc_Movement_PersonalAccount(), zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END) AS AccountSumm
                      , SUM (CASE WHEN Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NULL THEN MIContainer.Amount ELSE 0 END) AS SendSumm
+                     , COALESCE (MIString_Comment.ValueData, '') AS Comment
                 FROM tmpContainer
                      LEFT JOIN MovementItemContainer AS MIContainer
                                                      ON MIContainer.ContainerId = tmpContainer.Id
@@ -173,6 +176,9 @@ BEGIN
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                                       ON MILinkObject_MoneyPlace.MovementItemId = MIContainer.MovementItemId
                                                      AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                     LEFT JOIN MovementItemString AS MIString_Comment
+                                                  ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIString_Comment.DescId = zc_MIString_Comment()
                 GROUP BY tmpContainer.Id, tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId
                      , CASE WHEN Movement.DescId = zc_Movement_Income()
                                  THEN MovementLinkObject_From.ObjectId
@@ -189,12 +195,13 @@ BEGIN
                             WHEN Movement.DescId = zc_Movement_Cash()
                                  THEN MovementItem.ObjectId
                        END
+                     , COALESCE (MIString_Comment.ValueData, '')
                ) AS Operation_all
                LEFT JOIN ContainerLinkObject AS CLO_Car
                                              ON CLO_Car.ContainerId = Operation_all.ContainerId
                                             AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
 
-          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.MemberId, Operation_all.InfoMoneyId, CLO_Car.ObjectId, Operation_all.BranchId, Operation_all.ObjectId_by
+          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.MemberId, Operation_all.InfoMoneyId, CLO_Car.ObjectId, Operation_all.BranchId, Operation_all.ObjectId_by, Operation_all.Comment
          ) AS Operation
 
             LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId

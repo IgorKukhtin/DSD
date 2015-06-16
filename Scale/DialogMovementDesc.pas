@@ -78,6 +78,9 @@ function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //ѕроверка к
 begin
      CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
 
+     // !!!об€зательно обнулили!!!
+     ParamsMovement_local.ParamByName('MovementId_get').AsInteger:= 0;
+
      isEditPartnerCodeExit:= FALSE;
      ParamsMovement_local.ParamByName('isGetPartner').AsBoolean:= false;
 
@@ -727,7 +730,9 @@ begin
      if Key = VK_RETURN
      then if (ActiveControl=EditBarCode) and (infoPanelPartner.Visible)
           then begin
-                    EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
+                    if trim(EditBarCode.Text)=''
+                    then EditBarCode.Text:=IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger);
+
                     isEditBarCode:=true;
                     EditBarCodeExit(Self);
                     //переопредел€ютс€ параметры, т.к. они используютс€ в фильтре справ.

@@ -62,6 +62,18 @@ BEGIN
                             WHERE MovementItem.MovementId = inOrderExternalId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = FALSE
+                           /*UNION
+                            SELECT 
+                            FROM Object_InfoMoney_View AS View_InfoMoney
+                                 INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                       ON ObjectLink_Goods_InfoMoney.ChildObjectId = View_InfoMoney.InfoMoneyId
+                                                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                 INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                                                  AND Object_Goods.isErased = FALSE
+                                                                  AND Object_Goods.ObjectCode > 0
+                            WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                            )*/
+
                            )
        , tmpMI_Weighing AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -187,13 +199,18 @@ BEGIN
                                AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
                                                                 , zc_Enum_InfoMoney_30101() -- Доходы + Готовая продукция
                                                                 , zc_Enum_InfoMoney_30102() -- Доходы + Тушенка
-                                                                , zc_Enum_InfoMoney_30201() --Доходы + Мясное сырье
+                                                                , zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье
                                                                  )
                             UNION
                              SELECT View_InfoMoney.InfoMoneyId
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = FALSE
                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                            )
+                            UNION
+                             SELECT View_InfoMoney.InfoMoneyId
+                             FROM Object_InfoMoney_View AS View_InfoMoney
+                             WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                             )
                             )
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull

@@ -1535,6 +1535,8 @@ begin
      then Result:=myStrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-4));
      if (System.Pos('ves=',ParamStr(2))>0)and(Result=0)
      then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-4));
+     if (System.Pos('ves=',ParamStr(3))>0)and(Result=0)
+     then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
 //*****
      end;
      //

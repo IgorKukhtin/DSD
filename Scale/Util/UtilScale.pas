@@ -139,9 +139,11 @@ begin
      ParamAdd(Params,'ColorGridValue',ftInteger);
      ParamAdd(Params,'OperDate',ftDateTime);
 
-     ParamAdd(Params,'MovementId_begin',ftInteger);
+     ParamAdd(Params,'MovementId_begin',ftInteger);//документ который создается после закрытия "документа взвешивания", т.е. после Save_Movement_all
 
-     ParamAdd(Params,'MovementId',ftInteger);
+     ParamAdd(Params,'MovementId_get',ftInteger);//документ взвешивания определяется при gpGet_Scale_OrderExternal !!!только для заявки!!!, потом переносится в MovementId
+
+     ParamAdd(Params,'MovementId',ftInteger); //документ взвешивания
      ParamAdd(Params,'InvNumber',ftString);
      ParamAdd(Params,'OperDate_Movement',ftDateTime);
 

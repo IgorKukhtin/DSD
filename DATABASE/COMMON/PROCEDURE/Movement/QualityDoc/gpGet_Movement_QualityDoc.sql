@@ -120,6 +120,65 @@ BEGIN
      ELSE
      -- Результат
      RETURN QUERY 
+     WITH tmpOperDate AS (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Sale)
+        , tmpQualityDoc AS (SELECT Movement.Id                           AS MovementId
+                                 , MS_QualityNumber.ValueData            AS QualityNumber
+                                 , MS_CertificateNumber.ValueData        AS CertificateNumber
+                                 , MD_OperDateCertificate.ValueData      AS OperDateCertificate
+                                 , MS_CertificateSeries.ValueData        AS CertificateSeries
+                                 , MS_CertificateSeriesNumber.ValueData  AS CertificateSeriesNumber
+                            FROM tmpOperDate
+                                 INNER JOIN Movement ON Movement.DescId = zc_Movement_QualityDoc()
+                                                    AND Movement.OperDate = tmpOperDate.OperDate
+                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                 LEFT JOIN MovementDate AS MD_OperDateCertificate
+                                                        ON MD_OperDateCertificate.MovementId = Movement.Id  
+                                                       AND MD_OperDateCertificate.DescId = zc_MovementDate_OperDateCertificate()
+                                 LEFT JOIN MovementString AS MS_CertificateNumber
+                                                          ON MS_CertificateNumber.MovementId = Movement.Id 
+                                                         AND MS_CertificateNumber.DescId = zc_MovementString_CertificateNumber()
+                                 LEFT JOIN MovementString AS MS_CertificateSeries
+                                                          ON MS_CertificateSeries.MovementId = Movement.Id   
+                                                         AND MS_CertificateSeries.DescId = zc_MovementString_CertificateSeries()
+                                 LEFT JOIN MovementString AS MS_CertificateSeriesNumber
+                                                          ON MS_CertificateSeriesNumber.MovementId = Movement.Id   
+                                                         AND MS_CertificateSeriesNumber.DescId = zc_MovementString_CertificateSeriesNumber()
+                                 LEFT JOIN MovementString AS MS_QualityNumber
+                                                          ON MS_QualityNumber.MovementId = Movement.Id  
+                                                         AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
+                           WHERE MS_QualityNumber.ValueData <> ''
+                           ORDER BY Movement.Id DESC
+                           LIMIT 1
+                           )
+        , tmpQualityDoc_old AS (SELECT Movement.Id                           AS MovementId
+                                     , MS_QualityNumber.ValueData            AS QualityNumber
+                                     , MS_CertificateNumber.ValueData        AS CertificateNumber
+                                     , MD_OperDateCertificate.ValueData      AS OperDateCertificate
+                                     , MS_CertificateSeries.ValueData        AS CertificateSeries
+                                     , MS_CertificateSeriesNumber.ValueData  AS CertificateSeriesNumber
+                                FROM tmpOperDate
+                                     INNER JOIN Movement ON Movement.DescId = zc_Movement_QualityDoc()
+                                                        AND Movement.OperDate BETWEEN (tmpOperDate.OperDate - INTERVAL '8 DAY') AND (tmpOperDate.OperDate - INTERVAL '1 DAY')
+                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                                     LEFT JOIN MovementDate AS MD_OperDateCertificate
+                                                            ON MD_OperDateCertificate.MovementId = Movement.Id  
+                                                           AND MD_OperDateCertificate.DescId = zc_MovementDate_OperDateCertificate()
+                                     LEFT JOIN MovementString AS MS_CertificateNumber
+                                                              ON MS_CertificateNumber.MovementId = Movement.Id 
+                                                             AND MS_CertificateNumber.DescId = zc_MovementString_CertificateNumber()
+                                     LEFT JOIN MovementString AS MS_CertificateSeries
+                                                              ON MS_CertificateSeries.MovementId = Movement.Id   
+                                                             AND MS_CertificateSeries.DescId = zc_MovementString_CertificateSeries()
+                                     LEFT JOIN MovementString AS MS_CertificateSeriesNumber
+                                                              ON MS_CertificateSeriesNumber.MovementId = Movement.Id   
+                                                             AND MS_CertificateSeriesNumber.DescId = zc_MovementString_CertificateSeriesNumber()
+                                     LEFT JOIN MovementString AS MS_QualityNumber
+                                                              ON MS_QualityNumber.MovementId = Movement.Id  
+                                                             AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
+                                WHERE MS_QualityNumber.ValueData <> ''
+                                ORDER BY Movement.Id DESC
+                                LIMIT 1
+                               )
        SELECT
              0                 AS Id
            , '' :: TVarChar    AS InvNumber
@@ -141,29 +200,15 @@ BEGIN
            , Object_To.Id             AS ToId
            , Object_To.ValueData      AS ToName
 
-           , MS_QualityNumber.ValueData            AS QualityNumber
-           , MS_CertificateNumber.ValueData        AS CertificateNumber
-           , MD_OperDateCertificate.ValueData      AS OperDateCertificate
-           , MS_CertificateSeries.ValueData        AS CertificateSeries
-           , MS_CertificateSeriesNumber.ValueData  AS CertificateSeriesNumber
+           , COALESCE (tmpQualityDoc.QualityNumber, tmpQualityDoc_old.QualityNumber) :: TVarChar AS QualityNumber
+           , COALESCE (tmpQualityDoc.CertificateNumber, tmpQualityDoc_old.CertificateNumber) :: TVarChar AS CertificateNumber
+           , COALESCE (tmpQualityDoc.OperDateCertificate, tmpQualityDoc_old.OperDateCertificate) :: TDateTime AS OperDateCertificate
+           , COALESCE (tmpQualityDoc.CertificateSeries, tmpQualityDoc_old.CertificateSeries) :: TVarChar AS CertificateSeries
+           , COALESCE (tmpQualityDoc.CertificateSeriesNumber, tmpQualityDoc_old.CertificateSeriesNumber) :: TVarChar AS CertificateSeriesNumber
 
-       FROM Movement
-
-            LEFT JOIN MovementDate AS MD_OperDateCertificate
-                                   ON MD_OperDateCertificate.MovementId = Movement.Id  
-                                  AND MD_OperDateCertificate.DescId = zc_MovementDate_OperDateCertificate()
-            LEFT JOIN MovementString AS MS_CertificateNumber
-                                     ON MS_CertificateNumber.MovementId = Movement.Id 
-                                    AND MS_CertificateNumber.DescId = zc_MovementString_CertificateNumber()
-            LEFT JOIN MovementString AS MS_CertificateSeries
-                                     ON MS_CertificateSeries.MovementId = Movement.Id   
-                                    AND MS_CertificateSeries.DescId = zc_MovementString_CertificateSeries()
-            LEFT JOIN MovementString AS MS_CertificateSeriesNumber
-                                     ON MS_CertificateSeriesNumber.MovementId = Movement.Id   
-                                    AND MS_CertificateSeriesNumber.DescId = zc_MovementString_CertificateSeriesNumber()
-            LEFT JOIN MovementString AS MS_QualityNumber
-                                     ON MS_QualityNumber.MovementId = Movement.Id  
-                                    AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
+       FROM (SELECT inMovementId_Sale AS MovementId) AS tmp
+            LEFT JOIN Movement ON Movement.Id = tmp.MovementId
+                             -- AND Movement.DescId IN zc_Movement_Sale()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -187,8 +232,8 @@ BEGIN
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
-       WHERE Movement.Id = inMovementId_Sale
-         -- AND Movement.DescId IN zc_Movement_Sale()
+            LEFT JOIN tmpQualityDoc ON 1 = 1
+            LEFT JOIN tmpQualityDoc_old ON 1 = 1
       ;
      END IF;
   

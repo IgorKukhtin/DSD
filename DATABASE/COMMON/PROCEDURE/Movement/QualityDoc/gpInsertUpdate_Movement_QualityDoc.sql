@@ -138,7 +138,7 @@ BEGIN
      -- получили "ненужный" список 
      INSERT INTO _tmpMovement_QualityDoc (MovementId)
         SELECT CASE WHEN tmpResult.MovementId_master <> 0
-                         THEN lpInsertUpdate_Movement_QualityDoc (ioId               := tmpResult.MovementId
+                         THEN lpInsertUpdate_Movement_QualityDoc (ioId                     := tmpResult.MovementId
                                                                 , inMovementId_master      := tmpResult.MovementId_master
                                                                 , inMovementId_child       := inMovementId_Sale
                                                                 , inOperDateIn             := inOperDateIn
@@ -146,7 +146,7 @@ BEGIN
                                                                 , inCarId                  := inCarId
                                                                 , inQualityNumber          := inQualityNumber
                                                                 , inCertificateNumber      := inCertificateNumber
-                                                                , inOperDateCertificate    := inCarId
+                                                                , inOperDateCertificate    := inOperDateCertificate
                                                                 , inCertificateSeries      := inCertificateSeries
                                                                 , inCertificateSeriesNumber:= inCertificateSeriesNumber
                                                                 , inUserId                 := vbUserId

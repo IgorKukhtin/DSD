@@ -70,11 +70,12 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Release>1</VerInfo_Release>
+			<Icon_MainIcon>0203.ico</Icon_MainIcon>
+			<VerInfo_Release>2</VerInfo_Release>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<Debugger_RunParams>/autologin ves=12</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.5;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>5</VerInfo_Build>
+			<Debugger_RunParams>/autologin ves=12.345 scale-my.ini</Debugger_RunParams>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.2.8;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>8</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>

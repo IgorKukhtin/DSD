@@ -431,12 +431,20 @@ begin
      Result:=DialogMovementDescForm.Execute(BarCode);
      if Result then
      begin
-          if ParamsMovement.ParamByName('MovementId').AsInteger<>0
-          then DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+          if ParamsMovement.ParamByName('MovementId_get').AsInteger <> 0
+          then begin
+                    ParamsMovement.ParamByName('MovementId').AsInteger:=ParamsMovement.ParamByName('MovementId_get').AsInteger;
+                    if TRUE = DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE)//isLast=FALSE,isNext=FALSE
+                    then gpInitialize_MovementDesc
+                    else begin ShowMessage('Ошибка.'+#10+#13+'Документ взвешивания не найден.'+#10+#13+'Необходимо перезайти в программу.');ParamsMovement.Free;end;
+          end
+          else
+              if ParamsMovement.ParamByName('MovementId').AsInteger<>0
+              then DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
           //
           WriteParamsMovement;
           //
-          if MovementId_save <> 0 then
+          if (MovementId_save <> 0)or(ParamsMovement.ParamByName('MovementId_get').AsInteger<>0) then
           begin
                RefreshDataSet;
                Initialize_afterSave_all;
@@ -1079,6 +1087,8 @@ begin
      then Result:=myStrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-4));
      if (System.Pos('ves=',ParamStr(2))>0)and(Result=0)
      then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-4));
+     if (System.Pos('ves=',ParamStr(3))>0)and(Result=0)
+     then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
 //*****
      PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;

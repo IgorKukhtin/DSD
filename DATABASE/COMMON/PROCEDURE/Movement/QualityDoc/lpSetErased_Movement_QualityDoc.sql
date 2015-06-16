@@ -14,7 +14,7 @@ BEGIN
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := inUserId
                                   );
-     RETURN 0;
+     RETURN inMovementId;
 
 END;
 $BODY$

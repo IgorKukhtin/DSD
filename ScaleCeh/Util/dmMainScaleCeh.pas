@@ -687,8 +687,13 @@ begin
   //!!!захардкодили т.к. это программа ScaleCeh!!!
   SettingMain.isCeh:=TRUE;//AnsiUpperCase(ExtractFileName(ParamStr(0))) <> AnsiUpperCase('Scale.exe');
 
-
-  Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'scale.ini');
+  if System.Pos(AnsiUpperCase('ini'),AnsiUpperCase(ParamStr(1)))>0
+  then Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + ParamStr(1))
+  else if System.Pos(AnsiUpperCase('ini'),AnsiUpperCase(ParamStr(2)))>0
+       then Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + ParamStr(2))
+       else if System.Pos(AnsiUpperCase('ini'),AnsiUpperCase(ParamStr(3)))>0
+            then Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + ParamStr(3))
+            else Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'scale.ini');
 
   //!!!отладака при запуске!!!
   gc_isDebugMode:=AnsiUpperCase(Ini.ReadString('Main','isDebugMode','FALSE')) = AnsiUpperCase('TRUE');

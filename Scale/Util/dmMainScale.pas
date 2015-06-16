@@ -827,6 +827,7 @@ begin
          Result:=DataSet.RecordCount=1;
        with execParams do
        begin
+         ParamByName('MovementId_get').AsInteger:= DataSet.FieldByName('MovementId_get').asInteger;//документ взвешивания !!!только для заявки!!!, потом переносится в MovementId
          ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
          ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
          ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
@@ -1052,7 +1053,13 @@ begin
   SettingMain.isCeh:=FALSE;//AnsiUpperCase(ExtractFileName(ParamStr(0))) <> AnsiUpperCase('Scale.exe');
 
   //а теперь ини-файл
-  Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'scale.ini');
+  if System.Pos(AnsiUpperCase('ini'),AnsiUpperCase(ParamStr(1)))>0
+  then Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + ParamStr(1))
+  else if System.Pos(AnsiUpperCase('ini'),AnsiUpperCase(ParamStr(2)))>0
+       then Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + ParamStr(2))
+       else if System.Pos(AnsiUpperCase('ini'),AnsiUpperCase(ParamStr(3)))>0
+            then Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + ParamStr(3))
+            else Ini:=TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'scale.ini');
 
   //!!!отладака при запуске!!!
   gc_isDebugMode:=AnsiUpperCase(Ini.ReadString('Main','isDebugMode','FALSE')) = AnsiUpperCase('TRUE');
