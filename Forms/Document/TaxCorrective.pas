@@ -62,7 +62,7 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     edIsDocument: TcxCheckBox;
-    edIsRegistered: TcxCheckBox;
+    edIsElectron: TcxCheckBox;
     HeaderSaverParams: THeaderSaver;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     cxLabel5: TcxLabel;

@@ -88,6 +88,7 @@ type
     cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
+    Article: TcxGridDBColumn;
   private
     { Private declarations }
   public

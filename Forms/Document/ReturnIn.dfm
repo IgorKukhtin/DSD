@@ -555,14 +555,6 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 29
           end
-          object colRegistered: TcxGridDBColumn
-            Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088'.'
-            DataBinding.FieldName = 'Registered'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
           object colIsEDI: TcxGridDBColumn
             Caption = 'EXITE'
             DataBinding.FieldName = 'isEDI'

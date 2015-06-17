@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax_Params(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inDateRegistered      TDateTime , -- Дата регистрации
-    IN inRegistered          Boolean   , -- Зарегестрирована (да/нет)
+    IN inIsElectron          Boolean   , -- Электронная (да/нет)
     IN inInvNumberRegistered TVarChar  , -- Номер регистрации документа 
     IN inContractId          Integer   , -- Договора
     IN inUserId              Integer     -- пользователь
@@ -20,7 +20,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), ioId, inDateRegistered);
 
      -- сохранили свойство <Зарегестрирован (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Registered(), ioId, inRegistered);
+     --PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Electron(), ioId, inIsElectron);
 
      -- сохранили свойство <Номер налогового документа регистрации>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberRegistered(), ioId, inInvNumberRegistered);

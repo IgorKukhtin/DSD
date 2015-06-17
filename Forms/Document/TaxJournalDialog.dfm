@@ -2,7 +2,7 @@ object TaxJournalDialogForm: TTaxJournalDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1078#1091#1088#1085#1072#1083#1072' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' <'#1044#1072#1085#1085#1099#1077' '#1086' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1052#1077#1076#1086#1082'>'
   ClientHeight = 245
   ClientWidth = 418
   Color = clBtnFace
@@ -48,11 +48,11 @@ object TaxJournalDialogForm: TTaxJournalDialogForm
     Top = 79
     Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080':'
   end
-  object edIsRegistered: TcxCheckBox
+  object edIsElectron: TcxCheckBox
     Left = 144
     Top = 99
-    Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088#1080#1088#1086#1074#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
-    Properties.ReadOnly = False
+    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 166
   end
@@ -69,7 +69,7 @@ object TaxJournalDialogForm: TTaxJournalDialogForm
   end
   object edInvNumber: TcxTextEdit
     Left = 8
-    Top = 23
+    Top = 25
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 74
@@ -81,7 +81,7 @@ object TaxJournalDialogForm: TTaxJournalDialogForm
   end
   object edOperDate: TcxDateEdit
     Left = 116
-    Top = 23
+    Top = 25
     EditValue = 42156d
     Properties.ReadOnly = True
     Properties.SaveTime = False
@@ -96,12 +96,12 @@ object TaxJournalDialogForm: TTaxJournalDialogForm
   end
   object cxLabel9: TcxLabel
     Left = 235
-    Top = 8
+    Top = 5
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object edContract: TcxButtonEdit
     Left = 235
-    Top = 23
+    Top = 25
     Properties.Buttons = <
       item
         Default = True
@@ -139,9 +139,9 @@ object TaxJournalDialogForm: TTaxJournalDialogForm
         ParamType = ptInput
       end
       item
-        Name = 'Registered'
+        Name = 'isElectron'
         Value = Null
-        Component = edIsRegistered
+        Component = edIsElectron
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -218,9 +218,9 @@ object TaxJournalDialogForm: TTaxJournalDialogForm
         ParamType = ptInput
       end
       item
-        Name = 'inRegistered'
+        Name = 'inIsElectron'
         Value = Null
-        Component = edIsRegistered
+        Component = edIsElectron
         DataType = ftBoolean
         ParamType = ptInput
       end

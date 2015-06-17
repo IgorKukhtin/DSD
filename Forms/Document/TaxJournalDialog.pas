@@ -20,7 +20,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
-    edIsRegistered: TcxCheckBox;
+    edIsElectron: TcxCheckBox;
     edInvNumberRegistered: TcxTextEdit;
     cxLabel1: TcxLabel;
     edInvNumber: TcxTextEdit;

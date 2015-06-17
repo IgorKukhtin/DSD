@@ -474,14 +474,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
             Options.Editing = False
             Width = 45
           end
-          object colRegistered: TcxGridDBColumn
-            Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088'.'
-            DataBinding.FieldName = 'Registered'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
           object colIsEDI: TcxGridDBColumn
             Caption = 'EXITE'
             DataBinding.FieldName = 'isEDI'
@@ -805,6 +797,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
     end
+    inherited actMISetUnErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
     object MedocAction: TMedocAction [4]
       Category = 'TaxLib'
       MoveParams = <>
@@ -812,12 +807,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
     end
-    inherited actMISetUnErased: TdsdUpdateErased
-      TabSheet = tsMain
-    end
     object actTaxJournalChoice: TOpenChoiceForm [7]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'TaxJournalSelectForm'
       FormName = 'TTaxJournalChoiceForm'
       FormNameParam.Value = 'TTaxJournalChoiceForm'
@@ -859,20 +852,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       isShowModal = True
     end
-    object mactPrint: TMultiAction [11]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSPPrintProcName
-        end
-        item
-          Action = actPrint
-        end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -904,7 +883,29 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
+    object mactPrint: TMultiAction [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintProcName
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end>
+    end
+    inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
           StoredProc = spChangeStatus
@@ -915,6 +916,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -935,20 +937,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       isShowModal = True
     end
-    inherited actCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end>
-    end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
     end
     object actTaxCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTaxCorrective
       StoredProcList = <
         item
@@ -967,6 +962,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spCorrective
       StoredProcList = <
         item
@@ -998,6 +994,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -1098,6 +1095,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportNameTaxCorrective
       StoredProcList = <
         item
@@ -1206,6 +1204,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actMedocProcedure: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectPrintTaxCorrective_Client
       StoredProcList = <
         item
@@ -1216,6 +1215,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actUpdateIsMedoc: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMedoc
       StoredProcList = <
         item
@@ -2082,6 +2082,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Top = 222
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item

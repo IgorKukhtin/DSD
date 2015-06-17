@@ -25,11 +25,11 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
    END IF;
 
-   -- если связь не нужна, зачем ее создавать
-   IF COALESCE (inGoodsKindId, 0) = 0
-   THEN
-       RETURN;
-   END IF;
+   -- !!!надо создавать!!! если связь не нужна, зачем ее создавать
+   -- IF COALESCE (inGoodsKindId, 0) = 0
+   -- THEN
+   --     RETURN;
+   -- END IF;
 
    -- проверка уникальности
    IF EXISTS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
@@ -72,6 +72,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.06.15                                        *   -- !!!надо создавать!!!
  19.03.15         *
 */
 

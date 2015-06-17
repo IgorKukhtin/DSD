@@ -55,7 +55,6 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     colInvNumber_Master: TcxGridDBColumn;
     colIsError: TcxGridDBColumn;
-    colRegistered: TcxGridDBColumn;
     colInvNumberBranch: TcxGridDBColumn;
     cxLabel14: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;

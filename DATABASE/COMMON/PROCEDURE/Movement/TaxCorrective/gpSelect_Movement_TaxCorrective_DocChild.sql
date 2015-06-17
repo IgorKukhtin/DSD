@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective_DocChild(
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, DocumentValue TVarChar, Registered Boolean, DateRegistered TDateTime
+             , Checked Boolean, Document Boolean, DocumentValue TVarChar, DateRegistered TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -50,7 +50,6 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean    AS Checked
            , COALESCE (MovementBoolean_Document.ValueData, FALSE) :: Boolean   AS Document
            , CASE WHEN MovementBoolean_Document.ValueData = TRUE THEN 'V' ELSE '-' END :: TVarChar AS DocumentValue
-           , COALESCE (MovementBoolean_Registered.ValueData, FALSE) :: Boolean AS Registered
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -132,10 +131,6 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
             LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                       ON MovementBoolean_Document.MovementId =  Movement.Id
                                      AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
-
-            LEFT JOIN MovementBoolean AS MovementBoolean_Registered
-                                      ON MovementBoolean_Registered.MovementId =  Movement.Id
-                                     AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id

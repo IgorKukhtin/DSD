@@ -9061,6 +9061,7 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_GoodsByGoodsKind;
+var Id_find:Integer;
 begin
      if (not cbGoodsByGoodsKind.Checked)or(not cbGoodsByGoodsKind.Enabled) then exit;
      //
@@ -9111,7 +9112,24 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             if FieldByName('inGoodsKindId').AsInteger = 0
+             then begin
+                      // ѕытаемс€ найти
+                      fOpenSqToQuery (' select ObjectLink_GoodsByGoodsKind_Goods.ObjectId'
+                                     +' from ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods'
+                                     +'      LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind'
+                                     +'                           ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId'
+                                     +'                           AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()'
+                                     +' where ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = '+IntToStr(FieldByName('inGoodsId').AsInteger)
+                                     +'   and ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()'
+                                     +'   and ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId is null'
+                                     );
+                       Id_find:=toSqlQuery.FieldByName('ObjectId').AsInteger;
+             end
+             else Id_find:=FieldByName('Id_Postgres').AsInteger;
+
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=Id_find;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('inGoodsKindId').AsInteger;
              toStoredProc.Params.ParamByName('inWeightPackage').Value:=FieldByName('inWeightPackage').AsFloat;
