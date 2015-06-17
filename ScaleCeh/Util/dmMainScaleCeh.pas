@@ -624,9 +624,9 @@ begin
          zc_Movement_OrderExternal:=DataSet.FieldByName('Value').asInteger;
 
          //Measure
-         Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';
-         Execute;
-         zc_Measure_Sh:=DataSet.FieldByName('Value').asInteger;
+         //Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';
+         //Execute;
+         //zc_Measure_Sh:=DataSet.FieldByName('Value').asInteger;
 
          Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Kg() :: TVarChar';
          Execute;

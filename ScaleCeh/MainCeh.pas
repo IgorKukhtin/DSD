@@ -1509,12 +1509,8 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.fGetScale_CurrentWeight:Double;
 begin
-     if ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh
-     then
-          try Result:=StrToFloat(EditEnterCount.Text)
-          except Result:=0;
-          end
-     else begin
+     if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg) or (ParamsMI.ParamByName('MeasureId').AsInteger = 0)
+     then begin
      // открываем ВЕСЫ, только когда НУЖЕН вес
      //Initialize_Scale_DB;
      // считывание веса
@@ -1538,7 +1534,11 @@ begin
      if (System.Pos('ves=',ParamStr(3))>0)and(Result=0)
      then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
 //*****
-     end;
+     end
+     else
+          try Result:=StrToFloat(EditEnterCount.Text)
+          except Result:=0;
+          end;
      //
      PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;

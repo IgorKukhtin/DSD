@@ -177,6 +177,7 @@ begin
                and (rgGoodsKind.Items.Count>1)
             then CDS.Filter:= CDS.Filter +' and GoodsKindId = '+IntToStr(ParamsMI.ParamByName('GoodsKindId').AsInteger);
 
+            CDS.Filtered:=false;
             CDS.Filtered:=true;
 
             EditGoodsCode.Text:=ParamsMI.ParamByName('GoodsCode').AsString;
@@ -185,7 +186,7 @@ begin
 
             EditWeightValue.Text:='0';
 
-            if (CDS.RecordCount=1)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)
+            if (CDS.RecordCount=1)and(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
             then EditTareCount.Text:='0'
             else EditTareCount.Text:=GetArrayList_Value_byName(Default_Array,'TareCount');
             EditTareWeightCode.Text:=    IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
@@ -207,7 +208,7 @@ begin
             end;}
 
             if (CDS.RecordCount<>1) then ActiveControl:=EditGoodsCode
-            else if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+            else if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
                  then ActiveControl:=EditWeightValue
                  else ActiveControl:=EditTareCount
   end
@@ -229,6 +230,7 @@ begin
 
             CDS.Filter:='';
             CDS.Filtered:=false;
+            if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0 then CDS.Filtered:=true;
             ActiveControl:=EditGoodsCode;
   end;
 
@@ -289,7 +291,7 @@ begin
       if (ActiveControl=EditGoodsName) then EditGoodsNameExit(EditGoodsName);
 
       if (ActiveControl=EditGoodsCode)and(CDS.RecordCount=1)
-      then if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+      then if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
            then ActiveControl:=EditWeightValue
            else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
       else
@@ -297,13 +299,13 @@ begin
       then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
       else if (ActiveControl=EditGoodsCode)
            then if (Length(trim(EditGoodsCode.Text))>1)and(CDS.RecordCount>=1)
-                then if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+                then if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
                      then ActiveControl:=EditWeightValue
                      else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
                 else ActiveControl:=EditGoodsName
 
            else if (ActiveControl=EditGoodsName)and(CDS.RecordCount=1)
-                then if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+                then if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
                      then ActiveControl:=EditWeightValue
                      else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
 
@@ -347,26 +349,34 @@ begin
      then
        if  (EditGoodsCode.Text=DataSet.FieldByName('GoodsCode').AsString)
         and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
-       then Accept:=true else Accept:=false
+       then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
      else
          if (fEnterGoodsKindCode)and(trim(GoodsCode_FilterValue)<>'')
          then
              if  (GoodsCode_FilterValue=DataSet.FieldByName('GoodsCode').AsString)
               and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
-             then Accept:=true else Accept:=false;
+             then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
+         //else if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
+         ;
      //
+     //if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
      //
      if fEnterGoodsName
      then
        if  (pos(AnsiUpperCase(EditGoodsName.Text),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
         and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
-       then Accept:=true else Accept:=false
+       then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
      else
          if (fEnterGoodsKindCode)and(trim(GoodsName_FilterValue)<>'')
          then
              if  (pos(AnsiUpperCase(GoodsName_FilterValue),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
               and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
-             then Accept:=true else Accept:=false;
+             then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
+         //else if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
+         ;
+
+     if (trim(EditGoodsCode.Text) = '') and (trim(EditGoodsName.Text) = '') and (ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)
+     then if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
 
 end;
 {------------------------------------------------------------------------------}
@@ -438,7 +448,7 @@ begin
      if Result = TRUE then
      begin
           //если не ШТ, проверка стабильности - т.е. вес такой же как и был
-          if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Sh
+          if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg
           then begin
                     //получили еще раз
                     WeightReal_check:=MainForm.fGetScale_CurrentWeight;
@@ -477,7 +487,8 @@ begin
      if fEnterGoodsCode then
        with CDS do begin
            Filtered:=false;
-           if trim(EditGoodsCode.Text)<>'' then Filtered:=true;
+           if trim(EditGoodsCode.Text)<>'' then Filtered:=true
+           else if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0 then CDS.Filtered:=true;//!!!
        end;
 end;
 {------------------------------------------------------------------------------}
@@ -485,6 +496,7 @@ procedure TGuideGoodsForm.EditGoodsCodeEnter(Sender: TObject);
 begin TEdit(Sender).SelectAll;
       EditGoodsName.Text:='';
       CDS.Filtered:=false;
+      if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0 then CDS.Filtered:=true;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeExit(Sender: TObject);
@@ -538,7 +550,8 @@ begin
        with CDS do begin
            Code_begin:= FieldByName('GoodsCode').AsString;
            Filtered:=false;
-           if trim(EditGoodsName.Text)<>'' then Filtered:=true;
+           if trim(EditGoodsName.Text)<>'' then Filtered:=true
+           else if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0 then CDS.Filtered:=true;//!!!
            if Code_begin <> '' then Locate('GoodsCode',Code_begin,[loCaseInsensitive,loPartialKey]);
        end;
 end;
@@ -549,6 +562,7 @@ begin
   TEdit(Sender).SelectAll;
   EditGoodsCode.Text:='';
   CDS.Filtered:=false;
+  if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0 then CDS.Filtered:=true;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsNameExit(Sender: TObject);
@@ -598,7 +612,7 @@ begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditWeightValueExit(Sender: TObject);
 begin
-     if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Sh
+     if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg
      then exit;
 
      try StrToFloat(EditWeightValue.Text)
@@ -660,7 +674,7 @@ begin
                   end
         else if ParamsMI.ParamByName('RealWeight').AsFloat<=0.0001
              then
-                  if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+                  if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
                   then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');ActiveControl:=EditWeightValue;end
                   else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
 end;
@@ -729,9 +743,9 @@ begin
       end;
 
       if (ActiveControl=EditGoodsKindCode)and(rgGoodsKind.ItemIndex>=0)and(rgGoodsKind.Items.Count=1)then begin rgGoodsKind.ItemIndex:=0;FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditTareCount)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin EditTareCount.Text:='0';FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditTareWeightCode)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditTareWeightEnter)and(CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)then begin FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditTareCount)and(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)then begin EditTareCount.Text:='0';FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditTareWeightCode)and(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)then begin FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditTareWeightEnter)and(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)then begin FormKeyDown(Sender,Key,[]);exit;end;
       if (ActiveControl=EditChangePercentAmountCode)then begin FormKeyDown(Sender,Key,[]);exit;end;
       if (ActiveControl=EditPriceListCode){and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)}then begin FormKeyDown(Sender,Key,[]);exit;end;
       //
@@ -912,7 +926,7 @@ procedure TGuideGoodsForm.DSDataChange(Sender: TObject; Field: TField);
 begin
      with ParamsMI do begin
         if CDS.RecordCount=1 then
-         if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+         if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
          then try ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text); except ParamByName('RealWeight').AsFloat:=0;end
          else ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Get').AsFloat
         else
@@ -962,7 +976,7 @@ begin
                EditGoodsKindCodeChange(EditGoodsKindCode);
           end;
      //
-     if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh
+     if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
      then ActiveControl:=EditWeightValue
      else if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
           then ActiveControl:=EditGoodsKindCode

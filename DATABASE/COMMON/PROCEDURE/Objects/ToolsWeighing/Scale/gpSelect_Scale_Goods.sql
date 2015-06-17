@@ -29,13 +29,14 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , CountForPrice         TFloat
              , CountForPrice_Return  TFloat
              , Color_calc            Integer
+             , isTare                Boolean
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpGetUserBySession (inSession);
+   vbUserId:= lpGetUserBySession (inSession);
 
    IF inOrderExternalId <> 0
    THEN
@@ -46,6 +47,7 @@ BEGIN
                                  , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                  , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+                                 , FALSE AS isTare
                             FROM MovementItem
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -62,8 +64,13 @@ BEGIN
                             WHERE MovementItem.MovementId = inOrderExternalId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = FALSE
-                           /*UNION
-                            SELECT 
+                           UNION
+                            SELECT Object_Goods.Id AS GoodsId
+                                 , CASE WHEN inIsGoodsComplete = FALSE THEN 0 ELSE zc_Enum_GoodsKind_Main() END  AS GoodsKindId
+                                 , 0 AS Amount
+                                 , 0 AS Price
+                                 , 0 AS CountForPrice
+                                 , TRUE AS isTare
                             FROM Object_InfoMoney_View AS View_InfoMoney
                                  INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                        ON ObjectLink_Goods_InfoMoney.ChildObjectId = View_InfoMoney.InfoMoneyId
@@ -72,7 +79,9 @@ BEGIN
                                                                   AND Object_Goods.isErased = FALSE
                                                                   AND Object_Goods.ObjectCode > 0
                             WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
-                                                                            )*/
+                                                                          , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                           )
+                              AND vbUserId = 5
 
                            )
        , tmpMI_Weighing AS (SELECT MovementItem.ObjectId                         AS GoodsId
@@ -105,6 +114,7 @@ BEGIN
                                  , 0            AS Amount_Weighing
                                  , tmpMI.Price
                                  , tmpMI.CountForPrice
+                                 , tmpMI.isTare
                             FROM tmpMI_Order AS tmpMI
                            UNION ALL
                             SELECT tmpMI.GoodsId
@@ -113,6 +123,7 @@ BEGIN
                                  , tmpMI.Amount AS Amount_Weighing
                                  , tmpMI.Price
                                  , tmpMI.CountForPrice
+                                 , FALSE AS isTare
                             FROM tmpMI_Weighing AS tmpMI
                            )
        -- Результат - по заявке
@@ -158,17 +169,21 @@ BEGIN
                    ELSE 0 -- clBlack
               END :: Integer AS Color_calc
 
+            , tmpMI.isTare
+
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   , SUM (tmpMI.Amount_Order)    AS Amount_Order
                   , SUM (tmpMI.Amount_Weighing) AS Amount_Weighing
                   , tmpMI.Price
                   , tmpMI.CountForPrice
+                  , tmpMI.isTare
              FROM tmpMI
              GROUP BY tmpMI.GoodsId
                     , tmpMI.GoodsKindId
                     , tmpMI.Price
                     , tmpMI.CountForPrice
+                    , tmpMI.isTare
             ) AS tmpMI
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -211,6 +226,7 @@ BEGIN
                              SELECT View_InfoMoney.InfoMoneyId
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                           , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                             )
                             )
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -235,6 +251,7 @@ BEGIN
             , 1 :: TFloat                 AS CountForPrice
             , 1 :: TFloat                 AS CountForPrice_Return
             , 0                           AS Color_calc -- clBlack
+            , FALSE                       AS isTare
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName

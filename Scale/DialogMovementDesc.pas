@@ -657,6 +657,7 @@ procedure TDialogMovementDescForm.DBGridDrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
 begin
      //if (gdSelected in State)and(ChoiceNumber=0) then exit;
+     if (gdSelected in State) then exit;
 
      //if ChoiceNumber <> 0 then ShowMessage (CDS.FieldByName('Number').AsString);
 
