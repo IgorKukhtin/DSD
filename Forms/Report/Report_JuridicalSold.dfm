@@ -691,7 +691,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 80
           end
           object colSaleRealSumm: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072
+            Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1092#1072#1082#1090' '#1089' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
             DataBinding.FieldName = 'SaleRealSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
@@ -714,6 +714,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
+          object SaleRealSumm_total: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1092#1072#1082#1090' '#1073#1077#1079' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
+            DataBinding.FieldName = 'SaleRealSumm_total'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object colSaleSumm: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1073#1091#1093#1075'.)'
             DataBinding.FieldName = 'SaleSumm'
@@ -728,7 +737,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 80
           end
           object colReturnInRealSumm: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'.'
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. ('#1092#1072#1082#1090' '#1089' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
             DataBinding.FieldName = 'ReturnInRealSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
@@ -750,6 +759,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object ReturnInRealSumm_total: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. ('#1092#1072#1082#1090' '#1073#1077#1079' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
+            DataBinding.FieldName = 'ReturnInRealSumm_total'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
           object colReturnInSumm: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. ('#1073#1091#1093#1075'.)'

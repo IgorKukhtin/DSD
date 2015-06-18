@@ -35,7 +35,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, SaleSumm_10300 TFloat, ReturnInSumm TFloat, ReturnInRealSumm TFloat, ReturnInSumm_10300 TFloat
+             , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, SaleSumm_10300 TFloat, SaleRealSumm_total TFloat, ReturnInSumm TFloat, ReturnInRealSumm TFloat, ReturnInSumm_10300 TFloat, ReturnInRealSumm_total TFloat
              , PriceCorrectiveSumm TFloat
              , MoneySumm TFloat, ServiceSumm TFloat, ServiceRealSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, ChangeCurrencySumm TFloat, OtherSumm TFloat
              , EndAmount_A TFloat, EndAmount_P TFloat, EndAmount_D TFloat, EndAmount_K TFloat
@@ -167,9 +167,13 @@ BEGIN
         Operation.SaleSumm::TFloat,
         Operation.SaleRealSumm::TFloat,
         Operation.SaleSumm_10300::TFloat,
+
+        (Operation.SaleRealSumm + Operation.SaleSumm_10300) ::TFloat AS SaleRealSumm_total,
+
         Operation.ReturnInSumm::TFloat,
         Operation.ReturnInRealSumm::TFloat,
         Operation.ReturnInSumm_10300::TFloat,
+        (Operation.ReturnInRealSumm + Operation.ReturnInSumm_10300) ::TFloat AS ReturnInRealSumm_total,
         Operation.PriceCorrectiveSumm::TFloat,
         Operation.MoneySumm::TFloat,
         Operation.ServiceSumm::TFloat,

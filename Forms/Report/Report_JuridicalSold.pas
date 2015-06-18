@@ -123,6 +123,8 @@ type
     bbPrintIncomePartner: TdxBarButton;
     clPartionMovementName: TcxGridDBColumn;
     clPaymentDate: TcxGridDBColumn;
+    SaleRealSumm_total: TcxGridDBColumn;
+    ReturnInRealSumm_total: TcxGridDBColumn;
   private
     { Private declarations }
   public

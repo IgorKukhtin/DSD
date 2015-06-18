@@ -115,6 +115,7 @@ BEGIN
                                          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
                                     WHERE ObjectBoolean_Order.ValueData = TRUE
                                       AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                      AND vbIsOrderDnepr = TRUE
                                    )
 
           , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
