@@ -277,7 +277,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GoodsName'
         end>
       Params = <
         item
@@ -345,9 +345,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
     end
-  end
-  inherited MasterCDS: TClientDataSet
-    Left = 656
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionSeparate'
@@ -628,13 +625,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         DataType = ftString
         ParamType = ptInput
       end>
-  end
-  inherited GuidesFiller: TGuidesFiller
-    Left = 224
-  end
-  inherited HeaderSaver: THeaderSaver
-    Left = 264
-    Top = 209
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetErased'

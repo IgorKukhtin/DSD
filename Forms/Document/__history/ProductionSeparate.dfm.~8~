@@ -125,7 +125,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       inherited cxGridChild: TcxGrid
         Top = 229
         Width = 903
-        ExplicitTop = 229
+        ExplicitLeft = 3
+        ExplicitTop = 235
         ExplicitWidth = 903
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
