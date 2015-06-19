@@ -168,7 +168,6 @@ inherited OrderExternalForm: TOrderExternalForm
         Width = 250
         Height = 200
         TabOrder = 1
-        Visible = False
         object cxGridExportDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -276,6 +275,7 @@ inherited OrderExternalForm: TOrderExternalForm
     object actExportStoredproc: TdsdExecStoredProc [0]
       Category = 'SendEMail'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetExportParam
       StoredProcList = <
         item
@@ -347,6 +347,7 @@ inherited OrderExternalForm: TOrderExternalForm
     object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -383,6 +384,7 @@ inherited OrderExternalForm: TOrderExternalForm
     object actGetDocumentDataForEmail: TdsdExecStoredProc
       Category = 'SendEMail'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetDocumentDataForEmail
       StoredProcList = <
         item
