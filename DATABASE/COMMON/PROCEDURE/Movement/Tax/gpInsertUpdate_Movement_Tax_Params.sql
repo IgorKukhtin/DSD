@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax_Params (
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inDateRegistered      TDateTime , -- Дата регистрации
-    IN inRegistered          Boolean   , -- Зарегестрирована (да/нет)
+    IN inIsElectron          Boolean   , -- Электронная (да/нет)
     IN inInvNumberRegistered TVarChar  , -- Номер регистрации документа 
     IN inContractId          Integer   , -- Договора
     IN inSession             TVarChar    -- сессия пользователя
@@ -18,7 +18,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     IF (select descid from movement where id = ioId) = zc_Movement_Tax() 
+     IF (SELECT DescId FROM Movement WHERE Id = ioId) = zc_Movement_Tax() 
      THEN
 	vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Tax_IsRegistered());
      ELSE 
@@ -32,7 +32,7 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_Tax_Params(ioId, inInvNumber, inOperDate, inDateRegistered, inRegistered, inInvNumberRegistered, inContractId, vbUserId);
+     ioId := lpInsertUpdate_Movement_Tax_Params(ioId, inInvNumber, inOperDate, inDateRegistered, inIsElectron, inInvNumberRegistered, inContractId, vbUserId);
 
 END;
 $BODY$

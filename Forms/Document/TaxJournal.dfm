@@ -3,7 +3,7 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,8 +22,6 @@ inherited TaxJournalForm: TTaxJournalForm
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 458
-        ExplicitLeft = -48
-        ExplicitTop = -3
         ExplicitWidth = 1110
         ExplicitHeight = 458
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -325,14 +323,6 @@ inherited TaxJournalForm: TTaxJournalForm
           object colInvNumberBranch: TcxGridDBColumn
             Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
             DataBinding.FieldName = 'InvNumberBranch'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colRegistered: TcxGridDBColumn
-            Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088'.'
-            DataBinding.FieldName = 'Registered'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -813,9 +803,9 @@ inherited TaxJournalForm: TTaxJournalForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
-      ImageIndex = 35
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1052#1077#1076#1086#1082
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1052#1077#1076#1086#1082
+      ImageIndex = 24
       FormName = 'TTaxJournalDialogForm'
       FormNameParam.Value = 'TTaxJournalDialogForm'
       FormNameParam.DataType = ftString
@@ -835,10 +825,10 @@ inherited TaxJournalForm: TTaxJournalForm
           ParamType = ptInputOutput
         end
         item
-          Name = 'Registered'
+          Name = 'isElectron'
           Value = '0'
           Component = MasterCDS
-          ComponentItem = 'Registered'
+          ComponentItem = 'isElectron'
           DataType = ftBoolean
         end
         item

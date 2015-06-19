@@ -116,6 +116,7 @@ type
     cxLabel22: TcxLabel;
     edRetail: TcxButtonEdit;
     RetailGuides: TdsdGuides;
+    ArticleGLN: TcxGridDBColumn;
   private
     { Private declarations }
   public

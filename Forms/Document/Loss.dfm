@@ -3,7 +3,7 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -345,10 +345,10 @@ inherited LossForm: TLossForm
       RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_Loss
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Loss
         end>
       DataSets = <
         item
@@ -1140,7 +1140,7 @@ inherited LossForm: TLossForm
     Left = 644
     Top = 334
   end
-  object spSelectPrint: TdsdStoredProc
+  object spSelectPrint_Loss: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Loss_Print'
     DataSet = PrintHeaderCDS
     DataSets = <

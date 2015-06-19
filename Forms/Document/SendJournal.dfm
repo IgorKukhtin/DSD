@@ -3,7 +3,7 @@ inherited SendJournalForm: TSendJournalForm
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -168,10 +168,11 @@ inherited SendJournalForm: TSendJournalForm
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
-    Top = 243
+    Top = 203
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 31
+    Top = 266
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSendForm'
     end

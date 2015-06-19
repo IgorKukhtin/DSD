@@ -327,6 +327,13 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object colIsElectron: TcxGridDBColumn
+            Caption = #1069#1083#1077#1082#1090#1088'.'
+            DataBinding.FieldName = 'isElectron'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
         end
       end
     end

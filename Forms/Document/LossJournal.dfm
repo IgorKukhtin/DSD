@@ -3,7 +3,7 @@ inherited LossJournalForm: TLossJournalForm
   ClientHeight = 535
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -109,11 +109,12 @@ inherited LossJournalForm: TLossJournalForm
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 243
+    Left = 24
+    Top = 211
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 31
+    Top = 266
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TLossForm'
     end
@@ -133,10 +134,10 @@ inherited LossJournalForm: TLossJournalForm
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_Loss
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Loss
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -400,7 +401,7 @@ inherited LossJournalForm: TLossJournalForm
     Left = 700
     Top = 270
   end
-  object spSelectPrint: TdsdStoredProc
+  object spSelectPrint_Loss: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Loss_Print'
     DataSet = PrintHeaderCDS
     DataSets = <

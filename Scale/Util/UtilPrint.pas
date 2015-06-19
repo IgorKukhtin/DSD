@@ -72,6 +72,14 @@ type
     actPrint_SendOnPrice_out: TdsdPrintAction;
     actPrint_SendOnPrice_in: TdsdPrintAction;
     spSelectPrint_SendOnPrice: TdsdStoredProc;
+    spSelectPrint_ReturnOut: TdsdStoredProc;
+    actPrint_ReturnOut: TdsdPrintAction;
+    spSelectPrint_Income: TdsdStoredProc;
+    actPrint_Income: TdsdPrintAction;
+    spSelectPrint_Send: TdsdStoredProc;
+    actPrint_Send: TdsdPrintAction;
+    spSelectPrint_Loss: TdsdStoredProc;
+    actPrint_Loss: TdsdPrintAction;
   private
   end;
 
@@ -93,6 +101,30 @@ var
 implementation
 uses UtilScale;
 {$R *.dfm}
+//------------------------------------------------------------------------------------------------
+procedure Print_Send (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_Send.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_Loss (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_Loss.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_Income (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_Income.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_ReturnOut (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_ReturnOut.Execute;
+end;
 //------------------------------------------------------------------------------------------------
 procedure Print_Sale (MovementId: Integer);
 begin
@@ -161,14 +193,26 @@ begin
           try
              //Print
              if (MovementDescId = zc_Movement_Sale)
-             or (MovementDescId = zc_Movement_Loss)
+             or (MovementDescId = zc_Movement_Loss)and(SettingMain.isCeh=false)and(SettingMain.isGoodsComplete=true)
              or (MovementDescId = zc_Movement_ReturnOut)
              then Print_Sale(MovementId)
              else if MovementDescId = zc_Movement_ReturnIn
                   then Print_ReturnIn(MovementId)
                   else if MovementDescId = zc_Movement_SendOnPrice
                        then Print_SendOnPrice(MovementId,isSendOnPriceIn)
-                       else begin ShowMessage ('Ошибка.Форма печати <Накладная> не найдена.');exit;end;
+
+                       else if MovementDescId = zc_Movement_Income
+                            then Print_Income(MovementId)
+                            else if MovementDescId = zc_Movement_ReturnOut
+                                  then Print_ReturnOut(MovementId)
+
+                            else if (MovementDescId = zc_Movement_Send)
+                                 or (MovementDescId = zc_Movement_ProductionUnion)
+                                  then Print_Send(MovementId)
+                            else if MovementDescId = zc_Movement_Loss
+                                  then Print_Loss(MovementId)
+
+                                  else begin ShowMessage ('Ошибка.Форма печати <Накладная> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Накладная> не сформирована.');
                 exit;

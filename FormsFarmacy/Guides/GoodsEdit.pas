@@ -34,6 +34,8 @@ type
     cxLabel8: TcxLabel;
     cePercentMarkup: TcxCurrencyEdit;
     cbIsTop: TcxCheckBox;
+    cxLabel9: TcxLabel;
+    ceSalePrice: TcxCurrencyEdit;
   private
     { Private declarations }
   public

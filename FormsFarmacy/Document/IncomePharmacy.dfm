@@ -1007,6 +1007,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'GoodsName'
     Params = <>
     Left = 508
     Top = 246

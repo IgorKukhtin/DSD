@@ -21,6 +21,13 @@ type
     procedure ProcedureLoad; override;
     procedure Test; override;
   end;
+  TUpdaterScaleCehTest = class (TdbObjectTestNew)
+  private
+    procedure SaveFile(FilePath: string);
+  published
+    procedure ProcedureLoad; override;
+    procedure Test; override;
+  end;
 
 implementation
 
@@ -67,6 +74,7 @@ begin
   SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
   SaveFile(ExtractFileDir(ParamStr(0)) + '\Scale.exe');
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\ScaleCeh.exe');
 end;
 
 
@@ -110,8 +118,49 @@ begin
   SaveFile(ExtractFileDir(ParamStr(0)) + '\Scale.exe');
 end;
 
+{-----------------ScaleCeh--------------------------------}
+
+procedure TUpdaterScaleCehTest.ProcedureLoad;
+begin
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Program\';
+  inherited;
+end;
+
+procedure TUpdaterScaleCehTest.SaveFile(FilePath: string);
+var Stream: TStream;
+begin
+  Stream := TStringStream.Create(ConvertConvert(FileReadString(FilePath)));
+  with TZStoredProc.Create(nil), UnilWin.GetFileVersion(FilePath) do begin
+    try
+      Connection := ZConnection;
+      StoredProcName := 'gpInsertUpdate_Object_Program';
+      Params.CreateParam(ftString, 'inProgramName', ptInput);
+      Params.CreateParam(ftFloat, 'inMajorVersion', ptInput);
+      Params.CreateParam(ftFloat, 'inMinorVersion', ptInput);
+      Params.CreateParam(ftBlob, 'inProgramData', ptInput);
+      Params.CreateParam(ftString, 'inSession', ptInput);
+      ParamByName('inProgramName').AsString := ExtractFileName(FilePath);
+      ParamByName('inMajorVersion').AsFloat := VerHigh;
+      ParamByName('inMinorVersion').AsFloat := VerLow;
+      ParamByName('inProgramData').LoadFromStream(Stream, ftMemo);
+      ParamByName('inSession').AsString := gc_User.Session;
+      ExecProc;
+    finally
+      Free;
+      Stream.Free;
+    end;
+  end;
+end;
+
+procedure TUpdaterScaleCehTest.Test;
+begin
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\ScaleCeh.exe');
+end;
+
 initialization
   TestFramework.RegisterTest('Сохранение программы', TUpdaterTest.Suite);
   TestFramework.RegisterTest('Сохранение Scale', TUpdaterScaleTest.Suite);
+  TestFramework.RegisterTest('Сохранение ScaleCeh', TUpdaterScaleCehTest.Suite);
 
 end.

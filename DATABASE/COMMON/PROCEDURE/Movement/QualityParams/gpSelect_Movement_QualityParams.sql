@@ -56,16 +56,16 @@ BEGIN
 
             LEFT JOIN MovementDate AS MD_OperDateCertificate
                                    ON MD_OperDateCertificate.MovementId =  Movement.Id
-                                  AND MD_OperDateCertificate.DescId = zc_MovementDate_OperDateCertificate()
+                                  AND MD_OperDateCertificate.DescId = NULL -- zc_MovementDate_OperDateCertificate()
             LEFT JOIN MovementString AS MS_CertificateNumber
                                      ON MS_CertificateNumber.MovementId =  Movement.Id
-                                    AND MS_CertificateNumber.DescId = zc_MovementString_CertificateNumber()
+                                    AND MS_CertificateNumber.DescId = NULL -- zc_MovementString_CertificateNumber()
             LEFT JOIN MovementString AS MS_CertificateSeries
                                      ON MS_CertificateSeries.MovementId =  Movement.Id
-                                    AND MS_CertificateSeries.DescId = zc_MovementString_CertificateSeries()
+                                    AND MS_CertificateSeries.DescId = NULL -- zc_MovementString_CertificateSeries()
             LEFT JOIN MovementString AS MS_CertificateSeriesNumber
                                      ON MS_CertificateSeriesNumber.MovementId =  Movement.Id
-                                    AND MS_CertificateSeriesNumber.DescId = zc_MovementString_CertificateSeriesNumber()
+                                    AND MS_CertificateSeriesNumber.DescId = NULL -- zc_MovementString_CertificateSeriesNumber()
             LEFT JOIN MovementString AS MS_ExpertPrior
                                      ON MS_ExpertPrior.MovementId =  Movement.Id
                                     AND MS_ExpertPrior.DescId = zc_MovementString_ExpertPrior()
@@ -74,7 +74,7 @@ BEGIN
                                     AND MS_ExpertLast.DescId = zc_MovementString_ExpertLast()
             LEFT JOIN MovementString AS MS_QualityNumber
                                      ON MS_QualityNumber.MovementId =  Movement.Id
-                                    AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
+                                    AND MS_QualityNumber.DescId = NULL -- zc_MovementString_QualityNumber()
             LEFT JOIN MovementBlob AS MB_Comment
                                    ON MB_Comment.MovementId =  Movement.Id
                                   AND MB_Comment.DescId = zc_MovementBlob_Comment()

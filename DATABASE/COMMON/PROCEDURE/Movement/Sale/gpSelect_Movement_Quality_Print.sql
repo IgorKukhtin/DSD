@@ -23,20 +23,25 @@ BEGIN
 
      -- параметр из документа - !!!временно!!!
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
-
+/*
      -- !!!временно!!!
      IF NOT EXISTS (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child()) -- 1=1 OR vbUserId = 5
-     THEN PERFORM gpInsertUpdate_Movement_QualityDoc (ioId             := 0
-                                                    , inMovementId_Sale:= inMovementId
-                                                    , inOperDateIn     := Movement.OperDate
-                                                    , inOperDateOut    := Movement.OperDate
-                                                    , inCarId          := NULL
-                                                    , inSession        := inSession
+     THEN PERFORM gpInsertUpdate_Movement_QualityDoc (ioId                     := 0
+                                                    , inMovementId_Sale        := inMovementId
+                                                    , inOperDateIn             := Movement.OperDate
+                                                    , inOperDateOut            := Movement.OperDate
+                                                    , inCarId                  := NULL
+                                                    , inQualityNumber          := NULL
+                                                    , inCertificateNumber      := NULL
+                                                    , inOperDateCertificate    := Movement.OperDate
+                                                    , inCertificateSeries      := NULL
+                                                    , inCertificateSeriesNumber:= NULL
+                                                    , inSession                := inSession
                                                      )
           FROM Movement
           WHERE Movement.Id = inMovementId;
      END IF;
-
+*/
 
     -- очень важная проверка
     IF COALESCE ((SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId), 0) <> zc_Enum_Status_Complete()
@@ -173,6 +178,11 @@ BEGIN
                   , MovementDate_OperDateIn.ValueData           AS OperDateIn
                   , MovementDate_OperDateOut.ValueData          AS OperDateOut
                   , MovementLinkObject_Car.ObjectId             AS CarId
+                  , MS_QualityNumber.ValueData                         AS QualityNumber
+                  , MD_OperDateCertificate.ValueData                   AS OperDateCertificate
+                  , MS_CertificateNumber.ValueData                     AS CertificateNumber
+                  , MS_CertificateSeries.ValueData                     AS CertificateSeries
+                  , MS_CertificateSeriesNumber.ValueData               AS CertificateSeriesNumber
              FROM MovementLinkMovement AS MovementLinkMovement_Child
                   INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementId
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -192,6 +202,22 @@ BEGIN
                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Quality
                                                ON MovementLinkObject_Quality.MovementId = MovementLinkMovement_Master.MovementChildId
                                               AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
+
+                  LEFT JOIN MovementString AS MS_QualityNumber
+                                           ON MS_QualityNumber.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                          AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
+                  LEFT JOIN MovementDate AS MD_OperDateCertificate
+                                         ON MD_OperDateCertificate.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                        AND MD_OperDateCertificate.DescId = zc_MovementDate_OperDateCertificate()
+                  LEFT JOIN MovementString AS MS_CertificateNumber
+                                           ON MS_CertificateNumber.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                          AND MS_CertificateNumber.DescId = zc_MovementString_CertificateNumber()
+                  LEFT JOIN MovementString AS MS_CertificateSeries
+                                           ON MS_CertificateSeries.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                          AND MS_CertificateSeries.DescId = zc_MovementString_CertificateSeries()
+                  LEFT JOIN MovementString AS MS_CertificateSeriesNumber
+                                           ON MS_CertificateSeriesNumber.MovementId =  MovementLinkMovement_Child.MovementId -- tmpMovement_find.MovementId
+                                          AND MS_CertificateSeriesNumber.DescId = zc_MovementString_CertificateSeriesNumber()
              WHERE MovementLinkMovement_Child.MovementChildId = inMovementId
                AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
             )
@@ -200,41 +226,26 @@ BEGIN
                   , Movement.Id                                        AS Id
                   , Movement.InvNumber                                 AS InvNumber
                   , Movement.OperDate                                  AS OperDate
-                  , MD_OperDateCertificate.ValueData                   AS OperDateCertificate
-                  , MS_CertificateNumber.ValueData                     AS CertificateNumber
-                  , MS_CertificateSeries.ValueData                     AS CertificateSeries
-                  , MS_CertificateSeriesNumber.ValueData               AS CertificateSeriesNumber
                   , MS_ExpertPrior.ValueData                           AS ExpertPrior
                   , MS_ExpertLast.ValueData                            AS ExpertLast
-                  , MS_QualityNumber.ValueData                         AS QualityNumber
                   , MB_Comment.ValueData                               AS Comment
                   , 0                                                  AS ReportType
                   , tmpMovement_find.OperDateIn                        AS OperDateIn
                   , tmpMovement_find.OperDateOut                       AS OperDateOut
                   , tmpMovement_find.CarId                             AS CarId
+                  , tmpMovement_find.QualityNumber
+                  , tmpMovement_find.OperDateCertificate
+                  , tmpMovement_find.CertificateNumber
+                  , tmpMovement_find.CertificateSeries
+                  , tmpMovement_find.CertificateSeriesNumber
              FROM tmpMovement_find
                   LEFT JOIN Movement ON Movement.Id = tmpMovement_find.MovementId
-                  LEFT JOIN MovementDate AS MD_OperDateCertificate
-                                         ON MD_OperDateCertificate.MovementId =  tmpMovement_find.MovementId
-                                        AND MD_OperDateCertificate.DescId = zc_MovementDate_OperDateCertificate()
-                  LEFT JOIN MovementString AS MS_CertificateNumber
-                                           ON MS_CertificateNumber.MovementId =  tmpMovement_find.MovementId
-                                          AND MS_CertificateNumber.DescId = zc_MovementString_CertificateNumber()
-                  LEFT JOIN MovementString AS MS_CertificateSeries
-                                           ON MS_CertificateSeries.MovementId =  tmpMovement_find.MovementId
-                                          AND MS_CertificateSeries.DescId = zc_MovementString_CertificateSeries()
-                  LEFT JOIN MovementString AS MS_CertificateSeriesNumber
-                                           ON MS_CertificateSeriesNumber.MovementId =  tmpMovement_find.MovementId
-                                          AND MS_CertificateSeriesNumber.DescId = zc_MovementString_CertificateSeriesNumber()
                   LEFT JOIN MovementString AS MS_ExpertPrior
                                            ON MS_ExpertPrior.MovementId =  tmpMovement_find.MovementId
                                           AND MS_ExpertPrior.DescId = zc_MovementString_ExpertPrior()
                   LEFT JOIN MovementString AS MS_ExpertLast
                                            ON MS_ExpertLast.MovementId =  tmpMovement_find.MovementId
                                           AND MS_ExpertLast.DescId = zc_MovementString_ExpertLast()
-                  LEFT JOIN MovementString AS MS_QualityNumber
-                                           ON MS_QualityNumber.MovementId =  tmpMovement_find.MovementId
-                                          AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
                   LEFT JOIN MovementBlob AS MB_Comment
                                          ON MB_Comment.MovementId =  tmpMovement_find.MovementId
                                         AND MB_Comment.DescId = zc_MovementBlob_Comment()

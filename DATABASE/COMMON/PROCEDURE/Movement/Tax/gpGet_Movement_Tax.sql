@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Tax(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, Registered Boolean, DateRegistered TDateTime
+             , Checked Boolean, Document Boolean, isElectron Boolean, DateRegistered TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
@@ -34,8 +34,8 @@ BEGIN
      IF COALESCE (inMask, False) = True
      THEN
      inMovementId := gpInsert_Movement_Tax_Mask (ioId        := inMovementId
-                                              , inOperDate  := inOperDate
-                                              , inSession   := inSession); 
+                                               , inOperDate  := inOperDate
+                                               , inSession   := inSession); 
      END If;
 
 
@@ -44,14 +44,14 @@ BEGIN
      THEN
          RETURN QUERY
          SELECT
-               0 									AS Id
-             , tmpInvNumber.InvNumber                  AS InvNumber
-             , inOperDate						 	AS OperDate
+               0 					AS Id
+             , tmpInvNumber.InvNumber                   AS InvNumber
+             , inOperDate				AS OperDate
              , Object_Status.Code               	AS StatusCode
              , Object_Status.Name              		AS StatusName
              , CAST (False as Boolean)         		AS Checked
              , CAST (False as Boolean)         		AS Document
-             , CAST (False as Boolean)        		AS Registered
+             , CAST (False as Boolean)        		AS isElectron
              , inOperDate         	            	AS DateRegistered
              , CAST (False as Boolean)              AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
@@ -96,7 +96,7 @@ BEGIN
            , Object_Status.ValueData     				AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
            , COALESCE (MovementBoolean_Document.ValueData, FALSE)       AS Document
-           , COALESCE (MovementBoolean_Registered.ValueData, FALSE)     AS Registered
+           , COALESCE (MovementBoolean_Electron.ValueData, FALSE)       AS isElectron
            , COALESCE (MovementDate_DateRegistered.ValueData,CAST (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) AS TDateTime))AS DateRegistered
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -124,9 +124,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                       ON MovementBoolean_Document.MovementId =  Movement.Id
                                      AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
-            LEFT JOIN MovementBoolean AS MovementBoolean_Registered
-                                      ON MovementBoolean_Registered.MovementId =  Movement.Id
-                                     AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                      ON MovementBoolean_Electron.MovementId = Movement.Id
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id

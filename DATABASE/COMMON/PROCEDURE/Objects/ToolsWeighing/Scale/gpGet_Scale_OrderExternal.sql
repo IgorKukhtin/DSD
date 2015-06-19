@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Scale_OrderExternal(
 )
 RETURNS TABLE (MovementId            Integer
              , MovementDescId_order  Integer
+             , MovementId_get        Integer -- документ взвешивания !!!только для заявки!!!, потом переносится в MovementId
              , BarCode               TVarChar
              , InvNumber             TVarChar
              , InvNumberPartner      TVarChar
@@ -122,6 +123,21 @@ BEGIN
                                                       ON ObjectLink_UnitTo_Branch.ObjectId = MovementLinkObject_To.ObjectId
                                                      AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
                            )
+           , tmpMovement_find AS (SELECT tmpMovement.Id
+                                       , MovementLinkMovement_Order.MovementId AS MovementId_get
+                                  FROM tmpMovement
+                                       INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                       ON MovementLinkMovement_Order.MovementChildId = tmpMovement.Id
+                                                                      AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                       INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
+                                                          AND Movement.DescId = zc_Movement_WeighingPartner()
+                                                          AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                       INNER JOIN MovementLinkObject
+                                               AS MovementLinkObject_User
+                                               ON MovementLinkObject_User.MovementId = Movement.Id
+                                              AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                                              AND MovementLinkObject_User.ObjectId = vbUserId
+                                 )
            , tmpJuridicalPrint AS (SELECT tmpGet.Id AS JuridicalId
                                         , tmpGet.isMovement
                                         , tmpGet.isAccount
@@ -174,6 +190,7 @@ BEGIN
                                  )
        SELECT tmpMovement.Id                                 AS MovementId
             , tmpMovement.DescId                             AS MovementDescId_order
+            , tmpMovement_find.MovementId_get                AS MovementId_get
             , inBarCode                                      AS BarCode
             , tmpMovement.InvNumber                          AS InvNumber
             , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
@@ -246,6 +263,7 @@ BEGIN
             , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || DATE (tmpMovement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 
        FROM tmpMovement
+            LEFT JOIN tmpMovement_find ON tmpMovement_find.Id = tmpMovement.Id
             LEFT JOIN tmpMovementDescNumber ON tmpMovementDescNumber.MovementDescNumber > 0
             LEFT JOIN tmpJuridicalPrint ON tmpJuridicalPrint.JuridicalId = tmpMovement.JuridicalId
 

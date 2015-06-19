@@ -36,7 +36,7 @@ BEGIN
                            , CASE WHEN (MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.IsActive = TRUE) THEN MIContainer.Amount  ELSE 0 END                     AS Amount_Send_in
                            , CASE WHEN (MIContainer.MovementDescId = zc_Movement_Send()  AND MIContainer.IsActive = False) THEN MIContainer.Amount *(-1) ELSE 0 END              AS Amount_Send_out
                            , CASE WHEN (MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = FALSE) THEN MIContainer.Amount *(-1) ELSE 0 END    AS Amount_ProductionUnion
-                           , COALESCE (MIFloat_Count.ValueData ,0)   ::TFloat                  AS Count
+                           , COALESCE (MIFloat_CountPack.ValueData ,0)   ::TFloat                  AS Count
                       FROM MovementItemContainer AS MIContainer
                            LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                          ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
@@ -44,9 +44,9 @@ BEGIN
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                          ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-                           LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                        ON MIFloat_Count.MovementItemId = MIContainer.MovementItemId
-                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                           LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                        ON MIFloat_CountPack.MovementItemId = MIContainer.MovementItemId
+                                       AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate   --inStartDate+(interval '1 DAY') AND inEndDate+(interval '1 DAY')
                         AND MIContainer.DescId = zc_MIContainer_Count()
                         AND (MIContainer.WhereObjectId_Analyzer = inUnitId or inUnitId = 0)

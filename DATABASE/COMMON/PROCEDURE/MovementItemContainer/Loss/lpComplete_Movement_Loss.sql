@@ -298,8 +298,8 @@ BEGIN
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , _tmpItem.ContainerId_Goods
-            , 0                                       AS AccountId  -- нет счета
-            , 0                                       AS AnalyzerId -- нет аналитики
+            , 0                                       AS AccountId              -- нет счета
+            , 0                                       AS AnalyzerId             -- нет аналитики
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- “овар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- ѕодраделение или...
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
@@ -344,8 +344,8 @@ BEGIN
                                        , ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId
             , _tmpItemSumm.ContainerId
-            , _tmpItemSumm.AccountId                  AS AccountId  -- счет есть всегда
-            , 0                                       AS AnalyzerId -- нет аналитики
+            , _tmpItemSumm.AccountId                  AS AccountId              -- счет есть всегда
+            , 0                                       AS AnalyzerId             -- нет аналитики
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- “овар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- ѕодраделение или...
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!

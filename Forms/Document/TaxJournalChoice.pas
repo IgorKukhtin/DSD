@@ -54,6 +54,7 @@ type
     bbSelect: TdxBarButton;
     ContractTagName: TcxGridDBColumn;
     colContractCode: TcxGridDBColumn;
+    colIsElectron: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -33,7 +33,7 @@ type
     colTotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrint_Loss: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     ArticleLossName: TcxGridDBColumn;

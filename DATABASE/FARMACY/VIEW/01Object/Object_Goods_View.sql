@@ -22,6 +22,7 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , COALESCE(ObjectBoolean_Goods_Close.ValueData, false)   AS isClose
            , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)     AS isTOP
            , ObjectFloat_Goods_PercentMarkup.ValueData        AS PercentMarkup
+           , ObjectFloat_Goods_Price.ValueData                AS Price
 
        FROM ObjectLink AS ObjectLink_Goods_Object
 
@@ -67,6 +68,10 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
                                ON ObjectFloat_Goods_PercentMarkup.ObjectId = ObjectLink_Goods_Object.ObjectId 
                               AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
 
+        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                               ON ObjectFloat_Goods_Price.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price()   
+
         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
                                ON ObjectFloat_Goods_MinimumLot.ObjectId = ObjectLink_Goods_Object.ObjectId 
                               AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()   
@@ -81,6 +86,7 @@ ALTER TABLE Object_Goods_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.06.15                         *
  16.02.15                         *
  21.10.14                         *
  23.07.14                         *

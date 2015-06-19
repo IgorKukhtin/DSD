@@ -649,6 +649,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodRemains: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      FormName = 'TReport_GoodsRemainsForm'
+      FormNameParam.Value = 'TReport_GoodsRemainsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -840,6 +850,9 @@ inherited MainForm: TMainForm
       end
       object N41: TMenuItem
         Action = actReport_JuridicalCollation
+      end
+      object N51: TMenuItem
+        Action = actReport_GoodRemains
       end
     end
     inherited miService: TMenuItem

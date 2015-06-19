@@ -4,7 +4,7 @@
   ClientWidth = 1004
   AddOnFormData.isSingle = False
   ExplicitWidth = 1010
-  ExplicitHeight = 644
+  ExplicitHeight = 641
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -68,6 +68,7 @@
     Left = 214
     Top = 77
     EditValue = 42096d
+    Enabled = False
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 8
@@ -75,7 +76,8 @@
   end
   object edCertificateNumber: TcxTextEdit [9]
     Left = 8
-    Top = 80
+    Top = 77
+    Enabled = False
     TabOrder = 9
     Width = 193
   end
@@ -112,12 +114,14 @@
   object edCertificateSeries: TcxTextEdit [15]
     Left = 397
     Top = 77
+    Enabled = False
     TabOrder = 15
     Width = 72
   end
   object edCertificateSeriesNumber: TcxTextEdit [16]
     Left = 503
     Top = 77
+    Enabled = False
     TabOrder = 16
     Width = 100
   end

@@ -109,7 +109,15 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 126
           end
-          object GoodsCode: TcxGridDBColumn [1]
+          object Article: TcxGridDBColumn [1]
+            Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
+            DataBinding.FieldName = 'ArticleGLN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsCode: TcxGridDBColumn [2]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -117,7 +125,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 45
           end
-          object GoodsName: TcxGridDBColumn [2]
+          object GoodsName: TcxGridDBColumn [3]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -125,7 +133,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 250
           end
-          object GoodsKindName: TcxGridDBColumn [3]
+          object GoodsKindName: TcxGridDBColumn [4]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -140,7 +148,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object MeasureName: TcxGridDBColumn [4]
+          object MeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -148,7 +156,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 55
           end
-          object AmountRemains: TcxGridDBColumn [5]
+          object AmountRemains: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090'.'
             DataBinding.FieldName = 'AmountRemains'
             HeaderAlignmentHorz = taCenter
@@ -156,7 +164,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 70
           end
-          object AmountEDI: TcxGridDBColumn [6]
+          object AmountEDI: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' EDI'
             DataBinding.FieldName = 'AmountEDI'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -167,7 +175,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 80
           end
-          object Amount: TcxGridDBColumn [7]
+          object Amount: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -177,7 +185,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object AmountSecond: TcxGridDBColumn [8]
+          object AmountSecond: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -187,7 +195,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object Price: TcxGridDBColumn [9]
+          object Price: TcxGridDBColumn [10]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -197,7 +205,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object CountForPrice: TcxGridDBColumn [10]
+          object CountForPrice: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -208,7 +216,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountSumm: TcxGridDBColumn [11]
+          object AmountSumm: TcxGridDBColumn [12]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -219,7 +227,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 100
           end
-          object AmountSumm_Partner: TcxGridDBColumn [12]
+          object AmountSumm_Partner: TcxGridDBColumn [13]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSumm_Partner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -231,7 +239,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 100
           end
-          object InfoMoneyCode: TcxGridDBColumn [13]
+          object InfoMoneyCode: TcxGridDBColumn [14]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -240,7 +248,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [14]
+          object InfoMoneyGroupName: TcxGridDBColumn [15]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -249,7 +257,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [15]
+          object InfoMoneyDestinationName: TcxGridDBColumn [16]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -258,7 +266,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [16]
+          object InfoMoneyName: TcxGridDBColumn [17]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False

@@ -11,21 +11,33 @@ uses
   Vcl.Menus, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC;
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
+  cxButtonEdit, dsdGuides, cxCurrencyEdit;
 
 type
-  TAncestorReportForm2 = class(TAncestorReportForm)
+  TReport_GoodsRemainsForm = class(TAncestorReportForm)
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    colGoodsCode: TcxGridDBColumn;
+    colOperAmount: TcxGridDBColumn;
+    colOperSum: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
+    colPrice: TcxGridDBColumn;
+    actOpenPartionReport: TdsdOpenForm;
+    bbGoodsPartyReport: TdxBarButton;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
-var
-  AncestorReportForm2: TAncestorReportForm2;
-
 implementation
 
 {$R *.dfm}
+
+initialization
+
+  RegisterClass(TReport_GoodsRemainsForm);
 
 end.

@@ -52,9 +52,9 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Send();
+         AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
+      ;
     RETURN NEXT Cursor1;
 
 

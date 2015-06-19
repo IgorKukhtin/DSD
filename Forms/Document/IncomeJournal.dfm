@@ -1188,7 +1188,7 @@ object IncomeJournalForm: TIncomeJournalForm
       end>
     PackSize = 1
     Left = 336
-    Top = 280
+    Top = 264
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
