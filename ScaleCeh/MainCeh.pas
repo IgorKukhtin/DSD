@@ -270,6 +270,7 @@ type
     procedure bbChangeLiveWeightClick(Sender: TObject);
     procedure bbChangePartionGoodsClick(Sender: TObject);
     procedure bbChangePartionGoodsDateClick(Sender: TObject);
+    procedure EditPartionGoodsEnter(Sender: TObject);
   private
     oldGoodsId:Integer;
 
@@ -287,7 +288,6 @@ type
     procedure WriteParamsMovement;
     procedure Initialize_afterSave_all;
     procedure Initialize_afterSave_MI;
-    procedure InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
 
     procedure SetParams_OperCount;
     procedure myActiveControl;
@@ -295,6 +295,7 @@ type
     function fGetScale_CurrentWeight:Double;
     function GetOldRealWeight:Double;
   public
+    procedure InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
   end;
 
 var
@@ -345,9 +346,9 @@ begin
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
-var i:Integer;
+var i,i2:Integer;
 begin
-     PanelGoodsKind.Visible:=GoodsKindWeighingGroupId>0;
+     PanelGoodsKind.Visible:=(GoodsKindWeighingGroupId>0)or(SettingMain.isGoodsComplete = TRUE);
      //
      //if GoodsKindWeighingGroupId = 0 then exit;
      //
@@ -357,14 +358,16 @@ begin
      begin
           Items.Clear;
           i:=0;
+          i2:=0;
           if GoodsKindWeighingGroupId = 0
           then begin Items.Add('(1) нет'); ItemIndex:=0;EditGoodsKindCode.Text:='1';end
           else
               for i:=0 to Length(GoodsKind_Array)-1 do
                  if GoodsKind_Array[i].Number = GoodsKindWeighingGroupId
-                 then Items.Add('('+IntToStr(GoodsKind_Array[i].Code)+') '+ GoodsKind_Array[i].Name);
-
-          if i<10 then Columns:=1 else Columns:=2;
+                 then begin i2:=i2+1;Items.Add('('+IntToStr(GoodsKind_Array[i].Code)+') '+ GoodsKind_Array[i].Name);end;
+          //
+          if i2<5 then Columns:=1 else Columns:=2;
+          if i2>15 then PanelGoodsKind.Height:=185 else PanelGoodsKind.Height:=155;
           //
           ItemIndex:=0;
      end;
@@ -508,8 +511,10 @@ begin
      if DMMainScaleCehForm.gpInsert_MovementCeh_all(ParamsMovement) then
      begin
           //
+          //Print and Create Quality + Transport + Tax
+          Print_Movement_afterSave;
           //Initialize or Empty
-             //НЕ будем автоматов открывать предыдущий док.
+          //НЕ будем автоматов открывать предыдущий док.
           //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!нельзя обнулять, т.к. это будет значить isLast=TRUE!!!
           //DMMainScaleCehForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
           EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
@@ -526,6 +531,7 @@ end;
 function TMainCehForm.Save_MI:Boolean;
 begin
      Result:=false;
+     //
      // проверка
      if  (oldGoodsId=ParamsMI.ParamByName('GoodsId').AsInteger)
       and(MessageDlg ('Повторно введен код.Продолжить?', mtConfirmation, mbYesNoCancel, 0) <> 6)
@@ -540,11 +546,20 @@ begin
            PanelMovementDesc.Caption:='Ошибка.Не определен код <Продукции>';
            exit;
      end;
+     //Сначала пересчитали кол-во
+     SetParams_OperCount;
      // проверка
      if ParamsMI.ParamByName('OperCount').AsFloat <= 0 then
      begin ActiveControl:=EditGoodsCode;
            PanelMovementDesc.Font.Color:=clRed;
            PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть <= 0';
+           exit;
+     end;
+     // проверка
+     if (rgGoodsKind.ItemIndex=-1)and (rgGoodsKind.Items.Count>1) then
+     begin ActiveControl:=EditGoodsKindCode;
+           PanelMovementDesc.Font.Color:=clRed;
+           PanelMovementDesc.Caption:='Ошибка.Не определено значение <Код вида упаковки>';
            exit;
      end;
      // проверка
@@ -561,6 +576,10 @@ begin
                end;
      end;
 
+     // доопределили параметр
+     if (PanelGoodsKind.Visible)and(rgGoodsKind.ItemIndex>=0)
+     then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
+     else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
      // доопределили параметр
      try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text)
      except ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime + 1;
@@ -584,6 +603,12 @@ begin
      ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      ParamsMI.ParamByName('isStartWeighing').AsBoolean:=gbStartWeighing.ItemIndex = 0;
 
+     //обязательно перед Проверка - только для Обв.
+     if ParamsMovement.ParamByName('MovementId').AsInteger = 0 then
+     begin
+           Result:= DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement);
+           if not Result then exit;
+     end;
      //Проверка - только для Обв.
      if SettingMain.isGoodsComplete = FALSE
      then
@@ -835,7 +860,7 @@ begin
 
      with DialogDateValueForm do
      begin
-          LabelDateValue.Caption:='Партия СЫРЬЯ';
+          LabelDateValue.Caption:='Партия ДАТА';
           ActiveControl:=DateValueEdit;
           DateValueEdit.Text:=DateToStr(CDS.FieldByName('PartionGoodsDate').AsDateTime);
           isPartionGoodsDate:=true;
@@ -1070,6 +1095,11 @@ begin
      end;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainCehForm.EditPartionGoodsEnter(Sender: TObject);
+begin
+     EditPartionGoods.SelectAll;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditGoodsCodeKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if Key = 13 then
@@ -1263,7 +1293,7 @@ begin
      then begin
          findIndex:=GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex);
          EditGoodsKindCode.Text:=IntToStr(GoodsKind_Array[findIndex].Code);
-         ActiveControl:=EditGoodsKindCode;
+         if (ActiveControl.ClassName = 'TGroupButton') or (ActiveControl.ClassName = 'TRadioGroup') then ActiveControl:=EditGoodsKindCode;
      end;
 end;
 {------------------------------------------------------------------------------}
@@ -1290,7 +1320,6 @@ begin
   //local Control Form
   Initialize_afterSave_all;
   Initialize_afterSave_MI;
-  InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
   //local visible Columns
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible    :=SettingMain.isGoodsComplete = TRUE;
@@ -1396,7 +1425,10 @@ begin
     else rgScale.Items.Add(Scale_Array[i].ScaleName+' : COM?');
     if Scale_Array[i].COMPort=SettingMain.DefaultCOMPort then number:=i;
   end;
-  rgScale.ItemIndex:=number;
+  //
+  if rgScale.Items.Count = 1
+  then rgScale.ItemIndex:=0
+  else rgScale.ItemIndex:=number;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.Initialize_Scale;
@@ -1477,12 +1509,8 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.fGetScale_CurrentWeight:Double;
 begin
-     if ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg
-     then try Result:=StrToFloat(EditEnterCount.Text)
-          except Result:=0;
-          end
-
-     else begin
+     if (ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg) or (ParamsMI.ParamByName('MeasureId').AsInteger = 0)
+     then begin
      // открываем ВЕСЫ, только когда НУЖЕН вес
      //Initialize_Scale_DB;
      // считывание веса
@@ -1500,12 +1528,18 @@ begin
      //
 //*****
      if (System.Pos('ves=',ParamStr(1))>0)and(Result=0)
-     then Result:=myStrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-5));
+     then Result:=myStrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-4));
      if (System.Pos('ves=',ParamStr(2))>0)and(Result=0)
-     then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-5));
+     then Result:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-4));
+     if (System.Pos('ves=',ParamStr(3))>0)and(Result=0)
+     then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
 //*****
-     end;
-
+     end
+     else
+          try Result:=StrToFloat(EditEnterCount.Text)
+          except Result:=0;
+          end;
+     //
      PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;
 //------------------------------------------------------------------------------------------------

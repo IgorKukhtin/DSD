@@ -12,6 +12,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown

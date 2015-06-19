@@ -58,7 +58,7 @@ type
     actSPPrintTaxProcName: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
     edIsDocument: TcxCheckBox;
-    edIsRegistered: TcxCheckBox;
+    edIsElectron: TcxCheckBox;
     HeaderSaver2: THeaderSaver;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     spSelectTax_Us: TdsdStoredProc;

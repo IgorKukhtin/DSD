@@ -192,14 +192,10 @@ BEGIN
          WHERE _tmp.OperSumm <> 0;
 
 
-     -- для теста
-     -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.JuridicalId_From, _tmpItem.isCorporate, _tmpItem.PersonalId_From, _tmpItem.UnitId, _tmpItem.BranchId_Unit, _tmpItem.PersonalId_Packer, _tmpItem.PaidKindId, _tmpItem.ContractId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.OperCount, _tmpItem.tmpOperSumm_Partner, _tmpItem.OperSumm_Partner, _tmpItem.tmpOperSumm_Packer, _tmpItem.OperSumm_Packer, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.InfoMoneyDestinationId_isCorporate, _tmpItem.InfoMoneyId_isCorporate, _tmpItem.JuridicalId_basis, _tmpItem.BusinessId                         , _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.PartionMovementId, _tmpItem.PartionGoodsId FROM _tmpItem;
-
-
-
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
      -- 1.1.1. определяется Счет для проводок суммового учета по счету долг Физ.лица (Водитель)
      UPDATE _tmpItem SET AccountId_To = _tmpItem_byAccount.AccountId
@@ -308,17 +304,50 @@ BEGIN
         AND _tmpItem.BranchId_ProfitLoss    = _tmpItem_byContainer.BranchId_ProfitLoss;
 
      -- 1.3. формируются Проводки суммового учета
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , ParentId, Amount, OperDate, IsActive)
        -- по счету долг Физ.лица (Водитель)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, OperSumm, OperDate, TRUE AS IsActive FROM _tmpItem
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , ContainerId_To
+            , AccountId_To                            AS AccountId              -- счет есть всегда
+            , 0                                       AS AnalyzerId             -- нет аналитики
+            , MemberId_To                             AS ObjectId_Analyzer      -- Физ лицо
+            , UnitId_ProfitLoss                       AS WhereObjectId_Analyzer -- !!!Подразделение!!!, а можно было б и Автомобиль
+            , ContainerId_From                        AS ContainerId_Analyzer   -- Контейнер-Корреспондент
+            , 0                                       AS ParentId
+            , OperSumm
+            , OperDate
+            , CASE WHEN OperSumm > 0 THEN TRUE ELSE FALSE END AS IsActive
+       FROM _tmpItem
       UNION ALL
        -- тут же списание с него по счету долг Физ.лица (Водитель) (!!!если Прибыль!!!)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE AS IsActive
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , ContainerId_To
+            , AccountId_To                            AS AccountId              -- счет есть всегда
+            , zc_Enum_AnalyzerId_ProfitLoss()         AS AnalyzerId             -- относится к ОПиУ
+            , MemberId_To                             AS ObjectId_Analyzer      -- Физ лицо
+            , UnitId_ProfitLoss                       AS WhereObjectId_Analyzer -- !!!Подразделение!!!, а можно было б и Автомобиль
+            , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
+            , 0                                       AS ParentId
+            , -1 * OperSumm
+            , OperDate
+            , CASE WHEN -1 * OperSumm > 0 THEN TRUE ELSE FALSE END AS IsActive
        FROM _tmpItem
        WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
       UNION ALL
        -- по счету Прибыль
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, ContainerId_ProfitLoss, 0 AS ParentId, OperSumm, OperDate, FALSE AS IsActive
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , ContainerId_ProfitLoss
+            , zc_Enum_Account_100301()                AS AccountId              -- прибыль текущего периода
+            , 0                                       AS AnalyzerId             -- нет аналитики
+            , MemberId_To                             AS ObjectId_Analyzer      -- Физ лицо
+            , UnitId_ProfitLoss                       AS WhereObjectId_Analyzer -- !!!Подразделение!!!
+            , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , 0                                       AS ParentId
+            , OperSumm
+            , OperDate
+            , FALSE AS IsActive
        FROM _tmpItem
        WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
      ;
@@ -366,17 +395,22 @@ BEGIN
           ) AS _tmpItem_byContainer
       WHERE _tmpItem.InfoMoneyId = _tmpItem_byContainer.InfoMoneyId;
 
-     -- 2.3. формируются Проводки суммового учета по долг Физ.лица (От кого)
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_From, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE
-       FROM (SELECT _tmpItem.ContainerId_From
-                  , _tmpItem.OperDate
-                  , SUM (_tmpItem.OperSumm) AS OperSumm
-             FROM _tmpItem
-             GROUP BY _tmpItem.ContainerId_From
-                    , _tmpItem.OperDate
-            ) AS _tmpItem_group;
-
+     -- 2.3. формируются Проводки суммового учета по долг Физ.лица (От кого) + !!!добавлен MovementItemId!!! + !!!добавлен ContainerId_To!!!
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , ContainerId_From
+            , AccountId_From                          AS AccountId              -- счет есть всегда
+            , 0                                       AS AnalyzerId             -- нет аналитики
+            , vbMemberId_From                         AS ObjectId_Analyzer      -- Физ лицо
+            , 0                                       AS WhereObjectId_Analyzer -- т.к. у Физ.лица нет Подразделения
+            , ContainerId_To                          AS ContainerId_Analyzer   -- Контейнер-Корреспондент
+            , 0                                       AS ParentId
+            , -1 * OperSumm
+            , OperDate
+            , CASE WHEN -1 * OperSumm > 0 THEN TRUE ELSE FALSE END AS IsActive
+       FROM _tmpItem;
 
 
      -- 3.1. формируются Проводки для отчета (Аналитики: Физ.лицо (От кого) и Физ.лицо (Водитель))

@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternalUnit(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер заявки у контрагента
-    IN inOperDate            TDateTime , -- Дата документа
-   OUT outOperDatePartner    TDateTime , -- Дата принятия заказа от контрагента
+    IN inOperDate            TDateTime , -- Дата документа (принятия заказа от контрагента)
+   OUT outOperDatePartner    TDateTime , -- Дата документа (планируется отгрузка со склада)
     IN inOperDateMark        TDateTime , -- Дата маркировки
     IN inOperDateStart       TDateTime , -- Дата прогноз (нач.)
     IN inOperDateEnd         TDateTime , -- Дата прогноз (конечн.)

@@ -13,22 +13,118 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
-   DECLARE vbPriceListId Integer;
-   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
-     -- 
-     vbOperDate:= (SELECT ValueData FROM MovementDate WHERE MovementId = inMovementId AND DescId = zc_MovementDate_OperDatePartner());
 
-
-    -- таблица -
- /*  CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecast TFloat) ON COMMIT DROP;
+     -- таблица -
+     CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecast TFloat) ON COMMIT DROP;
     
-   INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountForecastOrder, AmountForecast)
-                                 SELECT MovementItem.Id                               AS MovementItemId 
+     INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountForecastOrder, AmountForecast)
+                                WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup WHERE UnitId <> inUnitId)
+                                   , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+                                                  FROM Object_InfoMoney_View
+                                                       LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                            ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                                                           AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                  WHERE Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
+                                                 )
+                                 SELECT tmp.MovementItemId
+                                       , COALESCE (tmp.GoodsId,tmpAll.GoodsId)          AS GoodsId
+                                       , COALESCE (tmp.GoodsKindId, tmpAll.GoodsKindId) AS GoodsKindId
+                                       , COALESCE (tmpAll.AmountOrder, 0)               AS AmountForecastOrder
+                                       , COALESCE (tmpAll.AmountSale, 0)                AS AmountForecast
+                                 FROM (SELECT tmpAll.GoodsId
+                                            , tmpAll.GoodsKindId
+                                            , SUM (tmpAll.AmountOrder) AS AmountOrder
+                                            , SUM (tmpAll.AmountSale)  AS AmountSale
+                                       FROM
+                                      (SELECT MovementItem.ObjectId                                                    AS GoodsId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId
+                                            , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS AmountOrder
+                                            , 0                                                                        AS AmountSale
+                                       FROM Movement 
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                            INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
+                                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                                   AND MovementItem.isErased   = FALSE
+                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                         AND Movement.DescId = zc_Movement_OrderExternal()
+                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                       GROUP BY MovementItem.ObjectId
+                                              , MILinkObject_GoodsKind.ObjectId
+                                       HAVING SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) <> 0
+                                      UNION ALL
+                                       SELECT MovementItem.ObjectId                               AS GoodsId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                                            , 0                                                   AS AmountOrder
+                                            , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountSale
+                                       FROM MovementDate AS MovementDate_OperDatePartner
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                          ON MovementLinkObject_From.MovementId = MovementDate_OperDatePartner.MovementId
+                                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                            INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_From.ObjectId
+                                            INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                                               AND Movement.DescId = zc_Movement_Sale()
+                                                               AND Movement.StatusId = zc_Enum_Status_Complete()
+
+                                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                                   AND MovementItem.isErased   = FALSE
+                                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
+                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                       WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                       GROUP BY MovementItem.ObjectId
+                                              , MILinkObject_GoodsKind.ObjectId
+                                       HAVING SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) <> 0   
+                                      UNION ALL
+                                       SELECT MovementItem.ObjectId                               AS GoodsId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                                            , 0                                                   AS AmountOrder
+                                            , SUM (COALESCE (MovementItem.Amount, 0))             AS AmountSale
+                                       FROM Movement
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                            INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_From.ObjectId
+
+                                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                                   AND MovementItem.isErased   = FALSE
+                                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
+                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                         AND Movement.DescId = zc_Movement_SendOnPrice()
+                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                       GROUP BY MovementItem.ObjectId
+                                              , MILinkObject_GoodsKind.ObjectId
+                                       HAVING SUM (COALESCE (MovementItem.Amount, 0)) <> 0   
+                                       ) AS tmpAll
+                                       GROUP BY tmpAll.GoodsId
+                                              , tmpAll.GoodsKindId
+                                       ) AS tmpAll
+                                 FULL JOIN
+                                (SELECT MovementItem.Id                               AS MovementItemId 
                                       , MovementItem.ObjectId                         AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                       , MovementItem.Amount
@@ -39,28 +135,22 @@ BEGIN
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
-                                
+                                ) AS tmp  ON tmp.GoodsId = tmpAll.GoodsId
+                                         AND tmp.GoodsKindId = tmpAll.GoodsKindId
                      ;
 
        -- сохранили
-       PERFORM lpUpdate_MovementItem_OrderInternal_Property (inId                 := tmpAll.MovementItemId
-                                                           , inMovementId         := inMovementId
-                                                           , inGoodsId            := tmpAll.GoodsId
-                                                           , inGoodsKindId        := tmpAll.GoodsKindId
-                                                           , inAmount_Param       := tmpAll.AmountForecast
-                                                           , inDescId_Param       := zc_MIFloat_AmountForecast()
-                                                           , inAmount_ParamOrder  := tmpAll.AmountForecastOrder
-                                                           , inDescId_ParamOrder  := zc_MIFloat_AmountForecastOrder()
-
-                                                           , inUserId             := vbUserId
-                                                            ) 
-       FROM tmpAll
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpAll.GoodsId
-
-      ;
-*/
-
+       PERFORM lpUpdate_MI_OrderInternal_Property (inId                 := tmpAll.MovementItemId
+                                                 , inMovementId         := inMovementId
+                                                 , inGoodsId            := tmpAll.GoodsId
+                                                 , inGoodsKindId        := tmpAll.GoodsKindId
+                                                 , inAmount_Param       := tmpAll.AmountForecast
+                                                 , inDescId_Param       := zc_MIFloat_AmountForecast()
+                                                 , inAmount_ParamOrder  := tmpAll.AmountForecastOrder
+                                                 , inDescId_ParamOrder  := zc_MIFloat_AmountForecastOrder()
+                                                 , inUserId             := vbUserId
+                                                  ) 
+       FROM tmpAll;
 
 END;
 $BODY$
@@ -69,6 +159,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.06.15                                        * all
  03.03.15         *
 */
 

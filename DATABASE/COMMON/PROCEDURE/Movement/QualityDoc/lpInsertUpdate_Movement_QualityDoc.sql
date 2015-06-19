@@ -10,13 +10,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_QualityDoc(
     IN inOperDateIn                 TDateTime , -- Дата і час виготовлення
     IN inOperDateOut                TDateTime , -- Дата відвантаження
     IN inCarId                      Integer   , -- Автомобиль
-    
     IN inQualityNumber              TVarChar  , --
     IN inCertificateNumber          TVarChar  , --
     IN inOperDateCertificate        TDateTime , --
     IN inCertificateSeries          TVarChar  , --
     IN inCertificateSeriesNumber    TVarChar  , --
-   
     IN inUserId                     Integer     -- Пользователь
 )                              
 RETURNS Integer

@@ -4,7 +4,6 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TDateTime, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderInternal(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- дата Документа
@@ -34,17 +33,20 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              
-             , inOperDate                                       AS OperDatePartner
-             , (inOperDate - INTERVAL '7 DAY') ::TDateTime      AS OperDateStart
+             , (inOperDate + INTERVAL '1 DAY') :: TDateTime     AS OperDatePartner
+             , (inOperDate - INTERVAL '56 DAY') ::TDateTime     AS OperDateStart
              , (inOperDate - INTERVAL '1 DAY') ::TDateTime      AS OperDateEnd  
                           
-             , 0                     				            AS FromId
-             , CAST ('' AS TVarChar) 				            AS FromName
-             , 0                     				            AS ToId
-             , CAST ('' AS TVarChar) 				            AS ToName
-             , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '7 DAY')))) :: TFloat AS DayCount
+             , Object_From.Id                                     AS FromId
+             , Object_From.ValueData                              AS FromName
+             , Object_To.Id                                       AS ToId
+             , Object_To.ValueData                                AS ToName
+             , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '56 DAY')))) :: TFloat AS DayCount
              
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_From ON Object_From.Id = 8457 -- Склады База + Реализации
+               LEFT JOIN Object AS Object_To ON Object_To.Id = 8446 -- ЦЕХ колбаса+дел-сы
+         ;
 
      ELSE
 
@@ -57,7 +59,7 @@ BEGIN
            , Object_Status.ValueData                            AS StatusName
 
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-           , COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime      AS OperDateStart
+           , COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '56 DAY')) :: TDateTime      AS OperDateStart
            , COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime        AS OperDateEnd                      
            
            , Object_From.Id                                     AS FromId
@@ -66,7 +68,7 @@ BEGIN
            , Object_To.ValueData                                AS ToName
 
            , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime
-                                   - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime)
+                                   - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '56 DAY')) :: TDateTime)
                           )) :: TFloat AS DayCount
 
        FROM Movement

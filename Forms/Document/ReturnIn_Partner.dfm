@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 668
   ClientWidth = 1139
   ExplicitWidth = 1155
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -98,6 +98,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colCode: TcxGridDBColumn [2]
@@ -144,6 +145,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colAmount: TcxGridDBColumn [7]
@@ -543,14 +545,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 29
-          end
-          object colRegistered: TcxGridDBColumn
-            Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088'.'
-            DataBinding.FieldName = 'Registered'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
           end
           object colIsEDI: TcxGridDBColumn
             Caption = 'EXITE'

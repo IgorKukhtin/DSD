@@ -62,6 +62,7 @@ type
     InfoMoneyName_all: TcxGridDBColumn;
     MoneyPlaceName: TcxGridDBColumn;
     ItemName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited ReturnOutForm: TReturnOutForm
   ClientHeight = 668
   ClientWidth = 838
   ExplicitWidth = 854
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,8 +21,6 @@ inherited ReturnOutForm: TReturnOutForm
       inherited cxGrid: TcxGrid
         Width = 838
         Height = 529
-        ExplicitLeft = -112
-        ExplicitTop = -71
         ExplicitWidth = 838
         ExplicitHeight = 529
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -88,6 +86,7 @@ inherited ReturnOutForm: TReturnOutForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colCode: TcxGridDBColumn
@@ -134,6 +133,7 @@ inherited ReturnOutForm: TReturnOutForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 35
           end
           object colAmount: TcxGridDBColumn

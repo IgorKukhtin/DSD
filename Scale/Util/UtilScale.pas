@@ -123,7 +123,7 @@ var
   zc_Object_ArticleLoss: Integer;
   zc_Object_Unit       : Integer;
 
-  zc_Measure_Sh: Integer;
+//  zc_Measure_Sh: Integer;
   zc_Measure_Kg: Integer;
 
   zc_BarCodePref_Object  :String;
@@ -139,9 +139,11 @@ begin
      ParamAdd(Params,'ColorGridValue',ftInteger);
      ParamAdd(Params,'OperDate',ftDateTime);
 
-     ParamAdd(Params,'MovementId_begin',ftInteger);
+     ParamAdd(Params,'MovementId_begin',ftInteger);//документ который создается после закрытия "документа взвешивания", т.е. после Save_Movement_all
 
-     ParamAdd(Params,'MovementId',ftInteger);
+     ParamAdd(Params,'MovementId_get',ftInteger);//документ взвешивания определяется при gpGet_Scale_OrderExternal !!!только для заявки!!!, потом переносится в MovementId
+
+     ParamAdd(Params,'MovementId',ftInteger); //документ взвешивания
      ParamAdd(Params,'InvNumber',ftString);
      ParamAdd(Params,'OperDate_Movement',ftDateTime);
 
@@ -655,7 +657,7 @@ end;
 {------------------------------------------------------------------------------}
 function gpCheck_BranchCode: Boolean;
 begin
-    Result:=((SettingMain.isCeh = FALSE) and (SettingMain.BranchCode < 100))
+    Result:=((SettingMain.isCeh = FALSE) and ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode < 100)))
           or((SettingMain.isCeh = TRUE) and ((SettingMain.BranchCode = 1) or (SettingMain.BranchCode > 100)));
     //
     if not Result

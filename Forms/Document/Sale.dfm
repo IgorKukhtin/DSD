@@ -12,17 +12,17 @@ inherited SaleForm: TSaleForm
     Width = 1020
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1179
+    ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1179
+      ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 518
-        ExplicitWidth = 1179
+        ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -117,6 +117,7 @@ inherited SaleForm: TSaleForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colCode: TcxGridDBColumn [2]
@@ -315,7 +316,7 @@ inherited SaleForm: TSaleForm
     Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1179
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8

@@ -98,6 +98,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colCode: TcxGridDBColumn [2]
@@ -144,6 +145,7 @@ inherited ReturnInForm: TReturnInForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colAmount: TcxGridDBColumn [7]
@@ -230,6 +232,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -554,14 +559,6 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 29
-          end
-          object colRegistered: TcxGridDBColumn
-            Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088'.'
-            DataBinding.FieldName = 'Registered'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
           end
           object colIsEDI: TcxGridDBColumn
             Caption = 'EXITE'

@@ -61,7 +61,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object colCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -69,7 +69,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             Options.Editing = False
             Width = 45
           end
-          object colName: TcxGridDBColumn
+          object colName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -77,7 +77,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             Options.Editing = False
             Width = 220
           end
-          object colGoodsKindName: TcxGridDBColumn
+          object colGoodsKindName: TcxGridDBColumn [2]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -92,14 +92,15 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colMeasureName: TcxGridDBColumn
+          object colMeasureName: TcxGridDBColumn [3]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 44
           end
-          object colChangePercentAmount: TcxGridDBColumn
+          object colChangePercentAmount: TcxGridDBColumn [4]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             Visible = False
@@ -107,7 +108,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colAmount: TcxGridDBColumn
+          object colAmount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -117,7 +118,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPrice: TcxGridDBColumn
+          object colPrice: TcxGridDBColumn [6]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -127,7 +128,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn
+          object colCountForPrice: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -135,7 +136,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmountSumm: TcxGridDBColumn
+          object colAmountSumm: TcxGridDBColumn [8]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -151,6 +152,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -473,14 +477,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
-          end
-          object colRegistered: TcxGridDBColumn
-            Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088'.'
-            DataBinding.FieldName = 'Registered'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
           end
           object colIsEDI: TcxGridDBColumn
             Caption = 'EXITE'
@@ -805,6 +801,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
     end
+    inherited actMISetUnErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
     object MedocAction: TMedocAction [4]
       Category = 'TaxLib'
       MoveParams = <>
@@ -812,12 +811,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
     end
-    inherited actMISetUnErased: TdsdUpdateErased
-      TabSheet = tsMain
-    end
     object actTaxJournalChoice: TOpenChoiceForm [7]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'TaxJournalSelectForm'
       FormName = 'TTaxJournalChoiceForm'
       FormNameParam.Value = 'TTaxJournalChoiceForm'
@@ -859,20 +856,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       isShowModal = True
     end
-    object mactPrint: TMultiAction [11]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSPPrintProcName
-        end
-        item
-          Action = actPrint
-        end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -904,7 +887,29 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
+    object mactPrint: TMultiAction [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintProcName
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end>
+    end
+    inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
           StoredProc = spChangeStatus
@@ -915,6 +920,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -935,20 +941,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       isShowModal = True
     end
-    inherited actCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end>
-    end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
     end
     object actTaxCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spTaxCorrective
       StoredProcList = <
         item
@@ -967,6 +966,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spCorrective
       StoredProcList = <
         item
@@ -998,6 +998,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -1098,6 +1099,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportNameTaxCorrective
       StoredProcList = <
         item
@@ -1206,6 +1208,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actMedocProcedure: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spSelectPrintTaxCorrective_Client
       StoredProcList = <
         item
@@ -1216,6 +1219,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actUpdateIsMedoc: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateIsMedoc
       StoredProcList = <
         item
@@ -2082,6 +2086,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Top = 222
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item

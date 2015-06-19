@@ -192,11 +192,12 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 243
+    Left = 24
+    Top = 211
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 23
+    Top = 258
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TProductionUnionForm'
     end
@@ -226,10 +227,11 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       Category = 'DSDLib'
       MoveParams = <
         item
-          FromParam.Name = 'id'
+          FromParam.Name = 'Id'
           FromParam.Value = Null
           FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
@@ -260,9 +262,8 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -395,7 +396,6 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -512,7 +512,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ProductionUnion_Print'
+    StoredProcName = 'gpSelect_Movement_Send_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -533,11 +533,5 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     PackSize = 1
     Left = 535
     Top = 248
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 628
-    Top = 294
   end
 end

@@ -58,7 +58,17 @@ BEGIN
                                                           , inWeightOther         := inWeightOther
                                                           , inPartionGoodsDate    := CASE WHEN inIsPartionGoodsDate = TRUE THEN inPartionGoodsDate ELSE NULL END :: TDateTime
                                                           , inPartionGoods        := inPartionGoods
-                                                          , inGoodsKindId         := inGoodsKindId
+                                                          , inGoodsKindId         := CASE WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
+                                                                                                FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                                                     LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                                                WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                                                                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                                                               ) IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                                                   , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                                                    )
+                                                                                               THEN 0
+                                                                                          ELSE inGoodsKindId
+                                                                                     END
                                                           , inSession             := inSession
                                                            );
 

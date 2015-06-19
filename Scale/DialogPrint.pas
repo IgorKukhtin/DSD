@@ -56,12 +56,12 @@ begin
      cbPrintSpec.Checked:=isSpec;
      cbPrintTax.Checked:=isTax;
      //
-     cbPrintAccount.Enabled:=SettingMain.isCeh = TRUE;
-     cbPrintTransport.Enabled:=SettingMain.isCeh = TRUE;
-     cbPrintQuality.Enabled:=SettingMain.isCeh = TRUE;
-     cbPrintPack.Enabled:=SettingMain.isCeh = TRUE;
-     cbPrintSpec.Enabled:=SettingMain.isCeh = TRUE;
-     cbPrintTax.Enabled:=SettingMain.isCeh = TRUE;
+     cbPrintAccount.Enabled:=SettingMain.isCeh = FALSE;
+     cbPrintTransport.Enabled:=SettingMain.isCeh = FALSE;
+     cbPrintQuality.Enabled:=SettingMain.isCeh = FALSE;
+     cbPrintPack.Enabled:=SettingMain.isCeh = FALSE;
+     cbPrintSpec.Enabled:=SettingMain.isCeh = FALSE;
+     cbPrintTax.Enabled:=SettingMain.isCeh = FALSE;
      //
      cbPrintPreview.Checked:=GetArrayList_Value_byName(Default_Array,'isPrintPreview') = AnsiUpperCase('TRUE');
      PrintCountEdit.Text:=GetArrayList_Value_byName(Default_Array,'PrintCount');

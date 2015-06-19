@@ -34,6 +34,9 @@ type
     bbPrint_obval: TdxBarButton;
     colLiveWeight: TcxGridDBColumn;
     colChildLiveWeight: TcxGridDBColumn;
+    actPrint_Ceh: TdsdPrintAction;
+    spSelectPrintCeh: TdsdStoredProc;
+    bbPrint_Ceh: TdxBarButton;
   private
     { Private declarations }
   public

@@ -234,7 +234,8 @@ BEGIN
              END :: Boolean AS isERPN
 
            , CASE WHEN OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN AND Movement_child.OperDate >= '01.02.2015'
-                  THEN 'X' ELSE '' END                                      AS ERPN2
+                  THEN CASE WHEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0 THEN '' ELSE 'X' END
+                  ELSE '' END AS ERPN2
 
            , CASE WHEN OH_JuridicalDetails_From.INN = vbNotNDSPayer_INN
                   THEN 'X' ELSE '' END                                      AS NotNDSPayer

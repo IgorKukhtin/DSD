@@ -59,9 +59,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clFuelName: TcxGridDBColumn;
-    clInfoMoneyGroupCode: TcxGridDBColumn;
     clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationCode: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
     clBusinessName: TcxGridDBColumn;

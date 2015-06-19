@@ -3,7 +3,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   ClientHeight = 678
   ClientWidth = 903
   ExplicitWidth = 919
-  ExplicitHeight = 713
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -257,6 +257,40 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    object actPrint_Ceh: TdsdPrintAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintCeh
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCeh
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
+      ReportNameParam.Value = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrint_Obval: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
@@ -291,7 +325,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [10]
+    object actUpdateChildDS: TdsdUpdateDataSet [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -311,6 +345,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
     end
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 656
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionSeparate'
@@ -403,6 +440,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Ceh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_obval'
         end
         item
@@ -435,6 +480,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     end
     object bbPrint_obval: TdxBarButton
       Action = actPrint_Obval
+      Category = 0
+    end
+    object bbPrint_Ceh: TdxBarButton
+      Action = actPrint_Ceh
       Category = 0
     end
   end
@@ -580,8 +629,16 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptInput
       end>
   end
+  inherited GuidesFiller: TGuidesFiller
+    Left = 224
+  end
+  inherited HeaderSaver: THeaderSaver
+    Left = 264
+    Top = 209
+  end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetErased'
+    Left = 454
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetUnErased'
@@ -828,6 +885,29 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end>
     PackSize = 1
     Left = 751
+    Top = 96
+  end
+  object spSelectPrintCeh: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionSeparate_Ceh_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 679
     Top = 96
   end
 end

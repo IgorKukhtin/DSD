@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TaxCorrective(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, Registered Boolean, DateRegistered TDateTime
+             , Checked Boolean, Document Boolean, isElectron Boolean, DateisElectron TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
@@ -49,8 +49,8 @@ BEGIN
              , Object_Status.Name              	    AS StatusName
              , CAST (False as Boolean)         	    AS Checked
              , CAST (False as Boolean)         	    AS Document
-             , CAST (False as Boolean)        	    AS Registered
-             , inOperDate         	            AS DateRegistered
+             , CAST (False as Boolean)        	    AS isElectron
+             , inOperDate         	            AS DateisElectron
              , CAST (False as Boolean)              AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                   AS TotalCount
@@ -96,8 +96,8 @@ BEGIN
            , Object_Status.ValueData     				                    AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)            AS Checked
            , COALESCE (MovementBoolean_Document.ValueData, FALSE)           AS Document
-           , COALESCE (MovementBoolean_Registered.ValueData, FALSE)         AS Registered
-           , COALESCE (MovementDate_DateRegistered.ValueData,Movement.OperDate) AS DateRegistered
+           , COALESCE (MovementBoolean_Electron.ValueData, FALSE)           AS isElectron
+           , COALESCE (MovementDate_DateRegistered.ValueData,Movement.OperDate) AS DateisElectron
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)       AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
            , MovementFloat_TotalCount.ValueData                             AS TotalCount
@@ -128,14 +128,12 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
-
             LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                       ON MovementBoolean_Document.MovementId =  Movement.Id
                                      AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
-
-            LEFT JOIN MovementBoolean AS MovementBoolean_Registered
-                                      ON MovementBoolean_Registered.MovementId =  Movement.Id
-                                     AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                      ON MovementBoolean_Electron.MovementId = Movement.Id
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
@@ -235,5 +233,5 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, Boolean, TDateTime, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_TaxCorrective (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
--- SELECT * FROM gpGet_Movement_TaxCorrective(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
+-- SELECT * FROM gpGet_Movement_TaxCorrective (inMovementId:= 0, inOperDate:=CURRENT_DATE, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_TaxCorrective(inMovementId := 40859 , inMask:= FALSE, inOperDate := '25.01.2014',  inSession := '5');

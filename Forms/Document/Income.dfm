@@ -386,6 +386,7 @@ object IncomeForm: TIncomeForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colCode: TcxGridDBColumn
@@ -426,6 +427,7 @@ object IncomeForm: TIncomeForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colAmount: TcxGridDBColumn
@@ -698,6 +700,7 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -718,7 +721,6 @@ object IncomeForm: TIncomeForm
           ItemName = 'bbStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbPrint'
         end

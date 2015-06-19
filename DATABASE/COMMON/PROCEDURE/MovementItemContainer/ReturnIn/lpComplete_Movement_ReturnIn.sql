@@ -912,7 +912,7 @@ BEGIN
      vbAccountId_GoodsTransit:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND vbMemberId_To = 0 THEN zc_Enum_Account_110101() ELSE 0 END;
 
 
-     -- 1.1.1. определяется ContainerId_GoodsPartner для проводки по количественному учету - долги Покупателя или Физ.лица
+     -- 1.1.1. определяется ContainerId_GoodsPartner для !!!забалансовой!!! проводки по количественному учету - долги Покупателя или Физ.лица
      UPDATE _tmpItem SET ContainerId_GoodsPartner = -- 0)Товар 1)Покупатель
                                                     -- 0)Товар 1)Физ.лицо
                                                     lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
@@ -932,8 +932,20 @@ BEGIN
     ;
 
      -- 1.1.2. формируются Проводки для количественного учета - долги Покупателя или Физ.лицо
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, isActive)
-       SELECT 0, zc_MIContainer_CountSupplier() AS DescId, vbMovementDescId, inMovementId, MovementItemId, ContainerId_GoodsPartner, 0 AS ParentId, -1 * OperCount, vbOperDate, FALSE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , ParentId, Amount, OperDate, isActive)
+       SELECT 0, zc_MIContainer_CountSupplier() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+            , ContainerId_GoodsPartner
+            , 0                                       AS AccountId              -- нет счета
+            , 0                                       AS AnalyzerId             -- нет аналитики
+            , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
+            , CASE WHEN vbMemberId_From <> 0 THEN vbMemberId_From ELSE vbPartnerId_From END AS WhereObjectId_Analyzer -- Покупатель или Физ.лицо
+            , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
+            , 0                                       AS ParentId
+            , -1 * OperCount                          AS Amountt
+            , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
+            , FALSE                                   AS isActive
        FROM _tmpItem
        WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0
        AND vbPartnerId_To = 0 -- !!!если НЕ возврат от Контрагента -> Контрагенту!!!

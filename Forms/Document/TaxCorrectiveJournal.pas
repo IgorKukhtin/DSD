@@ -49,7 +49,6 @@ type
     bbPrintTaxCorrective_Us: TdxBarButton;
     bbPrintTaxCorrective_Client: TdxBarButton;
     colIsError: TcxGridDBColumn;
-    colRegistered: TcxGridDBColumn;
     colOperDate_Child: TcxGridDBColumn;
     colInvNumberPartner_Master: TcxGridDBColumn;
     actPrint_TaxCorrective_Reestr: TdsdPrintAction;

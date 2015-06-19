@@ -1,28 +1,27 @@
--- Function: lpUpdate_MovementItem_OrderInternal_Property()
+-- Function: lpUpdate_MI_OrderInternal_Property()
 
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, Integer);
 
-DROP FUNCTION IF EXISTS lpUpdate_MovementItem_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, TFloat, Integer);
-
-CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_OrderInternal_Property(
+CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAmount_Param        TFloat    , -- 
-    IN inDescId_Param        Integer  ,
+    IN inDescId_Param        Integer   ,
     IN inAmount_ParamOrder   TFloat    , -- 
-    IN inDescId_ParamOrder   Integer  ,
+    IN inDescId_ParamOrder   Integer   ,
     IN inUserId              Integer     -- пользователь
 )
-RETURNS VOID AS--RECORD AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbIsInsert Boolean;
-   --DECLARE vbinId Integer;   
 BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (inId, 0) = 0;
 
-     IF COALESCE (inId, 0) = 0 
+     IF COALESCE (inId, 0) = 0
      THEN
        -- сохранили <Элемент документа>
        inId := lpInsertUpdate_MovementItem (inId, zc_MI_Master(), inGoodsId, inMovementId, 0, NULL);
@@ -49,13 +48,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.06.15                                        * all
  02.03.15         *
 */
 
 -- тест
--- SELECT * FROM lpUpdate_MovementItem_OrderInternal_Property (inId:= 10696633, inMovementId:= 869524, inGoodsId:= 7402,  inGoodsKindId := 8328 , inAmount:= 45::TFloat, inAmountParam:= 777::TFloat, inDescCode:= 'zc_MIFloat_AmountRemains'::TVarChar, inSession:= lpCheckRight ('5', zc_Enum_Process_InsertUpdate_MI_OrderInternal()))
-
---select * from gpInsertUpdate_MovementItem_OrderInternal(ioId := 10696633 , inMovementId := 869524 , inGoodsId := 7402 , inAmount := 45 , inAmountSecond := 0 , inGoodsKindId := 8328 , inPrice := 68.75 , ioCountForPrice := 1 ,  inSession := '5');
-
--- select lpCheckRight ('5', zc_Enum_Process_InsertUpdate_MI_OrderInternal());
+-- SELECT * FROM lpUpdate_MI_OrderInternal_Property (inId:= 10696633, inMovementId:= 869524, inGoodsId:= 7402,  inGoodsKindId := 8328 , inAmount:= 45::TFloat, inAmountParam:= 777::TFloat, inDescCode:= 'zc_MIFloat_AmountRemains'::TVarChar, inSession:= lpCheckRight ('5', zc_Enum_Process_InsertUpdate_MI_OrderExternal()))
