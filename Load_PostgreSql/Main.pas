@@ -20217,8 +20217,6 @@ begin
         Add('     left outer join dba.Unit as UnitTo on UnitTo.Id = Bill.ToId');
         Add('     left outer join dba._pgArticleLoss on _pgArticleLoss.UnitId = Bill.ToId');
         Add('                                       and _pgArticleLoss.UnitId <> 0');
-
-
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkOut()'
            +'  and (Bill.BillNumber<>0 or Bill.FromId <> Bill.ToId)'
@@ -21336,8 +21334,8 @@ begin
         Add('     , 20 as VATPercent');
         Add('     , 0 as ChangePercent');
 
-        Add('     , case when pgUnitFrom.Id_Postgres > 0 then zc_rvYes() else zc_rvNo() end as isBranch');
-        Add('     , isnull (pgUnitFrom.Id_Postgres, isnull (_pgPartner.PartnerId_pg, UnitFrom.Id3_Postgres)) as FromId_Postgres');
+        Add('     , case when pgUnitFrom.Id_Postgres > 0 or (UnitFrom.LossId_pg > 0 and isnull (_pgPartner.PartnerId_pg, isnull (UnitFrom.Id3_Postgres, 0)) = 0)  then zc_rvYes() else zc_rvNo() end as isBranch');
+        Add('     , isnull (pgUnitFrom.Id_Postgres, isnull (_pgPartner.PartnerId_pg, isnull (UnitFrom.Id3_Postgres, UnitFrom.LossId_pg))) as FromId_Postgres');
         Add('     , pgUnitTo.Id_Postgres as ToId_Postgres');
 
         Add('     , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres');
@@ -21382,8 +21380,13 @@ begin
         Result:=RecordCount;
         cbOrderExternal.Caption:='7.1. ('+IntToStr(RecordCount)+')Заявки покуп.';
         //
+        if cbShowContract.Checked
+        then fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('PaidKindId_Postgres').AsInteger,'myContractNumber is null');
+        //
+        //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
+        //
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;

@@ -21,21 +21,31 @@ BEGIN
     vbPriceListId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PriceList());
 
     -- Ú‡·ÎËˆ‡ -
-   CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat) ON COMMIT DROP;
+   CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, AmountPartnerPrior TFloat) ON COMMIT DROP;
    --
-   INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner)
+   INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner, AmountPartnerPrior)
+                                WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup WHERE UnitId <> inUnitId)
                                  SELECT tmp.MovementItemId
                                        , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
                                        , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
                                        , COALESCE (tmpOrder.AmountPartner, 0)             AS AmountPartner
-                                 FROM (SELECT MovementItem.ObjectId           AS GoodsId
-                                            , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
-                                            , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS AmountPartner
+                                       , COALESCE (tmpOrder.AmountPartnerPrior, 0)        AS AmountPartnerPrior
+                                 FROM (SELECT MovementItem.ObjectId                                                    AS GoodsId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId
+                                            , SUM (CASE WHEN Movement.OperDate = inOperDate THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartner
+                                            , SUM (CASE WHEN Movement.OperDate = (inOperDate - INTERVAL '1 DAY')
+                                                         AND MovementDate_OperDatePartner.ValueData = inOperDate
+                                                             THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                                        ELSE 0
+                                                   END) AS AmountPartnerPrior
                                        FROM Movement 
+                                            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                         AND MovementLinkObject_To.ObjectId = inUnitId
+                                            INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
                                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                                    AND MovementItem.isErased   = FALSE
@@ -45,12 +55,17 @@ BEGIN
                                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                                       WHERE Movement.OperDate = inOperDate
-                                         AND Movement.DescId = zc_Movement_OrderInternal()
+                                       WHERE Movement.OperDate BETWEEN (inOperDate - INTERVAL '1 DAY') AND inOperDate
+                                         AND Movement.DescId = zc_Movement_OrderExternal()
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
                                        GROUP BY MovementItem.ObjectId
                                               , MILinkObject_GoodsKind.ObjectId
-                                       HAVING SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) <> 0   
+                                       HAVING SUM (CASE WHEN Movement.OperDate = inOperDate THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) <> 0
+                                           OR SUM (CASE WHEN Movement.OperDate = (inOperDate - INTERVAL '1 DAY')
+                                                         AND MovementDate_OperDatePartner.ValueData = inOperDate
+                                                             THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                                        ELSE 0
+                                                   END)  <> 0
                                        ) AS tmpOrder
                                  FULL JOIN
                                 (SELECT MovementItem.Id                               AS MovementItemId 
@@ -69,18 +84,17 @@ BEGIN
                      ;
 
        -- ÒÓı‡ÌËÎË
-       PERFORM lpUpdate_MovementItem_OrderInternal_Property (inId                 := tmpAll.MovementItemId
-                                                           , inMovementId         := inMovementId
-                                                           , inGoodsId            := tmpAll.GoodsId
-                                                           , inGoodsKindId        := tmpAll.GoodsKindId
-                                                           , inAmount_Param       := tmpAll.AmountPartner
-                                                           , inDescId_Param       := zc_MIFloat_AmountPartner()
-                                                           , inAmount_ParamOrder  := NULL
-                                                           , inDescId_ParamOrder  := NULL
-                                                           , inUserId             := vbUserId
-                                                            ) 
-       FROM tmpAll
-      ;
+       PERFORM lpUpdate_MI_OrderInternal_Property (inId                 := tmpAll.MovementItemId
+                                                  , inMovementId         := inMovementId
+                                                  , inGoodsId            := tmpAll.GoodsId
+                                                  , inGoodsKindId        := tmpAll.GoodsKindId
+                                                  , inAmount_Param       := tmpAll.AmountPartner
+                                                  , inDescId_Param       := zc_MIFloat_AmountPartner()
+                                                  , inAmount_ParamOrder  := tmpAll.AmountPartnerPrior
+                                                  , inDescId_ParamOrder  := zc_MIFloat_AmountPartnerPrior()
+                                                  , inUserId             := vbUserId
+                                                   ) 
+       FROM tmpAll;
 
 END;
 $BODY$
@@ -89,6 +103,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.06.15                                        *
  14.02.15         *
 */
 

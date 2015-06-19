@@ -3,7 +3,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,8 +21,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       inherited cxGrid: TcxGrid
         Width = 944
         Height = 518
-        ExplicitLeft = 8
-        ExplicitTop = 3
         ExplicitWidth = 944
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -88,6 +86,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colCode: TcxGridDBColumn [1]

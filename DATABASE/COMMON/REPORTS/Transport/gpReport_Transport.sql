@@ -348,6 +348,7 @@ BEGIN
                      , tmpAll.CarId
                      , tmpAll.PersonalDriverId
                      , tmpAll.FuelId
+                     , tmpAll.RouteId
 
              ) AS tmpFuel
              LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpFuel.CarId

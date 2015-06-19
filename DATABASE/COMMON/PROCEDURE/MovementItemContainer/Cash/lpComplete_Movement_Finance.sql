@@ -195,11 +195,20 @@ BEGIN
                                                                           , inUserId                 := inUserId
                                                                            )
                                      END;
-
+     -- 1.1.4. проверка
      IF EXISTS (SELECT AccountId FROM _tmpItem WHERE COALESCE (AccountId, 0) = 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Счет не определен.Документ № <%> (%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), inMovementId;
      END IF;
+
+     -- 1.1.5. если встречается проводка по прибыли, тогда у корреспондирующих проводках надо установить zc_Enum_AnalyzerId_ProfitLoss
+     IF EXISTS (SELECT _tmpItem.AccountId FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301()) -- прибыль текущего периода
+     THEN
+         UPDATE _tmpItem SET AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() -- то что относится к ОПиУ, кроме проводок с товарами
+         WHERE COALESCE (_tmpItem.AnalyzerId, 0) = 0
+           AND _tmpItem.AccountId <> zc_Enum_Account_100301(); -- прибыль текущего периода
+     END IF;
+
 
      -- 1.2.1. определяется ProfitLossDirectionId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50100() -- Налоговые платежи по ЗП

@@ -23,10 +23,10 @@ type
     cxLabel4: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -40,7 +40,7 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colAmountSecond: TcxGridDBColumn;
+    AmountSecond: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
     spUpdateAmountPartner: TdsdStoredProc;
     spUpdateAmountForecast: TdsdStoredProc;
@@ -54,11 +54,11 @@ type
     cxLabel19: TcxLabel;
     cxLabel20: TcxLabel;
     edOperDateEnd: TcxDateEdit;
-    colAmountRemains: TcxGridDBColumn;
-    colAmountPartner: TcxGridDBColumn;
-    colAmountForecast: TcxGridDBColumn;
-    colAmountForecastOrder: TcxGridDBColumn;
-    colCuterCount: TcxGridDBColumn;
+    AmountRemains: TcxGridDBColumn;
+    AmountPartner: TcxGridDBColumn;
+    AmountForecast: TcxGridDBColumn;
+    AmountForecastOrder: TcxGridDBColumn;
+    CuterCount: TcxGridDBColumn;
     bbMultiAmountRemain: TdxBarButton;
     actUpdateAmountPartner: TdsdExecStoredProc;
     MultiAmountPartner: TMultiAction;
@@ -71,7 +71,19 @@ type
     MeasureName: TcxGridDBColumn;
     ReceiptCode: TcxGridDBColumn;
     ReceiptName: TcxGridDBColumn;
-    clGoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    Koeff: TcxGridDBColumn;
+    CountForecast: TcxGridDBColumn;
+    CountForecastOrder: TcxGridDBColumn;
+    CountForecastK: TcxGridDBColumn;
+    CountForecastOrderK: TcxGridDBColumn;
+    AmountPartnerPrior: TcxGridDBColumn;
+    TermProduction: TcxGridDBColumn;
+    NormInDays: TcxGridDBColumn;
+    StartProductionInDays: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
   private
     { Private declarations }
   public

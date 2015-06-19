@@ -6,42 +6,47 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternal(Integer, TVarChar,
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-
-   OUT outOperDatePartner    TDateTime , -- Дата принятия заказа от контрагента
-    IN inOperDateStart       TDateTime , -- Дата прогноз (нач.)
-    IN inOperDateEnd         TDateTime , -- Дата прогноз (конечн.)
+    IN inOperDate            TDateTime , -- Дата документа (формирование заказа)
+   OUT outOperDatePartner    TDateTime , -- Дата документа (производства)
+ INOUT ioOperDateStart       TDateTime , -- Дата прогноз (нач.)
+ INOUT ioOperDateEnd         TDateTime , -- Дата прогноз (конечн.)
    OUT outDayCount           TFloat    , -- Количество дней прогноз
-   
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Record AS--Integer AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbIsInsert Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderInternal());
-     vbUserId := inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderInternal());
 
+     -- 1. эти параметры всегда +1 день
+     outOperDatePartner:= inOperDate + INTERVAL '1 DAY';
+     -- 1. эти параметры всегда -56 день
+     ioOperDateStart:= inOperDate - INTERVAL '56 DAY';
+     -- 1. эти параметры всегда -1 день
+     ioOperDateEnd:= inOperDate - INTERVAL '1 DAY';
      -- 0.
-     outDayCount:= 1 + EXTRACT (DAY FROM (inOperDateEnd - inOperDateStart));
-     -- 1. эти параметры всегда из Контрагента
-     outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
+     outDayCount:= 1 + EXTRACT (DAY FROM (ioOperDateEnd - ioOperDateStart));
 
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderInternal(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили свойство <Дата отгрузки контрагенту>
+     -- сохранили свойство <Дата производства>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, outOperDatePartner);
      -- сохранили свойство <Дата проноз с>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, ioOperDateStart);
      -- сохранили свойство <Дата проноз по>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);                                          
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, ioOperDateEnd);                                          
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
@@ -52,19 +57,18 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.06.15                                        * all
  02.03.15         * add OperDatePartner, OperDateStart, OperDateEnd, DayCount
  06.06.14                                                        *
-
 */
 
 -- тест

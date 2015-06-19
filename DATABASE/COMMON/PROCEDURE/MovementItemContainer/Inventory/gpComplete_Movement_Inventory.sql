@@ -651,7 +651,15 @@ BEGIN
                                            ELSE (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60101) -- Амортизация + Административные ОС + Основные средства*****
                                       END
                              WHEN tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
-                              AND vbOperDate < '01.04.2015' -- !!!временно для первого раза!!!
+                              AND vbOperDate < '01.04.2015' -- !!!временно для второго раза!!!
+                                 THEN CASE WHEN tmpItem_group.InfoMoneyId = zc_Enum_InfoMoney_70102() -- Производственное оборудование
+                                                     -- !!!временно для первого раза!!!
+                                                THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60201) -- Амортизация + Производственные ОС + Основные средства*****
+                                                -- !!!временно для первого раза!!!
+                                           ELSE (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60101) -- Амортизация + Административные ОС + Основные средства*****
+                                      END
+                             WHEN tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                              AND vbOperDate < '01.07.2015' -- !!!временно для последнего раза!!!
                                  THEN CASE WHEN tmpItem_group.InfoMoneyId = zc_Enum_InfoMoney_70102() -- Производственное оборудование
                                                      -- !!!временно для первого раза!!!
                                                 THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60201) -- Амортизация + Производственные ОС + Основные средства*****
@@ -669,16 +677,14 @@ BEGIN
                                        -- !!!временно для второго раза!!!
                                   THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20508) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + Прочие ТМЦ
 
-                             /*WHEN(tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                             WHEN(tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                  )
-                              AND vbOperDate < '01.04.2015' -- !!!временно для первого раза!!!
-                                       -- !!!временно для первого раза!!!
-                                  -- THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20509) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + ГСМ
-                                       -- !!!временно для второго раза!!!
+                              AND vbOperDate < '01.07.2015' -- !!!временно для последнего раза!!!
                                   THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20508) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + Прочие ТМЦ
-                             */
+
+                             
                              WHEN tmpItem_group.InfoMoneyDestinationId_calc = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                               AND vbOperDate < '01.06.2014' -- !!!временно для первого раза!!!
                                        -- !!!временно для первого раза!!!

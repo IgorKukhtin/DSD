@@ -3,7 +3,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientHeight = 668
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -90,6 +90,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colCode: TcxGridDBColumn [1]
@@ -137,6 +138,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 41
           end
           object colChangePercentAmount: TcxGridDBColumn [6]

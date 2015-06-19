@@ -23,16 +23,14 @@ BEGIN
     vbPriceListId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PriceList());
 
     -- таблица
-    CREATE TEMP TABLE tmpGoods (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpContainer_Count (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpContainer (GoodsId Integer, GoodsKindId Integer, Amount_End TFloat) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount_End TFloat, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpContainer (GoodsId Integer, GoodsKindId Integer, Amount_end TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount_end TFloat, Amount TFloat) ON COMMIT DROP;
     
-   --
-   INSERT INTO tmpGoods (GoodsId) SELECT Id FROM Object WHERE DescId = zc_Object_Goods();
-   --
-   INSERT INTO tmpContainer_Count (ContainerId, GoodsId, GoodsKindId, Amount)
-                                SELECT Container.Id AS ContainerId 
+    --
+    INSERT INTO tmpContainer_Count (ContainerId, GoodsId, GoodsKindId, Amount)
+                                WITH tmpGoods AS (SELECT Id FROM Object WHERE DescId = zc_Object_Goods())
+                                SELECT Container.Id AS ContainerId
                                      , Container.ObjectId AS GoodsId
                                      , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
                                      , Container.Amount
@@ -47,24 +45,24 @@ BEGIN
                                                                    ON CLO_GoodsKind.ContainerId = Container.Id
                                                                   AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind();
 
-       INSERT INTO tmpContainer (GoodsId, GoodsKindId, Amount_End)
+       INSERT INTO tmpContainer (GoodsId, GoodsKindId, Amount_end)
                                   SELECT 
                                            tmpContainer_Count.GoodsId
                                          , tmpContainer_Count.GoodsKindId
-                                         , tmpContainer_Count.Amount - COALESCE (SUM (MIContainer.Amount), 0)  AS Amount_End
+                                         , tmpContainer_Count.Amount - COALESCE (SUM (MIContainer.Amount), 0)  AS Amount_end
                                   FROM tmpContainer_Count
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
-                                                                                     AND MIContainer.OperDate >= inOperDate + INTERVAL '1 DAY'
+                                                                                     AND MIContainer.OperDate >= (inOperDate + INTERVAL '1 DAY')
                                   GROUP BY tmpContainer_Count.GoodsId
                                          , tmpContainer_Count.GoodsKindId
                                          , tmpContainer_Count.Amount
                                   HAVING  (tmpContainer_Count.Amount - COALESCE (SUM (MIContainer.Amount), 0)) <> 0
                                    ;      
-          INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, Amount_End, Amount)
+          INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, Amount_end, Amount)
                       SELECT tmp.MovementItemId
                            , COALESCE (tmp.GoodsId, tmpContainer.GoodsId)         AS GoodsId
                            , COALESCE (tmp.GoodsKindId, tmpContainer.GoodsKindId) AS GoodsKindId
-                           , COALESCE (tmpContainer.Amount_End, 0)                AS Amount_End
+                           , COALESCE (tmpContainer.Amount_end, 0)              AS Amount_end
                            , COALESCE (tmp.Amount, 0)                             AS Amount
                       FROM tmpContainer
                            FULL JOIN
@@ -88,7 +86,7 @@ BEGIN
                                                            , inMovementId         := inMovementId
                                                            , inGoodsId            := tmpAll.GoodsId
                                                            , inGoodsKindId        := tmpAll.GoodsKindId
-                                                           , inAmount_Param       := tmpAll.Amount_End
+                                                           , inAmount_Param       := tmpAll.Amount_end
                                                            , inDescId_Param       := zc_MIFloat_AmountRemains()
                                                            , inAmount_ParamOrder  := NULL
                                                            , inDescId_ParamOrder  := NULL
