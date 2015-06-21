@@ -1,80 +1,77 @@
--- Function: gpSelect_Object_Street (TVarChar)
+п»ї-- Function: gpSelect_Object_Street (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Price (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
-    IN inUnitId      Intere   , 
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inUnitId      Integer,       -- РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
+    IN inisShowAll   Boolean,	    --True - РїРѕРєР°Р·Р°С‚СЊ РІСЃРµ С‚РѕРІР°СЂС‹, False - РїРѕРєР°Р·Р°С‚СЊ С‚РѕР»СЊРєРѕ СЃ С†РµРЅР°РјРё
+    IN inisShowDel   Boolean,       --True - РїРѕРєР°Р·Р°С‚СЊ С‚Р°Рє Р¶Рµ СѓРґР°Р»РµРЅРЅС‹Рµ, False - РїРѕРєР°Р·Р°С‚СЊ С‚РѕР»СЊРєРѕ СЂР°Р±РѕС‡РёРµ
+    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 )
-RETURNS TABLE (Id Integer, Name TVarChar 
-             , PostalCode TVarChar
-             , StreetKindId Integer, StreetKindName TVarChar
-             , CityId Integer, CityName TVarChar
-             , ProvinceCityId Integer, ProvinceCityName TVarChar
-             , RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar
-             , isErased boolean
+RETURNS TABLE (Id Integer, Price TFloat
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , DateChange TDateTime,
+			 isErased boolean
              ) AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
+DECLARE
+  vbUserId Integer;
+  --vbAccessKeyAll Boolean;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
+     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Street());
      vbUserId:= lpGetUserBySession (inSession);
-     -- определяется - может ли пользовать видеть весь справочник
-     vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+     -- РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ - РјРѕР¶РµС‚ Р»Рё РїРѕР»СЊР·РѕРІР°С‚СЊ РІРёРґРµС‚СЊ РІРµСЃСЊ СЃРїСЂР°РІРѕС‡РЅРёРє
+     --vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+     IF inUnitId is null
+     THEN
+       inUnitId := 0;
+     END IF;
+     -- Р РµР·СѓР»СЊС‚Р°С‚
+      RETURN QUERY
+         SELECT DISTINCT
+           Object_Price_View.Id
+	      ,Object_Price_View.Price
+	      ,Object_Goods.id as  GoodsId
+	      ,Object_Goods.objectcode as GoodsCode
+	      ,object_goods.valuedata as GoodsName
+	      ,Object_Price_View.DateChange
+	      ,Object_Goods.isErased
+         FROM Object AS Object_Goods
+           LEFT OUTER JOIN Object_Price_View ON Object_Goods.id = object_price_view.goodsid
+                                             AND Object_Price_View.unitid = inUnitId
 
-     -- Результат
-     RETURN QUERY 
-       SELECT 
-             Object_Street_View.Id
-           , Object_Street_View.Name
-           
-           , Object_Street_View.PostalCode
-           
-           , Object_Street_View.StreetKindId
-           , Object_Street_View.StreetKindName
-         
-           , Object_Street_View.CityId
-           , Object_Street_View.CityName
-
-           , Object_Street_View.ProvinceCityId
-           , Object_Street_View.ProvinceCityName
-
-           , Object_Region.ValueData     AS RegionName 
-           , Object_Province.ValueData   AS ProvinceName  
-           , Object_CityKind.ValueData   AS CityKindName
-
-           , Object_Street_View.isErased
-           
-       FROM Object_Street_View
-            LEFT JOIN ObjectLink AS ObjectLink_City_Region 
-                                ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
-                               AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
-            LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_City_Province
-                                 ON ObjectLink_City_Province.ObjectId = Object_Street_View.CityId
-                                AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
-            LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
-                                 ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
-                                AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
-            LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
-       ;
+         WHERE
+           Object_Goods.descid = zc_object_goods()
+           AND
+           (
+             (
+               inIsSHowAll = True
+               AND
+               inUnitId <> 0
+             )
+             or
+             object_price_view.id is not null
+           )
+           AND
+           (
+             inisShowDel = True
+             or
+             Object_Goods.isErased = False
+           )
+         ORDER BY
+           GoodsName;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Price(TVarChar) OWNER TO postgres;
-
+ALTER FUNCTION gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
  09.06.15                        *
-        
+
 */
 
--- тест
--- SELECT * FROM gpSelect_Object_Street (zfCalc_UserAdmin())
+-- С‚РµСЃС‚
+-- SELECT * FROM gpSelect_Object_Price (183292,False,False,'3');
