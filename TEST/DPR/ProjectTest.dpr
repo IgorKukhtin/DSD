@@ -285,7 +285,7 @@ uses
   MovementCheck in '..\..\Forms\System\MovementCheck.pas' {MovementCheckForm: TParentForm},
   InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   SalaryCalculation in '..\SOURCE\Calculation\SalaryCalculation.pas',
-  Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
+  Juridical_PriceList in '..\..\Forms\Guides\Juridical_PriceList.pas' {Juridical_PriceListForm: TParentForm},
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
   PartnerJuridicalEdit in '..\..\Forms\Guides\PartnerJuridicalEdit.pas' {PartnerJuridicalEditForm: TParentForm},
@@ -487,7 +487,7 @@ uses
   PositionTest in '..\SOURCE\Objects\All\PositionTest.pas',
   BranchLink in '..\..\FormsMeat\Guides\BranchLink.pas' {BranchLinkForm: TParentForm},
   Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
-  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
+  Partner_PriceList in '..\..\Forms\Guides\Partner_PriceList.pas' {Partner_PriceListForm: TParentForm},
   Report_GoodsMI_Production in '..\..\Forms\Report\Report_GoodsMI_Production.pas' {Report_GoodsMI_ProductionForm: TParentForm},
   Report_GoodsMI_ProductionSeparate in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas' {Report_GoodsMI_ProductionSeparateForm: TParentForm},
   Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
@@ -544,7 +544,7 @@ uses
   BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
   BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
-  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
+  Partner_PriceList_view in '..\..\Forms\Guides\Partner_PriceList_view.pas' {Partner_PriceList_viewForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
   SaleJournalChoice in '..\..\Forms\Document\SaleJournalChoice.pas' {SaleJournalChoiceForm: TParentForm},
   Sale_OrderJournal in '..\..\Forms\Document\Sale_OrderJournal.pas' {Sale_OrderJournalForm: TParentForm},
@@ -681,7 +681,10 @@ uses
   QualityDocJournal in '..\..\Forms\Document\QualityDocJournal.pas' {QualityDocJournalForm: TParentForm},
   Report_PersonalComplete in '..\..\Forms\Report\Report_PersonalComplete.pas' {Report_PersonalCompleteForm: TParentForm},
   Report_PersonalCompleteDialog in '..\..\Forms\Report\Report_PersonalCompleteDialog.pas' {Report_PersonalCompleteDialogForm: TParentForm},
-  TaxJournalDialog in '..\..\Forms\Document\TaxJournalDialog.pas' {TaxJournalDialogForm: TParentForm};
+  TaxJournalDialog in '..\..\Forms\Document\TaxJournalDialog.pas' {TaxJournalDialogForm: TParentForm},
+  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
+  Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
+  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
