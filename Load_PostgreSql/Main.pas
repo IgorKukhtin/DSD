@@ -5078,7 +5078,7 @@ begin
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
         //Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                                       and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                                       and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('     left outer join dba._pgUnit as _pgUnitKiev       on _pgUnitKiev.ObjectCode      = 22020');
         Add('     left outer join dba._pgUnit as _pgUnitKrRog      on _pgUnitKrRog.ObjectCode     = 22030');
         Add('     left outer join dba._pgUnit as _pgUnitCherkassi  on _pgUnitCherkassi.ObjectCode = 22040');
@@ -5174,7 +5174,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = GoodsProperty_Detail.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where KindPackage.Id_Postgres is not null');
         Add('order by ObjectId');
         Open;
@@ -8988,7 +8988,7 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = GoodsProperty_Detail.KindPackageId');
         //Add('                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                     and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
 
         //        Add('where is4=zc_rvYes()'
         Add('where (KindPackage.Id_Postgres is not null or trim (GoodsProperty_Detail.GoodsName_Client)<> '+FormatToVarCharServer_notNULL('')+' or trim (GoodsProperty_Detail.GoodsName_GD)<> '+FormatToVarCharServer_notNULL('')
@@ -9085,7 +9085,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = GoodsProperty_Detail.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Id_Postgres <> 0 or Ves_onUpakovka <> 0 or Ves_Upakovka <> 0 or isSale = zc_rvYes()');
         Add('order by GoodsProperty.GoodsName, KindPackage.KindPackageName');
         Open;
@@ -10900,7 +10900,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
 
         Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
            +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
@@ -12232,7 +12232,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
 
         Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
            +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
@@ -12525,7 +12525,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and UnitFrom.PersonalId_Postgres is not null'
@@ -12810,7 +12810,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
            +'  and (isUnitFrom.UnitId is not null or (UnitFrom.PersonalId_Postgres is not null and Bill.ToId not in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())) or UnitFrom.ParentId in (4137, 8217))' // МО ЛИЦА-ВСЕ + АВТОМОБИЛИ
@@ -13201,7 +13201,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
 
         Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
            +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId'
@@ -14377,7 +14377,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = GoodsProperty.Id'
            +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = KindPackage.Id'
            +'                                                                           and Bill.BillDate between tmpBI_byDiscountWeight.StartDate and tmpBI_byDiscountWeight.EndDate'
@@ -14857,7 +14857,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = GoodsProperty.Id'
            +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = KindPackage.Id'
            +'                                                                           and Bill.BillDate between tmpBI_byDiscountWeight.StartDate and tmpBI_byDiscountWeight.EndDate'
@@ -15500,10 +15500,10 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('     left outer join dba.KindPackage as KindPackage_zakaz on KindPackage_zakaz.Id = BillItems.KindPackageId_zakaz');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and (Bill.BillKind in (zc_bkProductionInFromReceipt())'
            +'    or (Bill.BillKind=zc_bkIncomeToUnit() and (Bill.FromId in (5347)' //ИЗЛИШКИ ПО ПРИХОДУ СО
@@ -15612,7 +15612,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItemsReceipt.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkProductionInFromReceipt())'
            +'  and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()'
@@ -15875,7 +15875,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkProduction())'
            +'  and BillItems.Id is not null'
@@ -15957,7 +15957,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkProduction())'
            +'  and BillItems.Id is not null'
@@ -16421,7 +16421,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkReturnToClient()'
            +'  and BillItems.Id is not null'
@@ -16904,7 +16904,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkReturnToClient()'
            +'  and BillItems.Id is not null'
@@ -17238,7 +17238,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
 
         if cbOnlyInsertDocument.Checked
         then Add('where isnull(BillItems.Id_Postgres,0)=0');
@@ -17602,7 +17602,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit(),zc_bkSendUnitToUnit())'
            +'  and Bill.Id_Postgres>0'
@@ -18460,7 +18460,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and Bill.NalogId_PG>0'
@@ -18985,7 +18985,7 @@ begin
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
         //Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and Bill.NalogId_PG>0'
@@ -19707,7 +19707,7 @@ begin
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
         //Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
            +'  and Bill.NalogId_PG>0'
@@ -19750,7 +19750,7 @@ begin
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         //Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
         Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                                     and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
            +'  and BillItems_byParent.NalogId_PG>0'
@@ -20707,7 +20707,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where BillItems.Id > 0');
 
         Add('order by 2,3,1');
@@ -21549,7 +21549,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('     LEFT JOIN dba.PriceListItems_byHistory on PriceListItems_byHistory.GoodsPropertyId=BillItems.GoodsPropertyId'
            +'                                           and PriceListItems_byHistory.PriceListID = 2' // ОПТОВЫЕ ЦЕНЫ
            +'                                           and Bill.BillDate between PriceListItems_byHistory.StartDate and PriceListItems_byHistory.EndDate');
@@ -21763,7 +21763,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind = zc_bkProductionInZakaz()'
            +'  and (isUnitFrom.UnitId is not null and isUnitTo.UnitId is not null)'
@@ -22179,7 +22179,7 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = ScaleHistory.KindPackageId');
         //Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101)'); // Ирна  + Готовая продукция
+        Add('                                    and GoodsProperty.InfoMoneyCode in(20901,30101,30201)'); // Ирна  + Готовая продукция + Рулька
         Add('     left join dba.PriceList_byHistory on PriceList_byHistory.Id=ScaleHistory.PriceListID');
         Add('     LEFT JOIN dba.PriceListItems_byHistory on PriceListItems_byHistory.GoodsPropertyId=ScaleHistory.GoodsPropertyId'
            +'                                           and PriceListItems_byHistory.PriceListID = ScaleHistory.PriceListID' // ОПТОВЫЕ ЦЕНЫ

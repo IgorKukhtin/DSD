@@ -29,6 +29,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                OKPO TVarChar,
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
+               PriceListId_Prior Integer, PriceListName_Prior TVarChar, 
+               PriceListId_30103 Integer, PriceListName_30103 TVarChar, 
+               PriceListId_30201 Integer, PriceListName_30201 TVarChar, 
                StartPromo TDateTime, EndPromo TDateTime,
 
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
@@ -145,6 +148,15 @@ BEGIN
          , Object_PriceListPromo.Id         AS PriceListPromoId 
          , Object_PriceListPromo.ValueData  AS PriceListPromoName 
        
+         , Object_PriceList_Prior.Id         AS PriceListId_Prior
+         , Object_PriceList_Prior.ValueData  AS PriceListName_Prior
+
+         , Object_PriceList_30103.Id         AS PriceListId_30103
+         , Object_PriceList_30103.ValueData  AS PriceListName_30103
+
+         , Object_PriceList_30201.Id         AS PriceListId_30201
+         , Object_PriceList_30201.ValueData  AS PriceListName_30201
+
          , ObjectDate_StartPromo.ValueData AS StartPromo
          , ObjectDate_EndPromo.ValueData   AS EndPromo 
 
@@ -291,6 +303,21 @@ BEGIN
                              AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
          LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Partner_PriceListPromo.ChildObjectId         
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList_Prior
+                              ON ObjectLink_Partner_PriceList_Prior.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PriceList_Prior.DescId = zc_ObjectLink_Partner_PriceListPrior()
+         LEFT JOIN Object AS Object_PriceList_Prior ON Object_PriceList_Prior.Id = ObjectLink_Partner_PriceList_Prior.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList_30103
+                              ON ObjectLink_Partner_PriceList_30103.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PriceList_30103.DescId = zc_ObjectLink_Partner_PriceList30103()
+         LEFT JOIN Object AS Object_PriceList_30103 ON Object_PriceList_30103.Id = ObjectLink_Partner_PriceList_30103.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList_30201
+                              ON ObjectLink_Partner_PriceList_30201.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PriceList_30201.DescId = zc_ObjectLink_Partner_PriceList30201()
+         LEFT JOIN Object AS Object_PriceList_30201 ON Object_PriceList_30201.Id = ObjectLink_Partner_PriceList_30201.ChildObjectId
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Unit
                               ON ObjectLink_Partner_Unit.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
@@ -306,7 +333,6 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

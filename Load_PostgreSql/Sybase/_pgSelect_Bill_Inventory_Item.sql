@@ -531,7 +531,7 @@ begin
          left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId
          left outer join dba.KindPackage on KindPackage.Id = _tmpList_Remains_byKindPackage_two.KindPackageId
                                         -- and Goods.ParentId not in(686,1670,2387,2849,5874) --  Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-                                        and GoodsProperty.InfoMoneyCode in(20901,30101) -- Ирна  + Готовая продукция
+                                        and GoodsProperty.InfoMoneyCode in(20901,30101,30201) -- Ирна  + Готовая продукция + Рулька
          left outer join _tmpList_Partion_find as GoodsProperty_find on GoodsProperty_find.GoodsPropertyId = _tmpList_Remains_byKindPackage_two.GoodsPropertyId
                                                                     and GoodsProperty_find.UnitId = _tmpList_Remains_byKindPackage_two.UnitId
 

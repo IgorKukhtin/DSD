@@ -37,13 +37,21 @@ BEGIN
                                , ObjectLink_Receipt_GoodsKind.ChildObjectId                     AS GoodsKindId
                                , COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
                                , MILO_Receipt.ObjectId                                          AS ReceiptId
-                               , MLO_To.ObjectId                                                AS ToId
+                               -- , MLO_To.ObjectId                                                AS ToId
+                               , OrderType_Unit.ChildObjectId                                   AS ToId
                                , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
                                , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0))                         AS CuterCount
                           FROM Movement
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased = FALSE
                                                       AND MovementItem.DescId     = zc_MI_Master()
+                               LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
+                                                    ON ObjectLink_OrderType_Goods.ChildObjectId = MovementItem.ObjectId
+                                                   AND ObjectLink_OrderType_Goods.DescId = zc_ObjectLink_OrderType_Goods()
+                               LEFT JOIN ObjectLink AS OrderType_Unit
+                                                    ON OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
+                                                   AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
+
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                            ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
@@ -68,13 +76,15 @@ BEGIN
                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.DescId = zc_Movement_OrderInternal()
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
-                            AND MLO_To.ObjectId = inFromId
+                            -- AND MLO_To.ObjectId = inFromId
+                            AND OrderType_Unit.ChildObjectId = inFromId
                           GROUP BY Movement.OperDate
                                  , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)
                                  , ObjectLink_Receipt_GoodsKind.ChildObjectId
                                  , COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis())
                                  , MILO_Receipt.ObjectId
-                                 , MLO_To.ObjectId
+                                 -- , MLO_To.ObjectId
+                                 , OrderType_Unit.ChildObjectId
                           HAVING SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) <> 0
                          )
    , tmpMI_production AS (SELECT Movement.Id                                                    AS MovementId
