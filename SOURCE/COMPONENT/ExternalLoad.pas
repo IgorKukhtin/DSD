@@ -299,7 +299,7 @@ begin
     InvNumber := ElementList[0];
     OperDate := VarToDateTime(trim(ElementList[1]));
     InvTaxNumber := ElementList[2];
-    if ElementList[13] = '' then
+    if (ElementList[13] = '') or (ElementList[13] = '  .  .  ') then
        PaymentDate := OperDate
     else
        PaymentDate := VarToDateTime(ElementList[13]);

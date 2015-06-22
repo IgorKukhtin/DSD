@@ -296,7 +296,9 @@ uses
   CashRegisterEdit in '..\..\Forms\Guides\CashRegisterEdit.pas' {CashRegisterEditForm: TParentForm},
   AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
   Report_RemainGoods in '..\..\FormsFarmacy\Report\Report_RemainGoods.pas' {Report_GoodsRemainsForm: TParentForm},
-  Report_GoodsPartionMove in '..\..\FormsFarmacy\Report\Report_GoodsPartionMove.pas' {Report_GoodsPartionMoveForm: TParentForm};
+  Report_GoodsPartionMove in '..\..\FormsFarmacy\Report\Report_GoodsPartionMove.pas' {Report_GoodsPartionMoveForm: TParentForm},
+  Price in '..\..\Forms\Guides\Price.pas' {PriceForm: TParentForm},
+  PriceTest in '..\SOURCE\Objects\All\Farmacy\PriceTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

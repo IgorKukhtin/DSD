@@ -754,6 +754,9 @@ begin
              end;
         end
         else begin
+          if not Assigned(ValueColumn) then
+             raise Exception.Create('Не установлено значение ValueColumn для изменения цвета');
+
           if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
              FStyle.TextColor := ARecord.Values[ValueColumn.Index];
              AStyle := FStyle
