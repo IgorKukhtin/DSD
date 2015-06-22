@@ -14,12 +14,13 @@ type
   function InsertDefault: integer; override;
   procedure SetDataSetParam; override;
   public
-    function InsertUpdatePrice(const Id: Integer; const Price: Double;
+    function InsertUpdatePrice(const Id: Integer; const Price, MCS: Double;
       const GoodsId, UnitId: Integer): integer;
     constructor Create; override;
   end;
 var
   Price_Value: Double;
+  MCS_Value: Double;
   GoodsId: Integer;
   UnitID: Integer;
 
@@ -42,16 +43,17 @@ end;
 
 function TPrice.InsertDefault: integer;
 begin
-  result := InsertUpdatePrice(0, Price_Value, GoodsId, UnitId);
+  result := InsertUpdatePrice(0, Price_Value, MCS_Value, GoodsId, UnitId);
   inherited;
 end;
 
-function TPrice.InsertUpdatePrice(const Id: Integer; const Price: Double;
+function TPrice.InsertUpdatePrice(const Id: Integer; const Price, MCS: Double;
       const GoodsId, UnitId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inPrice', ftFloat, ptInput, Price);
+  FParams.AddParam('inMCSValue', ftFloat, ptInput, MCS);
   FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
   result := InsertUpdate(FParams);
@@ -82,6 +84,7 @@ begin
   // Вставка новой цены
 
   Price_Value := 0.01;
+  MCS_Value := 1.0;
   GoodsId := TGoods.Create.GetDefault;
   UnitID  := TUnit.Create.GetDefault;
 
@@ -90,6 +93,7 @@ begin
     // Получение данных
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Price').AsFloat = Price_Value) AND
+            (FieldByName('MCSValue').AsFloat = MCS_Value) AND
             (FieldByName('GoodsId').AsInteger = GoodsId) AND
             (FieldByName('UnitId').AsInteger = UnitId),
             'Не сходятся данные Id = ' + FieldByName('id').AsString);
