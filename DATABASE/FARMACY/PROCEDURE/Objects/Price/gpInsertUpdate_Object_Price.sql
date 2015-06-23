@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Price (Integer, TFloat, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >

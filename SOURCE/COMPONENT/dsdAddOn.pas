@@ -84,6 +84,7 @@ type
     FColorInValueColumn: boolean;
     FColorValueList: TCollection;
     FStyle: TcxStyle;
+    FBackGroundValueColumn: TcxGridColumn;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -93,6 +94,8 @@ type
     property ColorColumn: TcxGridColumn read FColorColumn write FColorColumn;
     // Откуда брать значение для определения цвета
     property ValueColumn: TcxGridColumn read FValueColumn write FValueColumn;
+    // Откуда брать значение для определения цвета BackGround
+    property BackGroundValueColumn: TcxGridColumn read FBackGroundValueColumn write FBackGroundValueColumn;
     // Указан ли цвет непосредственно в ValueColumn;
     property ColorInValueColumn: boolean read FColorInValueColumn write FColorInValueColumn default true;
     // Значения для цветов
@@ -427,7 +430,7 @@ type
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
-    // данное свойство нужно только в случае открытия диалога ДО формы. Что бы не быдо 2-х перечитываний запроса
+    // данное свойство нужно только в случае открытия диалога ДО формы. Что бы не быдо 2-х перечитываний запроса
     RefreshAllow: boolean;
     function Execute: boolean; override;
     property RefreshDispatcher: TRefreshDispatcher read FRefreshDispatcher write FRefreshDispatcher;
@@ -747,20 +750,20 @@ begin
       with TColorRule(ColorRuleList.Items[i]) do begin
         if Assigned(ColorColumn) then
         begin
-          if AItem = ColorColumn then
-             if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
+          if AItem = ColorColumn then begin
+             if not VarIsNull(ARecord.Values[ValueColumn.Index]) then
                 FStyle.TextColor := ARecord.Values[ValueColumn.Index];
-                AStyle := FStyle
-             end;
+             if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then
+                FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
+             AStyle := FStyle
+           end;
         end
         else begin
-          if not Assigned(ValueColumn) then
-             raise Exception.Create('Не установлено значение ValueColumn для изменения цвета');
-
-          if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
-             FStyle.TextColor := ARecord.Values[ValueColumn.Index];
-             AStyle := FStyle
-          end;
+           if not VarIsNull(ARecord.Values[ValueColumn.Index]) then
+              FStyle.TextColor := ARecord.Values[ValueColumn.Index];
+           if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then
+              FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
+           AStyle := FStyle
         end;
       end;
 end;

@@ -67,7 +67,7 @@ end;
 
 procedure TPriceTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\Price\';
+  ScriptDirectory := LocalProcedurePath + 'OBJECTS\Price\';
   inherited;
 end;
 
