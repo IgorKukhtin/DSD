@@ -32,6 +32,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
                                  ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = ObjectLink_Receipt_Goods.ObjectId
                                 AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+                                AND ObjectLink_Receipt_GoodsKind.ChildObjectId = zc_GoodsKind_Basis()
        WHERE /*(ObjectLink_Receipt_Goods.ObjectId = inReceiptId
            OR ObjectLink_Receipt_Goods.ObjectId = inGoodsId
            OR COALESCE (inGoodsId, 0) = 0 OR COALESCE (inReceiptId, 0) = 0
@@ -122,7 +123,7 @@ BEGIN
                       AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
                   ) AS tmp ON tmp.ReceiptId = ObjectLink_Receipt_Goods.ObjectId
    WHERE (ObjectLink_Receipt_Goods.ObjectId = inReceiptId
-       OR ObjectLink_Receipt_Goods.ObjectId = inGoodsId
+       OR ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
        OR COALESCE (inGoodsId, 0) = 0 OR COALESCE (inReceiptId, 0) = 0
          )
       AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()

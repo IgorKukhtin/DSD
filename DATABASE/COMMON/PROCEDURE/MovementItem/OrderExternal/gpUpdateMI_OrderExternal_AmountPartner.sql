@@ -29,8 +29,8 @@ BEGIN
                                        , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
                                        , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
                                        , COALESCE (tmpOrder.AmountPartner, 0)             AS AmountPartner
-                                 FROM (SELECT MovementItem.ObjectId           AS GoodsId
-                                            , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                                 FROM (SELECT MovementItem.ObjectId                                                    AS GoodsId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId
                                             , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS AmountPartner
                                        FROM Movement 
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To

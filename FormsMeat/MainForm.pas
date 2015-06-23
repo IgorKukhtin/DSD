@@ -579,6 +579,12 @@ type
     N64: TMenuItem;
     actMedocJournal: TdsdOpenForm;
     miReport_WeighingPartner: TMenuItem;
+    actPartner_PriceList: TdsdOpenForm;
+    actPartner_PriceList_view: TdsdOpenForm;
+    actJuridical_PriceList: TdsdOpenForm;
+    N65: TMenuItem;
+    N66: TMenuItem;
+    N67: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

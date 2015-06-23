@@ -42,10 +42,10 @@ BEGIN
                                             , SUM (tmpAll.AmountOrder) AS AmountOrder
                                             , SUM (tmpAll.AmountSale)  AS AmountSale
                                        FROM
-                                      (SELECT MovementItem.ObjectId           AS GoodsId
-                                            , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                                      (SELECT MovementItem.ObjectId                                                    AS GoodsId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId
                                             , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS AmountOrder
-                                            , 0 AS AmountSale
+                                            , 0                                                                        AS AmountSale
                                        FROM Movement 
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
@@ -67,9 +67,9 @@ BEGIN
                                               , MILinkObject_GoodsKind.ObjectId
                                        HAVING SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) <> 0
                                       UNION ALL
-                                       SELECT MovementItem.ObjectId           AS GoodsId
-                                            , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
-                                            , 0 AS AmountOrder
+                                       SELECT MovementItem.ObjectId                               AS GoodsId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                                            , 0                                                   AS AmountOrder
                                             , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountSale
                                        FROM MovementDate AS MovementDate_OperDatePartner
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_From

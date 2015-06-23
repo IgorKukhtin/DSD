@@ -136,7 +136,20 @@ BEGIN
               , OperDate
            FROM _tmpItem;
    
-
+     --Создать переоценку
+     PERFORM lpInsertUpdate_Object_Price(inGoodsId := MI.goodsid,
+                                         inUnitId := M.toid,
+                                         inPrice := MI.pricesale,
+										 inDate := M.OperDate,
+                                         inUserId := inUserId)
+     FROM Movement_Income_View AS M
+       INNER JOIN MovementItem_Income_View AS MI ON MI.MovementId = M.Id
+     WHERE
+       M.Id =  inMovementId
+       AND
+       COALESCE(MI.PriceSale,0)>0;
+      -- пересчитали Итоговые суммы
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
     
 --     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer
   --                                           , AccountId Integer, AnalyzerId Integer, ObjectId_Analyzer Integer, WhereObjectId_Analyzer Integer, ContainerId_Analyzer Integer

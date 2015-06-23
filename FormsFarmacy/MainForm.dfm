@@ -659,6 +659,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPrice: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+      FormName = 'TPriceForm'
+      FormNameParam.Value = 'TPriceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -766,6 +776,9 @@ inherited MainForm: TMainForm
         object N31: TMenuItem
           Action = actProfitLoss
         end
+      end
+      object N52: TMenuItem
+        Action = actPrice
       end
     end
     object miLoad: TMenuItem [1]

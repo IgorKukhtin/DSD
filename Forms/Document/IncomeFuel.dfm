@@ -335,6 +335,7 @@ object IncomeFuelForm: TIncomeFuelForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colAmount: TcxGridDBColumn
@@ -619,6 +620,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -672,6 +674,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item

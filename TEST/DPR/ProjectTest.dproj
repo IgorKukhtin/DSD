@@ -778,8 +778,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Calculation\SalaryCalculation.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\Juridical.pas">
-				<Form>JuridicalForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Juridical_PriceList.pas">
+				<Form>Juridical_PriceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
@@ -1412,8 +1412,8 @@
 				<Form>Report_GoodsMI_SaleReturnInForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Partner.pas">
-				<Form>PartnerForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Partner_PriceList.pas">
+				<Form>Partner_PriceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Production.pas">
@@ -1601,8 +1601,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\ContractChoicePartner.pas">
-				<Form>ContractChoicePartnerForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Partner_PriceList_view.pas">
+				<Form>Partner_PriceList_viewForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashJournal.pas">
@@ -2075,6 +2075,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\TaxJournalDialog.pas">
 				<Form>TaxJournalDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Partner.pas">
+				<Form>PartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Juridical.pas">
+				<Form>JuridicalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ContractChoicePartner.pas">
+				<Form>ContractChoicePartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

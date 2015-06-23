@@ -366,7 +366,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Width = 100
           end
           object colChildPartionGoodsDate: TcxGridDBColumn [9]
-            Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

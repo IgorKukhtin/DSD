@@ -252,8 +252,12 @@ BEGIN
                                             AND View_Contract_InvNumber.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = MIMaster.ObjectId
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = MIMaster.ObjectId
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+                                                  -- AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна AND Доходы + Продукция + Готовая продукция AND Доходы + Мясное сырье + Мясное сырье
   
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MIMaster.Id
@@ -292,4 +296,5 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '28.04.2015', inEndDate:= '29.04.2015', inInfoMoneyId:= 8962, inPaidKindId:= 3, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '06.06.2015', inEndDate:= '06.06.2015', inInfoMoneyId:= zc_Enum_InfoMoney_30201(), inPaidKindId:= 3, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '06.06.2015', inEndDate:= '06.06.2015', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= 3, inSession:= zfCalc_UserAdmin()) AS a WHERE InvNumber = '233695'

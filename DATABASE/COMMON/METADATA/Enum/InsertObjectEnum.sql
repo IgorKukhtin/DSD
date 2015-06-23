@@ -153,9 +153,13 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossCount_20200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 301, inName:= 'Кол-во, списание при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossCount_20200');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossSumm_20200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 302, inName:= 'Сумма с/с, списание при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossSumm_20200');
 
-     -- !!!
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Cash_PersonalAvance(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1001, inName:= ' Выплата сотруднику - аванс ', inEnumName:= 'zc_Enum_AnalyzerId_Cash_PersonalAvance');
+     --
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Cash_PersonalAvance(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1001, inName:= 'Выплата сотруднику - аванс', inEnumName:= 'zc_Enum_AnalyzerId_Cash_PersonalAvance');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Cash_PersonalService(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 1002, inName:= 'Выплата сотруднику - по ведомости', inEnumName:= 'zc_Enum_AnalyzerId_Cash_PersonalService');
+     --
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ProfitLoss(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1011, inName:= 'то что относится к ОПиУ, кроме проводок с товарами', inEnumName:= 'zc_Enum_AnalyzerId_ProfitLoss');
+     --
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Income_Packer(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1021, inName:= 'в приходе если количественная или суммовая проводка по заготовителю', inEnumName:= 'zc_Enum_AnalyzerId_Income_Packer');
 
      
      -- !!! формы оплаты

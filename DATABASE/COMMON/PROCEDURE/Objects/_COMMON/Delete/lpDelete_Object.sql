@@ -1,4 +1,4 @@
-п»ї-- Function: lpDelete_Object(integer, tvarchar)
+-- Function: lpDelete_Object(integer, tvarchar)
 
 -- DROP FUNCTION lpDelete_Object(integer, tvarchar);
 
@@ -9,7 +9,7 @@ IN Session tvarchar)
 $BODY$
 BEGIN
   /*
-  -- РЎРµСЂСЊРµР·РЅС‹Р№ СЃРєСЂРёРїС‚ !!!РќР• Р”Р›РЇ Р РђР‘РћР§Р•Р™ Р‘РђР—Р«!!!
+  -- Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
   DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryFloat.objecthistoryid IN 
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
   DELETE FROM ObjectHistoryString WHERE ObjectHistoryString.objecthistoryid IN 
@@ -33,7 +33,7 @@ BEGIN
   DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
   */
   DELETE FROM ObjectLink WHERE ObjectId = inId;
-  DELETE FROM ObjectLink WHERE ChildObjectId = inId;
+  -- DELETE FROM ObjectLink WHERE ChildObjectId = inId;
   DELETE FROM ObjectString WHERE ObjectId = inId;
   -- DELETE FROM ObjectBLOB WHERE ObjectId = inId;
   DELETE FROM ObjectFloat WHERE ObjectId = inId;
@@ -48,8 +48,8 @@ $BODY$
 ALTER FUNCTION lpDelete_Object(integer, tvarchar) OWNER TO postgres;
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
- 25.04.15                                        * РЎРµСЂСЊРµР·РЅС‹Р№ СЃРєСЂРёРїС‚ !!!РќР• Р”Р›РЇ Р РђР‘РћР§Р•Р™ Р‘РђР—Р«!!!
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.04.15                                        * Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
  01.01.14          *
 */

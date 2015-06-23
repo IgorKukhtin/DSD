@@ -253,6 +253,48 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Width = 65
       end
+      object PriceListName_Prior: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1074#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1089#1090#1072#1088'. '#1094#1077#1085#1072#1084')'
+        DataBinding.FieldName = 'PriceListName_Prior'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePriceList_Prior
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        Width = 80
+      end
+      object PriceListName_30103: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1061#1083#1077#1073')'
+        DataBinding.FieldName = 'PriceListName_30103'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePriceList_30103
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        Width = 80
+      end
+      object PriceListName_30201: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+        DataBinding.FieldName = 'PriceListName_30201'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePriceList_30201
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        Width = 80
+      end
       object clGoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsPropertyName'
@@ -716,6 +758,78 @@ object JuridicalForm: TJuridicalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalGroupName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoicePriceList_Prior: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PriceListChoiceForm'
+      FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListId_Prior'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListName_Prior'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoicePriceList_30103: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PriceListChoiceForm'
+      FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListId_30103'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListName_30103'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoicePriceList_30201: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PriceListChoiceForm'
+      FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListId_30103'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListName_30103'
           DataType = ftString
         end>
       isShowModal = True

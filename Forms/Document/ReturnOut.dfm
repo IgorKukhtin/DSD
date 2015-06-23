@@ -86,6 +86,7 @@ inherited ReturnOutForm: TReturnOutForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colCode: TcxGridDBColumn
@@ -132,6 +133,7 @@ inherited ReturnOutForm: TReturnOutForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 35
           end
           object colAmount: TcxGridDBColumn

@@ -17,10 +17,10 @@ CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_OrderExternal_Property(
     IN inCountForPrice       TFloat    , -- Цена за количество
     IN inUserId              Integer     -- пользователь
 )
-RETURNS VOID AS--RECORD AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbIsInsert Boolean;
-   --DECLARE vbinId Integer;   
 BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (inId, 0) = 0;
