@@ -123,6 +123,8 @@ type
     clChContainerId: TcxGridDBColumn;
     clChAmount_old: TcxGridDBColumn;
     clChAmount_next: TcxGridDBColumn;
+    ColorB_AmountPartner: TcxGridDBColumn;
+    ColorB_DayCountForecast: TcxGridDBColumn;
   private
     { Private declarations }
   public

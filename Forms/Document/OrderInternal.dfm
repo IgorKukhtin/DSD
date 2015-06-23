@@ -682,6 +682,15 @@ inherited OrderInternalForm: TOrderInternalForm
             VisibleForCustomization = False
             Width = 55
           end
+          object ColorB_AmountPartner: TcxGridDBColumn [47]
+            DataBinding.FieldName = 'ColorB_AmountPartner'
+            Width = 55
+          end
+          object ColorB_DayCountForecast: TcxGridDBColumn [48]
+            DataBinding.FieldName = 'ColorB_DayCountForecast'
+            Visible = False
+            Width = 55
+          end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1453,16 +1462,28 @@ inherited OrderInternalForm: TOrderInternalForm
       item
         ColorColumn = DayCountForecastOrder
         ValueColumn = Color_remains
+        BackGroundValueColumn = ColorB_DayCountForecast
         ColorValueList = <>
       end
       item
         ColorColumn = DayCountForecast
         ValueColumn = Color_remains
+        BackGroundValueColumn = ColorB_DayCountForecast
         ColorValueList = <>
       end
       item
         ColorColumn = AmountRemains
         ValueColumn = Color_remains
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPartnerPrior
+        BackGroundValueColumn = ColorB_AmountPartner
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPartner
+        BackGroundValueColumn = ColorB_AmountPartner
         ColorValueList = <>
       end>
     SummaryItemList = <
