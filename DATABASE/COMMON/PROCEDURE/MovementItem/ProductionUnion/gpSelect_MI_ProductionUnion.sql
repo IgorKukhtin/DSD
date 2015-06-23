@@ -39,9 +39,9 @@ BEGIN
             , CAST (NULL AS Integer)                AS GoodsKindId
             , CAST (NULL AS Integer)                AS GoodsKindCode
             , CAST (NULL AS TVarchar)               AS GoodsKindName
-            , CAST (NULL AS Integer)                AS GoodsKindCompleteId
-            , CAST (NULL AS Integer)                AS GoodsKindCompleteCode
-            , CAST (NULL AS TVarchar)               AS GoodsKindCompleteName
+            , CAST (NULL AS Integer)                AS GoodsKindId_Complete
+            , CAST (NULL AS Integer)                AS GoodsKindCode_Complete
+            , CAST (NULL AS TVarchar)               AS GoodsKindName_Complete
 
             , CAST (NULL AS Integer)                AS ReceiptId
             , CAST (NULL AS TVarchar)               AS ReceiptCode
@@ -110,9 +110,9 @@ BEGIN
             , Object_GoodsKind.Id                 AS GoodsKindId
             , Object_GoodsKind.ObjectCode         AS GoodsKindCode
             , Object_GoodsKind.ValueData          AS GoodsKindName
-            , Object_GoodsKindComplete.Id         AS GoodsKindCompleteId
-            , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
-            , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
+            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
+            , Object_GoodsKindComplete.ObjectCode AS GoodsKindCode_Complete
+            , Object_GoodsKindComplete.ValueData  AS GoodsKindName_Complete
 
             , Object_Receipt.Id                   AS ReceiptId
             , ObjectString_Receipt_Code.ValueData AS ReceiptCode
@@ -222,9 +222,9 @@ BEGIN
             , Object_GoodsKind.ValueData        AS GoodsKindName
             , Object_Measure.ValueData          AS MeasureName
 
-            , Object_GoodsKindComplete.Id         AS GoodsKindCompleteId
-            , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
-            , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
+            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
+            , Object_GoodsKindComplete.ObjectCode AS GoodsKindCode_Complete
+            , Object_GoodsKindComplete.ValueData  AS GoodsKindName_Complete
 
             , Object_Receipt.Id                   AS ReceiptId
             , ObjectString_Receipt_Code.ValueData AS ReceiptCode

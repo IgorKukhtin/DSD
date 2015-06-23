@@ -14,7 +14,8 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_ContractPartner());
 
    -- изменили
-   PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
+   -- PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
+   PERFORM lpDelete_Object (inObjectId, inSession) ;
 
 END;
 $BODY$
@@ -24,6 +25,7 @@ ALTER FUNCTION gpUpdate_Object_isErased_ContractPartner (Integer, TVarChar) OWNE
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.06.15                                        * add lpDelete_Object
  09.02.15         *
 */

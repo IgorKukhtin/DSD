@@ -29,7 +29,7 @@ BEGIN
     
     --
     INSERT INTO tmpContainer_Count (ContainerId, GoodsId, GoodsKindId, Amount)
-                                WITH tmpGoods AS (SELECT Id FROM Object WHERE DescId = zc_Object_Goods())
+                                WITH tmpGoods AS (SELECT Id AS GoodsId FROM Object WHERE DescId = zc_Object_Goods())
                                 SELECT Container.Id AS ContainerId
                                      , Container.ObjectId AS GoodsId
                                      , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId

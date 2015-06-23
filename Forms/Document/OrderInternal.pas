@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxSplitter;
 
 type
   TOrderInternalForm = class(TAncestorDocumentForm)
@@ -23,8 +23,8 @@ type
     cxLabel4: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
@@ -83,7 +83,46 @@ type
     StartProductionInDays: TcxGridDBColumn;
     UnitCode: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
-    ContainerId: TcxGridDBColumn;
+    DayCountForecast: TcxGridDBColumn;
+    DayCountForecastOrder: TcxGridDBColumn;
+    Color_remains: TcxGridDBColumn;
+    GoodsCode_detail: TcxGridDBColumn;
+    GoodsName_detail: TcxGridDBColumn;
+    GoodsKindName_detail: TcxGridDBColumn;
+    MeasureName_detail: TcxGridDBColumn;
+    AmountRemains_calc: TcxGridDBColumn;
+    AmountPrognoz_calc: TcxGridDBColumn;
+    AmountPrognozOrder_calc: TcxGridDBColumn;
+    AmountProduction_old: TcxGridDBColumn;
+    AmountProduction_next: TcxGridDBColumn;
+    StartDate_old: TcxGridDBColumn;
+    EndDate_old: TcxGridDBColumn;
+    StartDate_next: TcxGridDBColumn;
+    EndDate_next: TcxGridDBColumn;
+    GoodsCode_basis: TcxGridDBColumn;
+    GoodsName_basis: TcxGridDBColumn;
+    MeasureName_basis: TcxGridDBColumn;
+    isCheck_basis: TcxGridDBColumn;
+    ReceiptCode_basis: TcxGridDBColumn;
+    ReceiptName_basis: TcxGridDBColumn;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    cxGridChild: TcxGrid;
+    cxGridDBTableViewChild: TcxGridDBTableView;
+    clChGoodsCode: TcxGridDBColumn;
+    clChGoodsName: TcxGridDBColumn;
+    clChMeasureName: TcxGridDBColumn;
+    clChAmount: TcxGridDBColumn;
+    clChPartionGoodsDate: TcxGridDBColumn;
+    clChIsErased: TcxGridDBColumn;
+    cxGridLevelChild: TcxGridLevel;
+    ChildDBViewAddOn: TdsdDBViewAddOn;
+    cxBottomSplitter: TcxSplitter;
+    clChGoodsKindName_Complete: TcxGridDBColumn;
+    clChGoodsKindName: TcxGridDBColumn;
+    clChContainerId: TcxGridDBColumn;
+    clChAmount_old: TcxGridDBColumn;
+    clChAmount_next: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -24,7 +24,15 @@ BEGIN
    CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, AmountPartnerPrior TFloat) ON COMMIT DROP;
    --
    INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner, AmountPartnerPrior)
-                                WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup WHERE UnitId <> inUnitId)
+                                 WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup WHERE UnitId <> inUnitId)
+                                    , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+                                                   FROM Object_InfoMoney_View
+                                                        LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                             ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                   WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                                                      OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Продукция + Мясное сырье
+                                                  )
                                  SELECT tmp.MovementItemId
                                        , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
                                        , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
@@ -49,6 +57,8 @@ BEGIN
                                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                                    AND MovementItem.isErased   = FALSE
+                                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -84,17 +94,24 @@ BEGIN
                      ;
 
        -- сохранили
-       PERFORM lpUpdate_MI_OrderInternal_Property (inId                 := tmpAll.MovementItemId
-                                                  , inMovementId         := inMovementId
-                                                  , inGoodsId            := tmpAll.GoodsId
-                                                  , inGoodsKindId        := tmpAll.GoodsKindId
-                                                  , inAmount_Param       := tmpAll.AmountPartner
-                                                  , inDescId_Param       := zc_MIFloat_AmountPartner()
-                                                  , inAmount_ParamOrder  := tmpAll.AmountPartnerPrior
-                                                  , inDescId_ParamOrder  := zc_MIFloat_AmountPartnerPrior()
-                                                  , inUserId             := vbUserId
-                                                   ) 
-       FROM tmpAll;
+       PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := tmpAll.MovementItemId
+                                                 , inMovementId         := inMovementId
+                                                 , inGoodsId            := tmpAll.GoodsId
+                                                 , inGoodsKindId        := tmpAll.GoodsKindId
+                                                 , inAmount_Param       := tmpAll.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_Param       := zc_MIFloat_AmountPartner()
+                                                 , inAmount_ParamOrder  := tmpAll.AmountPartnerPrior * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamOrder  := zc_MIFloat_AmountPartnerPrior()
+                                                 , inUserId             := vbUserId
+                                                  ) 
+       FROM tmpAll
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpAll.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = tmpAll.GoodsId
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+      ;
 
 END;
 $BODY$

@@ -17,6 +17,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                OKPO TVarChar,
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
+               PriceListId_Prior Integer, PriceListName_Prior TVarChar, 
+               PriceListId_30103 Integer, PriceListName_30103 TVarChar, 
+               PriceListId_30201 Integer, PriceListName_30201 TVarChar, 
                StartPromo TDateTime, EndPromo TDateTime,
                isErased Boolean
               )
@@ -104,11 +107,20 @@ BEGIN
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
-       , Object_PriceList.Id         AS PriceListId 
-       , Object_PriceList.ValueData  AS PriceListName 
+       , Object_PriceList.Id         AS PriceListId
+       , Object_PriceList.ValueData  AS PriceListName
 
-       , Object_PriceListPromo.Id         AS PriceListPromoId 
-       , Object_PriceListPromo.ValueData  AS PriceListPromoName 
+       , Object_PriceListPromo.Id         AS PriceListPromoId
+       , Object_PriceListPromo.ValueData  AS PriceListPromoName
+
+       , Object_PriceList_Prior.Id         AS PriceListId_Prior
+       , Object_PriceList_Prior.ValueData  AS PriceListName_Prior
+
+       , Object_PriceList_30103.Id         AS PriceListId_30103
+       , Object_PriceList_30103.ValueData  AS PriceListName_30103
+
+       , Object_PriceList_30201.Id         AS PriceListId_30201
+       , Object_PriceList_30201.ValueData  AS PriceListName_30201
        
        , ObjectDate_StartPromo.ValueData AS StartPromo
        , ObjectDate_EndPromo.ValueData   AS EndPromo       
@@ -171,6 +183,21 @@ BEGIN
                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = Object_Juridical.Id 
                             AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
         LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Juridical_PriceListPromo.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList_Prior
+                             ON ObjectLink_Juridical_PriceList_Prior.ObjectId = Object_Juridical.Id 
+                            AND ObjectLink_Juridical_PriceList_Prior.DescId = zc_ObjectLink_Juridical_PriceListPrior()
+        LEFT JOIN Object AS Object_PriceList_Prior ON Object_PriceList_Prior.Id = ObjectLink_Juridical_PriceList_Prior.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList_30103
+                             ON ObjectLink_Juridical_PriceList_30103.ObjectId = Object_Juridical.Id 
+                            AND ObjectLink_Juridical_PriceList_30103.DescId = zc_ObjectLink_Juridical_PriceList30103()
+        LEFT JOIN Object AS Object_PriceList_30103 ON Object_PriceList_30103.Id = ObjectLink_Juridical_PriceList_30103.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList_30201
+                             ON ObjectLink_Juridical_PriceList_30201.ObjectId = Object_Juridical.Id 
+                            AND ObjectLink_Juridical_PriceList_30201.DescId = zc_ObjectLink_Juridical_PriceList30201()
+        LEFT JOIN Object AS Object_PriceList_30201 ON Object_PriceList_30201.Id = ObjectLink_Juridical_PriceList_30201.ChildObjectId
 
     WHERE Object_Juridical.DescId = zc_Object_Juridical()
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint

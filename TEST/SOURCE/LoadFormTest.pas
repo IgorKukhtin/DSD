@@ -840,6 +840,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGLNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalGLNForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_PriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridical_PriceListForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_PrintKindItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_PrintKindItemForm');
 end;
@@ -1009,6 +1012,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerGLNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerGLNForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_PriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartner_PriceListForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_PriceList_viewForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartner_PriceList_viewForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerTagFormTest;
