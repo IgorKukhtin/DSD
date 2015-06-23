@@ -133,7 +133,7 @@ implementation
 
 uses VCL.ActnList, SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin,
      DBClient, TypInfo, Variants, UtilConvert, WinApi.Windows, StrUtils,
-     System.Types;
+     System.Types, Registry;
 
 const cArchive = 'Archive';
 
@@ -390,6 +390,7 @@ procedure TFileExternalLoad.Open(FileName: string);
 var strConn :  widestring;
     List: TStringList;
     ListName: string;
+    CanRead: integer;
 begin
   case FDataSetType of
     dtMMO: CreateMMODataSet(FileName);
@@ -409,7 +410,42 @@ begin
         end;
     end;
     dtXLS: begin
-      strConn:='Provider=Microsoft.Jet.OLEDB.4.0;' +
+    {  try
+         //   HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Security\FileValidation
+         with TRegistry.Create(KEY_READ) do begin
+           try
+             RootKey := HKEY_CURRENT_USER;
+             if OpenKey('Software\Microsoft\Office\14.0\Excel\Security\FileValidation', True) then
+                CanRead := ReadInteger('DisableEditFromPV');
+           finally
+             Free;
+           end;
+         end;
+      except
+        CanRead := 1;
+      end;
+      if true then
+        with TRegistry.Create(KEY_WRITE) do begin
+           try
+             RootKey := HKEY_CURRENT_USER;
+             if OpenKey('Software\Microsoft\Office\11.0\Excel\Security\FileValidation', True) then
+                WriteInteger('DisableEditFromPV', 0);
+             if OpenKey('Software\Microsoft\Office\12.0\Excel\Security\FileValidation', True) then
+                WriteInteger('DisableEditFromPV', 0);
+             if OpenKey('Software\Microsoft\Office\13.0\Excel\Security\FileValidation', True) then
+                WriteInteger('DisableEditFromPV', 0);
+             if OpenKey('Software\Microsoft\Office\14.0\Excel\Security\FileValidation', True) then
+                WriteInteger('DisableEditFromPV', 0);
+             if OpenKey('Software\Microsoft\Office\15.0\Excel\Security\FileValidation', True) then
+                WriteInteger('DisableEditFromPV', 0);
+             if OpenKey('Software\Microsoft\Office\16.0\Excel\Security\FileValidation', True) then
+                WriteInteger('DisableEditFromPV', 0);
+           finally
+             Free;
+           end;
+         end;
+     }
+      strConn:='Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;' +
                'Data Source=' + FileName + ';' +
                'Extended Properties="Excel 8.0' + FExtendedProperties + ';IMEX=1;"';
       if not Assigned(FAdoConnection) then begin
@@ -421,6 +457,7 @@ begin
       FAdoConnection.Connected := False;
       FAdoConnection.ConnectionString := strConn;
       FAdoConnection.Open;
+
       List := TStringList.Create;
       try
         FAdoConnection.GetTableNames(List, True);

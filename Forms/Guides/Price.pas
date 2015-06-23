@@ -31,6 +31,8 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdUpdatePrice: TdsdUpdateDataSet;
     rdUnit: TRefreshDispatcher;
+    clMCSValue: TcxGridDBColumn;
+    clMCSDateChange: TcxGridDBColumn;
   private
     { Private declarations }
   public

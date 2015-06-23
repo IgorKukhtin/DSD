@@ -1,48 +1,51 @@
-п»ї-- Function: gpSelect_Object_Street (TVarChar)
+-- Function: gpSelect_Object_Street (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
-    IN inUnitId      Integer,       -- РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ
-    IN inisShowAll   Boolean,	    --True - РїРѕРєР°Р·Р°С‚СЊ РІСЃРµ С‚РѕРІР°СЂС‹, False - РїРѕРєР°Р·Р°С‚СЊ С‚РѕР»СЊРєРѕ СЃ С†РµРЅР°РјРё
-    IN inisShowDel   Boolean,       --True - РїРѕРєР°Р·Р°С‚СЊ С‚Р°Рє Р¶Рµ СѓРґР°Р»РµРЅРЅС‹Рµ, False - РїРѕРєР°Р·Р°С‚СЊ С‚РѕР»СЊРєРѕ СЂР°Р±РѕС‡РёРµ
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inUnitId      Integer,       -- подразделение
+    IN inisShowAll   Boolean,	    --True - показать все товары, False - показать только с ценами
+    IN inisShowDel   Boolean,       --True - показать так же удаленные, False - показать только рабочие
+    IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Price TFloat
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , DateChange TDateTime,
-			 isErased boolean
+RETURNS TABLE (Id Integer, Price TFloat, MCSValue Tfloat
+             , GoodsId Integer, GoodsCode TVarChar, GoodsName TVarChar
+             , DateChange TDateTime, MCSDateChange TDateTime
+			 , isErased boolean
              ) AS
 $BODY$
 DECLARE
   vbUserId Integer;
-  --vbAccessKeyAll Boolean;
+  vbObjectId Integer;
 BEGIN
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Street());
      vbUserId:= lpGetUserBySession (inSession);
-     -- РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ - РјРѕР¶РµС‚ Р»Рё РїРѕР»СЊР·РѕРІР°С‚СЊ РІРёРґРµС‚СЊ РІРµСЃСЊ СЃРїСЂР°РІРѕС‡РЅРёРє
-     --vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+     -- Ограничение на просмотр товарного справочника
+     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
      IF inUnitId is null
      THEN
        inUnitId := 0;
      END IF;
-     -- Р РµР·СѓР»СЊС‚Р°С‚
+     -- Результат
       RETURN QUERY
          SELECT DISTINCT
            Object_Price_View.Id
 	      ,Object_Price_View.Price
+          ,Object_Price_View.MCSValue
+
 	      ,Object_Goods.id as  GoodsId
-	      ,Object_Goods.objectcode as GoodsCode
-	      ,object_goods.valuedata as GoodsName
+	      ,Object_Goods.goodscode as GoodsCode
+	      ,object_goods.goodsname as GoodsName
 	      ,Object_Price_View.DateChange
+	      ,Object_Price_View.MCSDateChange
 	      ,Object_Goods.isErased
-         FROM Object AS Object_Goods
+         FROM Object_Goods_View AS Object_Goods
            LEFT OUTER JOIN Object_Price_View ON Object_Goods.id = object_price_view.goodsid
                                              AND Object_Price_View.unitid = inUnitId
-
          WHERE
-           Object_Goods.descid = zc_object_goods()
+           Object_Goods.ObjectId = vbObjectId
            AND
            (
              (
@@ -67,11 +70,11 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  09.06.15                        *
 
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpSelect_Object_Price (183292,False,False,'3');
+-- тест
+-- SELECT * FROM gpSelect_Object_Price (183292,True,False,'3');

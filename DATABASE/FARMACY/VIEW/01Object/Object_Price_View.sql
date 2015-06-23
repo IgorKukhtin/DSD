@@ -6,6 +6,7 @@ CREATE OR REPLACE VIEW Object_Price_View AS
          SELECT
             Object_Price.Id              AS Id
            , Price_Value.ValueData       AS Price
+           , MCS_Value.ValueData         AS MCSValue
 
            , Object_Goods.Id             AS GoodsId
            , Object_Goods.ObjectCode     AS GoodsCode
@@ -16,6 +17,7 @@ CREATE OR REPLACE VIEW Object_Price_View AS
            , Object_Unit.ValueData       AS UnitName
 
            , price_datechange.valuedata  AS DateChange
+           , MCS_datechange.valuedata    AS MCSDateChange
            , Object_Goods.isErased       AS isErased
 
      FROM Object AS Object_Price
@@ -25,6 +27,12 @@ CREATE OR REPLACE VIEW Object_Price_View AS
           LEFT JOIN ObjectDate AS Price_DateChange
                                 ON Price_DateChange.ObjectId = Object_Price.Id
                                 AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+          LEFT JOIN ObjectFloat AS MCS_Value
+                                ON MCS_Value.ObjectId = Object_Price.Id
+                               AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+          LEFT JOIN ObjectDate AS MCS_DateChange
+                               ON MCS_DateChange.ObjectId = Object_Price.Id
+                              AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
             LEFT JOIN ObjectLink AS Price_Goods
                                  ON Price_Goods.ObjectId = Object_Price.Id
                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()

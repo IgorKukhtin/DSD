@@ -87,8 +87,11 @@ BEGIN
        SELECT 'PartnerCode'::TVarChar AS FieldName, 'Код покупателя'::TVarChar AS DisplayName, 100 AS Width
  UNION SELECT 'Code'::TVarChar AS FieldName, 'Код'::TVarChar AS DisplayName, 100 AS Width
  UNION SELECT 'GoodsName'::TVarChar AS FieldName, 'Товар'::TVarChar AS DisplayName, 200 AS Width
- UNION SELECT 'Amount'::TVarChar AS FieldName, 'Кол-во'::TVarChar AS DisplayName, 100 AS Width;
-                                          
+ UNION SELECT 'Amount'::TVarChar AS FieldName, 'Кол-во'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'Price'::TVarChar AS FieldName, 'Цена без ндс'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'Summ'::TVarChar AS FieldName, 'Cумма без ндс'::TVarChar AS DisplayName, 100 AS Width
+ UNION SELECT 'PartionGoodsDate'::TVarChar AS FieldName, 'Cрок годности'::TVarChar AS DisplayName, 100 AS Width;
+
      RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
@@ -97,7 +100,10 @@ BEGIN
            , MovementItem.GoodsCode::TVarChar        as Code
            , MovementItem.GoodsName                  AS GoodsName
            , MovementItem.Amount                     as Amount
-           
+           , MovementItem.Price
+           , MovementItem.Summ
+           , MovementItem.PartionGoodsDate
+
         FROM MovementItem_OrderExternal_View AS MovementItem
        WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = false;
      RETURN NEXT Cursor2;
@@ -112,6 +118,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal_Export (Integer, TVarChar) OW
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.06.15                         *
  13.01.15                         *
  25.12.14                         *
  12.12.14                         *

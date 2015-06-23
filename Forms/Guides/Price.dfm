@@ -42,14 +42,14 @@ inherited PriceForm: TPriceForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 84
+            Width = 78
           end
           object clGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 388
+            Width = 301
           end
           object clPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -59,14 +59,31 @@ inherited PriceForm: TPriceForm
             Properties.DisplayFormat = ',0.00'
             Properties.MinValue = 0.010000000000000000
             HeaderAlignmentHorz = taCenter
-            Width = 78
+            Width = 72
           end
           object clDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'DateChange'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 136
+            Width = 92
+          end
+          object clMCSValue: TcxGridDBColumn
+            AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Caption = #1053#1058#1047
+            DataBinding.FieldName = 'MCSValue'
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Width = 67
+          end
+          object clMCSDateChange: TcxGridDBColumn
+            AlternateCaption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1053#1058#1047
+            DataBinding.FieldName = 'MCSDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+            Options.Editing = False
+            Width = 103
           end
           object clisErased: TcxGridDBColumn
             AlternateCaption = #1058#1086#1074#1072#1088' '#1091#1076#1072#1083#1077#1085
@@ -299,6 +316,14 @@ inherited PriceForm: TPriceForm
         ParamType = ptInput
       end
       item
+        Name = 'inMCSValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSValue'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -317,6 +342,13 @@ inherited PriceForm: TPriceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DateChange'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outMCSDateChange'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSDateChange'
         DataType = ftDateTime
       end>
     PackSize = 1
