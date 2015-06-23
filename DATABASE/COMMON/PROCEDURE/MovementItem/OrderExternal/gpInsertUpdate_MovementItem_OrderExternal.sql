@@ -28,7 +28,7 @@ BEGIN
                                                    , inMovementId         := inMovementId
                                                    , inGoodsId            := inGoodsId
                                                    , inAmount             := inAmount
-                                                   , inAmountSecond      := inAmountSecond
+                                                   , inAmountSecond       := inAmountSecond
                                                    , inGoodsKindId        := inGoodsKindId
                                                    , inPrice              := inPrice
                                                    , ioCountForPrice      := ioCountForPrice

@@ -1,23 +1,23 @@
 inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' + '#1044#1086#1075#1086#1074#1086#1088' + '#1087#1088#1086#1074#1077#1088#1082#1072' '#1055#1088#1072#1081#1089'>'
   ClientHeight = 496
-  ClientWidth = 1000
-  ExplicitWidth = 1016
+  ClientWidth = 1054
+  ExplicitWidth = 1070
   ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1000
+    Width = 1054
     Height = 470
     ExplicitWidth = 1000
     ExplicitHeight = 470
     ClientRectBottom = 470
-    ClientRectRight = 1000
+    ClientRectRight = 1054
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1000
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1000
+        Width = 1054
         Height = 470
         ExplicitWidth = 1000
         ExplicitHeight = 470
@@ -26,27 +26,25 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountDebet
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountKredit
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountDebet
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountKredit
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -76,68 +74,12 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
             Options.Editing = False
             Width = 55
           end
-          object PrepareDayCount: TcxGridDBColumn
-            Caption = #1044#1085'. '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'PrepareDayCount'
-            Visible = False
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object DocumentDayCount: TcxGridDBColumn
-            Caption = #1044#1085'. '#1076#1086#1082'.'
-            DataBinding.FieldName = 'DocumentDayCount'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object AmountDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090
-            DataBinding.FieldName = 'AmountDebet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object AmountKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090
-            DataBinding.FieldName = 'AmountKredit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colChangePercent: TcxGridDBColumn
-            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
-            DataBinding.FieldName = 'ChangePercent'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object DelayDay: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1077
-            DataBinding.FieldName = 'DelayDay'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object BranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object colJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'. '#1083'.'
@@ -241,53 +183,155 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
             Options.Editing = False
             Width = 55
           end
-          object clRouteName: TcxGridDBColumn
-            Caption = #1052#1072#1088#1096#1088#1091#1090
-            DataBinding.FieldName = 'RouteName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoiceRoute
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
+          object colContractComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractComment'
             Visible = False
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceListName_income: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1055#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'PriceListName_income'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clRouteSortingName: TcxGridDBColumn
-            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-            DataBinding.FieldName = 'RouteSortingName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoiceRouteSorting
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
+          object DescName_income: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1055#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'DescName_income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PriceListName_GP_sale: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1055#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'PriceListName_GP_sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object MemberTakeName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-            DataBinding.FieldName = 'MemberTakeName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoicePersonalTake
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
+          object DescName_GP_sale: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1055#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'DescName_GP_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PriceListName_GP_return: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1042#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'PriceListName_GP_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName_GP_return: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1042#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'DescName_GP_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PriceListName_GP_return_prior: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1089#1090#1072#1088#1099#1084' '#1094'.'
+            DataBinding.FieldName = 'PriceListName_GP_return_prior'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName_GP_return_prior: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1042#1086#1079#1074#1088'. '#1087#1086' '#1089#1090'.'#1094'.'
+            DataBinding.FieldName = 'DescName_GP_return_prior'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PriceListName_30103_sale: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1055#1088#1086#1076#1072#1078#1072' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'PriceListName_30103_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName_30103_sale: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1055#1088#1086#1076#1072#1078#1072' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'DescName_30103_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PriceListName_30103_return: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1042#1086#1079#1074#1088#1072#1090' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'PriceListName_30103_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName_30103_return: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1042#1086#1079#1074#1088#1072#1090' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'DescName_30103_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PriceListName_30201_sale: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1055#1088#1086#1076#1072#1078#1072' '#1052#1103#1089#1086
+            DataBinding.FieldName = 'PriceListName_30201_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName_30201_sale: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1055#1088#1086#1076#1072#1078#1072' '#1052#1103#1089#1086
+            DataBinding.FieldName = 'DescName_30201_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PriceListName_30201_return: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1042#1086#1079#1074#1088#1072#1090' '#1052#1103#1089#1086
+            DataBinding.FieldName = 'PriceListName_30201_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName_30201_return: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1042#1086#1079#1074#1088#1072#1090' '#1052#1103#1089#1086
+            DataBinding.FieldName = 'DescName_30201_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PersonalTradeCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1058#1055')'
+            DataBinding.FieldName = 'PersonalTradeCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 55
+          end
+          object PersonalTradeName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
+            DataBinding.FieldName = 'PersonalTradeName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PositionName_PersonalTrade: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1058#1055')'
+            DataBinding.FieldName = 'PositionName_PersonalTrade'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object BranchName_PersonalTrade: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1058#1055')'
+            DataBinding.FieldName = 'BranchName_PersonalTrade'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -319,21 +363,16 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 111
           end
-          object colContractComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractComment'
-            Visible = False
-            Options.Editing = False
-            Width = 70
-          end
           object clGLNCode: TcxGridDBColumn
             Caption = 'GLN - '#1084#1077#1089#1090#1086' '#1076#1086#1089#1090#1072#1074#1082#1080
             DataBinding.FieldName = 'GLNCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -364,11 +403,81 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           end
         end
       end
+      object LabelOperDate: TcxLabel
+        Left = 214
+        Top = 3
+        AutoSize = False
+        Caption = #1053#1072' '#1076#1072#1090#1091' '#1079#1072#1103#1074#1082#1080':'
+        Height = 17
+        Width = 92
+      end
+      object deOperDate: TcxDateEdit
+        Left = 312
+        Top = 2
+        EditValue = 42005d
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 2
+        Width = 97
+      end
+      object LabelJuridical: TcxLabel
+        Left = 688
+        Top = 10
+        AutoSize = False
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+        Height = 17
+        Width = 110
+      end
+      object edJuridical: TcxButtonEdit
+        Left = 807
+        Top = 9
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 4
+        Width = 218
+      end
+      object LabelRetail: TcxLabel
+        Left = 432
+        Top = 10
+        AutoSize = False
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
+        Height = 17
+        Width = 81
+      end
+      object edRetail: TcxButtonEdit
+        Left = 519
+        Top = 3
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 6
+        Width = 163
+      end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
     Top = 200
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = GuidesJuridical
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesRetail
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     Left = 95
@@ -627,17 +736,31 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
     Top = 82
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ContractPartnerChoice'
+    StoredProcName = 'gpSelect_Object_Partner_PriceList'
     Params = <
       item
-        Name = 'inShowAll'
+        Name = 'inOperDate'
         Value = False
-        Component = actShowAll
-        DataType = ftBoolean
+        Component = deOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 112
-    Top = 82
+    Top = 90
   end
   inherited BarManager: TdxBarManager
     Left = 168
@@ -684,11 +807,89 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLabelOperDate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOperDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLabelRetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRetail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLabelJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
       Category = 0
+    end
+    object bbLabelOperDate: TdxBarControlContainerItem
+      Caption = 'bbLabelOperDate'
+      Category = 0
+      Hint = 'bbLabelOperDate'
+      Visible = ivAlways
+      Control = LabelOperDate
+    end
+    object bbOperDate: TdxBarControlContainerItem
+      Caption = 'bbOperDate'
+      Category = 0
+      Hint = 'bbOperDate'
+      Visible = ivAlways
+      Control = deOperDate
+    end
+    object bbLabelJuridical: TdxBarControlContainerItem
+      Caption = 'bbLabelJuridical'
+      Category = 0
+      Hint = 'bbLabelJuridical'
+      Visible = ivAlways
+      Control = LabelJuridical
+    end
+    object bbJuridical: TdxBarControlContainerItem
+      Caption = 'bbJuridical'
+      Category = 0
+      Hint = 'bbJuridical'
+      Visible = ivAlways
+      Control = edJuridical
+    end
+    object bbLabelRetail: TdxBarControlContainerItem
+      Caption = 'bbLabelRetail'
+      Category = 0
+      Hint = 'bbLabelRetail'
+      Visible = ivAlways
+      Control = LabelRetail
+    end
+    object bbRetail: TdxBarControlContainerItem
+      Caption = 'bbRetail'
+      Category = 0
+      Hint = 'bbRetail'
+      Visible = ivAlways
+      Control = edRetail
     end
   end
   inherited PopupMenu: TPopupMenu
@@ -746,5 +947,57 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
     PackSize = 1
     Left = 344
     Top = 168
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 872
+    Top = 24
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 576
+    Top = 24
   end
 end

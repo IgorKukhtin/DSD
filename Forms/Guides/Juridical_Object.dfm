@@ -66,6 +66,7 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 71
       end
@@ -73,12 +74,14 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
         Caption = 'GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
         DataBinding.FieldName = 'GLNCode'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
       object clJuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'JuridicalGroupName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 119
       end
@@ -141,6 +144,7 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'isCorporate'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
       end

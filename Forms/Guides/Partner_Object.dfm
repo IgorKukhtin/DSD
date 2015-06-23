@@ -65,6 +65,13 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Options.Editing = False
         Width = 150
       end
+      object clRetailName: TcxGridDBColumn
+        Caption = #1058#1086#1075#1088#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 94
+      end
       object clJuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
         DataBinding.FieldName = 'JuridicalGroupName'
@@ -121,20 +128,20 @@ object Partner_ObjectForm: TPartner_ObjectForm
         Width = 86
       end
       object clStartPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Width = 80
       end
       object clEndPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+        Caption = #1044#1072#1090#1072' '#1079#1072#1074'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 88
+        Width = 80
       end
       object DocumentDayCount: TcxGridDBColumn
         Caption = #1044#1085'. '#1076#1086#1082'.'
@@ -198,13 +205,6 @@ object Partner_ObjectForm: TPartner_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
-      end
-      object clRetailName: TcxGridDBColumn
-        Caption = #1058#1086#1075#1088#1086#1074#1072#1103' '#1089#1077#1090#1100
-        DataBinding.FieldName = 'RetailName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 94
       end
     end
     object cxGridLevel: TcxGridLevel

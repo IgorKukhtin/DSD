@@ -43,7 +43,6 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -61,7 +60,7 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 99
+        Width = 150
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
@@ -93,7 +92,8 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Options.Editing = False
+        Width = 100
       end
       object clRetailReportName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
@@ -106,8 +106,10 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
       object clJuridicalGroupName: TcxGridDBColumn
@@ -124,7 +126,130 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
+      end
+      object clIsCorporate: TcxGridDBColumn
+        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083'.'
+        DataBinding.FieldName = 'isCorporate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object clisTaxSummary: TcxGridDBColumn
+        Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
+        DataBinding.FieldName = 'isTaxSummary'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object clPriceListName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+        DataBinding.FieldName = 'PriceListName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePriceListForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object clPriceListPromoName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1072#1082#1094#1080#1086#1085#1085#1099#1081')'
+        DataBinding.FieldName = 'PriceListPromoName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePriceListPromoForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object clStartPromo: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
+        DataBinding.FieldName = 'StartPromo'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clEndPromo: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1079#1072#1074'. '#1072#1082#1094#1080#1080
+        DataBinding.FieldName = 'EndPromo'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object PriceListName_Prior: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1074#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1089#1090#1072#1088#1099#1084' '#1094#1077#1085#1072#1084')'
+        DataBinding.FieldName = 'PriceListName_Prior'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePriceList_Prior
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 140
+      end
+      object PriceListName_30103: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1061#1083#1077#1073')'
+        DataBinding.FieldName = 'PriceListName_30103'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePriceList_30103
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object PriceListName_30201: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+        DataBinding.FieldName = 'PriceListName_30201'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePriceList_30201
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object clGoodsPropertyName: TcxGridDBColumn
+        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsPropertyName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object clInfoMoneyGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
@@ -176,7 +301,7 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 100
       end
       object InfoMoneyName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
@@ -186,123 +311,6 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
-      end
-      object clIsCorporate: TcxGridDBColumn
-        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083'.'
-        DataBinding.FieldName = 'isCorporate'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
-      end
-      object clisTaxSummary: TcxGridDBColumn
-        Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
-        DataBinding.FieldName = 'isTaxSummary'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
-      end
-      object clPriceListName: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
-        DataBinding.FieldName = 'PriceListName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceListForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object clPriceListPromoName: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1072#1082#1094#1080#1086#1085#1085#1099#1081')'
-        DataBinding.FieldName = 'PriceListPromoName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceListPromoForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object clStartPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
-        DataBinding.FieldName = 'StartPromo'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object clEndPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
-        DataBinding.FieldName = 'EndPromo'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 65
-      end
-      object PriceListName_Prior: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1074#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1089#1090#1072#1088'. '#1094#1077#1085#1072#1084')'
-        DataBinding.FieldName = 'PriceListName_Prior'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceList_Prior
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        Width = 80
-      end
-      object PriceListName_30103: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1061#1083#1077#1073')'
-        DataBinding.FieldName = 'PriceListName_30103'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceList_30103
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        Width = 80
-      end
-      object PriceListName_30201: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
-        DataBinding.FieldName = 'PriceListName_30201'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceList_30201
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        Width = 80
-      end
-      object clGoodsPropertyName: TcxGridDBColumn
-        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsPropertyName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
       end
       object ceIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -823,13 +831,13 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PriceListId_30103'
+          ComponentItem = 'PriceListId_30201'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PriceListName_30103'
+          ComponentItem = 'PriceListName_30201'
           DataType = ftString
         end>
       isShowModal = True
@@ -908,7 +916,7 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
     Top = 184
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Juridical_Params'
+    StoredProcName = 'gpUpdate_Object_Juridical_PriceList'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -918,27 +926,6 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
-      end
-      item
-        Name = 'inJuridicalGroupId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'JuridicalGroupId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inRetailId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'RetailId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inRetailReportId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'RetailReportId'
-        ParamType = ptInput
       end
       item
         Name = 'inPriceListId'
@@ -952,6 +939,27 @@ object Juridical_PriceListForm: TJuridical_PriceListForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceListPromoId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceListId_Prior'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceListId_Prior'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceListId_30103'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceListId_30103'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceListId_30201'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceListId_30201'
         ParamType = ptInput
       end
       item

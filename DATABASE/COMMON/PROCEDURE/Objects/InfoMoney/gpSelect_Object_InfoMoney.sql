@@ -8,8 +8,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
-               isErased boolean) AS
-$BODY$BEGIN
+               isErased boolean
+)
+AS
+$BODY$
+BEGIN
      
      -- проверка прав пользовател€ на вызов процедуры 
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_InfoMoney());
@@ -32,7 +35,7 @@ $BODY$BEGIN
       FROM Object_InfoMoney_View
     UNION ALL
       SELECT 0 AS Id
-           , 0 AS Code
+           , NULL :: Integer AS Code
            , '”ƒјЋ»“№' :: TVarChar AS Name
            , '' :: TVarChar AS NameAll
     

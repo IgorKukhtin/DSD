@@ -38,7 +38,18 @@ BEGIN
                                  ON ObjectLink_Currency.ObjectId = Object_PriceList.Id
                                 AND ObjectLink_Currency.DescId = zc_ObjectLink_PriceList_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Currency.ChildObjectId
-       WHERE Object_PriceList.DescId = zc_Object_PriceList();
+       WHERE Object_PriceList.DescId = zc_Object_PriceList()
+      UNION ALL
+       SELECT 
+             0 AS Id
+           , NULL :: Integer AS Code
+           , '”ƒ¿À»“‹' :: TVarChar AS Name
+           , FALSE AS PriceWithVAT
+           , NULL :: TFloat AS VATPercent
+           , 0 AS CurrencyId
+           , '' :: TVarChar AS CurrencyName
+           , FALSE  AS isErased
+      ;
   
 END;
 $BODY$

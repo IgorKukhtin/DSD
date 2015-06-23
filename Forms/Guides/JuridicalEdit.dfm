@@ -3,7 +3,7 @@
   ClientHeight = 535
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 563
+  ExplicitHeight = 560
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -624,12 +624,12 @@
     Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
   end
   object cxLabel17: TcxLabel [21]
-    Left = 157
+    Left = 151
     Top = 445
-    Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+    Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
   end
   object edEndPromo: TcxDateEdit [22]
-    Left = 157
+    Left = 151
     Top = 463
     EditValue = 0d
     Properties.SaveTime = False
@@ -679,7 +679,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 31
+    TabOrder = 30
     Width = 272
   end
   object cbisTaxSummary: TcxCheckBox [28]
