@@ -43,7 +43,6 @@ object JuridicalForm: TJuridicalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -61,7 +60,7 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 99
+        Width = 150
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
@@ -69,7 +68,7 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 70
       end
       object clGLNCode: TcxGridDBColumn
         Caption = 'GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
@@ -93,7 +92,7 @@ object JuridicalForm: TJuridicalForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 80
       end
       object clRetailReportName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
@@ -108,7 +107,7 @@ object JuridicalForm: TJuridicalForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 100
       end
       object clJuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -176,7 +175,7 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 80
       end
       object InfoMoneyName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
@@ -219,7 +218,8 @@ object JuridicalForm: TJuridicalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Options.Editing = False
+        Width = 80
       end
       object clPriceListPromoName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1072#1082#1094#1080#1086#1085#1085#1099#1081')'
@@ -235,22 +235,25 @@ object JuridicalForm: TJuridicalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Options.Editing = False
+        Width = 100
       end
       object clStartPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object clEndPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+        Caption = #1044#1072#1090#1072' '#1079#1072#1074'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 65
       end
       object PriceListName_Prior: TcxGridDBColumn
@@ -265,6 +268,9 @@ object JuridicalForm: TJuridicalForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object PriceListName_30103: TcxGridDBColumn
@@ -279,6 +285,9 @@ object JuridicalForm: TJuridicalForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object PriceListName_30201: TcxGridDBColumn
@@ -293,6 +302,9 @@ object JuridicalForm: TJuridicalForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object clGoodsPropertyName: TcxGridDBColumn
@@ -938,36 +950,6 @@ object JuridicalForm: TJuridicalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RetailReportId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPriceListId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceListId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPriceListPromoId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceListPromoId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inStartPromo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'StartPromo'
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndPromo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'EndPromo'
-        DataType = ftDateTime
         ParamType = ptInput
       end>
     PackSize = 1

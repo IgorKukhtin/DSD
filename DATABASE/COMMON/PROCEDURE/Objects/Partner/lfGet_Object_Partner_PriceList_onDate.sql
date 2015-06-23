@@ -18,6 +18,12 @@ $BODY$
    DECLARE vbOperDate TDateTime;
 BEGIN
 
+      -- выход
+      IF COALESCE (inContractId, 0) = 0
+      THEN RETURN;
+      END IF;
+
+
       -- определили Статью
       vbInfoMoneyId:= (SELECT ObjectLink_Contract_InfoMoney.ChildObjectId
                        FROM ObjectLink AS ObjectLink_Contract_InfoMoney
@@ -31,8 +37,14 @@ BEGIN
                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                       );
 
-      -- 
-      CREATE TEMP TABLE _tmpPriceList_onDate (PriceListId Integer, DescId Integer) ON COMMIT DROP;
+      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmppricelist_ondate')
+      THEN
+          --
+          DELETE FROM _tmpPriceList_onDate;
+      ELSE
+          -- 
+          CREATE TEMP TABLE _tmpPriceList_onDate (PriceListId Integer, DescId Integer) ON COMMIT DROP;
+      END IF;
 
       -- 1.1. так для возвратов + ГП
       IF inMovementDescId = zc_Movement_ReturnIn() AND vbInfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
@@ -76,13 +88,15 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
                                            ON ObjectLink_Partner_PriceList.ObjectId = tmpPartner.PartnerId
                                           AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
+                                          AND ObjectLink_Partner_PriceList.ChildObjectId > 0
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-                                          AND ObjectLink_Contract_PriceListPromo.ObjectId IS NULL
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                            ON ObjectLink_Juridical_PriceList.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
+                                          AND ObjectLink_Juridical_PriceList.ChildObjectId > 0
                  ;
 
           END IF;
@@ -112,23 +126,28 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList30103
                                            ON ObjectLink_Partner_PriceList30103.ObjectId = tmpPartner.PartnerId
                                           AND ObjectLink_Partner_PriceList30103.DescId = zc_ObjectLink_Partner_PriceList30103()
+                                          AND ObjectLink_Partner_PriceList30103.ChildObjectId > 0
                                           AND vbInfoMoneyId = zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList30201
                                            ON ObjectLink_Partner_PriceList30201.ObjectId = tmpPartner.PartnerId
-                                          AND ObjectLink_Partner_PriceList30201.DescId = zc_ObjectLink_Partner_PriceList30103()
+                                          AND ObjectLink_Partner_PriceList30201.DescId = zc_ObjectLink_Partner_PriceList30201()
+                                          AND ObjectLink_Partner_PriceList30201.ChildObjectId > 0
                                           AND vbInfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье
 
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
 
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList30103
                                            ON ObjectLink_Juridical_PriceList30103.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectLink_Juridical_PriceList30103.DescId = zc_ObjectLink_Juridical_PriceList30103()
+                                          AND ObjectLink_Juridical_PriceList30103.ChildObjectId > 0
                                           AND vbInfoMoneyId = zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList30201
                                            ON ObjectLink_Juridical_PriceList30201.ObjectId = tmpPartner.JuridicalId
-                                          AND ObjectLink_Juridical_PriceList30201.DescId = zc_ObjectLink_Juridica_PriceList30103()
+                                          AND ObjectLink_Juridical_PriceList30201.DescId = zc_ObjectLink_Juridical_PriceList30201()
+                                          AND ObjectLink_Juridical_PriceList30201.ChildObjectId > 0
                                           AND vbInfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье
 
                  ;
@@ -174,6 +193,7 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPromo
                                            ON ObjectLink_Partner_PriceListPromo.ObjectId = tmpPartner.PartnerId
                                           AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
+                                          AND ObjectLink_Partner_PriceListPromo.ChildObjectId > 0
                                           AND inOperDatePartner BETWEEN ObjectDate_PartnerStartPromo.ValueData AND ObjectDate_PartnerEndPromo.ValueData
 
                       LEFT JOIN ObjectDate AS ObjectDate_StartPromo
@@ -185,6 +205,7 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
                                            ON ObjectLink_Contract_PriceListPromo.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
+                                          AND ObjectLink_Contract_PriceListPromo.ChildObjectId > 0
                                           AND inOperDatePartner BETWEEN ObjectDate_StartPromo.ValueData AND ObjectDate_EndPromo.ValueData
 
                       LEFT JOIN ObjectDate AS ObjectDate_JuridicalStartPromo
@@ -196,17 +217,21 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
                                            ON ObjectLink_Juridical_PriceListPromo.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
+                                          AND ObjectLink_Juridical_PriceListPromo.ChildObjectId > 0
                                           AND inOperDatePartner BETWEEN ObjectDate_JuridicalStartPromo.ValueData AND ObjectDate_JuridicalEndPromo.ValueData
 
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
                                            ON ObjectLink_Partner_PriceList.ObjectId = tmpPartner.PartnerId
                                           AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
+                                          AND ObjectLink_Partner_PriceList.ChildObjectId > 0
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                            ON ObjectLink_Juridical_PriceList.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
+                                          AND ObjectLink_Juridical_PriceList.ChildObjectId > 0
                  ;
          
           ELSE
@@ -233,23 +258,28 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList30103
                                            ON ObjectLink_Partner_PriceList30103.ObjectId = tmpPartner.PartnerId
                                           AND ObjectLink_Partner_PriceList30103.DescId = zc_ObjectLink_Partner_PriceList30103()
+                                          AND ObjectLink_Partner_PriceList30103.ChildObjectId > 0
                                           AND vbInfoMoneyId = zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList30201
                                            ON ObjectLink_Partner_PriceList30201.ObjectId = tmpPartner.PartnerId
-                                          AND ObjectLink_Partner_PriceList30201.DescId = zc_ObjectLink_Partner_PriceList30103()
+                                          AND ObjectLink_Partner_PriceList30201.DescId = zc_ObjectLink_Partner_PriceList30201()
+                                          AND ObjectLink_Partner_PriceList30201.ChildObjectId > 0
                                           AND vbInfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье
 
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
 
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList30103
                                            ON ObjectLink_Juridical_PriceList30103.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectLink_Juridical_PriceList30103.DescId = zc_ObjectLink_Juridical_PriceList30103()
+                                          AND ObjectLink_Juridical_PriceList30103.ChildObjectId > 0
                                           AND vbInfoMoneyId = zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList30201
                                            ON ObjectLink_Juridical_PriceList30201.ObjectId = tmpPartner.JuridicalId
-                                          AND ObjectLink_Juridical_PriceList30201.DescId = zc_ObjectLink_Juridica_PriceList30103()
+                                          AND ObjectLink_Juridical_PriceList30201.DescId = zc_ObjectLink_Juridical_PriceList30201()
+                                          AND ObjectLink_Juridical_PriceList30201.ChildObjectId > 0
                                           AND vbInfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье
                  ;
           ELSE
@@ -264,6 +294,7 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                            ON ObjectLink_Contract_PriceList.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                          AND ObjectLink_Contract_PriceList.ChildObjectId > 0
                  ;
           END IF;
           END IF;

@@ -3,7 +3,7 @@ inherited ContractEditForm: TContractEditForm
   ClientHeight = 668
   ClientWidth = 911
   ExplicitWidth = 917
-  ExplicitHeight = 696
+  ExplicitHeight = 693
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -270,7 +270,6 @@ inherited ContractEditForm: TContractEditForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitTop = -1
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -651,7 +650,7 @@ inherited ContractEditForm: TContractEditForm
   object cxLabel27: TcxLabel [61]
     Left = 184
     Top = 547
-    Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+    Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
   end
   object edEndPromo: TcxDateEdit [62]
     Left = 183
@@ -660,7 +659,7 @@ inherited ContractEditForm: TContractEditForm
     Properties.SaveTime = False
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
-    TabOrder = 66
+    TabOrder = 65
     Width = 100
   end
   object cxLabel28: TcxLabel [63]
@@ -2506,8 +2505,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 248
-    Top = 522
+    Left = 280
+    Top = 490
   end
   object GoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'

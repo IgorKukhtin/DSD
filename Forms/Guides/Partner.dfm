@@ -163,22 +163,22 @@ object PartnerForm: TPartnerForm
         Width = 86
       end
       object clStartPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 85
+        Width = 80
       end
       object clEndPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+        Caption = #1044#1072#1090#1072' '#1079#1072#1074'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 88
+        Width = 80
       end
       object PriceListName_Prior: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1074#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1089#1090#1072#1088'. '#1094#1077#1085#1072#1084')'
@@ -192,6 +192,9 @@ object PartnerForm: TPartnerForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object PriceListName_30103: TcxGridDBColumn
@@ -206,6 +209,9 @@ object PartnerForm: TPartnerForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object PriceListName_30201: TcxGridDBColumn
@@ -220,6 +226,9 @@ object PartnerForm: TPartnerForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object clRouteName: TcxGridDBColumn
@@ -400,13 +409,9 @@ object PartnerForm: TPartnerForm
       object Id: TcxGridDBColumn
         Caption = #1050#1083#1102#1095'-2'
         DataBinding.FieldName = 'Id'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Enabled = False
-            Kind = bkEllipsis
-          end>
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.'
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1205,7 +1210,7 @@ object PartnerForm: TPartnerForm
     Top = 152
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Partner_PriceList'
+    StoredProcName = 'gpUpdate_Object_Partner_Params'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1215,22 +1220,6 @@ object PartnerForm: TPartnerForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
-      end
-      item
-        Name = 'inStartPromo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'StartPromo'
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndPromo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'EndPromo'
-        DataType = ftDateTime
-        ParamType = ptInput
       end
       item
         Name = 'inRouteId'
@@ -1251,20 +1240,6 @@ object PartnerForm: TPartnerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MemberTakeId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPriceListId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceListId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPriceListPromoId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceListPromoId'
         ParamType = ptInput
       end
       item

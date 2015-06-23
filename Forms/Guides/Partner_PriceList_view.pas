@@ -21,7 +21,9 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxImageComboBox, cxButtonEdit, cxCurrencyEdit;
+  dxSkinXmas2008Blue, cxImageComboBox, cxButtonEdit, cxCurrencyEdit,
+  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
+  cxDropDownEdit, cxCalendar, cxLabel, dsdGuides;
 
 type
   TPartner_PriceList_viewForm = class(TAncestorEnumForm)
@@ -39,7 +41,6 @@ type
     clInfoMoneyCode: TcxGridDBColumn;
     colPartnerCode: TcxGridDBColumn;
     colPartnerName: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     colCode: TcxGridDBColumn;
@@ -49,13 +50,42 @@ type
     actChoicePersonalTake: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    DelayDay: TcxGridDBColumn;
-    BranchName: TcxGridDBColumn;
-    AmountDebet: TcxGridDBColumn;
-    AmountKredit: TcxGridDBColumn;
     Id: TcxGridDBColumn;
-    PrepareDayCount: TcxGridDBColumn;
-    DocumentDayCount: TcxGridDBColumn;
+    PersonalTradeCode: TcxGridDBColumn;
+    PersonalTradeName: TcxGridDBColumn;
+    PositionName_PersonalTrade: TcxGridDBColumn;
+    BranchName_PersonalTrade: TcxGridDBColumn;
+    LabelOperDate: TcxLabel;
+    bbLabelOperDate: TdxBarControlContainerItem;
+    bbOperDate: TdxBarControlContainerItem;
+    deOperDate: TcxDateEdit;
+    PriceListName_income: TcxGridDBColumn;
+    PriceListName_GP_sale: TcxGridDBColumn;
+    PriceListName_GP_return: TcxGridDBColumn;
+    PriceListName_GP_return_prior: TcxGridDBColumn;
+    PriceListName_30103_sale: TcxGridDBColumn;
+    PriceListName_30103_return: TcxGridDBColumn;
+    PriceListName_30201_sale: TcxGridDBColumn;
+    PriceListName_30201_return: TcxGridDBColumn;
+    DescName_income: TcxGridDBColumn;
+    DescName_GP_sale: TcxGridDBColumn;
+    DescName_GP_return: TcxGridDBColumn;
+    DescName_GP_return_prior: TcxGridDBColumn;
+    DescName_30103_sale: TcxGridDBColumn;
+    DescName_30103_return: TcxGridDBColumn;
+    DescName_30201_sale: TcxGridDBColumn;
+    DescName_30201_return: TcxGridDBColumn;
+    LabelJuridical: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    bbLabelJuridical: TdxBarControlContainerItem;
+    bbJuridical: TdxBarControlContainerItem;
+    bbLabelRetail: TdxBarControlContainerItem;
+    bbRetail: TdxBarControlContainerItem;
+    LabelRetail: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    GuidesRetail: TdsdGuides;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

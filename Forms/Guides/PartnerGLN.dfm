@@ -220,7 +220,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Width = 86
       end
       object clStartPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -229,7 +229,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Width = 85
       end
       object clEndPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+        Caption = #1044#1072#1090#1072' '#1079#1072#1074'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -653,6 +653,7 @@ object PartnerGLNForm: TPartnerGLNForm
     object actChoicePriceListPromoForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PriceListPromoChoiceForm'
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
@@ -676,6 +677,7 @@ object PartnerGLNForm: TPartnerGLNForm
     object actChoicePriceListForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PriceListChoiceForm'
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
@@ -708,6 +710,7 @@ object PartnerGLNForm: TPartnerGLNForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdate
       StoredProcList = <
         item

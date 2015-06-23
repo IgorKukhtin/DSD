@@ -625,7 +625,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 305
   end
   object cbPeriod: TcxCheckBox
@@ -1024,6 +1024,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object PriceListPromoChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PriceListPromoChoiceForm'
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
@@ -1047,6 +1048,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object StreetKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'StreetChoiceForm'
       FormName = 'TStreetKindForm'
       FormNameParam.Value = 'TStreetKindForm'
@@ -1072,6 +1074,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object CityKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'CityKindChoiceForm'
       FormName = 'TCityKindForm'
       FormNameParam.Value = 'TCityKindForm'
@@ -1142,6 +1145,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -1153,6 +1157,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object ContactPersonChoiceActForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ContactPersonChoiceForm'
       FormName = 'TContactPersonChoiceForm'
       FormNameParam.Value = 'TContactPersonChoiceForm'
@@ -1214,6 +1219,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object ContactPersonChoiceOrderForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ContactPersonChoiceForm'
       FormName = 'TContactPersonChoiceForm'
       FormNameParam.Value = 'TContactPersonChoiceForm'
@@ -1275,6 +1281,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object ContactPersonChoiceDocForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ContactPersonChoiceForm'
       FormName = 'TContactPersonChoiceForm'
       FormNameParam.Value = 'TContactPersonChoiceForm'
@@ -1336,6 +1343,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object MemberTakeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Member_ObjectForm'
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
@@ -1359,6 +1367,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Personal_ObjectForm'
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -1382,6 +1391,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object PersonalTradeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Personal_ObjectForm'
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -1405,6 +1415,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object PartnerTagChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PartnerTagForm'
       FormName = 'TPartnerTagForm'
       FormNameParam.Value = 'TPartnerTagForm'
@@ -1428,6 +1439,7 @@ object PartnerAddressForm: TPartnerAddressForm
     object AreaChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'AreaForm'
       FormName = 'TAreaForm'
       FormNameParam.Value = 'TAreaForm'
