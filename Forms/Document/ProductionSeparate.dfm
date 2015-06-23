@@ -905,6 +905,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 679
