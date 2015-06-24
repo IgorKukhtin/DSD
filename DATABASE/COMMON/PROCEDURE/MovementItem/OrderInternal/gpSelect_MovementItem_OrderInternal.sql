@@ -287,10 +287,8 @@ BEGIN
                   ELSE 0 -- clBlack
              END :: Integer AS Color_remains
 
-           , 1118719 :: Integer AS ColorB_DayCountForecast -- $00E2C7C7
-           , 1118719 :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
---           , 14862279 :: Integer AS ColorB_DayCountForecast -- $00E2C7C7
---           , 11987626 :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
+           , 14862279 :: Integer AS ColorB_DayCountForecast -- $00E2C7C7
+           , 11987626 :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
 
            , tmpMI.isErased
 

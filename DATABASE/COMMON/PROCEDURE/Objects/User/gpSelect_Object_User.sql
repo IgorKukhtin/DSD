@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_User (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_User(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, MemberId Integer, MemberName TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, MemberId Integer, MemberName TVarChar, User_ TVarChar
              , BranchCode Integer
              , BranchName TVarChar
              , UnitCode Integer
@@ -36,6 +36,7 @@ BEGIN
        , Object_User.isErased
        , Object_Member.Id AS MemberId
        , Object_Member.ValueData AS MemberName
+       , ObjectString_User_.ValueData AS User_
 
        , Object_Branch.ObjectCode  AS BranchCode
        , Object_Branch.ValueData   AS BranchName
@@ -44,6 +45,9 @@ BEGIN
        , Object_Position.ValueData AS PositionName
 
    FROM Object AS Object_User
+         LEFT JOIN ObjectString AS ObjectString_User_
+                                ON ObjectString_User_.ObjectId = Object_User.Id
+                               AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
         LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = Object_User.Id
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()

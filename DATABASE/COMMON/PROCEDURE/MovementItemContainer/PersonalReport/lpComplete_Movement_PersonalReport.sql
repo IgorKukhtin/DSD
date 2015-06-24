@@ -162,7 +162,9 @@ BEGIN
 
 
                 -- нет
-             , (SELECT Object_Contract_View.ContractId FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId AND Object_Contract_View.PaidKindId = zc_Enum_PaidKind_SecondForm() AND Object_Contract_View.isErased = FALSE AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close() ORDER BY Object_Contract_View.ContractId DESC LIMIT 1) AS ContractId
+             -- , (SELECT Object_Contract_View.ContractId FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId AND Object_Contract_View.PaidKindId = zc_Enum_PaidKind_SecondForm() AND Object_Contract_View.isErased = FALSE AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close() ORDER BY Object_Contract_View.ContractId DESC LIMIT 1) AS ContractId
+                -- появился
+             , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
                -- нет
              , zc_Enum_PaidKind_SecondForm() AS PaidKindId
 
@@ -175,6 +177,9 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                               ON MILinkObject_Unit.MovementItemId = _tmpItem.MovementItemId
                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                              ON MILinkObject_Contract.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
 
              LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
 
