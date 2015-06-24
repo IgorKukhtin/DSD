@@ -73,6 +73,12 @@ BEGIN
                           AND MovementItem.DescId     = zc_MI_Master()
                           AND MovementItem.isErased   = False
                         )
+       , tmpMIChild AS (SELECT SUM (MovementItem.amount)  AS Count_Child
+                        FROM MovementItem 
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.DescId     = zc_MI_Child()
+                          AND MovementItem.isErased   = False
+                        )
 
         SELECT
            Movement.InvNumber                 AS InvNumber
@@ -87,6 +93,7 @@ BEGIN
          , Object_Goods.ValueData                 AS GoodsName
          , tmpMIMaster.Count 
          , tmpMIMaster.HeadCount 
+         , tmpMIChild.Count_Child /tmpMIMaster.Count :: tfloat AS PersentVyhod
      FROM Movement 
         
           LEFT JOIN MovementFloat AS MovementFloat_TotalCount
@@ -113,6 +120,7 @@ BEGIN
 
           LEFT JOIN tmpMIMaster on 1=1
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIMaster.GoodsId
+          LEFT JOIN tmpMIChild on 1=1
 
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -124,12 +132,12 @@ BEGIN
 
     OPEN Cursor2 FOR
 
-                 
-      SELECT Object_Goods.ObjectCode  			 AS GoodsCode
+       SELECT Object_Goods.ObjectCode  			 AS GoodsCode
            , Object_Goods.ValueData   			 AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
-
+           , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (MovementItem.Amount) ELSE 0 END) ::TFloat  AS Amount_Sh
+           , SUM (MovementItem.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) )  ::TFloat  AS Amount_Weight
            , SUM (MovementItem.Amount)::TFloat		 AS Amount
            , SUM (MIFloat_LiveWeight.ValueData)::TFloat  AS LiveWeight
            , SUM (MIFloat_HeadCount.ValueData)::TFloat	 AS HeadCount
@@ -154,7 +162,11 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId 
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-                                           
+     
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight	
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                               
             where MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Child()
                              AND MovementItem.isErased   = false
@@ -163,8 +175,10 @@ BEGIN
            , Object_Goods.ValueData
            , ObjectString_Goods_GoodsGroupFull.ValueData
            , Object_Measure.ValueData
+           , Object_Measure.Id 
           
       ;
+      
 
     RETURN NEXT Cursor2;
 
