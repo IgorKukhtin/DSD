@@ -751,19 +751,29 @@ begin
         if Assigned(ColorColumn) then
         begin
           if AItem = ColorColumn then begin
-             if not VarIsNull(ARecord.Values[ValueColumn.Index]) then
-                FStyle.TextColor := ARecord.Values[ValueColumn.Index];
-             if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then
-                FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
-             AStyle := FStyle
+           if Assigned(ValueColumn) then
+              if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
+                 FStyle.TextColor := ARecord.Values[ValueColumn.Index];
+                 AStyle := FStyle
+              end;
+           if Assigned(BackGroundValueColumn) then
+              if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then begin
+                 FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
+                 AStyle := FStyle
+              end;
            end;
         end
         else begin
-           if not VarIsNull(ARecord.Values[ValueColumn.Index]) then
-              FStyle.TextColor := ARecord.Values[ValueColumn.Index];
-           if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then
-              FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
-           AStyle := FStyle
+           if Assigned(ValueColumn) then
+              if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
+                 FStyle.TextColor := ARecord.Values[ValueColumn.Index];
+                 AStyle := FStyle
+              end;
+           if Assigned(BackGroundValueColumn) then
+              if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then begin
+                 FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
+                 AStyle := FStyle
+              end;
         end;
       end;
 end;
