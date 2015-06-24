@@ -100,6 +100,12 @@ object UserForm: TUserForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object User_: TcxGridDBColumn
+        DataBinding.FieldName = 'User_'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -542,6 +548,7 @@ object UserForm: TUserForm
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateUserRole
       StoredProcList = <
         item
@@ -553,6 +560,7 @@ object UserForm: TUserForm
     object OpenChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TRoleForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -575,6 +583,7 @@ object UserForm: TUserForm
     object ChoiceRole: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TRoleForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -597,6 +606,7 @@ object UserForm: TUserForm
     object ChoiceUnit: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TObject_UnitForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -619,6 +629,7 @@ object UserForm: TUserForm
     object UpdatePeriodClose: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdatePeriodClose
       StoredProcList = <
         item

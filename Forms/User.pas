@@ -77,6 +77,7 @@ type
     UnitCode: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
+    User_: TcxGridDBColumn;
   private
     { Private declarations }
   public

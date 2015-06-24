@@ -11,15 +11,15 @@ CREATE OR REPLACE FUNCTION lfGet_Object_Partner_PriceList_onDate_calc(
     IN inInfoMoneyDestinationId Integer,
     IN inInfoMoneyId            Integer
 )
-RETURNS TABLE (PriceListId Integer, PriceListName TVarChar, DescId Integer)
+RETURNS TABLE (OperDate TDateTime, PriceListId Integer, PriceListName TVarChar, DescId Integer)
 AS
 $BODY$
 BEGIN
 
        --
-       IF inParam <> 1
+       /*IF inParam <> 1
        THEN inParam:= NULL;
-       END IF;
+       END IF;*/
 
 
        -- 2.1. ГП
@@ -30,16 +30,17 @@ BEGIN
            AND inInfoMoneyId <> zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
 
             THEN RETURN QUERY
-                 SELECT tmp.PriceListId, tmp.PriceListName, tmp.DescId
+                 SELECT tmp.OperDate, tmp.PriceListId, tmp.PriceListName, tmp.DescId
                  FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                            , inPartnerId      := inPartnerId
                                                            , inMovementDescId := zc_Movement_Sale()
                                                            , inOperDate_order := inOperDate
                                                            , inOperDatePartner:= NULL
+                                                           , inDayPrior_PriceReturn:= 10
                                                            , inIsPrior        := NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
-                 SELECT NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
+                 SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
             END IF;
 
 
@@ -52,16 +53,17 @@ BEGIN
            AND inInfoMoneyId <> zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
 
             THEN RETURN QUERY
-                 SELECT tmp.PriceListId, tmp.PriceListName, tmp.DescId
+                 SELECT tmp.OperDate, tmp.PriceListId, tmp.PriceListName, tmp.DescId
                  FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                            , inPartnerId      := inPartnerId
                                                            , inMovementDescId := zc_Movement_ReturnIn()
                                                            , inOperDate_order := NULL
-                                                           , inOperDatePartner:= NULL
+                                                           , inOperDatePartner:= inOperDate
+                                                           , inDayPrior_PriceReturn:= 10
                                                            , inIsPrior        := FALSE
                                                             ) AS tmp;
             ELSE RETURN QUERY
-                 SELECT NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
+                 SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
             END IF;
 
 
@@ -74,16 +76,17 @@ BEGIN
            AND inInfoMoneyId <> zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
 
             THEN RETURN QUERY
-                 SELECT tmp.PriceListId, tmp.PriceListName, tmp.DescId
+                 SELECT tmp.OperDate, tmp.PriceListId, tmp.PriceListName, tmp.DescId
                  FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                            , inPartnerId      := inPartnerId
                                                            , inMovementDescId := zc_Movement_ReturnIn()
                                                            , inOperDate_order := NULL
-                                                           , inOperDatePartner:= NULL
+                                                           , inOperDatePartner:= inOperDate
+                                                           , inDayPrior_PriceReturn:= 10
                                                            , inIsPrior        := TRUE
                                                             ) AS tmp;
             ELSE RETURN QUERY
-                 SELECT NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
+                 SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
             END IF;
 
 
@@ -93,16 +96,17 @@ BEGIN
        THEN IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
             OR inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
             THEN RETURN QUERY
-                 SELECT tmp.PriceListId, tmp.PriceListName, tmp.DescId
+                 SELECT tmp.OperDate, tmp.PriceListId, tmp.PriceListName, tmp.DescId
                  FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                            , inPartnerId      := inPartnerId
                                                            , inMovementDescId := zc_Movement_Sale()
                                                            , inOperDate_order := NULL
-                                                           , inOperDatePartner:= NULL
+                                                           , inOperDatePartner:= inOperDate
+                                                           , inDayPrior_PriceReturn:= 10
                                                            , inIsPrior        := NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
-                 SELECT NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
+                 SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
             END IF;
 
        ELSE
@@ -111,16 +115,17 @@ BEGIN
        THEN IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
             OR inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
             THEN RETURN QUERY
-                 SELECT tmp.PriceListId, tmp.PriceListName, tmp.DescId
+                 SELECT tmp.OperDate, tmp.PriceListId, tmp.PriceListName, tmp.DescId
                  FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                            , inPartnerId      := inPartnerId
                                                            , inMovementDescId := zc_Movement_ReturnIn()
                                                            , inOperDate_order := NULL
-                                                           , inOperDatePartner:= NULL
+                                                           , inOperDatePartner:= inOperDate
+                                                           , inDayPrior_PriceReturn:= 10
                                                            , inIsPrior        := NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
-                 SELECT NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
+                 SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
             END IF;
 
        ELSE
@@ -128,16 +133,17 @@ BEGIN
        IF inParam = 1
        THEN IF inInfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_30000() -- Доходы
             THEN RETURN QUERY
-                 SELECT tmp.PriceListId, tmp.PriceListName, tmp.DescId
+                 SELECT tmp.OperDate, tmp.PriceListId, tmp.PriceListName, tmp.DescId
                  FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                            , inPartnerId      := inPartnerId
                                                            , inMovementDescId := zc_Movement_Income()
                                                            , inOperDate_order := NULL
-                                                           , inOperDatePartner:= NULL
+                                                           , inOperDatePartner:= inOperDate
+                                                           , inDayPrior_PriceReturn:= 10
                                                            , inIsPrior        := NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
-                 SELECT NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
+                 SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
             END IF;
 
 
@@ -146,16 +152,17 @@ BEGIN
        IF inParam = 31
        THEN IF inInfoMoneyId = zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
             THEN RETURN QUERY
-                 SELECT tmp.PriceListId, tmp.PriceListName, tmp.DescId
+                 SELECT tmp.OperDate, tmp.PriceListId, tmp.PriceListName, tmp.DescId
                  FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                            , inPartnerId      := inPartnerId
                                                            , inMovementDescId := zc_Movement_Sale()
                                                            , inOperDate_order := NULL
-                                                           , inOperDatePartner:= NULL
+                                                           , inOperDatePartner:= inOperDate
+                                                           , inDayPrior_PriceReturn:= 10
                                                            , inIsPrior        := NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
-                 SELECT NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
+                 SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
             END IF;
 
 
@@ -164,21 +171,22 @@ BEGIN
        IF inParam = 32
        THEN IF inInfoMoneyId = zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
             THEN RETURN QUERY
-                 SELECT tmp.PriceListId, tmp.PriceListName, tmp.DescId
+                 SELECT tmp.OperDate, tmp.PriceListId, tmp.PriceListName, tmp.DescId
                  FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                            , inPartnerId      := inPartnerId
                                                            , inMovementDescId := zc_Movement_ReturnIn()
                                                            , inOperDate_order := NULL
-                                                           , inOperDatePartner:= NULL
+                                                           , inOperDatePartner:= inOperDate
+                                                           , inDayPrior_PriceReturn:= 10
                                                            , inIsPrior        := NULL
                                                             ) AS tmp;
             ELSE RETURN QUERY
-                 SELECT NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
+                 SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
             END IF;
 
 
        ELSE RETURN QUERY
-            SELECT NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
+            SELECT NULL :: TDateTime AS OperDate, NULL :: Integer AS PriceListId, '' :: TVarChar AS PriceListName, NULL :: Integer AS DescId;
 
        END IF;
        END IF;

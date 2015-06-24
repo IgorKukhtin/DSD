@@ -1,21 +1,22 @@
 -- Function: lfGet_Object_Partner_PriceList_onDate (Integer, Integer, TDateTime)
 
 DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate (Integer, Integer, Integer, TDateTime, TDateTime, Boolean);
+DROP FUNCTION IF EXISTS lfGet_Object_Partner_PriceList_onDate (Integer, Integer, Integer, TDateTime, TDateTime, Integer, Boolean);
 
 CREATE OR REPLACE FUNCTION lfGet_Object_Partner_PriceList_onDate(
-    IN inContractId      Integer, 
-    IN inPartnerId       Integer,
-    IN inMovementDescId  Integer,
-    IN inOperDate_order  TDateTime,
-    IN inOperDatePartner TDateTime,
-    IN inIsPrior         Boolean
+    IN inContractId           Integer, 
+    IN inPartnerId            Integer,
+    IN inMovementDescId       Integer,
+    IN inOperDate_order       TDateTime,
+    IN inOperDatePartner      TDateTime,
+    IN inDayPrior_PriceReturn Integer,
+    IN inIsPrior              Boolean
 )
-RETURNS TABLE (PriceListId Integer, PriceListName TVarChar, PriceWithVAT Boolean, VATPercent TFloat, DescId Integer, Code TVarChar, ItemName TVarChar)
+RETURNS TABLE (OperDate TDateTime, PriceListId Integer, PriceListName TVarChar, PriceWithVAT Boolean, VATPercent TFloat, DescId Integer, Code TVarChar, ItemName TVarChar)
 AS
 $BODY$
    DECLARE vbJuridicalId Integer;
    DECLARE vbInfoMoneyId Integer;
-   DECLARE vbOperDate TDateTime;
 BEGIN
 
       -- выход
@@ -43,7 +44,7 @@ BEGIN
           DELETE FROM _tmpPriceList_onDate;
       ELSE
           -- 
-          CREATE TEMP TABLE _tmpPriceList_onDate (PriceListId Integer, DescId Integer) ON COMMIT DROP;
+          CREATE TEMP TABLE _tmpPriceList_onDate (OperDate TDateTime, PriceListId Integer, DescId Integer) ON COMMIT DROP;
       END IF;
 
       -- 1.1. так для возвратов + ГП
@@ -53,8 +54,9 @@ BEGIN
           THEN
               -- 1.1.1. так для возвратов ГП по "старым ценам"
               WITH tmpPartner AS (SELECT inPartnerId AS PartnerId, vbJuridicalId AS JuridicalId)
-              INSERT INTO _tmpPriceList_onDate (PriceListId, DescId)
-                 SELECT COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId
+              INSERT INTO _tmpPriceList_onDate (OperDate, PriceListId, DescId)
+                 SELECT inOperDatePartner :: Date - inDayPrior_PriceReturn AS OperDate
+                      , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId
                       , COALESCE (ObjectLink_Juridical_PriceListPrior.ChildObjectId
                                 , zc_PriceList_BasisPrior())) AS PriceListId
 
@@ -74,8 +76,9 @@ BEGIN
           ELSE
               -- 1.1.2. так для возвратов ГП по "обычным ценам"
               WITH tmpPartner AS (SELECT inPartnerId AS PartnerId, inContractId AS ContractId, vbJuridicalId AS JuridicalId)
-              INSERT INTO _tmpPriceList_onDate (PriceListId, DescId)
-                 SELECT COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
+              INSERT INTO _tmpPriceList_onDate (OperDate, PriceListId, DescId)
+                 SELECT inOperDatePartner :: Date - inDayPrior_PriceReturn AS OperDate
+                      , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
                       , COALESCE (ObjectLink_Contract_PriceList.ChildObjectId
                       , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId
                                 , zc_PriceList_Basis()))) AS PriceListId
@@ -105,8 +108,9 @@ BEGIN
           IF inMovementDescId = zc_Movement_ReturnIn()
           THEN
               WITH tmpPartner AS (SELECT inPartnerId AS PartnerId, inContractId AS ContractId, vbJuridicalId AS JuridicalId)
-              INSERT INTO _tmpPriceList_onDate (PriceListId, DescId)
-                 SELECT COALESCE (ObjectLink_Partner_PriceList30103.ChildObjectId
+              INSERT INTO _tmpPriceList_onDate (OperDate, PriceListId, DescId)
+                 SELECT inOperDatePartner AS OperDate
+                      , COALESCE (ObjectLink_Partner_PriceList30103.ChildObjectId
                       , COALESCE (ObjectLink_Partner_PriceList30201.ChildObjectId
                       , COALESCE (ObjectLink_Contract_PriceList.ChildObjectId
                       , COALESCE (ObjectLink_Juridical_PriceList30103.ChildObjectId
@@ -155,17 +159,32 @@ BEGIN
           -- 2.1. так для продажи + ГП
           IF inMovementDescId = zc_Movement_Sale() AND vbInfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
           THEN
+              IF inOperDate_order IS NULL
+              THEN
+                  -- поиск даты для заявки
+                  inOperDate_order:= inOperDatePartner :: Date - COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: Integer
+                                                               - COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: Integer
+                                                               ;
+              END IF;
               IF inOperDatePartner IS NULL
               THEN
-                  -- дата для поиска акций
+                  -- поиск даты для акций
                   inOperDatePartner:= inOperDate_order :: Date + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: Integer
                                                                + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: Integer
                                                                ;
               END IF;
               -- 2.1. в следующем порядке: 1.1) акционный у контрагента 1.2) акционный у договора 1.3) акционный у юр.лица 2.1) обычный у контрагента 2.2) обычный у договора 2.3) обычный у юр.лица 3) zc_PriceList_Basis
               WITH tmpPartner AS (SELECT inPartnerId AS PartnerId, inContractId AS ContractId, vbJuridicalId AS JuridicalId)
-              INSERT INTO _tmpPriceList_onDate (PriceListId, DescId)
-                 SELECT COALESCE (ObjectLink_Partner_PriceListPromo.ChildObjectId
+              INSERT INTO _tmpPriceList_onDate (OperDate, PriceListId, DescId)
+                 SELECT CASE WHEN ObjectLink_Partner_PriceListPromo.ChildObjectId > 0
+                               OR ObjectLink_Contract_PriceListPromo.ChildObjectId > 0
+                               OR ObjectLink_Juridical_PriceListPromo.ChildObjectId > 0
+                                  THEN inOperDatePartner
+                             WHEN ObjectBoolean_OperDateOrder.ValueData = TRUE
+                                  THEN inOperDate_order
+                             ELSE inOperDatePartner
+                        END AS OperDate
+                      , COALESCE (ObjectLink_Partner_PriceListPromo.ChildObjectId
                       , COALESCE (ObjectLink_Contract_PriceListPromo.ChildObjectId
                       , COALESCE (ObjectLink_Juridical_PriceListPromo.ChildObjectId
 
@@ -232,6 +251,13 @@ BEGIN
                                            ON ObjectLink_Juridical_PriceList.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
                                           AND ObjectLink_Juridical_PriceList.ChildObjectId > 0
+
+                      LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                           ON ObjectLink_Juridical_Retail.ObjectId = tmpPartner.JuridicalId
+                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                              ON ObjectBoolean_OperDateOrder.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId 
+                                             AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder() 
                  ;
          
           ELSE
@@ -240,8 +266,9 @@ BEGIN
           THEN
               --
               WITH tmpPartner AS (SELECT inPartnerId AS PartnerId, inContractId AS ContractId, vbJuridicalId AS JuridicalId)
-              INSERT INTO _tmpPriceList_onDate (PriceListId, DescId)
-                 SELECT COALESCE (ObjectLink_Partner_PriceList30103.ChildObjectId
+              INSERT INTO _tmpPriceList_onDate (OperDate, PriceListId, DescId)
+                 SELECT COALESCE (inOperDatePartner, inOperDate_order) AS OperDate
+                      , COALESCE (ObjectLink_Partner_PriceList30103.ChildObjectId
                       , COALESCE (ObjectLink_Partner_PriceList30201.ChildObjectId
                       , COALESCE (ObjectLink_Contract_PriceList.ChildObjectId
                       , COALESCE (ObjectLink_Juridical_PriceList30103.ChildObjectId
@@ -283,10 +310,11 @@ BEGIN
                                           AND vbInfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье
                  ;
           ELSE
-              -- 3. так для всего остального
+              -- 3. так для всего остального : Приход от поставщика + Возврат Поставщику
               WITH tmpPartner AS (SELECT inPartnerId AS PartnerId, inContractId AS ContractId, vbJuridicalId AS JuridicalId)
-              INSERT INTO _tmpPriceList_onDate (PriceListId, DescId)
-                 SELECT COALESCE (ObjectLink_Contract_PriceList.ChildObjectId
+              INSERT INTO _tmpPriceList_onDate (OperDate, PriceListId, DescId)
+                 SELECT COALESCE (inOperDatePartner, inOperDate_order) AS OperDate
+                      , COALESCE (ObjectLink_Contract_PriceList.ChildObjectId
                                 , zc_PriceList_Basis()) AS PriceListId
                       , COALESCE (ObjectLink_Contract_PriceList.DescId
                                 , 0) AS DescId
@@ -303,7 +331,8 @@ BEGIN
 
       -- Результат
       RETURN QUERY
-      SELECT tmpPriceList.PriceListId
+      SELECT tmpPriceList.OperDate
+           , tmpPriceList.PriceListId
            , Object_PriceList.ValueData           AS PriceListName
            , ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , ObjectFloat_VATPercent.ValueData     AS VATPercent
@@ -332,4 +361,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lfGet_Object_Partner_PriceList_onDate (inContractId:= 347332, inPartnerId:= 348917, inMovementDescId:= zc_Movement_Sale(), inOperDate_order:= '05.05.2015', inOperDatePartner:= NULL, inIsPrior:= NULL)
+-- SELECT * FROM lfGet_Object_Partner_PriceList_onDate (inContractId:= 347332, inPartnerId:= 348917, inMovementDescId:= zc_Movement_Sale(), inOperDate_order:= '05.05.2015', inOperDatePartner:= NULL, inDayPrior_PriceReturn:= 10, inIsPrior:= NULL)
