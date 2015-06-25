@@ -466,7 +466,7 @@ BEGIN
                    END AS TFloat) AS AmountSumm
 
            , CASE WHEN vbPriceWithVAT = TRUE
-                  THEN CAST (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / 100) AS NUMERIC (16, 4))
+                  THEN CAST (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4))
                   ELSE MIFloat_Price.ValueData
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
              AS PriceNoVAT
@@ -479,20 +479,20 @@ BEGIN
 
            , CAST (CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis()
                              THEN MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                                                  THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / 100))
+                                                                  THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / (vbVATPercent + 100)))
                                                                   ELSE MIFloat_Price.ValueData
                                                          END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                              ELSE 0
                    END AS NUMERIC (16, 2)) AS AmountSummNoVAT
            , CAST (CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                              THEN MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                                                  THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / 100))
+                                                                  THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / (vbVATPercent + 100)))
                                                                   ELSE MIFloat_Price.ValueData
                                                          END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                              ELSE 0
                    END AS NUMERIC (16, 2)) AS AmountSummNoVAT_11
 
-           , CAST (MovementItem.Amount * CASE WHEN vbPriceWithVAT <> TRUE
+           , CAST (MovementItem.Amount * CASE WHEN vbPriceWithVAT = FALSE
                                               THEN MIFloat_Price.ValueData + MIFloat_Price.ValueData * (vbVATPercent / 100)
                                               ELSE MIFloat_Price.ValueData
                                          END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
