@@ -87,4 +87,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lfGet_Object_Partner_PriceList (inContractId:= 347332, inPartnerId:= 348917, inOperDate:= '05.05.2015')
+-- SELECT * FROM lfGet_Object_Partner_PriceList (inContractId:= 440036, inPartnerId:= 260775 , inOperDate:= '24.06.2015')

@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
-               Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
+               Value TFloat, ValueCost TFloat, TaxExit TFloat, TaxLoss TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
                TotalWeightMain TFloat, TotalWeight TFloat,
                StartDate TDateTime, EndDate TDateTime,
                isMain Boolean,
@@ -47,6 +47,7 @@ BEGIN
          , ObjectFloat_Value.ValueData         AS Value
          , ObjectFloat_ValueCost.ValueData     AS ValueCost
          , ObjectFloat_TaxExit.ValueData       AS TaxExit
+         , ObjectFloat_TaxLoss.ValueData       AS TaxLoss
          , ObjectFloat_PartionValue.ValueData  AS PartionValue
          , ObjectFloat_PartionCount.ValueData  AS PartionCount
          , ObjectFloat_WeightPackage.ValueData AS WeightPackage
@@ -210,6 +211,9 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit
                                 ON ObjectFloat_TaxExit.ObjectId = Object_Receipt.Id
                                AND ObjectFloat_TaxExit.DescId = zc_ObjectFloat_Receipt_TaxExit()
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxLoss
+                                ON ObjectFloat_TaxLoss.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TaxLoss.DescId = zc_ObjectFloat_Receipt_TaxLoss()
 
           LEFT JOIN ObjectFloat AS ObjectFloat_PartionValue
                                 ON ObjectFloat_PartionValue.ObjectId = Object_Receipt.Id
