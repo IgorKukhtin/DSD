@@ -684,7 +684,8 @@ uses
   TaxJournalDialog in '..\..\Forms\Document\TaxJournalDialog.pas' {TaxJournalDialogForm: TParentForm},
   Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
-  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm};
+  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
+  IncomePartionGoodsJournal in '..\..\Forms\Document\IncomePartionGoodsJournal.pas' {IncomePartionGoodsJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
