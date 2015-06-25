@@ -2,13 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inGoodsKindId         Integer   , -- 
     IN inCuterCount          TFloat    , -- Количество
  INOUT ioAmount              TFloat    , -- Количество
     IN inCuterCountSecond    TFloat    , -- Количество дозаказ
@@ -23,7 +21,6 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbMovementItemId Integer;
-   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
@@ -45,21 +42,53 @@ BEGIN
      END IF;
 
 
-     -- поиск
-     IF inReceiptId_basis > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId = ioId AND MovementItemLinkObject.DescId = zc_MILinkObject_ReceiptBasis())
-     vbMovementItemId:= (SELECT
+     -- поиск - 1
+     vbMovementItemId:= (SELECT MovementItem.Id
                          FROM MovementItem
+                              INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                               AND MILinkObject_Goods.ObjectId = inGoodsId
+                              INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                                ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                                               AND MILinkObject_GoodsKindComplete.ObjectId = inGoodsKindId
                               LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                          AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId     = zc_MI_Master()
-                           AND (MovementItem.Amount     <> 0 OR MIFloat_AmountSecond.ValueData <> 0)
-                           AND MovementItem.isErased   = FALSE)
+                           AND MovementItem.isErased   = FALSE
+                           AND (MovementItem.Amount <> 0 OR MIFloat_AmountSecond.ValueData <> 0)
+                        );
+     -- поиск - 2
+     IF COALESCE (vbMovementItemId, 0) = 0
+     THEN
+          vbMovementItemId:= (SELECT MovementItem.Id
+                              FROM MovementItem
+                                   INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                     ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                    AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                                    AND MILinkObject_Goods.ObjectId = inGoodsId
+                                   INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                                     ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                    AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                                                    AND MILinkObject_GoodsKindComplete.ObjectId = inGoodsKindId
+                              WHERE MovementItem.MovementId = inMovementId
+                                AND MovementItem.DescId = zc_MI_Master()
+                                AND MovementItem.isErased = FALSE
+                              LIMIT 1
+                             );
+     END IF;
+     -- проверка
+     IF COALESCE (vbMovementItemId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Элемент не найден.';
+     END IF;
 
 
      -- расчет
-     IF inReceiptId_basis > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId = ioId AND MovementItemLinkObject.DescId = zc_MILinkObject_ReceiptBasis())
+     IF inReceiptId_basis > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId = vbMovementItemId AND MovementItemLinkObject.DescId = zc_MILinkObject_ReceiptBasis())
      THEN
          -- расчет <Количество>
          SELECT COALESCE (ObjectFloat_Value.ValueData, 0) * inCuterCount
@@ -73,33 +102,40 @@ BEGIN
      END IF;
 
 
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
-
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
+     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, ioAmount, NULL)
+     FROM MovementItem
+     WHERE MovementItem.Id = vbMovementItemId;
 
      -- сохранили свойство <Количество дозаказ>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), ioId, inAmountSecond);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), vbMovementItemId, ioAmountSecond);
 
      -- сохранили свойство <Количество кутеров>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCount(), ioId, inCuterCount);
-
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCount(), vbMovementItemId, inCuterCount);
      -- сохранили свойство <Количество кутеров дозаказ>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCountSecond(), ioId, inCuterCountSecond);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCountSecond(), vbMovementItemId, inCuterCountSecond);
 
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-     -- сохранили связь с <Рецептуры>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), ioId, inReceiptId_basis);
+     -- сохранили связь с <Рецептуры> : ВСЕМ + удаленным
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), MovementItem.Id, inReceiptId_basis)
+     FROM MovementItem
+          INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                            ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                           AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                           AND MILinkObject_Goods.ObjectId = inGoodsId
+          INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                            ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                           AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                           AND MILinkObject_GoodsKindComplete.ObjectId = inGoodsKindId
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId = zc_MI_Master()
+     ;
 
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, FALSE);
 
 END;
 $BODY$

@@ -42,6 +42,7 @@ BEGIN
       IF lpGetAccessKey (inUserId, COALESCE ((SELECT MAX (ProcessId) FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Sale(), zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())), zc_Enum_Process_InsertUpdate_Movement_Sale()))
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
          AND inUserId <> 128491 -- Хохлова Е.Ю. !!!временно!!!
+         AND inUserId <> 409618 -- Скрипник А.В. !!!временно!!!
          AND inUserId <> 81707 -- Неграш О.В.
          -- AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
       THEN
@@ -53,6 +54,7 @@ BEGIN
       IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_ReturnIn())))
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
          AND inUserId <> 128491 -- Хохлова Е.Ю. !!!временно!!!
+         AND inUserId <> 409618 -- Скрипник А.В. !!!временно!!!
          AND inUserId <> 81707 -- Неграш О.В.
          -- AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
       THEN
@@ -82,7 +84,9 @@ BEGIN
 
 
   -- !!!временно!!!
-  IF inUserId = 128491 -- Хохлова Е.Ю. !!!временно!!!
+  IF inUserId IN (128491 -- Хохлова Е.Ю. !!!временно!!!
+                , 409618 -- Скрипник А.В. !!!временно!!!
+                 )
   THEN RETURN;
   END IF;
 
