@@ -10,19 +10,19 @@ inherited ReturnInForm: TReturnInForm
     Top = 166
     Width = 1104
     Height = 502
-    ExplicitTop = 126
-    ExplicitWidth = 1139
-    ExplicitHeight = 542
+    ExplicitTop = 166
+    ExplicitWidth = 1104
+    ExplicitHeight = 502
     ClientRectBottom = 502
     ClientRectRight = 1104
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1139
-      ExplicitHeight = 518
+      ExplicitWidth = 1104
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1104
         Height = 478
-        ExplicitWidth = 1139
-        ExplicitHeight = 518
+        ExplicitWidth = 1104
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -232,8 +232,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitWidth = 1139
-      ExplicitHeight = 518
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -241,9 +239,6 @@ inherited ReturnInForm: TReturnInForm
         Height = 478
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -48
-        ExplicitTop = -24
-        ExplicitWidth = 1211
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -596,9 +591,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 1104
     Height = 140
     TabOrder = 3
-    ExplicitLeft = 16
-    ExplicitTop = 16
-    ExplicitWidth = 1225
+    ExplicitWidth = 1104
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -933,7 +926,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 127
   end
   object cbCalcAmountPartner: TcxCheckBox [10]
-    Left = 625
+    Left = 680
     Top = 191
     Caption = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
     Properties.ReadOnly = False
@@ -3166,9 +3159,9 @@ inherited ReturnInForm: TReturnInForm
     KeyField = 'Id'
     LookupControl = edInvNumberParent
     Key = '0'
-    FormNameParam.Value = 'TReturnInChoiceJournalForm'
+    FormNameParam.Value = 'TReturnInJournalChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TReturnInChoiceJournalForm'
+    FormName = 'TReturnInJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -3192,9 +3185,8 @@ inherited ReturnInForm: TReturnInForm
         Value = ''
         Component = edInvNumber
         DataType = ftString
-        ParamType = ptInput
       end>
-    Left = 316
-    Top = 96
+    Left = 284
+    Top = 88
   end
 end
