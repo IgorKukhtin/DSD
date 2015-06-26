@@ -1,5 +1,5 @@
-inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
+inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1110
   AddOnFormData.ChoiceAction = dsdChoiceGuides
@@ -767,7 +767,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Choice'
+    StoredProcName = 'gpSelect_Movement_ReturnIn_Choice'
     Params = <
       item
         Name = 'instartdate'
