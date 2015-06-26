@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
-               Value TFloat, ValueCost TFloat, TaxExit TFloat, TaxLoss TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
+               Value TFloat, ValueWeight TFloat, ValueCost TFloat, TaxExit TFloat, TaxLoss TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
                TotalWeightMain TFloat, TotalWeight TFloat,
                StartDate TDateTime, EndDate TDateTime,
                isMain Boolean,
@@ -45,6 +45,7 @@ BEGIN
          , ObjectString_Comment.ValueData AS Comment
 
          , ObjectFloat_Value.ValueData         AS Value
+         , (ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS ValueWeight
          , ObjectFloat_ValueCost.ValueData     AS ValueCost
          , ObjectFloat_TaxExit.ValueData       AS TaxExit
          , ObjectFloat_TaxLoss.ValueData       AS TaxLoss
@@ -154,6 +155,9 @@ BEGIN
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

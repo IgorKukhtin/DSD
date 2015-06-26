@@ -3,7 +3,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   ClientHeight = 678
   ClientWidth = 903
   ExplicitWidth = 919
-  ExplicitHeight = 716
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -75,6 +75,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           inherited colGoodsName: TcxGridDBColumn
@@ -85,6 +86,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colAmount: TcxGridDBColumn [4]
@@ -166,6 +168,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           inherited colChildGoodsName: TcxGridDBColumn
@@ -176,6 +179,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colChildAmount: TcxGridDBColumn [4]
@@ -186,7 +190,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object colChildLiveWeight: TcxGridDBColumn [5]
@@ -195,8 +198,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colChildHeadCount: TcxGridDBColumn [6]
@@ -205,6 +210,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -267,8 +273,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end>
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 22
-      ShortCut = 16464
+      ImageIndex = 3
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -299,10 +304,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
       ImageIndex = 22
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -320,8 +324,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1073#1074#1072#1083#1082#1077' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -432,14 +436,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint_Ceh'
         end
         item
@@ -457,10 +453,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           Visible = True
           ItemName = 'bbMIMasterProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

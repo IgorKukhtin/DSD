@@ -636,6 +636,7 @@ begin
      if DialogPrintForm.cbPrintMovement.Checked
      then Result:=Print_Movement (ParamsMovement.ParamByName('MovementDescId').AsInteger
                                 , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                                , ParamsMovement.ParamByName('MovementId').AsInteger
                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text) // myPrintCount
                                 , DialogPrintForm.cbPrintPreview.Checked        // isPreview
                                 , DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
