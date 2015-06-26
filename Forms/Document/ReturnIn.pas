@@ -140,6 +140,11 @@ type
     SaleChoiceGuides: TdsdGuides;
     clPartionMovementName: TcxGridDBColumn;
     actSaleJournalChoice: TOpenChoiceForm;
+    cxLabel18: TcxLabel;
+    ceComment: TcxTextEdit;
+    cxLabel21: TcxLabel;
+    edInvNumberParent: TcxButtonEdit;
+    ParentChoiceGuides: TdsdGuides;
   private
     { Private declarations }
   public
