@@ -112,9 +112,16 @@ inherited ReturnInForm: TReturnInForm
           object colName: TcxGridDBColumn [3]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 200
           end
           object colGoodsKindName: TcxGridDBColumn [4]
@@ -1375,6 +1382,49 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
+    object actGoodsChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actGoodsChoice'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupNameFull'
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object actGoodsKindChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2128,8 +2178,8 @@ inherited ReturnInForm: TReturnInForm
       item
         Guides = GuidesTo
       end>
-    Left = 168
-    Top = 192
+    Left = 200
+    Top = 200
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -2187,7 +2237,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Control = edCurrencyValue
       end>
-    Left = 224
+    Left = 264
     Top = 209
   end
   inherited RefreshAddOn: TRefreshAddOn
@@ -3181,7 +3231,7 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
-        Name = 'InvNumber'
+        Name = 'TextValue'
         Value = ''
         Component = edInvNumber
         DataType = ftString

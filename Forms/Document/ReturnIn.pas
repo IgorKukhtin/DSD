@@ -145,6 +145,7 @@ type
     cxLabel21: TcxLabel;
     edInvNumberParent: TcxButtonEdit;
     ParentChoiceGuides: TdsdGuides;
+    actGoodsChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

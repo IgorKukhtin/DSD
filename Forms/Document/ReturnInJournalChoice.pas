@@ -47,12 +47,9 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
     colContractCode: TcxGridDBColumn;
-    InvNumber_TransportGoods: TcxGridDBColumn;
-    OperDate_TransportGoods: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
-    colPaymentDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

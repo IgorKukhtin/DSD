@@ -133,6 +133,12 @@ type
     mactPrint_TaxCorrective_Us: TMultiAction;
     colLineNum: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    cxLabel21: TcxLabel;
+    edInvNumberParent: TcxButtonEdit;
+    ParentChoiceGuides: TdsdGuides;
+    cxLabel18: TcxLabel;
+    ceComment: TcxTextEdit;
+    actGoodsChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   ClientHeight = 535
   ClientWidth = 1106
   ExplicitWidth = 1122
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -179,6 +179,13 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object colInvNumber_Parent: TcxGridDBColumn
+            Caption = #1054#1089#1085'.- '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'InvNumber_Parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object colDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
@@ -442,6 +449,13 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 30
+          end
+          object colComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
         end
       end

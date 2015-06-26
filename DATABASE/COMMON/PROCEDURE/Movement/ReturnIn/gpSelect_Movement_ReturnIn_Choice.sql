@@ -84,7 +84,6 @@ BEGIN
            , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
 
-           , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
            , Object_From.Id                                 AS FromId
            , Object_From.ValueData                          AS FromName
            , Object_To.Id                                   AS ToId
@@ -102,10 +101,10 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
            , Object_PriceList.ValueData                     AS PriceListName
-           , Object_TaxKind_Master.Id                	    AS DocumentTaxKindId
-           , Object_TaxKind_Master.ValueData         	    AS DocumentTaxKindName
+           , Object_TaxKind.Id                	        AS DocumentTaxKindId
+           , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
 
-           , COALESCE (MovementLinkMovement_ReturnIn.MovementChildId, 0) <> 0 AS isEDI
+           , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
            , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, MovementDate_OperDatePartner.ValueData) AS InvNumber_Full
 
        FROM (SELECT Movement.id
@@ -222,11 +221,6 @@ BEGIN
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
-                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
-                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
@@ -237,13 +231,22 @@ BEGIN
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
-                                         ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id -- MovementLinkMovement_Master.MovementChildId
-                                        AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
-            LEFT JOIN Object AS Object_TaxKind_Master ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
-                                                     AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
-            WHERE MovementLinkObject_To.ObjectId = inPartnerId -- OR COALESCE (inPartnerId, 0) = 0
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
+                                        ON MovementLinkMovement_MasterEDI.MovementId = Movement.Id 
+                                       AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
+
+            WHERE MovementLinkObject_To.ObjectId = inPartnerId --OR COALESCE (inPartnerId, 0) = 0
             ;
 
 END;
