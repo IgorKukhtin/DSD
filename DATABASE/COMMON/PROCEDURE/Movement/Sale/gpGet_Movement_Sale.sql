@@ -1,10 +1,12 @@
 -- Function: gpGet_Movement_Sale()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Sale (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Sale(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- ключ Документа
+    IN inChangePercentAmount TFloat , -- Расчет по % скидки вес
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -51,7 +53,7 @@ BEGIN
              , CAST (False AS Boolean)                      AS PriceWithVAT
              , CAST (20 AS TFloat)                          AS VATPercent
              , CAST (0 AS TFloat)                           AS ChangePercent
-             , CAST (1 AS TFloat)                           AS ChangePercentAmount
+             , inChangePercentAmount                        AS ChangePercentAmount
 
              , CAST (0 as TFloat)                           AS CurrencyValue
              , CAST (0 as TFloat)                           AS ParValue
@@ -103,7 +105,7 @@ BEGIN
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
-           , CAST (1 AS TFloat)                             AS ChangePercentAmount
+           , inChangePercentAmount                          AS ChangePercentAmount
 
            , MovementFloat_CurrencyValue.ValueData          AS CurrencyValue
            , MovementFloat_ParValue.ValueData               AS ParValue
@@ -277,12 +279,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.06.15         * add inChangePercentAmount
  24.07.14         * add zc_MovementFloat_CurrencyValue
                         zc_MovementLinkObject_CurrencyDocument
                         zc_MovementLinkObject_CurrencyPartner

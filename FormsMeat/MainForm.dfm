@@ -1384,7 +1384,12 @@ inherited MainForm: TMainForm
       FormName = 'TSaleJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inChangePercentAmount'
+          Value = '1'
+          DataType = ftFloat
+        end>
       isShowModal = False
     end
     object actSale_Partner: TdsdOpenForm
@@ -1394,7 +1399,12 @@ inherited MainForm: TMainForm
       FormName = 'TSale_PartnerJournalForm'
       FormNameParam.Value = 'TSale_PartnerJournalForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inChangePercentAmount'
+          Value = '1'
+          DataType = ftFloat
+        end>
       isShowModal = False
     end
     object actSale_Order: TdsdOpenForm
@@ -1404,7 +1414,12 @@ inherited MainForm: TMainForm
       FormName = 'TSale_OrderJournalForm'
       FormNameParam.Value = 'TSale_OrderJournalForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inChangePercentAmount'
+          Value = '1'
+          DataType = ftFloat
+        end>
       isShowModal = False
     end
     object actReturnIn: TdsdOpenForm

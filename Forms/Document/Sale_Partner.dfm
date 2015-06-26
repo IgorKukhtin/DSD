@@ -3,7 +3,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1604,6 +1604,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
       end>
     Left = 32
     Top = 304
@@ -1633,6 +1639,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercentAmount'
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
