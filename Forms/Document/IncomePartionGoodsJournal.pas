@@ -1,4 +1,4 @@
-unit IncomeJournal;
+unit IncomePartionGoodsJournal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
 
 type
-  TIncomeJournalForm = class(TParentForm)
+  TIncomePartionGoodsJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -113,6 +113,9 @@ type
     FormParams: TdsdFormParams;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    colGoodsName: TcxGridDBColumn;
+    colGoodsCode: TcxGridDBColumn;
+    colPartionGoods: TcxGridDBColumn;
   private
   public
   end;
@@ -122,6 +125,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeJournalForm);
+  RegisterClass(TIncomePartionGoodsJournalForm);
 
 end.

@@ -1,9 +1,8 @@
--- Function: gpSelect_Movement_Income()
+-- Function: gpSelect_Movement_Income_PartionGoods()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income_PartionGoods (TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_PartionGoods(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inIsErased    Boolean ,
@@ -21,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PersonalPackerName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
+             , GoodsCode Integer, GoodsName TVarChar, PartionGoods TVarChar
               )
 AS
 $BODY$
@@ -86,6 +86,10 @@ BEGIN
 
            , Object_CurrencyDocument.ValueData AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData  AS CurrencyPartnerName
+
+           , Object_Goods.ObjectCode  AS GoodsCode
+           , Object_Goods.ValueData   AS GoodsName
+           , COALESCE (MIString_PartionGoods.ValueData, MIString_PartionGoodsCalc.ValueData) :: TVarChar AS PartionGoods
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -183,37 +187,34 @@ BEGIN
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+-- привязываем строки док-та, нужны партия и товар
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  AND MovementItem.isErased   = False
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                         ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                        AND MIString_PartionGoods.ValueData <> ''
+            LEFT JOIN MovementItemString AS MIString_PartionGoodsCalc
+                                         ON MIString_PartionGoodsCalc.MovementItemId =  MovementItem.Id
+                                        AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()                                        
+
 
     ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Income_PartionGoods (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 25.06.15         * add inIsErased
- 02.08.14                                        * add Object_Member
- 23.07.14         * add zc_MovementFloat_CurrencyValue
-                        zc_MovementLinkObject_CurrencyDocument
-                        zc_MovementLinkObject_CurrencyPartner
- 16.03.14                                        * change OKPO_From
- 12.02.14                                        * add JuridicalName_From and OKPO
- 10.02.14                                        * add TotalCountPartner
- 10.02.14                                        * add Object_RoleAccessKey_View
- 09.02.14                                        * add Object_Contract_InvNumber_View and Object_InfoMoney_View
- 14.12.13                                        * del Object_RoleAccessKey_View
- 14.12.13                                        * add Object_RoleAccessKey_View
- 23.10.13                                        * add zfConvert_StringToNumber
- 07.10.13                                        * add lpCheckRight
- 30.09.13                                        * add Object_Personal_View
- 30.09.13                                        * del zc_MovementLinkObject_PersonalDriver
- 27.09.13                                        * del zc_MovementLinkObject_Car
- 07.07.13                                        *
- 30.06.13                                        *
+ 25.06.15         * 
+
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '01.01.2014', inEndDate:= '01.02.2014', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Income_PartionGoods (inStartDate:= '01.01.2014', inEndDate:= '01.02.2014', inSession:= zfCalc_UserAdmin())

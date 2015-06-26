@@ -585,6 +585,8 @@ type
     N65: TMenuItem;
     N66: TMenuItem;
     N67: TMenuItem;
+    actIncomePartionGoods: TdsdOpenForm;
+    N68: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

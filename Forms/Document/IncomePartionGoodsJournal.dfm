@@ -1,7 +1,7 @@
-object IncomeJournalForm: TIncomeJournalForm
+object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084'>'
   ClientHeight = 427
   ClientWidth = 1240
   Color = clBtnFace
@@ -442,6 +442,30 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 54
+      end
+      object colGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object colGoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 123
+      end
+      object colPartionGoods: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1103
+        DataBinding.FieldName = 'PartionGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1012,7 +1036,7 @@ object IncomeJournalForm: TIncomeJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income'
+    StoredProcName = 'gpSelect_Movement_Income_PartionGoods'
     DataSet = ClientDataSet
     DataSets = <
       item
