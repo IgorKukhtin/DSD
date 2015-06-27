@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberMark TVarChar, OperDate TDateTime
+             , ParentId Integer, InvNumber_Parent TVarChar
              , StatusId Integer, StatusCode Integer, StatusName TVarChar, Checked Boolean
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
@@ -21,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Partion Integer, PartionMovementName TVarChar
+             , Comment TVarChar
              )
 AS
 $BODY$
@@ -40,6 +42,8 @@ BEGIN
              , '' :: TVarChar                           AS InvNumberPartner
              , '' :: TVarChar                           AS InvNumberMark
              , inOperDate				AS OperDate
+             , 0                                        AS ParentId
+             , '' :: TVarChar                           AS InvNumber_Parent
              , zc_Enum_Status_UnComplete()              AS StatusId
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
@@ -72,6 +76,7 @@ BEGIN
              , CAST ('' as TVarChar) 		        AS DocumentTaxKindName
              , 0                     		        AS MovementId_Partion
              , CAST ('' as TVarChar) 		        AS PartionMovementName
+             , CAST ('' as TVarChar) 		        AS Comment
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
@@ -108,6 +113,8 @@ BEGIN
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
            , MovementString_InvNumberMark.ValueData AS InvNumberMark
            , Movement.OperDate
+           , Movement.ParentId                          AS ParentId
+           , (Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Parent
            , Movement.StatusId
            , Object_Status.ObjectCode          	    AS StatusCode
            , Object_Status.ValueData         	    AS StatusName
@@ -142,6 +149,7 @@ BEGIN
 
            , tmpMI.MovementId                       AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
+           , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
@@ -151,6 +159,7 @@ BEGIN
                                    ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
                                   AND MovementDate_OperDatePartner_PartionMovement.DescId = zc_MovementDate_OperDatePartner()
 
+            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
            
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
@@ -159,6 +168,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberMark
                                      ON MovementString_InvNumberMark.MovementId =  Movement.Id
                                     AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
             
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
@@ -254,6 +266,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Манько Д.А.
+ 26.06.15         * add Comment, Parent
  24.07.14         * add zc_MovementFloat_CurrencyValue
                         zc_MovementLinkObject_CurrencyDocument
                         zc_MovementLinkObject_CurrencyPartner

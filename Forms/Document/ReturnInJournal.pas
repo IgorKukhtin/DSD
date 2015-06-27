@@ -93,6 +93,8 @@ type
     mactPrint_TaxCorrective_Us: TMultiAction;
     actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
     colContractCode: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
+    colInvNumber_Parent: TcxGridDBColumn;
   private
     { Private declarations }
   public

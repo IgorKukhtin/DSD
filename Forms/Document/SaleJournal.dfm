@@ -2,8 +2,9 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 641
   ClientWidth = 1020
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 676
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -907,6 +908,7 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
+      FormNameParam.Value = 'TSaleForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -925,6 +927,14 @@ inherited SaleJournalForm: TSaleJournalForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inChangePercentAmount'
+          DataType = ftFloat
+          ParamType = ptInput
         end>
     end
     object actMovementCheck: TdsdOpenForm [19]
@@ -1760,6 +1770,12 @@ inherited SaleJournalForm: TSaleJournalForm
         Name = 'ReportNameSaleTax'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        DataType = ftFloat
         ParamType = ptInput
       end>
     Left = 400

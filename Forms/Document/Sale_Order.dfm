@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1724,6 +1724,12 @@ inherited Sale_OrderForm: TSale_OrderForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     Left = 40
     Top = 328
@@ -1753,6 +1759,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercentAmount'
+        DataType = ftFloat
         ParamType = ptInput
       end
       item

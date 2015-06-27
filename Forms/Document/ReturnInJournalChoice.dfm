@@ -1,5 +1,5 @@
-inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
+inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1110
   AddOnFormData.ChoiceAction = dsdChoiceGuides
@@ -175,7 +175,6 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           object colOperDatePartner: TcxGridDBColumn [3]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -209,30 +208,6 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colInvNumberOrder: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
-            DataBinding.FieldName = 'InvNumberOrder'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object InvNumber_TransportGoods: TcxGridDBColumn
-            DataBinding.FieldName = 'InvNumber_TransportGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object OperDate_TransportGoods: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1058#1058#1053
-            DataBinding.FieldName = 'OperDate_TransportGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
@@ -247,17 +222,17 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colOKPO_To: TcxGridDBColumn
+          object colOKPO_From: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
-            DataBinding.FieldName = 'OKPO_To'
+            DataBinding.FieldName = 'OKPO_From'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colJuridicalName_To: TcxGridDBColumn
+          object colJuridicalName_From: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName_To'
+            DataBinding.FieldName = 'JuridicalName_From'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -419,13 +394,6 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colPaymentDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaymentDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
@@ -484,22 +452,6 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object clRouteName: TcxGridDBColumn
-            Caption = #1052#1072#1088#1096#1088#1091#1090
-            DataBinding.FieldName = 'RouteName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object colRouteSortingName: TcxGridDBColumn
-            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-            DataBinding.FieldName = 'RouteSortingName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -569,49 +521,6 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 30
-          end
-          object colIsElectron: TcxGridDBColumn
-            Caption = #1069#1083#1077#1082#1090#1088'.'
-            DataBinding.FieldName = 'isElectron'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 30
-          end
-          object colIsMedoc: TcxGridDBColumn
-            Caption = #1052#1077#1076#1086#1082
-            DataBinding.FieldName = 'IsMedoc'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object clEdiOrdspr: TcxGridDBColumn
-            Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
-            DataBinding.FieldName = 'EdiOrdspr'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object clEdiInvoice: TcxGridDBColumn
-            Caption = 'EDI - '#1057#1095#1077#1090
-            DataBinding.FieldName = 'EdiInvoice'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object clEdiDesadv: TcxGridDBColumn
-            Caption = 'EDI - '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'EdiDesadv'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
         end
       end
@@ -767,7 +676,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Choice'
+    StoredProcName = 'gpSelect_Movement_ReturnIn_Choice'
     Params = <
       item
         Name = 'instartdate'

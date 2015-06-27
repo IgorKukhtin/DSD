@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_Movement_ReturnIn()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
+    IN inParentId            Integer   , -- 
     IN inOperDate            TDateTime , -- Дата(склад)
     IN inOperDatePartner     TDateTime , -- Дата документа у покупателя
     IN inChecked             Boolean   , -- Проверен
@@ -20,6 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
     IN inCurrencyValue       TFloat    , -- курс валюты
+    In inComment             TVarChar  , -- примечание
     IN inUserId              Integer     -- Пользователь
 )
 RETURNS Integer
@@ -85,7 +88,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnIn(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnIn(), inInvNumber, inOperDate, inParentId, vbAccessKeyId);
      -- испраляю ошибку
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = ioId AND AccessKeyId IS NULL;
 
@@ -95,6 +98,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
      -- сохранили свойство <Номер "перекресленої зеленої марки зi складу">
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberMark(), ioId, inInvNumberMark);
+
+     -- сохранили свойство <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
      -- сохранили свойство <Проверен>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
@@ -142,6 +148,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.06.15         * add Comment, ParentId
  24.12.14				         * add меняется дата у всех корректировок
  26.08.14                                        * add только в GP - рассчитали свойство <Курс для перевода в валюту баланса>
  24.07.14         * add inCurrencyDocumentId

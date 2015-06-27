@@ -546,7 +546,7 @@ uses
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
   Partner_PriceList_view in '..\..\Forms\Guides\Partner_PriceList_view.pas' {Partner_PriceList_viewForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  SaleJournalChoice in '..\..\Forms\Document\SaleJournalChoice.pas' {SaleJournalChoiceForm: TParentForm},
+  ReturnInJournalChoice in '..\..\Forms\Document\ReturnInJournalChoice.pas' {ReturnInJournalChoiceForm: TParentForm},
   Sale_OrderJournal in '..\..\Forms\Document\Sale_OrderJournal.pas' {Sale_OrderJournalForm: TParentForm},
   Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
   Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm},
@@ -685,7 +685,8 @@ uses
   Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
-  IncomePartionGoodsJournal in '..\..\Forms\Document\IncomePartionGoodsJournal.pas' {IncomePartionGoodsJournalForm: TParentForm};
+  IncomePartionGoodsJournal in '..\..\Forms\Document\IncomePartionGoodsJournal.pas' {IncomePartionGoodsJournalForm: TParentForm},
+  SaleJournalChoice in '..\..\Forms\Document\SaleJournalChoice.pas' {SaleJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

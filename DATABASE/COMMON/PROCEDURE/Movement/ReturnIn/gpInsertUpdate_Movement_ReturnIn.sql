@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Movement_ReturnIn()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
+    IN inParentId            Integer   , -- 
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inChecked             Boolean   , -- Проверен
@@ -20,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
    OUT outCurrencyValue      TFloat    , -- курс валюты
+    In inComment             TVarChar  , -- примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -68,6 +71,7 @@ BEGIN
                                       , inInvNumber        := inInvNumber
                                       , inInvNumberPartner := inInvNumberPartner
                                       , inInvNumberMark    := inInvNumberMark
+                                      , inParentId         := inParentId
                                       , inOperDate         := inOperDate
                                       , inOperDatePartner  := CASE WHEN vbUserId = 5 AND ioId > 0 THEN COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()), inOperDatePartner) ELSE inOperDatePartner END
                                       , inChecked          := CASE WHEN vbUserId = 5 AND ioId > 0 THEN COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked()), inChecked) ELSE inChecked END
@@ -81,6 +85,7 @@ BEGIN
                                       , inCurrencyDocumentId := inCurrencyDocumentId
                                       , inCurrencyPartnerId  := inCurrencyPartnerId
                                       , inCurrencyValue    := outCurrencyValue
+                                      , inComment          := inComment
                                       , inUserId           := vbUserId
                                        )AS tmp;
 
@@ -92,6 +97,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.06.15         * add
  26.08.14                                        * add только в GP - рассчитали свойство <Курс для перевода в валюту баланса>
  24.07.14         * add inCurrencyDocumentId
                         inCurrencyPartnerId

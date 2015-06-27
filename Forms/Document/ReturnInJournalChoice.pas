@@ -1,4 +1,4 @@
-unit ReturnIn_PartnerJournal;
+unit ReturnInJournalChoice;
 
 interface
 
@@ -27,74 +27,29 @@ uses
   dsdGuides, cxButtonEdit;
 
 type
-  TReturnIn_PartnerJournalForm = class(TAncestorJournalForm)
-    colOperDatePartner: TcxGridDBColumn;
+  TReturnInJournalChoiceForm = class(TAncestorJournalForm)
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
-    colTotalCountPartner: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
     colPriceWithVAT: TcxGridDBColumn;
     colVATPercent: TcxGridDBColumn;
     colTotalSummVAT: TcxGridDBColumn;
     colTotalSummMVAT: TcxGridDBColumn;
     colTotalSummPVAT: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
     colChecked: TcxGridDBColumn;
-    edIsPartnerDate: TcxCheckBox;
-    colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
+    colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
-    edDocumentTaxKind: TcxButtonEdit;
-    cxLabel14: TcxLabel;
-    DocumentTaxKindGuides: TdsdGuides;
-    spTaxCorrective: TdsdStoredProc;
-    actTaxCorrective: TdsdExecStoredProc;
-    bbTaxCorrective: TdxBarButton;
-    colDocumentTaxKindName: TcxGridDBColumn;
-    colOKPO_From: TcxGridDBColumn;
-    colJuridicalName_From: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
-    colTotalCountTare: TcxGridDBColumn;
-    colTotalCountSh: TcxGridDBColumn;
-    colTotalCountKg: TcxGridDBColumn;
-    spSelectPrint: TdsdStoredProc;
-    spSelectPrintTaxCorrective_Client: TdsdStoredProc;
-    spSelectPrintTaxCorrective_Us: TdsdStoredProc;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    actPrint: TdsdPrintAction;
-    bbPrintReturnIn: TdxBarButton;
-    bbPrintTaxCorrective_Client: TdxBarButton;
-    bbPrintTaxCorrective_Us: TdxBarButton;
-    actCorrective: TdsdExecStoredProc;
-    bbCorrective: TdxBarButton;
-    spCorrective: TdsdStoredProc;
-    colInvNumberMark: TcxGridDBColumn;
-    spGetReportName: TdsdStoredProc;
-    actSPPrintProcName: TdsdExecStoredProc;
-    mactPrint: TMultiAction;
-    actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
-    bbPrint_Return_By_TaxCorrective: TdxBarButton;
-    spChecked: TdsdStoredProc;
-    actChecked: TdsdExecStoredProc;
-    bbactChecked: TdxBarButton;
-    colCurrencyValue: TcxGridDBColumn;
-    colCurrencyDocumentName: TcxGridDBColumn;
-    colCurrencyPartnerName: TcxGridDBColumn;
-    colIsEDI: TcxGridDBColumn;
-    spGetReportNameTaxCorrective: TdsdStoredProc;
-    actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
-    actPrint_TaxCorrective_Us: TdsdPrintAction;
-    actPrint_TaxCorrective_Client: TdsdPrintAction;
-    mactPrint_TaxCorrective_Client: TMultiAction;
-    mactPrint_TaxCorrective_Us: TMultiAction;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    bbSelect: TdxBarButton;
     colContractCode: TcxGridDBColumn;
-    colInvNumber_Parent: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edPartner: TcxButtonEdit;
+    PartnerGuides: TdsdGuides;
   private
     { Private declarations }
   public
@@ -102,11 +57,11 @@ type
   end;
 
 var
-  ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm;
+  ReturnInJournalChoiceForm: TReturnInJournalChoiceForm;
 
 implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReturnIn_PartnerJournalForm);
+  RegisterClass(TReturnInJournalChoiceForm);
 end.
