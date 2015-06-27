@@ -204,11 +204,11 @@
 				<Form>ToolsWeighingTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbMovementItemTest.pas"/>
-			<DCCReference Include="..\..\Forms\Document\Income.pas">
-				<Form>IncomeForm</Form>
+			<DCCReference Include="..\..\Forms\Document\IncomeTo.pas">
+				<Form>IncomeToForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\IncomeJournal.pas">
-				<Form>ParentForm2</Form>
+			<DCCReference Include="..\..\Forms\Document\IncomeToJournal.pas">
+				<Form>IncomeToJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<DCCReference Include="..\SOURCE\dbMovementCompleteTest.pas"/>
@@ -2103,6 +2103,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderInternalJournal.pas">
 				<Form>OrderInternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\IncomeJournal.pas">
+				<Form>IncomeJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Income.pas">
+				<Form>IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

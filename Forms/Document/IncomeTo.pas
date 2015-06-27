@@ -143,6 +143,14 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
+    cxLabel16: TcxLabel;
+    edChangePercentTo: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edPaidKindTo: TcxButtonEdit;
+    PaidKindToGuides: TdsdGuides;
+    cxLabel18: TcxLabel;
+    edContractTo: TcxButtonEdit;
+    ContractGuidesTo: TdsdGuides;
   private
   public
   end;

@@ -3,7 +3,7 @@ object IncomeToForm: TIncomeToForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 462
-  ClientWidth = 1138
+  ClientWidth = 1162
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object IncomeToForm: TIncomeToForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1138
+    Width = 1162
     Height = 100
     Align = alTop
     BevelOuter = bvNone
@@ -61,6 +61,7 @@ object IncomeToForm: TIncomeToForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = False
       TabOrder = 3
       Width = 173
     end
@@ -72,6 +73,7 @@ object IncomeToForm: TIncomeToForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = False
       TabOrder = 2
       Width = 144
     end
@@ -128,7 +130,7 @@ object IncomeToForm: TIncomeToForm
     end
     object edChangePercent: TcxCurrencyEdit
       Left = 451
-      Top = 63
+      Top = 64
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 3
@@ -189,7 +191,7 @@ object IncomeToForm: TIncomeToForm
     end
     object edPacker: TcxButtonEdit
       Left = 603
-      Top = 63
+      Top = 64
       Properties.Buttons = <
         item
           Default = True
@@ -275,11 +277,60 @@ object IncomeToForm: TIncomeToForm
       TabOrder = 30
       Width = 127
     end
+    object cxLabel16: TcxLabel
+      Left = 941
+      Top = 45
+      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094'. '#1087#1086#1082'.'
+    end
+    object edChangePercentTo: TcxCurrencyEdit
+      Left = 941
+      Top = 64
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.###'
+      TabOrder = 32
+      Width = 144
+    end
+    object cxLabel17: TcxLabel
+      Left = 941
+      Top = 5
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099'('#1087#1086#1082'.)'
+    end
+    object edPaidKindTo: TcxButtonEdit
+      Left = 941
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 34
+      Width = 107
+    end
+    object cxLabel18: TcxLabel
+      Left = 1054
+      Top = 5
+      Caption = #1044#1086#1075#1086#1074#1086#1088'('#1087#1086#1082'.) '
+    end
+    object edContractTo: TcxButtonEdit
+      Left = 1054
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 36
+      Width = 113
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 1138
+    Width = 1162
     Height = 336
     Align = alClient
     TabOrder = 2
@@ -287,7 +338,7 @@ object IncomeToForm: TIncomeToForm
     Properties.CustomButtons.Buttons = <>
     ExplicitWidth = 956
     ClientRectBottom = 336
-    ClientRectRight = 1138
+    ClientRectRight = 1162
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -296,7 +347,7 @@ object IncomeToForm: TIncomeToForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1138
+        Width = 1162
         Height = 312
         Align = alClient
         TabOrder = 0
@@ -1715,6 +1766,7 @@ object IncomeToForm: TIncomeToForm
         ParamType = ptInput
       end>
     Left = 624
+    Top = 8
   end
   object PackerGuides: TdsdGuides
     KeyField = 'Id'
@@ -1987,5 +2039,59 @@ object IncomeToForm: TIncomeToForm
     PackSize = 1
     Left = 471
     Top = 368
+  end
+  object PaidKindToGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKindTo
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindToGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindToGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 968
+    Top = 8
+  end
+  object ContractGuidesTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContractTo
+    FormNameParam.Value = 'TContractForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuidesTo
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1080
+    Top = 8
   end
 end
