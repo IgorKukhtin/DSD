@@ -31,15 +31,11 @@ type
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
-    bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    bbPrintTax_Us: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
     colTotalCountKg: TcxGridDBColumn;
     colTotalCountSh: TcxGridDBColumn;
   private

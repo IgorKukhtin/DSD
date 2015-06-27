@@ -27,7 +27,12 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderInternal());
 
      -- 1. эти параметры всегда +1 день
-     outOperDatePartner:= inOperDate + INTERVAL '1 DAY';
+     IF inToId = 8451 -- ÷ех ”паковки
+     THEN
+         outOperDatePartner:= inOperDate;
+     ELSE 
+         outOperDatePartner:= inOperDate + INTERVAL '1 DAY';
+     END IF;
      -- 1. эти параметры всегда -56 день
      ioOperDateStart:= inOperDate - INTERVAL '56 DAY';
      -- 1. эти параметры всегда -1 день

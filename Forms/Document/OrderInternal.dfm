@@ -1,5 +1,5 @@
 inherited OrderInternalForm: TOrderInternalForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')>'
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
@@ -245,7 +245,6 @@ inherited OrderInternalForm: TOrderInternalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = True
-          OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -1403,7 +1402,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 392
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_OrderInternal'
+    StoredProcName = 'gpSelect_MI_OrderInternal'
     DataSets = <
       item
         DataSet = MasterCDS
@@ -1433,16 +1432,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptUnknown
       end>
     Left = 152
     Top = 296
@@ -1473,18 +1462,6 @@ inherited OrderInternalForm: TOrderInternalForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1740,22 +1717,9 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ReportNameOrderInternal'
-        Value = 'PrintMovement_Sale1'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ReportNameOrderInternalTax'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ReportNameOrderInternalBill'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
+        Name = 'isPack'
+        Value = False
+        DataType = ftBoolean
       end>
     Left = 280
     Top = 369
@@ -1780,17 +1744,25 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
       end
       item
-        Name = 'InvNumber'
-        Value = ''
-        Component = edInvNumber
-      end
-      item
         Name = 'inOperDate'
         Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsPack'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isPack'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
       end
       item
         Name = 'OperDate'

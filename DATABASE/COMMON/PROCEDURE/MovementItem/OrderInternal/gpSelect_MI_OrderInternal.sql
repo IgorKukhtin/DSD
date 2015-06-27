@@ -1,9 +1,8 @@
--- Function: gpSelect_MovementItem_OrderInternal()
+-- Function: gpSelect_MI_OrderInternal()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderInternal (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_OrderInternal (Integer, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderInternal(
+CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternal(
     IN inMovementId  Integer      , -- ÍÎ˛˜ ƒÓÍÛÏÂÌÚ‡
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
@@ -480,7 +479,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MI_OrderInternal (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -492,5 +491,5 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
