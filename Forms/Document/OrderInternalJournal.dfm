@@ -1,5 +1,5 @@
 inherited OrderInternalJournalForm: TOrderInternalJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')>'
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1089
@@ -119,12 +119,11 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 80
           end
           inherited colOperDate: TcxGridDBColumn [1]
-            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             HeaderAlignmentHorz = taCenter
-            Width = 50
+            Width = 70
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
@@ -136,14 +135,14 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 150
           end
           object colToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 150
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -182,16 +181,22 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   inherited Panel: TPanel
     Width = 1073
     ExplicitWidth = 1073
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 243
+    Top = 203
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 47
+    Top = 250
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TOrderInternalForm'
     end
@@ -324,14 +329,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbTax'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbShowErased'
         end
         item
@@ -363,37 +360,9 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           ItemName = 'bbGridToExcel'
         end>
     end
-    object bbTax: TdxBarButton
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Category = 0
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Visible = ivNever
-      ImageIndex = 41
-    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-    end
-    object bbPrintTax_Us: TdxBarButton
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Visible = ivAlways
-      ImageIndex = 16
-    end
-    object bbPrintTax_Client: TdxBarButton
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Visible = ivAlways
-      ImageIndex = 18
-    end
-    object bbPrint_Bill: TdxBarButton
-      Caption = #1057#1095#1077#1090
-      Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -458,36 +427,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 376
   end
   inherited FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'ReportNameOrderInternal'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ReportNameOrderInternalTax'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end>
     Left = 400
     Top = 200
   end

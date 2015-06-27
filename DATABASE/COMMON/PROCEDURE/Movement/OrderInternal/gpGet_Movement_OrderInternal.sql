@@ -3,10 +3,12 @@
 -- DROP FUNCTION gpGet_Movement_OrderInternal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderInternal(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- дата Документа
+    IN inIsPack            Boolean  , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -33,7 +35,7 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              
-             , (inOperDate + INTERVAL '1 DAY') :: TDateTime     AS OperDatePartner
+             , (CASE WHEN inIsPack = TRUE THEN inOperDate ELSE inOperDate + INTERVAL '1 DAY' END) :: TDateTime     AS OperDatePartner
              , (inOperDate - INTERVAL '56 DAY') ::TDateTime     AS OperDateStart
              , (inOperDate - INTERVAL '1 DAY') ::TDateTime      AS OperDateEnd  
                           
@@ -45,7 +47,10 @@ BEGIN
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_From ON Object_From.Id = 8457 -- Склады База + Реализации
-               LEFT JOIN Object AS Object_To ON Object_To.Id = 8446 -- ЦЕХ колбаса+дел-сы
+               LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN inIsPack = TRUE
+                                                                         THEN 8451 -- Цех Упаковки
+                                                                    ELSE 8446 -- ЦЕХ колбаса+дел-сы
+                                                               END
          ;
 
      ELSE
@@ -104,15 +109,16 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.06.15                                        * all
  02.03.15         * add OperDatePartner, OperDateStart, OperDateEnd, DayCount               
  06.06.14                                                        *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderInternal (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_OrderInternal (inMovementId:= 1, inOperDate:= NULL, inIsPack:= FALSE, inSession:= zfCalc_UserAdmin())

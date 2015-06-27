@@ -13,10 +13,16 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbIsPack  Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
+
+     -- расчет, временно захардкодил
+     vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND ObjectId = 8451); -- Цех Упаковки
+ 
 
      -- таблица -
      CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecast TFloat) ON COMMIT DROP;
@@ -153,6 +159,7 @@ BEGIN
                                                  , inDescId_Param       := zc_MIFloat_AmountForecast()
                                                  , inAmount_ParamOrder  := tmpAll.AmountForecastOrder * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamOrder  := zc_MIFloat_AmountForecastOrder()
+                                                 , inIsPack             := vbIsPack
                                                  , inUserId             := vbUserId
                                                   ) 
        FROM tmpAll
@@ -170,7 +177,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.06.15                                        * расчет, временно захардкодил
  19.06.15                                        * all
  03.03.15         *
 */
