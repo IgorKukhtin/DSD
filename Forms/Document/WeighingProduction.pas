@@ -57,8 +57,8 @@ type
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    coPriceListName: TcxGridDBColumn;
-    colChangePercentAmount: TcxGridDBColumn;
+    colWeightSkewer1: TcxGridDBColumn;
+    colCountSkewer1: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     actPrint: TdsdPrintAction;
@@ -79,10 +79,10 @@ type
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     edStartWeighing: TcxDateEdit;
-    edInvNumberTransport: TcxCurrencyEdit;
+    edMovementDescName: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     HeaderSaver: THeaderSaver;
-    edInvNumberOrder: TcxTextEdit;
+    edMovementDescNumber: TcxTextEdit;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
     GridToExcel: TdsdGridToExcel;
@@ -90,9 +90,6 @@ type
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
-    cxLabel13: TcxLabel;
-    edRouteSorting: TcxButtonEdit;
-    RouteSortingGuides: TdsdGuides;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
@@ -117,6 +114,22 @@ type
     UserGuides: TdsdGuides;
     clGoodsGroupNameFull: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
+    colCountPack: TcxGridDBColumn;
+    edOperDate_parent: TcxDateEdit;
+    cxLabel14: TcxLabel;
+    edInvNumber_parent: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    cxLabel10: TcxLabel;
+    edWeighingNumber: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    edPartionGoods: TcxTextEdit;
+    edisIncome: TcxCheckBox;
+    colStartWeighing: TcxGridDBColumn;
+    colLiveWeight: TcxGridDBColumn;
+    colHeadCount: TcxGridDBColumn;
+    colCountSkewer2: TcxGridDBColumn;
+    colWeightSkewer2: TcxGridDBColumn;
+    colWeightOther: TcxGridDBColumn;
   private
   public
   end;

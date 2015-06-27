@@ -14,8 +14,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Amount TFloat
              , StartWeighing Boolean
              , InsertDate TDateTime, UpdateDate TDateTime
-             , RealWeight TFloat, WeightTare TFloat, LiveWeight TFloat, HeadCount TFloat,  Count TFloat
-             , CountSkewer1 TFloat, WeightSkewer1 TFloat, CountSkewer2 TFloat, WeightSkewer2 TFloat,  WeightOther TFloat
+             , RealWeight TFloat, WeightTare TFloat, LiveWeight TFloat
+             , HeadCount TFloat, Count TFloat, CountPack TFloat
+             , CountSkewer1 TFloat, WeightSkewer1 TFloat
+             , CountSkewer2 TFloat, WeightSkewer2 TFloat,  WeightOther TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , isErased Boolean
@@ -49,6 +51,7 @@ BEGIN
            , MIFloat_HeadCount.ValueData    AS HeadCount
            , MIFloat_Count.ValueData        AS Count
 
+           , MIFloat_CountPack.ValueData      AS CountPack
            , MIFloat_CountSkewer1.ValueData   AS CountSkewer1
            , MIFloat_WeightSkewer1.ValueData  AS WeightSkewer1
            , MIFloat_CountSkewer2.ValueData   AS CountSkewer2
@@ -104,6 +107,10 @@ BEGIN
                                         ON MIFloat_Count.MovementItemId = MovementItem.Id
                                        AND MIFloat_Count.DescId = zc_MIFloat_Count()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                        ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+
             LEFT JOIN MovementItemFloat AS MIFloat_CountSkewer1
                                         ON MIFloat_CountSkewer1.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountSkewer1.DescId = zc_MIFloat_CountSkewer1()
@@ -151,6 +158,7 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingProduction (Integer, Boolean, Boole
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 27.06.15         * add CountPack
  11.03.14         *
 */
 
