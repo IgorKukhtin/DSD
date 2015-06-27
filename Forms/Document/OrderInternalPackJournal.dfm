@@ -1,4 +1,4 @@
-inherited OrderInternalJournalForm: TOrderInternalJournalForm
+inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 535
   ClientWidth = 1073

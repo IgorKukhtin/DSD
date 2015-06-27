@@ -1323,12 +1323,12 @@
 				<Form>InventoryJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderInternalJournal.pas">
-				<Form>OrderInternalJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalPackJournal.pas">
+				<Form>OrderInternalPackJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderInternal.pas">
-				<Form>OrderInternalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalPack.pas">
+				<Form>OrderInternalPackForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\OrderKind.pas">
@@ -2095,6 +2095,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SaleJournalChoice.pas">
 				<Form>SaleJournalChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderInternal.pas">
+				<Form>OrderInternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalJournal.pas">
+				<Form>OrderInternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

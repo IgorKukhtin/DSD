@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -1523,10 +1523,21 @@ inherited MainForm: TMainForm
     object actOrderInternal: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
-      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')'
       FormName = 'TOrderInternalJournalForm'
       FormNameParam.Value = 'TOrderInternalJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actOrderInternalPack: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+      FormName = 'TOrderInternalPackJournalForm'
+      FormNameParam.Value = 'TOrderInternalPackJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3279,6 +3290,9 @@ inherited MainForm: TMainForm
       end
       object miOrderInternal: TMenuItem
         Action = actOrderInternal
+      end
+      object miOrderInternalPack: TMenuItem
+        Action = actOrderInternalPack
       end
       object miOrderType: TMenuItem
         Action = actOrderType

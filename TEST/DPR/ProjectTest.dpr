@@ -446,8 +446,8 @@ uses
   ProvinceEdit in '..\..\Forms\Guides\ProvinceEdit.pas' {ProvinceEditForm: TParentForm},
   Inventory in '..\..\Forms\Document\Inventory.pas' {InventoryForm: TParentForm},
   InventoryJournal in '..\..\Forms\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
-  OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
-  OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  OrderInternalPackJournal in '..\..\Forms\Document\OrderInternalPackJournal.pas' {OrderInternalPackJournalForm: TParentForm},
+  OrderInternalPack in '..\..\Forms\Document\OrderInternalPack.pas' {OrderInternalPackForm: TParentForm},
   OrderKind in '..\..\Forms\Kind\OrderKind.pas' {OrderKindForm: TParentForm},
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
@@ -686,7 +686,9 @@ uses
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
   IncomePartionGoodsJournal in '..\..\Forms\Document\IncomePartionGoodsJournal.pas' {IncomePartionGoodsJournalForm: TParentForm},
-  SaleJournalChoice in '..\..\Forms\Document\SaleJournalChoice.pas' {SaleJournalChoiceForm: TParentForm};
+  SaleJournalChoice in '..\..\Forms\Document\SaleJournalChoice.pas' {SaleJournalChoiceForm: TParentForm},
+  OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

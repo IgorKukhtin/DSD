@@ -1,4 +1,4 @@
-unit OrderInternalJournal;
+unit OrderInternalPackJournal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TOrderInternalJournalForm = class(TAncestorJournalForm)
+  TOrderInternalPackJournalForm = class(TAncestorJournalForm)
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
@@ -52,5 +52,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TOrderInternalJournalForm);
+  RegisterClass(TOrderInternalPackJournalForm);
 end.
