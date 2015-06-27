@@ -548,6 +548,11 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartionGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartionGoodsJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeToForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeToForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeToJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeToJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendFormTest;
