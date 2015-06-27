@@ -84,6 +84,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
         , tmpAccessKey.AccessKeyId_GuideCommerce
         , tmpAccessKey.AccessKeyId_GuideCommerceAll
 
+        , tmpAccessKey.AccessKeyId_UserOrder
+
         , lfSelect_Object_Unit_byProfitLossDirection.UnitId AS UnitId_PersonalService
 
    FROM (SELECT UserId
@@ -111,6 +113,12 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                THEN AccessKeyId
                           ELSE 0
                      END) AS AccessKeyId_GuideCommerceAll
+
+              , MAX (CASE WHEN AccessKeyId IN (zc_Enum_Process_AccessKey_UserOrder()
+                                              )
+                               THEN AccessKeyId
+                          ELSE 0
+                     END) AS AccessKeyId_UserOrder
 
               , MAX (CASE WHEN AccessKeyId IN (zc_Enum_Process_AccessKey_PersonalServiceProduction()
                                              , zc_Enum_Process_AccessKey_PersonalServiceAdmin()

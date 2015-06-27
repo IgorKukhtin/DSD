@@ -911,3 +911,19 @@ group by Movement_Parent.Id
 
 -- тест
 -- SELECT * FROM gpInsert_Scale_Movement_all (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+/*
+select 
+  case when Id <> 0                then Id /*lpSetErased_Movement (Id, 5)*/ end as isId
+, case when MovementId_parent <> 0 then MovementId_parent /*lpSetErased_Movement (MovementId_parent,  5)*/ end as isMovementId_parent
+, case when MovementId_tax <> 0    then MovementId_tax /*lpSetErased_Movement (MovementId_tax,  5)*/ end as isMovementId_tax
+, a.* 
+from gpSelect_Scale_Movement(inStartDate := ('01.06.2015')::TDateTime , inEndDate := ('26.06.2015')::TDateTime , inIsComlete := 'True' ,  inSession := '5') as a
+where FromName <> 'Склад ГП ф.Запорожье' and FromName <> 'Склад ГП ф.Одесса'
+  and ToName <>  'Склад ГП ф.Запорожье' and ToName <>  'Склад ГП ф.Одесса'
+
+select 
+  case when Id <> 0                then Id /*lpSetErased_Movement (Id, 5)*/ end as isId
+, a.* 
+from gpSelect_Scale_MovementCeh(inStartDate := ('01.06.2015')::TDateTime , inEndDate := ('26.06.2015')::TDateTime , inIsComlete := 'True' ,  inSession := '5') as a
+and StatusCode <> 1
+*/

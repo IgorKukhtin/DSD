@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PersonalService(
     IN inInvNumber              TVarChar  , -- Номер документа
     IN inOperDate               TDateTime , -- Дата документа
     IN inServiceDate            TDateTime , -- Месяц начислений
-    IN inComment                TVarChar  , -- Комментерий
+    IN inComment                TVarChar  , -- Примечание
     IN inPersonalServiceListId  Integer   , -- 
     IN inJuridicalId            Integer   , -- 
     IN inUserId                 Integer     -- пользователь

@@ -1206,6 +1206,7 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'UnitCode;GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -1214,9 +1215,8 @@ inherited OrderInternalForm: TOrderInternalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -1550,9 +1550,6 @@ inherited OrderInternalForm: TOrderInternalForm
           Visible = True
           ItemName = 'bbGridToExcel'
         end>
-    end
-    inherited bbPrint: TdxBarButton
-      Visible = ivNever
     end
     object bbPrint_Bill: TdxBarButton [5]
       Caption = #1057#1095#1077#1090
@@ -2096,7 +2093,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

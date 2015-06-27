@@ -18,6 +18,8 @@ $BODY$
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
 
+    DECLARE vbCurrencyPartnerId Integer;
+
     DECLARE vbNotNDSPayer_INN TVarChar;
 
     DECLARE Cursor1 refcursor;

@@ -58,9 +58,19 @@ BEGIN
                                    , CASE WHEN inShowAll = TRUE THEN MovementItem.ObjectId                         ELSE 0 END AS GoodsId_detail
                                    , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId_detail
 
-                                   , COALESCE (MILinkObject_Goods.ObjectId, 0)             AS GoodsId
+                                   , COALESCE (MILinkObject_Goods.ObjectId
+                                             , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
+                                                         THEN MovementItem.ObjectId
+                                                    ELSE 0
+                                               END
+                                              )AS GoodsId
                                    , COALESCE (MILinkObject_GoodsBasis.ObjectId, 0)        AS GoodsId_basis
-                                   , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_complete
+                                   , COALESCE (MILinkObject_GoodsKindComplete.ObjectId
+                                             , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
+                                                         THEN zc_GoodsKind_Basis()
+                                                    ELSE 0
+                                               END
+                                              ) AS GoodsKindId_complete
                                    , COALESCE (MILinkObject_Receipt.ObjectId, 0)           AS ReceiptId
                                    , COALESCE (MILinkObject_ReceiptBasis.ObjectId, 0)      AS ReceiptId_basis
 
@@ -89,6 +99,11 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                                ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+--                                                       AND  = Object_InfoMoney_View.InfoMoneyId
 
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
                                                                ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
@@ -223,7 +238,7 @@ BEGIN
            , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
            , Object_Goods.ValueData              AS GoodsName
-           , Object_Goods_basis.Id                       AS GoodsId_basis
+           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_Goods_basis.Id END AS GoodsId_basis
            , Object_Goods_basis.ObjectCode               AS GoodsCode_basis
            , Object_Goods_basis.ValueData                AS GoodsName_basis
            , Object_Goods_detail.ObjectCode              AS GoodsCode_detail
@@ -252,11 +267,11 @@ BEGIN
            , CASE WHEN tmpMI.StartDate_next = zc_DateEnd()                                                THEN NULL ELSE tmpMI.StartDate_next END :: TDateTime AS StartDate_next -- Партия-1 далее
            , CASE WHEN tmpMI.EndDate_next   = zc_DateStart() OR tmpMI.EndDate_next = tmpMI.StartDate_next THEN NULL ELSE tmpMI.EndDate_next   END :: TDateTime AS EndDate_next   -- Партия-2 далее
 
-           , CAST (tmpMI.AmountRemains       AS NUMERIC (16, 1)) :: TFloat AS AmountRemains       -- Ост. начальн.
+           , CASE WHEN ABS (tmpMI.AmountRemains) < 1 THEN tmpMI.AmountRemains ELSE CAST (tmpMI.AmountRemains AS NUMERIC (16, 1)) END :: TFloat AS AmountRemains -- Ост. начальн.
            , CAST (tmpMI.AmountPartnerPrior  AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPrior  -- неотгуж. заявка
            , CAST (tmpMI.AmountPartner       AS NUMERIC (16, 2)) :: TFloat AS AmountPartner       -- сегодня заявка
-           , CAST (tmpMI.AmountForecast      AS NUMERIC (16, 1)) :: TFloat AS AmountForecast      -- Прогноз по прод.
-           , CAST (tmpMI.AmountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS AmountForecastOrder -- Прогноз по заяв.
+           , CASE WHEN ABS (tmpMI.AmountForecast) < 1      THEN tmpMI.AmountForecast      ELSE CAST (tmpMI.AmountForecast AS NUMERIC (16, 1))      END :: TFloat AS AmountForecast      -- Прогноз по прод.
+           , CASE WHEN ABS (tmpMI.AmountForecastOrder) < 1 THEN tmpMI.AmountForecastOrder ELSE CAST (tmpMI.AmountForecastOrder AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrder -- Прогноз по заяв.
 
            , CAST (tmpMI.CountForecast AS NUMERIC (16, 1))      :: TFloat AS CountForecast                     -- Норм 1д (по пр.) без К
            , CAST (tmpMI.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder                -- Норм 1д (по зв.) без К
@@ -279,7 +294,7 @@ BEGIN
            , tmpMI.NormInDays            :: TFloat AS NormInDays            -- Норма запас в дн.
            , tmpMI.StartProductionInDays :: TFloat AS StartProductionInDays -- Нач. произв. в дн.
 
-           , Object_GoodsKind.Id                 AS GoodsKindId
+           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_GoodsKind.Id END AS GoodsKindId
            , Object_GoodsKind.ValueData          AS GoodsKindName
            , Object_GoodsKind_detail.ValueData   AS GoodsKindName_detail
            , Object_Measure.ValueData            AS MeasureName
@@ -408,10 +423,10 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
                                  ON ObjectLink_OrderType_Goods.ChildObjectId = Object_Goods.Id
                                 AND ObjectLink_OrderType_Goods.DescId = zc_ObjectLink_OrderType_Goods()
-            LEFT JOIN ObjectLink AS OrderType_Unit
-                                 ON OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
-                                AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = OrderType_Unit.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_OrderType_Unit
+                                 ON ObjectLink_OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
+                                AND ObjectLink_OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_OrderType_Unit.ChildObjectId
           ;
 
        RETURN NEXT Cursor1;
@@ -424,15 +439,15 @@ BEGIN
                                   )
        SELECT
              _tmpMI_child.MovementItemId         AS Id
-           , Object_Goods.Id                     AS GoodsId
+           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_Goods.Id END AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
            , Object_Goods.ValueData              AS GoodsName
            , Object_GoodsKind.ValueData          AS GoodsKindName
-           , Object_GoodsKindComplete.Id         AS GoodsKindId_complete
+           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_GoodsKindComplete.Id END AS GoodsKindId_complete
            , Object_GoodsKindComplete.ValueData  AS GoodsKindName_complete
            , Object_Measure.ValueData            AS MeasureName
            , _tmpMI_child.PartionGoodsDate
-           , CAST (_tmpMI_child.Amount AS NUMERIC (16, 1))                          :: TFloat AS Amount
+           , CASE WHEN ABS (_tmpMI_child.Amount) < 1 THEN _tmpMI_child.Amount ELSE CAST (_tmpMI_child.Amount AS NUMERIC (16, 1)) END :: TFloat AS Amount
            , CAST (_tmpMI_child.Amount * tmpMI_master.KoeffLoss AS NUMERIC (16, 1)) :: TFloat AS Amount_calc
            , CAST (tmpMI_master.TaxLoss AS NUMERIC (16, 1))                         :: TFloat AS TaxLoss
            , CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)

@@ -2,8 +2,8 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 535
   ClientWidth = 1073
-  ExplicitWidth = 1081
-  ExplicitHeight = 569
+  ExplicitWidth = 1089
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -228,6 +228,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'UnitCode;GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -373,7 +374,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbPrintTax_Us: TdxBarButton
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -427,12 +427,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inislastcomplete'
-        Value = True
-        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 80
@@ -511,7 +505,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

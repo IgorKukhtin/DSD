@@ -33,6 +33,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbIsUserOrder  Boolean;
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
    DECLARE vbBranchId_Constraint Integer;
@@ -43,6 +44,7 @@ BEGIN
 
 
    -- определяется уровень доступа
+   vbIsUserOrder:= EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
    vbObjectId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId), 0 );
    vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
    vbIsConstraint:= vbObjectId_Constraint > 0 OR vbBranchId_Constraint > 0;
@@ -125,11 +127,6 @@ BEGIN
                                ON ObjectFloat_DocumentDayCount.ObjectId = Object_Partner.Id
                               AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
-                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
-                             AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
-         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
-         
          LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
                               ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
@@ -182,27 +179,32 @@ BEGIN
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
- 	LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
-                        , ObjectFloat_Value.ValueData AS ChangePercent
-                   FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
-                        INNER JOIN ObjectFloat AS ObjectFloat_Value
-                                               ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
-                                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
-                                              AND ObjectFloat_Value.ValueData <> 0
-                        INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
-                                                                     AND Object_ContractCondition.isErased = FALSE
-                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
-                                              ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
-                                             AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                   WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
-                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                  )*/ Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_View.ContractId
+        LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+                         , ObjectFloat_Value.ValueData AS ChangePercent
+                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                         INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                               AND ObjectFloat_Value.ValueData <> 0
+                         INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                                                      AND Object_ContractCondition.isErased = FALSE
+                         LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                               ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                              AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                    WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
+                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                   )*/ Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_View.ContractId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
-                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
-        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Route.DescId = CASE WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() THEN zc_ObjectLink_Partner_Route30201() ELSE zc_ObjectLink_Partner_Route() END
+         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -211,10 +213,16 @@ BEGIN
                                                                             , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                             , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                                              )
-           AND vbBranchId_Constraint = 0)
-       OR Object_InfoMoney_View.InfoMoneyId = 8942 -- Кротон
-       OR Object_Juridical.Id = 15222 -- Кротон НВКФ ТОВ
+           AND vbBranchId_Constraint = 0
+           AND vbIsUserOrder = FALSE)
+       OR (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                          , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                           )
+           AND vbIsUserOrder = TRUE)
+       OR (Object_InfoMoney_View.InfoMoneyId = 8942 AND vbIsUserOrder = FALSE) -- Кротон
+       OR (Object_Juridical.Id = 15222 AND vbIsUserOrder = FALSE) -- Кротон НВКФ ТОВ
          )
+     --
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE
@@ -309,11 +317,6 @@ BEGIN
                                ON ObjectFloat_DocumentDayCount.ObjectId = Object_Partner.Id
                               AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
-                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
-                             AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
-         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
-         
          LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
                               ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
@@ -366,27 +369,32 @@ BEGIN
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
- 	LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
-                        , ObjectFloat_Value.ValueData AS ChangePercent
-                   FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
-                        INNER JOIN ObjectFloat AS ObjectFloat_Value
-                                               ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
-                                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
-                                              AND ObjectFloat_Value.ValueData <> 0
-                        INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
-                                                                     AND Object_ContractCondition.isErased = FALSE
-                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
-                                              ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
-                                             AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                   WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
-                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                  )*/ Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_View.ContractId
+        LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+                         , ObjectFloat_Value.ValueData AS ChangePercent
+                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                         INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                               AND ObjectFloat_Value.ValueData <> 0
+                         INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                                                      AND Object_ContractCondition.isErased = FALSE
+                         LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                               ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                              AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                    WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
+                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                   )*/ Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_View.ContractId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
-                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
-        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Route.DescId = CASE WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() THEN zc_ObjectLink_Partner_Route30201() ELSE zc_ObjectLink_Partner_Route() END
+         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
@@ -396,10 +404,16 @@ BEGIN
                                                                             , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                             , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                                              )
-           AND vbBranchId_Constraint = 0)
-       OR Object_InfoMoney_View.InfoMoneyId = 8942 -- Кротон
-       OR Object_Juridical.Id = 15222 -- Кротон НВКФ ТОВ
+           AND vbBranchId_Constraint = 0
+           AND vbIsUserOrder = FALSE)
+       OR (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                          , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                           )
+           AND vbIsUserOrder = TRUE)
+       OR (Object_InfoMoney_View.InfoMoneyId = 8942 AND vbIsUserOrder = FALSE) -- Кротон
+       OR (Object_Juridical.Id = 15222 AND vbIsUserOrder = FALSE) -- Кротон НВКФ ТОВ
          )
+     --
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE

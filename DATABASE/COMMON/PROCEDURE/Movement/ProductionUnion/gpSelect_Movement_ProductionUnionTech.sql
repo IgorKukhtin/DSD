@@ -31,16 +31,24 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId -- WHERE inIsErased = TRUE
                        )
-        , tmpMI_order AS (SELECT Movement.OperDate                                              AS OperDate
+        , tmpMI_order AS (SELECT (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime AS OperDate
                                , MAX (MovementItem.Id)                                          AS MovementItemId
                                , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)          AS GoodsId
                                , ObjectLink_Receipt_GoodsKind.ChildObjectId                     AS GoodsKindId
                                , COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
-                               , MILO_Receipt.ObjectId                                          AS ReceiptId
+                               , COALESCE (MILO_ReceiptBasis.ObjectId, 0)                       AS ReceiptId
                                -- , MLO_To.ObjectId                                                AS ToId
                                , OrderType_Unit.ChildObjectId                                   AS ToId
-                               , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
-                               , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0))                         AS CuterCount
+                               , SUM (CASE WHEN (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime
+                                                BETWEEN inStartDate AND inEndDate
+                                                THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                           ELSE 0
+                                      END) AS Amount
+                               , SUM (CASE WHEN (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime
+                                                BETWEEN inStartDate AND inEndDate
+                                                THEN COALESCE (MIFloat_CuterCount.ValueData, 0) + COALESCE (MIFloat_CuterCountSecond.ValueData, 0)
+                                           ELSE 0
+                                      END) AS CuterCount
                           FROM Movement
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased = FALSE
@@ -52,28 +60,34 @@ BEGIN
                                                     ON OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
                                                    AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
 
+                               LEFT JOIN MovementItemFloat AS MIFloat_StartProductionInDays
+                                                           ON MIFloat_StartProductionInDays.MovementItemId = MovementItem.Id 
+                                                          AND MIFloat_StartProductionInDays.DescId = zc_MIFloat_StartProductionInDays()
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                            ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                                LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                                            ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
                                                           AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                               LEFT JOIN MovementItemFloat AS MIFloat_CuterCountSecond
+                                                           ON MIFloat_CuterCountSecond.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CuterCountSecond.DescId = zc_MIFloat_CuterCountSecond()
                                LEFT JOIN MovementItemLinkObject AS MILO_Goods
                                                                 ON MILO_Goods.MovementItemId = MovementItem.Id
                                                                AND MILO_Goods.DescId = zc_MILinkObject_Goods()
-                               LEFT JOIN MovementItemLinkObject AS MILO_Receipt
-                                                                ON MILO_Receipt.MovementItemId = MovementItem.Id
-                                                               AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
+                               LEFT JOIN MovementItemLinkObject AS MILO_ReceiptBasis
+                                                                ON MILO_ReceiptBasis.MovementItemId = MovementItem.Id
+                                                               AND MILO_ReceiptBasis.DescId = zc_MILinkObject_ReceiptBasis()
                                LEFT JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                    ON ObjectLink_Receipt_GoodsKind.ObjectId = MILO_Receipt.ObjectId
+                                                    ON ObjectLink_Receipt_GoodsKind.ObjectId = MILO_ReceiptBasis.ObjectId
                                                    AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
-                                                    ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = MILO_Receipt.ObjectId
+                                                    ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = MILO_ReceiptBasis.ObjectId
                                                    AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
-                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                          WHERE Movement.OperDate BETWEEN (inStartDate - INTERVAL '1 DAY') AND (inEndDate + INTERVAL '1 DAY')
                             AND Movement.DescId = zc_Movement_OrderInternal()
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
                             -- AND MLO_To.ObjectId = inFromId
@@ -82,10 +96,20 @@ BEGIN
                                  , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)
                                  , ObjectLink_Receipt_GoodsKind.ChildObjectId
                                  , COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis())
-                                 , MILO_Receipt.ObjectId
+                                 , MILO_ReceiptBasis.ObjectId
                                  -- , MLO_To.ObjectId
                                  , OrderType_Unit.ChildObjectId
-                          HAVING SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) <> 0
+                                 , MIFloat_StartProductionInDays.ValueData
+                          HAVING SUM (CASE WHEN (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime
+                                                BETWEEN inStartDate AND inEndDate
+                                                THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                           ELSE 0
+                                      END) <> 0
+                              OR SUM (CASE WHEN (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime
+                                                BETWEEN inStartDate AND inEndDate
+                                                THEN COALESCE (MIFloat_CuterCount.ValueData, 0) + COALESCE (MIFloat_CuterCountSecond.ValueData, 0)
+                                           ELSE 0
+                                      END) <> 0
                          )
    , tmpMI_production AS (SELECT Movement.Id                                                    AS MovementId
                                , Movement.StatusId                                              AS StatusId
@@ -148,7 +172,9 @@ BEGIN
                                  AND tmpMI_order.GoodsKindId_Complete = tmpMI_production.GoodsKindId_Complete
                                  AND tmpMI_order.ReceiptId = tmpMI_production.ReceiptId
                                  AND tmpMI_order.OperDate = tmpMI_production.OperDate
-                                 AND tmpMI_order.ToId = tmpMI_production.FromId;
+                                 AND tmpMI_order.ToId = tmpMI_production.FromId
+                                 -- AND (tmpMI_order.CuterCount <> 0 OR tmpMI_order.Amount <> 0)
+                                ;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpListMaster;

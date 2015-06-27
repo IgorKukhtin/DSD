@@ -570,6 +570,30 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         end>
       isShowModal = True
     end
+    object actChoiceRoute_30201: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Route_ObjectForm'
+      FormName = 'TRoute_ObjectForm'
+      FormNameParam.Value = 'TRoute_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteId_30201'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteName_30201'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object actChoiceRouteSorting: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -705,6 +729,13 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         Component = MasterCDS
         ComponentItem = 'PartnerId'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
       end
       item
         Name = 'inRouteId'

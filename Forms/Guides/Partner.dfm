@@ -242,10 +242,24 @@ object PartnerForm: TPartnerForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 71
+        Width = 100
+      end
+      object clRouteName_30201: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+        DataBinding.FieldName = 'RouteName_30201'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceRoute_30201
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object clRouteSortingName: TcxGridDBColumn
         Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
@@ -943,6 +957,30 @@ object PartnerForm: TPartnerForm
         end>
       isShowModal = True
     end
+    object actChoiceRoute_30201: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Route_ObjectForm'
+      FormName = 'TRoute_ObjectForm'
+      FormNameParam.Value = 'TRoute_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteId_30201'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteName_30201'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object actChoiceRouteSorting: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1226,6 +1264,13 @@ object PartnerForm: TPartnerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteId_30201'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteId_30201'
         ParamType = ptInput
       end
       item
