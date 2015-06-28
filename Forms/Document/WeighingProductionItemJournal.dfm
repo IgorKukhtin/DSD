@@ -1,7 +1,7 @@
 object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1090#1086#1082#1086#1083' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
   ClientHeight = 427
   ClientWidth = 1240
   Color = clBtnFace
@@ -714,7 +714,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_WeighingProduction'
+    StoredProcName = 'gpSelect_Movement_WeighingProduction_Item'
     DataSet = ClientDataSet
     DataSets = <
       item
