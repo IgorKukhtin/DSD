@@ -944,6 +944,10 @@ inherited MainForm: TMainForm
       object miTest: TMenuItem
         Action = actTestFormOpen
       end
+      object N53: TMenuItem
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+        OnClick = N53Click
+      end
     end
   end
 end

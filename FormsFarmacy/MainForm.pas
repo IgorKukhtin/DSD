@@ -150,7 +150,9 @@ type
     N51: TMenuItem;
     actPrice: TdsdOpenForm;
     N52: TMenuItem;
+    N53: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
+    procedure N53Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -161,7 +163,11 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-uses UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal;
+uses UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal,
+
+
+
+     RepriceUnit;
 {$R *.dfm}
 
 procedure TMainForm.actSaveDataExecute(Sender: TObject);
@@ -175,6 +181,16 @@ begin
 
   Application.ProcessMessages;
   ShowMessage('Выгрузили');
+end;
+
+procedure TMainForm.N53Click(Sender: TObject);
+begin
+  with TRepriceUnitForm.Create(nil) do
+  try
+     ShowModal;
+  finally
+     Free;
+  end;
 end;
 
 end.
