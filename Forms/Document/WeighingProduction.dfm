@@ -26,8 +26,6 @@ object WeighingProductionForm: TWeighingProductionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -1
-    ExplicitWidth = 1016
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -243,17 +241,15 @@ object WeighingProductionForm: TWeighingProductionForm
     Width = 1100
     Height = 336
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 969
     ClientRectBottom = 336
     ClientRectRight = 1100
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 969
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -261,7 +257,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 969
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -425,7 +420,7 @@ object WeighingProductionForm: TWeighingProductionForm
             Width = 44
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -501,7 +496,7 @@ object WeighingProductionForm: TWeighingProductionForm
             Width = 70
           end
           object colCountSkewer1: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1096#1087#1072#1078#1077#1082'/'#1082#1088#1102#1095#1082#1086#1074' '#1074#1080#1076#1072' 1'
+            Caption = #1050#1086#1083'. '#1096#1087'.1/'#1082#1088'.'
             DataBinding.FieldName = 'CountSkewer1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -509,7 +504,7 @@ object WeighingProductionForm: TWeighingProductionForm
             Width = 55
           end
           object colWeightSkewer1: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1096#1087#1072#1078#1082#1080'/'#1082#1088#1102#1095#1082#1072' '#1074#1080#1076#1072'1'
+            Caption = #1042#1077#1089' '#1086#1076#1085'. '#1096#1087'.1/'#1082#1088'.'
             DataBinding.FieldName = 'WeightSkewer1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -517,7 +512,7 @@ object WeighingProductionForm: TWeighingProductionForm
             Width = 59
           end
           object colCountSkewer2: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1096#1087#1072#1078#1077#1082' '#1074#1080#1076#1072' 2'
+            Caption = #1050#1086#1083'. '#1096#1087'. 2'
             DataBinding.FieldName = 'CountSkewer2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -525,7 +520,7 @@ object WeighingProductionForm: TWeighingProductionForm
             Width = 46
           end
           object colWeightSkewer2: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1096#1087#1072#1078#1082#1080' '#1074#1080#1076#1072' 2'
+            Caption = #1042#1077#1089' '#1086#1076#1085'. '#1096#1087'.2'
             DataBinding.FieldName = 'WeightSkewer2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -555,7 +550,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 6
+    TabOrder = 4
     Width = 96
   end
   object cxLabel18: TcxLabel

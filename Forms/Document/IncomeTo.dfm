@@ -26,7 +26,6 @@ object IncomeToForm: TIncomeToForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 956
     object edInvNumber: TcxTextEdit
       Left = 5
       Top = 23
@@ -336,14 +335,12 @@ object IncomeToForm: TIncomeToForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 956
     ClientRectBottom = 336
     ClientRectRight = 1162
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 956
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -351,7 +348,6 @@ object IncomeToForm: TIncomeToForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 956
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1173,9 +1169,9 @@ object IncomeToForm: TIncomeToForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TContractChoicePartnerForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TContractChoicePartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1194,7 +1190,8 @@ object IncomeToForm: TIncomeToForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 520
+    Left = 496
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
