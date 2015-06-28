@@ -298,7 +298,9 @@ uses
   Report_RemainGoods in '..\..\FormsFarmacy\Report\Report_RemainGoods.pas' {Report_GoodsRemainsForm: TParentForm},
   Report_GoodsPartionMove in '..\..\FormsFarmacy\Report\Report_GoodsPartionMove.pas' {Report_GoodsPartionMoveForm: TParentForm},
   Price in '..\..\Forms\Guides\Price.pas' {PriceForm: TParentForm},
-  PriceTest in '..\SOURCE\Objects\All\Farmacy\PriceTest.pas';
+  PriceTest in '..\SOURCE\Objects\All\Farmacy\PriceTest.pas',
+  AlternativeGroupTest in '..\SOURCE\Objects\All\Farmacy\AlternativeGroupTest.pas',
+  AlternativeGroup in '..\..\FormsFarmacy\Guides\AlternativeGroup.pas' {AlternativeGroupForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

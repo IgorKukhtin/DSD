@@ -58,6 +58,7 @@ type
     procedure LoadUnitFormTest;
     procedure LoadAdditionalGoodsFormTest;
     procedure LoadPriceFormTest;
+    procedure LoadAlternativeGroupFormTest;
     procedure FormTest;
   end;
 
@@ -530,6 +531,12 @@ procedure TLoadFormTest.LoadPriceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceForm');
+end;
+
+procedure TLoadFormTest.LoadAlternativeGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAlternativeGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAlternativeGroupForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
