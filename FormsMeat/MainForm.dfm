@@ -3172,6 +3172,28 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actWeighingPartnerItem: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+      FormName = 'TWeighingPartnerItemJournalForm'
+      FormNameParam.Value = 'TWeighingPartnerItemJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actWeighingProductionItem: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
+      FormName = 'TWeighingProductionItemJournalForm'
+      FormNameParam.Value = 'TWeighingProductionItemJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -3253,6 +3275,12 @@ inherited MainForm: TMainForm
       end
       object miWeighingProduction: TMenuItem
         Action = actWeighingProduction
+      end
+      object N71: TMenuItem
+        Action = actWeighingPartnerItem
+      end
+      object N72: TMenuItem
+        Action = actWeighingProductionItem
       end
       object N8: TMenuItem
         Caption = '-'

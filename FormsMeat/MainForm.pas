@@ -593,6 +593,10 @@ type
     actOrderInternalPack: TdsdOpenForm;
     actIncomeTo: TdsdOpenForm;
     N70: TMenuItem;
+    actWeighingPartnerItem: TdsdOpenForm;
+    actWeighingProductionItem: TdsdOpenForm;
+    N71: TMenuItem;
+    N72: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
