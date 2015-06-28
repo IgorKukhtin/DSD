@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_CashRemains (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_CashRemains(
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer, 
-               Remains TFloat, Price TFloat, Reserved TFloat)
+RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer,
+               Remains TFloat, Price TFloat, Reserved TFloat, MCSValue TFloat)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -20,25 +20,28 @@ BEGIN
      vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
      IF vbUnitKey = '' THEN
         vbUnitKey := '0';
-     END IF;   
+     END IF;
      vbUnitId := vbUnitKey::Integer;
 
      RETURN QUERY
 
-       SELECT Goods.Id, 
-              Goods.ValueData, 
+       SELECT Goods.Id,
+              Goods.ValueData,
               Goods.ObjectCode,
               GoodsRemains.Remains::TFloat,
-              100::TFloat,
-              10::TFloat
-       FROM (SELECT SUM(Amount) AS Remains, container.objectid FROM container  
+              object_Price_view.price,
+              10::TFloat,
+              object_Price_view.mcsvalue
+       FROM (SELECT SUM(Amount) AS Remains, container.objectid FROM container
                JOIN containerlinkobject AS CLO_Unit
                  ON CLO_Unit.containerid = container.id AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
-                AND CLO_Unit.objectid = vbUnitId 
+                AND CLO_Unit.objectid = vbUnitId
               WHERE container.descid = zc_container_count() AND Amount<>0
-           GROUP BY container.objectid) AS GoodsRemains 
-         
-       JOIN OBJECT AS Goods ON Goods.Id = GoodsRemains.ObjectId;
+           GROUP BY container.objectid) AS GoodsRemains
+
+       JOIN OBJECT AS Goods ON Goods.Id = GoodsRemains.ObjectId
+       LEFT OUTER JOIN object_Price_view ON GoodsRemains.ObjectId = object_Price_view.goodsid
+                                        AND object_Price_view.unitid = vbUnitId;
 
 
 END;
@@ -55,4 +58,4 @@ ALTER FUNCTION gpSelect_CashRemains (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashRemains (inSession:= '2')
+-- SELECT * FROM gpSelect_CashRemains (inSession:= '3')
