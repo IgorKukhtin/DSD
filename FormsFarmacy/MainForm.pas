@@ -150,6 +150,8 @@ type
     N51: TMenuItem;
     actPrice: TdsdOpenForm;
     N52: TMenuItem;
+    actAlternativeGroup: TdsdOpenForm;
+    N53: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }
